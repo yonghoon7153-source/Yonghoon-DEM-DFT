@@ -1,0 +1,87 @@
+{
+  "schema": "runlog/v1",
+  "record_kind": "runlog",
+  "date": "2026-11-20",
+  "트랙": "[혁주] LZO 코팅 양극 계면 — 1저자 = 혁주 · 사용자 = 계산 담당",
+  "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json ⏩_개정_2_2026_11_20_MD1_결과_전 · D-2026-11-20-hyeokju-lzo-md1-amend2 (active · 사용자 비준 2026-11-20)",
+  "status": "개정 2 active (사용자 비준 2026-11-20) → kgy 블록 줌 (세 시드 동시 · 결과 없음)",
+  "시작_구조": [
+    {
+      "file": "db/structures/hyeokju_md1_2026_11_20/I142_liouter_aLZO16_md1s1_init.xyz",
+      "sha256": "2a47a83f6e299e27283e47c8e15b947abb8a97fec06437fae882f43f9f233940"
+    },
+    {
+      "file": "db/structures/hyeokju_md1_2026_11_20/I142_liouter_aLZO16_md1s2_init.xyz",
+      "sha256": "984d62b7a836b353d35755f4fa1c72f9f057c9568da2e0a26853883f834a4cee"
+    },
+    {
+      "file": "db/structures/hyeokju_md1_2026_11_20/I142_liouter_aLZO16_md1s3_init.xyz",
+      "sha256": "6bd5c6204c40fd63cf86264cb045637b747d9adce7058d1da79be2c304d736bc"
+    }
+  ],
+  "도구": {
+    "run_li_interface_md.py": "58d44eb1e3862456eb5305836f1e52eb1ddd07d76e12a4f5cea0863779c61310",
+    "analyze_interface_decomp.py": "8d8049eff6135fe3cc474e5467c3b0c9fc56d536d917739280626510f2285406",
+    "collect_neb.py (관측창)": "d372044fb5da58a010a7777ec37e82df59865a47523e11c3d9511d1154c61c12"
+  },
+  "시험": "run_li_interface_md --selftest 19/19 (스트림 = 비스트림 바이트 같음 · 끊김 때 .part 만 남음 · .part 있으면 다시 시작 거부) · 깨기 2/2 (이름 바꾸기 뺌 · .part 문 뺌) · analyze_interface_decomp --selftest 23/23 · 깨기 5/5 (최소상 끔 · 지속 ≥ → > · 앙상블 문턱 1 · 프레임 수 문 · 기원 양쪽 문) · 옛 판 (SE|Li) 경로 그대로 돈다",
+  "by": "agent · 2026-11-20",
+  "kgy_실행_블록 (사용자가 붙여넣는다)": "M=/home/kgy/Yonghoon-DEM-DFT; W=$HOME/wt_hj_md1; R=/home/kgy/work/runs/hj_md1_1120; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; ST=db/structures/hyeokju_md1_2026_11_20\n( echo \"== 자리 (worktree · 런 폴더 · tmux 없음)\" && [ ! -e $W ] && [ ! -e $R ] && ! tmux has-session -t hjmd1 2>/dev/null \\\n && echo \"== 판 받기 (worktree $W)\" && git -C $M fetch -q origin claude/friendly-meitner-lldvar && git -C $M worktree add -q --detach $W FETCH_HEAD && echo \"  커밋 $(git -C $W rev-parse --short HEAD)\" \\\n && echo \"== 도구 · 시작 구조 지문 (결과 전 커밋 그대로)\" && ( cd $W && printf '%s\\n' \"58d44eb1e3862456eb5305836f1e52eb1ddd07d76e12a4f5cea0863779c61310  tools/oxidation/run_li_interface_md.py\" \"8d8049eff6135fe3cc474e5467c3b0c9fc56d536d917739280626510f2285406  tools/oxidation/analyze_interface_decomp.py\" \"2a47a83f6e299e27283e47c8e15b947abb8a97fec06437fae882f43f9f233940  $ST/I142_liouter_aLZO16_md1s1_init.xyz\" \"984d62b7a836b353d35755f4fa1c72f9f057c9568da2e0a26853883f834a4cee  $ST/I142_liouter_aLZO16_md1s2_init.xyz\" \"6bd5c6204c40fd63cf86264cb045637b747d9adce7058d1da79be2c304d736bc  $ST/I142_liouter_aLZO16_md1s3_init.xyz\" \"30ac46caf16dc0280083cfcca2b2e8831d0a76c5c67399deeb0491f9db21042b  $ST/I142_liouter_aLZO16_md1s1_init_freeze.json\" | sha256sum -c - ) \\\n && echo \"== 개정 2 active · 판독 문턱 (카드에서 읽힘)\" && ( cd $W && $PY -c \"import sys; sys.path.insert(0, 'tools/oxidation'); import analyze_interface_decomp as A; th = A.md1_load_card(); print('  ', th['pairs_judged'], '· 지속', th['persist_ps'], 'ps · 생산', th['prod_ps'], 'ps · 시드', th['n_seeds'])\" ) \\\n && echo \"== 실행기 selftest (EMT · UMA 안 부름)\" && ( cd $W && $PY tools/oxidation/run_li_interface_md.py --selftest 2>&1 | tail -1 | grep -q \"19 통과 / 0 실패\" ) && echo \"  ✓ 19/19\" \\\n && echo \"== GPU 지금 (세 시드 동시 · 여유 12,000 MiB 이상이어야 시작)\" && F=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -1) && echo \"  여유 $F MiB\" && [ \"$F\" -ge 12000 ] \\\n && mkdir -p $R && git -C $W rev-parse HEAD > $R/SOURCE_COMMIT && cat > $R/driver.sh <<'EOF' && tmux new -d -s hjmd1 \"bash $R/driver.sh >> $R/run.log 2>&1; sleep 5\" && echo \"== 시작 · tmux hjmd1 · 로그 $R/run.log · 시드별 $R/s1.log s2.log s3.log\" \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"\n#!/usr/bin/env bash\nW=/home/kgy/wt_hj_md1; R=/home/kgy/work/runs/hj_md1_1120; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; ST=$W/db/structures/hyeokju_md1_2026_11_20\nts(){ date '+%m-%d %H:%M:%S'; }\necho \"[$(ts)] 시작 · commit $(cat $R/SOURCE_COMMIT) · 세 시드 동시\"\nfor k in 1 2 3; do\n  s=$((20261120 + k))\n  mkdir -p $R/s$k\n  \"$PY\" -u $W/tools/oxidation/run_li_interface_md.py --interface $ST/I142_liouter_aLZO16_md1s${k}_init.xyz --label md1s$k --out_dir $R/s$k \\\n    --freeze_idx $ST/I142_liouter_aLZO16_md1s${k}_init_freeze.json --schedule \"hold:2500:10,ramp:2500:600:19\" --schedule_dt_fs 1 --release \\\n    --relax_fmax 1.0 --relax_steps 300 --temperature 600 --equilib_ps 1 --prod_ps 1000 --dt_fs 2 --friction 0.02 --save_fs 100 \\\n    --seed $s --msd_elements Zr O Li --device cuda --stream_traj > $R/s$k.log 2>&1 &\n  echo \"[$(ts)] ▶ s$k (seed $s) PID $!\"\n  echo $! > $R/s$k.pid\n  sleep 20\ndone\nrc=0\nfor k in 1 2 3; do wait $(cat $R/s$k.pid); r=$?; echo \"[$(ts)] s$k rc $r\"; [ $r = 0 ] || rc=1; done\necho \"[$(ts)] 끝 · rc $rc\"\nEOF",
+  "감시_블록": "watch -n 30 'R=/home/kgy/work/runs/hj_md1_1120; tmux has-session -t hjmd1 2>/dev/null && echo \"(tmux 도는 중)\" || echo \"(tmux 끝)\"; tail -2 $R/run.log | cut -c1-120; for k in 1 2 3; do L=$(grep -a \"생산\\|일정\\|NVT\\|done\\|Error\\|error\" $R/s$k.log 2>/dev/null | tail -1 | cut -c1-110); echo \"s$k · ${L:-시작 전}\"; done; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader'",
+  "블록_설명": "① 자리 (worktree · 런 폴더 · tmux 없음) ② 판 받기 ③ 도구 2 · 시작 구조 3 · 고정 목록 지문 ④ 개정 2 active · 판독 문턱이 카드에서 읽힘 ⑤ 실행기 selftest 19/19 (EMT) ⑥ GPU 여유 ≥ 12,000 MiB ⑦ SOURCE_COMMIT · 드라이버 (세 시드를 20 s 간격으로 띄우고 기다림 · 시드별 로그 · rc) · tmux hjmd1",
+  "로컬_시험": "bash -n 셋 통과 · 드라이버를 가짜 python (시드 20261122 만 실패) 으로 돌려 셋 다 뜨고 · 기다리고 · s2 rc 7 · 전체 rc 1 을 찍는 것 확인",
+  "진행_2026_11_20_2055": {
+    "출처": "사용자 붙여넣은 kgy watch (2026-11-20 20:55:46 KST)",
+    "상태": "tmux 도는 중 · 세 시드 생산 s1 126.0 · s2 125.0 · s3 125.0 / 1000 ps · 프레임 1263 · 1259 · 1260 (100 fs 간격과 맞음) · GPU 8379 MiB · 100 %",
+    "순간_온도": "564 · 638 · 618 K — 142 원자 순간 T 요동 1σ ≈ 600 × √(2/(3·142)) ≈ 41 K 안 (판정은 평균 T · 카드 T_band ±15 K)",
+    "끝_어림(가정)": "시작 14:33 · 지금 속도면 생산 약 20 ps/h → 1 ns 는 약 11-22 오후 (어림 · 판정 아님)",
+    "by": "claude · 2026-11-20"
+  },
+  "끝_2026_11_22": {
+    "출처": "사용자 붙여넣은 kgy watch (2026-11-22 16:42:08 KST)",
+    "상태": "(tmux 끝) · run.log '[11-22 10:28:41] s3 rc 0' · '[11-22 10:28:41] 끝 · rc 0' · s1 · s2 · s3 생산 1000.0 / 1000.0 ps · 프레임 10001 씩",
+    "순간_온도": "마지막 줄 663 · 557 · 620 K — 순간값 (142 원자 요동 1σ ≈ 41 K) · 판정은 생산 평균 T (카드 600 ± 15 K)",
+    "GPU": "10599 MiB · 99 % — MD-1 은 10:28 에 끝났으니 우리 잡이 아니다 (kgy 공유)",
+    "판독": "아직 안 돌림 — 결과 전 개정 3 (t = 0 쌍) 을 먼저 정한다",
+    "by": "claude · 2026-11-22 (대피 세션)"
+  },
+  "개정3_결과_전_2026_11_22": {
+    "무엇": "생산 시작 (t = 0) 때 이미 문턱 안이던 원자 쌍은 판정에서 뺀다 (생산 중 새로 든 쌍만 · t = 0 쌍은 기록) — 카드 ⏩_개정_3_2026_11_22_MD1_결과_전_t0쌍 · D-2026-11-22-hyeokju-lzo-md1-amend3",
+    "계기": "가짜 궤적 시험 (담금질 전 시작 구조 + 잡음) 에서 seed 1 시작 구조에 Zr–S 2.9 Å 안 쌍이 2 개 → 개정 2 셈이면 첫 사건 0.0 ps 로 센다 · 실제 생산 시작 구조는 2500 K 담금질 · 식힘 뒤라 그때 생긴 접촉도 같은 꼴",
+    "사용자_선택": "2026-11-22 AskUserQuestion 't=0 결합' → '새로 생긴 쌍만 판정 (Recommended)'",
+    "도구": "tools/oxidation/analyze_interface_decomp.py sha256 bb8dbee3a523b3de84a8aeb40751cea06c24baf0c9ffc5da872e52fe9f40e6b4 (옛 8d8049ef) · selftest 34/34 · 깨기 6/6 · 개정 3 이 없는 카드로는 옛 판과 출력 같음 (JSON · CSV 바이트)",
+    "가짜_kgy_시험": "블록을 가짜 kgy (1 ns 길이 가짜 궤적 셋 · 로컬 원격 저장소) 로 끝까지: 개정 3 proposed → ② 에서 '판독하지 않는다' 로 멈춤 · active → 판독 · 앙상블 '판정' · 회수 · push · worktree 정리 (93 s · 시드당 판독 ≈ 30 s · 216 MB) · 틀린 상태 (판독 폴더 있음 · .part 남음 · run.log rc 1) 는 ① 에서 멈춤",
+    "by": "claude · 2026-11-22 (대피 세션)"
+  },
+  "판독_블록_2026_11_22 (개정 3 비준 뒤 · 사용자가 붙여넣는다)": "R=/home/kgy/work/runs/hj_md1_1120; W=$HOME/wt_hj_md1; M=/home/kgy/Yonghoon-DEM-DFT; RW=$HOME/wt_hj_md1_read; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; ST=db/structures/hyeokju_md1_2026_11_20; O=$R/readout; B=claude/evac-2026-11-20; D=db/raw/hyeokju_lzo_md1_2026_11_20/readout_kgy_1122\n( export PYTHONDONTWRITEBYTECODE=1 && echo \"== ① 자리 (tmux 끝 · run.log rc 0 · 궤적 셋 · .part 없음 · 판독 폴더 · 회수 worktree 없음 · 런 판 = SOURCE_COMMIT)\" \\\n && ! tmux has-session -t hjmd1 2>/dev/null && grep -aq \"끝 · rc 0\" $R/run.log \\\n && for k in 1 2 3; do { [ -s $R/s$k/md1s${k}_traj.xyz ] && [ ! -e $R/s$k/md1s${k}_traj.xyz.part ]; } || exit 1; done \\\n && [ ! -e $O ] && [ ! -e $RW ] && [ \"$(git -C $W rev-parse HEAD)\" = \"$(cat $R/SOURCE_COMMIT)\" ] && echo \"  런 판 $(git -C $W rev-parse --short HEAD) = SOURCE_COMMIT\" \\\n && echo \"== ② 판독 판 받기 ($B → $RW) · 도구 · 고정 목록 지문 · 개정 2 · 3 active\" && git -C $M fetch -q origin $B && git -C $M worktree add -q --detach $RW FETCH_HEAD && echo \"  판독 판 $(git -C $RW rev-parse --short HEAD)\" \\\n && ( cd $RW && printf '%s\\n' \"bb8dbee3a523b3de84a8aeb40751cea06c24baf0c9ffc5da872e52fe9f40e6b4  tools/oxidation/analyze_interface_decomp.py\" \"d372044fb5da58a010a7777ec37e82df59865a47523e11c3d9511d1154c61c12  tools/sei/collect_neb.py\" \"30ac46caf16dc0280083cfcca2b2e8831d0a76c5c67399deeb0491f9db21042b  $ST/I142_liouter_aLZO16_md1s1_init_freeze.json\" \"30ac46caf16dc0280083cfcca2b2e8831d0a76c5c67399deeb0491f9db21042b  $ST/I142_liouter_aLZO16_md1s2_init_freeze.json\" \"30ac46caf16dc0280083cfcca2b2e8831d0a76c5c67399deeb0491f9db21042b  $ST/I142_liouter_aLZO16_md1s3_init_freeze.json\" | sha256sum -c --quiet - ) && echo \"  ✓ 지문 5/5\" \\\n && ( cd $RW && $PY -c \"import sys; sys.path.insert(0, 'tools/oxidation'); import analyze_interface_decomp as A; th = A.md1_load_card(); a3 = A.md1_load_amend3(); assert a3, '개정 3 이 카드에 없다'; print('  개정 2 문턱', th['pairs_judged'], '· 지속', th['persist_ps'], 'ps · 개정 3', a3)\" ) \\\n && echo \"== ③ 시드마다 판독 (CPU · 시드당 1 분 안팎 · rc 0 = 무결성 통과 · rc 3 = 무결성 실패 — 기록은 남기고 계속)\" && mkdir -p $O \\\n && for k in 1 2 3; do ( cd $RW && $PY tools/oxidation/analyze_interface_decomp.py --md1 $R/s$k/md1s${k}_traj.xyz --freeze $ST/I142_liouter_aLZO16_md1s${k}_init_freeze.json --label md1s$k --out_json $O/md1s${k}_md1.json --out_csv $O/md1s${k}_md1.csv ); r=$?; echo \"  s$k rc $r\"; [ $r = 0 ] || [ $r = 3 ] || exit 1; done \\\n && echo \"== ④ 앙상블 (결과 전 규칙 · 개정 3 = 생산 중 새로 든 쌍만 · 시드 2/3 · 관측창 줄 · rc 0 = 판정 · rc 3 = 판정 보류)\" \\\n && { ( cd $RW && $PY tools/oxidation/analyze_interface_decomp.py --md1_ensemble $O/md1s1_md1.json $O/md1s2_md1.json $O/md1s3_md1.json --out_json $O/md1_verdict.json ); r=$?; echo \"  앙상블 rc $r\"; [ $r = 0 ] || [ $r = 3 ]; } \\\n && echo \"== ⑤ 회수 (판독 · 앙상블 · 런 기록 — 궤적은 kgy 에 둔다 · 궤적 sha 는 시드 판독 JSON 에 있다)\" && mkdir -p $RW/$D && cp $O/* $R/run.log $R/SOURCE_COMMIT $R/driver.sh $RW/$D/ \\\n && for k in 1 2 3; do mkdir -p $RW/$D/s$k && find $R/s$k -maxdepth 1 -type f ! -name '*_traj.xyz*' -size -20M -exec cp {} $RW/$D/s$k/ \\; && { if [ $(stat -c %s $R/s$k.log) -le 5000000 ]; then cp $R/s$k.log $RW/$D/; else tail -n 500 $R/s$k.log > $RW/$D/s$k.log.tail; fi; } || exit 1; done \\\n && ( cd $RW/$D && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS && echo \"  ✓ 파일 $(wc -l < SHA256SUMS) · $(du -sh . | cut -f1)\" ) \\\n && git -C $RW add $D && git -C $RW commit -q -m \"[혁주] MD-1: readout of three seeds (600 K, 1 ns, kgy) under amendment 3 - seed readouts, ensemble verdict, run records (trajectories stay on kgy)\" -m \"$(printf 'Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\\nClaude-Session: https://claude.ai/code/session_01Er41drwDRfvL6hhZbVtBiw')\" \\\n && git -C $RW fetch -q origin $B && git -C $RW merge -q --no-edit FETCH_HEAD && echo \"✓ 커밋 $(git -C $RW rev-parse --short HEAD) — 이제 push (Password = GitHub 토큰)\" && git -C $RW push origin HEAD:$B && git -C $M worktree remove $RW && echo \"✓ push · 회수 worktree 정리\" \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"\n",
+  "판독_블록_설명": "① 자리 (tmux 끝 · run.log rc 0 · 궤적 셋 · .part 없음 · 판독 폴더 · 회수 worktree 없음 · 런 worktree = SOURCE_COMMIT) ② 대피 브랜치에서 판독 판 worktree (~/wt_hj_md1_read) · 도구 · 관측창 도구 · 고정 목록 지문 · 카드 개정 2 · 3 active (도구 로더로) ③ 시드마다 --md1 (rc 0/3 이면 계속) ④ --md1_ensemble (rc 0/3) ⑤ 회수 db/raw/hyeokju_lzo_md1_2026_11_20/readout_kgy_1122/ (판독 · 앙상블 · run.log · SOURCE_COMMIT · driver.sh · 시드 폴더의 작은 파일 · 시드 로그 · SHA256SUMS) → 커밋 → 대피 브랜치 받아 합침 → push (마지막) → worktree 정리 · PYTHONDONTWRITEBYTECODE=1 (worktree 를 깨끗하게)",
+  "MD1_판정_2026_11_22": {
+    "출처": "사용자 붙여넣은 kgy 판독 블록 출력 (2026-11-22) · 회수 커밋 b90ed7ef (판독 판 0718bc6b · 런 판 d0f47698 = SOURCE_COMMIT) · db/raw/hyeokju_lzo_md1_2026_11_20/readout_kgy_1122/ (파일 25 · SHA256SUMS 대조 통과)",
+    "도구": "analyze_interface_decomp.py sha256 bb8dbee3… (개정 3 경로) · 카드 개정 2 · 3 active (도구 로더 확인)",
+    "무결성": "3/3 통과 — 프레임 10001 · 생산 평균 T 602.44 · 601.29 · 601.34 K (600 ± 15) · 궤적 sha b6afba07… · f234e887… · 14181cc3… (서로 다름)",
+    "시드별": {
+      "s1": "P–O 0 · Zr–S 지속 0 (순간 접촉 26 프레임 · 최대 1 · t = 0 쌍 1 = Zr 74 – S 42 · 지속 안 됨) · S–O 0",
+      "s2": "P–O 0 · Zr–S 지속 0 (순간 접촉 134 프레임 · 최대 1) · S–O 0",
+      "s3": "P–O 0 · Zr–S 새 쌍 지속 사건 2 (Zr 132 – S 34 · 1.5 ps 시작 · 1.2 ps / Zr 132 – S 29 · 162.1 ps 시작 · 1.5 ps · 순간 접촉 557 프레임 · 최대 2) · S–O 0"
+    },
+    "앙상블": {
+      "P–O": "새 쌍 사건 시드 0/3 → 관측창 안 개시 없음 · 관측창 (ν₀ 1e+13 s⁻¹ 가정 · 반응 기회 4 · 정상성 가정 · 600 K · 궤적 3e-09 s): 기대 사건 1 ≈ 0.60 eV (검출 63 %) · 95 % 검출 ≈ 0.55 eV",
+      "Zr–S": "새 쌍 사건 시드 1/3 → 시드 하나에서만 (개시 관측 아님) · 관측창 (ν₀ 1e+13 s⁻¹ 가정 · 반응 기회 16 · 정상성 가정 · 600 K · 궤적 3e-09 s): 기대 사건 1 ≈ 0.68 eV (검출 63 %) · 95 % 검출 ≈ 0.62 eV",
+      "개정_3_영향": "없음 — t = 0 쌍까지 센 개정 2 셈도 P–O 0/3 · Zr–S 1/3 (같은 판정)"
+    },
+    "기록만": "S–O 지속 · 순간 0 · Li 계면 넘음 블록→슬랩 영역 최대 8 · 12 · 11 · 슬랩→밖 최대 7 · 8 · 8 (판정 아님)",
+    "판정_문장": "카드 ⏩_2026_11_22_MD1_판정 의 허용_문장에서만",
+    "by": "claude · 2026-11-22 (대피 세션)"
+  },
+  "공유_보고_11_23판": {
+    "출처": "사용자 2026-11-22 '혁주 관련해서 이제 html 하나로 종결지어서 보낼 수 있는건지도 알려줘' → 답 '자료 받기 전 판으로는 보낼 수 있다' · 2026-11-23 새 날짜 판 만듦 (보낼지 · 언제는 사용자)",
+    "파일": "docs/collab/lzo_coated_nca_lpscl_report_2026_11_23.html",
+    "sha256": "43125d1cc9c98db2830ec3af246d2b33c425b4000bc2244b5f88129643b3cce4",
+    "바탕": "docs/collab/lzo_coated_nca_lpscl_progress_2026_11_17.html (고치지 않았다) — 1–3 절 · 그림 3 장 (바이트 같음) 그대로 · 4 절 MD-0 (통과) · 5 절 MD-1 (판정) 새로 · 요약 · 남은 일 · 한계 · 부록 A · B 갱신 · 차례 번호를 본문 절 번호와 맞춤",
+    "문장_출처": "MD-0: hyeokju_lzo_md0_runlog_2026_11_17.json MD0_판정_2026_11_20 (허용_서술 · 금지_서술) · MD-1: 카드 ⏩_개정_2 (모델 · 절차 · 보고량 · 게이트 · 관측창) · ⏩_개정_3 (t = 0 쌍) · ⏩_2026_11_22_MD1_판정 (허용_문장 · 기록만 · 금지_그대로) · 이 런로그 MD1_판정_2026_11_22 (시드별 · 무결성)",
+    "표기만_바꾼_것": "궤적 3e-09 s → 3 × 10⁻⁹ s · ν₀ 1e+13 → 10¹³ (값 같음)",
+    "점검": "기업 이름 0 · 점착 W 0 · '안정하다 · 반응하지 않는다' 단정 0 · 내부 앵커 죽은 것 0 · 태그 짝 맞음 · 1100 px · 400 px 화면 가로 넘침 없음 (넓은 표는 표 안에서만 넘김)",
+    "자료_받기_전_판": "실제 NCA 조성 · 화성 충전 용량 · 코팅 정보 · 요청 문서 4 쪽을 받으면 1 단계 확인과 3.8 · 4.4 V 의 y 대응을 더해 다시 낸다 (6 절)",
+    "by": "claude · 2026-11-23 (대피 세션)"
+  }
+}

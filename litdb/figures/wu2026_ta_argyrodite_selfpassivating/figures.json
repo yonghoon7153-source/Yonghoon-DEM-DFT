@@ -1,0 +1,753 @@
+{
+ "slug": "wu2026_ta_argyrodite_selfpassivating",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-19",
+ "sources": [
+  "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+  "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Design of solid-state electrolytes (SSEs) with high conductivity and self-passivating stability. a) Schematic of anionic and cationic frameworks in the crystal structure of Li7PS6 and enhanced Li-ion conductivity through strategic anion modulation and cation substitution. b) Schematic of self-passivating stabilization mechanism between SSE and electrodes. Due to potential diﬀerence, spontaneous hazardous electron transfer is triggered between SSE and electrodes, leading to the formation of solid-electrolyte interphase (SEI) and cathode-electrolyte interphase (CEI). If the in situ formed SEI and CEI can remain stable and are characterized by ionic conduction and electronic insulation, the detrimental interfacial reactions can be eﬀectively suppressed. Through such a self-sacriﬁcial passivation strategy, the practical stability window of the SSE can be extended. particles.[16–18]",
+   "bbox": [
+    46.7,
+    54.5,
+    548.9,
+    222.9
+   ],
+   "w": 2094,
+   "h": 703,
+   "dpi": 300,
+   "src": "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Composition screening of Li5.5P1−xTaxS4.5Cl0.75Br0.75. a) Band gaps of Li5.5PS4.5Cl0.75Br0.75 and LiyP0.9M0.1S4.5Cl0.75Br0.75 (M represents substituted metal element) electrolytes with diﬀerent cation substitution at P-site. Among these substitution elements with same content, Ta incorporation yields the largest band gap. b) XRD pattern and c) Raman shift of Li5.5P1−xTaxS4.5Cl0.75Br0.75 (x = 0, 0.02, 0.04, 0.06, 0.08, and 0.1). d) Ionic conductivity of Li5.5P1−xTaxS4.5Cl0.75Br0.75 at 30°C. e) Arrhenius plots of ionic conductivities measured ranging from 30°C to 80°C and f) corresponding activation energy of Li5.5P1−xTaxS4.5Cl0.75Br0.75.",
+   "bbox": [
+    46.7,
+    55.4,
+    543.3,
+    488.6
+   ],
+   "w": 2070,
+   "h": 1806,
+   "dpi": 300,
+   "src": "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Exploration of crystal structure and ionic transport in Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75. a) Rietveld reﬁnement pattern of Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75. b) Wavelet-transformed EXAFS contour plots of Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 at Ta L3-edge. k represents wavenumber, R + \u0002R denotes the radial distance, and \u0002R indicates the distance correction due to phase shifts. c) Fourier-transform (FT) EXAFS ﬁtting for the Ta L3-edge spectrum of Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75. Blue and red circles represent the magnitude (Mag.) and real (Re.) part of the FT experimental (Exp.) EXAFS, respectively. d) Ordered crystal structure of the Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 electrolyte. e) Sublattice extracted from d) to elucidate the Li+ migration path. f) Temperature dependence of the 7Li spin-lattice relaxation (SLR) rate of Li5.5PS4.5Cl0.75Br0.75 and Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75. g)",
+   "bbox": [
+    45.8,
+    54.0,
+    548.7,
+    612.6
+   ],
+   "w": 2097,
+   "h": 2328,
+   "dpi": 300,
+   "src": "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.805
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Interfacial stabilization between Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 and electrodes. a) CV curves for the ﬁrst three cycles of Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 with a scanning rate of 0.1 mV s−1. b) Schematic of the thermodynamic instability and c) the self-passivating stability after the generation of stable SEI and CEI layers at the electrolyte-electrode interfaces. d)–f) XPS spectra showing the binding energies of Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 at the pristine state and after cycling. d) S 2p region. e) P 2p region. f) Ta 4f region. g), h) ToF-SIMS characterizations revealing the component distributions in CEI and SEI layers. g) Depth proﬁles of S2−, PS3−, and TaO3−components over 500 s etching time and corresponding 3D distribution images. h) Depth proﬁles of LiS−, Li2P−, and Ta+ components over 500 s etching time and corresponding 3D distribution images.",
+   "bbox": [
+    45.8,
+    55.2,
+    548.0,
+    584.6
+   ],
+   "w": 2094,
+   "h": 2207,
+   "dpi": 300,
+   "src": "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Investigation of Li/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 interfacial stability. a) Galvanostatic Li+ plating/stripping proﬁles of the symmetric Li/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Li cell at 0.5 mA cm−2 and 0.5 mAh cm−2 (Inset is the enlarged galvanostatic Li+ plating/stripping proﬁles.) and b) corresponding 3D XR-CT reconstructed image after partial excision and enlarged 2D slices (bottom) of the dashed box area. c)–e) Nyquist plots and corresponding DRT analyses of Li/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Li cell over the 0–300 h cycle time range. f) 3D XR-CT reconstructed image of the symmetric Li/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Li cell after cycling for 300 h. The red areas at the bottom represent the Li anode and the yellow regions on top correspond to the SSE layer. g) Schematic of SEI generation at the Li/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 interface after cycling and COMSOL Multip",
+   "bbox": [
+    46.2,
+    53.1,
+    547.2,
+    490.6
+   ],
+   "w": 2088,
+   "h": 1824,
+   "dpi": 300,
+   "src": "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.645
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Electrochemical performances of all-solid-state batteries. a) Cycling performance of the NCM811/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Li battery at 0.2C and b) corresponding charge/discharge curves at diﬀerent cycles. c), d) Focused-ion beam processed depth morphology of the composite cathode pre- and post-cycling 200 cycles. e) Long-term electrochemical performance of the NCM811/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Li battery at 0.5C with a cathode loading of 20 mg cm−2 and N/P ratio of 2.6 and f) corresponding charge–discharge curves at diﬀerent cycles. g) Cycling performance of the NCM811/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Li battery at 0.5C with higher cathode loading of 30 mg cm−2 and N/P ratio of 1.8. h) Comparison of cathode loading and capacity decay rate per cycle in all-solid-state batteries between previous work and this study. i) Schematic of the NCM811/Li5.5P0.94Ta0.06S4.5Cl0",
+   "bbox": [
+    46.7,
+    55.0,
+    548.9,
+    533.2
+   ],
+   "w": 2093,
+   "h": 1993,
+   "dpi": 300,
+   "src": "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematic preparation of Li5.5PS4.5Cl1.5-xBrx electrolyte.",
+   "bbox": [
+    84.0,
+    84.7,
+    523.4,
+    237.1
+   ],
+   "w": 1831,
+   "h": 636,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) XRD pattern and (b) Raman shift of Li5.5PS4.5Cl1.5-xBrx electrolytes. (c) Schematic of crystal structure and atomic occupation of Li5.5PS4.5Cl1.5-xBrx electrolytes.",
+   "bbox": [
+    84.0,
+    76.8,
+    513.7,
+    413.0
+   ],
+   "w": 1791,
+   "h": 1403,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) Nyquist plots of Li5.5PS4.5Cl1.5-xBrx electrolytes. (b) Correlation between ionic conductivity and configurational entropy of Li5.5PS4.5Cl1.5-xBrx.",
+   "bbox": [
+    84.0,
+    69.7,
+    523.3,
+    251.5
+   ],
+   "w": 1831,
+   "h": 758,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. SEM image and corresponding EDS mappings of the optimal Li5.5PS4.5Cl0.75Br0.75 electrolyte.",
+   "bbox": [
+    84.0,
+    71.8,
+    486.5,
+    255.9
+   ],
+   "w": 1678,
+   "h": 768,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.182
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. DFT-calculated energy band structures of LiyP0.9M0.1S4.5Cl0.75Br0.75 (where M denotes the substituted metal element) electrolytes.",
+   "bbox": [
+    84.0,
+    71.5,
+    513.7,
+    397.8
+   ],
+   "w": 1791,
+   "h": 1361,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.54
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Nyquist plots of the Li5.5P1-xTaxS4.5Cl0.75Br0.75 electrolytes.",
+   "bbox": [
+    84.0,
+    64.1,
+    509.5,
+    251.5
+   ],
+   "w": 1773,
+   "h": 781,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (a-f) Nyquist plots of the Li5.5P1-xTaxS4.5Cl0.75Br0.75 electrolytes with x values of 0 (a), 0.02 (b), 0.04 (c), 0.06 (d), 0.08 (e) and 0.1 (f) at the temperatures ranging from 30 oC to 80 oC.",
+   "bbox": [
+    84.0,
+    77.9,
+    513.7,
+    397.8
+   ],
+   "w": 1791,
+   "h": 1334,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Rietveld refinement pattern of the Li5.5PS4.5Cl0.75Br0.75 electrolyte.",
+   "bbox": [
+    84.0,
+    72.5,
+    475.6,
+    273.4
+   ],
+   "w": 1632,
+   "h": 838,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 13,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. (a) Normalized Ta L3-edge XANES spectra of Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 and reference samples (Ta foil and TaCl5). The inset is an enlarged view of the prepeak. (b) FT of the EXAFS spectra in R-space.",
+   "bbox": [
+    84.0,
+    76.8,
+    504.2,
+    251.5
+   ],
+   "w": 1751,
+   "h": 729,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 14,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Electrostatic potential between P and S in Li5.5PS4.5Cl0.75Br0.75 electrolyte, and between Ta and S in Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 electrolyte.",
+   "bbox": [
+    84.0,
+    78.2,
+    513.7,
+    211.7
+   ],
+   "w": 1791,
+   "h": 557,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.343
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 15,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. COHP analysis of P-S (a), Ta-S (b), Li-S (P) (c), and Li-S (Ta) (d) bonds.",
+   "bbox": [
+    84.0,
+    68.2,
+    480.0,
+    352.8
+   ],
+   "w": 1650,
+   "h": 1186,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 16,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Crystal structures of (a) Li5.5PS4.5Cl0.75Br0.75 and (b) Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 optimized by DFT calculations. (c) Comparison of unit-cell volume between Li5.5PS4.5Cl0.75Br0.75 and Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75.",
+   "bbox": [
+    78.8,
+    69.7,
+    517.3,
+    217.8
+   ],
+   "w": 1828,
+   "h": 618,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.743
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 17,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. (a) Direct-current polarization curves of Li5.5PS4.5Cl0.75Br0.75 and Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75. (b) Comparison of band gap and electronic conductivity between Li5.5PS4.5Cl0.75Br0.75 and Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75.",
+   "bbox": [
+    84.0,
+    63.9,
+    526.2,
+    240.3
+   ],
+   "w": 1843,
+   "h": 736,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.797
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 18,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. XPS spectra showing the binding energies of Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 at the pristine state and after cycling. (a) Cl 2p region. (b) Br 3d region.",
+   "bbox": [
+    84.0,
+    66.1,
+    513.7,
+    348.0
+   ],
+   "w": 1791,
+   "h": 1175,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 21,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. (a) Galvanostatic Li+ plating/stripping profiles of the symmetric Li/Li5.5PS4.5Cl0.75Br0.75/Li cell at 0.5 mA cm-2 and 0.5 mAh cm-2. (b-d) Nyquist plots and corresponding DRT analyses of Li/Li5.5PS4.5Cl0.75Br0.75/Li cell over the 0-250h cycle time range.",
+   "bbox": [
+    84.0,
+    76.9,
+    514.0,
+    318.8
+   ],
+   "w": 1792,
+   "h": 1009,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.725
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 22,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Critical current density (CCD) of the Li/Li5.5PS4.5Cl0.75Br0.75/Li cell. The charge/discharge time at each current density was set to 1h.",
+   "bbox": [
+    84.0,
+    65.5,
+    513.7,
+    295.2
+   ],
+   "w": 1791,
+   "h": 959,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 23,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. 3D XR-CT reconstructed images of the symmetric Li/Li5.5PS4.5Cl0.75Br0.75/Li cell after cycling.",
+   "bbox": [
+    84.0,
+    85.1,
+    488.2,
+    220.5
+   ],
+   "w": 1685,
+   "h": 565,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.393
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 24,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Cross-sectional SEM images and corresponding EDS images of Li-Li5.5PS4.5Cl0.75Br0.75 at the pristine state and after cycling.",
+   "bbox": [
+    83.9,
+    70.1,
+    513.7,
+    289.8
+   ],
+   "w": 1792,
+   "h": 916,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.184
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 26,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. COMSOL Multiphysics simulation of electric potential and Li concentration at the Li/Li5.5PS4.5Cl0.75Br0.75 interface over time evolution in working batteries.",
+   "bbox": [
+    84.0,
+    76.7,
+    513.7,
+    397.8
+   ],
+   "w": 1791,
+   "h": 1339,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.669
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 27,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. (a) Rate performance and (b) corresponding charge/discharge curves of the NCM811/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Li battery at various rates ranging from 0.1 to 2.0C.",
+   "bbox": [
+    84.0,
+    79.9,
+    520.7,
+    251.5
+   ],
+   "w": 1820,
+   "h": 716,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.804
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 28,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Schematic diagram of dry film preparation process.",
+   "bbox": [
+    84.0,
+    73.5,
+    486.6,
+    229.0
+   ],
+   "w": 1678,
+   "h": 649,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.781
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 29,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Optical and corresponding SEM images of the self-supporting cathode, electrolyte, and anode films prepared via dry-process technology.",
+   "bbox": [
+    84.0,
+    80.5,
+    513.7,
+    402.0
+   ],
+   "w": 1791,
+   "h": 1341,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.506
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 30,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Cross-sectional SEM image and corresponding EDS mappings of the NCM811/Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75/Graphite pouch cell.",
+   "bbox": [
+    84.0,
+    81.5,
+    512.1,
+    312.5
+   ],
+   "w": 1784,
+   "h": 964,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.351
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 31,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Rietveld refinement data of the Li5.5PS4.5Cl1.5 electrolyte. Atom Fractional Coordinates Wyckoff site Occ. Uiso (Å2) x y z Li1 0.18265 0.18265 -0.01383 48h 0.3769 0.01453 Li2 0.02561 0.25 0.25 24g 0.17 0.0308 P 0.5 0.5 0.5 4b 1 0.02712 S1 0.62381 0.62381 0.62381 16e 1 0.05516 S2 0 0 0 4a 0.2611 0.05451 S3 0.25 0.25 0.25 4d 0.2486 0.03349 Cl1 0 0 0 4a 0.7612 0.01952 Cl2 0.25 0.25 0.25 4d 0.7503 0.01058",
+   "bbox": [
+    63.7,
+    79.8,
+    534.1,
+    222.3
+   ],
+   "w": 1961,
+   "h": 595,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 31,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Rietveld refinement data of the Li5.5PS4.5Cl1.25Br0.25 electrolyte. Atom Fractional Coordinates Wyckoff site Occ. Uiso (Å2) x y z Li1 0.13725 0.13725 0.00485 48h 0.375 0.04214 Li2 -0.01505 0.25 0.25 24g 0.166 0.01523 P 0.5 0.5 0.5 4b 1 0.03156 S1 0.62618 0.62618 0.62618 16e 1 0.05784 S2 0 0 0 4a 0.2349 0.02029 S3 0.25 0.25 0.25 4d 0.1964 0.00352 Cl1 0 0 0 4a 0.5381 0.0142 Cl2 0.25 0.25 0.25 4d 0.723 0.01394 Br1 0 0 0 4a 0.2514 0.00895 Br2 0.25 0.25 0.25 4d 0.0756 0.00295",
+   "bbox": [
+    63.7,
+    226.3,
+    534.1,
+    392.4
+   ],
+   "w": 1961,
+   "h": 693,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 31,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Rietveld refinement data of the Li5.5PS4.5Cl1.0Br0.5 electrolyte. Atom Fractional Coordinates Wyckoff site Occ. Uiso (Å2) x y z Li1 0.17871 0.17871 -0.00008 48h 0.38 0.08747 Li2 -0.02495 0.25 0.25 24g 0.1648 0.04797 P 0.5 0.5 0.5 4b 1 0.03556 S1 0.62365 0.62365 0.62365 16e 1 0.05435 S2 0 0 0 4a 0.3106 0.03827 S3 0.25 0.25 0.25 4d 0.1896 0.05339 Cl1 0 0 0 4a 0.4728 0.04798 Cl2 0.25 0.25 0.25 4d 0.5668 0.03386 Br1 0 0 0 4a 0.3171 0.04725 Br2 0.25 0.25 0.25 4d 0.2029 0.01666",
+   "bbox": [
+    63.7,
+    396.3,
+    534.1,
+    562.3
+   ],
+   "w": 1961,
+   "h": 693,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 31,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Rietveld refinement data of the Li5.5PS4.5Cl0.75Br0.75 electrolyte. Atom Fractional Coordinates Wyckoff site Occ. Uiso (Å2) x y z Li1 0.13011 0.13011 -0.00784 48h 0.48 1.37502 Li2 0.02 0.25 0.25 24g 0.018 0.01 P 0.5 0.5 0.5 4b 1 0.09238 S1 0.62713 0.62713 0.62713 16e 1 0.09702 S2 0 0 0 4a 0.21 1.72247 S3 0.25 0.25 0.25 4d 0.39 0.00448 Cl1 0 0 0 4a 0.33 0.03126 Cl2 0.25 0.25 0.25 4d 0.46 0.10045 Br1 0 0 0 4a 0.54 0.04843 Br2 0.25 0.25 0.25 4d 0.25 0.05282",
+   "bbox": [
+    63.7,
+    566.3,
+    534.1,
+    732.3
+   ],
+   "w": 1961,
+   "h": 693,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 32,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Rietveld refinement data of the Li5.5PS4.5Cl0.25Br1.25 electrolyte. Atom Fractional Coordinates Wyckoff site Occ. Uiso (Å2) x y z Li1 0.18637 0.18637 -0.00358 48h 0.3537 0.08137 Li2 -0.02353 0.25 0.25 24g 0.2173 0.00438 P 0.5 0.5 0.5 4b 1 0.04167 S1 0.61945 0.61945 0.61945 16e 1 0.05582 S2 0 0 0 4a 0.123 0.02096 S3 0.25 0.25 0.25 4d 0.4389 0.05545 Cl1 0 0 0 4a 0.0239 0.00762 Cl2 0.25 0.25 0.25 4d 0.2484 0.01955 Br1 0 0 0 4a 0.851 0.04809 Br2 0.25 0.25 0.25 4d 0.3441 0.02753",
+   "bbox": [
+    63.7,
+    221.3,
+    534.1,
+    387.4
+   ],
+   "w": 1961,
+   "h": 693,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 32,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Rietveld refinement data of the Li5.5PS4.5Br1.5 electrolyte. Atom Fractional Coordinates Wyckoff site Occ. Uiso (Å2) x y z Li1 0.17156 0.17156 -0.00024 48h 0.3612 0.04009 Li2 0.02 0.25 0.25 24g 0.1563 0.03488 P 0.5 0.5 0.5 4b 1 0.05253 S1 0.62093 0.62093 0.62093 16e 1 0.06385 S2 0 0 0 4a 0.2719 0.01774 S3 0.25 0.25 0.25 4d 0.2704 0.01909 Br1 0 0 0 4a 0.7368 0.04115 Br2 0.25 0.25 0.25 4d 0.7249 0.06381",
+   "bbox": [
+    63.7,
+    391.3,
+    534.1,
+    533.8
+   ],
+   "w": 1961,
+   "h": 595,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 32,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Calculated configurational entropy for the different Li5.5PS4.5Cl1.5-xBrx samples. Material ΔSconf / R Li5.5PS4.5Cl1.5 1.12 Li5.5PS4.5Cl1.25Br0.25 1.77 Li5.5PS4.5Cl1.0Br0.5 2.04 Li5.5PS4.5Cl0.75Br0.75 2.08 Li5.5PS4.5Cl0.5Br1.0 1.87 Li5.5PS4.5Cl0.25Br1.25 1.56 Li5.5PS4.5Br1.5 1.17",
+   "bbox": [
+    85.2,
+    537.8,
+    510.0,
+    656.8
+   ],
+   "w": 1771,
+   "h": 497,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 32,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Rietveld refinement data of the Li5.5P0.94Ta0.06S4.5Cl0.75Br0.75 electrolyte. Atom Fractional coordinates Wyckoff site Occ. Uiso (Å2) x y z Li1 0.2047 0.2047 -0.00223 48h 0.47 0.12 Li2 0.02 0.25 0.25 24g 0.026 0.02 P 0.5 0.5 0.5 4b 0.94 0.05 Ta 0.5 0.5 0.5 4b 0.06 0.01 S1 0.62347 0.62347 0.62347 16e 1 0.04465",
+   "bbox": [
+    63.7,
+    660.8,
+    534.1,
+    768.1
+   ],
+   "w": 1961,
+   "h": 448,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 33,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Performance comparison between the previous works and this study. Specific capacity (mAh g-1)",
+   "bbox": [
+    9.3,
+    259.5,
+    585.8,
+    767.6
+   ],
+   "w": 2403,
+   "h": 2118,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 35,
+   "file": "tab_S12.png",
+   "caption": "Table S12. Coefficients of correlation equations used in COMSOL simulations. Symbol Real value Interfacial mobility Li 2.5×10-6m3J-1s-1",
+   "bbox": [
+    90.4,
+    39.2,
+    450.0,
+    412.8
+   ],
+   "w": 1499,
+   "h": 1558,
+   "dpi": 300,
+   "src": "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
+   "blank": 0.945
+  }
+ ]
+}

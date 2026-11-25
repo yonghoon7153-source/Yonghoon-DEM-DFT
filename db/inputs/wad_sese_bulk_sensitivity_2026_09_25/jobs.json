@@ -1,0 +1,180 @@
+{
+ "schema": "qe_input_set/sensitivity",
+ "date": "2026-09-25",
+ "decisions": [
+  "D-2026-09-25-wad-reference-state-policy",
+  "D-2026-09-23-wad-sese-alarm-band-v2"
+ ],
+ "what": "Codex BX Q5 권고 3 — 52 원자 벌크의 **입방 고정 셀(comp1 V0)** 과 **면내 고정·c 이완 셀(B′ 최종)** 에서 cutoff·k 를 바꿔 (a) 응력 성분 (b) 두 참조의 에너지 차 ΔE(cubic − epi) 가 얼마나 흔들리는지 잰다. 전부 PBE(D3 없음) · SCF 단일점 · 기하 고정.",
+ "baselines_already_run": {
+  "cubic_e52_k3": {
+   "job": "04_bulk_relax_pbe 첫 SCF (= 01 E_pbe)",
+   "E_Ry": -1022.94625093,
+   "stress_kbar": {
+    "xx": 12.98,
+    "yy": -6.54,
+    "zz": -6.61,
+    "yz": 10.8,
+    "P": -0.06
+   }
+  },
+  "epi_e52_k3": {
+   "job": "05_bulk_vcrelax_epi_pbe 최종 SCF",
+   "E_Ry": -1022.96421634,
+   "stress_kbar": {
+    "xx": 13.85,
+    "yy": -3.57,
+    "zz": -0.07,
+    "yz": -0.15,
+    "P": 3.4
+   }
+  }
+ },
+ "derivation": {
+  "from": "db/inputs/wad_sese_control_4L_2026_09_24/01_bulk_scf/pw.in",
+  "from_sha256": "6c0432e684608146d47b4664c406666baad2e7e651b83d45ae0eecbddf76ff43",
+  "edits": [
+   "prefix",
+   "vdw_corr grimme-d3(+dftd3_*) → none (슬랩 이완·B·B′ 와 같은 PBE)",
+   "ecutwfc/ecutrho 52/520 → 70/700 (해당 잡)",
+   "K_POINTS 3 3 3 → 4 4 4 (해당 잡)",
+   "epi 잡: CELL_PARAMETERS·ATOMIC_POSITIONS 를 db/raw/wad_sese_4L_2026_09_25/bulk_vcrelax_epi_final_2026_09_25.txt (05 최종 · 소수 6자리 출력) 로 교체"
+  ],
+  "⚠_6자리": "epi 좌표·셀은 소수 6자리 출력에서 왔다 — 07_epi_e52_k3 가 **내장 대조**다: 05 최종 SCF −1022.96421634 Ry 와 |차| ≤ 1e-5 Ry 여야 좌표 이식이 맞다. 넘으면 epi 넷을 쓰지 않는다."
+ },
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF"
+  },
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655"
+  },
+  "pseudo_dir_note": "pseudo_dir 는 러너가 실행 사본에서 PSEUDO_DIR 로 바꾼다 (원본 해시 불변)"
+ },
+ "reading_rules_diagnostic_set_before_running": {
+  "⚠": "결과(경보 · B · B′)를 본 뒤 정하는 **진단 규칙**이다 (Codex BX: 그렇게 명시한다). 합격선이 아니고 W 전체의 수렴 인증도 아니다.",
+  "R1_전단_실재": "cubic 셀 σ_yz 가 네 설정(52k3 · 52k4 · 70k3 · 70k4)에서 부호가 같고 |σ_yz| 최소 ≥ 5 kbar → '전단 성분은 기저·k 의 수치 아티팩트가 아니다' 까지 쓴다 (원인 분류 아님).",
+  "R2_참조차_안정성": "ΔW′(설정) = 4.312 × [E_cubic − E_epi](설정) J/m². 네 설정의 max − min ≤ 0.02 J/m² (≈ 1.2 meV/atom) → '참조 변경 효과 0.0775 는 수치 설정에 강건'. > 0.02 → 그 스프레드를 W 계열 값의 수치 불확실도로 명시한다.",
+  "R3_정보": "E(70,k4) − E(52,k3) [meV/atom] · P(70) − P(52) 같은 셀 [kbar] (Pulay 어림) — 문턱 없음 · 기록만.",
+  "⛔": "슬랩(110/98 원자)은 52 Ry/k 3×3×1 그대로다 — 이 시험이 슬랩 W 의 수렴을 인증하지 않는다 (Codex BX Q5)."
+ },
+ "jobs": [
+  {
+   "dir": "06_cubic_e52_k4",
+   "kind": "bulk",
+   "cell": "cubic",
+   "calc": "scf",
+   "nat": 52,
+   "ecutwfc": 52,
+   "ecutrho": 520,
+   "kpts": [
+    4,
+    4,
+    4
+   ],
+   "pw_in_sha256": "31abb3566ecb7552781d8ae441003958c37ae91eb35ed4c25de1eecfb261c4cb"
+  },
+  {
+   "dir": "06_cubic_e70_k3",
+   "kind": "bulk",
+   "cell": "cubic",
+   "calc": "scf",
+   "nat": 52,
+   "ecutwfc": 70,
+   "ecutrho": 700,
+   "kpts": [
+    3,
+    3,
+    3
+   ],
+   "pw_in_sha256": "1cd8b36d9cb926e748c5b436076dc36eaa828d1d75042d38fb748cc7f1590eaf"
+  },
+  {
+   "dir": "06_cubic_e70_k4",
+   "kind": "bulk",
+   "cell": "cubic",
+   "calc": "scf",
+   "nat": 52,
+   "ecutwfc": 70,
+   "ecutrho": 700,
+   "kpts": [
+    4,
+    4,
+    4
+   ],
+   "pw_in_sha256": "1c814b8df97e79defb939d1f0a3ec3662e056d547a69f77aed9759e321270239"
+  },
+  {
+   "dir": "07_epi_e52_k3",
+   "kind": "bulk",
+   "cell": "epi",
+   "calc": "scf",
+   "nat": 52,
+   "ecutwfc": 52,
+   "ecutrho": 520,
+   "kpts": [
+    3,
+    3,
+    3
+   ],
+   "pw_in_sha256": "88a780222d98591934cb8b13bc1e74f9e7350a75a39b02052b47236ecd9b797e"
+  },
+  {
+   "dir": "07_epi_e52_k4",
+   "kind": "bulk",
+   "cell": "epi",
+   "calc": "scf",
+   "nat": 52,
+   "ecutwfc": 52,
+   "ecutrho": 520,
+   "kpts": [
+    4,
+    4,
+    4
+   ],
+   "pw_in_sha256": "76dd720a881acd885e12ae157e1c3073a24d90efa44a104cb6789e3010d6e36d"
+  },
+  {
+   "dir": "07_epi_e70_k3",
+   "kind": "bulk",
+   "cell": "epi",
+   "calc": "scf",
+   "nat": 52,
+   "ecutwfc": 70,
+   "ecutrho": 700,
+   "kpts": [
+    3,
+    3,
+    3
+   ],
+   "pw_in_sha256": "8540ed48c502db936b8e87a2db3af71a4250f0ba3597ae9c8bc299213d50fe45"
+  },
+  {
+   "dir": "07_epi_e70_k4",
+   "kind": "bulk",
+   "cell": "epi",
+   "calc": "scf",
+   "nat": 52,
+   "ecutwfc": 70,
+   "ecutrho": 700,
+   "kpts": [
+    4,
+    4,
+    4
+   ],
+   "pw_in_sha256": "7f593042367d765ed3a1e28ac82745314a6b91a3a7bd52892e196ec312abd8cd"
+  }
+ ],
+ "w_conversion": {
+  "n_bulk_cells": 4,
+  "area_A2": 101.1049,
+  "from": "db/inputs/wad_sese_control_4L_2026_09_24 (02_s_outer_scf 셀 · n = (P_s + P_li)/4)",
+  "note": "ΔW′ = n · ΔE[Ry] · Ry/(2A) — 4L SE|SE 식과 같은 계수"
+ }
+}

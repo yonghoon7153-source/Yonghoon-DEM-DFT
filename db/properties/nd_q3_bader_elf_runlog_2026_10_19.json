@@ -1,0 +1,169 @@
+{
+ "schema": "runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-19",
+ "track": "CEI/Nd — 1저자 = 실험 쪽 · 사용자 (계산 담당) 결정 · 1저자 통지는 사용자를 통해",
+ "decision": "D-2026-10-19-nd-q23-ppswap-structure (active · 사용자 10-19)",
+ "card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json §2 Q2 · Q3 · G5 · G6",
+ "results_seen": false,
+ "구조": "6 월 최종 Nd₂O₃@LPSCl1.6 (Nd@Li · Li48Nd2P10O3S41Cl16 · 120 원자) 의 9 월 새 PP (Nd.pbe-spdn-kjpaw_psl.1.0.0 · 4f-in-core) vc-relax 판 (nd_ppswap_vcrelax_result_2026_09_18.json · 부피 −0.15 % · 모양 유지) — gabia /data/work/runs/nd_ppswap_2026_09_16",
+ "gabia_점검_2026_10_19": {
+  "출처": "사용자 붙여넣기 10-19 (gabia 읽기 블록)",
+  "런_폴더": "kprobe_k331/ (4.4 G · kprobe.in · .out · tmp_kprobe/kprobe_k331.save) · lc_nd_doped_DFTrela/ (16 G · 01_vcrelax · 02_scf · 04_nscf_dos …) · lobster_frozen4f/ (18 G)",
+  "k331_SCF_설정": "prefix kprobe_k331 · ecut 70/560 · smearing mv · kjpaw_psl 세트 (Li sl · P n · S nl · Cl nl · O n 0.1 · Nd spdn) = 호스트 AE Bader 표 (bader_ae_modelc_LPSCl16.csv) 와 같은 PP · ecut",
+  "bader": "/data/apps/bader/bader 있음",
+  "NC_Nd_PP": "없음 — gabia 의 Nd PP 는 PAW 둘뿐 (Nd.pbe-spdn-kjpaw_psl.1.0.0 4f-in-core · Nd.paw.z_14.atompaw.wentzcovitch 4f-in-valence) ⇒ ELF NC 규약 (run_lpsocl_elf_gabia.sh · ONCV 80/320) 은 4f-in-core NC Nd (예: PseudoDojo nc-sr-04-3plus) 를 먼저 구해야 한다",
+  "GPU": "37,250 / 49,140 MiB · 100 % (tmux li3nd_r2 · el_mc2x_1001 등) — 새 GPU pw.x 는 지금 못 띄운다"
+ },
+ "Bader_계획_결과_전": {
+  "방법": "기존 AE Bader 규약 그대로 — k331 SCF save 를 읽기만 · pp.x plot_num=17 (AE 가전자) · bader (-p all_atom 안 씀 · 전하 같음) · net = ZVAL − N_bader · ZVAL 은 UPF z_valence 에서 (표와 다르면 멈춤 · Nd 11)",
+  "다른_점": "occupations smearing mv · k 3 3 1 (호스트 표는 fixed · k444) — 절연체라 Bader 영향 작다고 본다 · 기록에 남긴다",
+  "자리_분류_결과_전": "거리 하나 — R_PS 2.4 · R_PO 1.9 · R_NdX 3.3 · R_NdO 2.9 Å (6 월 실측 Nd–S 2.62–3.18 · Nd–O 2.48 · 2.61). 6 월 구조로 미리 본 개수 (전하 아님): S_PS4 31 · S_PS4_nearNd 6 · S_free 2 · S_free_nearNd 2 · O_P 1 · O_P_nearNd 2 · P_S4 8 · P_withO 2 · Cl 14 · Cl_nearNd 2 · Li 48 · Nd 2 · d_Nd 3.0–3.6 Å 사이 원자 0 (문턱이 애매하지 않다)",
+  "비교": "같은 계산 안 — Nd 이웃 S 대 Nd 없는 S (1저자 1 · 2 번: 전자가 음이온 쪽 · 밀도) · 원소 평균 — 호스트 modelc (같은 규약 · 원소 평균뿐) · 자리별 호스트 비교는 없다",
+  "도구": "tools/electronic/bader_summary_zval.py (확장 · selftest 17/17 · 깨기 9/9 빨강 + 셀 밖 좌표 시험 보탬) · tools/electronic/run_nd_bader_from_scf_gabia.sh (계보 = vc-relax 'Begin final coordinates' 짝 · 시험 트리 8 가지 기대값)",
+  "CPU": "pp.x · bader 는 CPU 후처리 — SCF · relax · nscf 실행이 아니다 (결정 enforcement ③) · 8 랭크 · OMP 1"
+ },
+ "ELF_계획": "NC 규약 — 새 SCF (GPU) 가 필요하다: ① 4f-in-core NC Nd 확보 (PseudoDojo 3plus · gabia 에 없음) ② GPU 가 비면 같은 vc-relax 기하로 ONCV 80/320 SCF ③ 호스트 modelc ELF (modelc_elf_bonds.csv · 같은 NC 규약) 와 결합 ELF 비교 — 사용자 결정 대기 (Nd NC PP 선택은 새 PP 라 결합 묘사가 PAW 와 다를 수 있다)",
+ "Q2_계획": "분해상 기저 (UMA/MP hull · G5) → 같은 설정 (kjpaw 70/560) 의 상 에너지 (GPU) → dft_decomp_check.py — Bader 뒤에 정한다",
+ "첫_실행_2026_10_19_1434": "gabia 14:34:40 — SCF ✓ (! −6399.21429237 Ry · save ✓) · **계보에서 멈춤 (종료 4)**: 9 월 vc-relax 출력의 최종 좌표가 Å 였는데 러너 첫 판 (212c94a9) 은 crystal 만 받아 Å 값을 분율로 읽었다 (분율 차 0.496 — 계산 오류가 아니라 러너 빈틈 · 가드는 제대로 멈췄다) → Å · Bohr 를 같은 블록의 최종 셀로 분율로 바꿔 대조하게 고침 · 시험 crystal · Å · Bohr ✓ · Å 불일치 · alat · crystal 불일치 거부 · 전체 실행 해시 OK",
+ "ELF_사용자_결정_2026_10_19": "사용자 '권고대로 해' — NC 규약: 4f-in-core NC Nd (PseudoDojo 3plus) 확보 → GPU 가 비면 같은 vc-relax 기하로 ONCV SCF → pp.x ELF → 호스트 modelc ELF 표와 비교",
+ "ELF_NC_Nd_PP_준비_2026_10_19": {
+  "출처": "PseudoDojo GitHub ONCVPSP-PBE-PDv0.4/Nd/Nd3+_f-in-core.{in,psp8,djrepo,out} — 4f³ 를 core 에 (nc 10 · nv 4) · 가전자 5s²5p⁶5d¹6s² = 11 (지금 PAW Nd.pbe-spdn-kjpaw_psl 과 같은 가전자) · ONCVPSP 3.2.3.1 · md5 474ce0fc5175ff9ddf2621f906febf65 (= djrepo) · sha256 c9c335c4…014c · 권장 컷 normal 24 Ha · high 28 Ha (ELF 규약 80 Ry 면 충분) · 표준 표 밖 (논문: f 가 물리에 중요하지 않을 때만)",
+  "형식_문제": "psp8 만 있다 (UPF 404) · QE 7.4 가 psp8 을 읽는다는 근거 못 찾음 ⇒ ONCVPSP 를 빌드해 같은 입력으로 psfile 'both' (psp8 + UPF 한 실행) → psp8 을 배포본과 열마다 대조",
+  "판_문제": "GitHub oncvpsp 에 3.2.3 소스가 없다 (태그 4.0.1 · master 에 old_optimize 없음) — 4.0.1 에는 3.3.0 optimize 수정 · 4.0.1 modcore 3·4 차 도함수 잡음 제거가 들어 있어 숫자가 조금 다를 수 있다 ⇒ 러너는 재고 기록만 · UPF 설치는 차이를 보고 정한다 (필요하면 같은 실행의 psp8+UPF 짝으로 psp8→UPF 변환기를 검증해 배포본에 쓴다)",
+  "도구": "tools/electronic/oncv_regen_check.py (psp8 열마다 상대 대조 · 추출 · psfile · md5 · selftest 12/12 · 깨기 4/5 빨강 + 1 등가 변이 (mmax 헤더 — 모양 대조가 같은 곳을 잡는다)) · 실물: 배포 psp8 대 .out 안의 psp8 = 상대 0 · tools/electronic/make_nd3plus_nc_upf_gabia.sh (가짜 트리 시험: 같음 0 · 2 % 다름 기록 0 · md5·받기 실패 3 · cmake·gfortran·LAPACK 없음 5 · ONCVPSP ERROR 6)",
+  "CPU": "ONCVPSP 빌드·원자 계산 (수 초) — QE 계산 아님 (준비)"
+ },
+ "재실행_2026_10_19_1456": {
+  "시작": "gabia 14:56:34 — worktree /data/work/wt_ndq3_1019c · HEAD 58dd54f13 (Bader 경로 파일 = 0bca4188 과 같다 · 58dd54f1 은 NC 준비 도구만 더함) · DRY_RUN 통과 뒤 tmux ndq3bader 시작 (pp.x plot_num 17 → bader → 요약)",
+  "계보": "✓ 셀 0.0e+00 Å · 좌표 0.0e+00 · 120 원자 — 차가 정확히 0 = SCF 입력 (kprobe.in) 이 vc-relax 최종 Å 좌표·셀을 그대로 옮긴 것",
+  "실행파일": "pp.x · bader · libmpi /lib/x86_64-linux-gnu/libmpi.so.40 → /usr/bin/mpirun · np 8 · OMP 1 (CPU 후처리)",
+  "고친_판_재확인_2026_10_19": "가짜 트리 (Å 좌표 vc-relax 출력 + crystal SCF 입력 · 13 원자): 옛 판 212c94a9 = gabia 와 같은 메시지로 멈춤 (분율 차 4.77e-01) · 새 판 = 통과 (5.2e-11) · 원자 하나 0.05 Å 옮김 = 잡음 (3.6e-03)",
+  "회수_계획": "■ 끝 확인 → OUT SHA256SUMS 대조 → cube (nd_rho_ae.cube) · filplot (nd_ae) 빼고 db/raw/nd_q3_bader_2026_10_19/ 로 → 복사본 대조 (--ignore-missing) → 사용자 commit·push (gabia 자격 증명)"
+ },
+ "ELF_NC_Nd_PP_변환_2026_10_19": {
+  "gabia_첫_시도": "14:52:54 ⛔ 빌드 실패 (끝 코드 6) — 'oncvpsp 에 CMakeLists.txt 가 없다'. 58dd54f1 판이 CMake 를 가정했다 (내 실수 · 4.0.1 은 make.inc 빌드) · 그 앞 ① 받기·md5 · ② 도구 (gfortran · cmake · LAPACK) 는 통과",
+  "4.0.1_재생성_결과": "클라우드에서 make.inc 빌드 (gfortran 13.3 · libxc 끔) 로 같은 입력을 돌림 → **다른 pseudo**: r_core 2.10908/1.91712/1.91712/2.52232 → 2.11163/1.90745/1.90745/2.51166 · ekb 상대 최대 0.83 (l=3) · 투영자 0.2–1.2 · l=0 'WARNING - GHOST(+)' (3.2.3.1 출력에는 없음) ⇒ 4.0.1 UPF 는 PseudoDojo 가 검증한 pseudo 가 아니다 — 안 쓴다",
+  "바꾼_경로": "배포본 psp8 을 그대로 UPF 로 옮긴다 — oncv_regen_check.py --to_upf (ONCVPSP 4.0.1 upfout.f90 의 단위·격자 규약: LOCAL 2·v · BETA 그대로 · DIJ 2·ekb · NLCC core/4π · RHOATOM r²·ρ · 보간 없음) · runlog 'ELF_계획' 의 대비책 (같은 실행 짝으로 변환기 검증 → 배포본에) 그대로",
+  "변환기_검증_같은_실행_짝": "4.0.1 실행이 쓴 psp8 → --to_upf 대 같은 실행이 쓴 UPF (--compare_upf): R · RAB · NLCC · RHOATOM · DIJ 상대 0 · LOCAL 5e-12 · BETA ≤7e-11 (psp8 격자 600 점) · 따로 적은 둘: ① 투영자 꼬리 — 4.0.1 psp8 이 rc+2·drl 뒤를 '0.' 으로 쓴 1–3 점 (최대 상대 1.0e-4 · l=3) ② psp8 격자 밖 (원본 UPF 17.55 bohr) — 국소 퍼텐셜이 쿨롱과 최대 8.8e-5 Ry · 시작 밀도 0.27 e",
+  "QE_대조_샌드박스": "QE 6.7 (Ubuntu 패키지 · 클라우드 CPU · 사용자 기계 run 아님 · md5 fortify 버그 우회 심) · fcc Nd 1 원자 60/240 Ry k666: 원본 UPF − 변환본 = −4.56 mRy · −4.3 meV (E_F) · −1.53 kbar → 원본의 r ≥ 6 bohr 국소 퍼텐셜만 쿨롱으로 바꾸면 −0.05 mRy · −0.1 meV · −0.05 kbar (차의 99 % 가 그 꼬리 = QE 가 10 bohr 까지 적분하는 G=0 상수항) · 밀도 최대 차 2.0e-5 · **ELF 최대 차 1.7e-4 · 평균 1.7e-5** (값 범위 0.007–0.868)",
+  "배포본의_다른_점": "3.2.3.1 psp8 은 투영자 잔물결을 rc 뒤 ~0.1 bohr 까지 그대로 쓴다 (l=3 최대 상대 1.7e-3) — 버리지 않고 cutoff_radius_index 를 268 로 늘려 담았다 (ABINIT 가 검증에 쓴 값 그대로)",
+  "산출": "db/inputs/nd_q3_elf_nc_2026_10_19/pseudo/Nd3plus_f-in-core.dojo_psp8_conv.upf (sha256 56b2e141cc9726c8b544bfd1fe87e5a2098ac8d8117e4f2c23b280da85d00654 · 격자 600 · 투영자 7 · z 11 · wfc 0) · 원본 pseudo_src/ (psp8 md5 474ce0fc… = djrepo) · 검증 원자료 db/raw/nd_nc_pp_conversion_2026_10_19/",
+  "쓰는_범위": "밀도에서 나오는 양 (ELF · 밀도 그림) 만 — 절대 에너지는 같은 pseudo 의 ONCVPSP UPF 와 수 mRy 다르다 → 에너지 비교 (Q2 분해 등) 에 섞지 않는다 (Q2 는 PAW frozen-4f 세트)",
+  "도구": "oncv_regen_check.py selftest 30/30 (변환·UPF 대조 18 · 음성 14) · 일부러 깨기 6/6 빨강 (vloc ×1 · nlcc /2π · 잔물결 cutoff · 꼬리 창 40 — 처음엔 tail_tol 이 대신 막아 창 크기를 못 쟀다 → 창 밖 작은 잔물결 시험 보탬 · PP_INFO 거르개 · dij ×1) · make_nd3plus_nc_upf_gabia.sh 고침 (기본 = 원본에서 다시 변환해 저장소 UPF 와 sha256 대조 · REGEN=1 = make.inc 빌드로 짝 검증 재현) · 로컬 시험 양성 2 · 음성 8 (md5 3 · 받기 3 · 저장소 UPF 다름 4 · 없음 4 · FC 5 · LAPACK 5 · clone 6 · upfout 을 깬 ONCVPSP 로 짝 대조 7)",
+  "gabia_에서_할_일": "없다 — ELF 러너가 저장소 UPF 를 쓰고 sha256 을 본다 · QE 7.4.1 이 이 UPF 를 읽는지는 ELF 러너의 메모리 프로브 (CPU 검사 · run 아님) 로 확인"
+ },
+ "Bader_결과_2026_10_19": {
+  "실행": "gabia 14:56:34–14:58:15 (pp.x 61 s · bader 39 s · CPU 후처리) · 원자료 db/raw/nd_q3_bader_2026_10_19/ (사용자 push 32d69d05 15:01 · 해시 12 파일 ✓ · cube 는 gabia) · 계보 ✓ 셀·좌표 차 0 · 전자 합 592.0253 (ZVAL 합 592 · +0.025)",
+  "조성": "Li48 Nd2 P10 S41 Cl16 O3 (120 원자 · 형식 전하 +104/−104) · 셀 7.00 × 6.92 × 69.47 Å",
+  "사전등록_비교_그대로": "원소 평균 (net = ZVAL − N): Li +0.884 · Nd +1.959 [1.913, 2.004] · P +4.231 · S −1.674 · Cl −0.903 · O −1.866 · 자리별: S_PS4 −1.718 (31) · S_PS4_nearNd −1.510 (6) · S_free −1.690 (2) · S_free_nearNd −1.470 (2) · Cl −0.913 (14) · Cl_nearNd −0.833 (2) · O_P −1.898 (1) · O_P_nearNd −1.850 (2) · 호스트 같은 방법 원소 평균 LPSCl16: Li +0.883 · P +4.340 · S −1.736 · Cl −0.918",
+  "⚠_분할_인공물_결과_후_발견": "P 자리 전하가 +4.85 (3) / +4.03 (3) / +3.17 · +3.53 로 층이 진다 — BCF.dat: 그 P 들은 자기 껍질 (≤0.3 Å) 밖 1.56–1.62 Å 에 극대 1–2 개 (각 ~0.82 e · 합 6.2 e) 를 가진다 = 결합 쪽 극대가 가까운 원자 규칙으로 P 에 붙은 것 · 짝 S 는 −1.85 → −1.02 로 같은 양을 잃는다 ⇒ **PS₄ 안의 P · S 자리 전하는 단독으로 못 쓴다** (호스트 표의 P · S 원소 평균도 같은 영향을 받을 수 있다 — 호스트는 원소 평균뿐이라 확인 못 함). 다른 원소의 극대는 전부 자기 껍질 반경 (Li 0 · O 0.4–0.5 · Cl 1.0–1.1 · S 1.1–1.3 · Nd 1.2 Å) 안 → Nd · Cl · 자유 S · O 값은 이 인공물이 없다",
+  "단위_전하_결과_후_추가": "PS₄ 단위 (P + S 넷) 합은 흔들리지 않는다: Nd 이웃 (d < 3.3 Å) −2.425 (n 2 · −2.442 · −2.407) 대 Nd 없음 −2.623 (n 6 · −2.651 … −2.585) → Δ +0.20 e/단위 · O 든 단위 (둘 다 Nd 이웃) POS₃ −2.447 · PO₂S₂ −2.564 — 결과를 보고 고른 지표다 (사전등록 아님) · 이유는 위 인공물",
+  "읽기": "Nd 옆 음이온은 **덜** 음전하다 — 자유 S −1.47 대 −1.69 (Δ +0.22) · Cl −0.83 대 −0.91 (Δ +0.08) · PS₄ 단위 Δ +0.20 · 그 짝이 Nd +1.96 (형식 +3 의 65 % · Li 는 +0.88 = 88 %) ⇒ Nd–음이온 접촉에서 전자가 음이온으로 더 가지 않고 일부가 Nd 쪽 (결합 영역) 에 남는다 = Li–음이온보다 공유성이 조금 있다 (6 월 ICOHP Nd–X −0.4~−0.6 · ELF 바닥 0.13–0.19 와 같은 방향) · Nd 이웃 음이온 바더 부피가 작다 (자유 S 33.8 대 42.2 Å³ · Cl 32.6 대 38.4) — Nd 가 분할 공간을 가져간 것",
+  "1저자_질문_답": "'전자가 음이온 쪽으로 가나' → 아니다, 반대다 (같은 셀 안 비교 · 방법 차 무관) · 'Li 는 그대로인가' → 그대로 (+0.884 대 호스트 +0.883)",
+  "한계": "n 이 작다 (Nd 2 · 자유 S 이웃 2 · Cl 이웃 2 · PS₄ 이웃 단위 2) · 구조 하나 (6 월 Nd@Li 선별 모델의 9 월 새 PP 판) · smearing mv · k331 (호스트 fixed · k444 — 셀 안 비교는 무관 · 원소 평균 비교에만 걸린다) · Bader 는 분할 규칙 하나의 답이다 (ELF 로 교차 확인 예정)",
+  "도구_후속": "bader_summary_zval.py 에 BCF.dat 극대 거리 검사 (껍질 밖 극대 → 경고) · 단위 합 (P 중심) 을 넣을 것 — 다음 Bader 에서 같은 인공물을 사람이 찾지 않게"
+ },
+ "ELF_러너_2026_10_19": {
+  "사용자": "'일단 같이 돌려봐 ㅇㅇ' (GPU 가 비길 기다리지 말고) · '안되면 잠깐 li3Nd stop하고 해도 되잖아' → 결정 D-2026-10-19-gabia-nd-elf-coexist-or-pause-li3nd (active · 비준)",
+  "러너": "tools/electronic/run_nd_elf_nc_gabia.sh — kprobe.in (sha256 adbd6f70… = Bader 계보) 의 셀·좌표·k 그대로 · pseudo 만 NC (SG15 Li P S Cl O = gabia lpsocl_elf/pseudo · Nd = 변환 UPF 56b2e141…) · ecut 80/320 · mv 0.01 · nosym · conv 1e-10 · β 0.3 · verbosity high → GPU pw.x → CPU pp.x plot_num 8 → sample_elf_bonds.py (호스트 표와 같은 도구 · Nd–S · Cl–Nd 3.3 Å 보탬 = Bader 사전등록 거리) → gap (고유값)",
+  "GPU_자리": "CPU 프로브 (검사) 추정 × 1.3 + 1024 = need · GPU 0 → alone · 빔 − need ≥ 4,096 → coexist (가드 47,500 MiB → 우리 pw.x 만 죽임 · 끝 11) · 아니면 GPU 위가 r2 하나뿐일 때만 pause (BFGS 줄 직후 EXIT → 판정 '사람이 세움 → restart' → GPU 빔 × 2 → ELF 혼자 → 성공·실패 상관없이 r2 restart · tmux) · 다른 잡 있으면 아무것도 안 세움 (끝 5)",
+  "메모리_어림_결과_전": "셀 2,395 Å³ · NC 80 Ry → k 점마다 평면파 ≈ 19.5 만 · 밴드 ≈ 355 (smearing 기본 1.2×) · 투영자 ≈ 1,000 → GPU ≈ 11–12 GB · 10-19 아침 gabia 빔 ≈ 11.6 GB (r2 37.2 GB) → 같이는 빠듯 — 프로브가 정한다",
+  "정지_도구_보탬": "pause_relax_at_bfgs.sh 에 --out · --no_runner — restart_qe_relax.sh 는 'X.restart.in' 으로 돌리고 'X.out' 에 쓴다 → 옛 도구는 '<입력>.out 없음' 으로 거부했을 것 (시험으로 확인) · 이 드라이버는 끝난 잡을 다시 걸지 않아 얼릴 필요 없음 · selftest 29 (새 10) · 깨기 2/2 빨강",
+  "시험": "러너 selftest 29 (가짜 nvidia-smi · CPU/GPU pw.x · pp.x · mpirun 둘 · 정지 도구 · 드라이버 · tmux · ldd · 실물 kprobe 사본) — alone · coexist · pause · 다른 잡 거부 · 정지 실패 · 정지 뒤 SCF 실패 (r2 재개) · 가드 · 프로브 실패 · 입력 해시 셋 · DRY_RUN (r2 안 건드림) · 프로브 재사용 · 정지 뒤 판정 이상 · 재개 판정 이상 (끝 12) · GPU 환경 격리 · 깨기 7/7 빨강 (GPU 환경 전역 export · 실패 뒤 재개 빠짐 · 다른 잡 거부 두 겹 (한 겹만 빼면 다른 겹이 막는다 — 둘 다 빼야 빨강) · 프로브 락 fd · 가드 · 블록 정규식 옛판)",
+  "시험이_잡은_진짜_버그": "① 자식이 락 fd 9 를 물려받아 DRY_RUN 뒤 본 실행이 '이미 실행 중' 으로 멈춤 → 자식마다 9>&- ② kprobe 블록 정규식 '^\\s*' 가 앞 빈 줄을 먹어 k 줄 · 셀 셋째 줄 · 마지막 원자가 빠졌는데 가짜 QE 시험은 통과 → '^[ \\t]*' + 블록 개수 검사 + 실물 사본 대조 (원자 블록 글자까지 같음) ③ (설계 중) GPU 런타임 환경을 전역 export 하면 뒤의 CPU pp.x (시스템 OpenMPI) 가 hpcx OPAL_PREFIX 를 받는다 → env 배열로 GPU mpirun 에만",
+  "실행": "gabia 새 worktree → DRY_RUN=1 (점검 + 프로브 + 결정만 · CPU 검사) → tmux ndelf (본 실행 · 프로브 재사용) · 감시 = run.log · nvidia-smi · tmux (ndelf · li3nd_r2_res_*)"
+ },
+ "ELF_첫_DRY_RUN_2026_10_19_1612": {
+  "결과": "gabia 16:12:08 · HEAD 707528bc8 · pseudo ✓ (Li P S Cl = SG15 1.2 · O = SG15 **1.0** · md5 c91dd4ce/0688a67b/f9d02029/0f993535/2e7c0b1a · Nd 465d92ca) · scf.in ✓ (원자 120 · k 3 3 1 0 0 0) · 프로브 4 초 만에 MPI_ABORT (끝 코드 4) — GPU 37,250/49,140 MiB · 100 % (r2)",
+  "원인": "내 러너 — 프로브를 probe/ 에서 돌리는데 scf.in 의 pseudo_dir='./pseudo' 는 실행 폴더 기준이라 probe/pseudo (없음) 를 찾았다. 가짜 pw.x 가 pseudo 를 안 읽어 selftest 가 못 잡았다 (QE 오류 줄은 probe.out 앞쪽 · 러너는 끝 5 줄만 보여 MPI 안내만 찍혔다)",
+  "고침": "probe/pseudo → ../pseudo 링크 · 실패 때 'Error in routine' 블록을 찍는다 · 가짜 pw.x 둘이 pseudo_dir 기준으로 ATOMIC_SPECIES 파일을 찾고 없으면 readpp 오류로 죽는다 (QE 처럼) → selftest 29 · 링크를 빼면 20 빨강",
+  "O_판": "O 만 SG15 1.0 (LPSOCl ELF 가 같은 파일을 썼다 — run_lpsocl_elf_gabia.sh 의 v1.2 → 1.1 → 1.0 순서 받기) · 호스트 modelc ELF 의 O 판은 기록에 없다 (modelc 는 O 가 없어 무관) — 기록만"
+ },
+ "ELF_DRY_RUN_통과_발사_2026_10_19_1617": {
+  "DRY_RUN": "gabia 16:17:04–08 · HEAD fdd6f378e · worktree /data/work/wt_ndelf_1019b · QE 7.4.1 CPU 프로브가 pseudo 여섯 (Nd 변환 UPF 포함) 을 읽었다 = 변환 UPF 가 7.4.1 에서 읽힌다 · 'Estimated static dynamical RAM per process > 9.89 GB' (⚠ static 줄 — 아래) · GPU 49,140 · 사용 37,250 · 빔 11,890 · need 14,189 (static 기준) · r2 pw.x 3384461 · 다른 잡 없음 → 결정 pause",
+  "발사": "tmux ndelf 16:17:08 (본 실행 · 프로브 재사용 → pause) — r2 다음 BFGS 줄 직후 EXIT 를 기다린다 (r2 한 스텝 ≈ 65 분 · 정지 도구 상한 4 h)",
+  "⚠_static_줄": "QE 7.4 는 static 다음에 max 추정을 찍는다 — 러너가 첫 줄 (static) 을 읽었다. 그날 결정은 max 로도 같다 (max ≥ static → need 더 큼 → pause) · 혼자 돌 때 48 GB 안이다. 고침 (다음 실행부터 · 도는 worktree 는 안 건드림): max 줄을 쓰고 없으면 static (조금 기다린 뒤) · selftest 31 · 첫 줄 읽기로 되돌리면 12 빨강"
+ },
+ "ELF_완주_2026_10_19_1736": {
+  "출처": "사용자 watch 붙여넣기 2026-10-19 18:07 (gabia · run.log tail -8 · w_li3nd_r2.sh) — 파일 회수 전 (회수 블록 = 다음 메시지)",
+  "끝": "17:36:15 ■ 끝 · 끝 코드 0 · 결정 pause — r2 를 BFGS 경계에서 EXIT 로 세우고 ELF SCF 혼자 · SCF 뒤 r2 재개",
+  "r2_재개": "tmux li3nd_r2_res_10191733 (17:33:58 · restart_qe_relax.sh --run --nstep 200) · 18:07 pw.x 4081873 경과 33:30 · GPU 25,356 MiB · watch 의 BFGS 번호 칸은 빔 (새 .out 첫 SCF 중으로 보임 — 이력 승계 줄은 다음 블록에서 확인)",
+  "표_붙여넣기_tail8": {
+   "Li-S": "n 119 · d 2.49 Å · ELF_mid 0.931 ± 0.018",
+   "Nd-O": "n 2 · d 2.49 · 0.311 ± 0.033",
+   "Nd-S": "n 7 · d 2.84 · 0.486 ± 0.044 — ⚠ 8 이어야 한다 (아래)",
+   "O-P": "n 3 · d 1.57 · 0.923 ± 0.002",
+   "P-S": "n 37 · d 2.06 · 0.943 ± 0.002",
+   "안_보인_행": "Cl-Li · Cl-Nd · Li-O (tail 밖) — 회수 뒤 채운다"
+  },
+  "gap_줄": "E_F 3.8487 eV · 최고 점유 3.1234 · 최저 빈 4.6265 → 1.503 eV (k 5 블록) — ⛔ 우리 band gap 규율 밖이다: smearing (mv 0.01) SCF · k 3 3 1 · Nd f-in-core NC (4f 가 코어에 얼려 있어 4f 준위가 없다) ⇒ canonical gap 이 아니다 · 참고 숫자로만",
+  "⚠_결함_표본_도구_최소상_결과_후_발견": {
+   "무엇": "tools/figures/sample_elf_bonds.py 의 최소상이 분수좌표 반올림만 했다 — 이 셀은 각 60° · c = (34.70, 19.69, 56.88) Å (길이 69.5 Å) 로 크게 기울어 반올림이 최소상이 아니다",
+   "영향": "입력 구조 (scf_input_copy.in) 로 바른 최소상 (±5 상 전수) 과 대조: Nd–S 만 8 → 7 (Nd1–S44 3.141 Å 가 5.234 Å 로 읽힘) · 나머지 Cl–Li 69 · Cl–Nd 2 · Li–O 4 · Li–S 119 · Nd–O 2 · O–P 3 · P–S 37 은 개수 같음 · 들어간 쌍의 값은 바르다 (셀 최단 병진 ≈ 6.9 Å 라 컷 3.3 Å 안에 상이 둘일 수 없다)",
+   "고침": "make_mic — 반올림 뒤 이웃 상 탐색 (폭 n_i = ceil(rmax·|b_i|) + 1) · selftest 5 (이 셀의 Nd1–S44 · 200 쌍 ±5 전수 대조 · 직교 셀은 반올림과 같음) · 반올림으로 되돌린 변형 빨강 · 합성 cube (이 셀 · 120 원자) 로 Nd–S 8 · 다른 행 개수 같음",
+   "호스트_표": "직교 셀이면 결과가 반올림과 같다 — modelc · b2o3 · lpsocl 표는 셀이 직교면 그대로 (셀 확인은 안 했다)",
+   "같은_꼴_다른_도구": "tools/ 에 분수좌표 반올림 최소상이 26 곳쯤 있다 (rg '-= np.round(') — 대부분 직교 셀용 · 기울어진 셀 (육방 슬랩 · 이 Nd 셀) 에 쓰는 곳은 따로 점검해야 한다 (미점검 · 목록만)",
+   "다음": "gabia 에서 같은 cube 를 고친 도구로 다시 읽어 nd_elf_bonds_mic.csv (옛 csv 는 지우지 않는다) → 회수"
+  },
+  "사전등록_비교": "ELF_계획 ③ — 호스트 modelc_elf_bonds.csv (같은 NC 규약) 와 결합 ELF 비교: P–S 0.943 대 호스트 0.944 · Li–S 0.931 대 0.940 (붙여넣기 기준 · Li–Cl 은 회수 뒤)",
+  "by": "agent · 2026-10-19"
+ },
+ "ELF_결과_회수_2026_10_19": {
+  "회수": "사용자 push 47a54e5d (gabia worktree /data/work/wt_read_1019 @677eaca1) · db/raw/nd_q3_elf_2026_10_19/ 12 파일 · 러너 SHA256SUMS 의 8 파일 OK (pseudo · r2_resume.log 는 회수 안 함 — r2_resume.log 는 r2 재개 로그라 계속 자란다) · Nd UPF 해시 = 저장소 변환본 56b2e141… (검증한 그 파일) · cube 는 gabia (sha256 4edeb00d7e11b3e1… · SHA256SUMS_after_1019)",
+  "SCF": "16 반복 · 31m52s WALL · KS 상태 355 · k 5 (3 3 1 · 시간반전) · mv 0.01 Ry · ⛔ 총에너지는 쓰지 않는다 (변환 UPF 의 vloc 꼬리 4.6 mRy 상수 · f-in-core — 밀도 · ELF 전용)",
+  "표_최소상_고친_판_nd_elf_bonds_mic.csv": {
+   "Cl-Li": "n 69 · d 2.475 · ELF_mid 0.893 ± 0.020 · 중앙 최소 0.413",
+   "Cl-Nd": "n 2 · d 2.748 · 0.372 ± 0.010 · 0.329",
+   "Li-O": "n 4 · d 1.975 · 0.779 ± 0.012 · 0.161",
+   "Li-S": "n 119 · d 2.492 · 0.931 ± 0.018 · 0.570",
+   "Nd-O": "n 2 · d 2.492 · 0.311 ± 0.033 · 0.296",
+   "Nd-S": "n 8 · d 2.879 · 0.466 ± 0.067 · 0.379 (옛 표 n 7 · 0.486 ± 0.044 — 빠졌던 3.141 Å 결합의 중점은 평균에서 되짚으면 ≈ 0.33)",
+   "O-P": "n 3 · d 1.571 · 0.923 ± 0.002 · 0.891",
+   "P-S": "n 37 · d 2.065 · 0.943 ± 0.002 · 0.922",
+   "옛_표와_차": "Nd-S 행만 다르다 (예측대로) · 나머지 일곱 행 글자 그대로"
+  },
+  "사전등록_비교_ELF_계획_③": "호스트 modelc_elf_bonds.csv (같은 NC 규약 · 같은 도구): P–S 0.943 대 0.944 (−0.001) · Li–S 0.931 대 0.940 (−0.009) · Cl–Li 0.893 대 0.887 (+0.006) — 호스트 결합의 묘사가 같은 자리에 온다 (새 Nd PP · 기울어진 셀에서도) · 호스트 표는 셀이 직교면 고친 도구로도 같다 (호스트 셀 확인은 안 했다)",
+  "읽기_기술": "Nd–X 중점 셋 다 0.5 아래 (Nd–S 0.47 · Nd–Cl 0.37 · Nd–O 0.31) — 공유 쌍 자리 (P–S · O–P 0.92–0.94) 와 달리 중점에 국재한 전자쌍이 없다 ⇒ P–S 꼴 공유 결합은 아니다. Bader 와는 **다른 것을 잰다**: Bader 는 '전하 이동이 Li 보다 덜 됐다 (Nd +1.96 = 형식 +3 의 65 % · Li 88 % · Nd 옆 음이온이 덜 음전하)' 를 말하고, 중점 ELF 는 그 '조금의 공유성' 크기를 재지 못한다 (Li–X 중점이 높은 것도 Li 가 작아서다) ⇒ 둘을 합친 그림 = '주로 이온 결합 · Li–X 보다 공유성이 조금 더' · ELF 교차 확인의 결과는 '어긋나지 않는다' 까지다 (확인이 아니다)",
+  "⛔_읽지_않는_것": [
+   "Nd–S > Nd–Cl > Nd–O 로 '이온성 크기' 를 줄 세우기 — 결합 길이가 달라 중점이 음이온 껍질에서 떨어진 거리가 다르다 (중점 지표의 한계 · 도구 docstring)",
+   "Li–S 0.93 을 '공유 결합' 으로 — Li 가 작아 중점이 S 원자가 껍질 안에 든다",
+   "ELF 0.5 근처를 '결합 없음' 으로 — 0.5 는 균일 전자기체 기준값이다"
+  ],
+  "r2_재개_확인": "새 00_control_relax.out (18:22 · 21 KB · 첫 SCF 중) 에 'Atomic positions and unit cell read from directory' · 'The initial density is read from file' · 'Starting wfcs from file' ✓ · 세우기 전 마지막 'number of bfgs steps = 177' (.out.005 · 17:01 · 7.3 MB) ⇒ 첫 SCF 뒤 178 이면 BFGS 이력 승계 ✓ (다음 확인)",
+  "다음": "Q3 의 Bader · ELF 둘 다 끝 · Δρ 는 계획 표에 없다 · Q2 (분해) 는 '분해상 기저 (UMA/MP hull · G5) → 같은 설정 (kjpaw 70/560) 의 상 에너지 (GPU) → dft_decomp_check.py — Bader 뒤에 정한다' 그대로 — 사용자 결정 · 결과 정리를 실험 쪽 1저자에게 보낼지는 사용자",
+  "by": "agent · 2026-10-19",
+  "정정": [
+   {
+    "at": "2026-10-19",
+    "옛_문장": "Nd–X 중점 셋 다 0.5 아래 (Nd–S 0.47 · Nd–Cl 0.37 · Nd–O 0.31) — 공유 쌍 자리 (P–S · O–P 0.92–0.94) 와 달리 중점에 국재한 전자쌍이 없다 ⇒ 이온 결합 쪽 · Bader 의 Nd +1.96 · Nd 옆 음이온이 덜 음전하인 것과 같은 방향 (따로 잰 두 묘사가 어긋나지 않는다)",
+    "왜": "'Bader 와 같은 방향' 은 부정확 — Bader 읽기는 '공유성이 조금 있다' 쪽이고 ELF 중점은 '공유 쌍이 없다' 만 말한다 (같은 걸 잰 게 아니다)"
+   }
+  ]
+ },
+ "✅_1저자_설명_페이지_2026_10_20": {
+  "사용자": "'nd 1저자가 요구한거 관련해서 처음보는 사람도 이해가 되게 html로 작성해서 줘봐 · plot등 넣어서 · 결국 전달을 해야되는데 1저자는 pauling, 전기음성도로 서술이 되는게 있으면 좋겠다고 하거든'",
+  "산출": "db/properties/cei_figs/cei_nd_electronegativity.html (sha256 a2d935662244ca03…) · Origin CSV 6 개 (cei_nd_en_fig1 · 2 · 4 · 5 · 6 · 7) · 생성기 tools/figures/build_nd_electronegativity_page.py (selftest 23 · 음성 8 · 깨기 4/4 빨강) · Artifact https://claude.ai/artifact/AxbmymBfkKeKtALwSBRAn1 (비공개 · 정본은 저장소 파일)",
+  "틀": "1저자 카톡 요지의 Pauling 값 (Nd 1.14 · P 2.19 · S 2.58 · O 3.44 — 생성기 검사 ⑤ 로 카드 글자와 대조) + 같은 표 Li 0.98 · Cl 3.16 → 결합 Δχ → '방향은 Nd 가 대신하는 원자가 정한다' (Nd@P: P–S 0.39 → Nd–S 1.44 · S 전자 더 / Nd@Li: Li–S 1.60 → 1.44 · S 전자 조금 덜) · 이번 DFT (Nd@Li) = 전기음성도 기대와 같은 방향 · 1저자 1 번 주장의 비교 상대 (P–S) 는 Nd@P 그림이다",
+  "재현": "구조에서 자리 분류를 다시 냄 = CSV 120/120 · PS₄ 단위 합이 이 runlog 값을 재현 (−2.442 · −2.407 · 없음 6 · POS₃ −2.447 · PO₂S₂ −2.564) · 전자 합 592.025 (ZVAL 592)",
+  "싣지_않은_것": "Q1 · Q2 값 (자리 판정은 허용 서술 없음 · 분해는 시작 전) · S 빈자리 v2 (마감 결정 D-2026-10-20-nd-s-vacancy-closed 가 proposed — 비준 전) · PS₄ 안 P · S 자리 전하 · Li–X 중점 ELF · Pauling 이온성 % 의 절대 해석",
+  "그대로_가져온_금지": "카드 §5 (묘사 → 안정성 인과 · x 를 실험 조성으로 · 4f · 이온전도) · 이 runlog ⛔_읽지_않는_것 셋 (ELF 로 이온성 순서 · Li–S 0.93 공유 · 0.5 = 결합 없음)",
+  "⏭": "1저자에게 보낼지 · 언제 = 사용자 결정 (CEI 트랙 · 통지는 사용자를 통해) · Nd@P Bader (그림 3a 확인 · Q1 뒤) 를 할지 = 사용자 결정 · 1저자의 'Pauling' 이 전기음성도 척도가 아니라 Pauling 규칙 (정전 원자가 규칙) 을 뜻했으면 다시 맞춘다"
+ },
+ "✅_1저자_설명_페이지_갱신_2026_10_26": {
+  "사용자": "'관련해서 html 갱신해서 만들어봐' (Nd Q1 · Q2 · Q3 · Li₃Nd 결정 기록 설명 뒤)",
+  "산출": "db/properties/cei_figs/cei_nd_electronegativity.html (sha256 fcdd096f71899198…) · Origin CSV 8 개 (fig8_site_energy · fig9_decomp_difference 추가) · 생성기 tools/figures/build_nd_electronegativity_page.py (selftest 41 · 음성 16 · 깨기 9/9 빨강) · Artifact https://claude.ai/artifact/EDFtoGaz6jVUqnysLjZQXq (비공개 — 1저자가 열려면 사용자가 Share 메뉴에서 공유해야 한다 · 정본은 저장소 파일)",
+  "옛_링크": "https://claude.ai/artifact/AxbmymBfkKeKtALwSBRAn1 — 2026-10-26 이 계정에서 읽기가 'artifact not found' (지워졌거나 이 계정 것이 아님) · 같은 자리 갱신을 못 해서 새 링크로 냈다 · 위 10-20 항목은 고치지 않는다",
+  "더한_것": "제목 'Nd in LPSCl1.6' · 배경 (세 질문 · 셀이 달라 숫자를 서로 견주지 않음) · Q1 자리 (그림 8 · 잠정 — 카드 D-2026-10-14-ndo-site-stability-estimand proposed · 1저자 동의 전 · 하한 쪽 읽기 · Rietveld 반박 근거로 안 씀) · Q2 분해 (그림 9 · Y 보정_B25 · '불안정' 아님) · S 빈자리 (구분 안 됨 · D-2026-10-20-nd-s-vacancy-closed active) · 원고 Fig. 3g Li₃Nd (HZ-li3nd-neb-si-conditional SI 문장 + 홉 수 검산 줄을 결속 블록 안에만) · 원고 예문 · 금지 · 계산 조건 · 남은 것",
+  "검사": "⑦ Q1 원자료 ΔG ↔ runlog 글자 ↔ 카드 §5 문장 · ⑧ Q2 판독 Y ↔ 원자료 (1e-3) · 분해능 밖 · G_V · 상 이완 · 생성물 다섯 (원자료 basis 에서 이름) · ⑨ S 빈자리 확정값 ↔ 허용 문장 · 문턱 · 결정 active · ⑩ Li₃Nd CONDITIONAL + 결정 active · 나머지 NEB BLOCKED 항목 있음 · SI 문장 안 장벽 = sei_neb.json · ⑪ 만든 페이지 (단독 · Artifact 본문) 에 Li₂S 장벽 없음 · Li₃Nd 장벽은 data-claim 결속 블록 안에만 — 하나라도 어긋나면 아무것도 쓰지 않는다",
+  "깨기_교훈": "⑧ Y 대조를 끈 변이가 처음엔 초록이었다 — 음성 입력 (Y −20) 이 허용 문장 반올림 대조에 먼저 걸려서 Y 대조를 재지 못했다 · 음성 입력을 −22.4 (반올림 22 그대로) 로 바꿔 원자료 대조만 잡게 했다 · Q1 '잠정' 표지 시험은 처음에 한쪽만 봤다 (proposed 면 늘 통과) → 원장 사본에서 Q1 카드를 active 로 바꿔 표지 일곱이 전부 빠지는지까지 보게 고침 (칩을 늘 붙이는 변이 = 빨강)",
+  "화면_확인": "Playwright 1100 px 밝음 · 400 px 어두움 — 가로 넘침 없음 · 그림 9 값 글자가 행 이름과 겹쳐 축을 −40 까지 넓히고 분해능 글자를 선 왼쪽에 붙였다",
+  "싣지_않은_것": "Li₂S 장벽 (BLOCKED) · Q1 과 Q2 를 한 표에 · 분해 에너지 절대값 (두 셀의 차 Y 만) · 목표 조성 (x = 0.02) 으로 옮긴 크기",
+  "⏭": "1저자에게 보낼지 · 언제 = 사용자 결정 (공유는 사용자가 Share 메뉴에서) · Q1 카드를 비준하면 생성기를 다시 돌려 같은 파일로 다시 낸다 ('잠정' 표지가 빠진다) · Q2 메시지 초안 kb/projects/nd_q2_message_send_2026_10_26.md 와 같이 보낼지 = 사용자 결정"
+ },
+ "✅_닫힘_2026_11_03": {
+  "마감": "D-2026-11-03-nd-q123-closed (db/properties/nd_q123_closed_2026_11_03.json) — Q3 허용 문장은 마감 §2 에 그대로 복사",
+  "설명_페이지": "그대로 — 표지 문구 (원고 문장 전 1저자 동의) 는 아직 참이다 · 생성기의 '잠정' 판정을 카드 상태 + 1저자 동의 기록으로 고쳤다 (selftest 43/43 · 깨기 2/2) · 다시 만들어도 바이트까지 같다 (마감 §7)",
+  "by": "agent · 2026-11-03"
+ }
+}

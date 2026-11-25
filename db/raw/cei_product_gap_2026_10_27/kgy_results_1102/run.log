@@ -1,0 +1,402 @@
+[10-27 23:13:52] 시작 · commit 64564a9087e51b46e9a123f22a37b728cbef1011
+[23:13:52] ═══ P2O5_mp-aaaaadqi ═══
+[23:13:52]   ✓ 메모리 프리플라이트: 여유 57 GB ≥ 8 GB · 14 원자
+[23:13:52]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 01_vcrelax.in
+[23:13:52]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[02:37:52]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 02_scf.in
+[02:37:52]   ▶ 02_scf.in
+  P2O5_mp-aaaaadqi           ⏭ 스핀분극 계가 아니다
+
+바뀐 폴더는 03 부터 다시 돌린다:
+  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+[02:49:31]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 03_nscf_gap.in
+[02:49:31]   ▶ 03_nscf_gap.in
+  VBM 1.431 · CBM 6.617 · **gap 5.186 eV** (절연체)
+    (전자 80 · 점유 밴드 40 · nbnd 62 · 블록 304)
+[04:11:27]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 04_nscf_dos.in
+[04:11:27]   ▶ 04_nscf_dos.in
+[04:23:50]   ▶ 05_dos.in
+[04:24:02]   ▶ 06_projwfc.in
+[04:24:43]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/P2O5_mp-aaaaadqi
+[04:24:43] ═══ 결산 ═══
+  상                               VBM      CBM   gap(eV)  판정
+  P2O5_mp-aaaaadqi              1.431    6.617     5.186  절연체
+
+  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.
+  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.
+  P2O5_mp-aaaaadqi       기준 5.1860 · 지금 5.1864 · Δ 0.0004 · nk 304 → 통과
+  대조 잡 ✅ 통과
+[04:24:43] ═══ licl_mp-22905 ═══
+[04:24:43]   ✓ 메모리 프리플라이트: 여유 57 GB ≥ 8 GB · 8 원자
+[04:24:43]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 01_vcrelax.in
+[04:24:43]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[04:38:08]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 02_scf.in
+[04:38:08]   ▶ 02_scf.in
+  licl_mp-22905              ⏭ 스핀분극 계가 아니다
+
+바뀐 폴더는 03 부터 다시 돌린다:
+  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+[04:40:29]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 03_nscf_gap.in
+[04:40:29]   ▶ 03_nscf_gap.in
+  VBM 1.550 · CBM 7.814 · **gap 6.264 eV** (절연체)
+    (전자 40 · 점유 밴드 20 · nbnd 35 · 블록 35)
+[04:46:58]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 04_nscf_dos.in
+[04:46:58]   ▶ 04_nscf_dos.in
+[04:58:41]   ▶ 05_dos.in
+[04:58:51]   ▶ 06_projwfc.in
+[04:59:17]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/licl_mp-22905
+[04:59:17] ═══ li3po4_mp-13725 ═══
+[04:59:17]   ✓ 메모리 프리플라이트: 여유 57 GB ≥ 8 GB · 16 원자
+[04:59:17]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 01_vcrelax.in
+[04:59:17]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[06:28:12]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 02_scf.in
+[06:28:12]   ▶ 02_scf.in
+  li3po4_mp-13725            ⏭ 스핀분극 계가 아니다
+
+바뀐 폴더는 03 부터 다시 돌린다:
+  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+[06:40:33]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 03_nscf_gap.in
+[06:40:33]   ▶ 03_nscf_gap.in
+  VBM 2.886 · CBM 8.816 · **gap 5.930 eV** (절연체)
+    (전자 76 · 점유 밴드 38 · nbnd 59 · 블록 100)
+[07:17:18]   ✓ VRAM 여유 21078 MiB ≥ 8000 — 04_nscf_dos.in
+[07:17:18]   ▶ 04_nscf_dos.in
+[07:27:37]   ▶ 05_dos.in
+[07:27:47]   ▶ 06_projwfc.in
+[07:28:32]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/li3po4_mp-13725
+[07:28:32] ═══ Li2SO4_mp-aaaaagtg ═══
+[07:28:32]   ✓ 메모리 프리플라이트: 여유 57 GB ≥ 8 GB · 28 원자
+[07:28:32]   ✓ VRAM 여유 21080 MiB ≥ 8000 — 01_vcrelax.in
+[07:28:32]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[08:47:35]   ✓ VRAM 여유 23392 MiB ≥ 8000 — 02_scf.in
+[08:47:35]   ▶ 02_scf.in
+  Li2SO4_mp-aaaaagtg         ⏭ 스핀분극 계가 아니다
+
+바뀐 폴더는 03 부터 다시 돌린다:
+  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+[08:52:27]   ✓ VRAM 여유 23393 MiB ≥ 8000 — 03_nscf_gap.in
+[08:52:27]   ▶ 03_nscf_gap.in
+  VBM 1.344 · CBM 7.401 · **gap 6.056 eV** (절연체)
+    (전자 144 · 점유 밴드 72 · nbnd 105 · 블록 100)
+[09:26:20]   ✓ VRAM 여유 23393 MiB ≥ 8000 — 04_nscf_dos.in
+[09:26:20]   ▶ 04_nscf_dos.in
+[09:32:27]   ▶ 05_dos.in
+[09:32:32]   ▶ 06_projwfc.in
+[09:32:54]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/Li2SO4_mp-aaaaagtg
+[09:32:54] ═══ SO2_mp-aaaabpak ═══
+[09:32:54]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 6 원자
+[09:32:54]   ✓ VRAM 여유 23394 MiB ≥ 8000 — 01_relax.in
+[09:32:54]   ▶ 01_relax.in
+  기하 승계 → 02_scf.in (좌표만 · 셀 유지)
+  기하 승계 → 03_nscf_gap.in (좌표만 · 셀 유지)
+  기하 승계 → 04_nscf_dos.in (좌표만 · 셀 유지)
+[09:36:50]   ✓ VRAM 여유 23394 MiB ≥ 8000 — 02_scf.in
+[09:36:50]   ▶ 02_scf.in
+  SO2_mp-aaaabpak            ⏭ 스핀분극 계가 아니다
+
+바뀐 폴더는 03 부터 다시 돌린다:
+  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+[09:38:00]   ✓ VRAM 여유 23393 MiB ≥ 8000 — 03_nscf_gap.in
+[09:38:00]   ▶ 03_nscf_gap.in
+  VBM 0.511 · CBM 3.031 · **gap 2.520 eV** (절연체)
+    (전자 36 · 점유 밴드 18 · nbnd 32 · 블록 260)
+[09:45:56]   ✓ VRAM 여유 23394 MiB ≥ 8000 — 04_nscf_dos.in
+[09:45:56]   ▶ 04_nscf_dos.in
+[09:48:40]   ▶ 05_dos.in
+[09:48:42]   ▶ 06_projwfc.in
+[09:48:48]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/SO2_mp-aaaabpak
+[09:48:48] ═══ SCl_mp-aaaabpoq ═══
+[09:48:48]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 16 원자
+[09:48:48]   ✓ VRAM 여유 23394 MiB ≥ 8000 — 01_relax.in
+[09:48:48]   ▶ 01_relax.in
+  기하 승계 → 02_scf.in (좌표만 · 셀 유지)
+  기하 승계 → 03_nscf_gap.in (좌표만 · 셀 유지)
+  기하 승계 → 04_nscf_dos.in (좌표만 · 셀 유지)
+[10:12:55]   ✓ VRAM 여유 23394 MiB ≥ 8000 — 02_scf.in
+[10:12:55]   ▶ 02_scf.in
+  SCl_mp-aaaabpoq            ⏭ 스핀분극 계가 아니다
+
+바뀐 폴더는 03 부터 다시 돌린다:
+  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+[10:15:49]   ✓ VRAM 여유 23395 MiB ≥ 8000 — 03_nscf_gap.in
+[10:15:49]   ▶ 03_nscf_gap.in
+  VBM 1.072 · CBM 3.727 · **gap 2.656 eV** (절연체)
+    (전자 104 · 점유 밴드 52 · nbnd 78 · 블록 84)
+[10:34:44]   ✓ VRAM 여유 23394 MiB ≥ 8000 — 04_nscf_dos.in
+[10:34:44]   ▶ 04_nscf_dos.in
+[10:41:19]   ▶ 05_dos.in
+[10:41:23]   ▶ 06_projwfc.in
+[10:41:35]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/SCl_mp-aaaabpoq
+[10:41:35] ═══ NiP2O6_mp-aaaabchz ═══
+[10:41:35]   ⚠ NiP2O6_mp-aaaabchz 은 **36 원자** — 이 스크립트가 오래 전제하던 3–32 원자 범위 **밖**이다
+[10:41:35]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 36 원자
+[10:41:35]   ✓ VRAM 여유 23392 MiB ≥ 8000 — 01_vcrelax.in
+[10:41:35]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[05:40:19]   ✓ VRAM 여유 23395 MiB ≥ 8000 — 02_scf.in
+[05:40:19]   ▶ 02_scf.in
+  NiP2O6_mp-aaaabchz         ✓ 이미 맞다 (scf 8.000 → tot_mag 8)
+
+바뀐 폴더는 03 부터 다시 돌린다:
+  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+[06:26:38]   ✓ VRAM 여유 23395 MiB ≥ 8000 — 03_nscf_gap.in
+[06:26:38]   ▶ 03_nscf_gap.in
+  ⛔ VBM 이 CBM 보다 4.894 eV 위다. 물리적 겹침이 아니라 ↑/↓ 점유수가 전하밀도와 어긋난 것이다.
+     02_scf.out 의 수렴 모멘트를 03 에 옮기고 다시 돌릴 것:
+       python3 tools/sei/sync_magnetization.py <작업폴더>
+       TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06
+  VBM 8.489 · CBM 3.595 · **gap -4.894 eV** (⛔ 무효 — 스핀 점유수 불일치 (겹침 아님))
+    (전자 256 · 점유 밴드 ↑128/↓128 (M=0.00 μB) · nbnd 188 · 블록 144 · spin-polarized)
+[07:51:51]   ✓ VRAM 여유 23395 MiB ≥ 8000 — 04_nscf_dos.in
+[07:51:51]   ▶ 04_nscf_dos.in
+[08:18:38]   ▶ 05_dos.in
+[08:18:52]   ▶ 06_projwfc.in
+[08:20:40]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/NiP2O6_mp-aaaabchz
+[08:20:40] ═══ MnP2O6_mp-aaabevzn ═══
+[08:20:40]   ⚠ MnP2O6_mp-aaabevzn 은 **36 원자** — 이 스크립트가 오래 전제하던 3–32 원자 범위 **밖**이다
+[08:20:40]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 36 원자
+[08:20:40]   ✓ VRAM 여유 23395 MiB ≥ 8000 — 01_vcrelax.in
+[08:20:40]   ▶ 01_vcrelax.in
+[10-30 15:36:52] 시작 · commit 027e049e056beb9bcdabf6dd4118cc5824454f6d
+[15:36:52] ═══ P2O5_mp-aaaaadqi ═══
+[15:36:52]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 14 원자
+[15:36:52]   ✓ 01_vcrelax.in 이미 완료
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[15:36:52]   ✓ 02_scf.in 이미 완료
+  P2O5_mp-aaaaadqi           ⏭ 스핀분극 계가 아니다
+[15:36:52]   ✓ 03_nscf_gap.in 이미 완료
+  VBM 1.431 · CBM 6.617 · **gap 5.186 eV** (절연체)
+    (전자 80 · 점유 밴드 40 · nbnd 62 · 블록 304)
+[15:36:52]   ✓ 04_nscf_dos.in 이미 완료
+[15:36:52]   ✓ 05_dos.in 이미 완료
+[15:36:52]   ✓ 06_projwfc.in 이미 완료
+[15:36:52]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/P2O5_mp-aaaaadqi
+[15:36:52] ═══ 결산 ═══
+  상                               VBM      CBM   gap(eV)  판정
+  Li2SO4_mp-aaaaagtg            1.344    7.401     6.056  절연체
+  NiP2O6_mp-aaaabchz            4.072    8.345     4.273  절연체
+  P2O5_mp-aaaaadqi              1.431    6.617     5.186  절연체
+  SCl_mp-aaaabpoq               1.072    3.727     2.656  절연체
+  SO2_mp-aaaabpak               0.511    3.031     2.520  절연체
+  li3po4_mp-13725               2.886    8.816     5.930  절연체
+  licl_mp-22905                 1.550    7.814     6.264  절연체
+
+  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.
+  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.
+  P2O5_mp-aaaaadqi       기준 5.1860 · 지금 5.1864 · Δ 0.0004 · nk 304 → 통과
+  대조 잡 ✅ 통과
+[15:36:52] ═══ licl_mp-22905 ═══
+[15:36:52]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 8 원자
+[15:36:52]   ✓ 01_vcrelax.in 이미 완료
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[15:36:52]   ✓ 02_scf.in 이미 완료
+  licl_mp-22905              ⏭ 스핀분극 계가 아니다
+[15:36:52]   ✓ 03_nscf_gap.in 이미 완료
+  VBM 1.550 · CBM 7.814 · **gap 6.264 eV** (절연체)
+    (전자 40 · 점유 밴드 20 · nbnd 35 · 블록 35)
+[15:36:52]   ✓ 04_nscf_dos.in 이미 완료
+[15:36:52]   ✓ 05_dos.in 이미 완료
+[15:36:52]   ✓ 06_projwfc.in 이미 완료
+[15:36:52]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/licl_mp-22905
+[15:36:52] ═══ li3po4_mp-13725 ═══
+[15:36:52]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 16 원자
+[15:36:52]   ✓ 01_vcrelax.in 이미 완료
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[15:36:52]   ✓ 02_scf.in 이미 완료
+  li3po4_mp-13725            ⏭ 스핀분극 계가 아니다
+[15:36:53]   ✓ 03_nscf_gap.in 이미 완료
+  VBM 2.886 · CBM 8.816 · **gap 5.930 eV** (절연체)
+    (전자 76 · 점유 밴드 38 · nbnd 59 · 블록 100)
+[15:36:53]   ✓ 04_nscf_dos.in 이미 완료
+[15:36:53]   ✓ 05_dos.in 이미 완료
+[15:36:53]   ✓ 06_projwfc.in 이미 완료
+[15:36:53]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/li3po4_mp-13725
+[15:36:53] ═══ Li2SO4_mp-aaaaagtg ═══
+[15:36:53]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 28 원자
+[15:36:53]   ✓ 01_vcrelax.in 이미 완료
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[15:36:53]   ✓ 02_scf.in 이미 완료
+  Li2SO4_mp-aaaaagtg         ⏭ 스핀분극 계가 아니다
+[15:36:53]   ✓ 03_nscf_gap.in 이미 완료
+  VBM 1.344 · CBM 7.401 · **gap 6.056 eV** (절연체)
+    (전자 144 · 점유 밴드 72 · nbnd 105 · 블록 100)
+[15:36:53]   ✓ 04_nscf_dos.in 이미 완료
+[15:36:53]   ✓ 05_dos.in 이미 완료
+[15:36:53]   ✓ 06_projwfc.in 이미 완료
+[15:36:53]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/Li2SO4_mp-aaaaagtg
+[15:36:53] ═══ SO2_mp-aaaabpak ═══
+[15:36:53]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 6 원자
+[15:36:53]   ✓ 01_relax.in 이미 완료
+  기하 승계 → 02_scf.in (좌표만 · 셀 유지)
+  기하 승계 → 03_nscf_gap.in (좌표만 · 셀 유지)
+  기하 승계 → 04_nscf_dos.in (좌표만 · 셀 유지)
+[15:36:53]   ✓ 02_scf.in 이미 완료
+  SO2_mp-aaaabpak            ⏭ 스핀분극 계가 아니다
+[15:36:53]   ✓ 03_nscf_gap.in 이미 완료
+  VBM 0.511 · CBM 3.031 · **gap 2.520 eV** (절연체)
+    (전자 36 · 점유 밴드 18 · nbnd 32 · 블록 260)
+[15:36:53]   ✓ 04_nscf_dos.in 이미 완료
+[15:36:53]   ✓ 05_dos.in 이미 완료
+[15:36:53]   ✓ 06_projwfc.in 이미 완료
+[15:36:53]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/SO2_mp-aaaabpak
+[15:36:53] ═══ SCl_mp-aaaabpoq ═══
+[15:36:53]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 16 원자
+[15:36:53]   ✓ 01_relax.in 이미 완료
+  기하 승계 → 02_scf.in (좌표만 · 셀 유지)
+  기하 승계 → 03_nscf_gap.in (좌표만 · 셀 유지)
+  기하 승계 → 04_nscf_dos.in (좌표만 · 셀 유지)
+[15:36:53]   ✓ 02_scf.in 이미 완료
+  SCl_mp-aaaabpoq            ⏭ 스핀분극 계가 아니다
+[15:36:53]   ✓ 03_nscf_gap.in 이미 완료
+  VBM 1.072 · CBM 3.727 · **gap 2.656 eV** (절연체)
+    (전자 104 · 점유 밴드 52 · nbnd 78 · 블록 84)
+[15:36:53]   ✓ 04_nscf_dos.in 이미 완료
+[15:36:53]   ✓ 05_dos.in 이미 완료
+[15:36:53]   ✓ 06_projwfc.in 이미 완료
+[15:36:53]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/SCl_mp-aaaabpoq
+[15:36:53] ═══ NiP2O6_mp-aaaabchz ═══
+[15:36:53]   ⚠ NiP2O6_mp-aaaabchz 은 **36 원자** — 이 스크립트가 오래 전제하던 3–32 원자 범위 **밖**이다
+[15:36:53]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 36 원자
+[15:36:53]   ✓ 01_vcrelax.in 이미 완료
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[15:36:53]   ✓ 02_scf.in 이미 완료
+  NiP2O6_mp-aaaabchz         ✓ 이미 맞다 (scf 8.000 → tot_mag 8)
+[15:36:53]   ✓ 03_nscf_gap.in 이미 완료
+  VBM 4.072 · CBM 8.345 · **gap 4.273 eV** (절연체)
+    (전자 256 · 점유 밴드 ↑132/↓124 (M=8.00 μB · 02_scf converged moment (nscf kept M=0 filling)) · nbnd 188 · 블록 144 · spin-polarized)
+[15:36:53]   ✓ 04_nscf_dos.in 이미 완료
+[15:36:53]   ✓ 05_dos.in 이미 완료
+[15:36:53]   ✓ 06_projwfc.in 이미 완료
+[15:36:53]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/NiP2O6_mp-aaaabchz
+[15:36:53] ═══ MnP2O6_mp-aaabevzn ═══
+[15:36:53]   ⚠ MnP2O6_mp-aaabevzn 은 **36 원자** — 이 스크립트가 오래 전제하던 3–32 원자 범위 **밖**이다
+[15:36:53]   ✓ 메모리 프리플라이트: 여유 58 GB ≥ 8 GB · 36 원자
+[15:36:53]   ✓ VRAM 여유 23336 MiB ≥ 8000 — 01_vcrelax.in
+[15:36:53]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[01:56:19]   ✓ VRAM 여유 20286 MiB ≥ 8000 — 02_scf.in
+[01:56:19]   ▶ 02_scf.in
+  MnP2O6_mp-aaabevzn         ✓ 이미 맞다 (scf 20.000 → tot_mag 20)
+[02:47:50]   ✓ VRAM 여유 20216 MiB ≥ 8000 — 03_nscf_gap.in
+[02:47:50]   ▶ 03_nscf_gap.in
+  VBM 4.058 · CBM 8.000 · **gap 3.942 eV** (절연체)
+    (전자 244 · 점유 밴드 ↑132/↓112 (M=20.00 μB · 02_scf converged moment (nscf kept M=0 filling)) · nbnd 186 · 블록 144 · spin-polarized)
+[04:18:23]   ✓ VRAM 여유 20276 MiB ≥ 8000 — 04_nscf_dos.in
+[04:18:23]   ▶ 04_nscf_dos.in
+[04:50:24]   ▶ 05_dos.in
+[04:51:06]   ▶ 06_projwfc.in
+[04:54:47]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/MnP2O6_mp-aaabevzn
+[04:54:47] ═══ CoS2_mp-aaaaadbq ═══
+[04:54:47]   ✓ 메모리 프리플라이트: 여유 49 GB ≥ 8 GB · 12 원자
+[04:54:47]   ✓ VRAM 여유 20388 MiB ≥ 8000 — 01_vcrelax.in
+[04:54:47]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  ⏭ 03_nscf_gap.in 없음 — 건너뜀 (electronic_class=metal 이면 정상이다)
+  기하 승계 → 04_nscf_dos.in
+  ⚠ 승계 안 한 타깃 1개: 03_nscf_gap.in
+[06:06:11]   ✓ VRAM 여유 20402 MiB ≥ 8000 — 02_scf.in
+[06:06:11]   ▶ 02_scf.in
+[06:06:12]   ✗ 02_scf.in 실패 — 꼬리:
+with errorcode 1.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+[06:06:12] ═══ NiS2_mp-aaaaadju ═══
+[06:06:12]   ✓ 메모리 프리플라이트: 여유 49 GB ≥ 8 GB · 12 원자
+[06:06:12]   ✓ VRAM 여유 20402 MiB ≥ 8000 — 01_vcrelax.in
+[06:06:12]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  ⏭ 03_nscf_gap.in 없음 — 건너뜀 (electronic_class=metal 이면 정상이다)
+  기하 승계 → 04_nscf_dos.in
+  ⚠ 승계 안 한 타깃 1개: 03_nscf_gap.in
+[07:39:30]   ✓ VRAM 여유 20338 MiB ≥ 8000 — 02_scf.in
+[07:39:30]   ▶ 02_scf.in
+  NiS2_mp-aaaaadju           ⏭ 03_nscf_gap.in 없음
+[07:57:29]   ⏭ 03(갭) 입력 없음 — electronic_class=metal 로 의도된 것인지 확인:
+[07:57:29]      ✔ 사유 파일 있음 → DOS/PDOS 로 E_F 상태를 본다
+[07:57:29]   ✓ VRAM 여유 20370 MiB ≥ 8000 — 04_nscf_dos.in
+[07:57:29]   ▶ 04_nscf_dos.in
+[08:02:45]   ▶ 05_dos.in
+[08:02:51]   ▶ 06_projwfc.in
+[08:03:10]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/NiS2_mp-aaaaadju
+[08:03:10] ═══ Ni3S4_mp-aaaaabok ═══
+[08:03:10]   ✓ 메모리 프리플라이트: 여유 49 GB ≥ 8 GB · 14 원자
+[08:03:10]   ✓ VRAM 여유 20324 MiB ≥ 8000 — 01_vcrelax.in
+[08:03:10]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  ⏭ 03_nscf_gap.in 없음 — 건너뜀 (electronic_class=metal 이면 정상이다)
+  기하 승계 → 04_nscf_dos.in
+  ⚠ 승계 안 한 타깃 1개: 03_nscf_gap.in
+[08:45:25]   ✓ VRAM 여유 20330 MiB ≥ 8000 — 02_scf.in
+[08:45:25]   ▶ 02_scf.in
+  Ni3S4_mp-aaaaabok          ⏭ 03_nscf_gap.in 없음
+[08:56:12]   ⏭ 03(갭) 입력 없음 — electronic_class=metal 로 의도된 것인지 확인:
+[08:56:12]      ✔ 사유 파일 있음 → DOS/PDOS 로 E_F 상태를 본다
+[08:56:12]   ✓ VRAM 여유 20266 MiB ≥ 8000 — 04_nscf_dos.in
+[08:56:12]   ▶ 04_nscf_dos.in
+[09:10:20]   ▶ 05_dos.in
+[09:10:29]   ▶ 06_projwfc.in
+[09:11:26]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/Ni3S4_mp-aaaaabok
+[09:11:26] ═══ MnS2_mp-aaacfzcu ═══
+[09:11:26]   ✓ 메모리 프리플라이트: 여유 49 GB ≥ 8 GB · 6 원자
+[09:11:26]   ✓ VRAM 여유 20320 MiB ≥ 8000 — 01_vcrelax.in
+[09:11:26]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  ⏭ 03_nscf_gap.in 없음 — 건너뜀 (electronic_class=metal 이면 정상이다)
+  기하 승계 → 04_nscf_dos.in
+  ⚠ 승계 안 한 타깃 1개: 03_nscf_gap.in
+[09:28:37]   ✓ VRAM 여유 20318 MiB ≥ 8000 — 02_scf.in
+[09:28:37]   ▶ 02_scf.in
+  MnS2_mp-aaacfzcu           ⏭ 03_nscf_gap.in 없음
+[09:32:38]   ⏭ 03(갭) 입력 없음 — electronic_class=metal 로 의도된 것인지 확인:
+[09:32:38]      ✔ 사유 파일 있음 → DOS/PDOS 로 E_F 상태를 본다
+[09:32:38]   ✓ VRAM 여유 20330 MiB ≥ 8000 — 04_nscf_dos.in
+[09:32:38]   ▶ 04_nscf_dos.in
+[09:39:20]   ▶ 05_dos.in
+[09:39:28]   ▶ 06_projwfc.in
+[09:39:51]   ✅ 완료 → /home/kgy/work/runs/cei_gap_1027/MnS2_mp-aaacfzcu
+[09:39:51] ═══ 결산 ═══
+  상                               VBM      CBM   gap(eV)  판정
+  Li2SO4_mp-aaaaagtg            1.344    7.401     6.056  절연체
+  MnP2O6_mp-aaabevzn            4.058    8.000     3.942  절연체
+  MnS2_mp-aaacfzcu                  —        —         —  NOT_APPLICABLE
+  Ni3S4_mp-aaaaabok                 —        —         —  NOT_APPLICABLE
+  NiP2O6_mp-aaaabchz            4.072    8.345     4.273  절연체
+  NiS2_mp-aaaaadju                  —        —         —  NOT_APPLICABLE
+  P2O5_mp-aaaaadqi              1.431    6.617     5.186  절연체
+  SCl_mp-aaaabpoq               1.072    3.727     2.656  절연체
+  SO2_mp-aaaabpak               0.511    3.031     2.520  절연체
+  li3po4_mp-13725               2.886    8.816     5.930  절연체
+  licl_mp-22905                 1.550    7.814     6.264  절연체
+
+  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.
+  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.
+[11-01 09:39:51] 끝

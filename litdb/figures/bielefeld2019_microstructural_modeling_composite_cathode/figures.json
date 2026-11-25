@@ -1,0 +1,220 @@
+{
+ "slug": "bielefeld2019_microstructural_modeling_composite_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Microstructural modeling of composite cathodes in GeoDict,30 featuring spherical AM particles (red), convex polyhedra as SE (dark blue) and ionic (light blue) as well as electronic (yellow) conduction clusters.",
+   "bbox": [
+    54.5,
+    195.7,
+    306.5,
+    346.4
+   ],
+   "w": 1051,
+   "h": 629,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.464
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Exemplary AM microstructures at 55 vol% fraction for {5,10,15} μm particle diameter and respective electronic clusters (yellow). Unconnected particles are shown in red. DOI: 10.1021/acs.jpcc.8b11043 J. Phys. Chem. C 2019, 123, 1626−1634 1629",
+   "bbox": [
+    54.5,
+    659.7,
+    570.5,
+    733.1
+   ],
+   "w": 2151,
+   "h": 307,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.637
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Utilization level of AM (left) and speciﬁc surface area of the electronic conduction cluster (right) at varying fraction of AM with 5 μm diameter. The geometrical limit (eq 7) of the speciﬁc surface area is indicated by the dashed line. observed: the smaller the particles, the higher the speciﬁc surface area gets. To quantify the eﬀect of particle size, the percolation threshold is deﬁned to be the AM volume fraction at which the majority of the 10 arrangements features a percolating cluster. This corresponds to the AM volume fraction at which the mean utilization level is at 40 vol%. These thresholds with respect to the particle size are presented in Figure 6 and can be ﬁtted by p d 7.83 ln( / m) 36.67 vol% c μ = [ + ] (8) indicating a logarithmic relationship between the AM particle size and percolation threshold.",
+   "bbox": [
+    54.5,
+    65.1,
+    570.5,
+    198.8
+   ],
+   "w": 2151,
+   "h": 558,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Speciﬁc surface area of the electronic cluster above percolation threshold for arbitrarily chosen AM particle size d = 10 μm featuring the power law predicted by percolation theory with a critical exponent of β = 0.41. The surface area is computed on the basis of eight particle arrangements for each packing density.",
+   "bbox": [
+    54.5,
+    235.1,
+    306.5,
+    401.1
+   ],
+   "w": 1051,
+   "h": 693,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Utilization level of AM (left) and speciﬁc surface area of the electronic conduction cluster (right) at varying fraction of AM for various AM particle sizes between 3 and 15 μm. DOI: 10.1021/acs.jpcc.8b11043 J. Phys. Chem. C 2019, 123, 1626−1634 1630",
+   "bbox": [
+    54.5,
+    597.7,
+    570.5,
+    733.2
+   ],
+   "w": 2151,
+   "h": 565,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Dependence of the percolation threshold (in vol% of AM) of the electronic conduction cluster on AM particle size, ﬁtted by a logarithmic function, which represents the data suﬃciently accurate.",
+   "bbox": [
+    318.5,
+    380.6,
+    570.5,
+    555.8
+   ],
+   "w": 1052,
+   "h": 731,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Utilization level of AM and SE (left) and speciﬁc active interface area between the ionic and electronic conduction cluster (right) for composite cathode arrangements at a constant porosity of 20% and AM particle size d = 5 μm. The lower x-axis reﬂects the total fraction of AM in the whole electrode, including porous space and SE, while the composition shown in the upper x-axis reﬂects the AM and SE volume in the solid phase, only. These ﬁndings correlate well with the observation of high fractions of inactive NCM-622 for large AM particle sizes, measured via ex situ X-ray diﬀraction and with their attributed low eﬀective electronic conductivity studied by Strauss et al.13 For a porosity of 20%, the resulting utilization levels of AM and SE, as well as the volume-speciﬁc interface area, are shown in Figure 7. The presented utilization level reveals the limitations for cathode p",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    199.0
+   ],
+   "w": 2151,
+   "h": 567,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Speciﬁc active interface area between the ionic and electronic conduction cluster at diﬀerent porosities for 5 μm-sized AM particles.",
+   "bbox": [
+    318.5,
+    446.5,
+    570.5,
+    630.8
+   ],
+   "w": 1051,
+   "h": 769,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Porosity dependence of the utilization level of AM and SE (left) and the speciﬁc active interface area between the ionic and electronic conduction cluster (right) for composite cathode microstructures at a constant composition of 70/30 vol% AM with electrolyte and AM particle size d = 5 μm. The lower x-axis reﬂects the total fraction of AM in the whole microstructure including porous space and SE. (82/18 wt% for NMC-622 and LPS). Apart from the shift of the optimal composition toward higher AM fractions for rising porosity, the ionic conduction limitation gains importance for higher porosities: the drop at compositions above the optimum is more pronounced at a porosity of 20% compared to 5 and 10%. Keeping a constant composition and varying the porosity, the eﬀect of densiﬁcation of composite electrodes can be studied. Figure 9 shows the percolation properties for porosities fr",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    199.0
+   ],
+   "w": 2151,
+   "h": 567,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Speciﬁc interface area between the electronic and ionic cluster for diﬀerent electrode thicknesses between 20 and 140 μm at a constant porosity of 20% and an AM particle size of d = 5 μm. The lower x-axis reﬂects the total fraction of AM in the whole composite, including porous space and SE, while the composition shown in the upper x-axis reﬂects the AM and SE volume in the solid phase, only. The microstructure models for minimal and maximal electrode thickness at 47 vol% AM fraction are shown (right).",
+   "bbox": [
+    318.5,
+    238.2,
+    570.5,
+    392.0
+   ],
+   "w": 1052,
+   "h": 642,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. General Microstructural Modeling Input Parameters",
+   "bbox": [
+    55.5,
+    43.6,
+    569.5,
+    791.8
+   ],
+   "w": 2058,
+   "h": 2994,
+   "dpi": 288,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.837
+  }
+ ]
+}

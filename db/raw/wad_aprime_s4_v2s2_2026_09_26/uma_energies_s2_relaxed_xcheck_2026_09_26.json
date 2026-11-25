@@ -1,0 +1,71 @@
+{
+ "schema": "uma_energies/v1",
+ "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)",
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "fairchem.core": "2.21.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/home/kgy/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ]
+ },
+ "energies": {
+  "V2_top_fcc/relaxed": {
+   "struct": "/tmp/wt_uma/db/raw/wad_aprime_s2_relax_2026_09_25/V2_top_fcc/relaxed.extxyz",
+   "sha256": "c38d6be18f920a29d036c6071a8ce210116f0b1835e6fb3752dfe1cdd3c2437b",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.8881632005413,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_top_hcp/relaxed": {
+   "struct": "/tmp/wt_uma/db/raw/wad_aprime_s2_relax_2026_09_25/V2_top_hcp/relaxed.extxyz",
+   "sha256": "41bf8693ff34ebf24800201361ad0858eebe2706c7e8255b73f490a4a7a8d5bf",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.88924498296993,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_bridge/relaxed": {
+   "struct": "/tmp/wt_uma/db/raw/wad_aprime_s2_relax_2026_09_25/V2_bridge/relaxed.extxyz",
+   "sha256": "832f9fe2e68a9bd364f56619e58ef64fed0e33d74b07c8f5f01ff25263788d45",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.88816472725465,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_hollow_fcc/relaxed": {
+   "struct": "/tmp/wt_uma/db/raw/wad_aprime_s2_relax_2026_09_25/V2_hollow_fcc/relaxed.extxyz",
+   "sha256": "e7c8e1b969e65132ea3bde1ae70a290b3b4f62d79fe858d1994ed2d28c245f91",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.88921847752987,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  }
+ }
+}

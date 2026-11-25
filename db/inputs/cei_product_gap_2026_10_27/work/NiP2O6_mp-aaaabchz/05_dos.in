@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'NiP2O6_mp-aaaabchz'
+  outdir = './tmp'
+  fildos = 'NiP2O6_mp-aaaabchz.dos'
+  degauss = 0.007
+/

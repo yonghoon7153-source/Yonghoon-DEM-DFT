@@ -1,0 +1,131 @@
+{
+ "slug": "alghamdi2026_finetuning_strategies_li_diffusion_mace",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 7,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Molecular dynamics snapshots of a knock-off event showing (a) the initial state, (b) an intermediate configuration along the transition pathway, and (c) the final state following the knock-off event. Purple atoms represent Li, and green atoms represent F.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    202.7
+   ],
+   "w": 1850,
+   "h": 608,
+   "dpi": 300,
+   "src": "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Arrhenius plot for activation energy Ea calculated with MACE-MPA-0 and our fine-tuned model (incorporating 200 DeePMD data points [38] and 100 MPtraj pre-training data points, ft200-pt100) from 9 ns MD trajectories. For reference, we include DeePMD results found in [38].",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    55.9,
+    557.1,
+    327.0
+   ],
+   "w": 1850,
+   "h": 1130,
+   "dpi": 300,
+   "src": "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The diffusivity at 400 K and 450 K computed using 3 ns trajectories from two independent replicas for different fine- tuned MACE models. The models in (a), (b), and (c) are trained with DeePMD model generated dataset [38]. Note that the 800 data points in (b) contains the same 710 data points in (c) with 90 additional LiF bulk structures. The models in (d) were trained using data generated from configurations explored by the MACE-MPA-0 model. The dashed lines are the DeePMD reference value [38].",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    401.7
+   ],
+   "w": 1850,
+   "h": 1437,
+   "dpi": 300,
+   "src": "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of datasets used to fine-tune MACE-MPA-0 [52], for the case where we used configurations from DeePMD actively learned dataset [38] to fine-tune with a varying amount from the pre-training Materials Project (MPtrj) [27] dataset. Fine-tuning data [38] Pre-training data [27] Bulk LiF Interstitial Li in LiF Total MPtrj 10 100 110 1000 10 200 210 0, 100, 1000 10 400 410 1000 10 700 710 0, 100, 1000, 10 000 100 700 800 0, 100, 1000, 10 000 200 1400 1600 1000",
+   "rotated_deg": 0,
+   "bbox": [
+    114.1,
+    23.1,
+    548.8,
+    802.0
+   ],
+   "w": 1674,
+   "h": 2997,
+   "dpi": 277,
+   "src": "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2. Dataset creation through active learning for models FT1 and FT2. The starting dataset for the active learning for both FT1 and FT2 models (step 0) was created by sampling configurations from MACE-MPA-0 MD trajectories, for bulk LiF and interstitial Li defects in LiF across a range of temperatures. FT1 model then added interstitial Li configurations in 2 steps, while in FT2, additional configurations for both bulk and interstitial Li cases were added in a single step. In each case sampling was done from the fine-tuned models themselves. FT1 FT2 Bulk Li interstitial Bulk Li interstitial step Temp (K) LiF in LiF LiF in LiF 0 300 4 10 4 10 350 — 10 — 10 400 4 10 4 10 450 — 10 — 10 500 4 10 4 10 600 4 10 4 10 1 300 — 10 7 10 400 — 10 7 10 500 — 10 7 10 600 — 10 7 10 2 300 — 10 — — 400 — 10 — — 500 — 10 — — 600 — 10 — — Total 156 144",
+   "rotated_deg": 0,
+   "bbox": [
+    114.1,
+    23.1,
+    557.3,
+    802.0
+   ],
+   "w": 1707,
+   "h": 2997,
+   "dpi": 277,
+   "src": "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3. The predicted values of the activation energy Ea, pre-exponential factor D0, and diffusivity D at 450 and 500 K, for MACE-MPA-0 foundational model, ft200-pt100 fine-tuned model, and the DeePMD reference values [38]. Ea D0 D (450 K) D (500 K) (eV) (cm2 s−1) ×10−3 (cm2 s−1) ×10−6 (cm2 s−1) ×10−6 MACE-MPA-0 0.22 ± 0.015 1.1 ± 0.42 3.45 ± 0.50 7.3 ± 1.2 Fine-tuned 0.20 ± 0.004 1.1 ± 0.13 6.4 ± 0.61 10.5 ± 0.43 DeePMD 0.24 3.3 6.8 12.5",
+   "rotated_deg": 0,
+   "bbox": [
+    114.1,
+    23.1,
+    547.1,
+    802.0
+   ],
+   "w": 1667,
+   "h": 2997,
+   "dpi": 277,
+   "src": "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf",
+   "blank": 0.906
+  }
+ ]
+}

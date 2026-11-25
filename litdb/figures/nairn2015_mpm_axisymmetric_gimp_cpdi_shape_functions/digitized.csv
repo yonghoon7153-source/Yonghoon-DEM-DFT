@@ -1,0 +1,114 @@
+figure,series,x_name,x,y_name,y,note
+Fig5,uGIMP (truncated),starting_position_mm,0.625,V_over_V0_pct,16.312,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (truncated),starting_position_mm,1.875,V_over_V0_pct,16.312,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (truncated),starting_position_mm,3.125,V_over_V0_pct,16.329,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (truncated),starting_position_mm,4.375,V_over_V0_pct,16.364,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (truncated),starting_position_mm,5.625,V_over_V0_pct,16.784,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (truncated),starting_position_mm,6.875,V_over_V0_pct,16.668,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (truncated),starting_position_mm,0.625,V_over_V0_pct,16.477,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (truncated),starting_position_mm,1.875,V_over_V0_pct,16.477,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (truncated),starting_position_mm,3.125,V_over_V0_pct,16.422,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (truncated),starting_position_mm,4.375,V_over_V0_pct,16.344,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (truncated),starting_position_mm,5.625,V_over_V0_pct,16.497,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (truncated),starting_position_mm,6.875,V_over_V0_pct,16.611,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (not truncated),starting_position_mm,0.625,V_over_V0_pct,6.523,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (not truncated),starting_position_mm,1.875,V_over_V0_pct,20.449,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (not truncated),starting_position_mm,3.125,V_over_V0_pct,20.335,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (not truncated),starting_position_mm,4.375,V_over_V0_pct,18.629,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (not truncated),starting_position_mm,5.625,V_over_V0_pct,14.771,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,uGIMP (not truncated),starting_position_mm,6.875,V_over_V0_pct,14.771,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (not truncated),starting_position_mm,0.625,V_over_V0_pct,20.120,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (not truncated),starting_position_mm,1.875,V_over_V0_pct,16.583,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (not truncated),starting_position_mm,3.125,V_over_V0_pct,16.521,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (not truncated),starting_position_mm,4.375,V_over_V0_pct,16.405,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (not truncated),starting_position_mm,5.625,V_over_V0_pct,16.488,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,CPDI (not truncated),starting_position_mm,6.875,V_over_V0_pct,16.561,"marker centre; frame map x 0-7.5 mm, y 6-24 %"
+Fig5,mean J (thin line),starting_position_mm,0.000,V_over_V0_pct,16.409,horizontal thin line (text: 'the thin line is the mean J')
+Fig6,uGIMP (truncated) [axisymmetric],starting_position_mm,0.625,V_over_V0_pct,16.309,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,uGIMP (truncated) [axisymmetric],starting_position_mm,1.875,V_over_V0_pct,16.309,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,uGIMP (truncated) [axisymmetric],starting_position_mm,3.125,V_over_V0_pct,16.324,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,uGIMP (truncated) [axisymmetric],starting_position_mm,4.375,V_over_V0_pct,16.351,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,uGIMP (truncated) [axisymmetric],starting_position_mm,5.625,V_over_V0_pct,16.566,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,uGIMP (truncated) [axisymmetric],starting_position_mm,6.875,V_over_V0_pct,16.527,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, No Extra Node BC)",starting_position_mm,0.625,V_over_V0_pct,23.326,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, No Extra Node BC)",starting_position_mm,1.875,V_over_V0_pct,15.629,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, No Extra Node BC)",starting_position_mm,3.125,V_over_V0_pct,15.964,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, No Extra Node BC)",starting_position_mm,4.375,V_over_V0_pct,16.074,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, No Extra Node BC)",starting_position_mm,5.625,V_over_V0_pct,16.204,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, No Extra Node BC)",starting_position_mm,6.875,V_over_V0_pct,16.123,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC 0)",starting_position_mm,0.625,V_over_V0_pct,17.478,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC 0)",starting_position_mm,1.875,V_over_V0_pct,16.001,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC 0)",starting_position_mm,3.125,V_over_V0_pct,15.982,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC 0)",starting_position_mm,4.375,V_over_V0_pct,16.016,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC 0)",starting_position_mm,5.625,V_over_V0_pct,16.204,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC 0)",starting_position_mm,6.875,V_over_V0_pct,16.134,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC mirror)",starting_position_mm,0.625,V_over_V0_pct,16.019,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC mirror)",starting_position_mm,1.875,V_over_V0_pct,16.019,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC mirror)",starting_position_mm,3.125,V_over_V0_pct,15.989,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC mirror)",starting_position_mm,4.375,V_over_V0_pct,16.012,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC mirror)",starting_position_mm,5.625,V_over_V0_pct,16.201,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig6,"uGIMP (planar, Extra Node BC mirror)",starting_position_mm,6.875,V_over_V0_pct,16.133,"marker centre; frame map x 0-7.5 mm, y 12-24 %"
+Fig8,Tractions,initial_particle_position_mm,0.500,particle_stress_MPa,999.8,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,1.500,particle_stress_MPa,1004.1,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,2.500,particle_stress_MPa,1000.2,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,3.500,particle_stress_MPa,1000.4,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,4.500,particle_stress_MPa,999.2,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,5.500,particle_stress_MPa,997.5,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,6.500,particle_stress_MPa,991.8,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,7.500,particle_stress_MPa,998.6,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,8.500,particle_stress_MPa,998.6,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Tractions,initial_particle_position_mm,9.500,particle_stress_MPa,992.7,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,0.500,particle_stress_MPa,574.5,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,1.500,particle_stress_MPa,1149.5,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,2.500,particle_stress_MPa,1174.7,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,3.500,particle_stress_MPa,1182.7,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,4.500,particle_stress_MPa,1203.1,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,5.500,particle_stress_MPa,1200.8,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,6.500,particle_stress_MPa,1201.9,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,7.500,particle_stress_MPa,1193.8,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,8.500,particle_stress_MPa,1193.8,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,Particle Forces,initial_particle_position_mm,9.500,particle_stress_MPa,1182.4,"marker centre; frame map x 0-10 mm, y 500-1300 MPa"
+Fig8,dotted line (specified 1000 MPa),initial_particle_position_mm,0.000,particle_stress_MPa,997.9,reads 997.9 = reading offset about -2 MPa
+Fig10,Nose experiment (circle),time_us,0.000,position_cm,0.000,marker centre
+Fig10,Nose MPM line at that time,time_us,0.000,position_cm,-0.006,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,10.400,position_cm,0.920,marker centre
+Fig10,Nose MPM line at that time,time_us,10.400,position_cm,0.929,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,15.300,position_cm,1.340,marker centre
+Fig10,Nose MPM line at that time,time_us,15.300,position_cm,1.335,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,20.500,position_cm,1.750,marker centre
+Fig10,Nose MPM line at that time,time_us,20.500,position_cm,1.758,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,20.700,position_cm,1.720,marker centre
+Fig10,Nose MPM line at that time,time_us,20.700,position_cm,1.774,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,25.300,position_cm,2.160,marker centre
+Fig10,Nose MPM line at that time,time_us,25.300,position_cm,2.138,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,28.300,position_cm,2.380,marker centre
+Fig10,Nose MPM line at that time,time_us,28.300,position_cm,2.371,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,30.500,position_cm,2.620,marker centre
+Fig10,Nose MPM line at that time,time_us,30.500,position_cm,2.540,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,40.400,position_cm,3.240,marker centre
+Fig10,Nose MPM line at that time,time_us,40.400,position_cm,3.270,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,40.600,position_cm,3.330,marker centre
+Fig10,Nose MPM line at that time,time_us,40.600,position_cm,3.284,"Bezier-sampled line, linear interpolation"
+Fig10,Nose experiment (circle),time_us,60.300,position_cm,4.560,marker centre
+Fig10,Nose MPM line at that time,time_us,60.300,position_cm,4.514,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,0.000,position_cm,-5.000,marker centre
+Fig10,Tail MPM line at that time,time_us,0.000,position_cm,-4.993,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,10.400,position_cm,-3.320,marker centre
+Fig10,Tail MPM line at that time,time_us,10.400,position_cm,-3.232,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,15.300,position_cm,-2.410,marker centre
+Fig10,Tail MPM line at that time,time_us,15.300,position_cm,-2.408,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,20.500,position_cm,-1.540,marker centre
+Fig10,Tail MPM line at that time,time_us,20.500,position_cm,-1.541,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,20.700,position_cm,-1.640,marker centre
+Fig10,Tail MPM line at that time,time_us,20.700,position_cm,-1.508,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,25.300,position_cm,-0.820,marker centre
+Fig10,Tail MPM line at that time,time_us,25.300,position_cm,-0.752,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,28.300,position_cm,-0.310,marker centre
+Fig10,Tail MPM line at that time,time_us,28.300,position_cm,-0.264,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,30.500,position_cm,0.200,marker centre
+Fig10,Tail MPM line at that time,time_us,30.500,position_cm,0.091,"Bezier-sampled line, linear interpolation"
+Fig10,Tail experiment (square),time_us,40.400,position_cm,1.640,marker centre
+Fig10,Tail MPM line at that time,time_us,40.400,position_cm,1.645,"Bezier-sampled line, linear interpolation"
+Fig10,Nose MPM line end,time_us,100.000,position_cm,4.757,line ends at t = 100 us
+Fig10,Tail MPM line end,time_us,100.000,position_cm,4.423,line ends at t = 100 us
+Fig7,solid lines (MPM) left end,V_over_V0_pct,9.300,stress_MPa,-25500.0,sigma_rr = sigma_tt end about -25.5 GPa; sigma_zz end about +15.2 GPa (text says 'plotted up to 84% compression')

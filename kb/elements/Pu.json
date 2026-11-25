@@ -1,0 +1,39 @@
+{
+  "symbol": "Pu",
+  "name": "Plutonium",
+  "Z": 94,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 5f⁶7s²(예외적으로 6d 없음). 초우라늄이자 핵무기·MOX 연료(PuO₂)의 핵심. 5f 국재↔편재 전환의 정중앙 — δ-Pu 금속은 응집물질물리의 난제(6개 동소체, 음의 열팽창, DMFT 대상)로 유명. 주 산화수 +4. 전지와 무관하나 강상관 5f 물리의 상징적 사례.",
+  "oxidation_states": ["+7", "+6", "+5", "+4", "+3"],
+  "electronegativity": 1.28,
+  "ionic_radius_A": {
+    "Pu3+_VI": 1.00,
+    "Pu4+_VI": 0.86,
+    "Pu4+_VIII": 0.96,
+    "Pu5+_VI": 0.74,
+    "_note": "Shannon 1976: Pu3+ VI 1.00, Pu4+ VI 0.86 / VIII 0.96, Pu5+ VI 0.74 A. Np보다 소폭 작음(계열 수축)."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f⁶ 7s²",
+    "electron_config": "[Rn] 5f⁶ 7s²",
+    "valence_orbitals": "5f⁶ 7s² (6d⁰!) — Am 직전이라 5f가 하나 더 채워지며 6d를 안 가짐. Pu⁴⁺면 5f⁴",
+    "band_character": "5f⁶ — 악티나이드 5f 국재↔편재 Mott 전환의 정중앙. α-Pu는 5f 편재(itinerant), δ-Pu는 부분국재로 갈리는 미묘한 경계라 표준 DFT가 부피·에너지를 못 맞추고 DMFT(동적평균장)가 필요한 대표 강상관계. PuO₂는 국재 5f 절연체(갭 ~2.8 eV). '5f 국재/편재, 강상관'의 교과서적 예.",
+    "bonding": "Pu–O 이온성+5f 공유 기여(PuO₂ fluorite); 금속 Pu는 5f 결합의 미묘한 부분참여로 저대칭·저밀도 동소체."
+  },
+  "representative_compounds": [
+    {"formula": "PuO2", "context": "대표 산화물(+4)·MOX 연료", "battery_role": "해당 없음(방사성)", "note": "fluorite형; 국재 5f 절연체(갭 ~2.8 eV). MOX((U,Pu)O₂) 핵연료"},
+    {"formula": "PuF4", "context": "할라이드(+4)", "battery_role": "해당 없음", "note": "금속 Pu 환원 제조 중간체"},
+    {"formula": "PuF6", "context": "휘발성 6가 불화물", "battery_role": "해당 없음", "note": "actinide hexafluoride 계열(불안정·강산화성)"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "5f⁶ — 악티나이드 계열에서 5f가 편재(itinerant, 결합)에서 국재(localized, 자성)로 넘어가는 Mott 전환의 한복판. 금속 Pu는 α↔δ 동소체마다 5f 편재도가 달라 표준 DFT(LDA/PBE)가 δ상 부피를 크게 틀리고 DMFT라야 재현됨 — 강상관 벤치마크의 상징. PuO₂는 국재 5f 절연체(갭 ~2.8 eV), DFT+U/하이브리드 필요. 초우라늄이라 실측 밴드데이터는 특수시설 한정.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Pu3+/Pu4+/Pu5+)",
+    "Savrasov, Kotliar, Abrahams, Nature 2001 — δ-Pu DMFT (5f 부분국재·강상관)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — Pu 화학",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · δ-Pu DMFT 문헌 · CRC/Greenwood) — 우리 db 절대값과 분리."
+}

@@ -1,0 +1,638 @@
+{
+ "slug": "basu2026_multifidelity_bandit_dopant_screening_funnel",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Three-tier DFT screening funnel. Tier 1 uses MF-OFUL-guided PBE-SCF for fast initial ranking (245 calculations, 93.9% convergence). Simple flagging criteria—d-electron count > 0 and ionic radius mismatch > 20%—route candidates to Tier 2 (PBE+U) or Tier 3 (ionic relaxation). The two higher tiers catch orthogonal failure modes: d-electron delocalization (V, Cu, Fe dopants) and geometric distortion (In at the Ti site), respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.0,
+    100.0,
+    530.0,
+    405.0
+   ],
+   "w": 1876,
+   "h": 1272,
+   "dpi": 233,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.926,
+   "note": "manual: TikZ 벡터 도식 — 자동 임계(min_draw=6) 미달, 손으로 영역 지정"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Simple regret comparison across methods. Mean ± s.d. over 6 hosts × 10 seeds on 1,000-candidate synthetic benchmarks at 8% budget. MF-OFUL achieves 10× lower simple regret than all other methods. Brackets show Wilcoxon p-values. MF-BO-EI (n = 18) uses identical fidelity-switching logic as MF-OFUL but never triggers its surrogate because EI selects high-GP-uncertainty candidates that always exceed the fidelity threshold.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.3,
+    319.1
+   ],
+   "w": 1931,
+   "h": 1055,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3: PBE versus PBE+U bandgaps for transition metal dopants. Grouped bar chart showing qualitative reclassifications. Arrows indicate direction and magnitude of shift. Red dashed line: metallic threshold (0.5 eV). Three of five doped systems cross the metallic threshold upon applying the Hubbard U correction, demonstrating that PBE-SCF alone is insufficient for transition metal dopant screening.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.4,
+    355.1
+   ],
+   "w": 1931,
+   "h": 1205,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4: HSE06 hybrid functional validation. (a) PBE versus HSE06 bandgaps for 5 systems. PBE misclassifies V-doped ZnO as near-metallic (0.15 eV →3.87 eV at HSE06) and ZnO:Cu as wide-gap (3.21 eV →0.09 eV). (b) PBE+U versus HSE06 shows substantially improved agreement for d-electron systems, with mean absolute deviation of 0.15 eV. The dashed line indicates perfect agreement; the shaded band marks the metallic threshold (<0.5 eV).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    87.5,
+    529.3,
+    284.9
+   ],
+   "w": 1931,
+   "h": 824,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5: Empirical Lyapunov diagnostics. (a) Lyapunov function decomposition: total L(t) (black), information deficit Φ(t) (blue, saturates), and bias potential µ · B(t) (red, grows linearly but bounded). (b) UCB width evolution: OFUL (blue, 80 steps) versus MF-OFUL (red, ∼548 steps). Triangles mark MF-OFUL’s DFT steps. Shaded bands: ±1 s.d. across 5 seeds. The information deficit saturates while the bias potential remains bounded, confirming that surrogate errors do not accumulate.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.4,
+    244.1
+   ],
+   "w": 1931,
+   "h": 743,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Collaborative filtering biplot of the host–dopant interaction matrix. SVD decomposition of the (5×16) reward matrix into two latent dimensions. Hosts (stars) cluster by crystal chemistry: MgO–ZnO (Group-II oxides) and TiO2–SnO2 (rutile-type Group-IV oxides), with SrTiO3 as an outlier. Dopants separate into sp-electron (triangles: Al, Ga, In, Sc, Y) and d-electron (squares: V, Cr, Mn, Fe, Co, Ni, Cu) groups. Cu and In are outliers with strongly host-dependent behavior. PC1 and PC2 together capture 87% of variance.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    60.0,
+    529.3,
+    385.1
+   ],
+   "w": 1931,
+   "h": 1355,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.975,
+   "note": "재렌더: 상단 host 라벨이 잘려 위쪽 여백 추가"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "Figure 7: Bandgap landscape of the 529-candidate ZnO co-doping campaign. Each point represents a DFT-evaluated candidate, sorted by bandgap and colored by reward (green: near 2.0 eV target; red: far from target). Cu-containing systems (diamonds) cluster near the target window (green band), while most other combinations produce wide-gap or near-metallic outcomes. Key Cu co-doped candidates are annotated.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.3,
+    312.0
+   ],
+   "w": 1931,
+   "h": 1025,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "note": "manual: 캡션 앵커 자동탐지 실패(영역 없음) → 손으로 렌더"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "Figure 8: Simple regret versus DFT budget on real QE data. Mean ± s.d. over 10 seeds on the 223-candidate cross-host QE oracle (5 oxide hosts). MF-OFUL achieves SR = 0.000 at 12% budget (annotated), finding the global optimum in every run. The surrogate activation threshold creates a sharp transition between 8% (no surrogate) and 12% (full activation), while DFT-only methods improve gradually.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.4,
+    312.7
+   ],
+   "w": 1931,
+   "h": 1030,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.608
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 25,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1: Lyapunov function decomposition (a) Lyapunov function L(t) = Φ(t)+µ·B(t) averaged over 10 seeds on 1,000-candidate synthetic benchmarks. (b) Information deficit Φ(t) = log det Vfull −log det Vt, showing rapid saturation after bootstrap. (c) Bias potential µ·B(t), growing linearly but bounded by surrogate accuracy.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    165.1,
+    529.4,
+    323.1
+   ],
+   "w": 1931,
+   "h": 660,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 25,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2: UCB width evolution UCB width (log scale) for OFUL (blue) and MF-OFUL (red) over time. Triangle markers indicate DFT steps in MF-OFUL. During bootstrap (steps 0–5), both methods have identical widths. After bootstrap, MF-OFUL evaluates ∼548 candidates per run with DFT concentrated at high-uncertainty candidates and periodic intervals.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    410.0,
+    529.3,
+    685.0
+   ],
+   "w": 1931,
+   "h": 1147,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.914,
+   "note": "⚠ 자동 크로핑 오류 수정 (2026-09-09): 이 preprint 의 SI 는 **캡션이 그림 위**에 있어 extract_figures 의 \"그림은 캡션 위\" 규칙이 매번 한 칸 앞 그림을 잡았다 → 손으로 재지정"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 26,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3: Information accumulation log det Vt growth for OFUL and MF-OFUL. Despite slower per-step accumulation (pseudo- weighted updates at w = 0.2), MF-OFUL reaches a higher total (∼103 versus ∼89) by evaluating 7× more candidates.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.3,
+    332.0
+   ],
+   "w": 1931,
+   "h": 1109,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.931,
+   "note": "⚠ 자동 크로핑 오류 수정 (2026-09-09): 이 preprint 의 SI 는 **캡션이 그림 위**에 있어 extract_figures 의 \"그림은 캡션 위\" 규칙이 매번 한 칸 앞 그림을 잡았다 → 손으로 재지정"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 26,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4: Surrogate prediction error Surrogate prediction error (—Ridge ensemble mean −DFT reward—) at DFT-verified steps. Individual seeds shown as gray points; red line shows running mean. The flat trend confirms that periodic forced DFT prevents error drift.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    412.0,
+    529.3,
+    678.0
+   ],
+   "w": 1931,
+   "h": 1109,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.976,
+   "note": "⚠ 자동 크로핑 오류 수정 (2026-09-09): 이 preprint 의 SI 는 **캡션이 그림 위**에 있어 extract_figures 의 \"그림은 캡션 위\" 규칙이 매번 한 칸 앞 그림을 잡았다 → 손으로 재지정"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 27,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5: Convergence study 2×2 grid showing simple regret (mean ± std over 5 seeds) across four parameter sweeps: (a) pool size (250–2,000), (b) DFT budget (40–120), (c) feature dimensionality (10–40), (d) noise level (σ = 0.1–1.0). MF-OFUL ranks first across all 15 conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.3,
+    421.0
+   ],
+   "w": 1931,
+   "h": 1480,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.951,
+   "note": "⚠ 자동 크로핑 오류 수정 (2026-09-09): 이 preprint 의 SI 는 **캡션이 그림 위**에 있어 extract_figures 의 \"그림은 캡션 위\" 규칙이 매번 한 칸 앞 그림을 잡았다 → 손으로 재지정"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 27,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6: MF-BO comparison Bar charts comparing Random, OFUL, MF-OFUL, and MF-BO-EI: (a) simple regret, (b) DFT fraction, (c) surrogate calls. MF-BO-EI achieves DFT fraction = 1.00 (zero surrogate usage) across all experiments.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    501.0,
+    529.3,
+    683.0
+   ],
+   "w": 1931,
+   "h": 759,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.611,
+   "note": "⚠ 자동 크로핑 오류 수정 (2026-09-09): 이 preprint 의 SI 는 **캡션이 그림 위**에 있어 extract_figures 의 \"그림은 캡션 위\" 규칙이 매번 한 칸 앞 그림을 잡았다 → 손으로 재지정"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 28,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7: Per-host simple regret Simple regret by host (6 panels) for all methods. MF-OFUL achieves the lowest regret on 5 of 6 hosts; the exception is the host with the weakest linear signal.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.3,
+    247.0
+   ],
+   "w": 1931,
+   "h": 755,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.844,
+   "note": "⚠ 자동 크로핑 오류 수정 (2026-09-09): 이 preprint 의 SI 는 **캡션이 그림 위**에 있어 extract_figures 의 \"그림은 캡션 위\" 규칙이 매번 한 칸 앞 그림을 잡았다 → 손으로 재지정"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1: Screening performance across three benchmark suites. Simple regret (SR): gap between best-found reward and global optimum (lower is better), averaged over 10+ seeds. Parenthetical percentages indicate budget fraction. GP-based methods compared in Supple- mentary Table 11. Bottom row: Wilcoxon signed-rank p-values for the synthetic benchmark only (paired by seed, n = 120), which provides the largest sample size for statistical testing. Dashes indicate methods not run on that benchmark. Benchmark MF-OFUL OFUL TS Platform Random Retroactive benchmarks (both objectives averaged) Materials Project (20%) 0.000 0.215 — 0.237 0.236 Synthetic (8%) 0.049 0.468 0.464 0.564 0.688 Single-objective validation (target bandgap 2p0) MP 500 (8%) 0.017 0.150 0.036 — 0.182 Real QE, ZnO (62.5%) 0.000 0.002 — — 0.069 Real QE, cross-host (12%) 0.000 0.031 0.120 — 0.392 p vs Random (synthetic) 3.2 × 10",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    76.6,
+    528.4,
+    807.2
+   ],
+   "w": 1891,
+   "h": 2995,
+   "dpi": 295,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 12,
+   "file": "tab_2.png",
+   "caption": "Table 2: Prospective comparisons on ZnO. Top: single-dopant pool (16 candidates, budget 10). Bottom: co-doped pool (120 candidates, budget 18). Target bandgap: 2.0 eV. Surrogate calls = 0 in these QE campaigns because UCB widths remained above the fidelity threshold at these pool sizes; surrogate activation is confirmed on 500-candidate Materials Project pools (see text). Single-dopant (16) Co-doped (120) OFUL MF-OFUL OFUL Main DFT calls 10 10 18 Surrogate calls 0 0 0 Verification DFT — 3 3 Best found Mn (1.85 eV) Mn (1.85 eV) Al+Cu (1.28 eV) Success rate 100% 100% 100% Wall time 1.3 h 1.9 h 1.4 h",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    76.6,
+    528.4,
+    773.8
+   ],
+   "w": 1923,
+   "h": 2906,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 14,
+   "file": "tab_3.png",
+   "caption": "Table 3: 50-seed retroactive reanalysis on 230 QE-converged ZnO candidates. The 229 unique QE results from the prospective campaign serve as an oracle. MF-OFUL, OFUL, and Random are each run 50 times. “Cov.” is the fraction of candidates evaluated (DFT + surrogate). “Top-5” is the mean number of true top-5 candidates found. P(≥0.9) is the fraction of seeds achieving reward ≥0.9. Global optimum: Y2Cu2 ZnO, reward = 0.987. Budget Method DFT Surr. Cov. Best reward SR Top-5 P(≥0.9) 18 (8%) MF-OFUL 18 0 8% 0.263 0.723 0.0 0% OFUL 18 0 8% 0.263 0.723 0.0 0% Random 18 0 8% 0.678 ± 0.262 0.308 0.4 26% 42 (18%) MF-OFUL 42 184 98% 0.987 ± 0.000 0.000 5.0 100% OFUL 42 0 18% 0.452 0.534 0.0 0% Random 42 0 18% 0.850 ± 0.181 0.136 0.9 58% 80 (35%) MF-OFUL 37 193 100% 0.987 ± 0.000 0.000 5.0 100% OFUL 80 0 35% 0.452 0.534 0.0 0% Random 80 0 35% 0.942 ± 0.095 0.045 2.0 86%",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    76.0,
+    528.4,
+    768.3
+   ],
+   "w": 1923,
+   "h": 2886,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 28,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1: Full method comparison across all benchmarks Extended version of Table 1 (main text) with per-host breakdowns and BO-GP-EI. Simple regret (SR) = gap between best-found reward and global optimum; lower is better. Bold indicates the best method per row. Panel A: Synthetic benchmark (1,000 candidates, budget = 80 DFT calls [8%], 10 seeds per condition).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    73.5,
+    528.3,
+    737.9
+   ],
+   "w": 1923,
+   "h": 2769,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 29,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Materials Project benchmark per-host simple regret (mean ± s.d., 10 seeds). Budget = 20% of per-host candidate pool. BO-GP-EI was not run on the MP benchmark. MF-OFUL achieves zero mean simple regret on every host under both objectives.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    71.5,
+    528.3,
+    584.4
+   ],
+   "w": 1923,
+   "h": 2138,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 30,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3: Hyperparameter sensitivity",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    580.3,
+    733.5
+   ],
+   "w": 2139,
+   "h": 2772,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 30,
+   "file": "tab_S4.png",
+   "caption": "Table S4: MF-OFUL hyperparameter sensitivity on synthetic benchmark (1,000 candidates, budget 80, 10 seeds). Simple regret (SR) reported. The method is robust across a wide range; only extreme values (w = 1.0, β = 0.1) cause significant degradation.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    580.3,
+    733.5
+   ],
+   "w": 2139,
+   "h": 2772,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 30,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Step-by-step OFUL selection on ZnO prospective campaign. Target bandgap: 2.0 eV. Mn (step 0, reward 0.747) is the best candidate found. Steps 0–2 explore diverse feature regions (3d TM, main group, rare earth); subsequent steps sample remaining feature regions to reduce uncertainty.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    580.3,
+    733.5
+   ],
+   "w": 2139,
+   "h": 2772,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 30,
+   "file": "tab_S6.png",
+   "caption": "Table S6: Ridge regression (α = 1) fit quality on DFT bandgap rewards by host. R2 computed on all available DFT data per host. ZnO shows the strongest linear signal, consistent with OFUL’s best performance on this host.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    580.3,
+    733.5
+   ],
+   "w": 2139,
+   "h": 2772,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 32,
+   "file": "tab_S7.png",
+   "caption": "Supplementary Table 7: Co-doped OFUL campaign on ZnO",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    528.3,
+    764.9
+   ],
+   "w": 1923,
+   "h": 2903,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 32,
+   "file": "tab_S8.png",
+   "caption": "Table S8: Step-by-step OFUL selection on ZnO co-doped campaign (120 candidates, budget 18 + 3 verification). Target bandgap: 2.0 eV. Al+Cu (step 6, reward −0.718) is the best candidate found. Cu-containing pairs (steps 4, 6, 9, 10) consistently produce the narrowest non-metallic gaps, confirming Cu’s role as a p-type acceptor. Verification-phase candidates (steps 18–20) had high surrogate predictions but low actual rewards, demonstrating the importance of DFT verification.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    103.2,
+    528.3,
+    764.9
+   ],
+   "w": 1923,
+   "h": 2758,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 35,
+   "file": "tab_S9.png",
+   "caption": "Supplementary Table 9: PBE versus experimental bandgap comparison Spearman rank correlations between PBE-computed and experimental bandgaps for 54 host– dopant combinations across ZnO (n = 20), TiO2 (n = 17), and SrTiO3 (n = 17). Experimental values from UV-vis diffuse reflectance spectroscopy and Tauc analysis (see main text for details).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    71.9,
+    528.3,
+    767.9
+   ],
+   "w": 1923,
+   "h": 2901,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 35,
+   "file": "tab_S10.png",
+   "caption": "Supplementary Table 10: PBE versus PBE+U bandgaps Dudarev formulation; U values (eV): Ti = 3.5, V = 4.5, Cr = 4.0, Mn = 5.0, Fe = 5.0, Co = 5.5, Ni = 8.0, Cu = 4.0. SCF-only on PBE-relaxed geometries. Systems marked with † are from the expanded campaign (64-core VPS, 8 MPI ranks).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    71.9,
+    528.3,
+    767.9
+   ],
+   "w": 1923,
+   "h": 2901,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 36,
+   "file": "tab_S11.png",
+   "caption": "Supplementary Table 11: Multi-fidelity and GP method comparison Single objective (target bandgap 2p0), budget = 80 DFT calls from 1,000 candidates. BO-GP- EI and GP-UCB use the same GP surrogate (Mat´ern 5/2) with different acquisition functions. CR counts DFT steps only. p from Wilcoxon rank-sum test versus MF-OFUL.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    528.3,
+    667.3
+   ],
+   "w": 1923,
+   "h": 2496,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 36,
+   "file": "tab_S12.png",
+   "caption": "Supplementary Table 12: Basis set and k-grid convergence tests Bandgap (eV) for three representative systems at four DFT settings. Production settings (ecutwfc = 40 Ry, 2 × 2 × 2 k-grid) versus higher-accuracy settings. Rankings are preserved across all settings despite large absolute shifts for ZnO:Al at denser k-grids.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    528.3,
+    667.3
+   ],
+   "w": 1923,
+   "h": 2496,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 37,
+   "file": "tab_S13.png",
+   "caption": "Supplementary Table 13: Surrogate activation on 500-candidate Materials Project pools",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    528.4,
+    362.3
+   ],
+   "w": 1923,
+   "h": 1225,
+   "dpi": 300,
+   "src": "838982bf-95._Accelerated_Dopant_Screening_in_Oxide_Semiconductors_via_MultiFidelity_Contextual_Bandits_and_a_ThreeTier_DFT_Validation_Funnel.pdf",
+   "blank": 0.905
+  }
+ ]
+}

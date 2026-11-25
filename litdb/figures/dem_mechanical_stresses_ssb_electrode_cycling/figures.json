@@ -1,0 +1,125 @@
+{
+ "slug": "dem_mechanical_stresses_ssb_electrode_cycling",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic representation of the simulation workflow based on the experimental procedure of cycling SSB composite cathodes under isostatic compressing.",
+   "bbox": [
+    31.6,
+    49.4,
+    567.8,
+    401.2
+   ],
+   "w": 2235,
+   "h": 1467,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.795
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Representation of the transition of M1 from the uniaxially compressed state to the relaxed state. interfaces and AM active surface that lead to heterogeneous (de)lith­ iation electrochemical kinetics. As a result, when performing numerical electrochemical simulations using microstructures derived from our simulations, symmetrical charge and discharge profiles are anticipated, without difference in potential values since the AM particles revert to their original size after each step. This would be because of the homo­ geneous AM size change during the DEM simulations. However, by using this approach, we assume that the DEM model should be able to capture the effects of isostatic compression on the microstructure allowing for a comprehensive analysis of the resulting microstructural changes and stress distribution within the electrode during electrochemical cycling under applied pr",
+   "bbox": [
+    31.6,
+    429.0,
+    566.0,
+    637.0
+   ],
+   "w": 2228,
+   "h": 868,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Representation of the transition of M1 from the relaxed state to the isostatically compressed state. challenging task beyond the scope of this publication. applied in lateral dimensions. 2.1.4. Electronic conductivity and ionic geometrical tortuosity factor calculations 3. Results and discussion In order to analyze the microstructural characteristics of the elec­ trode, we use physical properties and geometrical descriptors. We used the effective electronic conductivity σel arising from the percolated network of AM particles, and the geometrical tortuosity τ for ionic conduction along the percolated network of SE particles. The σel and τ of the microstructures serve as quantitative indicators for the impact of the compressing protocol on the electrode’s electrochemical performance. These parameters provide a simple means of assessing both the ionic and electronic properties of th",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    251.7
+   ],
+   "w": 2228,
+   "h": 844,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Average stress exerted on each dimension of M1 as a function of particles’ position in z dimension and the radius under 375 MPa uniaxial compression. The microstructure is presented with particles color coded according to the exerted stress on each dimension. stress distribution becomes imperative for enhancing electrochemical cycling protocols, thereby optimizing the battery cell’s overall cycle life and preserving the health of the AM and SE structural integrity. This milder approach not only mitigates the risk of structural damage but also contributes to the sustained performance and longevity of the SSB cell. across the microstructure thickness after the charge. Before the AM size increases to simulate discharging, AM experi­ ences higher stress compared to SE particles due to the deformable and soft nature of the SE. This gap in stress levels widens with AM particle expansio",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    423.7
+   ],
+   "w": 2228,
+   "h": 1561,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. a) Average stress exerted on each dimension of M1 as a function of particles’ position in z dimension and the radius under 5 MPa isostatic compression. The microstructure is presented with particles color coded according to the exerted stress on each dimension. b) Heatmaps of exerted stress in z dimension at the dis­ charged and charged states over the xy cross-section of M1 and M2 under 5 MPa isostatic compression.",
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    686.4
+   ],
+   "w": 2227,
+   "h": 2655,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. a) Electrodes’ σel evolution normalized by the conductivity of the AM (σAM) of the microstructures resulting from different isostatic compressions. b) Electrodes’ τ evolution for the microstructures resulting from different isostatic compressions. The x axis represents the microstructures resulting from different steps in the modeling workflow where Di and Ci refer to the discharging and charging for the ith time under isostatic compression. The green markers in the legend are aimed to differentiate the two microstructures and are not used for data representation. 7",
+   "bbox": [
+    31.6,
+    236.9,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1939,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.967
+  }
+ ]
+}

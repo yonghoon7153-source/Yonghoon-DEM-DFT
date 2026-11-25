@@ -1,0 +1,157 @@
+{
+  "schema": "ga_verdicts/v1",
+  "prereg": "db/properties/cathode_cei_limatched_additivity_prereg_2026_09_29.json",
+  "tol": 0.001,
+  "G0_reproduce": {
+    "verdict": "REPRODUCED",
+    "max_abs_delta": 0.0,
+    "n_compared": 216,
+    "tol": 0.002
+  },
+  "missing_labels": [],
+  "design_pairs": {
+    "Li": {
+      "ok": true,
+      "problems": [],
+      "compositions": {
+        "nd_li_002": {
+          "Li": 5.34,
+          "Nd": 0.02,
+          "P": 1.0,
+          "S": 4.4,
+          "Cl": 1.6
+        },
+        "o_only_003": {
+          "Li": 5.4,
+          "P": 1.0,
+          "S": 4.37,
+          "Cl": 1.6,
+          "O": 0.03
+        },
+        "ndo_li_002": {
+          "Li": 5.34,
+          "Nd": 0.02,
+          "P": 1.0,
+          "S": 4.37,
+          "Cl": 1.6,
+          "O": 0.03
+        },
+        "lim_li_002": {
+          "Li": 5.34,
+          "P": 1.0,
+          "S": 4.4,
+          "Cl": 1.6
+        },
+        "lim_li_002_o": {
+          "Li": 5.34,
+          "P": 1.0,
+          "S": 4.37,
+          "Cl": 1.6,
+          "O": 0.03
+        }
+      }
+    },
+    "P": {
+      "ok": true,
+      "problems": [],
+      "compositions": {
+        "nd_p_002": {
+          "Li": 5.44,
+          "Nd": 0.02,
+          "P": 0.98,
+          "S": 4.4,
+          "Cl": 1.6
+        },
+        "o_only_003": {
+          "Li": 5.4,
+          "P": 1.0,
+          "S": 4.37,
+          "Cl": 1.6,
+          "O": 0.03
+        },
+        "nd_p_002_asused": {
+          "Li": 5.44,
+          "Nd": 0.02,
+          "P": 0.98,
+          "S": 4.37,
+          "Cl": 1.6,
+          "O": 0.03
+        },
+        "lim_p_002": {
+          "Li": 5.44,
+          "P": 0.98,
+          "S": 4.4,
+          "Cl": 1.6
+        },
+        "lim_p_002_asused": {
+          "Li": 5.44,
+          "P": 0.98,
+          "S": 4.37,
+          "Cl": 1.6,
+          "O": 0.03
+        }
+      }
+    }
+  },
+  "GA_additivity": {
+    "Li": {
+      "labels": {
+        "nd": "nd_li_002",
+        "o": "o_only_003",
+        "both": "ndo_li_002",
+        "lim_nd": "lim_li_002",
+        "lim_both": "lim_li_002_o"
+      },
+      "n_cells": 23,
+      "N0_mean": -0.002702,
+      "N1_mean": -0.002699,
+      "residual": 3e-06,
+      "tol": 0.001,
+      "pass": true,
+      "info_R2_same_cells": 6e-06,
+      "info_R_O": -8e-06,
+      "info_by_V": {
+        "2.50": -5e-06,
+        "3.00": -1.3e-05,
+        "3.50": 2e-06,
+        "4.00": 2.7e-05,
+        "4.30": 1e-05,
+        "4.50": -1e-05
+      },
+      "info_n_cells_over_tol": 0,
+      "info_max_abs_cell_residual": 0.00012,
+      "info_cells_over_tol": []
+    },
+    "P": {
+      "labels": {
+        "nd": "nd_p_002",
+        "o": "o_only_003",
+        "both": "nd_p_002_asused",
+        "lim_nd": "lim_p_002",
+        "lim_both": "lim_p_002_asused"
+      },
+      "n_cells": 22,
+      "N0_mean": -0.002724,
+      "N1_mean": -0.002729,
+      "residual": -5e-06,
+      "tol": 0.001,
+      "pass": true,
+      "info_R2_same_cells": 1e-05,
+      "info_R_O": -5e-06,
+      "info_by_V": {
+        "2.50": -3e-06,
+        "3.00": 2e-06,
+        "3.50": -1.2e-05,
+        "4.00": -7e-06,
+        "4.30": -7e-06,
+        "4.50": -7e-06
+      },
+      "info_n_cells_over_tol": 0,
+      "info_max_abs_cell_residual": 3e-05,
+      "info_cells_over_tol": []
+    }
+  },
+  "source": {
+    "interface": "db/properties/cei_interface_V_ga_2026_09_29.json"
+  }
+}

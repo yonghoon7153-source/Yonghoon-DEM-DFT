@@ -1,0 +1,44 @@
+{
+ "n_atoms": 110,
+ "n_substrate": 98,
+ "n_ads": 12,
+ "substrate_kind": "PS4",
+ "normal_sign_declared_from_init": 1.0,
+ "fixed_policy": "far_half",
+ "fixed_n": 49,
+ "policy_expected_n": 49,
+ "mask_matches_policy": true,
+ "lateral_fixed_n": 0,
+ "z_ref_first_ads_layer_A": 19.273,
+ "n_first_layer_atoms": 4,
+ "penetration_max": {
+  "i": 89,
+  "el": "S",
+  "p_A": -1.458
+ },
+ "mixed_substrate_atoms": [
+  89,
+  90
+ ],
+ "sub_ads_min_gap_A": 1.028,
+ "bonds_listed": 18,
+ "bonds_out_of_tol": [],
+ "ps4_broken": {},
+ "ps4_partner_changed": [],
+ "disp_max_A": 2.151,
+ "disp_rms_A": 0.435,
+ "fixed_moved": [],
+ "lateral_moved": [],
+ "flags": [
+  "비혼합 기하 범위 벗어남 — 기판 원자 [89, 90] 가 첫 흡착층 평면 아래 1.5 Å 안 (최대 p -1.458 Å · 구조 경보 · 반응 판정 아님)"
+ ],
+ "thresholds": {
+  "pen_thr_A": 1.5,
+  "bond_tol": 0.15,
+  "first_layer_A": 0.8,
+  "nn_fac": 1.15,
+  "fixed_tol_A": 0.001,
+  "R_PS_A": 2.5
+ },
+ "⛔": "구조 경보만 낸다 — 반응·전하이동 판정 아님 · 원인 분류 아님 · 측방 영상 효과 미측정"
+}

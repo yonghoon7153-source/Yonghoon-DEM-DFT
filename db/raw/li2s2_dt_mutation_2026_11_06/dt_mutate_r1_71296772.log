@@ -1,0 +1,33 @@
+변이 499 개 (DS 판 472 · 자리 옮김 3 · DT 27) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 3 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_dt_r1_w*
+DS10_md_done_ignored             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT1_progress_no_after_traces     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT2_progress_gate_unchecked      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT3_progress_schedule_unchecked  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT4_progress_frames_unchecked    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT5_progress_record_inprog       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DQ68_melt_ledger_outside_section ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-E: 러너가 판정을 쓰는 네 자리 (담금질 끝 · 시작 전 재판정 · 첫 시드 녹음 멈춤 · 실행 중 상한) 모두 — 판정 파일의 임시 → 교체 사이에 신호가 와도 교체를 끝낸 뒤 받는다 · 판정 임시 파일이 안 남는다 · (3차 P1
+DT6_progress_record_unknown      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS21_md_seen_ignored             ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 160 · ⛔ 0
+DT7_after_trace_result_dropped   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT8_after_trace_tmp_dropped      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT9_after_trace_fire_log_dropped ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT11_shortcut_old_rule           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT12_prerun_keys_no_progress     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DT27_prerun_keys_no_times        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DT13_progress_vocab_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT14_p2_guard_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT15_p2_guard_verdict_only       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT16_p2_guard_history_only       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT17_p2_guard_links_ok           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT18_quench_check_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DF/DG: 1 단계 시드 판정 — quench_ps 가 카드 유도값보다 10 ps 김 (DT 전 1차 P1) → invalid (받음 pass)
+DT19_shortcut_plan_unchecked     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT20_shortcut_time_unchecked     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT21_shortcut_attempt_unchecked  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT22_progress_extra_files_ok     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT10_shortcut_late_ignored       ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 160 · ⛔ 0
+DT23_md_done_time_unread         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT24_judged_time_fixed           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT25_after_trace_vasp_dropped    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT26_runner_melt_written_ignored ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DT 전 1차 리뷰 P3: 첫 시드 녹음 fail 때 판정을 쓰지 못하면 장부에 판정을 지어 적지 않고 invalid 로 멈춘다 (닫힘은 장부에 그대로) (27 · 장부 판정 'invalid' · 엇갈림 '녹음 판정 fail 인데 시드 판정 invalid
+끝: 빨강 28 / 30

@@ -1,0 +1,14 @@
+변이 423 개 (DQ 판 368 − 뺌 1 · 자리 옮김 11 · DR 56) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 2 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_drr2_w*
+DQ69_folder_prior_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR48_preserved_runner_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DQ P1-2 (Codex 재현): B14 를 A14 보다 먼저 돌려 B14 첫 정본 판정 교체가 실패 (이력 · 임시 판정만 · 정본 없음) → 독립 요약 invalid · STOP 을 확인하고 기본 순서로 다시 시작해도 (A14 를 띄우지 않는다
+DQ72_summary_prior_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 3차 리뷰 P1: 장부 판정이 빈 끊긴 상태에서 폴더의 앞 판정 fail → 지금 pass · 앞 invalid → 원자료가 바뀐 뒤 pass 면 러너가 보류 (발사 0) · 같은 원자료면 적고 이어 간다 · (4차) 끊긴 뒤 사람이 한 번 더 
+DR49_preserved_summary_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR50_preserved_records_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR51_chain_nonsci_ledger_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR53_preserved_name_pattern      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR54_record_status_check_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR55_preserved_seeds_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 리뷰 P2-B · 2차: 현재 시드 폴더가 아닌 모든 폴더 (이름 꼴과 무관 — seed14.moved · old14 · seed15_moved · seed12-old) 의 정본 없는 판정 기록 · 정본 옆 판정 임시 파일 · 모르는 상태 ('P
+DR52_summary_chain_nonsci_off    ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 141 · ⛔ 0
+DR56_persist_before_stop_off     ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DQ P1-2 (Codex 재현): B14 를 A14 보다 먼저 돌려 B14 첫 정본 판정 교체가 실패 (이력 · 임시 판정만 · 정본 없음) → 독립 요약 invalid · STOP 을 확인하고 기본 순서로 다시 시작해도 (A14 를 띄우지 않는다
+끝: 빨강 10 / 11

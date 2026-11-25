@@ -1,0 +1,44 @@
+{
+  "symbol": "Er",
+  "name": "Erbium",
+  "Z": 68,
+  "role": "란타나이드 aliovalent 도펀트(Er2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. 실질 산화수 +3만(inert, 비-redox). Er³⁺(4f¹¹)는 광통신의 핵심 이온: 1.5 μm 발광(⁴I₁₃/₂→⁴I₁₅/₂)으로 Er-도핑 광섬유증폭기(EDFA)·양자메모리에 필수, 녹색 상향변환(⁴S₃/₂)도 유명. Er³⁺면 P 자리 치환+O 동반(P-O-Er 가정); 무거운 RE라 반경 작음.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.24,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹² 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f¹² 6s²",
+    "valence_orbitals": "4f¹² 6s² — Er³⁺면 4f¹¹(개방껍질, S=3/2, ⁴I₁₅/₂); P 자리 치환+O 동반",
+    "band_character": "Er³⁺=4f¹¹ 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 부분점유 4f¹¹가 갭 내/근처 국재준위; 단 광학 활성 4f-4f 전이(1.5 μm)는 parity-forbidden 예리선이라 DFT 밴드가 아닌 다중항 이론 영역 — DFT+U는 전자구조 배경만. O 2p→Er 5d/4f 엣지. 단일 +3라 inert",
+    "bonding": "Er–O 이온성(Er2O3, hard-산 친산소 앵커), Er–Cl/Er–S; 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f¹¹ 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Er3+_VI": 0.890,
+    "Er3+_VIII": 1.004,
+    "Er3+_IX": 1.062,
+    "_note": "Shannon 1976: Er³⁺ VI 0.890 A, VIII 1.004, IX 1.062. 란탄족 수축상 Ho(0.901)>Er(0.890)>Tm(0.880); Li⁺(0.76)보다 크나 초기 RE(La 1.032)보다 작아 왜곡 완화."
+  },
+  "representative_compounds": [
+    {"formula": "Er2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Er³⁺ + O 공급원", "note": "cubic bixbyite(C-type); Er 4d5/2 ~168 eV, Er 3d5/2 ~1409 eV(다중구조 broad, 근사); 분홍색 산화물"},
+    {"formula": "Er-doped silica/fiber (참고계)", "context": "광통신 응용(별개 맥락)", "battery_role": "Er³⁺ 1.5 μm 발광 매질(EDFA)·양자메모리 호스트", "note": "SE와 무관한 대표 응용이나 Er³⁺의 4f¹¹ 광학 정체성을 상징 — 도판트로서의 Er 성격 참고"},
+    {"formula": "Er-O in doped argyrodite (P-O-Er bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Er와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Er는 단일 +3로 inert"},
+    {"formula": "ErCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Er³⁺ 염화물; 대체 Er 원료·분해생성물", "note": "Er³⁺ 안정 염화물 → Li 금속 환원서 보존, 전자차단 passivation SEI 기대(inert RE 계열 공통)"}
+  ],
+  "sei_relevance": "Er는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Er³⁺가 친산소 hard-산 앵커(P-O-Er 가정). Ce/Pr/Eu/Tb과 달리 단일 +3로 redox-비활성 -> Er2O3/ErCl3는 wide-gap 절연이라 Li 금속 환원서 살아남는 부동태 SEI 기대(La/Nd/Gd/Dy과 같은 inert 계열). aliovalent Er³⁺→Li 공공 주입 유비. 부가 관점: Er³⁺의 1.5 μm 발광은 SE 자체엔 무관하나, 도판트 국소환경을 광학 프로브(발광 선폭/수명)로 삼는 진단이 가능(간접). 정직히: Er-argyrodite 직접 문헌 부재 → Nd/La 계보 유비.",
+  "xps": [
+    {"core": "Er 4d5/2", "BE_eV": 168.0, "assignment": "Er³⁺ in Er2O3 (4d 다중구조; 개방껍질 4f¹¹로 broad, 근사 위치)", "ref": "Er2O3 XPS 문헌 / xpsdatabase (근사)"},
+    {"core": "Er 3d5/2", "BE_eV": 1409.0, "assignment": "Er³⁺ 근사 위치(란탄족 3d5/2 계열 진행상 Ho 1351↔Tm 사이; Al Kα 1486.6 eV로 접근 가능 하한 근처)", "ref": "란탄족 3d XPS 진행 / xpsdatabase (근사)"}
+  ],
+  "raman": [
+    {"cm1": 380, "assignment": "Er2O3 cubic bixbyite Fg 격자모드(주 라만선 대역, Y2O3 계열과 유사)", "ref": "Er2O3 Raman 문헌"}
+  ],
+  "dos_character": "Er³⁺는 4f¹¹(S=3/2, ⁴I₁₅/₂) 개방껍질 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 부분점유 4f¹¹가 갭 안팎에 국재상태 -> PBE 단독 오배치; O 2p->Er 5d/4f 엣지. 유의: Er³⁺ 1.5 μm 발광은 parity-forbidden 4f-4f 다중항 전이(Judd-Ofelt)라 DFT 밴드로 직접 재현 안 됨 — DFT+U는 전자구조 배경만 제공. 단일 +3라 4f¹¹ 고정. 4f는 5s5p에 가려 결합은 5d/6s -> 명시 4f 투영(projwfc 스핀분해).",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Er³⁺ VI 0.890)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Er 4f¹¹ 스핀분극 프로토콜)",
+    "Er³⁺ 1.5 μm(⁴I₁₃/₂→⁴I₁₅/₂) EDFA·양자메모리·녹색 상향변환 — 4f 광학 응용 맥락(Judd-Ofelt 다중항)",
+    "Er2O3 XPS — Er 4d5/2 ~168 eV, Er 3d5/2 ~1409 eV (xpsdatabase, 근사)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Er2O3 XPS/Raman · DFT+U 4f 프로토콜); Er는 단일 +3 inert RE라 La/Nd/Gd 유비가 직접 성립(XPS는 근사; 1.5 μm 발광은 다중항 영역) — 우리 db 절대값과 분리."
+}

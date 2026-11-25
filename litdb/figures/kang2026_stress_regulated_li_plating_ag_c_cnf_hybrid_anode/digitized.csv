@@ -1,0 +1,56 @@
+figure,series,x,x_unit,y,y_unit,note
+SI Fig. S3,max dP/dt (NCM||Li half-cell),2.3,mAh cm-2,0.265,MPa h-1,fig_S3.png 300 dpi; y ticks 0..1.0 at px 638.5..43.5 (595 px/MPa h-1); bar top = first row with 25-row continuous fill
+SI Fig. S3,max dP/dt (NCM||Li half-cell),3.5,mAh cm-2,0.433,MPa h-1,fig_S3.png 300 dpi; y ticks 0..1.0 at px 638.5..43.5 (595 px/MPa h-1); bar top = first row with 25-row continuous fill
+SI Fig. S3,max dP/dt (NCM||Li half-cell),4.9,mAh cm-2,0.724,MPa h-1,fig_S3.png 300 dpi; y ticks 0..1.0 at px 638.5..43.5 (595 px/MPa h-1); bar top = first row with 25-row continuous fill
+SI Fig. S16,max dP/dt (NCM||Ag-C/CNF),0,um CNF,0.88,MPa h-1,fig_S16.png; y ticks 0..1.0 at px 589..41 (548 px per unit); bar top as S3
+SI Fig. S16,max dP/dt (NCM||Ag-C/CNF),10,um CNF,0.611,MPa h-1,fig_S16.png; y ticks 0..1.0 at px 589..41 (548 px per unit); bar top as S3
+SI Fig. S16,max dP/dt (NCM||Ag-C/CNF),20,um CNF,0.456,MPa h-1,fig_S16.png; y ticks 0..1.0 at px 589..41 (548 px per unit); bar top as S3
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0",2.3,mAh cm-2,5.5,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0",3.5,mAh cm-2,5.5,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0",4.9,mAh cm-2,5.5,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.001",2.3,mAh cm-2,11.1,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.001",3.5,mAh cm-2,14.9,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.001",4.9,mAh cm-2,19.7,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.002",2.3,mAh cm-2,18.8,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.002",3.5,mAh cm-2,28.7,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.002",4.9,mAh cm-2,41.9,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.003",2.3,mAh cm-2,28.0,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.003",3.5,mAh cm-2,45.8,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.003",4.9,mAh cm-2,70.7,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.005",2.3,mAh cm-2,51.2,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.005",3.5,mAh cm-2,87.4,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S6,"bulk 95th-percentile von Mises, beta=0.005",4.9,mAh cm-2,131.1,MPa,fig_S6.png; y ticks 10..130 at px 546..55.5 (4.0875 px/MPa); x ticks 2.5..5.0 at px 230.5..816.5; marker = longest colour run in a 5-px column at x(Q)
+SI Fig. S12,CNF thickness after recovery,1,compression no.,35.11,um,fig_S12.png; y ticks 0..50 at px 690.5..37.5 (13.06 px/um); marker centre = colour run in 7-px column
+SI Fig. S12,CNF thickness after compression at 5 MPa,1,compression no.,33.15,um,as above
+SI Fig. S12,CNF thickness after recovery,2,compression no.,34.95,um,fig_S12.png; y ticks 0..50 at px 690.5..37.5 (13.06 px/um); marker centre = colour run in 7-px column
+SI Fig. S12,CNF thickness after compression at 5 MPa,2,compression no.,33.04,um,as above
+SI Fig. S12,CNF thickness after recovery,3,compression no.,34.84,um,fig_S12.png; y ticks 0..50 at px 690.5..37.5 (13.06 px/um); marker centre = colour run in 7-px column
+SI Fig. S12,CNF thickness after compression at 5 MPa,3,compression no.,33.04,um,as above
+SI Fig. S12,CNF thickness after recovery,4,compression no.,34.65,um,fig_S12.png; y ticks 0..50 at px 690.5..37.5 (13.06 px/um); marker centre = colour run in 7-px column
+SI Fig. S12,CNF thickness after compression at 5 MPa,4,compression no.,32.92,um,as above
+SI Fig. S12,CNF thickness after recovery,5,compression no.,34.65,um,fig_S12.png; y ticks 0..50 at px 690.5..37.5 (13.06 px/um); marker centre = colour run in 7-px column
+SI Fig. S12,CNF thickness after compression at 5 MPa,5,compression no.,32.92,um,as above
+Fig. 4e,initial-cycle areal capacity,0,um CNF,5.165,mAh cm-2,fig_4e.png; left ticks 4.0..5.5 at px 427.5..36.5 (261 px per mAh cm-2); bar top = first row with 25-row continuous fill
+Fig. 4e,initial Coulombic efficiency,0,um CNF,89.55,%,fig_4e.png; right axis 75..95 % over the same frame (391 px per 20 %)
+Fig. 4e,initial-cycle areal capacity,10,um CNF,5.042,mAh cm-2,fig_4e.png; left ticks 4.0..5.5 at px 427.5..36.5 (261 px per mAh cm-2); bar top = first row with 25-row continuous fill
+Fig. 4e,initial Coulombic efficiency,10,um CNF,88.63,%,fig_4e.png; right axis 75..95 % over the same frame (391 px per 20 %)
+Fig. 4e,initial-cycle areal capacity,20,um CNF,4.962,mAh cm-2,fig_4e.png; left ticks 4.0..5.5 at px 427.5..36.5 (261 px per mAh cm-2); bar top = first row with 25-row continuous fill
+Fig. 4e,initial Coulombic efficiency,20,um CNF,87.3,%,fig_4e.png; right axis 75..95 % over the same frame (391 px per 20 %)
+Fig. 7e,"areal capacity NCM||Ag-C/CNF (mold, 0.2C, 45 C)",1,cycle,4.57,mAh cm-2,fig_7e.png; left ticks 0..6 at px 398..27.5 (61.75 px per mAh cm-2); x ticks 0..250 at px 137.5..880; filled blue marker run
+Fig. 7e,"areal capacity NCM||Ag-C/CNF (mold, 0.2C, 45 C)",5,cycle,4.43,mAh cm-2,fig_7e.png; left ticks 0..6 at px 398..27.5 (61.75 px per mAh cm-2); x ticks 0..250 at px 137.5..880; filled blue marker run
+Fig. 7e,"areal capacity NCM||Ag-C/CNF (mold, 0.2C, 45 C)",50,cycle,3.68,mAh cm-2,fig_7e.png; left ticks 0..6 at px 398..27.5 (61.75 px per mAh cm-2); x ticks 0..250 at px 137.5..880; filled blue marker run
+Fig. 7e,"areal capacity NCM||Ag-C/CNF (mold, 0.2C, 45 C)",100,cycle,3.34,mAh cm-2,fig_7e.png; left ticks 0..6 at px 398..27.5 (61.75 px per mAh cm-2); x ticks 0..250 at px 137.5..880; filled blue marker run
+Fig. 7e,"areal capacity NCM||Ag-C/CNF (mold, 0.2C, 45 C)",150,cycle,3.11,mAh cm-2,fig_7e.png; left ticks 0..6 at px 398..27.5 (61.75 px per mAh cm-2); x ticks 0..250 at px 137.5..880; filled blue marker run
+Fig. 7e,"areal capacity NCM||Ag-C/CNF (mold, 0.2C, 45 C)",200,cycle,2.88,mAh cm-2,fig_7e.png; left ticks 0..6 at px 398..27.5 (61.75 px per mAh cm-2); x ticks 0..250 at px 137.5..880; filled blue marker run
+Fig. 7e,"areal capacity NCM||Ag-C/CNF (mold, 0.2C, 45 C)",249,cycle,2.67,mAh cm-2,fig_7e.png; left ticks 0..6 at px 398..27.5 (61.75 px per mAh cm-2); x ticks 0..250 at px 137.5..880; filled blue marker run
+Fig. 7e,"areal capacity NCM||Ag-C-only (mold, 0.2C, 45 C)",1,cycle,4.82,mAh cm-2,as above; green filled markers; erratic after ~206 (short circuit at 213)
+Fig. 7e,"areal capacity NCM||Ag-C-only (mold, 0.2C, 45 C)",5,cycle,4.68,mAh cm-2,as above; green filled markers; erratic after ~206 (short circuit at 213)
+Fig. 7e,"areal capacity NCM||Ag-C-only (mold, 0.2C, 45 C)",50,cycle,3.9,mAh cm-2,as above; green filled markers; erratic after ~206 (short circuit at 213)
+Fig. 7e,"areal capacity NCM||Ag-C-only (mold, 0.2C, 45 C)",100,cycle,3.56,mAh cm-2,as above; green filled markers; erratic after ~206 (short circuit at 213)
+Fig. 7e,"areal capacity NCM||Ag-C-only (mold, 0.2C, 45 C)",150,cycle,3.33,mAh cm-2,as above; green filled markers; erratic after ~206 (short circuit at 213)
+Fig. 7e,"areal capacity NCM||Ag-C-only (mold, 0.2C, 45 C)",200,cycle,3.16,mAh cm-2,as above; green filled markers; erratic after ~206 (short circuit at 213)
+Fig. 7e,"areal capacity NCM||Ag-C-only (mold, 0.2C, 45 C)",204,cycle,3.15,mAh cm-2,as above; green filled markers; erratic after ~206 (short circuit at 213)
+SI Fig. S26,creep-equivalent current plateau (host kappa 0.01 mS cm-1),3.5,mAh cm-2,0.439,mA cm-2,fig_S26_host_kappa_0p01.png; y ticks 0..0.5 at px 496.5..117.5; red trace mean row
+SI Fig. S26,creep current onset (kappa 0.001 / 0.01),~0.6-0.7 / ~1.0,mAh cm-2,0,mA cm-2,first column with red trace above baseline; coarse (+-0.1)
+SI Fig. S8,scale bar 5 um length,237,px,47.4,px per um,fig_S8.png (300 dpi render of a 221 dpi raster); fibre widths read on a 2x zoom: ~20-50 px = ~0.2-0.5 um (coarse; SEM edge blur may inflate)
+Fig. 8c,This work marker (pouch Ag-C/CNF; 250 cycles),11.69,mA,91.99,%,fig_8c.png 300 dpi; x ticks 0..14 at px 141.5..704.5 (40.2 px/mA); y ticks 60..100 at px 394.5..32.5 (9.05 px/%); centroid of the green square (650 px); y matches printed 92.0 %

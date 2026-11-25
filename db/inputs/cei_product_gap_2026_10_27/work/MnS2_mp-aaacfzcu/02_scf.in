@@ -1,0 +1,44 @@
+&CONTROL
+    calculation     = 'scf'
+    prefix          = 'MnS2_mp-aaacfzcu'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/cei_gap_1027/pseudo'
+    tprnfor         = .true.
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 6
+    ntyp            = 2
+    ecutwfc         = 90.0
+    ecutrho         = 1080.0
+    nspin           = 2
+    starting_magnetization(1) = 0.0703
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+
+ATOMIC_SPECIES
+  Mn    54.938  mn_pbe_v1.5.uspp.F.UPF
+  S     32.060  S.pbe-nl-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+      3.2580330000     0.0000000000     0.0000000000
+      0.0000000000     4.6815730000     0.0000000000
+      0.0000000000     0.0000000000     5.5528810000
+
+ATOMIC_POSITIONS angstrom
+  Mn      1.6290165000     2.3407865000     2.7764405000
+  Mn      0.0000000000     0.0000000000     0.0000000000
+  S       1.6290165000     3.2683840111     0.7308590915
+  S       1.6290165000     1.4131889889     4.8220219085
+  S       0.0000000000     0.9275975111     2.0455814085
+  S       0.0000000000     3.7539754889     3.5072995915
+
+K_POINTS automatic
+  7 5 4 0 0 0

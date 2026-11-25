@@ -1,0 +1,106 @@
+{
+ "slug": "sakuda2013_sulfide_mechanical_property",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "건식전극 논문/05. Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 | SEM images of fracture cross sections of typical solid oxide electrolyte Li7La3Zr2O12 and solid sulfide electrolyte particles (80Li2S?20P2S5 (mol.%)) glass pelletized at room temperature.",
+   "bbox": [
+    36.9,
+    45.8,
+    289.4,
+    388.2
+   ],
+   "w": 1053,
+   "h": 1428,
+   "dpi": 300,
+   "src": "05. Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery.pdf",
+   "blank": 0.282
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2 | (a) Molding pressure dependence of relative density of 75Li2S?25P2S5 (mol.%) glass solid electrolyte. (b) SEM image of 75Li2S?25P2S5 glass powder. SEM images of fracture cross sections of 75Li2S?25P2S5 glass powders compressed at (c) 74 and (d) 360 MPa.",
+   "bbox": [
+    36.9,
+    498.1,
+    558.9,
+    722.8
+   ],
+   "w": 2176,
+   "h": 937,
+   "dpi": 300,
+   "src": "05. Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3 | SEM images of cross sections of 80Li2S?20P2S5 glassy solid electrolytes compressed at 360 MPa at (a) 25 and (b) 2006C. Cross sections were prepared using a cross-section polisher with an Ar ion beam. Insets show photographs of pelletized samples.",
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    354.9
+   ],
+   "w": 2481,
+   "h": 1371,
+   "dpi": 300,
+   "src": "05. Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery.pdf",
+   "blank": 0.604
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Figure 4 | Relationship between molding pressure and ionic conductivity of 75Li2S?25P2S5 glass. Dashed line indicates the conductivity of 75Li2S?25P2S5 bulk glass. Figure 5 | Young’s modulus of Li2S–P2S5 glassy solid electrolytes for four different Li2S contents.",
+   "bbox": [
+    36.9,
+    531.5,
+    558.9,
+    713.6
+   ],
+   "w": 2176,
+   "h": 760,
+   "dpi": 300,
+   "src": "05. Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 4,
+   "file": "fig_6.png",
+   "caption": "Figure 6 | (a) Schematic diagram of composite electrode consisting of electrode particles coated with a solid sulfide electrolyte. Gray regions indicate electrode active material particles and yellow regions represent solid electrolyte coating. (b) Cross-sectional SEM image of compressed composite electrode consisting of LiCoO2 particles coated with 80Li2S?20P2S5 solid electrolyte. (c) Charge–discharge curves of all-solid-state battery consisting of a LiCoO2 positive electrode, a graphite negative electrode, and a Li2S–P2S5 solid electrolyte. The capacity was calculated from the mass of the positive composite electrode.",
+   "bbox": [
+    36.9,
+    493.1,
+    558.9,
+    692.0
+   ],
+   "w": 2176,
+   "h": 830,
+   "dpi": 300,
+   "src": "05. Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery.pdf",
+   "blank": 0.787
+  }
+ ]
+}

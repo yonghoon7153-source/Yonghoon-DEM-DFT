@@ -1,0 +1,7 @@
+﻿# Forward/backward barriers **from the 7 NEB images** (not from the spline).
+# spline_overshoot_eV = max(.int) - max(.dat): the plotted curve can overshoot when the saddle falls between images.
+# citable=false for ALL rows (cell convergence untested).
+case,label,supercell,lambda1_A,Ea_forward_eV,Ea_backward_eV,dE_endpoint_eV,spline_overshoot_eV,in_bar_panel,citable
+li2s,Li2S  c->c,3×3×3,12.10,0.305025,0.305015,0.000010,0.000000,yes,no
+li3nd_ccc,Li3Nd  c->c,2×2×2,10.37,0.228981,0.228958,0.000023,0.003325,yes,no
+li3nd_ccb,Li3Nd  c->b (diagnostic),2×2×2,10.37,2.071730,0.000000,2.071730,0.000000,no (diagnostic hop),no

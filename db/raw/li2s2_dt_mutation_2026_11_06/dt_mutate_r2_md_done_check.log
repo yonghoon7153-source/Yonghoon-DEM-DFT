@@ -1,0 +1,7 @@
+변이 501 개 (DS 판 472 · 자리 옮김 3 · DT 29) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 3 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_dt_r2_w*
+DT20_shortcut_time_unchecked     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT28_md_done_hash_unchecked      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT23_md_done_time_unread         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT29_md_done_run_id_unchecked    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+끝: 빨강 4 / 4

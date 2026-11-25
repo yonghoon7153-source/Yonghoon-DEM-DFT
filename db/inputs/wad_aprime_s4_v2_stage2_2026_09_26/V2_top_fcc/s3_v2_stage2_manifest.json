@@ -1,0 +1,434 @@
+{
+ "schema": "aprime_s3_v2_stage2/v1",
+ "model": "V2_top_fcc",
+ "pw_out_sha256": "f8f60724e427fd7176fab6ed15d74ed1814214e7030a345c436810c7d6637068",
+ "d0_A": 3.3017,
+ "endpoints": {
+  "c_A": 24.0527,
+  "delta_A": 4.6983,
+  "d0_A": 3.3017,
+  "gap_rule_A": 8.0,
+  "bound_gap_direct_image_A": [
+   3.3017,
+   13.6983
+  ],
+  "far_gap_direct_image_A": [
+   8.0,
+   9.0
+  ],
+  "dipfield": {
+   "tefield": true,
+   "dipfield": true,
+   "edir": 3,
+   "eamp": 0.0,
+   "emaxpos": 0.81291,
+   "eopreg": 0.04158,
+   "region_A": [
+    19.553,
+    20.553
+   ],
+   "clearance_A": {
+    "to_top_atom": 4.0,
+    "to_substrate_bottom_image": 4.0
+   },
+   "min_clear_rule_A": 4.0,
+   "width_A": 1.0,
+   "empty_in_both_endpoints": true,
+   "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+  }
+ },
+ "structures_sha256": {
+  "V2_top_fcc_dft_bound": "085195d675a30e1257e0814c6cc0eff0d5ef57595c8d63bf8c6784e94df20f2b",
+  "V2_top_fcc_dft_far": "ccf34b2a3d68faff520220c38e829296342cfca87745b2b67cab137795a831fc",
+  "V2_top_fcc_Ed_m03": "2d4fb3f3892be4e31c2bc6c0ac55daa95f828a338ead3fb1bffccfc6cc264c63",
+  "V2_top_fcc_Ed_p03": "d32ba7632aece2e524399c2c1ad30817a3d1c6d2540deb90e1dbc22778ba9f01",
+  "V2_top_fcc_Ed_p06": "d3717be51f9fa368e74030e0875ad7014582365e5f05e0ee07b0a3a75a72ca53",
+  "V2_top_fcc_G3_c2_bound": "074e5ec148bab41ee9a48a74392f05110e0b616a260260578a8735299159d1f3",
+  "V2_top_fcc_G3_c2_far_i": "a21bc3642d9382f728473e0ac9e01d00a62688a1041f121c604b50fbac453072",
+  "V2_top_fcc_G3_c2_far_ii": "9a50360294456ebc7828798324e2f99d4bdb0df94a8b0ad615363f07967bb2f0"
+ },
+ "jobs": [
+  {
+   "dir": "V2_top_fcc_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "7eb4fc802de4a5058692bb9342919cba89be77b1c9e8597d5d4dc5578d990260",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.3017
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "3f50a3c0d18ee173432c2420841fc69302db06d8795b01bc557b1274fdb55911",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "endpoint": "far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_Ed_m03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "6f7aa4fa3b533d36babcdc7d3cfbdebef74f755090fb5019cd2ff65f3ad11846",
+   "structure": "V2_top_fcc_Ed_m03",
+   "tags": {
+    "structure": "V2_top_fcc_Ed_m03",
+    "E(d)": "d0-0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_Ed_p03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "b6fc48b35819515d7899120f17cb15c39ab69560a673d42dd24f87477a80b37a",
+   "structure": "V2_top_fcc_Ed_p03",
+   "tags": {
+    "structure": "V2_top_fcc_Ed_p03",
+    "E(d)": "d0+0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_Ed_p06",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "d52d7631e5927d06c9f286c2bd7d785a16c40f4c5a61519324ee28067bcd21b0",
+   "structure": "V2_top_fcc_Ed_p06",
+   "tags": {
+    "structure": "V2_top_fcc_Ed_p06",
+    "E(d)": "d0+0.6"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G3_c2_bound",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.82727,
+    "eopreg": 0.03838
+   },
+   "pw_in_sha256": "4aa9e0c53fa2f7bbe9fe5511ffcac6d7d285d34b2129504b0935c0326c587002",
+   "structure": "V2_top_fcc_G3_c2_bound",
+   "tags": {
+    "structure": "V2_top_fcc_G3_c2_bound",
+    "G3": "G3_c2_bound"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G3_c2_far_i",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.82727,
+    "eopreg": 0.03838
+   },
+   "pw_in_sha256": "9d3814cfcc4cfbddbca8e277de06cf12d58e7a7f2b7bc92507b7714886767ca0",
+   "structure": "V2_top_fcc_G3_c2_far_i",
+   "tags": {
+    "structure": "V2_top_fcc_G3_c2_far_i",
+    "G3": "G3_c2_far_i"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G3_c2_far_ii",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.82727,
+    "eopreg": 0.03838
+   },
+   "pw_in_sha256": "3d9720992e87ef020547691655e7de918f90d9118366841f7344e98d8fb89727",
+   "structure": "V2_top_fcc_G3_c2_far_ii",
+   "tags": {
+    "structure": "V2_top_fcc_G3_c2_far_ii",
+    "G3": "G3_c2_far_ii"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_e70_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "815fc45aabf4efcb1bf2f9d32bdc048eb7418fabdbd8bdc5d2d7d54099fad676",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "G4": "G4_e70_bound"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_e70_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "f31dc27819e5947e5b124e399b02d6da964ea6ee98ec2e115b86496084bd421d",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_e70_far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_k1_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    7,
+    7,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "ef56138059a85d8ef0e66e27f43771d4818b31eba6710c636fcaa1e1ce354696",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "G4": "G4_k1_bound"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_k1_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    7,
+    7,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "38e16d82a2592c20f3950addcbc7c83b7f570b07d7c860047782038c5cf3fb70",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_k1_far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_s05_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "G4": "G4_s05_bound",
+    "degauss_halved": true
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_s05_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_s05_far",
+    "degauss_halved": true
+   },
+   "machine": "V100 (≈3 GB)"
+  }
+ ],
+ "rule": "카드 v5 V2: d₀ = 제약 아래 DFT 국소 이완 간격 · E(d) = d₀−0.3 · +0.3 · +0.6 · far (≥ 8/8) · G3 (i)(ii) · G4 (e70 · k 7×7×1 · smearing ½)"
+}

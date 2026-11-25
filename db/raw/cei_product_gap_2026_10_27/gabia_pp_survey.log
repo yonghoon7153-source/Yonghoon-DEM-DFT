@@ -1,0 +1,32 @@
+## 09-19 CEI 갭 PP
+Cl Cl.pbe-nl-kjpaw_psl.1.0.0.UPF
+Li Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+Nd Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF
+O O.pbe-n-kjpaw_psl.0.1.UPF
+P P.pbe-n-kjpaw_psl.1.0.0.UPF
+S S.pbe-nl-kjpaw_psl.1.0.0.UPF
+## 08 SEI 갭 PP (licl li2s li3po4)
+Cl cl_pbe_v1.4.uspp.F.UPF
+Li li_pbe_v1.4.uspp.F.UPF
+O O.pbe-n-kjpaw_psl.0.1.UPF
+P P.pbe-n-rrkjus_psl.1.0.0.UPF
+S s_pbe_v1.4.uspp.F.UPF
+## /data/work/pseudo 의 Co Ni Mn
+Co_pbe_v1.2.uspp.F.UPF
+mn_pbe_v1.5.uspp.F.UPF
+ni_pbe_v1.4.uspp.F.UPF
+## 다른 곳의 Co Ni Mn UPF
+/data/work/pseudo/Co_pbe_v1.2.uspp.F.UPF
+/data/work/pseudo/ni_pbe_v1.4.uspp.F.UPF
+/data/work/pseudo/mn_pbe_v1.5.uspp.F.UPF
+/data/apps/lobster-5.1.1/QE/FeNi3/Ni.pbesol-n-kjpaw_psl.0.1.UPF
+/data/apps/qe-7.4.1-cpu/XSpectra/examples/pseudo/Ni_PBE_TM_2pj.UPF
+/data/apps/qe-7.4.1-gpu/XSpectra/examples/pseudo/Ni_PBE_TM_2pj.UPF
+/root/archive/v100/home/wad4l/pseudo_kgy/ni_pbe_v1.4.uspp.F.UPF
+/root/archive/v100/home/wad4l/pseudo_kgy/mn_pbe_v1.5.uspp.F.UPF
+/root/archive/v100/home/wad4l/pseudo_kgy/Co_pbe_v1.2.uspp.F.UPF
+/root/dl/co_pbe_v1.2.uspp.F.UPF
+/root/dl/ni_pbe_v1.4.uspp.F.UPF
+/root/dl/mn_pbe_v1.5.uspp.F.UPF
+## SSSP json
+MP U {'F': {'Co': 3.32, 'Mn': 3.9, 'Ni': 6.2}, 'O': {'Co': 3.32, 'Mn': 3.9, 'Ni': 6.2}}

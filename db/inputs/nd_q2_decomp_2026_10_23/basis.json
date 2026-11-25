@@ -1,0 +1,95 @@
+{
+ "schema": "nd_q2_basis/v1",
+ "card": "db/properties/nd_q2_decomp_estimand_2026_10_23.json (개정 11)",
+ "decision": "D-2026-10-23-nd-q2-decomp-card",
+ "rule": "MP hull (thermo GGA_GGA+U · MP DB 2026.09.28) 이 도핑 · host 조성에 고른 분해 생성물의 합집합",
+ "sources": {
+  "doped": "db/raw/nd_q2_decomp_2026_10_23/step1b/mp_hull_doped.json",
+  "host": "db/raw/nd_q2_decomp_2026_10_23/step1b/mp_hull_host.json"
+ },
+ "phases": {
+  "Li3PS4": {
+   "formula": {
+    "Li": 3,
+    "P": 1,
+    "S": 4
+   },
+   "mp_id": "mp-aaacebzb",
+   "entry_id": "mp-aaacebzb-GGA",
+   "cif": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Li3PS4.cif",
+   "cif_sha256": "9813b43f46d061a1eba4fc5db8000e9af5da56a31fd80c2c384f314a0ff713e0",
+   "메모": "32 원자 사방정 (β 형으로 보임)"
+  },
+  "Li2S": {
+   "formula": {
+    "Li": 2,
+    "S": 1
+   },
+   "mp_id": "mp-aaaaabsj",
+   "entry_id": "mp-aaaaabsj-GGA",
+   "cif": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Li2S.cif",
+   "cif_sha256": "0d84d29471bc2ef92384e3778bf211f80871a8771bbf44a7200017c8b35cc345",
+   "메모": "3 원자 원시셀 (반형석)"
+  },
+  "LiCl": {
+   "formula": {
+    "Li": 1,
+    "Cl": 1
+   },
+   "mp_id": "mp-aaacpllf",
+   "entry_id": "mp-aaacpllf-GGA",
+   "cif": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/LiCl.cif",
+   "cif_sha256": "b6452f57123fa3d6084070fb75dcfbfff17a3a0a1a2219bc4b2a637b42e43316",
+   "메모": "육방 4 원자 — MP GGA 에서 암염보다 낮게 나오는 다형 (실험은 암염) · 공통상이라 Y 에 들어가는 계수 차 +0.0043/원자"
+  },
+  "Li3PO4": {
+   "formula": {
+    "Li": 3,
+    "P": 1,
+    "O": 4
+   },
+   "mp_id": "mp-aaaaauhx",
+   "entry_id": "mp-aaaaauhx-GGA",
+   "cif": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Li3PO4.cif",
+   "cif_sha256": "f059ad0f6351492a28b99d41f3f897e4f7299f80bdea4d8b910eb75e789bd0c7",
+   "메모": "16 원자 β 형"
+  },
+  "Nd2S3": {
+   "formula": {
+    "Nd": 2,
+    "S": 3
+   },
+   "mp_id": "mp-aaaaaaqw",
+   "entry_id": "mp-aaaaaaqw-GGA",
+   "cif": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Nd2S3.cif",
+   "cif_sha256": "badd3520c79161026fef0c617fd9a2485db77e044dc5b55485588877498c2b05",
+   "메모": "20 원자 α 형"
+  }
+ },
+ "G5": {
+  "doped": {
+   "coeffs": {
+    "Li3PS4": 9.25,
+    "Li2S": 1.0,
+    "LiCl": 16.0,
+    "Li3PO4": 0.75,
+    "Nd2S3": 1.0
+   }
+  },
+  "host": {
+   "coeffs": {
+    "Li3PS4": 5.0,
+    "Li2S": 2.0,
+    "LiCl": 8.0,
+    "Li3PO4": 0.0,
+    "Nd2S3": 0.0
+   }
+  },
+  "rank": "5 / 5 (해 하나)",
+  "residual_max_atoms": "≤ 6e-14",
+  "음_아닌_계수": true,
+  "G5a_정상성": "host = 알려진 답 {Li₃PS₄, Li₂S, LiCl} ✓ · 두 조성 다 원소상 없음 ✓"
+ },
+ "sealed": "2026-10-23 · QE 에너지 0 건 (상 · host 계산 전)",
+ "by": "agent"
+}

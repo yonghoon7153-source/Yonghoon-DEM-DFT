@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}판정의 근거 문서 · DFT{% endblock %}
+{% block content %}
+{#
+  /kb (인자 없음) — **결정 원장이 이름 댄 kb 문서**만 편다 (v3 묶음 G · 2026-09-09).
+  ⚠ kb 색인이 아니다. 383개 중 원장이 논거로 지목한 것만이다 — 목록이 짧은 것이 정상이고,
+    길어지면 그건 원장이 그만큼 근거를 대고 있다는 뜻이다.
+#}
+<div class="page-header">
+  <div><h1>📚 판정의 근거 문서</h1>
+    <div class="sub">결정 원장(db/governance/decisions.json)이 <b>record·card 로 이름 댄</b>
+      kb 마크다운만 — kb 전체 색인이 아니다</div></div>
+  <div class="page-actions"><a class="btn" href="/governance">⚖ 판정 원장</a>
+    <a class="btn" href="/">▦ Dashboard</a></div>
+</div>
+
+{% if not docs %}
+<div class="card" style="border-left:4px solid #be123c">
+  <h2>⛔ 원장이 이름 댄 kb 문서가 하나도 없다</h2>
+  <p class="sub">"근거가 없다" 가 아니라 <b>원장을 못 읽었거나 record·card 칸이 비었다</b>는
+    뜻이다. 빈 목록으로 안심하지 말 것.</p>
+</div>
+{% else %}
+<div class="card">
+  <h2>{{ docs|length }}건</h2>
+  <p class="sub">각 문서가 <b>어느 결정의</b> 근거인지 같이 적는다 — 문서만 열면
+    "왜 이걸 읽는지" 를 다시 물어야 한다.</p>
+  <table class="tbl">
+    <thead><tr><th>문서</th><th>이 문서를 근거로 든 결정</th></tr></thead>
+    <tbody>
+    {% for x in docs %}
+      <tr>
+        <td>{% if x.ok %}<a href="/kb?path={{ x.path }}" class="mono">{{ x.path }}</a>
+            {%- else %}<code>{{ x.path }}</code>
+              <span class="tbadge" style="background:#be123c;color:#fff"
+                title="원장이 가리키는데 저장소에 파일이 없다">⛔ 파일 없음</span>{% endif %}</td>
+        <td class="sub">
+          {% for did in x.decisions %}<a href="/governance#{{ did }}" class="mono">{{ did }}</a>
+            {%- if not loop.last %} · {% endif %}{% endfor %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

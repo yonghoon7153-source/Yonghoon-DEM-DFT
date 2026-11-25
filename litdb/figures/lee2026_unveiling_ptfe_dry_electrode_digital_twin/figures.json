@@ -1,0 +1,1099 @@
+{
+ "slug": "lee2026_unveiling_ptfe_dry_electrode_digital_twin",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+  "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 (a) Schematic illustration of the dry electrode process. Surface SEM images of (b) bare NCM and NCM particles within (c) 0.0PTFE and (d) 0.2PTFE. (e) Cross-sectional FIB-SEM image of 0.2PTFE with dotted lines outlining the coating layer, and the corresponding EDS maps of (f) Ni and (g) S. The dry-processed electrodes were prepared with a composition of NCM:LPSCl:VGCF = 85:13:2 wt.%, with 0.0–1.0 wt.% PTFE added.",
+   "rotated_deg": 0,
+   "bbox": [
+    89.9,
+    40.8,
+    521.9,
+    535.3
+   ],
+   "w": 1801,
+   "h": 2061,
+   "dpi": 300,
+   "src": "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.485,
+   "auto_bbox": [
+    47.6,
+    34.8,
+    568.1,
+    541.3
+   ],
+   "px": 3711861,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 본문 래스터보다 좌우 약 12–42 pt 넓은 여백을 넣었다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 300 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "판독 주의: (c) \"NCM particles within 0.0PTFE\" 는 Fig. S7a \"pre-mixed powder\" 와 같은 현미경 사진 (회색조 상관 0.967 · 교차 대조 −0.03) — (d) 는 Fig. S7d 와 같은 사진 (0.958, 라벨 일치). (a) 모식의 \"Flim fabrication\" 은 원문 오타."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 (a) Schematic illustration of the FIB-SEM tomography-based 3D reconstruction process for the dry-processed electrode. (b) Reconstructed 3D digital twin structures of 0.0PTFE and 0.2PTFE, along with the individually segmented NCM, LPSCl, and VGCF phases. (c) Volume fractions of each electrode component (NCM, LPSCl, VGCF, and pore) obtained from the reconstructed 0.0PTFE and 0.2PTFE structures. (d) Quantitative NCM surface coverage by LPSCl, VGCF, and pores for 0.0PTFE and 0.2PTFE. Visualization of the NCM–LPSCl interfacial contact in the (e) 0.0PTFE and (f) 0.2PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.9,
+    41.4,
+    551.9,
+    649.3
+   ],
+   "w": 2051,
+   "h": 2534,
+   "dpi": 300,
+   "src": "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.449,
+   "auto_bbox": [
+    47.6,
+    35.4,
+    568.1,
+    655.3
+   ],
+   "px": 5197234,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 본문 래스터보다 좌우 약 12–42 pt 넓은 여백을 넣었다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 300 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "(a) 범례 \"Voxel size: 20 nm\" ↔ Methods p.13 화소 20.83 nm · 슬라이스 50 nm (비등방 복셀). (d) 피복 세 몫 합 = 100 % (NCM–NCM 접촉면은 분모 밖으로 읽힌다 — 정의 미기재)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Z-direction projection maps of the VGCF phase for (a) 0.0PTFE and (b) 0.2PTFE electrodes, visualized using the solid volume fraction (SVF). (c) Histogram of the vol% of NCM–VGCF contact regions for all sub-volumes in 0.0PTFE and 0.2PTFE electrodes. Electron flux simulation results showing the 3D distribution of electron current density within the NCM phase, along with corresponding 2D cross-sectional views, for (d) 0.0PTFE and (e) 0.2PTFE electrodes. (f) Histogram of electron current density within the NCM phase for 0.0PTFE and 0.2PTFE electrodes. (g) Comparison of simulated and experimentally measured electronic conductivities of 0.0PTFE and 0.2PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.9,
+    41.3,
+    551.9,
+    481.3
+   ],
+   "w": 2051,
+   "h": 1834,
+   "dpi": 300,
+   "src": "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.639,
+   "auto_bbox": [
+    47.6,
+    35.3,
+    568.1,
+    487.3
+   ],
+   "px": 3761534,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 본문 래스터보다 좌우 약 12–42 pt 넓은 여백을 넣었다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 300 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Z-direction projection maps of the LPSCl phase for (a) 0.0PTFE and (b) 0.2PTFE electrodes, visualized using the solid volume fraction (SVF). (c) Histogram of the vol% of LPSCl for all sub-volumes in 0.0PTFE and 0.2PTFE electrodes. Ion flux simulation results showing the 3D distribution of ion current density within the LPSCl phase, along with corresponding 2D cross-sectional views, for (d) 0.0PTFE and (e) 0.2PTFE electrodes. (f) Histogram of ion current density within the LPSCl phase for 0.0PTFE and 0.2PTFE electrodes. (g) Comparison of simulated and experimentally measured ionic conductivities for 0.0PTFE and 0.2PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.9,
+    41.4,
+    551.9,
+    489.3
+   ],
+   "w": 2051,
+   "h": 1867,
+   "dpi": 300,
+   "src": "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.652,
+   "auto_bbox": [
+    47.6,
+    35.4,
+    568.1,
+    495.3
+   ],
+   "px": 3829217,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 본문 래스터보다 좌우 약 12–42 pt 넓은 여백을 넣었다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 300 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "(f) x 축 칸 이름 \"< 0.1 · 0.1-1 · 2-3 · 3-4 · 4-5 · > 5\" — 1–2 칸이 없고 막대 합 ≈97 % [판독]. 본문 인쇄값 (< 0.1 칸 14.4 · 4.2 %) 만 쓴다. (b) 0.2PTFE 지도 x ≈ 21–23 µm · y ≈ 10–13 µm 에 SVF ≈0.6–0.75 국소 LPSCl 덩어리."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 (a) Initial charge-discharge voltage profiles at 0.1 C and 25◦C of NCM/Li all-solid-state half-cells employing 0.0PTFE and 0.2PTFE electrodes, and (b) corresponding dQ/dV profiles. (c) Voltage profiles and corresponding polarization plots obtained by GITT. (d) Plot of the voltage change ( ΔV) at different applied current densities. (e) Nyquist plots and (f) corresponding DRT profiles. In situ DRT contour maps during discharge for (g) 0.0PTFE and (h) 0.2PTFE cells. (i) Rate capability and (j) cycling performance of 0.0PTFE and 0.2PTFE cells. Cycling performance was tested under 0.2 C charge/0.5 C discharge conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.9,
+    41.0,
+    551.9,
+    526.3
+   ],
+   "w": 2051,
+   "h": 2023,
+   "dpi": 300,
+   "src": "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.852,
+   "auto_bbox": [
+    47.6,
+    35.0,
+    568.1,
+    532.3
+   ],
+   "px": 4149173,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 본문 래스터보다 좌우 약 12–42 pt 넓은 여백을 넣었다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 300 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Cross-sectional SEM images and corresponding S element maps of 0.2PTFE electrodes with mass loadings of (a) 25 mg cm− 2 (b) 35 mg cm− 2 , and (c) 45 mg cm− 2 . (d) Initial charge-discharge voltage profiles at 0.1 C of NCM/Li all-solid-state half-cells with 0.0PTFE and 0.2PTFE electrodes featuring different mass loadings. (e) Specific capacity and (f) areal capacity as functions of applied current density for 0.0PTFE and 0.2PTFE cells. Areal capacity retention at 0.2 C charge/0.5 C discharge for (g) 0.0PTFE cells and (h) 0.2PTFE cells. (i) Comparison of the areal capacity, current density, and CAM loading of the 0.2PTFE cell (45 mg cm− 2 ) to previously reported ASSBs. All electrochemical measurements were conducted at 25◦C.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.2,
+    40.9,
+    539.7,
+    430.8
+   ],
+   "w": 1949,
+   "h": 1625,
+   "dpi": 300,
+   "src": "aadb168b-4._Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.671,
+   "auto_bbox": [
+    47.6,
+    34.9,
+    568.2,
+    436.8
+   ],
+   "px": 3167125,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 본문 래스터보다 좌우 약 12–42 pt 넓은 여백을 넣었다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 300 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Photos of the 0.2PTFE electrode as prepared, folded, and after folding.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    91.6,
+    522.0,
+    235.5
+   ],
+   "w": 1379,
+   "h": 441,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.317,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    531.3,
+    222.9
+   ],
+   "px": 608139,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. XRD patterns of NCM, LPSCl, 0.0PTFE electrode, and 0.2PTFE electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    216.6,
+    345.9,
+    378.5,
+    516.0
+   ],
+   "w": 496,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.92,
+   "auto_bbox": [
+    64.8,
+    339.9,
+    498.6,
+    503.5
+   ],
+   "px": 258416,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a, c, e, g) Cross-sectional SEM images and (b, d, f, h) corresponding backscattered electron (BSE) images of the 0.2PTFE electrode. The thickness of the LPSCl coating layer was measured across various regions in SEM images.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    91.5,
+    522.3,
+    627.2
+   ],
+   "w": 1380,
+   "h": 1638,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.295,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    531.3,
+    614.5
+   ],
+   "px": 2260440,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음) · S3 는 테두리 선 (522.3 · 627.2 pt) 까지 포함",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Cross-sectional FIB-SEM image of an NCM particle in (a) 0.0PTFE, and the corresponding EDS maps of (f) Ni and (g) S.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    91.5,
+    524.5,
+    222.8
+   ],
+   "w": 1387,
+   "h": 402,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.364,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.5,
+    210.9
+   ],
+   "px": 557574,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "캡션 \"(f) Ni and (g) S\" ↔ 패널 표지 b · c (캡션 오기)."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Cross-sectional SEM images and corresponding EDS elemental maps of Ni and S for (a–c) 0.2PTFE, (d–f) 0.5PTFE, and (g–i) 1.0PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.2,
+    347.7,
+    500.1,
+    683.7
+   ],
+   "w": 1239,
+   "h": 1028,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.184,
+   "auto_bbox": [
+    64.8,
+    341.7,
+    527.6,
+    671.2
+   ],
+   "px": 1273692,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Surface SEM images and corresponding EDS elemental maps of Ni, S, and C: (a–d) 0.0PTFE, (e–h) 0.2PTFE, (i–l) 0.5PTFE, and (m–p) 1.0PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.8,
+    84.6,
+    498.1,
+    453.7
+   ],
+   "w": 1288,
+   "h": 1129,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.193,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    530.5,
+    459.2
+   ],
+   "px": 1454152,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Surface SEM images of 0.2PTFE electrodes with different mixing times: (a) pre-mixed powder, (b) 2 min, (c) 10 min, and (d) 20 min after PTFE incorporation.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    70.8,
+    522.1,
+    337.8
+   ],
+   "w": 1380,
+   "h": 817,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.496,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    530.5,
+    343.3
+   ],
+   "px": 1127460,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "(a) 는 본문 Fig. 1c (\"NCM within 0.0PTFE\") 와 같은 사진 · (d) 는 Fig. 1d 와 같은 사진 (f1 노트)."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Schematic illustration of sub-volume-based distribution analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.1,
+    468.9,
+    510.2,
+    678.1
+   ],
+   "w": 1299,
+   "h": 640,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.698,
+   "auto_bbox": [
+    64.8,
+    462.9,
+    519.2,
+    665.5
+   ],
+   "px": 831360,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 7,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Histogram of the VGCF vol% for all sub-volumes in 0.0PTFE and 0.2PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    208.4,
+    91.5,
+    386.3,
+    261.6
+   ],
+   "w": 545,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.85,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.4,
+    249.1
+   ],
+   "px": 283945,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "인쇄 하위부피 평균 5.1 · 5.2 vol% (p.7) ↔ 전체 VGCF 3.5 · 3.3 vol% (Fig. 2c) — 같은 크기 정육면체 1000 개가 25 µm 정육면체를 빈틈없이 덮으면 평균은 전체 분율과 같아야 한다 → 정규화 미기재 [우리 산술]."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 7,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Histogram of the NCM vol% for all sub-volumes in 0.0PTFE and 0.2PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    210.6,
+    392.7,
+    384.0,
+    562.7
+   ],
+   "w": 531,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.665,
+   "auto_bbox": [
+    64.8,
+    386.7,
+    533.4,
+    550.2
+   ],
+   "px": 276651,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 8,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Electron flux simulation results showing the 3D distribution of electron current density within the NCM–VGCF phase, along with corresponding 2D cross-sectional views, for (a) 0.0PTFE and (b) 0.2PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    70.8,
+    522.1,
+    318.1
+   ],
+   "w": 1380,
+   "h": 756,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.694,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.4,
+    305.7
+   ],
+   "px": 1043280,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 8,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. DC polarization curves of 0.0PTFE and 0.2PTFE electrodes at 50 mV.",
+   "rotated_deg": 0,
+   "bbox": [
+    200.1,
+    470.1,
+    394.5,
+    640.2
+   ],
+   "w": 595,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.906,
+   "auto_bbox": [
+    64.8,
+    464.1,
+    480.6,
+    627.7
+   ],
+   "px": 309995,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 9,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Histogram of the LPSCl solid volume fraction derived from Z-projection maps of 0.0PTFE and 0.2PTFE electrodes (Figure 4a and 4b).",
+   "rotated_deg": 0,
+   "bbox": [
+    164.9,
+    84.7,
+    430.1,
+    254.7
+   ],
+   "w": 812,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.813,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.5,
+    260.1
+   ],
+   "px": 423052,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "막대 합 ≈100 % · 0.15–0.30 합 72.3 % ≈ 인쇄 72.4 % [판독]. 막대 가중 평균 ≈0.28 (0.0PTFE) · ≈0.24 (0.2PTFE) ↔ 재구성 LPSCl 0.235 · 0.236 — 정규화 미기재 [판독 + 우리 산술]."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 9,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. (a) Schematic illustration of the Li+ percolation pathway extraction from the LPSCl phase. (b) Histogram of Li+ percolation pathway lengths for 0.0PTFE and 0.2PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    420.3,
+    524.3,
+    570.4
+   ],
+   "w": 1387,
+   "h": 459,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.772,
+   "auto_bbox": [
+    64.8,
+    414.3,
+    533.4,
+    557.9
+   ],
+   "px": 636633,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "y 축 이름 \"(%)\" 이지만 값은 분율 0–0.5 (경로 1 개 = 0.05, n = 20). 위 축 \"Tortuosity\" = 경로 길이 ÷ 25 µm = 기하학적 τ (수송 tortuosity 아님)."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 10,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Nyquist plots of electron-blocking cells employing 0.0PTFE and 0.2PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    205.4,
+    70.8,
+    389.3,
+    240.9
+   ],
+   "w": 563,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.936,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.3,
+    228.3
+   ],
+   "px": 293323,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 10,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Initial charge-discharge voltage profiles at 0.1 C and 25 °C of NCM/Li all-solid-state half-cells employing 0.0PTFE, 0.2PTFE, 0.5PTFE, and 1.0PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    198.6,
+    372.0,
+    396.2,
+    542.0
+   ],
+   "w": 605,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.923,
+   "auto_bbox": [
+    64.8,
+    366.0,
+    530.7,
+    529.5
+   ],
+   "px": 315205,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 11,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. (a) DC polarization curves of 0.0PTFE, 0.2PTFE, 0.5PTFE, and 1.0PTFE electrodes at 50 mV. (b) Nyquist plots of electron-blocking cells employing 0.0PTFE, 0.2PTFE, 0.5PTFE, and 1.0PTFE electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    122.7,
+    70.8,
+    472.6,
+    240.9
+   ],
+   "w": 1071,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.915,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.4,
+    228.3
+   ],
+   "px": 557991,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 11,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Voltage profiles of (a) 0.0PTFE and (b) 0.2PTFE cells during DC-IR measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.4,
+    392.7,
+    476.7,
+    562.7
+   ],
+   "w": 1096,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.949,
+   "auto_bbox": [
+    64.8,
+    386.7,
+    533.5,
+    550.2
+   ],
+   "px": 571016,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 12,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Operando electrochemical pressiometry profiles of NCM/LTO cells with 0.0PTFE and 0.2PTFE electrodes during the initial charge-discharge cycle, showing (top) the voltage profile and (bottom) the corresponding pressure changes (ΔP).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    70.8,
+    521.9,
+    233.6
+   ],
+   "w": 1379,
+   "h": 498,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.965,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    531.3,
+    221.7
+   ],
+   "px": 686742,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 12,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Cross-sectional SEM images and corresponding EDS elemental maps of Ni and S for the (a, b, c) 0.0PTFE and (d, e, f) 0.2PTFE cells after 200 cycles at 0.2C charge/0.5C discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.8,
+    365.4,
+    499.5,
+    583.3
+   ],
+   "w": 1235,
+   "h": 667,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.145,
+   "auto_bbox": [
+    64.8,
+    359.4,
+    533.3,
+    588.8
+   ],
+   "px": 823745,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 13,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. XPS spectra of 0.0PTFE and 0.2PTFE after 20 cycles. S 2p spectra of (a) 0.0PTFE and (b) 0.0PTFE, and P 2p spectra of (c) 0.0PTFE and (d) 0.0PTFE.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    91.5,
+    522.0,
+    333.7
+   ],
+   "w": 1379,
+   "h": 741,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.93,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    531.3,
+    321.1
+   ],
+   "px": 1021839,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "캡션 \"(b) 0.0PTFE … (d) 0.0PTFE\" 는 오기 — 패널 제목은 0.2PTFE (b · d)."
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 13,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Digital twin half-cell models of 0.0PTFE and 0.2PTFE electrodes for electrochemical simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    485.5,
+    524.3,
+    637.3
+   ],
+   "w": 1387,
+   "h": 465,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.718,
+   "auto_bbox": [
+    64.8,
+    479.5,
+    533.4,
+    624.7
+   ],
+   "px": 644955,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 14,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Simulated (a) Electronic current density maps within NCM and (b) ionic current density maps within LPSCl for 0.0PTFE and 0.2PTFE electrodes at the last moment of discharge (Top: LPSCl side; Bottom: current collector side).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    70.8,
+    524.3,
+    332.3
+   ],
+   "w": 1387,
+   "h": 800,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.617,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.4,
+    319.8
+   ],
+   "px": 1109600,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 14,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Simulated surface overpotential at NCM surface for (a) 0.0PTFE and (b) 0.2PTFE electrodes at the last moment of discharge (Top: LPSCl side; Bottom: current collector side).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    484.1,
+    524.5,
+    713.7
+   ],
+   "w": 1387,
+   "h": 702,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.865,
+   "auto_bbox": [
+    64.8,
+    478.1,
+    530.5,
+    719.2
+   ],
+   "px": 973674,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 15,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Simulated lithiation state of NCM surface for 0.0PTFE and 0.2PTFE electrodes at the last moment of discharge (Top: LPSCl side, Bottom: current collector side).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    70.8,
+    524.3,
+    294.4
+   ],
+   "w": 1387,
+   "h": 684,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.759,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    530.5,
+    299.8
+   ],
+   "px": 948708,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 15,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Li+ concentration profiles across the electrode thickness for (a) 0.0PTFE and (b) 0.2PTFE during 2.0 C discharge (0 μm: LPSCl side; 25 μm: current collector side).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    425.5,
+    524.3,
+    562.2
+   ],
+   "w": 1387,
+   "h": 418,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.903,
+   "auto_bbox": [
+    64.8,
+    419.5,
+    533.4,
+    549.7
+   ],
+   "px": 579766,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 16,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. Rate performance of the (a) 0.0PTFE and (b) 0.2PTFE cells with different mass loadings (25, 35, and 45 mg cm−2).",
+   "rotated_deg": 0,
+   "bbox": [
+    94.4,
+    70.8,
+    500.6,
+    240.9
+   ],
+   "w": 1242,
+   "h": 521,
+   "dpi": 220,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.889,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.2,
+    228.3
+   ],
+   "px": 647082,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 SI 머리 로고 (y 35–68 pt) 를 넣고 래스터 아래 약 12 pt (축 제목 자리) 를 잘랐다. clip = 그림 래스터 경계 그대로 (캡션 글자 윗선은 래스터 아래 약 7 pt) · 원본 해상도 220 dpi 로 렌더 (업샘플 없음)",
+   "viewed": true,
+   "note": "400 dpi 재판독: 45 mg cm−2 0.2PTFE 1.0 C ≈103 mAh g−1 (본문 3.93 mAh cm−2 와 일치). 오른쪽 CE 축과 혼동 주의."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Electrode component volume fractions (NCM, LPSCl, VGCF, and pore) in the 0.0PTFE and 0.2PTFE electrodes, calculated from experimentally measured relative densities using the densities of NCM (4.44 g cm−3), LPSCl (1.86 g cm−3), VGCF (2.10 g cm−3), and PTFE (2.06 g cm−3), and compared with those obtained from 3D reconstructed electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.8,
+    69.3,
+    529.5,
+    414.1
+   ],
+   "w": 1921,
+   "h": 1438,
+   "dpi": 300,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.922,
+   "auto_bbox": [
+    65.8,
+    66.3,
+    532.5,
+    633.4
+   ],
+   "px": 2762398,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 Table S1 + S2 를 한 장에 담았다 (같은 쪽 두 표). clip = 표 캡션 윗선 − 2 pt ~ 표 괘선 합집합 + 2 pt · 300 dpi (벡터 글자)",
+   "viewed": true,
+   "note": "시료 칸 \"0.02TFE\" 는 원문 오타 (= 0.2PTFE). PTFE 는 재구성에서 분할되지 않음 (\"−\")."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 17,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Experimentally measured relative densities and effective electronic/ionic conductivities of the dry-processed electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.1,
+    469.3,
+    541.4,
+    638.1
+   ],
+   "w": 1973,
+   "h": 704,
+   "dpi": 300,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.908,
+   "auto_bbox": [
+    65.8,
+    67.3,
+    532.3,
+    633.6
+   ],
+   "px": 1388992,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 Table S1 + S2 를 한 장에 담았다 (같은 쪽 두 표). clip = 표 캡션 윗선 − 2 pt ~ 표 괘선 합집합 + 2 pt · 300 dpi (벡터 글자)",
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 18,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Comparison of areal capacity, current density, and CAM loading between this work and previously reported ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.6,
+    69.3,
+    529.3,
+    456.0
+   ],
+   "w": 1921,
+   "h": 1612,
+   "dpi": 300,
+   "src": "29772169-4._Sup_Unveiling_the_Structural_Advantages_in_PTFE_Based_Dry_Processed_Electrodes_for_Sulfide_Based_All_Solid_State_Batteries_via_3D_Microstructure_Resolved_Analysis.pdf",
+   "blank": 0.926,
+   "auto_bbox": [
+    65.8,
+    66.3,
+    532.3,
+    458.8
+   ],
+   "px": 3096652,
+   "si": true,
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 표 아래 여백을 넣었다. clip = 표 캡션 윗선 − 2 pt ~ 표 괘선 합집합 + 2 pt · 300 dpi (벡터 글자)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 큐레이터 검수 — 36 장 전부 Read 로 열람 (viewed). 자동 크롭 36 장 전부 손 재크롭 (사유 = 각 항목 recrop · 원 bbox = auto_bbox): 본문 그림 6 장은 자동 bbox 가 래스터보다 넓은 여백을 넣었고, SI 그림 27 장은 SI 머리 로고 (y 35–68 pt) 를 넣으면서 래스터 아래 약 12 pt 를 잘랐고, Table S1 · S2 는 같은 쪽 두 표가 한 장에 섞였다. 그림 = 래스터 경계 그대로 · 원본 해상도 (본문 300 dpi · SI 220 dpi, 업샘플 없음) · 표 = 300 dpi 벡터 렌더. PNG 는 PIL optimize 로 무손실 재압축 (33.8 → 26.7 MB). 캡션 목록 대조: 본문 Figure 1–6 · SI Figure S1–S27 · Table S1–S3 = 36 = 크롭 36 (빠진 번호 없음 · 본문 표 없음). ⚠ 도구가 쓴 litdb/figures/_sources.json 갱신은 sparse worktree 에서 다른 항목을 지우는 형태라 되돌렸다 (공유 파일 — 별도 반영)."
+}

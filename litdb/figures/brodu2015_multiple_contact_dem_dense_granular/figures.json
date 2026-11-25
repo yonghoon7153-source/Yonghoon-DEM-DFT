@@ -1,0 +1,802 @@
+{
+ "slug": "brodu2015_multiple_contact_dem_dense_granular",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. (Color online) When squeezing a packing of particles, particles deform and new contacts are formed. Traditional DEM (a) does not take this into account. Our multiple contacts model (b) captures these by correcting contact deformation δc using linearly additive corrections from other contacts δk→c, making (c) the local force depend on all particle contacts Fc = f (δc,δi,δj,δk,δl).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    66.4,
+    299.6,
+    180.3
+   ],
+   "w": 1073,
+   "h": 476,
+   "dpi": 300,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.931,
+   "viewed": true,
+   "mpm_note_ko": "개념도 — (a) 보통 DEM: 접촉 독립 F_c = f(δ_c) · 변형 안 되는 구 / (b) 제안 모델: 다접촉 F_c = f(δ_c, δ_i, δ_j, δ_k, δ_l) · 표면 변형이 새 접촉을 만든다 / (c) 한 알의 접촉 c 에 같은 알의 접촉 i · j · k · l 의 변위가 더해진다.  값 없음."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Inﬂuence of one contact onto another. Contacts are not restricted to the surface of a sphere, their position is consistent with the grain deformations.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    67.8,
+    562.6,
+    214.5
+   ],
+   "w": 1073,
+   "h": 612,
+   "dpi": 300,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.955,
+   "viewed": true,
+   "mpm_note_ko": "식 (1) 의 기하 — 접촉 c · k · 표면 법선 n_c · n_k (알 안쪽) · 단위벡터 u_kc (k → c) · u_ck · 접촉점 사이 거리 d_kc.  캡션: 접촉점은 구 표면에 묶이지 않고 변형된 알 위치를 따른다."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. (Color online) Force exerted on the top plate during a compression test, for the experimental data from [8] and all the simulation models mentioned above, for μ = 0.03.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    68.9,
+    562.6,
+    274.3
+   ],
+   "w": 1072,
+   "h": 857,
+   "dpi": 300,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.917,
+   "viewed": true,
+   "mpm_note_ko": "판 힘 F [N] vs 압축 Δ [mm] 0–25 — 실험 [8] + 다섯 모형 (μ = 0.03) · 위 가지 = 가압 · 아래 = 탈압 · 오른쪽 Rtop 1 · 0.8 · 0.7 · 0.44 · 0.43.  [판독 · 벡터 경로] Δ 25 mm: 실험 15.68 N · MC-DEM 15.75 · 반무한 γ=1 12.57 · 구-구 11.00 · 구 위 점힘 6.86 · 접촉 독립 6.68 (비 1.004 · 0.802 · 0.702 · 0.438 · 0.426 = 표 I Rtop).  Δ 5 mm 에서는 모든 모형이 실험의 1.5–1.9 배 (시뮬레이션 침대 부풂 · p.3)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. (Color online) Comparison of the force distributions at intermediate compression \u0006 = 18 mm during the unloading phase. This representative example is chosen to show values other than maximal compression. The bhat error measure in the main text captures all compression levels.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    67.0,
+    299.5,
+    252.3
+   ],
+   "w": 1073,
+   "h": 773,
+   "dpi": 300,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.952,
+   "viewed": true,
+   "mpm_note_ko": "Δ = 18 mm 탈압 가지의 접촉력 분포 p(f) [1/N] vs f [N] 0–0.2.  [판독] 봉우리: 실험 f 0.034 N · p 10.6 / MC-DEM 0.037 · 11.3 / 접촉 독립 0.009 · 18.9 (약한 힘 과다 · 곡선이 0.135 N 에서 끝).  평균 (그려진 범위) 실험 62.6 mN · MC-DEM 61.4 · 접촉 독립 35.8 mN [카드 산술]."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. (Color online) Number of contacts per grain Z after thresholding weak forces, averaged over multiple cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.3,
+    479.1,
+    519.7,
+    742.1
+   ],
+   "w": 1811,
+   "h": 1096,
+   "dpi": 300,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.931,
+   "viewed": true,
+   "mpm_note_ko": "약한 힘 (f < τ) 을 뺀 알당 접촉 수 Z vs Δ — 모형별 다섯 패널 (위 왼쪽부터 접촉 독립 · 구 위 점힘 · 구-구 / 아래 반무한 · MC-DEM) · 각 패널에 같은 실험 곡선.  [판독] Δ 25 mm: 실험 8.97 · MC-DEM 8.86 · 반무한 8.61 · 구-구 8.70 · 점힘 8.33 · 독립 8.30; Δ 0: 실험 3.37.  두 가지 중 어느 쪽이 가압인지 그림 · 본문에 표지 없음 [미확인]."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. (Color online) Validation that the scaling law from Ref. [8], derived from experimental data, also holds in the simulation. Here, F is the force exerted by the grains on the top plate, f is the average force at each contact, Z is the number of contacts per grain, ϕ is the volume fraction within the packing (starting one diameter away from walls), and b is the distance between grain centers. Microscopic quantities were averaged on all grains and contacts within the packing. Data was then averaged on the 15 retained compression or unloading phases with the same strain. Each marker in the diagram represents one such strain level. MC-DEM and the usual DEM data have been shifted for clarity by 5 and 10 mNm, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    421.0,
+    299.6,
+    634.5
+   ],
+   "w": 1052,
+   "h": 865,
+   "dpi": 300,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.923,
+   "viewed": true,
+   "mpm_note_ko": "F − F_min [N] vs ⟨f − f_min⟩⟨Z⟩⟨φ⟩⟨b⟩ [10⁻³ N m] — 식 (2) 의 검증 · 실험 · MC-DEM (+5 이동) · 고전 DEM (+10 이동) · 실선 = 가압 · 점선 = 탈압.  [판독 · 최소제곱] 가압 기울기 실험 1.12 · MC-DEM 0.99 · 고전 1.04 N per 10⁻³ N m (원문 'slope nearly the same in all three cases').",
+   "auto_bbox": [
+    42.5,
+    401.4,
+    299.6,
+    632.8
+   ],
+   "recrop": "tool crop (bbox [42.5, 401.4, 299.6, 632.8] pt) swallowed Eq. (2) above the figure → re-rendered from the vector page at 300 dpi: clip [42.5, 421.0, 299.6, 634.5] pt (frame, tick labels, axis titles; Eq. (2) and caption excluded), ink trim (min RGB < 235), uniform 6 pt margin; caption kept in 'caption'"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "I",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "TABLE I. Metrics to compare DEM methods with experiment: Rtop: maximum compression force ratio at maximum compression; errf: root mean-squared error of the force response at all compression levels during compression and decompression; bhat: interparticle force probability distribution function match; errZ: RMSE of the contact number per particle; τ: weak force resolution. — Independent contacts 0.43 · 3.39 · 0.51 · 7.21 · 2.89; Point force on sphere 0.44 · 3.23 · 0.53 · 6.51 · 2.93; Sphere to sphere 0.70 · 1.82 · 0.34 · 2.57 · 3.35; Elastic Half Space 0.80 · 1.26 · 0.40 · 1.90 · 3.45; MC-DEM 1.00 · 0.41 · 0.26 · 0.98 · 4.00; Perfect fit 1.00 · 0 · 0 · 0 · <10 (columns Rtop · errf · errZ · bhat × 10² · τ (mN)).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.5,
+    68.5,
+    558.6,
+    236.6
+   ],
+   "w": 1428,
+   "h": 975,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.886,
+   "manual_crop": "table not detected by the tool (Roman-numeral label 'TABLE I.' — the tool parses Arabic labels only) → cut by hand — vector page rendered at 400 dpi from the stated clip (line boxes from the PDF text layer), ink trim (min RGB < 235), uniform 6 pt margin; caption paragraph + table rules in one image",
+   "viewed": true,
+   "mpm_note_ko": "다섯 모형 × 지표 넷 + τ.  MC-DEM Rtop 1.00 = γ 를 그 값에 맞춘 결과 (p.5).  errf 단위 미기재 — 그림 3 판독 RMS (50 점) 가 3.388 · 3.230 · 1.819 · 1.262 · 0.415 로 재현 → N [카드 산술].  errZ 도 그림 5 판독 RMS 로 재현 (0.515 · 0.533 · 0.340 · 0.396 · 0.264)."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "Eq. (1)",
+   "page": 2,
+   "file": "eq_01_cross_contact_displacement_point_force_half_space.png",
+   "caption": "Eq. (1), p.2: δ_{k→c} = −γ (1+ν)F_k/(2πE d_kc) { (n_k·u_kc)(n_c·u_kc) + (3−4ν) n_k·n_c − (1−2ν) [(n_k+u_kc)·n_c]/[1 + n_k·u_kc] } — normal displacement at contact c induced by the force F_k at contact k on the same grain (point force on an elastic half-space, [17] §5.4.4, vector form).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.5,
+    617.8,
+    294.5,
+    683.0
+   ],
+   "w": 1405,
+   "h": 367,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.957,
+   "manual_crop": "cut by hand — vector page rendered at 400 dpi from the stated clip (line boxes from the PDF text layer), ink trim (min RGB < 235), uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "다접촉 보정의 본체.  ★ 분수는 (1−2ν) 항에만 걸린다 (giannis2021 카드 L136–L137 옮김과 다름 · 카드 문제).  γ = 1 반무한 · γ = 0.5 (ν = 0.5 무한 공간) · MC-DEM 맞춤 γ ≈ 1.19.  E 는 F_k ∝ E 로 지워진다 (p.6)."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "Eq. (2)",
+   "page": 5,
+   "file": "eq_02_top_force_microscopic_scaling.png",
+   "caption": "Eq. (2), p.5: F ∝ P ∝ ⟨Z⟩⟨φ⟩⟨|b|⟩⟨|f|⟩ — mean-field scaling of the top-plate force with grain-scale quantities, from Ref. [8].",
+   "rotated_deg": 0,
+   "bbox": [
+    110.0,
+    404.5,
+    294.5,
+    419.5
+   ],
+   "w": 1040,
+   "h": 116,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.947,
+   "manual_crop": "cut by hand — vector page rendered at 400 dpi from the stated clip (line boxes from the PDF text layer), ink trim (min RGB < 235), uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "판 힘 ↔ 미시량 비례식 (그림 6 의 x 축).  응력 텐서 σ = 1/V Σ b_c ⊗ f_c · 접촉 밀도 ≈ ½Zφ 에서 나온다 (§VI)."
+  },
+  {
+   "key": "e_sIII_hertz",
+   "kind": "equation",
+   "label": "unnumbered §III (multicontact Hertz law, in text)",
+   "page": 2,
+   "file": "eq_unnumbered_sIII_multicontact_hertz_law_in_text.png",
+   "caption": "p.2 §III (unnumbered, in text): the displacement fields δ_{k→c} in the normal direction, induced by the deformations at other contacts δ_k, are added to the particle deformation at the local contact δ_c [14], before applying Hertz's law F ∝ (δ_c + Σ_k δ_{k→c})^{3/2}.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    344.5,
+    294.5,
+    390.7
+   ],
+   "w": 1428,
+   "h": 311,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.877,
+   "manual_crop": "cut by hand — vector page rendered at 400 dpi from the stated clip (line boxes from the PDF text layer), ink trim (min RGB < 235), uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "다접촉 힘 법칙 그 자체 — 보정은 힘이 아니라 겹침 (변위) 에 더한다 (Giannis 의 MC-stress 는 힘에 더함)."
+  },
+  {
+   "key": "e_sV_bhat",
+   "kind": "equation",
+   "label": "unnumbered §V (Bhattacharyya distance, in text)",
+   "page": 3,
+   "file": "eq_unnumbered_sV_bhattacharyya_distance_in_text.png",
+   "caption": "p.3 §V (unnumbered, in text): Bhattacharyya 'distance' d = −log B with B = ∫_0^∞ √(p(f) q(f)) df (p, q = force distributions); averaged over all compression levels as D = −log⟨B⟩ = 'bhat'.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    654.6,
+    557.5,
+    699.7
+   ],
+   "w": 1428,
+   "h": 307,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.874,
+   "manual_crop": "cut by hand — vector page rendered at 400 dpi from the stated clip (line boxes from the PDF text layer), ink trim (min RGB < 235), uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "분포 일치 지표 정의 (표 I bhat × 10²).  모든 압축 수준의 B 를 평균한 뒤 로그."
+  },
+  {
+   "key": "e_sVI_sigma",
+   "kind": "equation",
+   "label": "unnumbered §VI (packing stress tensor, in text)",
+   "page": 5,
+   "file": "eq_unnumbered_sVI_packing_stress_tensor_in_text.png",
+   "caption": "p.5 §VI (unnumbered, in text): packing stress tensor σ = 1/V Σ_{c∈V} b_c ⊗ f_c (b_c = vector between grain centres, f_c = force along the contact normal); tr(b_c ⊗ f_c) ∝ b_c · f_c; number of terms ≈ ½Zφ per grain volume; with density matching and sphericity, P ∝ b_c · f_c.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    240.2,
+    294.5,
+    389.25
+   ],
+   "w": 1428,
+   "h": 880,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.858,
+   "manual_crop": "cut by hand — vector page rendered at 400 dpi from the stated clip (line boxes from the PDF text layer), ink trim (min RGB < 235), uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "식 (2) 의 유도 — Love–Weber 꼴 (b = 중심–중심) · 우리 f_AM (b) 상별 virial 과 같은 꼴 [카드 해석]."
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1_abstract_mc_dem_full_3d_13pc",
+   "page": 1,
+   "file": "txt_p1_abstract_mc_dem_full_3d_13pc.png",
+   "caption": "p.1 abstract: 'The new model closely reproduces our recent experimental measurements, including contact force distributions in full 3D, at all compression levels of the packing up to the experimental maximum limit of 13%.' … 'interactions between multiple contacts on each grain must be included for dense granular packings.'",
+   "rotated_deg": 0,
+   "bbox": [
+    101.0,
+    172.0,
+    504.0,
+    273.6
+   ],
+   "w": 2291,
+   "h": 621,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.866,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "주장 · 범위 (13 %) · FEM 안 씀."
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1_two_key_effects_no_fem_analytic_elasticity",
+   "page": 1,
+   "file": "txt_p1_two_key_effects_no_fem_analytic_elasticity.png",
+   "caption": "p.1 §I: 'two key effects that are not taken into account in traditional DEM: (i) shape deformations induce the formation of new contacts; (ii) every contact force is affected by other contact forces in its vicinity' · 'our method does not involve finite-element method (FEM) calculations. Particle shape deformations are computed with analytic linear elasticity calculations.'",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    619.6,
+    557.5,
+    756.5
+   ],
+   "w": 1431,
+   "h": 1139,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.856,
+   "parts": [
+    [
+     1,
+     47.5,
+     619.6,
+     294.5,
+     756.5
+    ],
+    [
+     1,
+     310.5,
+     315.8,
+     557.5,
+     372.4
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "DEM 한계 둘 (k) · 우회 = 해석 선형 탄성 (l)."
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1_binary_assumption_mean_field_dense_jamming",
+   "page": 1,
+   "file": "txt_p1_binary_assumption_mean_field_dense_jamming.png",
+   "caption": "p.1 §II: 'The conventional DEM approach [1] assumes that all contact forces are binary, i.e., independent of forces acting elsewhere on a particle. This is not rigorously true …' · 'The binary assumption avoids computational complexity and makes conventional DEM feasible.' · 'Without correlation between contacts, this method is similar in spirit to a mean-field approach and provides only a first-order description …' · 'The situation is different in dense granular packings near or above jamming.'",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    414.1,
+    557.5,
+    757.2
+   ],
+   "w": 1431,
+   "h": 1962,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 인용용 DEM 한계 문장 (k)."
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2_half_space_rationale_spherical_bc",
+   "page": 2,
+   "file": "txt_p2_half_space_rationale_spherical_bc.png",
+   "caption": "p.2 §III: 'there is no theoretical justification for choosing a solution based on a spherical boundary condition for dense packings, where that boundary may be a very complicated set of free surfaces between contacts. In this work, we therefore simply consider the solution for a point force on an infinite half-space, arguing that the dense packing more closely resembles this situation than that of an isolated sphere.'",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    447.6,
+    294.5,
+    607.4
+   ],
+   "w": 1428,
+   "h": 944,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "왜 반무한 해인가 (원문 논거)."
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2_gamma_full_space_0p5_half_space_1_adjustable",
+   "page": 2,
+   "file": "txt_p2_gamma_full_space_0p5_half_space_1_adjustable.png",
+   "caption": "p.2: 'for ν = 0.5 (and only that case) the half-space solution is the same as in Ref. [14]' · 'For noncompressible materials (Poisson's ratio ν = 0.5) the solution for an infinite full-space [17, 5.4.3] only induces a change in prefactor, γ = 0.5 instead of γ = 1 in Eq. (1). We therefore let γ be an adjustable parameter in order to account empirically for the geometry.'",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    268.1,
+    557.5,
+    757.2
+   ],
+   "w": 1431,
+   "h": 1143,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.861,
+   "parts": [
+    [
+     2,
+     47.5,
+     689.1,
+     294.5,
+     757.2
+    ],
+    [
+     2,
+     310.5,
+     268.1,
+     557.5,
+     393.5
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "★ γ 의 원문 뜻 = 반무한 1 · (ν 0.5) 무한 공간 0.5 — 'ν → 0 에서 1' 이라는 말은 없다 (카드 문제)."
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2_models_list_gamma_1p19",
+   "page": 2,
+   "file": "txt_p2_models_list_gamma_1p19.png",
+   "caption": "p.2 §IV: models — Independent contacts (nondeformable overlapping spheres [2], independent Hertz) · Point force on sphere (Bondareva [15], radial component of Eqs. (7)–(8)) · Sphere to sphere (Gonzalez and Cuitiño [14], Eq. (3) of [14]) · Elastic half-space (Eq. (1) with γ = 1) · MC-DEM ('adjusting γ so as to best match experimental measurements. We found a best fit at γ ≈ 1.19').",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    408.8,
+    557.5,
+    642.6
+   ],
+   "w": 1429,
+   "h": 1356,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.876,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "다섯 정식화 원문 이름 · γ ≈ 1.19."
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2_p3_new_contacts_inertia_cost_ozn",
+   "page": 2,
+   "file": "txt_p2_p3_new_contacts_inertia_cost_ozn.png",
+   "caption": "p.2–3: displacements Σ_k δ_{k→c} computed at contact points and at grain surfaces toward closest neighbours; new contacts created when deformed surfaces overlap (zero initial force — continuous); contact position = average of surface positions; sphere inertia kept ('recomputing the inertia matrix … would be very costly'); 'only the δ_{k→c} computations themselves significantly add to the simulation cost as O(ZN)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    70.4,
+    557.5,
+    757.2
+   ],
+   "w": 1431,
+   "h": 1906,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.853,
+   "parts": [
+    [
+     2,
+     310.5,
+     643.3,
+     557.5,
+     757.2
+    ],
+    [
+     3,
+     47.5,
+     70.4,
+     294.5,
+     287.4
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "★ 계산 순서 · 새 접촉 · 비용 O(ZN) (O(C²) 아님) · 반복 언급 없음."
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3_experiment_514_hydrogel_20_cycles_13p4pc_3d_forces",
+   "page": 3,
+   "file": "txt_p3_experiment_514_hydrogel_20_cycles_13p4pc_3d_forces.png",
+   "caption": "p.3 §V: 'Our reference experiment consists of 514 hydrogel grains that are uniaxially compressed 20 times consecutively [8]. … from strains of 0 to 13.4%. Each compression-unloading cycle comprises 50 full 3D scans … with 10 additional scans where the top plate is above the packing. We discard the first 5 compression cycles … some hysteresis is observed … The full 3D force vectors are available experimentally at each contact [8].'",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    305.7,
+    294.5,
+    493.6
+   ],
+   "w": 1428,
+   "h": 1100,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.856,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 기준 실험 — 측정법은 [8] 로 넘김 ('광탄성' 낱말 없음)."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3_e_23p3kpa_inflation_cor_mu_0p03_saturated_friction",
+   "page": 3,
+   "file": "txt_p3_e_23p3kpa_inflation_cor_mu_0p03_saturated_friction.png",
+   "caption": "p.3: grains replaced by equal-volume spheres → 'slight inflation of the simulated packing' (nonzero force at least compression) · 'best estimate of the hydrogel Young's modulus E = 23.3 kPa' · constant coefficient of restitution [19] close to one · 'intergrain coefficient of friction μ ≈ 0.03, although with an experimental error bar of ±0.02' · friction always saturated F_t = μF_n · tangential terms of Eq. (1) discarded.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    333.9,
+    557.5,
+    757.2
+   ],
+   "w": 1431,
+   "h": 1649,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.848,
+   "parts": [
+    [
+     3,
+     47.5,
+     494.3,
+     294.5,
+     757.2
+    ],
+    [
+     3,
+     310.5,
+     333.9,
+     557.5,
+     357.7
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "입력 값 · 가정 (E · μ · 반발 계수 값 미기재)."
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3_rtop_errf_definitions",
+   "page": 3,
+   "file": "txt_p3_rtop_errf_definitions.png",
+   "caption": "p.3: Rtop = ratio of simulated to measured top-plate force, on average, at the maximum compression level · 'The classic DEM model and the point force on sphere solutions are both off by more than 50%. The sphere-to-sphere and linear half-space models come closer, but the geometric correction by γ is necessary to reach a Rtop = 1.' · errf = RMS error of the top-plate force at all compression levels (also hysteresis).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    391.1,
+    557.5,
+    585.3
+   ],
+   "w": 1431,
+   "h": 1123,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.86,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "Rtop · errf 정의."
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4_fig4_weak_forces_errz_tau_4mn_z_6p4",
+   "page": 4,
+   "file": "txt_p4_fig4_weak_forces_errz_tau_4mn_z_6p4.png",
+   "caption": "p.4: experimental lower resolution limit on weak forces · Fig. 4 at Δ = 18 mm unloading ('force on the top plate is about half the maximum') · errZ = RMS error of Z after thresholding f < τ in the simulations · 'Here we find τ = 4 mN' · ⟨f⟩ = 10 mN at the least compression [8] · without thresholding 6.4 < Z < 6.5 in the least compressed case (residual compression; 4–5 expected [20]).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    253.1,
+    557.5,
+    470.1
+   ],
+   "w": 1429,
+   "h": 1524,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.855,
+   "parts": [
+    [
+     4,
+     47.5,
+     333.3,
+     294.5,
+     470.1
+    ],
+    [
+     4,
+     310.5,
+     253.1,
+     557.5,
+     378.4
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "errZ · τ · Z 값."
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4_p5_independent_fails_linear_spring_gc_vs_half_space",
+   "page": 4,
+   "file": "txt_p4_p5_independent_fails_linear_spring_gc_vs_half_space.png",
+   "caption": "p.4–5: 'The traditional DEM implementation with independent contacts clearly fails to reproduce the measurements. Implementing a linear spring model would make the match … even less accurate, due to the lack of nonlinear stiffening at the contact level [1].' · 'The seminal multiple-contacts model proposed by Gonzalez and Cuitiño [14] offers good performance, but not as good as the half-space approximation …' · 'MC-DEM, adjusting γ so that Rtop = 1, yields the best results on all quantifiers.'",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    70.4,
+    557.5,
+    470.1
+   ],
+   "w": 1428,
+   "h": 1142,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.854,
+   "parts": [
+    [
+     4,
+     310.5,
+     379.1,
+     557.5,
+     470.1
+    ],
+    [
+     5,
+     47.5,
+     70.4,
+     294.5,
+     172.8
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "★ 판정 문장 (k · e) · γ 맞춤 대상 = Rtop."
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5_scaling_slope_same_more_hysteresis_friction",
+   "page": 5,
+   "file": "txt_p5_scaling_slope_same_more_hysteresis_friction.png",
+   "caption": "p.5 §VI: MC-DEM vs experiment in Fig. 6 — 'a slightly lower coefficient of proportionality … as well as more hysteresis between the compression and unloading phases' · unloading curvature in simulations not in experiment; friction (Coulomb assumed) as possible explanation · 'the slope is nearly the same in all three cases, despite the top force being halved for the same compression level in the classic DEM case.'",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    70.4,
+    557.5,
+    344.7
+   ],
+   "w": 1429,
+   "h": 1580,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "식 (2) 검증 · 탈압 가지 불일치 (b · j)."
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5_discussion_gamma_boundary_nu_lt_0p5_nu0",
+   "page": 5,
+   "file": "txt_p5_discussion_gamma_boundary_nu_lt_0p5_nu0.png",
+   "caption": "p.5 §VII: γ = 'empirical prefactor … Ideally, γ should be replaced by a correct accounting for the boundary conditions within the packing, but this is very complicated and any solution would need to be updated at every simulation step.' · 'Future models also need to account for lower Poisson's ratios ν < 0.5. In the particular case of ν = 0, no correlation should be introduced between orthogonal contacts. Yet both the linear elasticity half-space solution … as well as the sphere-to-sphere contact approximation [14], predict some cross-contact displacements δ_{k→c} in this situation.'",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    362.9,
+    557.5,
+    632.6
+   ],
+   "w": 1432,
+   "h": 1544,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.857,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 저자 한계 (γ · ν)."
+  },
+  {
+   "key": "x5c",
+   "kind": "text",
+   "label": "p5_p6_conclusion_validity_soft_particles_gamma_z_phi",
+   "page": 5,
+   "file": "txt_p5_p6_conclusion_validity_soft_particles_gamma_z_phi.png",
+   "caption": "p.5–6 §VIII: 'The full extent of the validity of this model is, however, an open question. In particular, we have only compared our simulations to experiments on soft particles. Although Eq. (1) does not depend on the Young's modulus … it may be that MC-DEM becomes less relevant with harder materials, except perhaps close to jamming …' · 'the empirical parameter γ in Eq. (1) may itself depend on other microstructural parameters, like the number of contacts per grain Z and the packing fraction φ'.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    70.4,
+    557.5,
+    757.2
+   ],
+   "w": 1435,
+   "h": 2326,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.85,
+   "parts": [
+    [
+     5,
+     310.5,
+     649.4,
+     557.5,
+     757.2
+    ],
+    [
+     6,
+     47.5,
+     70.4,
+     294.5,
+     264.5
+    ],
+    [
+     6,
+     310.5,
+     70.4,
+     557.5,
+     172.8
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "★ 저자 한계 (단단한 재료 · γ(Z, φ))."
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6_source_code_available_ref23",
+   "page": 6,
+   "file": "txt_p6_source_code_available_ref23.png",
+   "caption": "p.6 Acknowledgments + ref. [23]: 'The source code for the simulations, including the new model, is available as free software on the first author's website [23].' — [23] N. Brodu, Source code for the MC-DEM simulations, http://nicolas.brodu.net/code/dymo/, GNU LGPL v2 or more recent.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    207.9,
+    557.5,
+    708.6
+   ],
+   "w": 1427,
+   "h": 551,
+   "dpi": 400,
+   "src": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+   "blank": 0.875,
+   "parts": [
+    [
+     6,
+     310.5,
+     207.9,
+     557.5,
+     264.5
+    ],
+    [
+     6,
+     310.5,
+     675.9,
+     557.5,
+     708.6
+    ]
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, uniform 6 pt margin; parts stacked top→bottom with a 4 pt gap",
+   "viewed": true,
+   "mpm_note_ko": "공개 = 시뮬레이션 코드 (실험 자료 공개 문장 없음)."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": [
+  "TABLE I — Roman-numeral label not parsed by the tool; hand-cut as tab_1.png"
+ ],
+ "note_manual": "2026-11-12 — published version (Phys. Rev. E 91, 032201 (2015); 6 PDF pages; no supplementary material). All plots (Figs. 3–6) and schematics (Figs. 1–2) are vector graphics (no embedded rasters). Tool crops 6 (Figs. 1–6): 5 kept as cut (viewed: clean, caption kept in 'caption'), Fig. 6 re-cut (the tool crop swallowed Eq. (2)). Table I not detected (Roman numeral) → hand-cut. Hand crops 22 = table 1 + equations 5 (Eq. (1), Eq. (2) + three unnumbered in-text formulas) + evidence paragraphs 16. All crops opened and checked. No page images.",
+ "key_note": "manual keys: t1 = Table I · e<N> = Eq. (N) · e_s<section>_<name> = unnumbered formula in section <section> (kept with its sentence) · x<PDF page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1], stacked top→bottom) · page = PDF page = article page 032201-<page>",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 1498,
+  "method": "vector paths read directly from the PDF (page.get_drawings, PyMuPDF): every curve / polyline vertex converted to data units with a linear map calibrated on the tick-mark line coordinates of each frame — Fig. 3 (p.3) x ticks 334.6/374.5/414.4/454.3/494.2/534.1 pt = 0..25 mm, y ticks 246.2/192.1/138.0/83.9 pt = 0/5/10/15 N; Fig. 4 (p.4) x 90.3/136.3/182.3/228.4/274.4 pt = 0..0.2 N, y 226.9/188.8/150.7/112.6/74.5 pt = 0..20; Fig. 5 (p.4) five frames (x 146.1–256.8 / 261.9–372.6 / 377.7–488.5 pt = 0..25 mm; y 593.6–484.6 (top row) and 707.6–598.6 (bottom row) pt = 3..9); Fig. 6 (p.5) x 74.5 pt = 0, 9.82 pt per 10⁻³ N m; y 602.1 pt = 0, 10.65 pt per N. Legend strokes dropped (paths with < 5 in-frame vertices; Fig. 4 model paths start with their 2-point legend sample; Fig. 6 circle markers = separate 11-point polygons, not used — series = polyline vertices). Fig. 3 branch labels: upper = loading (for MC-DEM the upper branch minus F_min reproduces Fig. 6's legend-labelled 'Compression' series point for point); Fig. 5 branches only by path order (not labelled in the figure — which one is loading is [미확인]). Checks: Fig. 3 endpoints at Δ = 25 mm give model/experiment 0.426 · 0.438 · 0.702 · 0.802 · 1.004 (Table I Rtop 0.43 · 0.44 · 0.70 · 0.80 · 1.00); RMS(model − experiment) over the 50 matched Fig. 3 points = 3.388 · 3.230 · 1.819 · 1.262 · 0.415 (Table I errf 3.39 · 3.23 · 1.82 · 1.26 · 0.41 → unit N); RMS over the 50 path-paired Fig. 5 points = 0.515 · 0.533 · 0.340 · 0.396 · 0.264 (Table I errZ 0.51 · 0.53 · 0.34 · 0.40 · 0.26)."
+ }
+}

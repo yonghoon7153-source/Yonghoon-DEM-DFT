@@ -1,0 +1,35 @@
+{
+  "property": "LPSOCl ELF bond descriptors (midpoint + central minimum)",
+  "system": "lpsocl = O-doped LPSCl1.6 V0 (Li27P5S21OCl8, 62 atoms)",
+  "date": "2026-07-29",
+  "method": "QE pp.x plot_num=8 (ELF) on NC ONCV scf, ecut 80/320, k 4x4x4, fixed-occ, converged 15 iterations to 5.5e-11 Ry. Sampled with tools/figures/sample_elf_bonds.py (trilinear interpolation on the cube grid, minimum-image bond search).",
+  "raw": "gabia:/data/work/runs/lpsocl_elf/{lpsocl_elf.cube (28 MB), postproc/lpsocl_elf_bond_midpoint.csv}",
+  "_which_number_to_read": "**ELF_central_min 이 판별력 있는 양이다.** ELF_midpoint 는 짧은 결합에서 상대 원자의 lone-pair 영역에 걸려 높게 읽힌다 — Li-O 가 중점 0.784(중간)인데 central_min 0.163(최저)인 것이 그 예다. 문헌 관례도 bond-path 의 **최솟값**으로 공유/이온을 가른다(>0.7 공유 · <0.3 이온).",
+  "bonds": {
+    "P-S":   {"n": 19, "d_mean_A": 2.063, "ELF_midpoint": 0.945, "ELF_mid_std": 0.001, "ELF_central_min": 0.924},
+    "O-P":   {"n": 1,  "d_mean_A": 1.559, "ELF_midpoint": 0.921, "ELF_mid_std": 0.000, "ELF_central_min": 0.878,
+              "note": "POS3 unit. 공유성 높음 — P-S 와 같은 층위."},
+    "Li-S":  {"n": 69, "d_mean_A": 2.486, "ELF_midpoint": 0.935, "ELF_mid_std": 0.020, "ELF_central_min": 0.576},
+    "Cl-Li": {"n": 39, "d_mean_A": 2.523, "ELF_midpoint": 0.884, "ELF_mid_std": 0.029, "ELF_central_min": 0.399},
+    "Li-O":  {"n": 2,  "d_mean_A": 1.964, "ELF_midpoint": 0.784, "ELF_mid_std": 0.004, "ELF_central_min": 0.163,
+              "note": "**격자에서 가장 이온적인 결합.** 다음으로 낮은 Cl-Li(0.399)의 절반에도 못 미친다."}
+  },
+  "host_unchanged_vs_family": {
+    "_note": "P-S 는 세 계에서 소수 셋째 자리까지 같다 = O 도핑이 host 결합을 안 건드린다는 ICOHP 판정의 독립 재확인.",
+    "P-S":   {"comp1": {"mid": 0.944, "cmin": 0.924}, "modelc": {"mid": 0.944, "cmin": 0.923}, "lpsocl": {"mid": 0.945, "cmin": 0.924}},
+    "Li-S":  {"comp1": {"mid": 0.933, "cmin": 0.591}, "modelc": {"mid": 0.940, "cmin": 0.588}, "lpsocl": {"mid": 0.935, "cmin": 0.576}},
+    "Cl-Li": {"comp1": {"mid": 0.851, "cmin": 0.343}, "modelc": {"mid": 0.887, "cmin": 0.402}, "lpsocl": {"mid": 0.884, "cmin": 0.399},
+              "note": "comp1(화학량론)이 Cl-rich 두 계와 갈리는 유일한 결합 — Cl 함량 축의 효과이지 O 도핑 효과가 아니다."}
+  },
+  "three_probe_convergence": {
+    "headline": "Li⁺ 포획이 **정전기적**이라는 판정이 서로 독립인 세 물리량에서 같이 나온다",
+    "evidence": {
+      "ICOHP (결합 에너지 적분)": "Li-O −1.155 eV/bond = Li 결합 중 **최약** (Li-S −1.767 · Li-Cl −2.107)",
+      "Bader (전하)": "O −1.926 e = 격자에서 **가장 깊은** 전하 (S −1.752 · Cl −0.913)",
+      "ELF (전자 국재화)": "Li-O central_min 0.163 = **가장 이온적** (Cl-Li 0.399 · Li-S 0.576)"
+    },
+    "reading": "공유결합은 약한데 전하는 깊다 → O 근처 Li⁺ 는 **궤도 겹침이 아니라 쿨롱 우물**로 붙잡힌다. wang2022 계열의 Li 포획 서술을 우리 계에서 기전까지 특정한 셈이다.",
+    "⚠_caveat": "세 값의 계산 기반이 다르다 — ICOHP/Bader 는 PAW ext-basis(k 2 2 1), ELF 는 NC ONCV(k 4 4 4). **같은 표에 절대값을 나란히 놓지 말 것.** 각각의 순위/부호가 일치한다는 것이 주장이고, 수치 등치가 아니다.",
+    "_not_claimed": "P-O 는 ICOHP 로는 격자 최강(−8.41 eV)인데 ELF central_min 은 0.878 로 P-S(0.924)보다 **낮다**. 모순이 아니다 — ICOHP 는 점유 상태에 걸친 결합 에너지 적분이고 ELF central_min 은 결합 임계점의 국재화라 서로 다른 양이다. 둘을 '공유성' 한 단어로 뭉뚱그리지 말 것."
+  }
+}

@@ -1,0 +1,125 @@
+{
+ "slug": "bak2024_binder_distribution_multilayer",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Multilayer model electrode fabrication process and analysis overview. 2",
+   "bbox": [
+    88.5,
+    362.3,
+    506.8,
+    730.8
+   ],
+   "w": 1744,
+   "h": 1536,
+   "dpi": 300,
+   "src": "20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf",
+   "blank": 0.585
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Distribution of adhesive strength by depth, (b) Nyquist plot, and (c) Cycle performance of the single layer electrodes at four drying temperatures, (d) Crystallinity of PVDF and CBD film for four drying temperatures. 4",
+   "bbox": [
+    31.6,
+    322.0,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1665,
+   "dpi": 300,
+   "src": "20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Surface EDX F element ratio of each layer and (b) SAICAS adhesive strength of each layer of three model electrodes. i, ii, iii, and iv refer to the Ref, HML, MMM, and LMH model electrodes, respectively. The electrodes were dried at 160 ◦C, and the measurements were carried out in the non-calendered state. 5",
+   "bbox": [
+    31.6,
+    514.0,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 865,
+   "dpi": 300,
+   "src": "20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Interfacial electrical resistance and (b) Nyquist plots of NCM/ graphite full cells of multilayer model electrode. electrical resistances at the interfaces were measured. As shown in Fig. 5a, our observations indicate that the MMM electrode had a lower electrical resistance at the interface than the Ref electrode. This can be attributed primarily to the nonuniform distribution of the binder, which results in longer and more complex electron pathways. In contrast, HML exhibited the lowest interfacial resistance. This is owing to the insuffi­ ciency of binders near the interface, which allows for a smooth electron transportation from the current collector to the bottom layer of the electrode. In contrast, LMH exhibited the highest interfacial resistance owing to the high concentration of binders near the interface, which hindered electrons from moving from the current collector",
+   "bbox": [
+    31.6,
+    49.4,
+    297.0,
+    557.9
+   ],
+   "w": 1107,
+   "h": 2120,
+   "dpi": 300,
+   "src": "20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Voltage profile of (a) formation step of precycle at 0.1C and (b) third stabilization step of precycle at 0.2C; specific capacity of (c) rate capability test at various discharging rates (0.2C to 6C) while maintaining the charging rate 0.2C and (d) cyclability test at 1C / 1C. the three layers with varying binder and conductive material ratios. CBD forms a nanoporous matrix. Its effective electronic conductivity varies depending on the binder-to-conductive material ratio and porosity. In this study, the effective electronic conductivity of the CBD was calcu­ lated (Fig. S9). The results showed that the binder-moderate (M) and binder-excess (H) models had significantly small values (approximately 8.4 % and 0 %, respectively) compared with the binder-deficiency model (L model). Consequently, the effective electronic conductivities applied to the CBD models H, M, and L were 0, 115.3",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    401.4
+   ],
+   "w": 2228,
+   "h": 1468,
+   "dpi": 300,
+   "src": "20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) The computation result of effective electronic conductivity. (b) The schematic diagram of electronic conductivity evaluation using 3D digital-twin modeling shows the current supplied from the current inlet plane at the bottom layer of the electrode and exiting through the current output plane at the top layer. (c) The results show the potential gradient inside the electrode according to the current flow. Additionally, (d)–(f) present the visualization results of the current flow within the HML, MMM, and LMH model electrodes. employed a thick composite electrode suitable for lab-scale use, where differences in binder distribution and resulting electrochemical perfor­ mance may be subtle, it is crucial to consider the commercial context with increased electrode thickness, loading levels, and faster roll-to-roll manufacturing speeds. Additionally, the utilization of diverse acti",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    439.0
+   ],
+   "w": 2228,
+   "h": 1625,
+   "dpi": 300,
+   "src": "20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf",
+   "blank": 0.695
+  }
+ ]
+}

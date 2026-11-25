@@ -1,0 +1,163 @@
+{
+ "slug": "mesarovicfleck2000_dissimilar_elastoplastic_indentation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Axisymmetric con®gurations: (a) a line of deformable spheres with or without ®xed lateral constraint, (b) a line of alternating deformable and rigid spheres with or without ®xed lateral constraint, (c) Brinell indentation, (d) a deformable sphere compressed between rigid, frictionless platens, (e) a deformable sphere compressed between deformable half-spaces, (f) a line of deformable spheres in a shrinking tube. Three-dimensional con®guration: (g) B2 lattice, initial density D0  0:68. Particles are shown smaller than their real size for better visibility. The central deformable sphere has eight initial contacts with rigid spheres.",
+   "bbox": [
+    36.5,
+    84.3,
+    502.9,
+    478.2
+   ],
+   "w": 1944,
+   "h": 1642,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Finite element meshes: (a) axisymmetric mesh with about 2500 second order elements and 23,500 degrees of freedom; eight-node rectangles and six-node triangles for transition. The shortest distance between the nodes at initial contact is 1:5 \u0002 10ÿ3R. (b) three- dimensional mesh for isostatic compaction of the B2 lattice of soft and hard particles shown in Fig. 1 (f). 1/24-th of the soft sphere is meshed. The mesh comprises about 4300 second order elements and 100,000 degrees of freedom; 20-node bricks and 15-node triangular prisms for transition. Mid-face nodes are added to the brick elements on the contact surface. The shortest distance between the nodes at initial contact is 5 \u0002 10ÿ3R. pressure and (a2=2hR0), and concluded that the mid-points in the bands are the most accurate. For clarity, only the mid-points are reported here. For the mesh in Fig. 3(a), the scatter in h is \u00067:",
+   "bbox": [
+    41.4,
+    86.2,
+    507.8,
+    551.7
+   ],
+   "w": 1944,
+   "h": 1940,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Comparison of the similarity solution and ®nite element results for the elastic±ideally plastic solid: (a) average pressure as a function of aE\u0003=R0r0, (b) average pressure as a function of a=R0, (c) a2=2hR0 as a function of aE\u0003=R0r0, (d) a2=2hR0 as a function of a=R0, (e) Load±displacement curves. In each ®gure, results are shown for (i) a sphere indented by a rigid half-space: small open symbols; (ii) a sphere indented by a rigid sphere of equal size: solid symbols; and (iii) a half-space indented by a rigid sphere: large open symbols. Circles: E\u0003=r0  10,000, Diamonds: E\u0003=r0  1000, Triangles: E\u0003=r0  250.",
+   "bbox": [
+    36.5,
+    84.3,
+    502.8,
+    606.6
+   ],
+   "w": 1944,
+   "h": 2177,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 13,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Comparison of the similarity solution and ®nite element results for the elastic-power-law hardening solid, with m  3: (a) reduced average pressure, F =pa2rr, as a function of aE\u0003=R0r0, (b) reduced average pressure as a function of a=R0, (c) a2=2hR0 as a function of aE\u0003=R0r0, (d) a2=2hR0 as a function of a=R0, (e) load±displacement curve. In each ®gure results are shown for (i) a sphere indented by a rigid half-space: small open symbols; (ii) a sphere indented by a rigid sphere of equal size: solid symbols; and (iii) a half- space indented by a rigid sphere: large open symbols. Circles: E\u0003=r0  10,000, Diamonds: E\u0003=r0  700.",
+   "bbox": [
+    36.5,
+    84.3,
+    502.9,
+    606.6
+   ],
+   "w": 1944,
+   "h": 2177,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 15,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Load±displacement curves for the indentation of two identical deformable spheres, case (A), shown by open symbols, and indentation of a deformable sphere and a deformable half-space, case (B), shown by solid symbols: (a) elastic±ideally plastic solids, Circles: E\u0003=r0  5000, Diamonds: E\u0003=r0  500, Triangles: E\u0003=r0  125; (b) elastic-hardening solids, m  3. Circles: E\u0003=r0  5000, Diamonds: E\u0003=r0  350.",
+   "bbox": [
+    36.5,
+    84.3,
+    502.9,
+    447.1
+   ],
+   "w": 1944,
+   "h": 1513,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 16,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Indentation maps for the contact between a rigid sphere and a deformable sphere: The deformable sphere is elastic±ideally plastic (thin lines), and elastic-power-law hardening with m  3 (thick lines). The ratio between the radius of the deformable sphere Rd and the radius of the rigid sphere Rr is given by (i) Rd=Rr  0, short dashed lines; (ii) Rd=Rr  1, long dashed lines; and (iii) Rd=Rr  1, full lines; (b) Indentation maps for the contact between two deformable spheres: The solid is elastic-ideally plastic (thin lines), and elastic-power-law hardening with m  3 (thick lines). The ratio between the radii of deformable spheres R1 and R2 is: R1=R2  1 for case (A), full lines; R1=R2  0 for case (B), dashed lines.",
+   "bbox": [
+    41.5,
+    84.3,
+    507.7,
+    464.7
+   ],
+   "w": 1944,
+   "h": 1586,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 18,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Eect of contact±contact interaction on the contact force. Comparison between a line of identical deformable spheres, a line of deformable and rigid spheres of equal diameter, a shrinking-tube model of isostatic compaction and three-dimensional isostatic compaction of a periodic B2 unit cell: (a) reduced average pressure, F =pa2rr as a function of aE\u0003=R0r0, (b) a2=2hR0 as a function of aE\u0003=R0r0, (c) Load±displacement response.",
+   "bbox": [
+    41.5,
+    84.3,
+    507.8,
+    457.5
+   ],
+   "w": 1944,
+   "h": 1556,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 20,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. The ratio of the ®nite element stiness parameter KFEM and the similarity stiness parameter Ktheory as de®ned in Eq. (1.6b). KFEM is obtained from Eq. (1.6a) using the values of force at h=R0  0:1 for the cases with the lowest yield strain.",
+   "bbox": [
+    41.5,
+    84.3,
+    507.8,
+    281.4
+   ],
+   "w": 1944,
+   "h": 822,
+   "dpi": 300,
+   "src": "04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf",
+   "blank": 0.968
+  }
+ ]
+}

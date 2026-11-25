@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+{% block title %}LPSCl@Li₂S 계면상 — 파이프라인{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>🔋 LPSCl@Li₂S 계면상 — 파이프라인</h1>
+    <div class="sub">0층 열역학 → 1층 비정질 400 원자 → <b>자원 마감</b> → 120 원자 소셀 재설계.
+      숫자는 전부 <span class="mono">db/properties/</span> 기록에서 읽는다 — 이 화면은 자체 보관하지 않는다.</div></div>
+</div>
+
+{% if p.missing %}
+<div class="callout cal-danger">
+  <b>⛔ 기록을 못 읽은 단계가 있다</b> — 화면이 비어 보이는 것과 자료가 없는 것은 다르다:
+  <span class="mono">{{ p.missing|join(', ') }}</span>
+</div>
+{% endif %}
+
+{# ── 처음 보는 분께 — 발표용 요약 (2026-09-28 신설) ──────────────────────────
+   왜: 이 화면의 나머지는 내부 기록 원문이라 처음 보는 사람이 못 읽는다. 발표 덱과 같은 줄거리를
+   필드 용어로 둔다. 숫자는 요약 기록이 아니라 각 원 기록에서 data.li2s_brief() 가 채운다. #}
+{% if br.ok %}
+<div class="card" id="brief" style="padding:18px 22px;margin-top:14px;border-left:4px solid #0d9488">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
+    <div style="font-weight:700;font-size:1.02rem">{{ br.title }}</div>
+    {% if br.deck.url %}<a class="btn" href="{{ br.deck.url }}" target="_blank" rel="noopener">발표 슬라이드 열기{% if br.deck.slides %} ({{ br.deck.slides }}장){% endif %}</a>{% endif %}
+  </div>
+  <div class="muted" style="font-size:.76rem;margin-top:4px">{{ br.authority }}{% if br.deck.note %} · {{ br.deck.note }}{% endif %}</div>
+  {% if br.unread %}
+  <div class="callout cal-danger" style="margin-top:10px"><b>⛔ 원 기록에서 못 읽은 값이 있다</b> — 그 자리는 <b>—</b> 로 그렸다 (0 이 아니다):
+    <span class="mono">{{ br.unread|join(', ') }}</span></div>
+  {% endif %}
+
+  <div class="grid grid-3" style="margin-top:12px">
+    {% for b in br.blocks %}
+    <div><div style="font-weight:600;color:#0f766e;font-size:.86rem">{{ b.title }}</div>
+      <div style="font-size:.82rem;margin-top:4px;line-height:1.6">{{ b.body|bold }}</div></div>
+    {% endfor %}
+  </div>
+
+  <h3 style="margin-top:16px;font-size:.92rem">진행 경로</h3>
+  <table class="tbl" style="font-size:.8rem">
+    <thead><tr><th style="width:7rem">날짜</th><th>한 일</th><th>결과</th></tr></thead>
+    <tbody>{% for r in br.timeline %}
+      <tr><td class="mono">{{ r.date }}</td><td>{{ r.did }}</td><td>{{ r.result|bold }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:16px;font-size:.92rem">그림으로 보기</h3>
+  <div class="grid grid-2" style="margin-top:8px">
+    {% for f in br.figures %}
+    <figure class="card" style="margin:0;padding:10px 12px">
+      <div style="font-weight:600;font-size:.84rem">{{ loop.index }}. {{ f.title }}</div>
+      {% if f.exists %}
+      <a href="/api/file/{{ f.file }}" target="_blank" rel="noopener"><img src="/api/file/{{ f.file }}" alt="{{ f.title }}" loading="lazy"
+         style="width:100%;margin-top:6px;border:1px solid #e5e7eb;border-radius:6px;background:#fff"></a>
+      {% else %}
+      <div class="callout cal-danger" style="margin-top:6px">⛔ 그림 파일이 없다 — <span class="mono">{{ f.file }}</span></div>
+      {% endif %}
+      <figcaption style="font-size:.78rem;margin-top:6px;line-height:1.55">{{ f.caption|bold }}</figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+
+  <h3 style="margin-top:16px;font-size:.92rem">측정 설계 — 결과를 보기 전에 정해 둔 것</h3>
+  <table class="tbl" style="font-size:.8rem"><tbody>
+    {% for k, v in br.measurement %}<tr><th style="width:9rem">{{ k }}</th><td>{{ v|bold }}</td></tr>{% endfor %}
+  </tbody></table>
+
+  <h3 style="margin-top:16px;font-size:.92rem">지금 진행 중인 것과 다음 단계</h3>
+  <ul style="font-size:.8rem;margin-top:4px">{% for x in br.now_next %}<li style="margin-top:4px">{{ x|bold }}</li>{% endfor %}</ul>
+
+  <div class="grid grid-2" style="margin-top:12px">
+    <div class="card" style="padding:12px 16px;border-left:3px solid #16a34a">
+      <div style="font-weight:600;color:#16a34a;font-size:.86rem">말할 수 있는 것</div>
+      <ul style="margin:6px 0 0;padding-left:18px;font-size:.8rem">{% for x in br.can %}<li style="margin-top:4px">{{ x|bold }}</li>{% endfor %}</ul>
+    </div>
+    <div class="card" style="padding:12px 16px;border-left:3px solid #dc2626">
+      <div style="font-weight:600;color:#dc2626;font-size:.86rem">아직 말할 수 없는 것</div>
+      <ul style="margin:6px 0 0;padding-left:18px;font-size:.8rem">{% for x in br.cannot %}<li style="margin-top:4px">{{ x|bold }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+  {% if br.rider %}<div class="muted" style="font-size:.76rem;margin-top:8px">{{ br.rider|bold }}</div>{% endif %}
+
+  <details style="margin-top:12px"><summary style="font-size:.84rem;font-weight:600;cursor:pointer">용어 정리</summary>
+    <table class="tbl" style="font-size:.78rem;margin-top:6px"><tbody>
+      {% for t, m in br.glossary %}<tr><th style="width:13rem">{{ t }}</th><td>{{ m }}</td></tr>{% endfor %}
+    </tbody></table>
+  </details>
+  <div class="muted mono" style="font-size:.7rem;margin-top:10px"><a href="/api/file/{{ br.record }}">{{ br.record }}</a>
+    · 숫자는 이 기록이 아니라 각 원 기록에서 읽는다</div>
+  <div class="muted" style="font-size:.74rem;margin-top:4px">아래부터는 내부 기록 원문이다 (마감 카드 · 사다리 · 단계별 판정).</div>
+</div>
+{% else %}
+<div class="callout cal-danger" style="margin-top:12px">⛔ 처음 보는 분께 요약을 못 읽었다 — {{ br.why }}. 빈 절로 흉내내지 않는다.</div>
+{% endif %}
+
+<div class="callout cal-warn">
+  <b>⚠ 이 캠페인은 한 번 닫혔고, 다른 질문으로 다시 열렸다.</b>
+  400 원자 1층 결과는 <b>‘UMA 미검증 조성’ 표지가 그대로 붙어 있고 인용할 수 없다</b> —
+  G1(400 원자 QE 검증)이 <b>불통과가 아니라 미실시</b>이기 때문이다. 아래 소셀 결과가 아무리 좋아도
+  그 표지는 <b>안 떨어진다</b>(G-B2 탈락 → 전이 통로 닫힘).
+</div>
+
+{% if cc.ok %}
+<div class="card" style="padding:16px 20px;margin-top:14px;border-left:4px solid #7c3aed">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div style="font-weight:600">🔒 마감 카드 — {{ cc.title|bold }}</div>
+    <div class="mono muted" style="font-size:.72rem">{{ cc.state }} · {{ cc.state_at }}</div>
+  </div>
+
+  <div class="callout cal-warn" style="margin-top:10px">
+    <b>순서를 먼저 밝힌다</b>
+    {# ⚠ 키를 라벨로 같이 낸다 — "무엇이 사전등록이었고 무엇이 사후 작성인가" 가 이 블록의
+       요점인데, 값만 이어 붙이면 네 문장이 구분 없이 흐른다 (2026-09-18 실측). #}
+    {% for k, v in cc.order.items() %}
+    <div style="margin-top:6px"><b>{{ k.replace('_',' ') }}</b> — {{ v|bold }}</div>{% endfor %}
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+    <div class="card" style="padding:10px 14px;min-width:190px;border-left:3px solid #16a34a">
+      <div class="muted" style="font-size:.72rem">힘 RMSE</div>
+      <div class="mono" style="font-size:1.1rem">{{ cc.value_force }} eV/Å</div></div>
+    <div class="card" style="padding:10px 14px;min-width:190px;border-left:3px solid #16a34a">
+      <div class="muted" style="font-size:.72rem">상대 에너지 MAE</div>
+      <div class="mono" style="font-size:1.1rem">{{ cc.value_energy }} meV/atom</div></div>
+  </div>
+  <div class="muted" style="font-size:.76rem;margin-top:6px">{{ cc.value_cond|bold }}</div>
+  {% if cc.policy_note %}
+  <div class="callout cal-danger" style="margin-top:8px">{{ cc.policy_note|bold }}</div>{% endif %}
+
+  <div class="grid grid-2" style="margin-top:14px">
+    <div>
+      <div style="font-weight:600;color:#16a34a;font-size:.86rem">✅ 허용 서술 — 이대로만</div>
+      <ol style="margin:6px 0 0;padding-left:20px;font-size:.78rem">
+        {% for k, v in cc.allowed.items() %}<li style="margin-top:5px">{{ v|bold }}</li>{% endfor %}
+      </ol>
+    </div>
+    <div>
+      <div style="font-weight:600;color:#dc2626;font-size:.86rem">⛔ 금지 서술</div>
+      <ol style="margin:6px 0 0;padding-left:20px;font-size:.78rem">
+        {% for v in cc.forbidden %}<li style="margin-top:5px">{{ v|bold }}</li>{% endfor %}
+      </ol>
+    </div>
+  </div>
+
+  <div style="font-weight:600;font-size:.86rem;margin-top:14px">↻ 재개 조건 — 이것들만</div>
+  {% if cc.reopen_warn %}<div class="muted" style="font-size:.74rem;margin-top:3px">{{ cc.reopen_warn|bold }}</div>{% endif %}
+  <ul style="margin:6px 0 0;padding-left:20px;font-size:.78rem">
+    {% for k, v in cc.reopen.items() %}<li style="margin-top:5px"><b>{{ k.replace('_',' ') }}</b> — {{ v|bold }}</li>{% endfor %}
+  </ul>
+  {% if cc.reopen_only %}<div class="callout cal-danger" style="margin-top:8px">{{ cc.reopen_only|bold }}</div>{% endif %}
+
+  <div class="muted mono" style="font-size:.7rem;margin-top:10px">
+    <a href="/api/file/{{ cc.record }}">{{ cc.record }}</a></div>
+</div>
+{% else %}
+<div class="callout cal-danger" style="margin-top:12px">⛔ 마감 카드를 못 읽었다 — {{ cc.why }}</div>
+{% endif %}
+
+<!-- ── 단계 ─────────────────────────────────────────────── -->
+<h2 style="margin-top:28px;font-size:1rem">단계별 진행</h2>
+<h2 id="ladder">트랙 사다리 L-1 ~ L-4 <span class="mut">— 계획의 <b>상태</b></span></h2>
+{% if not ld.ok %}
+<div class="callout cal-danger"><b>⛔ 사다리 기록을 못 읽었다</b> — {{ ld.why }}.
+  빈 사다리를 그리지 않는다.</div>
+{% else %}
+<div class="callout cal-warn">
+  <b>⚠ 이 사다리는 2026-09-18 까지 원장에 없었다.</b> {{ ld.why_record }}
+</div>
+<p class="mut">{{ ld.same_track }}</p>
+<table class="tbl">
+  <thead><tr><th>칸</th><th>제목</th><th>옛 표가 말한 것</th><th>실제 (2026-09-18)</th></tr></thead>
+  <tbody>
+  {% for r in ld.rungs %}
+    <tr>
+      <td class="mono"><b>{{ r.id }}</b><br><span class="mut">{{ r.state }}</span></td>
+      <td>{{ r.title }}</td>
+      <td class="mut">{{ r.old }}</td>
+      <td>{{ r.now }}
+        {% if r.caveat %}<div class="mut">⛔ {{ r.caveat }}</div>{% endif %}
+        {% if r.reopen %}<div class="mut">다시 열려면: {{ r.reopen }}</div>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="mut">{{ ld.branch_note }}</p>
+{% if ld.branch %}
+<div class="callout cal-info">
+  <b>사다리 밖 가지 — NEB.</b> {{ ld.branch['왜_생겼나'] }} · {{ ld.branch['지금'] }}
+  <div class="mut">⛔ {{ ld.branch['⛔'] }}</div>
+</div>
+{% endif %}
+<ul class="mut">{% for x in ld.not_doing %}<li>{{ x }}</li>{% endfor %}</ul>
+<p class="mut">기록: <span class="mono">{{ ld.record }}</span></p>
+{% endif %}
+
+{# ── 사다리 밖 가지: NEB — 마감 + 재개조건 현황 (2026-09-21 신설) ──────────────
+   왜: 종전엔 사다리 옆 한 줄뿐이었고 그 줄이 "9/9 생존 → 다음은 UMA-NEB" 로 3 일 낡아
+   화면이 "이제 NEB 를 돌린다" 고 말했다. 실제는 0/9 로 닫혔고 ① 도 0/18 로 소진됐다. #}
+{% if not nb.ok %}
+<div class="callout cal-danger"><b>⛔ NEB 가지 기록을 못 읽었다</b> — {{ nb.why }}.
+  빈 절로 흉내내지 않는다.</div>
+{% else %}
+<h2 style="margin-top:22px">사다리 밖 가지 — NEB <span class="mut" style="font-weight:400">({{ nb.state }} · {{ nb.state_at }})</span></h2>
+<div class="callout cal-danger">
+  <b>{{ nb.title }}</b>
+  <div style="margin-top:6px">닫는 대상: {{ nb.closed_target }}</div>
+  <div class="mut" style="margin-top:4px">{{ nb.order }}</div>
+</div>
+<table class="tbl"><tbody>
+  <tr><th style="width:12rem">Eb</th><td>{{ nb.eb or '—' }}</td></tr>
+  <tr><th>G-B7 통과</th><td>{{ nb.gb7 or '—' }}</td></tr>
+  <tr><th>왜</th><td>{{ nb.why or '—' }}</td></tr>
+  <tr><th>조건</th><td class="mut">{{ nb.cond or '—' }}</td></tr>
+</tbody></table>
+
+{% if nb.round1 %}
+<div class="callout cal-warn" style="margin-top:10px">
+  <b>재개조건 ① 라운드 (2026-09-21) — {{ nb.round1.verdict }}</b>
+  <div style="margin-top:6px">
+    census 원시 {{ nb.round1.n_raw if nb.round1.n_raw is not none else '—' }} 건
+    → 끝점 쌍 공유 {{ nb.round1.n_dropped if nb.round1.n_dropped is not none else '—' }} 건 제외
+    → <b>N₁ = {{ nb.round1.n1 if nb.round1.n1 is not none else '—' }}</b>
+    · G-B7 통과 <b>{{ nb.round1.n_ok if nb.round1.n_ok is not none else '—' }} / {{ nb.round1.n_events if nb.round1.n_events is not none else '—' }}</b>
+  </div>
+  {% if nb.round1.allowed %}<div class="mut" style="margin-top:4px">허용 문구: {{ nb.round1.allowed }}</div>{% endif %}
+  <div class="mut">기록: <span class="mono">{{ nb.round1.record }}</span></div>
+</div>
+{% else %}
+<div class="callout cal-warn" style="margin-top:10px">
+  <b>⚠ 재개조건 ① 라운드 기록을 못 읽었다</b> — 수치를 0 으로 그리지 않는다.
+</div>
+{% endif %}
+
+<h3 style="margin-top:14px">NEB 가지 — 재개 조건 (이것들만)</h3>
+<ul>
+{% for r in nb.reopen %}
+  {% if r.is_rule %}<li class="mut">{{ r.text }}</li>
+  {% else %}<li>{% if r.spent %}<b>⛔ 소진</b> · {% else %}<b>열림</b> · {% endif %}{{ r.text }}</li>{% endif %}
+{% endfor %}
+</ul>
+
+<h3 style="margin-top:14px">NEB 가지 — 허용 서술 (이대로만)</h3>
+<ul>{% for x in nb.allowed %}<li>{{ x }}</li>{% endfor %}</ul>
+<h3>NEB 가지 — ⛔ 금지 서술</h3>
+<ul>{% for x in nb.forbidden %}<li>{{ x }}</li>{% endfor %}</ul>
+{% if nb.undecided %}
+<p class="mut">가르지 못한 것 — (a) {{ nb.undecided['a'] }} / (b) {{ nb.undecided['b'] }} · {{ nb.undecided['⛔'] }}</p>
+{% endif %}
+<ul class="mut">{% for x in nb.left_behind %}<li>{{ x }}</li>{% endfor %}</ul>
+<p class="mut">기록: <span class="mono">{{ nb.record }}</span></p>
+{% endif %}
+
+{% for s in p.stages %}
+<div class="card" style="padding:14px 18px;margin-top:10px;
+     border-left:3px solid {{ '#dc2626' if s.missing else ('#16a34a' if s.verdict and '통과' in s.verdict|string
+     else ('#dc2626' if s.verdict and ('탈락' in s.verdict|string or '미실시' in s.verdict|string) else '#6b7280')) }}">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div style="font-weight:600">{{ loop.index }}. {{ s.title }}</div>
+    <div class="muted mono" style="font-size:.72rem">{{ s.machine }}{% if s.date %} · {{ s.date }}{% endif %}</div>
+  </div>
+  <div class="muted" style="font-size:.78rem;margin-top:3px">{{ s.one_line }}</div>
+
+  {% if s.missing %}
+    <div class="callout cal-danger" style="margin-top:8px">기록 파일을 못 읽었다 — 판정을 여기서 지어내지 않는다.</div>
+  {% else %}
+    {% if s.verdict %}
+    <div style="margin-top:8px;font-size:.82rem"><b>판정</b> · {{ s.verdict|bold }}</div>
+    {% endif %}
+    {% if s.facts %}
+    <table style="margin-top:8px;font-size:.78rem;width:100%">
+      <tbody>
+      {% for f in s.facts %}
+      <tr>
+        <td style="width:210px;color:#6b7280">{{ f.label }}</td>
+        <td class="mono">{% if f.unread %}<span style="color:#dc2626">— ⚠ 기록에서 못 읽음</span>
+            {% else %}{{ f.value }}{% endif %}</td>
+        <td class="muted" style="font-size:.72rem">{{ f.note|bold }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    <div class="muted mono" style="font-size:.7rem;margin-top:8px">
+      <a href="/api/file/db/properties/{{ s.record }}">db/properties/{{ s.record }}</a>
+      {% if s.citable is not none %} · citable: {{ s.citable }}{% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endfor %}
+
+<!-- ── 원소별 힘 분해 ────────────────────────────────────── -->
+{% if fe.ok %}
+<h2 style="margin-top:30px;font-size:1rem">G-B3 원소별 힘 오차 — 무른 곳이 어디인가</h2>
+<div class="callout cal-warn" style="margin-top:8px">{{ fe.not_a_gate|bold }}</div>
+<table style="margin-top:10px;font-size:.8rem">
+  <thead><tr><th>원소</th><th>원자수</th><th>MAE (eV/Å)</th><th>RMSE (eV/Å)</th>
+    <th>참조 RMS</th><th>상대 %</th><th>softening</th></tr></thead>
+  <tbody>
+  {% for el, g in fe.rows.items() %}
+  <tr>
+    <td><b>{{ el }}</b></td>
+    <td class="mono">{{ g.n_atoms }}</td>
+    <td class="mono">{{ '%.4f'|format(g.mae_eVA) }}</td>
+    <td class="mono">{{ '%.4f'|format(g.rmse_eVA) }}</td>
+    <td class="mono">{{ '%.3f'|format(g.rms_ref_eVA) }}</td>
+    <td class="mono">{{ '%.2f'|format(g.rel_mae_pct) }}</td>
+    <td class="mono" style="color:{{ '#c05621' if g.softening_slope < 1 else '#0284c7' }}">
+      {{ '%.4f'|format(g.softening_slope) }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% for r in fe.reads %}<div class="muted" style="font-size:.78rem;margin-top:6px">{{ r|bold }}</div>{% endfor %}
+{% if fe.interpretation %}
+<div class="callout cal-warn" style="margin-top:10px"><b>해석(측정 아님)</b> · {{ fe.interpretation|bold }}</div>
+{% endif %}
+{% if fe.ceiling %}
+<div class="callout cal-danger" style="margin-top:8px">{{ fe.ceiling|bold }}</div>
+{% endif %}
+<div class="muted mono" style="font-size:.7rem;margin-top:6px">
+  <a href="/api/file/{{ fe.record }}">{{ fe.record }}</a></div>
+{% endif %}
+
+<!-- ── 허용 서술 범위 ────────────────────────────────────── -->
+<h2 style="margin-top:30px;font-size:1rem">허용 서술 범위 — 소셀로 무엇을 말할 수 있나</h2>
+<div class="muted" style="font-size:.76rem;margin-top:4px">
+  생산 셀 선언 <span class="mono">D-2026-09-18-lpscl-smallcell-production-scope</span>
+  ({{ p.scope.status }}) 에서 읽는다.</div>
+
+{% if p.scope.rider %}
+<div class="callout cal-danger" style="margin-top:10px">
+  <b>모든 소셀 수치에 영구히 붙는 단서</b><div style="margin-top:4px">{{ p.scope.rider|bold }}</div>
+</div>
+{% endif %}
+
+<div class="grid grid-2" style="margin-top:12px">
+  <div class="card" style="padding:14px 18px;border-left:3px solid #16a34a">
+    <div style="font-weight:600;color:#16a34a">✅ 답할 수 있는 것</div>
+    <ul style="margin:8px 0 0;padding-left:18px;font-size:.8rem">
+      {% for x in p.scope.can %}<li style="margin-top:4px">{{ x|bold }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div class="card" style="padding:14px 18px;border-left:3px solid #dc2626">
+    <div style="font-weight:600;color:#dc2626">⛔ 답할 수 없는 것</div>
+    <ul style="margin:8px 0 0;padding-left:18px;font-size:.8rem">
+      {% for k, v in p.scope.cannot.items() %}
+      <li style="margin-top:6px"><b>{{ k.replace('_',' ') }}</b> — {{ v|bold }}</li>{% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

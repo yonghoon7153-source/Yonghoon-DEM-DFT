@@ -1,0 +1,1012 @@
+{
+ "slug": "cronk2026_lis_positive_electrode_geometry_fem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+  "c13446ce-64SUP1.PDF"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | All-solid-state battery using engineered Li-S conversion positive electrodes. Key features required to enable high speciﬁc energy ASSBs, improving both utilization and cycle life under practical operating conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    556.2,
+    257.1
+   ],
+   "w": 2178,
+   "h": 894,
+   "dpi": 300,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.692
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Characterizing sulfur positive electrodes after synthesis. a First cycle voltage proﬁles of the investigated positive electrode preparation methods in Li-In half cells operating with a rate of 80 mA g−1. Cells were evaluated at room tem- perature: 25 °C ± 1 °C. b X-ray diffraction (XRD) spectra of the prepared sulfur positive electrodes. c Raman spectroscopy and (d) X-ray absorption spectroscopy",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    408.6,
+    339.7
+   ],
+   "w": 1563,
+   "h": 1238,
+   "dpi": 300,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | LPSCl redox activity and capacity contribution. Voltage proﬁles of Li-In || LPSCl half cells evaluated under (a) sulfur voltage limits. b Cyclic voltammetry of sulfur and LPSCl positive electrode composites with a Li-In negative electrode. The active mass of the sulfur positive electrode is 2.5 mg cm−2, which consists of both sulfur and LPSCl. The active mass for the LPSCl positive electrode is 3 mg cm−2. c dQ/dV curves of the 1st and (d) 3rd cycle for cells with decreasing sulfur wt% within",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    44.6,
+    301.9,
+    386.8
+   ],
+   "w": 1118,
+   "h": 1427,
+   "dpi": 300,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Probing electrochemical reversibility. a Nyquist plots of in-situ EIS measurements of cells with the sulfur positive electrode and Li-In negative elec- trode during the ﬁrst formation cycle. b XRD and (c) TGA of high loading (7.6 mg cm-2) sulfur positive electrodes at the pristine, discharged, and charged states, performed in a nitrogen environment. Quantiﬁed sulfur masses are listed in",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    47.9,
+    385.7,
+    376.8
+   ],
+   "w": 1467,
+   "h": 1372,
+   "dpi": 300,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Modeling sulfur positive electrodes microstructures with electro- chemical validation in Li-In half cells. a Geometrically modeled sulfur positive electrodes for bulk, micron, and sub-micron sulfur particles. b Speciﬁc active sur- face area and (c) ionic transport tortuosity as a function of AM content (%) and particle size. d First cycle voltage proﬁles of positive electrode composites with various particles sizes e Long-term cycling stability at C/2 (800 mA g-1) with dis- charge capacity being normalized by the active mass (sulfur and LPSCl). f Nyquist",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.7,
+    540.7,
+    481.9
+   ],
+   "w": 2113,
+   "h": 1831,
+   "dpi": 300,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Quantifying positive electrode and cell level volume changes. Cryo-FIB images of the (a) micron sulfur and (b) Li2S positive electrode composite at various states of charge. c Operando pressure monitoring and voltage proﬁle of LCO and Sulfur paired with a lithiated silicon negative electrode and (d) LCO and Li2S paired",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.4,
+    515.1
+   ],
+   "w": 2012,
+   "h": 1969,
+   "dpi": 300,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.63
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 | High loading sulfur and Li2S electrochemical performance with gravi- metric energy density outlook. a Schematic of the sulfur positive electrode half- cell architecture in pellet cells using a Li-In negative electrode. b First cycle voltage proﬁles of cells with increasing areal capacity. Areal capacity was determined by using the average discharge and charge capacity divided by the cell area of 0.785 cm2. Sulfur mass loadings of 1.2 mgS cm-2, 2.7 mgS cm-2, and 7 mgS cm-2 were used for 2 mAh cm-2, 5.5 mAh cm-2, and 10 mAh cm-2, respectively. c Long term cycling stability at the 11 mAh cm-2 level evaluated at 25 °C. d Schematic of the dry process sulfur positive electrode paired with a lithiated silicon negative electrode in pellet cells. e Rate performance at the 5.5 mAh cm-2 level. f Cycling stability at the 7.4 mAh cm-2 level at C/5 (0.32 A g-1). N/P ratio: 2. Testing temperat",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.7,
+    329.4,
+    486.3
+   ],
+   "w": 1233,
+   "h": 1849,
+   "dpi": 300,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Various positive electrode composite synthesis methods. Schematic illustrating the process of (a) hand-mixing all components, (b) milling carbon and sulfur followed by hand-mixing SSE and (c) single step milling of all components with their expected distribution based on the 1st formation cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    61.3,
+    26.0,
+    549.0,
+    302.4
+   ],
+   "w": 2033,
+   "h": 1153,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.787
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. SEM images of LPSCl solid electrolyte particles (a) as received and (b) after milling to reduce particle size to the micron scale. Protocols are included within the methods section.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    101.3,
+    549.0,
+    247.2
+   ],
+   "w": 2013,
+   "h": 609,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.443
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig S3. Evaluation of lower milling intensities using the one-step milling process in Li-In half cells. (a) 1st formation cycle normalized by sulfur mass. Voltage profiles normalized by total active mass (sulfur and LPSCl) for composites fabricated at (b) 300 rpm, (c) 400 rpm, and (d) 500 rpm. Stack pressure: 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    385.2
+   ],
+   "w": 2013,
+   "h": 1331,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.937
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Characterization of sulfur and LPSCl catholyte after one-step synthesis without carbon. a, XRD spectra of S/LPSCl composite with increased milling durations. b, Raman spectra of composites shown in a. c, Corresponding Nyquist plots of S/LPSCl composites with increasing milling durations. Standalone d, XRD spectra e, Raman spectra, and f, Nyquist plots of LPSCl after 1 hour and 10 hour milling durations. Stack pressure: 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    398.4
+   ],
+   "w": 2013,
+   "h": 1386,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.903
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Thermogravimetric analysis (TGA) of the sulfur positive electrode composite evaluated with a thermal rate of 5 C°/min in nitrogen atmosphere.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    261.8
+   ],
+   "w": 2013,
+   "h": 816,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.954
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Analysis of sulfur positive electrode particles after one-step synthesis. a, Low magnification TEM image. b, HAADF-STEM image of sulfur/LPSCl/C agglomerated particle 1 after synthesis with EDS hyperspectral imaging, and (c) line scan results.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    64.9,
+    549.0,
+    353.8
+   ],
+   "w": 2013,
+   "h": 1205,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.554
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. Analysis of sulfur/LPSCl/C particle 2 after one-step synthesis. a, Low magnification TEM image. b, HAADF-STEM image of sulfur/LPSCl/C agglomerated particle 2 after synthesis with EDS hyperspectral imaging, and (c) line scan results.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.6,
+    549.0,
+    349.2
+   ],
+   "w": 2013,
+   "h": 1162,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.537
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. Performance comparison with LPS and LPSCl catholytes within sulfur positive electrodes. (a) Nyquist plots of EIS measurements comparing LPSCl and LPS. (b) Electrochemical performance of sulfur positive electrodes using the 1-step milled synthesis approach fabricated with either LPSCl or LPS as the catholyte. Half cells were fabricated with a Li-In negative electrode. Stack pressure: 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.4,
+    549.0,
+    263.5
+   ],
+   "w": 2013,
+   "h": 652,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.925
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. 1st formation cycle voltage profiles of half cells consisting of Li2S positive electrodes prepared by various methods. Stack pressure: 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    549.0,
+    258.0
+   ],
+   "w": 2013,
+   "h": 744,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.948
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. Characterization of the Li2S positive electrode. a, X-ray diffraction and b, Raman spectroscopy spectra comparing milled and mixed Li2S/LPSCl composites without carbon. c, Nyquist plots of Li2S/LPSCl composites after 1 and 10 hours of milling. For the EIS measurements the stack pressure was 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.4,
+    562.2,
+    272.4
+   ],
+   "w": 2068,
+   "h": 689,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.884
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. Voltage profiles of a Li0.5In|LPSCl|Li2S cell evaluated at 25°C at C/20 cycling conditions (60 mA g-1). Stack pressure: 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    549.0,
+    260.9
+   ],
+   "w": 2013,
+   "h": 756,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.945
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. 1st cycle voltage profiles of LPS and LPSCl (80 wt.% SSE and 20 wt.% carbon) as positive electrodes evaluated in Li-In half cells. These cells were cycled under a rate of 0.02 A g- 1, which is approximately C/20. Stack pressure: 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    549.0,
+    280.8
+   ],
+   "w": 2013,
+   "h": 782,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.95
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. Voltage profiles of a Li-In half cell using just LPSCl as the positive electrode (80 wt.% SSE and 20 wt.% carbon) evaluated within Li2S voltage limits from 3.5V to 1V. Stack pressure: 75 MPa. Testing Temperature: 25°C ± 1°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    549.0,
+    285.1
+   ],
+   "w": 2013,
+   "h": 800,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.951
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14. Raman spectra of cycled sulfur positive electrodes focusing on the symmetrical S-S bending region.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    549.0,
+    291.1
+   ],
+   "w": 2013,
+   "h": 825,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.958
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15. (a) Equivalent circuit used for fitting EIS spectra in Fig. 4a. (b) Fit results.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    517.0,
+    231.6
+   ],
+   "w": 1880,
+   "h": 633,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.811
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16. Raman spectra of the cycled sulfur positive electrode at a region correlating within the SSE bulk. (a) Comparison to pristine LPSCl and (b) fitted spectra highlighting two different PS43- phases attributed to LPSCl and LPS.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    549.0,
+    279.9
+   ],
+   "w": 2013,
+   "h": 778,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.925
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 18,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17. Sulfur K-edge X-ray absorption spectroscopy (XAS) spectra of reference species and expected redox products sulfur positive electrode redox products.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    549.0,
+    262.1
+   ],
+   "w": 2013,
+   "h": 761,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.949
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 19,
+   "file": "fig_S18.png",
+   "caption": "Fig. S18. Linear combination fitting of XAS spectra collected at the Sulfur K-edge of the LPSCl positive electrode system for the (a) pristine, (b) discharged state, and (c) charged (after 1 cycle) state.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    549.0,
+    203.1
+   ],
+   "w": 2013,
+   "h": 515,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.927
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 20,
+   "file": "fig_S19.png",
+   "caption": "Fig. S19. Linear combination fitting of XAS spectra at Sulfur K-edge of the sulfur system. a, Milled Sulfur/LPSCl (without carbon). b, Pristine composite. c, Discharged composite. d, Charged composite (after 1 cycle) conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    321.4
+   ],
+   "w": 2013,
+   "h": 1065,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.938
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 21,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20. Linear combination fitting of XAS spectra at Sulfur k-edge of the Li2S system. (a) pristine composite and under (b) charged and (c) discharged (after 1 cycle) conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    186.3
+   ],
+   "w": 2013,
+   "h": 502,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.923
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 22,
+   "file": "fig_S21.png",
+   "caption": "Fig. S21. Electrochemical performance of sulfur positive electrodes used for XRD analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.7,
+    79.8,
+    535.3,
+    296.9
+   ],
+   "w": 1899,
+   "h": 906,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.96
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 23,
+   "file": "fig_S22.png",
+   "caption": "Fig. S22. Electrochemical performance of cells with (a) LPSCl, (b) sulfur, and (c) Li2S positive electrodes used for XANES quantification.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    549.0,
+    223.0
+   ],
+   "w": 2013,
+   "h": 541,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.924
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 25,
+   "file": "fig_S23.png",
+   "caption": "Fig. S23. Scanning electron microscopy (SEM) images of unmodified sulfur and composite. Powders of (a) Bulk Sulfur as received and (b) composite after synthesis. (c) Top view after positive electrode composite fabrication.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    549.0,
+    205.9
+   ],
+   "w": 2013,
+   "h": 470,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.305
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 26,
+   "file": "fig_S24.png",
+   "caption": "Fig. S24. SEM images of Li2S powders. a, Low magnification and (b) high magnification of as received bulk Li2S particles. c, Low magnification and (d) high magnification of micron Li2S particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    86.8,
+    549.0,
+    275.1
+   ],
+   "w": 2013,
+   "h": 786,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.54
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 27,
+   "file": "fig_S25.png",
+   "caption": "Fig S25. SEM-EDS mapping of the sulfur positive electrode composite powders synthesized with unmodified Bulk Sulfur.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    288.3
+   ],
+   "w": 2013,
+   "h": 927,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.489
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 28,
+   "file": "fig_S26.png",
+   "caption": "Fig. S26. Scanning electron microscopy (SEM) images of milled sulfur particles and their composites. Powders of (a) Micron scale sulfur, (b) composite after synthesis, and (c) top view after positive electrode composite fabrication. Powders of (d) Sub-micron scale sulfur, (e) composite after synthesis, and (f) top view after positive electrode fabrication.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    549.0,
+    294.0
+   ],
+   "w": 2013,
+   "h": 894,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.265
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 29,
+   "file": "fig_S27.png",
+   "caption": "Fig. S27. XRD spectra of sulfur particles after particle size reduction to the micron and sub-micron scale.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    236.4
+   ],
+   "w": 2013,
+   "h": 711,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.958
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 30,
+   "file": "fig_S28.png",
+   "caption": "Fig. S28. Electrochemical results with differing sulfur particle sizes. a, Second formation cycle of half cells constructed with bulk, micron, and sub-micron sulfur composites and a Li-In negative electrode. b, Rate performance evaluation from 0.1C to 1C at 25°C, normalized by both sulfur (left y-axis) and active materials (S/LPSCl) (right y-axis).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    549.0,
+    247.9
+   ],
+   "w": 2013,
+   "h": 645,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.892
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 31,
+   "file": "fig_S29.png",
+   "caption": "Fig. S29. Electrochemical evaluation of the micron sulfur positive electrode Li-In half cells with various carbon types. SEM images of (a) vapor grown carbon fiber (VGCF), (b) acetylene black (AB) and (c) Ketjen black (KB, EC-600JD). (d), First cycle voltage profile at C/20. (e), Long term cycling performance at C/5.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    549.0,
+    278.9
+   ],
+   "w": 2013,
+   "h": 831,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.679
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 32,
+   "file": "fig_S30.png",
+   "caption": "Fig. S30. (a) Equivalent circuit used for fitting EIS spectra in Fig. 5f. (b) Fit results.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    516.3,
+    278.5
+   ],
+   "w": 1877,
+   "h": 886,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.832
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 33,
+   "file": "fig_S31.png",
+   "caption": "Fig. S31. Cross-sectional SEM images of sulfur positive electrode and SSE layer under cryogenic conditions. a, Micron sulfur and (b) Sub-micron sulfur positive electrodes after fabrication.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    108.6,
+    549.0,
+    272.6
+   ],
+   "w": 2013,
+   "h": 684,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.302
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 34,
+   "file": "fig_S32.png",
+   "caption": "Fig. S32. Estimated volume expansion of sulfur particles in positive electrodes based on % utilization obtained from first discharge capacities at C/20 (80 mA g-1). This estimation also considers the capacity contribution of LPSCl during the discharge process.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.4,
+    549.0,
+    241.5
+   ],
+   "w": 2013,
+   "h": 731,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.856
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 35,
+   "file": "fig_S33.png",
+   "caption": "Fig. S33. Estimated volume change (%) of the sulfur positive electrodes as a function of sulfur weight percent. Assuming only sulfur undergoes 80% volume change after complete lithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    225.6
+   ],
+   "w": 2013,
+   "h": 666,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.959
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 36,
+   "file": "fig_S34.png",
+   "caption": "Fig. S34. Top surface images of Li-S positive electrodes at various states of charge. a, Sulfur positive electrode and (b) Li2S positive electrode composite surface morphology with cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    290.4
+   ],
+   "w": 2013,
+   "h": 936,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.33
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 37,
+   "file": "fig_S35.png",
+   "caption": "Fig. S35. Full cell electrochemical performance consisting of Li2S positive electrode and Si negative electrode evaluated at 25°C. a, First cycle voltage profile. b, Long term cycling stability of five C/20 (70 mA g-1) cycles with subsequent cycles at C/5 (0.26 A g-1). N/P ratio: 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    192.6
+   ],
+   "w": 2013,
+   "h": 528,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.903
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 38,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Scanning transmission electron (STEM) microscopy elemental mapping results. Particle 1",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.6,
+    544.2,
+    347.1
+   ],
+   "w": 1989,
+   "h": 1166,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.924
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 39,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Estimated capacity contributions between unreacted sulfur, reacted sulfur in Li3PS4+n, and LPSCl based on a total sulfur positive electrode mass of 2.5 mg with a composition of 30 wt.% sulfur, 50 wt.% LPSCl, and 20 wt.% carbon.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    548.0,
+    746.8
+   ],
+   "w": 2005,
+   "h": 2832,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.949
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 40,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Estimated capacity and sulfur utilization in positive electrodes from cells shown in Fig. 3c. mAh gsulfur mAh gsulfur (Subtracting LPSCl capacity Sulfur capacity Sulfur utilizatio Sulfur LPSCl Active Discharge Charge (Without subtracting wt. % wt. % wt.% (mAh) (mAh) LPSCl capacity) (mAh) (mAh) n (%) LPSCl) 0 80 80 0.14 0.46 - - - - - 10 70 80 0.60 1.19 1900 0.22 0.37 1543 92 22 55 77 1.15 1.71 1647 0.22 0.93 1411 84.3 30 50 80 1.20 1.63 1615 0.14 1.05 1408 84",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    549.6,
+    257.0
+   ],
+   "w": 2011,
+   "h": 791,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.925
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 7,
+   "file": "tab_S4.png",
+   "caption": "Table S4. XANES linear combination ﬁtting results as weight percentages of pro- ducts at each state of charge for (d) LPSCl (e) sulfur, and (f) Li2S positive electrodes. Fit results are in Table S5. Error bars represent the standard error of the quantiﬁed masses. The electrochemical performance of cells used for XRD and XANES are presented in Fig. S21 and S22a-c.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.7,
+    19.3,
+    566.4,
+    776.5
+   ],
+   "w": 2105,
+   "h": 2998,
+   "dpi": 285,
+   "src": "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 42,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Sulfur K-edge XAS linear combination fitting results.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    129.6,
+    546.0,
+    343.0
+   ],
+   "w": 2000,
+   "h": 891,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.865
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 43,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Parameters used in FEM simulations. Name Symbol Value Young Modulus of S ES 17.8 GPa Young Modulus of LPSCl ESE 22 GPa Poisson ratio of S υS 0.32 Poisson ratio of LPSCl υSE 0.3 Density of S ρS 2 g.cm-3 Density of LPSCl ρSE 1.6 g.cm-3 Hygroscopic coefficient of Smicro βH 22.5.10-3 m3.kg-1 βH 24.10-3 m3.kg-1 Hygroscopic coefficient of Ssub-micro Molar mass of Li Mm 7.10-3 kg.mol-1",
+   "rotated_deg": 0,
+   "bbox": [
+    66.7,
+    93.3,
+    544.6,
+    290.3
+   ],
+   "w": 1993,
+   "h": 822,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.508
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 44,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Equations used in FEM simulations. Name Symbol On external boundaries u = 0 ρ ∂!u ∂!t = ∇𝐒+ F\" S = C: 𝜖#$ C = C(E, v) 𝜖%& = ϵ −𝜖'(#$ In the electrode 𝜖)*%& = 𝜖+, 𝜖= 1 2 [(∇u)- + ∇u] Hygroscopic swelling in S particles 𝜖+. = 𝛽+𝑀/𝐶0) u = 0 ∂u Initial values ∂t = 0",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    544.7,
+    325.9
+   ],
+   "w": 1991,
+   "h": 1078,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.842
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 45,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Values used for energy density calculations. The SSE used is for the calculations is LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    115.2,
+    555.8,
+    355.7
+   ],
+   "w": 2041,
+   "h": 1003,
+   "dpi": 300,
+   "src": "c13446ce-64SUP1.PDF",
+   "blank": 0.886
+  }
+ ]
+}

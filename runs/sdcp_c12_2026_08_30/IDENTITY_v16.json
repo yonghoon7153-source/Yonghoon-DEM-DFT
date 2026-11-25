@@ -1,0 +1,59 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-08-31",
+ "bundle": "sdcp_c12_v16.zip",
+ "zip_sha256": "796ac6566e79395c2ec89168bc3eecae8e26d3f02007d6f2fcf4ffda583f518f",
+ "generated_commit": "779463c3",
+ "branch": "claude/friendly-meitner-lldvar",
+ "generated_on": "gabia (kserver116-27) · /data/work/runs/sdcp_c12_v16",
+ "상태": "리뷰 AS 발송 대기 — VASP 미실행",
+ "잡": 16,
+ "vasp_실행": 16,
+ "단계": {
+  "1": 10,
+  "2": 6
+ },
+ "estimand_job_keys": {
+  "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
+  "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
+  "E_G_sdcp": "refs/mol__sdcp_neutral__box24",
+  "E_G_control": "refs/mol__ptfe_c10__box24"
+ },
+ "pose_alt_seal": {
+  "key": "role_pair",
+  "E_C_sdcp": "prospective/sdcp_neutral__b12__afm2424_pm1",
+  "E_C_control": "prospective/ptfe_c10__b52__afm2424_pm1",
+  "roles": {
+   "sdcp_neutral": [
+    "stress_sensitivity"
+   ],
+   "ptfe_c10": [
+    "sensitivity"
+   ]
+  },
+  "⛔_해석_미정": "리뷰 AS Q4 로 열어 둠 — 식만 결과 보기 전에 박았다"
+ },
+ "v15_와_다른_점": [
+  "기체 기준이 고정기하 static 단독 (relax 제거) — VASP 실행 20 → 16",
+  "기체 분자를 셀 **질량중심**에 배치 (분수 DIPOL 이 두 상자에서 0.5,0.5,0.5)",
+  "stage-1 선결조건 4 → 8축",
+  "run_census (exact 잡 집합 + 단계 분류) 를 러너가 실행 전에 대조",
+  "봉인·attestation 3자 집합 완전일치 + ZIP/VASP 결박",
+  "대안 자세 role_pair 봉인 (v15 는 봉인식 자체가 없었다)"
+ ],
+ "검증": {
+  "verify_zip": "통과",
+  "배포본_selftest": "245/245 PASS",
+  "비UTF8_로케일": "PASS (env -u PYTHONIOENCODING LC_ALL=C PYTHONUTF8=0)",
+  "생성기_selftest": "404건"
+ },
+ "⛔_이_번들이_보증하지_않는_것": [
+  "기체 기준이 평형 분자가 아니다 — UMA 가 고른 고정 conformer 다 (AS Q2)",
+  "role_pair 의 **해석** (AS Q4)",
+  "공식 PAW release — 현장 attestation 을 계산 전에 받아야 한다"
+ ],
+ "연결": [
+  "kb/reviews/codex_AR_reply_c12_v15_2026_08_31.md",
+  "kb/reviews/codex_AS_prompt_c12_v16_2026_08_31.md"
+ ]
+}

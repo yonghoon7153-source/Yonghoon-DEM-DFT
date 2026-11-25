@@ -1,0 +1,607 @@
+{
+ "slug": "kotakadi2025_metallic_interlayers_li_li6ps5cl_operando_sem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "kotakadi2025_metallic_interlayers_main.pdf",
+  "kotakadi2025_metallic_interlayers_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematics of cells used to characterize interlayers (A) Operando SEM cell configuration. (B and C) Schematics of (B) a functionalized current collector and (C) an interlayer when deposited on the solid electrolyte with the interlayer represented in blue. (D) Schematic of the 3-electrode cell configuration used for impedance measurements of interlayer pellet cells. To investigate the difference between sputtering locations, three-electrode cells were made in both configurations using a bismuth interlayer. Figure 2C shows that for both cases the bis­ muth layer behaves as a blocking electrode. Table 1 shows the results of fitting these spectra to an equivalent circuit (Figure 2C, inset), allowing us to calculate the double-layer charging capacitance component of the impedance, which is proportional to the contact area. The capacitance in the inter­ layer case is about 35 times h",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    43.1,
+    580.5,
+    261.0
+   ],
+   "w": 2223,
+   "h": 909,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "blank": 0.572
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Morphology of interlayers and analysis of different configurations (A) Schematic of RF magnetron sputtering used for bismuth interlayer. (B) SEM image of cross section of interlayer deposited on cold-pressed electrolyte pellet. Backscatter image shows interlayer as higher intensity due to higher density of the metal. (C) Bode plot of impedance spectra, with fits shown as lines, from the pristine bismuth layer sputtered as a functionalized current collector, and an interlayer showing the capacitance difference at frequencies below 100 Hz (Nyquist plots shown Figure S1). Inset top is a schematic of the 3-electrode cell configuration with the equivalent circuit used to fit the impedance spectra below.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    493.7,
+    551.2,
+    659.9
+   ],
+   "w": 2101,
+   "h": 693,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "blank": 0.595
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Voltage profiles and operando images taken during lithiation of the interlayer The voltage profiles during lithiation and the exact points at which the images were taken for are shown for interlayers of (A) bismuth, (B) indium, (C) silver, and (D) magnesium. Vertical lines highlight the potential windows of different phases. Comparison with average atomic percentage of the interlayer are shown in Figure S2. The cell potentials are shifted by +0.622 V to account for the potential of the InLi counter electrode vs. Li+/Li. The evolution of the interlayer during lithiation is shown through BSE images taken during operando imaging where (E–H) bismuth (red), (I–L) indium (yellow), (M–P) silver (blue), and (Q–T) magnesium (green). All images are backscatter electron images.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    43.1,
+    551.2,
+    643.8
+   ],
+   "w": 2101,
+   "h": 2504,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "blank": 0.432
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Operando SEM images of lithium plating These images follow on from the lithiation of the interlayers shown in Figure 3. Lithium plating on the (A–C) bismuth, (D–F) indium, (G–I) silver, and (J–L) magnesium interlayers at plated capacities of 0.5, 1, and 1.5 mAh cm−2. In (D)–(L), lithium globules are seen plating on the surface and growing with increasing capacity. The pristine interlayers are shown in Figures 3E, 3I, 3M, and 3Q.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    43.1,
+    551.2,
+    658.9
+   ],
+   "w": 2101,
+   "h": 2567,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "blank": 0.373
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Lithium-plating dynamics (A) Rate of surface coverage by lithium of the three interlayers with increasing capacity of lithium. (B) Lithium deposit size distribution on the surface of the interlayer after 1.5 mAh cm−2 of charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    45.2,
+    513.4,
+    266.3
+   ],
+   "w": 1944,
+   "h": 922,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Effect of interlayers on the SEI (A) Accumulated charge vs. time of CTTA cells with Bi sputtered on SE and current collector compared with the no-interlayer case. (B) Accumulated charge vs. time CTTA cells with Bi, In, Ag, and Mg interlayers and no interlayer. Accumulated charge has been normalized to account for lithium consumption due to alloying of the interlayers (Figure S9; Table S3). (C and D) Schematic of SEI growth (indicated by red gradient) in (C) interlayer cells and (D) functionalized current collector cells, respectively. (E–G) S 2p XPS spectra of SE pellet after multiple in situ sputters of interlayer element and after the first in situ lithiation cycle. Color key for peaks shown below. S- PS4 represents sulfur in the argyrodite, Li2S represents S2−in Li2S, and S-metal is the respective interlayer sulfide. The dotted lines show the location of the fitted Li2S peak",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    43.1,
+    558.4,
+    510.2
+   ],
+   "w": 2104,
+   "h": 1947,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Nyquist plots of impedance spectra from the pristine bismuth layer sputtered as a) a functionalized current collector and b) an interlayer. Fits are plotted as a line with the raw data as circles.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    437.2,
+    595.3,
+    656.7
+   ],
+   "w": 2481,
+   "h": 916,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Voltage profiles of operando cells during lithiation of the a) bismuth, b) indium c) silver d) magnesium interlayers. Atomic percentages of the average composition of the inter- layer based on amount of plated lithium are shown on the top x-axis. Due to kinetic effects the lithiation behavior shown by the voltage profile deviates from the phase diagram. The voltage observed at any point reflects the primary electrochemical reaction, essentially, the phase with the lowest potential. Heterogeneous lithiation of the interlayer leads to these phases forming earlier due to local lithium concentrations being higher than the average composition. As seen from the operando images the relatively fast diffusivity phases are preferentially lithiated, driving this heterogeneity, nucleating the successive phases, the potentials of which are observed in the voltage profile. This is most clea",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    67.0,
+    555.6,
+    508.5
+   ],
+   "w": 2151,
+   "h": 1840,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Binary Phase Diagram of Bismuth-Lithium[1]",
+   "rotated_deg": 0,
+   "bbox": [
+    113.6,
+    42.8,
+    478.4,
+    332.0
+   ],
+   "w": 1521,
+   "h": 1206,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Binary Phase Diagram of Indium-Lithium[2]",
+   "rotated_deg": 0,
+   "bbox": [
+    113.6,
+    375.9,
+    478.4,
+    665.1
+   ],
+   "w": 1521,
+   "h": 1206,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.972
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Binary Phase Diagram of Silver-Lithium[3]",
+   "rotated_deg": 0,
+   "bbox": [
+    113.6,
+    42.8,
+    478.4,
+    332.0
+   ],
+   "w": 1521,
+   "h": 1206,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.982
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Binary Phase Diagram of Magnesium-Lithium[4]",
+   "rotated_deg": 0,
+   "bbox": [
+    113.6,
+    375.9,
+    478.4,
+    665.1
+   ],
+   "w": 1521,
+   "h": 1206,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: 3 electrode measurements of periodic lithiation of all four interlayers. a, b, c, d show the lithiation profiles of Bismuth, Silver, Indium and Magnesium interlayers respectively. Coloured points indicate charging pulses while grey points indicate OCV periods.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    42.8,
+    555.6,
+    382.4
+   ],
+   "w": 2151,
+   "h": 1416,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Overpotential at lithium metal nucleation on the working electrode with and without sputtered interlayers. Measured in 3 electrode cells, Fig. S7. Data points are taken from the lowest point at which the nucleation overpotential spike reaches. Mg shows only a gradual decrease with no nucleation overpotential. The indium, silver and magnesium interlayers do not show a nucleation overpotential spike typically seen in anodeless cells when nucleating metallic lithium at the SE interface (Fig. S8). Bismuth has a nucleation overpotential of 10 mV, likely due to contact loss with the solid electrolyte upon fracturing. Alloying interlayers reduce the surface energy for metallic lithium to nucleate, thus leading to a lower overpotential. [5] This effect, combined with the lower effective current densities in a cell with an interlayer, leads to a more uniform nucleation of lithium acros",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    42.8,
+    555.6,
+    357.2
+   ],
+   "w": 2151,
+   "h": 1311,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 8,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Pre-normalized accumulated charge vs time of CTTA cells with Bi, In, Ag, Mg inter- layers, bismuth on the current collector and no interlayer. The raw data is plotted hence the large initial consumption of lithium from the lithium consumed by alloying.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    348.7,
+    575.6,
+    704.4
+   ],
+   "w": 2234,
+   "h": 1483,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: XPS spectra taken insitu during indium interlayer sputtering and electrochemical lithiation. Dashed lines show the difference in peak shifts between the S-metal peak and the pristine Li-S peak. Formation of the metal sulfide during sputtering is displaced after lithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    224.1,
+    555.6,
+    567.4
+   ],
+   "w": 2151,
+   "h": 1432,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: XPS spectra taken insitu during silver interlayer sputtering and electrochemical lithiation. Dashed lines show the difference in peak shifts between the S-metal peak and the pristine Li-S peak. Silver compound peaks overlap heavily with lithium hence it is not possible to resolve them separately.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    42.8,
+    555.6,
+    377.4
+   ],
+   "w": 2151,
+   "h": 1395,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: XPS spectra taken insitu during magnesium interlayer sputtering and electrochemi- cal lithiation. Dashed lines show the difference in peak shifts between the S-metal peak and the pristine Li-S peak. No peak shift back to the Li2S species is seen immediately after lithiation. Mg also forms more phosphide compounds compared with the other interlayers, seen by higher intensity peaks in the P 2p spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    42.8,
+    555.6,
+    383.7
+   ],
+   "w": 2151,
+   "h": 1421,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 12,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Photograph of the cell parts for the operando cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.9,
+    42.8,
+    467.4,
+    195.3
+   ],
+   "w": 1416,
+   "h": 636,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.319
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Schematic of assembly of the operando cell",
+   "rotated_deg": 0,
+   "bbox": [
+    143.2,
+    239.2,
+    452.0,
+    585.8
+   ],
+   "w": 1288,
+   "h": 1445,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.724
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Zoomed out view of operando cell. The steel electrode inner ring can be seen at the edge as well as the copper mesh across the surface to improve electrical contact. All images show that lithiation and plating occur across the entire cell area and is not localized towards any specific region.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    42.8,
+    555.6,
+    414.2
+   ],
+   "w": 2151,
+   "h": 1548,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.295
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 14,
+   "file": "fig_S16.png",
+   "caption": "Figure S16: Voltage profiles of a) No b) bismuth c) indium d) silver e) magnesium interlayer cells upon plating and stripping of lithium. f) coulombic efficiency of interlayer cells over cycles. 1.5 mAh cm−2 of capacity is plated/stripped every cycle at a current density of 0.1 mAh cm−2. Darker colors represent later cycles. The interlayer cells are able to run for greater cycles than a lithium anodeless cell at a low applied pressure of 5 MPa. The anodeless cells typically ran for 1-2 cycles before shorting through the solid electrolyte. Bismuth also performs similarly due to the fracture and delamination of its interlayer. Indium and magnesium interlayer cells show decreasing coulombic efficiency with cycling suggesting issues upon stripping of the interlayer. Silver interlayer cell shows an initial increase in coulombic efficiency however there is a similar drop after the first 3 cycl",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    42.8,
+    555.7,
+    330.2
+   ],
+   "w": 2151,
+   "h": 1198,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 15,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: a) 1st, b) 2nd and c) 3rd cycles (labeled) of all interlayers plotted individually. 1.5 mAh cm−2 of capacity is plated and stripped every cycle at a current density of 0.1 mAh cm−2. Over the first 3 cycles the nucleation overpotential is much lower for the interlayer cells as well as the stripping overpotential. Bismuth shows the largest overpotentials likely due to its fracturing. Silver and magnesium display very small overpotentials due to their formation of a final solid solution alloy.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    42.8,
+    555.7,
+    388.1
+   ],
+   "w": 2151,
+   "h": 1440,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Solid electrolyte resistance and double-layer charging capacitance of different interlayer configurations SE bulk resistance (Ω) DL capacitance (μF sα −1) α",
+   "rotated_deg": 0,
+   "bbox": [
+    54.8,
+    100.0,
+    302.7,
+    175.5
+   ],
+   "w": 1034,
+   "h": 316,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "blank": 0.691
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Energy densities calculated for Ag-C interlayers and each of the 4 metallic interlayers.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.6,
+    90.7,
+    554.6,
+    440.2
+   ],
+   "w": 2142,
+   "h": 1458,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Calculated volume expansions for bismuth and indium intermetallic phases. Crystal structure data from Materials Project. [6]",
+   "rotated_deg": 0,
+   "bbox": [
+    40.6,
+    80.8,
+    554.6,
+    343.9
+   ],
+   "w": 2142,
+   "h": 1097,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 9,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Shows the capacity that was subtracted from the raw CTTA data to account for lithium consumption due to alloying. This is the capacity plated before the cell goes below the lithium potential, hence will largely be due to alloying with the interlayer.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.6,
+    44.0,
+    554.6,
+    206.3
+   ],
+   "w": 2142,
+   "h": 677,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 11,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Gibbs energy of displacement reactions between Lithium sulfide and interlayer metal sulfides.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.6,
+    501.2,
+    554.6,
+    634.8
+   ],
+   "w": 2142,
+   "h": 558,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 15,
+   "file": "tab_S5.png",
+   "caption": "Table S5: SEI thickness is calculated based on thickness of 9 nm per 1 µAh cm−2 of lithium capacity consumed. [12]. Resistance of SEI is calculated using SEIΩ= ThicknessSEI ConductivitySEI . We have also assumed the electronic conductivity is much smaller than the ionic conductivity, as suggested in Alt et. al.[11]",
+   "rotated_deg": 0,
+   "bbox": [
+    40.6,
+    519.8,
+    554.6,
+    640.7
+   ],
+   "w": 2143,
+   "h": 504,
+   "dpi": 300,
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "blank": 0.879
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "kotakadi2025_metallic_interlayers_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  },
+  {
+   "src": "kotakadi2025_metallic_interlayers_SI.pdf",
+   "above_adjacent": 5,
+   "below_adjacent": 0,
+   "caption_below": true
+  }
+ ]
+}

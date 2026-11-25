@@ -1,0 +1,672 @@
+{
+ "slug": "deng2026_polysulfate_layer_moisture_oxidation_lpsc",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-27",
+ "sources": [
+  "80. Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+  "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Non-destructive surface modiﬁcation of sulﬁde electrolyte based on nucleophilic reaction: a) Schematic and reaction equation of DTD ring-opening polymerization initiated by the nucleophilic attack of surface S2−on the LPSC, leading to the formation of a PS modiﬁcation layer; b) TEM and c) HRTEM images of PS-LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.7,
+    53.7,
+    539.1,
+    273.6
+   ],
+   "w": 2053,
+   "h": 918,
+   "dpi": 300,
+   "src": "80. Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparative surface chemical characterization of LPSC and PS-LPSC: a) SEM images and EDS elemental mapping; b) infrared spectra of LPSC, PS-LPSC, and DTD modiﬁer; c) TOF-SIMS 3D spatial distribution of characteristic fragments.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.7,
+    53.4,
+    540.4,
+    329.6
+   ],
+   "w": 2058,
+   "h": 1152,
+   "dpi": 300,
+   "src": "80. Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Moisture resistance and electrochemical stability comparison for PS-LPSC and LPSC: a) LSV curves and b) electronic conductivity of LPSC and PS-LPSC; Nyquist plots of c) LPSC and d) PS-LPSC after exposure to air with 13% relative humidity for diﬀerent durations; e) changes and retention rates of ionic conductivity for LPSC and PS-LPSC after humidity exposure; f) adsorption conﬁgurations and corresponding adsorption energies of H2O on the LPSC surface and the PS modiﬁcation layer; initial charge–discharge curves of ASSBs using g) LPSC and h) PS-LPSC, before and after humidity exposure.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    54.0,
+    549.3,
+    454.6
+   ],
+   "w": 2101,
+   "h": 1670,
+   "dpi": 300,
+   "src": "80. Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Electrochemical performance of ASSBs using LPSC and PS-LPSC electrolytes at room temperature: a) Initial charge–discharge curves; cyclic voltammetry curves at a scan rate of 0.05 mV s−1 for b) LPSC and c) PS-LPSC ASSB; d)–f) rate capability and corresponding charge–discharge proﬁles under diﬀerent cathode loadings; g) Long-term cycling performance at 10 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    53.5,
+    549.8,
+    462.6
+   ],
+   "w": 2101,
+   "h": 1705,
+   "dpi": 300,
+   "src": "80. Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical performance of ASSBs at 60 °C: a) Charge–discharge curves and b) rate capability of PS-LPSC ASSB; c) long-term cycling performance at 50 C; d) performance comparison of Sulﬁde-based ASSBs: This work vs. literature.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    53.8,
+    549.3,
+    307.6
+   ],
+   "w": 2101,
+   "h": 1058,
+   "dpi": 300,
+   "src": "80. Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Chemical composition and structural characteristics of composite cathodes before and after cycling: XPS spectra of a) S 2p and b) P 2p; SEM images and corresponding EDS elemental maps of the composite cathode of c) LPSC and d) PS-LPSC ASSB after 100 cycles; e) impedance spectra; f) distribution of relaxation times spectra; g) ﬁtted impedance values from phase relaxation time distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    53.5,
+    549.8,
+    371.6
+   ],
+   "w": 2101,
+   "h": 1327,
+   "dpi": 300,
+   "src": "80. Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.739
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Gel permeation chromatography (GPC) analysis of PS-Li2S (dissolved in THF), showing a number- average molecular weight (Mw) of 2,618 and a polydispersity index (PDI) of 1.49.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    44.9,
+    573.2,
+    316.0
+   ],
+   "w": 2297,
+   "h": 1130,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Infrared spectra of PS-Li2S, showing characteristic vibrations of the poly(sulfate) layer, including C–H stretches (2800–3000 cm⁻¹), S=O stretches of sulfate ester (1268 and 1220 cm⁻¹), and C–O/S–O vibrations (882 and 756 cm⁻¹).",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    343.1,
+    573.2,
+    586.1
+   ],
+   "w": 2297,
+   "h": 1013,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. XPS analysis of PS-Li₂S: S 2p spectrum showing contributions from the surface PS layer (169.1 eV), PS/Li₂S interface (162.5 eV), and bulk Li₂S (159.9 eV).",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    44.9,
+    573.2,
+    302.6
+   ],
+   "w": 2297,
+   "h": 1074,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Performance of PS-LPSC electrolytes synthesized with different DTD concentrations. (a) Nyquist plots, (b) calculated ionic conductivity, and (c) cycling performance of the corresponding LiIn | SSE | NMC955 ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    329.8,
+    573.2,
+    494.7
+   ],
+   "w": 2297,
+   "h": 688,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Performance of PS-LPSC electrolytes synthesized with different reaction times. (a) Nyquist plots, (b) calculated ionic conductivity, and (c) cycling performance of the corresponding LiIn | SSE | NMC955 ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    521.8,
+    573.2,
+    710.8
+   ],
+   "w": 2297,
+   "h": 788,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. TEM image of pristine Li6PS6Cl (LPSC).",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    79.6,
+    573.2,
+    311.7
+   ],
+   "w": 2297,
+   "h": 968,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.588
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. HRTEM image of pristine Li₆PS₅Cl (LPSC).",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    326.8,
+    573.2,
+    566.6
+   ],
+   "w": 2297,
+   "h": 1000,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.601
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. XRD patterns of the pristine LPSC and the modified PS-LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    60.3,
+    573.2,
+    299.7
+   ],
+   "w": 2297,
+   "h": 998,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 8,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Gel permeation chromatography (GPC) of PS-LPSC dissolved in THF.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    314.8,
+    573.2,
+    527.7
+   ],
+   "w": 2297,
+   "h": 888,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.978
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Depth profiles of selected negative ions from TOF-SIMS analysis for LPSC and PS-LPSS, showing the distribution of (a) PO⁻, (b) PO₂⁻, (c) S₂O⁻, (d) SO⁻, (e) C₂H₃S⁻, and (f) C₂HO⁻ fragments after sputtering.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    44.9,
+    573.2,
+    700.6
+   ],
+   "w": 2297,
+   "h": 2733,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. DC polarization curves of (a) pristine LPSC and (b) PS-LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    60.3,
+    573.2,
+    304.5
+   ],
+   "w": 2297,
+   "h": 1018,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 10,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Critical current density (CCD) comparison of Li | SSE | Li symmetric cells with LPSC and PS-LPSC electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    319.6,
+    573.2,
+    600.0
+   ],
+   "w": 2297,
+   "h": 1169,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Ionic conductivity measurement of the PS-Li₂S composite: Nyquist plot and calculated value.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    44.9,
+    573.2,
+    238.0
+   ],
+   "w": 2297,
+   "h": 805,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 11,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. SEM image of NMC955.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    253.2,
+    573.2,
+    565.8
+   ],
+   "w": 2297,
+   "h": 1303,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.657
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 12,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Charge-discharge curves of LPSC ASSBs at various C-rates from 0.2C to 20C.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    44.9,
+    573.2,
+    288.2
+   ],
+   "w": 2297,
+   "h": 1014,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 12,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Charge-discharge curves of (a) PS-LPSC ASSBs and (b) LPSC ASSBs at selected cycles during 10C-rate long‑term cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    303.3,
+    573.2,
+    552.3
+   ],
+   "w": 2297,
+   "h": 1039,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 13,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Charge-discharge profiles of the PS-LPSC ASSB at 60 °C under different current rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    44.9,
+    558.7,
+    86.7
+   ],
+   "w": 2164,
+   "h": 175,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 13,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Charge–discharge profiles of the PS-LPSC ASSB (electrode loading: 10.8 mg cm⁻²) at 60 °C under various current rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    129.8,
+    573.2,
+    336.1
+   ],
+   "w": 2297,
+   "h": 861,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 13,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Electrochemical performance of a 28 mA h NCM955 | PS-LPSC | LTO pouch cell under practical conditions: (a) Initial charge/discharge profiles and (b) capacity retention over 1000 cycles between 1.2–2.8 V at 2 mA cm⁻², 25 °C, and 2 MPa stack pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    351.3,
+    573.2,
+    606.2
+   ],
+   "w": 2297,
+   "h": 1063,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 14,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. dQ/dV curves of PS-LPSC ASSB during cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    60.3,
+    573.2,
+    295.5
+   ],
+   "w": 2297,
+   "h": 981,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 14,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. dQ/dV curves of LPSC ASSB during cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    310.6,
+    573.2,
+    552.3
+   ],
+   "w": 2297,
+   "h": 1008,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 15,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. SEM and EDS elemental mapping of the NMC955 composite cathode in ASSBs prior to cycling, employing (a) LPSC and (b) PS-LPSC as the solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    44.9,
+    573.2,
+    499.2
+   ],
+   "w": 2297,
+   "h": 1893,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.43
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 15,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. GITT curves of the LPSC and PS-LPSC ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    526.3,
+    573.2,
+    760.1
+   ],
+   "w": 2297,
+   "h": 976,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 16,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Comparison of the Li-ion diffusion coefficients in ASSBs employing LPSC and PS-LPSC electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    44.9,
+    573.2,
+    313.5
+   ],
+   "w": 2297,
+   "h": 1120,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 16,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. N₂ adsorption-desorption isotherm of the NMC955 powder.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    328.6,
+    573.2,
+    561.2
+   ],
+   "w": 2297,
+   "h": 970,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 16,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Schematic of the PS-LPSC ASSB configuration used for electrochemical measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.1,
+    576.4,
+    573.2,
+    758.0
+   ],
+   "w": 2297,
+   "h": 758,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.652
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Comparison of the state-of-the-art all-solid-state batteries and their parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.5,
+    135.7,
+    553.8,
+    415.9
+   ],
+   "w": 2136,
+   "h": 1168,
+   "dpi": 300,
+   "src": "80. Sup) Deng2026_Surface_NonDestructive_Modification_Moisture_Oxidation_Sulfide.pdf",
+   "blank": 0.939
+  }
+ ]
+}

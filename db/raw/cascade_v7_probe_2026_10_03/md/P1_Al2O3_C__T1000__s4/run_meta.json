@@ -1,0 +1,25 @@
+{
+  "label": "cv7probe_P1_Al2O3_C",
+  "n_atoms": 204,
+  "supercell": [
+    1,
+    1,
+    1
+  ],
+  "v0_xyz": "/home/kgy/work/runs/cascade_v7_probe_1003/prep/P1_Al2O3_C.prepared.xyz",
+  "temperatures": [
+    1000.0
+  ],
+  "prod_ps": 400.0,
+  "equilib_ps": 5.0,
+  "seed": 4,
+  "fit_window_ps": [
+    2.0,
+    50.0
+  ],
+  "save_traj": true,
+  "uma_model": "uma-s-1p1",
+  "uma_inference_mode_requested": "default",
+  "note": "MD 시작 직후 기록 — 감시용. 결과는 ensemble_results.json 을 볼 것",
+  "uma_inference_mode": "default"
+}

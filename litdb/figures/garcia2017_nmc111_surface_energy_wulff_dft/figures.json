@@ -1,0 +1,310 @@
+{
+ "slug": "garcia2017_nmc111_surface_energy_wulff_dft",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Illustration of the bulk geometry of NMC111 with R3̅m symmetry. (b) Schematic representation of ion-ordering in NMC111 TM layers.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    171.6
+   ],
+   "w": 1051,
+   "h": 452,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.728,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Surface termination and reconstructions for the surface (110). (a) Original slab presenting a ﬁnite net dipole. (b) Modiﬁed slab where TMs in one of the layers are displaced one position up. (c) Modiﬁed slab where half of the charge is taken for the top and bottom layers. Green spheres represent Li, purple spheres represent Mn, gray spheres represent Ni, blue spheres represent Co, and red spheres represent oxygen. The same color scheme is used in the remaining ﬁgures.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    271.9
+   ],
+   "w": 2151,
+   "h": 871,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.784,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Scheme of the top layer of the surface (110). (a) Original surface with all the ions. (b) Reconstruction where the TMs and Li ions were taken oﬀin rows alternating with rows where oxygen vacancies are formed. (c) Reconstruction where all the TMs, lithium ions, and oxygen ions are taken oﬀfrom the same row (missing-row reconstruction). Empty circles represent vacancies. thermodynamically favorable.19 Therefore, we limit our investigation to this termination. Figure 4 shows a schematic of the slab used for the calculation and the reconstruction of the top and bottom layers. The (001) surface terminated at lithium ions is only sensitive to changes in the chemical potential of lithium. The changes in the Li potential depend on the Li content during material synthesis and on the voltage during cycling. center of the slab and the overall dipole is eliminated. This concept is illustra",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    321.2,
+    570.5,
+    556.9
+   ],
+   "w": 2151,
+   "h": 983,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.907,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic representation of the slab used to model the (001) surface. two TM atoms and one lithium atom. In site (B), O is coordinated to two lithium atoms and one TM atom. As expected, and according to previous work,19 the most stable surface is produced by a conﬁguration where every site A is occupied by an oxygen atom.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    248.0
+   ],
+   "w": 1050,
+   "h": 771,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.92,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematic of the (012) surface with 1/2 monolayer of oxygen coverage. The occupied sites are coordinated with two TMs and one Li-ion (site A). The less favorable site B is also indicated by an empty circle.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    345.5,
+    306.5,
+    500.0
+   ],
+   "w": 1050,
+   "h": 645,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.728,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 4,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Schematic representation of the top two layers of the (104) surface. DOI: 10.1021/acs.jpcc.7b00896 J. Phys. Chem. C 2017, 121, 8290−8299 8293",
+   "rotated_deg": 0,
+   "bbox": [
+    320.0,
+    667.0,
+    568.0,
+    731.0
+   ],
+   "w": 1034,
+   "h": 267,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.552,
+   "viewed": true,
+   "manual_crop": "auto crop included stray letters from the adjacent text column; re-cropped to the embedded image bbox (2026-10-13)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Reconstruction of the (110) surface that leads to lower surface energy. Sites where the ions were taken oﬀare indicated by an empty circle. Also, the (104) facets formed by the reconstructions are indicated by a dashed line.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    153.9
+   ],
+   "w": 1050,
+   "h": 379,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.827,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Figure 8. First three layers of the (012) surface. (a) One monolayer of oxygen coverage, which produces a surface dipole. (b) Half a monolayer of oxygen coverage, which produces a stoichiometric ratio of the elements and a nonpolar surface. (c) Schematic representation of the top three layers of the (100) surface. DOI: 10.1021/acs.jpcc.7b00896 J. Phys. Chem. C 2017, 121, 8290−8299 8294",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    583.8,
+    570.5,
+    723.2
+   ],
+   "w": 2151,
+   "h": 582,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.869,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 6,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Co PDOS d-orbitals. (a) Co in the surface layer of the slab. (b) Co in the bulk region of the slab. (c) Surface layer Co d orbital electronic conﬁguration scheme. (d) Bulk Co d orbital electronic conﬁguration scheme.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.4,
+    268.3
+   ],
+   "w": 2150,
+   "h": 855,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.954,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 6,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Surface energy of the (012) facet as a function of the oxygen chemical potential. The crystal particle shape from the Wulﬀconstruction is shown at select conditions indicated by the dotted lines. A SEM image of the synthesized particles is also shown. was ﬁxed to avoid this issue. Co3+ was also found in a high spin state at the surface caused by the large distortion (axial Co−O bond 1.98 Å) of the symmetry around the TM when all the atoms in the slab were relaxed. High spin states of Co3+ at LCO (104) surfaces, with square pyramidal coordination, have been reported.38 Qian et al.21 found that the surface energies are minimized when the surface Co3+ ions are in either the intermediate or high spin states. They found an energy of 0.31 J/m2 for the (104) surface of LCO with intermediate/high spin Co3+ compared to 1.0 J/m2 for a (104) surface with low spin Co3+. We also found a lo",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    297.2,
+    570.5,
+    584.9
+   ],
+   "w": 2151,
+   "h": 1200,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.759,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 7,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Surface energy of the (001) facet as a function of the Li chemical potential. The crystal particle shape from the Wulﬀconstruction is shown at select conditions indicated by the dotted lines. The inset shows a SEM image of synthesized NMC crystals for comparison with the constructed particle shape. value found for LCO since NMC111 has a lower concentration of Co3+. The rest of the TMs (Ni2+ and Mn4+) do not present any change in spin state because they are already in high spin states at these oxidation states. The stabilization produced by Co at the surface generates a driving force for segregation to this speciﬁc facet. Previous work10 has shown Co segregation to the (202̅) surface of a monoclinic cell for a layered NMC material, which is equivalent to the (104) surface using a hexagonal unit cell. oxidizing environments would lead to more stable (012) surfaces. It can be see",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    302.7
+   ],
+   "w": 2151,
+   "h": 999,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.772,
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Energy of formation of an oxygen vacancy on the (104) and (012) surfaces of Li(Ni1/3Mn1/3Co1/3)O2 as a function of Li content in the slab.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    283.2
+   ],
+   "w": 1051,
+   "h": 918,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.966,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Surface Energies for the Low Miller Index Families of Surfaces for NMC111 Under a Stoichiometric Ratio of the Species ((104) 0.76, (001) 0.89, (110)A 1.32, (110)B 1.67/1.77/1.88, (012) 1.97, (100) 2.27 J/m2; a (110)A: surface reconstruction. (110)B: bulk extended defect.)",
+   "rotated_deg": 0,
+   "bbox": [
+    322.0,
+    492.0,
+    567.0,
+    659.0
+   ],
+   "w": 1022,
+   "h": 696,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.857,
+   "manual_crop": "hand crop; table not detected by the extractor ('영역 없음') (2026-10-13)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2. Oxygen Vacancy Formation Energy on the (104) and (012) Surfaces ((104): Co axial 5.4, Ni axial 2.2, Mn axial 1.5 eV; (012): Co,Ni equatorial 1.9, Co,Mn 1.1, Mn,Ni 0.6 eV)",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    434.0,
+    302.0,
+    564.0
+   ],
+   "w": 1018,
+   "h": 542,
+   "dpi": 300,
+   "src": "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf",
+   "blank": 0.786,
+   "manual_crop": "hand crop; table not detected by the extractor ('영역 없음') (2026-10-13)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note": "figures embedded at 300 ppi (Fig 12: 600 ppi grey) — crops at native resolution; figure crops exclude captions (captions in this file); tables hand-cropped"
+}

@@ -1,0 +1,125 @@
+{
+ "slug": "kang2025_toughened_bimodal_nca_lzo",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic of stacking structure of active materials in the composite cathode depending on particle size distribution. (b) Photographs of pellets made by compressing 0.15 g of composite cathodes with U-NCA and B-NCA at 400 MPa. (c) Nyquist plots of cathode symmetric cells. (d) Quantified ionic and electronic resistances of U-NCA and B-NCA cathodes.",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    309.3
+   ],
+   "w": 2151,
+   "h": 1063,
+   "dpi": 300,
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.688
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Voltage profiles, (b) charge−discharge voltage gaps at SOC = 50%, and (c) cycle performances of NCA|LPSCl|Li−In cells with U- NCA and B-NCA cycled at 0.5C. (d) Ionic, (e) interfacial, and (f) Warburg resistances (Ω cm2) of B-NCA cells measured every 25 cycles. 3. RESULTS AND DISCUSSION examine the effects of dual-sized cathode active materials on the energy density of the cathodes. Figure 1b shows the 10 mm-diameter pellets made from the composite cathodes (0.15 g), which were used to examine how bimodal-sized cathode materials affect the packing density of electrodes. The measured thicknesses were 0.74 mm for U-NCA and 0.68 mm for B-NCA. The volumetric loading (mg cm−3) of NCA in B-NCA was calculated to be 1.1 times higher than that in U- Figure 1a shows a composite cathode composed solely of small polycrystalline NCA (U-NCA), and the bimodal cathode (B- NCA) with a blend ",
+   "bbox": [
+    45.5,
+    348.5,
+    561.5,
+    626.2
+   ],
+   "w": 2151,
+   "h": 1158,
+   "dpi": 300,
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Cross-sectional SEM images of the bare B-NCA cathodes collected after (a) 5, (b) 50, and (c) 100 cycles. Distributions of (d) Li concentration and (e) von Mises stress simulated upon charging at 0.5C with respect to the particle size of active materials. Heterogeneous surface features arising from oxidative decomposition in the cathode were reflected in the simulation. (f) Damage at boundaries between primary particles, indicating intergranular separation inside the secondary particles. A damage value of unity indicates complete detachment. NCA under the present experimental conditions (Figure S2). This confirms that employing bimodal cathode active materials can significantly enhance the energy density of the cathode. NCA cell (Figure 2b). Thus, although B-NCA offers advantages in terms of stacking efficiency and electronic conductivity, its electrochemical performance is infe",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    377.7
+   ],
+   "w": 2151,
+   "h": 1348,
+   "dpi": 300,
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.61
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) SEM and EDS images of LZO-coated B-NCA particles. (b) Cross-sectional TEM images of LZO-coated B-NCA. (c) Voltage profile of the ASSB with LZO-coated B-NCA cathode during the rate-capability test from 0.1 to 1.0C. (d) Capacity retention and Coulombic efficiency of the ASSB with LZO-coated B-NCA cathode. (e) Ionic, (f) interfacial, and (g) Warburg resistances (Ω cm2) of cells with U-NCA and B-NCA cathodes measured every 50 cycles. proportional relationship between Rw and δs (eq 2), these results indicate that the inferior rate performance of B-NCA arises from its longer diffusion distance. where z is the number of electrons consumed, F is the Faraday constant, cLi +,s is the bulk concentration of Li+, Ds is the effective diffusion coefficient for Li+, R is the gas constant, T is the temperature, and δs is the diffusion distance.47 While Rion showed only a minimal increase fr",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    462.2
+   ],
+   "w": 2151,
+   "h": 1700,
+   "dpi": 300,
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.705
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. XPS spectra for S 2p and P 2p core levels after 5 cycles of composite cathodes with (a) bare B-NCA and (b) LZO-coated B-NCA. Cross- sectional SEM images of LZO-coated B-NCA cathodes after (c) 5, (d) 50, and (e) 100 cycles at 0.5C. Distribution of (f) Li concentration and (g) von Mises stress in LZO-coated NCA upon charging at 0.5C. (h) Damage at the boundaries between primary particles in large LZO-coated NCA at SOC = 100%, showing intergranular separation inside the secondary particles. A damage value of unity signifies complete detachment. LPSCl interfaces and consequently initiates localized side reactions. The resulting surface heterogeneity of active materials, coupled with the repetitive volume change during cycling, generates uneven stress distributions that accelerate mechanical degradation and eventually leads to particle cracking.27 These cracks are reported to be str",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    419.5
+   ],
+   "w": 2151,
+   "h": 1522,
+   "dpi": 300,
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.586
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Schematic illustration of mechanical degradation in composite cathodes of sulfide-based ASSBs with bimodal cathodes and its mitigation by applying LZO coating layer. 3−tetrahedra of LPSCl.53−55 The XPS profiles obtained after 5 cycles demonstrate that the LZO coating successfully reduced degradation at the NCA/LPSCl interface during the early phase of cycling. P2Sx (133.5 eV), Li2Sn (163.0 eV), and PO4 exhibits superior chemical stability against sulfide SEs, while possessing a higher ionic conductivity than conventional oxides such as LiNbO3 and Li4Ti5O12, thereby sustaining efficient ionic pathways within the cathode.46 The LZO coating layer exists in an amorphous phase with no discernible lattice fringes and was uniformly deposited with a thickness of 6−8 nm (Figure 4a,b). The microstructure of the B-NCA electrode showed no significant changes before and after coating (Figur",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    279.3
+   ],
+   "w": 2151,
+   "h": 938,
+   "dpi": 300,
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.36
+  }
+ ]
+}

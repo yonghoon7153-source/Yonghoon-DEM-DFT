@@ -1,0 +1,92 @@
+{
+ "slug": "ender2011_3d_reconstruction_composite_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "9. Three-dimensional reconstruction of a composite cathode for lithium-ion cells.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. SEM image of a FIB milled sample region of the composite LiFePO4 cathode. (a) Size of the reconstructed volume element is 5×5×15 μm3. (b) Upper part: cathode in epoxy resin, LiFePO4 (light), no contrast between carbon black and pores; lower part: cathode in silicon resin, LiFePO4 (light), carbon black (dark) and pore (gray) are distinguishable at high magniﬁcation.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    47.2,
+    300.0,
+    172.9
+   ],
+   "w": 1099,
+   "h": 525,
+   "dpi": 300,
+   "src": "9. Three-dimensional reconstruction of a composite cathode for lithium-ion cells.pdf",
+   "blank": 0.274
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Averaged probability density function (PDF) of the grayscale values and ﬁtted distributions for carbon black, pores and LiFePO4. (b) Single distributions lead to the probabilities Pi, that a pixel with a given grayscale value belongs to the species i.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    69.4,
+    568.0,
+    400.2
+   ],
+   "w": 1099,
+   "h": 1379,
+   "dpi": 300,
+   "src": "9. Three-dimensional reconstruction of a composite cathode for lithium-ion cells.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 2,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Three-dimensional visualization of the reconstructed composite LiFePO4 cathode (representative volume element of 5×5×15 μm3): LiFePO4 (green), carbon black (dark) and pores (transparent).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    614.7,
+    568.0,
+    716.9
+   ],
+   "w": 1099,
+   "h": 426,
+   "dpi": 300,
+   "src": "9. Three-dimensional reconstruction of a composite cathode for lithium-ion cells.pdf",
+   "blank": 0.44
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Volume fraction, surface area and tortuosity of the LiFePO4 cathode, calculated from (a) reconstruction data and (b) mass ratio. Vol. fractiona Vol. fractionb Speciﬁc surface/μm−1a τgeom",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    32.7,
+    557.8,
+    695.8
+   ],
+   "w": 2206,
+   "h": 2764,
+   "dpi": 300,
+   "src": "9. Three-dimensional reconstruction of a composite cathode for lithium-ion cells.pdf",
+   "blank": 0.876
+  }
+ ],
+ "missing_labels": []
+}

@@ -1,0 +1,247 @@
+# Adhesion Energy (Wad) Calculation
+
+## Definition
+Work of adhesion = energy per unit area to separate SE/NCM interface into two free surfaces.
+
+```
+Wad = (E_SE_isolated + E_NCM_isolated - E_interface) / A
+```
+(Isolated slab method — avoids strain release artifacts from separation-relax method)
+
+## Methods Comparison
+
+### v1-v2: Amorphous SE (3000K Melt-Quench)
+- Melt SE at 3000K (5ps) → quench 300K (3ps) → amorphous SE
+- Assemble on crystalline NCM → anneal 500K (2ps) → cool → relax
+- **Pro:** Mimics real pressing (SE deforms at interface)
+- **Con:** Destroys vacancy information, lattice mismatch for rhombo cells
+
+### v5: Crystalline Slab + Surface-only MQA (Current)
+- SE 2×2×1 repeat → lattice match with NCM 5×5×1
+- Surface-only softening (800K, 2ps) → quench → Li anneal (500K, 3ps) → cool
+- **Pro:** Preserves bulk structure and vacancies
+- **Pro:** Lattice match eliminates PBC artifacts
+- **Con:** Less realistic for pressing scenarios
+
+## Cell Matching
+
+| Family | SE cell | NCM cell | Strain |
+|--------|---------|----------|--------|
+| Li₆ (comp1,2) | prim 2×2×1 (52 at) | 5×5×1 (300 at) | +3.3% |
+| Li₅.₄ (comp3-5) | 2×2×1 (248 at) | 5×5×1 (300 at) | +1.1% |
+
+Both use NCM 5×5×1 → fair cross-composition comparison.
+
+## Surface-only MQA Protocol
+
+1. SE 2×2×1 slab on NCM 5×5×1, gap=2.5Å
+2. **800K surface softening (2ps)** — surface atoms slightly rearrange, bulk preserved
+3. **300K quench (2ps)** — freeze surface structure
+4. **500K Li anneal (3ps)** — Li sublattice optimization, vacancy preserved
+5. **100K cool (2ps)** + MLIP relaxation
+
+Why 800K is safe in v5 (but failed in v3/v4):
+- v3/v4 failure cause was lattice mismatch (±20%), not temperature
+- v5 has matched lattice (~1-3%) → 800K only softens surface
+
+## Sampling: z-Cut (DEPRECATED) vs xy-Shift (CORRECT)
+
+### z-Cut — DEPRECATED, nonphysical!
+SE slab shifted along z by fractional amounts (0.0, 0.2, 0.4, 0.6, 0.8).
+**Problem:** z-shift cuts the crystalline SE slab at arbitrary planes, creating
+nonphysical dangling-bond surfaces. Results showed extreme variance:
+- comp4: Wad = 0.006 ~ 2.719 J/m2 (3 orders of magnitude!)
+- comp2B: Wad = 1.412 ~ 9.252 J/m2 (z=0.4 → SE slab cut invaded NCM)
+
+Analogy: cutting bread in half and placing the cut face on the table.
+Each cut exposes completely different internals → meaningless statistics.
+
+### xy-Shift — CORRECT
+SE slab shifted in xy fractional coordinates (PBC-safe). SE slab NOT cut.
+```python
+frac_se[:,0] = (frac_se[:,0] + dx) % 1.0  # x shift
+frac_se[:,1] = (frac_se[:,1] + dy) % 1.0  # y shift
+# z untouched! SE slab continuity preserved!
+```
+**Why xy works:** PBC makes xy periodic → shift just changes which SE atoms
+sit above which NCM atoms (registry). SE surface itself is identical.
+5 random seeds (42-46) → 5 different contact patterns → meaningful statistics.
+
+Analogy: sliding bread on the table without cutting it.
+Same bottom surface, different table position → reasonable variation.
+
+## Vacancy → Adhesion Mechanism
+
+Li₆ (no vacancy):
+- All surface Li coordinated → no driving force for extra NCM bonding
+- γ_SE high (1.21 J/m²), γ_SE/NCM high → Wad moderate
+
+Li₅.₄ (vacancy):
+- Under-coordinated Li near vacancy = "chemical anchor"
+- Pulls NCM O²⁻ across interface → cross-interface ionic bonds
+- γ_SE low (0.45 J/m²), γ_SE/NCM very low → Wad can be higher!
+
+## Surface Energies
+
+| Comp | γ_SE (J/m²) | 2γ (J/m²) |
+|------|-------------|-----------|
+| comp1 | 1.211 | 2.42 |
+| comp2 | 1.189 | 2.38 |
+| comp3 | 0.565 | 1.13 |
+| comp4 | 0.450 | 0.90 |
+| comp5 | 0.470 | 0.94 |
+
+Sharp drop from Li₆ to Li₅.₄ → vacancy reduces surface bond strength.
+
+## Calculator
+UMA (uma-s-1p2, fairchem, V100 GPU)
+
+## Known Bugs & Fixes
+
+### v5 FIX: ASE atom slicing error (2026-04-12)
+**Error:** `could not broadcast input array from shape (248,) into shape (348,)`
+**Cause:** ASE `Atoms` object does not support NumPy-style slicing `interface[:n_ncm]`.
+**Fix:** Use `copy()` + `del` instead of slice:
+```python
+# Before (broken):
+ncm_iso = interface[:n_ncm].copy()
+se_iso = interface[n_ncm:].copy()
+
+# After (fixed):
+ncm_iso = interface.copy()
+del ncm_iso[n_ncm:]
+se_iso = interface.copy()
+del se_iso[:n_ncm]
+```
+**Status:** FIX2 deployed on V100. Superseded by v5_working.
+
+### v5 Wad Debugging Saga (2026-04-13)
+
+6 iterations to get correct Wad. Root cause: **UMA vacuum sensitivity**.
+
+| Version | Method | Wad (J/m2) | Problem |
+|---------|--------|-----------|---------|
+| v5_fix | isolated slab + relax | 10.0 | relax releases strain |
+| v5_final | isolated slab, no relax | 75.4 | E_ncm=+248eV! 60A vacuum |
+| v5_final2 | separation 30A, cell fixed | 40.2 | PBC wrap (SE exceeds cell) |
+| v5_correct | independent slab cells, relax | 17.3 | used pre-MQA structure |
+| v5_real | post-MQA split, no relax | 47.8 | E_ncm=-24eV (vacuum issue) |
+| v5_v2method | separation 30A, vacuum 60A | 24.5 | vacuum too large for UMA |
+| **v5_working** | **sep 30A + cell+30A, vac 30A** | **1.252** | **CORRECT** |
+
+### UMA Vacuum Sensitivity (Critical Finding)
+
+UMA (graph neural network MLIP) gives nonphysical energies with large vacuum:
+- vacuum 30A: Wad = 1.252 J/m2 (correct, matches literature)
+- vacuum 60A: Wad = 24.5 J/m2 (10x too high!)
+
+Same atoms, same arrangement — only vacuum differs.
+Cause: UMA trained on bulk/dense systems. Large vacuum = out of training distribution.
+
+### Correct Protocol (v5_working)
+
+Three conditions ALL required:
+1. **vacuum = 30A** (not 60A!) — `cell_z = atoms_max + 30`
+2. **Expand cell on separation** — `sep_cell_z += 30A` AND `SE_z += 30A`
+3. **No relax after separation** — single point only (relax releases strain)
+
+```python
+# E_int: interface after MQA + relax
+cell_z = total_max + 30.0  # 30A vacuum
+E_int = interface.get_potential_energy()
+
+# E_sep: separate, expand cell, single point
+sep_cell[2] = [0, 0, cell_z + 30.0]  # cell +30A
+pos_sep[n_ncm:, 2] += 30.0            # SE +30A
+E_sep = sep.get_potential_energy()     # NO relax!
+
+Wad = (E_sep - E_int) / A * 16.0218
+```
+
+### v5_noMQA variant (2026-04-13)
+Crystalline stacking + relax only (no MQA thermal treatment).
+Purpose: baseline comparison — does MQA improve or change Wad?
+
+### v5_xyshift (2026-04-13, CURRENT)
+z-cut 대신 xy random shift로 통계 확보. SE slab은 자르지 않음!
+- z-cut 문제: SE를 z방향으로 자르면 vacancy가 노출/은폐 → 분산 원인이 불명확
+- xy-shift: SE 전체를 xy 평면에서 random shift → NCM과의 registry만 변경
+  → SE bulk 구조 완전 보존, vacancy 분포 동일
+  → 분산 = 순수 interface registry 효과
+
+Protocol:
+1. SE 2×2×1 repeat (bulk 그대로)
+2. SE fractional xy를 (dx, dy) random shift (seed별)
+3. NCM cell에 strain → gap 2.5A stacking
+4. Relax only (MQA 없음)
+5. Separation: SE +30A, cell_z +30A, single point
+6. Wad = (E_sep - E_int) / A × 16.0218
+
+Seeds: 42, 43, 44, 45, 46 (5 random xy positions per comp)
+Order: comp4 → comp2B → comp3 → comp1 → comp5
+Running on V100.
+
+### v5_comp12_mqa (next: for Li6 family)
+Crystalline stacking gives comp2B > comp1 (counter-intuitive at 20 seeds).
+MQA version with two key improvements:
+1. **500K MQA** (not 800K): gentler surface treatment for Li6 cubic
+   - 500K(2ps) → 300K(2ps) → 100K(2ps) → relax
+2. **Element-based separation** (not index-based):
+   - Ni/O → always NCM; P/S/Cl/Br → always SE
+   - Li → z_boundary = (NCM_O_zmax + SE_S_zmin) / 2
+   - MQA can cause Li to cross interface → index-based separation wrong!
+   - Element-based handles cross-interface Li correctly
+
+### Validation
+Test result (no MQA, comp4 z=0.0): Wad = 1.252 J/m2
+Compare v2 (3000K melt): comp1 = 1.107, comp2B = 1.046 J/m2
+→ Same order of magnitude, reasonable range.
+
+## References
+- [j_nucl_mater2020] Au/a-Si crystalline/amorphous interface statistics
+- [pnas2018] GAP MLIP melt-quench amorphous Si validation
+
+---
+
+## ★ PUBLISHED CONVENTION — paper #1 (v30u binding curves) [2026-07-21 박제]
+
+**이 관례로 논문이 이미 출판/제출됨. paper #2 등 후속 인용은 반드시 동일 관례를 따를 것.**
+
+### 정의 (출판본)
+- 곡선: `E_adh(d) = [E_int(d) − E_ref] / A` — UMA 단일점(rigid, 무이완) registry 앙상블
+  (face enum + flip + 36 lateral reg + z-shift) + Morse fit.
+- **E_ref = 보정된 분리 종점** (face-pair eiso + α 변형보정(α=1.0) + uniform Li5.4 dW=0.44)
+  — self-reference(꼬리=0) 아님. 그래서 꼬리가 0에 안 감 (comp1/2 ≈ +2.2, comp3–5 ≈ −0.3~−0.6).
+- **인용값 W = |E_adh(d_min)| (0-기준 우물 깊이)**. E_ref가 열역학 종점이므로 0-기준 깊이
+  = "결합 최소점 → 이완된 분리 상태"의 일 = 열역학적 W_ad. 자기일관적 선택.
+- 순위 검증: R(Wad_well, paper) = +0.989, ρ = +1.000 (paper AFM aJ 값 194–316,
+  r≈10nm 접촉 πr² 환산 1 J/m² ↔ ~314 aJ; 절대 스케일은 순위·상관으로만 비교).
+
+### 리더 오독 방지 (Q&A용)
+- "comp1/2가 d>1.6에서 양수 = 불안정?" → 아니오. 기울기(힘)는 d>2.5에서 0.
+  +2.2 꼬리는 강성 표면 준비 비용+보정 잔차의 **오프셋**이지 장거리 반발이 아님.
+- 꼬리-기준(순수 상호작용) 깊이로 재면 Li6(~3.0) > Li5.4(~1.65)로 순위 역전
+  — adhesion.json의 Tier-1 rigid 역전 기록과 일치. **출판 순위는 상호작용 + 표면준비
+  보정의 합**이며, 이것이 vacancy-anchor 서사의 정량 형태임 (paper #2 후보 서사).
+
+### 알려진 soft spot (리뷰어 대응 대비)
+1. comp3–5 꼬리 음수(−0.3~−0.6): 강성 분리 상태가 이완 기준보다 낮을 수 없음
+   → uniform dW=0.44 보정이 Li5.4 계열에서 과함(잔차). 방어: 순위·상관 불변,
+   우물 위치/깊이 대비 잔차 규모 명시.
+2. α·dW 유도의 추적성 — **✅ 완결 (2026-07-21)**. 유도 전문이 repo 내부에 있었음:
+   `kb/papers/mechanism_anion_O_descriptor.md` §ΔW_strain + `tools/adhesion_v30u/README.md`.
+   - **dW = ΔW_strain = E_NCM(SE cell) − E_NCM(NCM cell)** (NCM 변형 에너지;
+     "surface-Li dangling" 초기 추정은 오독으로 정정).
+   - per-comp: 2.633/2.503/0.873/**3.640(comp4)**/0.314. comp4 = 50:50 Cl/Br 조성의
+     single-frame cell artifact (anion-ordering 앙상블 분산 최대).
+   - **0.44 = Li5.4 계열 v1 앙상블 평균 ΔW_strain** — 독립 유도(앙상블 평균)이고,
+     rank 회복은 사후 검증. α∈[0.8,1.5] 전 구간 strict rank 유지.
+   - 출판식: `W_ad = (E_SE + E_NCM − E_SE/NCM)/A − α·ΔW_strain`, α=1.0
+     (러너 run_v30u_1L_face_flip.py L247; R=+0.989/ρ=+1.000 = v0 paper Fig.5).
+   - 구두 방어 최종본: "보정항은 NCM 변형 에너지 ΔW_strain입니다. 50:50 혼합 조성인
+     comp4는 단일-프레임 셀 artifact로 과대해서 Li5.4 계열엔 v1 앙상블 평균 0.44를
+     균일 적용했고, α 0.8–1.5 전 구간에서 순위 유지를 확인했습니다."
+
+### 용어
+- E_adh = adhesion energy (음수 우물, 곡선용) / W = work of adhesion·separation (양수, 인용용).
+- 엄밀히는 무이완 분리라 work of separation 계열 (W_ad의 상계).

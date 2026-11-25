@@ -1,0 +1,1353 @@
+{
+ "slug": "wensrich2012_rolling_friction_shape_contact_eccentricity_dem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-13",
+ "sources": [
+  "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Rolling resistance torques from model types A and C (elastic component only) for the situation of a single particle rolling along a flat surface. In both illustrations, the particle rolls for a fixed angular distance before stopping and rolling in the opposite direction.",
+   "rotated_deg": 0,
+   "bbox": [
+    103.5,
+    603.0,
+    216.6,
+    703.3
+   ],
+   "w": 521,
+   "h": 468,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.956,
+   "auto_bbox": [
+    27.7,
+    541.3,
+    291.2,
+    695.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop also took in Eq. (5) above the figure), re-rendered by hand from the vector page at 300 dpi (= tool default): clip box set from the text-layer line boxes of the neighbouring body text / equations and the caption → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 A (점선: 방향이 바뀌는 순간 ±μ_r R_r F_n 로 뛰는 일정 토크) ↔ 모델 C (실선: 기울기 k_r 의 탄성 구간 뒤 같은 한계에서 멈춤 — 되굴림 때 토크가 연속).  우리 압축 · 믹서 덱의 `rolling_friction cdt` 가 A 꼴 (정본 카드 표기)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. A single particle test for three different values of rolling stiffness and damping. These tests consist of the generation of a single particle above a flat surface with the following properties; initial height — 0.1 mm (gap), initial horizontal velocity — 150 mm/s, d=5.2 mm, G=10 MPa, ν=0.3, μp=0.5, μr=0.2, damping ratio (normal and shear) — 0.8.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    441.5,
+    292.0,
+    692.4
+   ],
+   "w": 722,
+   "h": 732,
+   "dpi": 200.2,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.878,
+   "auto_bbox": [
+    36.5,
+    434.8,
+    300.0,
+    698.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was a 300 dpi re-render of the 200 dpi raster with the column-width box, so the side margins were uneven), re-cut from the embedded native raster (xref 40, 692×701 px ≈ 200 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (17 px at 200 dpi) margin; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "native_px": [
+    692,
+    701
+   ],
+   "viewed": true,
+   "mpm_note_ko": "단일 입자 구름 시험 (PFC3D · 모델 C 세 설정): 정지 토크 고원 ≈0.756 μN·m [판독] = μ_r R m g 0.751 (ρ 2000 가정) [카드 산술] · 감속 ≈528 rad/s² [판독] ↔ 구르는 구 + 일정 토크 539 [카드 산술] · 봉우리 ω 40.4 rad/s [판독] ↔ (5/7)v₀/R 41.2 — U2 류 단위 시험의 꼴."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Contact between two particles with random shapes. The contact normal force typically does not pass through the centroid of the particle and a torque is produced.",
+   "rotated_deg": 0,
+   "bbox": [
+    372.4,
+    615.3,
+    500.3,
+    718.3
+   ],
+   "w": 583,
+   "h": 479,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.975,
+   "manual_crop": "not extracted by tools/litdb/extract_figures.py (excluded by the tool's geometry check: 'p3 거의 백지(0.987)' — a sparse line drawing); cut by hand from the vector page at 300 dpi (= tool default): clip box between the body text above (ending y 598.2 pt) and the caption below (y 730.0 pt) in the right column → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "편심 e — 비구형 입자에서 법선력의 작용선이 중심을 비켜 지나 토크 e·F_n 을 만든다.  방향은 구름 방향과 무관 (구름을 돕기도 막기도 한다 · p.412) — 식 (9) 의 출발점."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. A two dimensional cross section of an elliptical particle. Spheroidal shapes are formed from revolving this shape about the x or y-axis. For rotations about the x-axis, prolate spheroids are generated for a/b>1, oblate spheroids for a/b<1. The eccentricity of a contact can be calculated from the perpendicular distance from the origin to the surface normal.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.0,
+    590.6,
+    244.4,
+    701.2
+   ],
+   "w": 760,
+   "h": 511,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.97,
+   "auto_bbox": [
+    27.7,
+    540.0,
+    291.3,
+    683.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop also took in Eq. (11) above the figure; the auto caption read 'a/bb1' — a text-layer glyph substitution of the printed '<', fixed in the caption), re-rendered by hand from the vector page at 300 dpi (= tool default): clip box set from the text-layer line boxes of the neighbouring body text / equations and the caption → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "타원 단면 · 접점 (x₀, y₀) · 극각 θ · 띠 ds · 편심 e — 식 (10)–(14) 의 기호 그림.  x 축 회전: a/b > 1 = prolate · a/b < 1 = oblate."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Normalised eccentricity as a function of position in a range of two-dimensional ellipses of various aspect ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    328.0,
+    54.3,
+    527.2,
+    255.9
+   ],
+   "w": 588,
+   "h": 595,
+   "dpi": 200.2,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.86,
+   "auto_bbox": [
+    295.7,
+    47.2,
+    559.2,
+    262.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the column-width auto box left a wide white band on the left), re-cut from the embedded native raster (xref 65, 558×565 px ≈ 200 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (17 px at 200 dpi) margin; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "native_px": [
+    558,
+    565
+   ],
+   "viewed": true,
+   "mpm_note_ko": "2D 타원 둘레의 부호 있는 편심 (식 12) — 봉우리 ±1.5 (a/b 4 · 0.25) · ≈±0.71 (2 · 0.5) · ≈±0.29 (1.33 · 0.75) [판독 · 눈].  정규화 기준은 원문에 없다 — 봉우리 값이 (a − b)/√(ab) (같은 넓이 원의 반지름) 와 맞는다 [카드 산술 · 추정]."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Calculated values of the estimated coefficient of rolling friction and the rolling radius for elliptical particles from Eqs. (9), (12) and (14).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    53.9,
+    292.0,
+    313.6
+   ],
+   "w": 722,
+   "h": 756,
+   "dpi": 200.2,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.888,
+   "auto_bbox": [
+    36.5,
+    47.2,
+    300.0,
+    319.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was a 300 dpi re-render of the 200 dpi raster with uneven margins), re-cut from the embedded native raster (xref 82, 692×724 px ≈ 200 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (17 px at 200 dpi) margin; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "native_px": [
+    692,
+    724
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 회전 타원체 μ_r 추정 (위) · R_r/긴 반지름 (아래).  얇은 선 (prolate) = 식 (9)·(12)–(15) 재계산과 ±0.005 [판독 · 카드 산술] · 굵은 선 (oblate) 은 재계산보다 AR 2 에서 +0.03 · AR 3 에서 +0.11 높다 (재계산 0.456 · 0.708 ↔ 판독 ≈0.49 · 0.821) — §11 원문 비판."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. A tertiary clump consisting of three equally sized spheres arranged at the corners of an equilateral triangle. To simplify the analysis, we consider the case of spheres with a unit radius, place the centres of the spheres within the X–Y plane and place the centroid of the clump at the origin. The relative spacing between the spheres is specified by δ.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.8,
+    536.9,
+    253.2,
+    699.6
+   ],
+   "w": 760,
+   "h": 728,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.965,
+   "auto_bbox": [
+    36.5,
+    531.2,
+    300.1,
+    707.4
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the column-width auto box left uneven side margins), re-rendered by hand from the vector page at 300 dpi (= tool default): clip box set from the text-layer line boxes of the neighbouring body text / equations and the caption → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "삼중 점묶음 (정삼각형 · 단위 반지름 · 간격 δ) — 몬테카를로 편심 계산 (p.413) 의 기하."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Calculated equivalent coefficients of rolling friction and normalised rolling radii for (a) binary and (b) ternary equilateral clumps of various offset.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.5,
+    55.2,
+    510.8,
+    311.8
+   ],
+   "w": 1864,
+   "h": 1119,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.957,
+   "auto_bbox": [
+    63.1,
+    72.3,
+    523.3,
+    317.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop cut off the top — panel letters (a)/(b), both panel titles and the end of the y-axis labels), re-rendered by hand from the vector page at 300 dpi (= tool default): clip box set from the text-layer line boxes of the neighbouring body text / equations and the caption → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "점묶음 μ_r 추정 ≈ δ 에 비례 (μ_r/δ 0.33–0.44 [판독 · 벡터]) · 이중 ↔ 삼중 0–3 % 차 · 부피 등가 반지름 끝값 2^{1/3} · 3^{1/3} — 카드 재계산 (몬테카를로 · 원문 절차) 이 표 2 를 ±0.01 로 재현."
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 6,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8 (a) — binary spherical clumps (unit radius): estimated coefficient of rolling friction (top) and normalised equivalent radius (bottom) vs relative spacing δ.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.5,
+    55.2,
+    287.0,
+    311.8
+   ],
+   "w": 931,
+   "h": 1119,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.957,
+   "manual_crop": "panel (a) of Fig. 8 — cut by hand from the vector page at 300 dpi (= tool default): column split at the white gap x 287.0–298.5 pt measured on the rendered column ink profile (split line x 292.7 pt) → ink bounding box → white canvas with a uniform 6 pt margin; caption excluded (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "이중 점묶음: δ 0.49 · 0.79 · 1.10 · 1.45 · 1.76 ↔ μ_r 0.18 · 0.28 · 0.38 · 0.49 · 0.59 (표 2) — 곡선에서 다시 읽은 δ 0.483 · 0.785 · 1.091 · 1.454 · 1.759 [판독 · 벡터]."
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 6,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8 (b) — equilateral (ternary) spherical clumps (unit radius): estimated coefficient of rolling friction (top) and normalised equivalent radius (bottom) vs relative spacing δ.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.5,
+    55.2,
+    510.9,
+    311.8
+   ],
+   "w": 935,
+   "h": 1119,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.956,
+   "manual_crop": "panel (b) of Fig. 8 — cut by hand from the vector page at 300 dpi (= tool default): column split at the white gap x 287.0–298.5 pt (split line x 292.7 pt) → ink bounding box → white canvas with a uniform 6 pt margin; caption excluded (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "삼중 점묶음: 표 2 δ 0.50 · 0.82 · 1.13 · 1.46 · 1.78 ↔ 곡선 0.491 · 0.798 · 1.123 · 1.491 · 1.807 [판독 · 벡터] (≤ 0.03 차)."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Measured angle of repose for a series of 150 simulations; (a) the results for binary clumped particles of varying relative spacing, (b) the results for equilateral ternary clumped particles of varying relative spacing, and (c) the results for spherical particles with model C rolling friction. The upper graphs show the raw data as calculated from the resulting heaps, while the lower graphs present the same data in the form of contour plots (results from repeat tests are averaged).",
+   "rotated_deg": 0,
+   "bbox": [
+    69.6,
+    294.5,
+    535.0,
+    709.2
+   ],
+   "w": 1989,
+   "h": 1778,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.951,
+   "auto_bbox": [
+    36.5,
+    539.2,
+    567.5,
+    716.4
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop held only the lower contour row — the upper raw-data row, the panel letters and the titles were missing; the auto caption was truncated after 'rolling friction'), re-rendered by hand from the vector page at 300 dpi (= tool default): clip box set from the text-layer line boxes of the neighbouring body text / equations and the caption → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 안식각 150 런: 구형 + 구름마찰 (c) 이 같은 '등가' μ_r 의 점묶음 (a · b) 보다 4.1–10.9° 높다 [판독 · 벡터 · 카드 산술] · 삼중 − 이중 −0.2–3.2° · 같은 칸 반복 차 평균 0.6–1.0° (최대 2.5°) · 등고선이 넓게 퍼져 한 안식각을 (μ_p, μ_r) 여러 쌍이 낸다."
+  },
+  {
+   "key": "f9a",
+   "kind": "figure",
+   "label": "9a",
+   "page": 7,
+   "file": "fig_9a.png",
+   "caption": "Fig. 9 (a) — angle of repose of binary clumped particles vs equivalent μr: raw data (top, two repeats per cell) and contour plot over (equivalent μr, μp) (bottom, repeats averaged).",
+   "rotated_deg": 0,
+   "bbox": [
+    69.6,
+    294.5,
+    216.7,
+    708.5
+   ],
+   "w": 663,
+   "h": 1775,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.949,
+   "manual_crop": "panel (a) of Fig. 9 — cut by hand from the vector page at 300 dpi (= tool default): column split at the white gaps x 216.7–227.0 and 376.3–384.7 pt measured on the rendered column ink profile (split lines x 221.8 · 380.5 pt) → ink bounding box → white canvas with a uniform 6 pt margin; caption excluded (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "이중 점묶음 원자료 50 점 (벡터 마커) — μ_p 0.2 에서 15.9 → 21.1° · μ_p 0.8 에서 23.5 → 34.0° (칸 평균) [판독 · 벡터]."
+  },
+  {
+   "key": "f9b",
+   "kind": "figure",
+   "label": "9b",
+   "page": 7,
+   "file": "fig_9b.png",
+   "caption": "Fig. 9 (b) — angle of repose of equilateral ternary ('Tertiary' in the panel titles) clumped particles vs equivalent μr: raw data (top) and contour plot (bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    227.1,
+    294.5,
+    376.4,
+    708.5
+   ],
+   "w": 672,
+   "h": 1775,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.95,
+   "manual_crop": "panel (b) of Fig. 9 — cut by hand from the vector page at 300 dpi (= tool default): split lines x 221.8 · 380.5 pt in the white gaps → ink bounding box → white canvas with a uniform 6 pt margin; caption excluded (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "삼중 점묶음 원자료 50 점 — μ_p 0.2 에서 18.5 → 24.3° · μ_p 0.8 에서 24.7 → 35.4° (칸 평균) [판독 · 벡터]."
+  },
+  {
+   "key": "f9c",
+   "kind": "figure",
+   "label": "9c",
+   "page": 7,
+   "file": "fig_9c.png",
+   "caption": "Fig. 9 (c) — angle of repose of spherical particles with model C rolling friction vs μr: raw data (top) and contour plot (bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    384.8,
+    294.5,
+    535.1,
+    709.2
+   ],
+   "w": 676,
+   "h": 1778,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.955,
+   "manual_crop": "panel (c) of Fig. 9 — cut by hand from the vector page at 300 dpi (= tool default): split line x 380.5 pt in the white gap → ink bounding box → white canvas with a uniform 6 pt margin; caption excluded (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구형 + 구름마찰 원자료 50 점 — μ_p 0.2 에서 25.4 → 30.3° · μ_p 0.8 에서 33.0 → 44.5° (칸 평균) [판독 · 벡터].  μ_p 0.2 는 μ_r 0.38 뒤 평평 (≈30°)."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Particle properties used in the AOR tests.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    57.7,
+    294.3,
+    180.8
+   ],
+   "w": 1099,
+   "h": 563,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.94,
+   "auto_bbox": [
+    37.5,
+    32.7,
+    566.6,
+    749.4
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box [37.5, 32.7, 566.6, 749.4] was the whole page; the auto caption had swallowed the table body), re-rendered by hand from the vector page at 300 dpi (= tool default): clip box set from the text-layer line boxes of the neighbouring body text / equations and the caption → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; table title kept (table convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "안식각 시험 입자: 지름 4.6–5.2 mm 균일 · Hertz–Mindlin (no-tension) · ρ 2000 kg/m³ · G 1 × 10⁷ Pa (E = 2G(1+ν) = 26 MPa [카드 산술]) · ν 0.3 · 점성 감쇠비 0.8 / 0.8 · 국소 감쇠 0."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Simulated sliding and rolling friction values and corresponding clump spacings.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    57.7,
+    285.5,
+    162.6
+   ],
+   "w": 1099,
+   "h": 487,
+   "dpi": 300,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.935,
+   "auto_bbox": [
+    28.7,
+    32.7,
+    557.9,
+    750.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box [28.7, 32.7, 557.9, 750.1] was the whole page; the auto caption had swallowed the table body), re-rendered by hand from the vector page at 300 dpi (= tool default): clip box set from the text-layer line boxes of the neighbouring body text / equations and the caption → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; table title kept (table convention) (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "μ_p 0.2 · 0.3 · 0.4 · 0.6 · 0.8 × μ_r 0.18 · 0.28 · 0.38 · 0.49 · 0.59 ↔ δ (이중 0.49 · 0.79 · 1.10 · 1.45 · 1.76 / 삼중 0.50 · 0.82 · 1.13 · 1.46 · 1.78) — 5 × 5 × 3 형상 × 반복 2 = 150 런."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 1,
+   "file": "eq_01_model_A_constant_rolling_torque.png",
+   "caption": "Eq. (1) T_r = −μ_r R_r |F_n| ω_rel/|ω_rel| (model A — constant torque opposing the relative rotation; Zhou et al. [13])",
+   "rotated_deg": 0,
+   "bbox": [
+    347.2,
+    698.3,
+    561.0,
+    717.8
+   ],
+   "w": 1254,
+   "h": 174,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.977,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 A: 크기 μ_r R_r F_n · 방향 = 상대 회전의 반대 (ω_rel = 0 에서 불연속 → 정지 계에서 기어감 · p.410)."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_rolling_radius_Rr.png",
+   "caption": "Eq. (2) R_r = r_i r_j/(r_i + r_j) (effective rolling radius; R_r = r_i for a wall, r_j → ∞)",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    107.8,
+    284.1,
+    127.2
+   ],
+   "w": 1255,
+   "h": 174,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.987,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "굴림 유효 반지름 — 같은 크기 두 구면 R/2 · 벽이면 R (원문 p.410).  식 (9) 의 R_r 은 '입자를 나타내는 구의 굴림 반지름' (식 15) — 두 정의의 관계 [미확인] (§11)."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 2,
+   "file": "eq_03_model_B_viscous_rolling_torque.png",
+   "caption": "Eq. (3) T_r = −μ_r R_r |F_n| (ω_i r_i − ω_j r_j) (model B — viscous; as printed: torque × velocity, the units do not close)",
+   "rotated_deg": 0,
+   "bbox": [
+    70.2,
+    274.6,
+    284.1,
+    289.3
+   ],
+   "w": 1254,
+   "h": 148,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.97,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 B (점성) — 인쇄 그대로면 N·m × m/s 로 토크가 아니다 [카드 관찰 · ai2011 카드 §3-10 의 같은 관찰]."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 2,
+   "file": "eq_04_model_C_elastic_incremental_torque_capped.png",
+   "caption": "Eq. (4) T^k_{r,t+Δt} = T^k_{r,t} − k_r ω_rel Δt if |T^k_{r,t} − k_r ω_rel Δt| < μ_r R_r |F_n|, else μ_r R_r |F_n| (T^k_{r,t} − k_r ω_rel Δt)/|…| (model C elastic part — incremental spring capped at the model-A limit)",
+   "rotated_deg": 0,
+   "bbox": [
+    69.5,
+    445.6,
+    286.6,
+    498.6
+   ],
+   "w": 1272,
+   "h": 360,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.951,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 C 탄성부: 증분 스프링 (강성 k_r) · 한계 μ_r R_r F_n 에서 자름 = 회전의 '탄소성' (입자 소성 아님)."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 2,
+   "file": "eq_05_model_C_viscous_rolling_damping_torque.png",
+   "caption": "Eq. (5) T^v_{r,t+Δt} = −C_r ω_rel provided T^v_{r,t+Δt} < μ_r R_r |F_n|, 0 otherwise (model C viscous part as applied by Ai et al.)",
+   "rotated_deg": 0,
+   "bbox": [
+    69.5,
+    550.3,
+    284.1,
+    574.2
+   ],
+   "w": 1258,
+   "h": 199,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.954,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 C 점성부 (구름 감쇠) — 탄성부가 한계에 닿으면 꺼진다.  이 논문은 높은 k_r (식 7) 이면 이 항이 필요 없다고 본다 (p.411)."
+  },
+  {
+   "key": "e5b",
+   "kind": "equation",
+   "label": "eq5-Cr (inline, unnumbered)",
+   "page": 2,
+   "file": "eq_05b_rolling_damping_rate_Cr_inline.png",
+   "caption": "Inline (p.410, right column): C_r = ζ 2√(k_r I_r) — rolling damping as a proportion ζ of critical damping; I_r = equivalent moment of inertia",
+   "rotated_deg": 0,
+   "bbox": [
+    337.2,
+    57.6,
+    553.4,
+    86.5
+   ],
+   "w": 1267,
+   "h": 227,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.869,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — three text lines holding the inline (unnumbered) definition — band from the text-layer line boxes → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 감쇠율 = 임계 감쇠의 ζ 배 (1 자유도 기준 — 원문 스스로 '단순화된 1 자유도' 라 적는다 · p.411)."
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 2,
+   "file": "eq_06_rolling_stiffness_bardet_huang_2JnRrFn.png",
+   "caption": "Eq. (6) k_r = 2 J_n R_r |F_n| (Bardet and Huang rolling stiffness, J_n 0.25–0.5; used by Ai et al. and Wang et al.)",
+   "rotated_deg": 0,
+   "bbox": [
+    302.1,
+    484.7,
+    552.2,
+    499.4
+   ],
+   "w": 1455,
+   "h": 148,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "둥근 입자의 구름 강성 (원판 2D 해석) — '모양의 효과와 크게 다르다' 며 이 논문은 쓰지 않는다 (p.410)."
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 2,
+   "file": "eq_07_rolling_stiffness_Rr2_ks_iwashita_oda.png",
+   "caption": "Eq. (7) k_r = R_r² k_s (rolling stiffness chosen so that the nominal rotational natural frequency equals that of the shear stiffness; same as Iwashita and Oda)",
+   "rotated_deg": 0,
+   "bbox": [
+    302.1,
+    658.0,
+    552.2,
+    668.8
+   ],
+   "w": 1455,
+   "h": 126,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.988,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이 논문의 구름 강성: 전단 강성과 같은 고유 진동수 → 임계 시간 간격 불변 · 구름 감쇠 없이도 전단 감쇠가 진동을 잡는다 (p.410–411)."
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 3,
+   "file": "eq_08_max_rolling_torque_mur_Rr_Fn.png",
+   "caption": "Eq. (8) T_r,max = μ_r R_r |F_n| (maximum rolling resistance torque of models A and C)",
+   "rotated_deg": 0,
+   "bbox": [
+    310.9,
+    486.8,
+    560.9,
+    501.4
+   ],
+   "w": 1455,
+   "h": 147,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "A · C 공통 상한 — 식 (9) 의 비교 대상."
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 4,
+   "file": "eq_09_mur_estimate_mean_eccentricity_over_Rr.png",
+   "caption": "Eq. (9) μ_r ≈ ⟨e⟩/R_r (estimate of the coefficient of rolling friction from the ensemble-average contact eccentricity)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    167.4,
+    284.2,
+    186.3
+   ],
+   "w": 1458,
+   "h": 171,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이 논문의 제안: 구름마찰 계수 ≈ 평균 접촉 편심 ÷ 굴림 반지름.  AOR 비교 결과 실제로는 이 값의 ≈ 절반이면 같은 안식각 (p.416)."
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 4,
+   "file": "eq_10_ellipse.png",
+   "caption": "Eq. (10) x²/a² + y²/b² = 1",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    478.3,
+    284.2,
+    498.5
+   ],
+   "w": 1457,
+   "h": 178,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.987,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "타원 단면."
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 4,
+   "file": "eq_11_contact_normal_line.png",
+   "caption": "Eq. (11) y − y₀ = (a²/b²)(y₀/x₀)(x − x₀) (line of the contact normal through (x₀, y₀))",
+   "rotated_deg": 0,
+   "bbox": [
+    33.4,
+    546.4,
+    284.2,
+    567.5
+   ],
+   "w": 1459,
+   "h": 183,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "접점의 법선 직선."
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 4,
+   "file": "eq_12_signed_eccentricity_ellipse.png",
+   "caption": "Eq. (12) e = y₀(1 − a²/b²)/√((a²/b² · y₀/x₀)² + 1) (signed perpendicular distance from the centre to the contact normal)",
+   "rotated_deg": 0,
+   "bbox": [
+    302.0,
+    349.0,
+    552.2,
+    385.0
+   ],
+   "w": 1456,
+   "h": 266,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.981,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "부호 있는 편심 (부호 = 토크 방향 · 반시계 +) — 크기만 쓰려면 절댓값 (p.412).  최대 |e| = |a − b| [카드 산술]."
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 4,
+   "file": "eq_13_surface_average_eccentricity.png",
+   "caption": "Eq. (13) ⟨e⟩ = (1/A)∫_A |e| dA (surface average over the spheroid)",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    513.9,
+    552.2,
+    534.2
+   ],
+   "w": 1453,
+   "h": 179,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.985,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "2D → 3D: 회전면 표면 평균 (p.412)."
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 4,
+   "file": "eq_14_band_integral_spheroid_eccentricity.png",
+   "caption": "Eq. (14) ⟨e⟩ = (2π/A)∫_{θ=0}^{θ=π} |e| y ds (integration over bands of thickness ds on the surface of revolution about the x-axis)",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    621.7,
+    552.2,
+    644.9
+   ],
+   "w": 1453,
+   "h": 195,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "띠 적분 (가중 y ds) — 카드 재계산 (적분 · 3D 삼각망 두 방법 같음) 이 Fig 6 prolate 를 재현 · oblate 는 재현 안 됨 (§11)."
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 4,
+   "file": "eq_15_volume_equivalent_rolling_radius.png",
+   "caption": "Eq. (15) R_r = ∛(a b²) (radius of the sphere with the same volume as the spheroid revolved about x)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.8,
+    733.1,
+    552.2,
+    744.2
+   ],
+   "w": 1457,
+   "h": 128,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.985,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — band between the neighbouring prose lines (text-layer line boxes) → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "부피 등가 구 반지름 — Fig 6 아래 그림 (R_r/긴 반지름) 은 이 식 그대로 [판독 · 카드 산술]."
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "p.409 (PDF p.1) abstract: 'Shape is a computationally expensive property to model in DEM, and so rolling friction is often employed in order to simulate its effects. However, the precise way in which rolling friction models shape has never been properly outlined.' … back-to-back AOR simulations with clumped particles (simulating shape) and spheres with rolling friction … 'Approximately half as much rolling friction was required to reproduce the effects of an equivalent amount of shape estimated by the method' … 'shape can cause rotation as well as resist it, while rolling friction always acts to oppose rolling motion.'",
+   "rotated_deg": 0,
+   "bbox": [
+    207.2,
+    270.9,
+    562.1,
+    354.7
+   ],
+   "w": 2038,
+   "h": 532,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.83,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "초록 전문 — 제안 (편심 → μ_r) · 시험 (안식각 · 점묶음 ↔ 구 + 구름마찰) · 결론 (절반 · 구름마찰은 늘 막는 쪽)."
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-scaling-spheres-two-questions",
+   "page": 1,
+   "file": "txt_p1_scaling_spheres_two_questions_rolling_torque.png",
+   "caption": "p.409 (PDF p.1) (two parts: left column end + right column top): 'Practically this means scaling of particle size and stiffness, and idealisation in the form of spheres and simplified contact mechanics.' · two questions in DEM — real contact mechanics vs 'how to get idealised spherical particles to behave like a bulk material made up of many more real particles of a wide size distribution and arbitrary shape' · rolling friction = 'an additional torque that resists the rolling motion which is applied to each particle pair in contact.'",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    408.3,
+    561.7,
+    677.9
+   ],
+   "w": 1461,
+   "h": 1119,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.838,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ DEM 한계 문장 — 크기 · 강성 축척 + 구 이상화 + 단순 접촉 (문장 그대로 인용용).",
+   "parts_bbox": [
+    [
+     42.7,
+     565.3,
+     293.8,
+     677.9
+    ],
+    [
+     310.8,
+     408.3,
+     561.7,
+     479.2
+    ]
+   ]
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-energy-loss-sources-shape-expensive",
+   "page": 1,
+   "file": "txt_p1_energy_loss_sources_shape_expensive.png",
+   "caption": "p.409 (PDF p.1): energy loss due to rolling from '1. mechanisms that contribute to hysteresis at the point of contact (micro-sliding, visco-elasticity, plasticity, surface adhesion, etc.), and 2. the effects of shape' · 'in a practical situation they are most likely dwarfed by the effects of shape. Shape is an expensive thing to model in DEM, and so rolling friction is typically used in an effort to model this effect.'",
+   "rotated_deg": 0,
+   "bbox": [
+    310.6,
+    481.7,
+    561.5,
+    594.3
+   ],
+   "w": 1460,
+   "h": 692,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.832,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 손실의 두 근원 (접촉 이력 — 소성 포함 / 모양) · 실제로는 모양이 압도 · 모양은 비싸서 구름마찰로 대리 — 이 논문에서 'plasticity' 가 나오는 유일한 문장."
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-model-A-static-creep",
+   "page": 2,
+   "file": "txt_p2_model_a_static_creep_caution.png",
+   "caption": "p.410 (PDF p.2): 'caution must be used when using model A in a static situation. The relevant issue revolves around the bulk material creeping due to rapid oscillations in the rolling resistance due to the discontinuity in Eq. (1) at |ω_rel| = 0.'",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    161.5,
+    284.8,
+    211.7
+   ],
+   "w": 1259,
+   "h": 345,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.878,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 모델 A (우리 cdt 꼴) 의 정지 계 기어감 — 탈압 · 이완 판정과 닿는 함정."
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-no-physical-reasoning-tuned",
+   "page": 2,
+   "file": "txt_p2_link_unclear_no_physical_reasoning_tuned.png",
+   "caption": "p.410 (PDF p.2): rolling friction 'would probably be applied as a method of imitating the effects of particle shape, however the link between the model and the mechanism is not at all clear. In particular, there is currently no physical reasoning that is applied in the selection of a value for rolling friction, rather it tends to be treated as a parameter to be 'tuned' in an effort to produce realistic behaviour.'",
+   "rotated_deg": 0,
+   "bbox": [
+    301.8,
+    198.7,
+    552.9,
+    278.4
+   ],
+   "w": 1461,
+   "h": 509,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 보정값 ≠ 물성 고백 (구름마찰 계수 = 조율 매개변수) — 질문 k 의 인용 문장."
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2-bardet-huang-vastly-different",
+   "page": 2,
+   "file": "txt_p2_bardet_huang_jn_vastly_different_from_shape.png",
+   "caption": "p.410 (PDF p.2): J_n 0.25–0.5 · 'This analysis was based on the rolling resistance and stiffness in the case of idealised, round, particles. The mechanisms at play in this situation are vastly different from the effects of shape' · rolling stiffness as 'simply a mechanism to avoid the failings of model A' · k_r from equal nominal rotational natural frequencies (rolling ↔ shear).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.8,
+    514.3,
+    553.6,
+    637.4
+   ],
+   "w": 1465,
+   "h": 750,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "식 (6) 을 버리고 식 (7) 을 고른 이유 — 모양 대리에서 구름 강성은 A 의 결함을 피하는 장치일 뿐."
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-high-kr-no-rolling-damping",
+   "page": 3,
+   "file": "txt_p3_high_kr_mobilises_shear_damping_no_rolling_damping.png",
+   "caption": "p.411 (PDF p.3): rolling damping 'introduces an additional parameter that must be set. However, it may not be entirely necessary' · with low k_r (Eq. 6) oscillations are slow and shear damping has little effect · 'With higher levels of rolling stiffness, the shear damping is mobilised and additional rolling damping is not required' · choosing k_r so the natural frequencies match keeps 'the calculation of the critical time step … unaffected.'",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    57.5,
+    293.8,
+    231.2
+   ],
+   "w": 1462,
+   "h": 1031,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.845,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "높은 구름 강성 + 구름 감쇠 없음 = 매개변수 하나를 덜고 임계 Δt 를 바꾸지 않는 설정 (EPSD 계열 설정 근거)."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-single-particle-test-setup",
+   "page": 3,
+   "file": "txt_p3_single_particle_test_setup_pfc3d.png",
+   "caption": "p.411 (PDF p.3): single particle rolled along a flat surface until it stops (PFC3D 4.00-187) · radius 2.6 mm · starts 0.1 mm above the plane · horizontal velocity, zero angular velocity · three cases: Iwashita & Oda stiffness, no damping / Bardet & Huang J_n = 0.5, no damping / Bardet & Huang J_n = 0.5, critical damping (ζ = 1) · shear damping 0.8 × critical.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.4,
+    235.3,
+    294.3,
+    410.8
+   ],
+   "w": 1471,
+   "h": 1041,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Fig 2 시험 조건 (U2 류 단위 시험의 꼴)."
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-damping-observations-iwashita-oda-ideal",
+   "page": 3,
+   "file": "txt_p3_damping_observations_iwashita_oda_ideal.png",
+   "caption": "p.411 (PDF p.3): with damping — 'well damped — but not critically damped' (the 'critical damping' notion 'is based on a simplified one degree-of-freedom system') · large transient torque at impact 'almost entirely due to and dependant on the amount of damping' · resistance 'well above the model A limit for an almost a quarter of the remaining time' · stops sooner · Iwashita & Oda stiffness settles on the model-A limit; 'choosing the stiffness as per Iwashita and Oda [14] without any additional damping provides the ideal case …'",
+   "rotated_deg": 0,
+   "bbox": [
+    310.7,
+    57.5,
+    562.3,
+    419.6
+   ],
+   "w": 1464,
+   "h": 2078,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 감쇠가 만드는 인공물 셋 (충돌 순간 큰 토크 · 한계 초과 · 일찍 멈춤) — 감쇠 설정이 결과를 바꾼다."
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-eccentricity-eq9-shape-both-ways",
+   "page": 4,
+   "file": "txt_p4_eccentricity_torque_eq9_shape_both_ways.png",
+   "caption": "p.412 (PDF p.4) (two parts around Eq. 9): eccentricity used 'directly in some studies as an alternate definition of the coefficient of rolling friction' · |T_e| = e|F_n| · 'the product μ_r R_r should be of the same magnitude of the typical eccentricity of a contact' · ⟨e⟩ = ensemble average over all possible contacts · 'shape can both create or encourage rolling as well as resist it, while all of the rolling friction models resist rolling in all cases.'",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    57.5,
+    285.6,
+    314.8
+   ],
+   "w": 1464,
+   "h": 1351,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.835,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 식 (9) 의 논리와 한계 (모양은 회전을 돕기도 한다 ↔ 구름마찰은 늘 막는다).",
+   "parts_bbox": [
+    [
+     34.1,
+     57.5,
+     285.1,
+     159.7
+    ],
+    [
+     34.0,
+     191.6,
+     285.6,
+     314.8
+    ]
+   ]
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-validity-untested-typical-values",
+   "page": 5,
+   "file": "txt_p5_validity_untested_typical_values.png",
+   "caption": "p.413 (PDF p.5): 'The validity of this estimated coefficient of rolling friction is so-far entirely untested. However it is pleasing to note that the calculated values shown in Fig. 6 fit notionally within the range of typical values used in practice.'",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    360.8,
+    293.6,
+    400.2
+   ],
+   "w": 1460,
+   "h": 285,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.884,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Fig 6 값의 지위 — 시험 전 추정 (회전 타원체는 DEM 비교를 안 했다 · p.414)."
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-monte-carlo-clump-algorithm",
+   "page": 5,
+   "file": "txt_p5_monte_carlo_clump_eccentricity_algorithm.png",
+   "caption": "p.413 (PDF p.5): Monte-Carlo procedure (unit-radius spheres, clump centre at origin, δ relative) — steps 1–6: random sphere; random unit vector n → surface point x = x_i − n; test-sphere centre x_test = x − n; reject unless |x_test − x_j| ≥ 2 ∀ j ≠ i; θ = cos⁻¹((x/|x|)·n), e = |x| sin θ; average; 'Any number of iterations can be carried out to reach a required level of accuracy.'",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    224.9,
+    561.6,
+    515.4
+   ],
+   "w": 1461,
+   "h": 1680,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.876,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "점묶음 편심의 계산 절차 (카드가 이 절차로 Fig 8 · 표 2 를 재현)."
+  },
+  {
+   "key": "x5c",
+   "kind": "text",
+   "label": "p5-clump-mur-proportional-spacing",
+   "page": 5,
+   "file": "txt_p5_clump_mur_proportional_spacing_binary_ternary_1_2pct.png",
+   "caption": "p.413 (PDF p.5): 'the estimated coefficient of rolling friction is approximately proportional to the clump spacing' · 'Over the range examined, the estimated coefficient of rolling friction for the binary particles is within 1–2% of the value for ternary particles at the same relative spacing.'",
+   "rotated_deg": 0,
+   "bbox": [
+    310.7,
+    643.3,
+    562.3,
+    745.5
+   ],
+   "w": 1464,
+   "h": 634,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "점묶음 μ_r ∝ δ · 이중 ≈ 삼중 (원문 1–2 % ↔ 벡터 곡선 0–3.3 % · 카드 재계산 0.5–2.7 %)."
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-dem-method-pfc3d-aor",
+   "page": 6,
+   "file": "txt_p6_dem_method_pfc3d_7000_cylinder_aor_algorithm.png",
+   "caption": "p.414 (PDF p.6) (two parts): PFC3D 4.00-187 (64 bit, Itasca) · model C via C++ UDM (MS Visual C++ DLL) · 7000 particles (Table 1) in a vertical cylinder Ø 91 mm × 136.5 mm · clumps replace spheres of the same volume, randomly orientated · settle 1 s under gravity · cylinder raised at 16 mm/s · 5 s after the rise starts · AOR: 36 wedges, inner and extreme outer parts discarded, 10 radial bins, highest particle per bin, linear regression, wedge angles averaged.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    350.4,
+    552.7,
+    745.7
+   ],
+   "w": 1463,
+   "h": 1692,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.838,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 계산 사양 전부 (코드 · 입자 수 · 용기 · 시간 · 판정 알고리즘).",
+   "parts_bbox": [
+    [
+     34.1,
+     528.3,
+     285.6,
+     745.7
+    ],
+    [
+     301.8,
+     350.4,
+     552.7,
+     419.7
+    ]
+   ]
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-parameters-timestep-150-runs",
+   "page": 6,
+   "file": "txt_p6_parameters_wall_friction_timestep_150_runs.png",
+   "caption": "p.414 (PDF p.6): μ_p values with a range of μ_r and matching δ (Table 2) · particle-on-wall friction = the smaller of μ_p and 0.5 · time step 25 % of the software critical time step, typically 3–4 μs · 150 simulations (50 rolling friction, 50 binary, 50 ternary) · each (μ_p, μ_r or δ) pair simulated twice with a different initial packing.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.8,
+    423.6,
+    553.6,
+    578.0
+   ],
+   "w": 1465,
+   "h": 924,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.856,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "매개변수 격자 · 벽 마찰 규칙 · Δt · 런 수 · 반복 2."
+  },
+  {
+   "key": "x6c",
+   "kind": "text",
+   "label": "p6-results-model-a-still-settling",
+   "page": 6,
+   "file": "txt_p6_results_residual_velocity_model_a_still_settling.png",
+   "caption": "p.414 (PDF p.6): piles well formed, residual velocities well below 10⁻⁷ m/s after 5 s · preliminary model A runs: 'the piles were still in the process of settling at the end of the 5 second interval' · 'model C is far superior in this case.'",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    622.4,
+    553.6,
+    693.3
+   ],
+   "w": 1464,
+   "h": 460,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 모델 A 는 5 s 뒤에도 정착 중 (정량 없음) — 우리 cdt (A 꼴) 의 정착 · 이완 판정 경고."
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-contours-hand-in-hand-shape-like",
+   "page": 7,
+   "file": "txt_p7_contours_hand_in_hand_shape_like_not_perfect.png",
+   "caption": "p.415 (PDF p.7) (two parts): contour lines begin very steeply then flatten · 'the effects of shape (or rolling friction) go hand-in-hand with the effects of particle friction' · insensitive to more rolling friction when particle friction is small, and vice-versa · 'The only way in which a large angle of repose can be achieved is if both of these mechanisms work together' · top-left = rolling-dominated, bottom-right = sliding-dominated · 'rolling friction does introduce a 'shape-like' behaviour … the effect is not perfect' · at low δ clump contours essentially vertical.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    57.5,
+    562.3,
+    274.7
+   ],
+   "w": 1464,
+   "h": 1409,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "미끄럼 · 구름 두 기전이 함께여야 큰 안식각 — 한쪽만 키우면 둔감 (보정 설계에 쓸 꼴).",
+   "parts_bbox": [
+    [
+     42.7,
+     256.2,
+     293.4,
+     274.7
+    ],
+    [
+     310.7,
+     57.5,
+     562.3,
+     274.7
+    ]
+   ]
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-up-to-10deg-factor-two",
+   "page": 8,
+   "file": "txt_p8_up_to_10deg_factor_two_wrong_direction_fabric_10pct.png",
+   "caption": "p.416 (PDF p.8): non-spherical particles jump in AOR as μ_p goes 0.2 → 0.3 · spheres with rolling friction 'up to 10° higher than that of the clumped particles' · 'the effects of rolling friction are much stronger than Eq. (9) would tend to suggest — by at least a factor of two' · 'approximately half as much rolling friction is required' · reason: shape can rotate as well as resist ('hardly a robust argument') · up to half of the contacts act in the 'wrong' direction · fabric check: 'observed' Eq. (9) value from a settled ternary pile ≈10 % higher — 'far too small to account for the observed discrepancy.'",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    193.4,
+    285.6,
+    557.1
+   ],
+   "w": 1465,
+   "h": 2087,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.836,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 핵심 결과 문장 (10° · 두 배 · 절반 · 직물 10 %)."
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-binary-ternary-2deg-single-aor-insufficient",
+   "page": 8,
+   "file": "txt_p8_binary_ternary_2deg_single_aor_insufficient_scatter.png",
+   "caption": "p.416 (PDF p.8) (two parts): normalised eccentricity characterised shape 'reasonably well' · binary vs ternary AOR difference 'limited to around 2°', binary consistently lower (one more unrestrained degree-of-freedom) · §4.4: 'a single angle of repose can be achieved from a wide range of parameters' · 'there is no method of choosing appropriate particle properties' from one measured property · 'One bulk parameter from one type of test is entirely insufficient' · 'statistical scatter is ever present … Repeat simulations under the same conditions are extremely valuable.'",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    57.5,
+    553.6,
+    745.4
+   ],
+   "w": 1465,
+   "h": 2484,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.848,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 보정 비유일성 · 반복 런의 가치 — 우리 R5 · 단계 4 · 믹서 D3 앵커 설계와 닿는 문장.",
+   "parts_bbox": [
+    [
+     34.0,
+     559.5,
+     285.6,
+     745.4
+    ],
+    [
+     301.8,
+     57.5,
+     553.6,
+     300.8
+    ]
+   ]
+  },
+  {
+   "key": "x8c",
+   "kind": "text",
+   "label": "p8-conclusions-tuneable-parameter",
+   "page": 8,
+   "file": "txt_p8_conclusions_tuneable_parameter_half.png",
+   "caption": "p.416 (PDF p.8) conclusions: shape 'is every bit as important as the mechanics of contact' and 'one of the hardest properties to model accurately' · rolling friction gives 'shape-like' behaviour but many open questions · 'Without any physical basis, the coefficient can only ever be considered a 'tuneable parameter'' · technique 'not entirely successful' · around half the rolling friction estimated from the normalised eccentricity.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    339.8,
+    553.6,
+    536.1
+   ],
+   "w": 1464,
+   "h": 1157,
+   "dpi": 400,
+   "src": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+   "blank": 0.83,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band from the text-layer line boxes of the first and last cited line (start/end phrases located in the text layer, guarded against the neighbouring lines) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; multi-part passages are stacked top-to-bottom in reading order with a 6 pt gap (2026-11-13, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결론 전문 — '조율 매개변수' 문장 (질문 k)."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-13) extracted 8 of the 9 printed figures (Fig. 1, 2, 4–9) and both tables, and flagged Fig. 3 as a numbering gap (p3 '거의 백지(0.987)' — a sparse vector line drawing).  All tool crops were opened: all 10 were re-cut by hand (Fig. 1 and 4 had taken in Eqs. (5) and (11); Fig. 8 had lost its top (panel letters, titles); Fig. 9 held only the lower contour row; both table boxes were the whole page; Fig. 2, 5, 6 were re-cut from their native 200 dpi rasters; Fig. 5 and 7 had uneven margins) and Fig. 3 was cut by hand.  Added by hand: panel crops Fig. 8a–b and 9a–c, 16 equation crops (Eqs. 1–15, one per printed number, plus the inline C_r definition) and 20 evidence-paragraph crops (txt_*).  The paper has no supplementary material (9 pp, main text only; 'supplementary' 0 times).  Digitized data: digitized.csv (Fig. 8 and 9 = vector path coordinates; Fig. 2 and 6 = calibrated raster readings).",
+ "note_manual": "Printed points visible in the crops: Fig. 9 panel (b) titles read 'Tertiary Clumps' (the text and Table 2 say 'ternary'); the Fig. 4 caption in the text layer reads 'a/bb1' where the page prints 'a/b<1' (glyph substitution — fixed in the caption); Eq. (3) as printed multiplies a torque by a velocity; Eq. (5) prints the condition without an absolute value; the thick 'Oblate' line in Fig. 6 (top) lies above the value re-computed from Eqs. (9), (12)–(15) by up to ≈0.12 at aspect ratio 3 while the thin 'Prolate' line agrees within ≈0.005 — see the card §11.",
+ "key_note": "manual keys: f<N> = figure (8 recrop + Fig. 3 manual_crop + panel crops f8a–b, f9a–c manual_crop); t<N> = table (2 recrop); e<eq> = equation crop (kind 'equation'; e5b = inline C_r); x<page><letter> = evidence paragraph (kind 'text'; multi-part passages list their parts in parts_bbox)"
+}

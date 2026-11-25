@@ -1,0 +1,6 @@
+# Page 12 (user deck) — the EARLIER lower limit of the host window, kept only to show what the 2026-09-22 correction changed.
+# It is the voltage of a Li-uptake step (ledger first_reduction_plateau_V), not a window edge; earlier width = upper − this.
+# Source: db/properties/oxidation_stability_cascade_v3_pinned.json hosts_by_phase_set (identical in all phase sets).
+quantity,voltage_V_vs_Li
+earlier lower limit (a Li-uptake step; the edge until 2026-09-22),1.242
+earlier window width,0.898

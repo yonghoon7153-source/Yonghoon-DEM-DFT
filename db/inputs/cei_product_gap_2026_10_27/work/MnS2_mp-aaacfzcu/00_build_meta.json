@@ -1,0 +1,41 @@
+{
+ "tag": "MnS2_mp-aaacfzcu",
+ "structure": "db/structures/cei_gap_tm/MnS2_mp-aaacfzcu.vasp",
+ "structure_sha256": "4cde774d58f9fc3d3cc1c721a346a0f930e70cfd186b3b32920c21ca664ae7f8",
+ "species": [
+  "Mn",
+  "S"
+ ],
+ "nspin": 2,
+ "tm_state": "mp",
+ "tm_moment_rule": "a_mp_sites",
+ "magmom_sidecar": "db/structures/cei_gap_tm/MnS2_mp-aaacfzcu.magmom.json",
+ "starting_magnetization": {
+  "Mn": 0.0703
+ },
+ "tot_magnetization_initial": 2,
+ "hubbard": null,
+ "hubbard_policy": "mp",
+ "ecut_wfc_rho": [
+  90.0,
+  1080.0
+ ],
+ "cell_policy": "vc-relax",
+ "pseudo": {
+  "Mn": "mn_pbe_v1.5.uspp.F.UPF",
+  "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  7,
+  5,
+  4
+ ],
+ "k_gap": [
+  13,
+  9,
+  8
+ ],
+ "nbnd_gap": 49,
+ "gap_step": "skipped: electronic_class=metal — 금속엔 VBM/CBM 이 없다"
+}

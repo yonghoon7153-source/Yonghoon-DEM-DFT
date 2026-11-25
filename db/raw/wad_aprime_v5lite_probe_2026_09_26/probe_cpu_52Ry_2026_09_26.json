@@ -1,0 +1,62 @@
+{
+ "schema": "resource_probe/v1",
+ "date": "2026-09-26",
+ "stage": "새 카드 전 탐색 — LPSCl|Ag 소모델 축소 변형 메모리 추정 (DEM 5차 질문) · gabia qe-7.4.1-cpu · 4 랭크 · 52/520 Ry · k 3×2×1 · S 바깥 registry A far · 추정 줄 뒤 PID kill · 계산 결과 없음",
+ "inputs": "db/inputs/wad_aprime_v5lite_probe_2026_09_26 (commit 52d359186)",
+ "mpi": "/usr/bin/mpirun (Open MPI 4.1.6) · libmpi /lib/x86_64-linux-gnu · not found 0",
+ "pp_11e": {
+  "file": "Ag.pbe-n-kjpaw_psl.1.0.0.UPF",
+  "sha256_16": "1bf3b9d1ea5c878e",
+  "z_valence": 11.0,
+  "source": "pseudopotentials.quantum-espresso.org/upf_files"
+ },
+ "pp_others_sha256_16": {
+  "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b4",
+  "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743",
+  "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43",
+  "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b7",
+  "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f41"
+ },
+ "results": {
+  "A_ag2_pp19": {
+   "n_electrons": 1592,
+   "nbnd": 955,
+   "nk": 4,
+   "ram_per_proc_GB": 15.56,
+   "ram_total_GB": 62.25,
+   "gpu_est_GB": [
+    74.7,
+    90.3
+   ],
+   "passes_rule_total_le_30GB": false
+  },
+  "B_ag2_pp11": {
+   "n_electrons": 1144,
+   "nbnd": 686,
+   "nk": 4,
+   "ram_per_proc_GB": 15.3,
+   "ram_total_GB": 61.21,
+   "gpu_est_GB": [
+    73.5,
+    88.8
+   ],
+   "passes_rule_total_le_30GB": false
+  },
+  "C_ag3_pp11": {
+   "n_electrons": 1452,
+   "nbnd": 871,
+   "nk": 4,
+   "ram_per_proc_GB": 19.97,
+   "ram_total_GB": 79.9,
+   "gpu_est_GB": [
+    95.9,
+    115.9
+   ],
+   "passes_rule_total_le_30GB": false
+  }
+ },
+ "판정(결과_전_규칙)": "CPU 추정 총량 × 1.45 ≤ 44 GB (총량 ≤ 30.3 GB) 인 변형만 GPU 시험 → **셋 다 불합격** (61–80 GB) ⇒ GPU 시험 없음 · 축소 모델 경로 닫음",
+ "⚠_내_추정_정정": "사전 설명에서 'Ag 2 층 + 11 전자 PP 면 약 0.5 배 → CPU 30–35 GB' 라고 했으나 실측 61 GB — 전자 28 % 감소(A→B)에 메모리 2 % 감소. 메모리가 전자 수가 아니라 원자 수 × 셀 크기로 커지는 항(PP 투영자 · PAW 보조 배열 등)에 지배된다. 52 Ry 환산 기준값(원판 57–70 GB)도 과소였다 (Ag 2 층 A 가 이미 62 GB).",
+ "남은_축소_수단과_왜_안_쓰나": "k-점을 Γ 로 · 컷오프를 낮춤 · SE 1 층 · 셀 1×1 — 금속 k 수렴 붕괴 · 정확도 붕괴 · SE 표면이 아님 · 변형률 3 % 규칙 위반으로, 줄여도 W 가 판정 가능한 양이 아니게 된다.",
+ "결론": "우리 GPU(최대 48 GB)로는 의미를 유지하는 LPSCl|Ag 소모델을 만들 수 없다 — SE 계면(P1·P2) 직접 DFT W 는 이 기계들로 안 나온다."
+}

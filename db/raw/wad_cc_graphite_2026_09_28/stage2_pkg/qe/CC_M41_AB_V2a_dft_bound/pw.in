@@ -1,0 +1,57 @@
+&CONTROL
+  calculation = 'scf'
+  prefix = 'CC_M41_AB_V2a_dft_bound'
+  outdir = './tmp'
+  pseudo_dir = '/data/work/pseudo'
+  tprnfor = .true.
+  disk_io = 'medium'
+  tefield = .true.
+  dipfield = .true.
+/
+&SYSTEM
+  ibrav = 0
+  nat = 10
+  ntyp = 1
+  ecutwfc = 52.0
+  ecutrho = 520.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.01
+  nspin = 1
+  edir = 3
+  eamp = 0.0d0
+  emaxpos = 0.82287
+  eopreg = 0.03221
+  vdw_corr = 'grimme-d3'
+  dftd3_version = 4
+  dftd3_threebody = .false.
+/
+&ELECTRONS
+  conv_thr = 1.0d-8
+  mixing_beta = 0.3
+  electron_maxstep = 200
+  mixing_mode = 'local-TF'
+/
+
+ATOMIC_SPECIES
+  C    12.0110  C.pbe-n-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+      2.4926313809     0.0000000000     0.0000000000
+      1.2463156904     2.1586820981     0.0000000000
+      0.0000000000     0.0000000000    31.0500000000
+
+ATOMIC_POSITIONS angstrom
+  C      0.0000000000     0.0000000000     0.5000000000
+  C      1.2463156904     0.7195606994     0.5000000000
+  C      1.2463156904     0.7195606994     3.8500000000
+  C      2.4926313809     1.4391213987     3.8500000000
+  C      0.0000000000     0.0000000000     7.2000000000
+  C      1.2463156904     0.7195606994     7.2000000000
+  C      1.2463156904     0.7195606994    10.5500000000
+  C      2.4926313809     1.4391213987    10.5500000000
+  C      0.0000000000     0.0000000000    13.9000000000
+  C      1.2463156904     0.7195606994    13.9000000000
+
+K_POINTS automatic
+  18 18 1 0 0 0

@@ -1,0 +1,395 @@
+{
+ "date": "2026-09-19",
+ "kind": "endpoint_coupled_gate",
+ "card": "db/properties/lpscl_smallcell_neb_barrier_estimand_v2_2026_09_19.json",
+ "⛔_이것은_장벽이_아니다": "끝점 모양 판정(G-B7)일 뿐이다. Eb 는 NEB 뒤에, 그리고 ⓐ 통과 뒤에만 나온다.",
+ "settings": {
+  "fmax_endpoint": 0.03,
+  "deep_relax": true,
+  "track_guard_A": 0.6,
+  "thresh_A": 2.0,
+  "uma": "uma-s-1p1 omat default",
+  "cell": "fixed"
+ },
+ "n_events": 9,
+ "n_ok": 0,
+ "n_failed": 9,
+ "n_duplicate_raw_pair": 1,
+ "skip_duplicates": true,
+ "out_subdir": "coupled",
+ "rows": [
+  {
+   "tag": "ev01_atom88",
+   "atom_index": 88,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 3.0429007057002737,
+   "moved_step_A": 2.3768,
+   "li_disp_A": 1.7956,
+   "max_disp_A": 1.7956,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.1086,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -508.12652538464465,
+    "E_first": -508.1186877419207,
+    "gain_eV": 0.007837642723927729,
+    "n_escapes": 1,
+    "n_rejected": 0,
+    "track_drift_A": 0.022578234975051157,
+    "converged": true,
+    "steps": 284
+   },
+   "deep_f": {
+    "E": -508.0027881966615,
+    "E_first": -508.0027881966615,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 112
+   },
+   "sha256": {
+    "i": "c83e556b6851ae6c75e84b1f3a3876fac27f76dd6b80ef10d2957f425374b206",
+    "f": "0416827552de62a691bbbc3d41a1dd05f8a185d319db7aa950e6a9b7c8dfb265"
+   },
+   "raw_sha256": {
+    "i": "c631a526b627b8c49d8037d7d075ea0e240c15bcf15071b2e0096d29dc91cc4d",
+    "f": "e92c603934b055b1a012cc87cfa1cdd69d48af002ea4ce8174e5d9276a3029b9"
+   }
+  },
+  {
+   "tag": "ev02_atom91",
+   "atom_index": 91,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 2.51081479164011,
+   "moved_step_A": 2.5344,
+   "li_disp_A": 0.7971,
+   "max_disp_A": 0.7971,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.0547,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -508.15295933953803,
+    "E_first": -508.15295933953803,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 137
+   },
+   "deep_f": {
+    "E": -508.17100039984547,
+    "E_first": -508.17100039984547,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 134
+   },
+   "sha256": {
+    "i": "5af50008addac30e596195d2d385ceeaf28625add76f98c156d86228b703fcb9",
+    "f": "ca62220f9da96b138c07fe24607c846b5a69a962109fbe996a289c5208d2ddd0"
+   },
+   "raw_sha256": {
+    "i": "f002800c05b36ec6f56a05888d145ba1e2fcf0c5b0d1e691674f2caa25d179b9",
+    "f": "d3436faf8bd42fcc576bc1712d2af2b2ca1269cc4c026847dedf93c24236dcfc"
+   }
+  },
+  {
+   "tag": "ev03_atom95",
+   "atom_index": 95,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 2.3538138690109056,
+   "moved_step_A": 2.1274,
+   "li_disp_A": 1.6418,
+   "max_disp_A": 1.6418,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.085,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -507.9921909400451,
+    "E_first": -507.9921909400451,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 145
+   },
+   "deep_f": {
+    "E": -508.1044249446266,
+    "E_first": -508.1044249446266,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 102
+   },
+   "sha256": {
+    "i": "e1c3c888860ced67474b2a9dd470e002f91ede98929cf5cbb37eaeb54338830d",
+    "f": "b6d5debcd22727e41527f229554be4a1de586e232ca5f3067de8e2920da9c553"
+   },
+   "raw_sha256": {
+    "i": "b9fef180b0e10637ea5584080ba2b8d365f0fffd03d177537bf8e0eb743599ef",
+    "f": "ef48701229a7d3d2231fe48abd935c70a018776d31b8c88bff4191bbd759bff6"
+   }
+  },
+  {
+   "tag": "ev04_atom78",
+   "atom_index": 78,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 2.251003364964855,
+   "moved_step_A": 2.255,
+   "li_disp_A": 0.1257,
+   "max_disp_A": 0.1954,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.0533,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -508.1039687011859,
+    "E_first": -508.0537930907511,
+    "gain_eV": 0.050175610434791906,
+    "n_escapes": 1,
+    "n_rejected": 0,
+    "track_drift_A": 0.010977698229881604,
+    "converged": true,
+    "steps": 241
+   },
+   "deep_f": {
+    "E": -508.108047724078,
+    "E_first": -508.108047724078,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 146
+   },
+   "sha256": {
+    "i": "088fef0b04dc82d3b998ec818595c7270ca3d929e74fc4a37844788b72db0814",
+    "f": "4db04c863641cbef63e65ff9f9306f56177342c580b61a347fb9c9b25c620d50"
+   },
+   "raw_sha256": {
+    "i": "c3f1be35675ee2ce520eaf0d8f15ee28e94e681e7023e6d7c168e2eaba07eae2",
+    "f": "f455a8ece1cf1c698d443f9c2b6bcb0b0c9dd960582650ebc602127ba0894903"
+   }
+  },
+  {
+   "tag": "ev05_atom90",
+   "atom_index": 90,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 2.2040810447389756,
+   "moved_step_A": 1.9295,
+   "li_disp_A": 1.2315,
+   "max_disp_A": 1.2315,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.0707,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -508.0912612378137,
+    "E_first": -508.0912612378137,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 125
+   },
+   "deep_f": {
+    "E": -508.0303328752732,
+    "E_first": -508.0303328752732,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 138
+   },
+   "sha256": {
+    "i": "afa6ceefbca0662fb2ffb061b3728f3313c2c9bc6eea20d23652f4bef64b422b",
+    "f": "99091dd84948334403ff9e33c9c9fed9e1b80d6268fcaf2b5b225ceb3e7fb0c3"
+   },
+   "raw_sha256": {
+    "i": "91cb1c560171016baf20126bcf7a3aed26c50dbc6d6c27a71eb1a2db50db8443",
+    "f": "0df6c6e903d36d1e896e67b1820e8b8e71f8c9cc70a73124b95b680453fdcf71"
+   }
+  },
+  {
+   "tag": "ev06_atom77",
+   "atom_index": 77,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 2.1500619842529525,
+   "moved_step_A": 1.8267,
+   "li_disp_A": 0.088,
+   "max_disp_A": 0.212,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.0473,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -508.148661675921,
+    "E_first": -508.148661675921,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 141
+   },
+   "deep_f": {
+    "E": -508.1456646236462,
+    "E_first": -508.1456646236462,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 131
+   },
+   "sha256": {
+    "i": "49edcc062c392c403d8ca4519bb10c5032ad581847178a7228aa08ff4cc09e28",
+    "f": "93a30b7171db1a35e43bb3dc829bb9d5532d6a512c7d16467b0d361c906d0c15"
+   },
+   "raw_sha256": {
+    "i": "9314ead1b4405c0ca2c4c6ec7723d1443d8cd4cc78b488e5a907465cc8dbd0eb",
+    "f": "52ef150356c63403b5996c837fc2ce6d21083cba52913dc779f1d01a2509c34c"
+   }
+  },
+  {
+   "tag": "ev07_atom114",
+   "atom_index": 114,
+   "status": "duplicate_raw_pair",
+   "failed_because": [
+    "G-B7 전: ev07_atom114 의 원시 끝점 쌍이 ev04_atom78 와 **같다** (sha256 c3f1be35…/f455a8ec…). 두 사건이 같은 MD 프레임을 쓴다."
+   ],
+   "duplicate_of": "ev04_atom78",
+   "raw_sha256": {
+    "i": "c3f1be35675ee2ce520eaf0d8f15ee28e94e681e7023e6d7c168e2eaba07eae2",
+    "f": "f455a8ece1cf1c698d443f9c2b6bcb0b0c9dd960582650ebc602127ba0894903"
+   }
+  },
+  {
+   "tag": "ev08_atom79",
+   "atom_index": 79,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 2.0343272729288335,
+   "moved_step_A": 1.398,
+   "li_disp_A": 0.1032,
+   "max_disp_A": 0.1627,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.0275,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -508.0806234888366,
+    "E_first": -508.0806234888366,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 248
+   },
+   "deep_f": {
+    "E": -508.0791274210786,
+    "E_first": -508.0791274210786,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 151
+   },
+   "sha256": {
+    "i": "e43fc688df3156bea7d7a87cffcfafe9595a6ab74c47db3ef9dc26b8b3c8daee",
+    "f": "57ad404242ef1224fee8bf7e105fa92fb4694c8d024b59cc80cd6905100e6c58"
+   },
+   "raw_sha256": {
+    "i": "84789c239312ff25ef2222c869360ab8cc09a31436cd8a44145cf7268fac23f2",
+    "f": "b48b832b6851ed3bd896151368fa4081c5413cc2a3d7392a06f69fabf102c425"
+   }
+  },
+  {
+   "tag": "ev09_atom82",
+   "atom_index": 82,
+   "status": "coupled_endpoint_failed",
+   "failed_because": [
+    "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   ],
+   "hop_A_from_events": 2.0055378809277906,
+   "moved_step_A": 2.0383,
+   "li_disp_A": 1.0901,
+   "max_disp_A": 1.0901,
+   "n_over_thresh": 0,
+   "movers": [],
+   "nonli_rmsd_A": 0.057,
+   "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+   "thresh_A": 2.0,
+   "deep_i": {
+    "E": -508.1389711624579,
+    "E_first": -508.1389711624579,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 157
+   },
+   "deep_f": {
+    "E": -508.0796620941167,
+    "E_first": -508.0796620941167,
+    "gain_eV": 0.0,
+    "n_escapes": 0,
+    "n_rejected": 0,
+    "track_drift_A": 0.0,
+    "converged": true,
+    "steps": 111
+   },
+   "sha256": {
+    "i": "ff4e12c393b16d0f83679f3c7909b513663952c7dee8a3e5f41a535eb1d9ebe3",
+    "f": "8a61267b2de4add0352e36a2f7ca8640e47cda69ee9090603f3d2b298c52b600"
+   },
+   "raw_sha256": {
+    "i": "94b2f9aaf5b0b011ee1041f5edef02addb307528e89049248a088e429495fb3b",
+    "f": "a36116da2013f1afbed8af02ba1c6268a55d10f5c9b7bc0dfbbb80b2e1559245"
+   }
+  }
+ ]
+}

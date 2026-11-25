@@ -1,0 +1,83 @@
+{
+ "n_files": 2270,
+ "flagged": [
+  {
+   "path": "db/properties/bvse_b2o3/b2o3_paper3_bvse_Bcentered.cube",
+   "n": 114,
+   "pbc": true,
+   "SX_min": 1.554,
+   "n_SX_lt_2p8": 59
+  },
+  {
+   "path": "db/properties/bvse_b2o3/b2o3_paper3_bvse_boundary.cube",
+   "n": 120,
+   "pbc": true,
+   "SX_min": 0.98,
+   "n_SX_lt_2p8": 55
+  },
+  {
+   "path": "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.cif",
+   "n": 16,
+   "pbc": true,
+   "SX_min": 2.093,
+   "n_SX_lt_2p8": 8
+  },
+  {
+   "path": "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.vasp",
+   "n": 16,
+   "pbc": true,
+   "SX_min": 2.093,
+   "n_SX_lt_2p8": 8
+  },
+  {
+   "path": "db/structures/hyeokju_md0_2026_11_17/comp1_001_li_outer_L2.vasp",
+   "n": 46,
+   "pbc": true,
+   "SX_min": 2.349,
+   "n_SX_lt_2p8": 4
+  },
+  {
+   "path": "db/structures/lpscl_F43m_24G_canonical.cif",
+   "n": 52,
+   "pbc": true,
+   "SX_min": 2.356,
+   "n_SX_lt_2p8": 16
+  },
+  {
+   "path": "db/structures/lpscl_b2o3_scheme_F43m.cif",
+   "n": 52,
+   "pbc": true,
+   "SX_min": 2.356,
+   "n_SX_lt_2p8": 13
+  },
+  {
+   "path": "db/structures/lpsocl_cubic_approx.vasp",
+   "n": 51,
+   "pbc": true,
+   "SX_min": 0.189,
+   "n_SX_lt_2p8": 2
+  },
+  {
+   "path": "paper_figures/comp1_V0_cubic.cif",
+   "n": 52,
+   "pbc": true,
+   "SX_min": 2.311,
+   "n_SX_lt_2p8": 16
+  },
+  {
+   "path": "paper_figures/comp1_V0_cubic.xyz",
+   "n": 52,
+   "pbc": true,
+   "SX_min": 2.311,
+   "n_SX_lt_2p8": 16
+  },
+  {
+   "path": "paper_figures/lpscl_primitive_1fu.cif",
+   "n": 13,
+   "pbc": true,
+   "SX_min": 2.356,
+   "n_SX_lt_2p8": 4
+  }
+ ],
+ "secs": 38.5
+}

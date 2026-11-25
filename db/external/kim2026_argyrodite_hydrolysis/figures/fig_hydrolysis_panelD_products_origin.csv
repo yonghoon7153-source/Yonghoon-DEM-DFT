@@ -1,0 +1,19 @@
+system,product,count
+LPSC-H2O,S-H on framework S,0
+LPSC-H2O,S-H on free S inside slab,7
+LPSC-H2O,S-H on free S in water,10
+LPSC-H2O,H$_2$S,0
+LPSC-H2O,H$_2$,0
+LPSC-H2O,S-S,0
+LPSC-ion,S-H on framework S,1
+LPSC-ion,S-H on free S inside slab,15
+LPSC-ion,S-H on free S in water,12
+LPSC-ion,H$_2$S,2
+LPSC-ion,H$_2$,1
+LPSC-ion,S-S,0
+LPSnSC-ion,S-H on framework S,4
+LPSnSC-ion,S-H on free S inside slab,4
+LPSnSC-ion,S-H on free S in water,10
+LPSnSC-ion,H$_2$S,1
+LPSnSC-ion,H$_2$,1
+LPSnSC-ion,S-S,4

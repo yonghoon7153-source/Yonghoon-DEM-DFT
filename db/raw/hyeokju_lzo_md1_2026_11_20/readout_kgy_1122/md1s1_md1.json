@@ -1,0 +1,173 @@
+{
+ "schema": "hyeokju_md1_seed_readout/v1",
+ "label": "md1s1",
+ "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+ "amend": "⏩_개정_2_2026_11_20_MD1_결과_전",
+ "thresholds": {
+  "pairs_judged": [
+   [
+    "P",
+    "O",
+    1.8
+   ],
+   [
+    "Zr",
+    "S",
+    2.9
+   ]
+  ],
+  "pairs_record": [
+   [
+    "S",
+    "O",
+    1.8
+   ]
+  ],
+  "persist_ps": 1.0,
+  "save_fs": 100,
+  "prod_ps": 1000,
+  "T_K": 600,
+  "T_band_K": 15,
+  "n_seeds": 3,
+  "onset_seeds_min": 2,
+  "slab_elements": [
+   "Li",
+   "P",
+   "S",
+   "Cl"
+  ],
+  "block_elements": [
+   "Li",
+   "Zr",
+   "O"
+  ]
+ },
+ "persist_frames": 10,
+ "tool": {
+  "path": "tools/oxidation/analyze_interface_decomp.py",
+  "sha256": "bb8dbee3a523b3de84a8aeb40751cea06c24baf0c9ffc5da872e52fe9f40e6b4"
+ },
+ "traj": {
+  "path": "/home/kgy/work/runs/hj_md1_1120/s1/md1s1_traj.xyz",
+  "sha256": "b6afba0724bcb3c6d8e20f5b4fad05a732a9078e7c3326acba524a09d3a7585b",
+  "n_frames": 10001
+ },
+ "freeze": {
+  "path": "db/structures/hyeokju_md1_2026_11_20/I142_liouter_aLZO16_md1s1_init_freeze.json",
+  "sha256": "30ac46caf16dc0280083cfcca2b2e8831d0a76c5c67399deeb0491f9db21042b",
+  "n_slab": 46
+ },
+ "integrity": {
+  "ok": true,
+  "problems": [],
+  "T_prod_mean_K": 602.4388248251873
+ },
+ "pairs": {
+  "P-O": {
+   "judged": true,
+   "cut_A": 1.8,
+   "n_A": 4,
+   "n_B": 48,
+   "n_events": 0,
+   "n_distinct_pairs": 0,
+   "first_onset_ps": null,
+   "max_run_ps": null,
+   "frac_frames_with_persistent": 0.0,
+   "inst_max": 0,
+   "frames_with_inst_contact": 0,
+   "events": [],
+   "events_truncated": false,
+   "t0_pairs": [],
+   "n_t0_pairs": 0,
+   "n_events_new": 0,
+   "n_distinct_new_pairs": 0,
+   "first_onset_new_ps": null,
+   "max_run_new_ps": null,
+   "events_new": [],
+   "events_new_truncated": false
+  },
+  "Zr-S": {
+   "judged": true,
+   "cut_A": 2.9,
+   "n_A": 16,
+   "n_B": 18,
+   "n_events": 0,
+   "n_distinct_pairs": 0,
+   "first_onset_ps": null,
+   "max_run_ps": null,
+   "frac_frames_with_persistent": 0.0,
+   "inst_max": 1,
+   "frames_with_inst_contact": 26,
+   "events": [],
+   "events_truncated": false,
+   "t0_pairs": [
+    [
+     74,
+     42
+    ]
+   ],
+   "n_t0_pairs": 1,
+   "n_events_new": 0,
+   "n_distinct_new_pairs": 0,
+   "first_onset_new_ps": null,
+   "max_run_new_ps": null,
+   "events_new": [],
+   "events_new_truncated": false
+  },
+  "S-O": {
+   "judged": false,
+   "cut_A": 1.8,
+   "n_A": 18,
+   "n_B": 48,
+   "n_events": 0,
+   "n_distinct_pairs": 0,
+   "first_onset_ps": null,
+   "max_run_ps": null,
+   "frac_frames_with_persistent": 0.0,
+   "inst_max": 0,
+   "frames_with_inst_contact": 0,
+   "events": [],
+   "events_truncated": false,
+   "t0_pairs": [],
+   "n_t0_pairs": 0,
+   "n_events_new": 0,
+   "n_distinct_new_pairs": 0,
+   "first_onset_new_ps": null,
+   "max_run_new_ps": null,
+   "events_new": [],
+   "events_new_truncated": false
+  }
+ },
+ "amend3": {
+  "key": "⏩_개정_3_2026_11_22_MD1_결과_전_t0쌍",
+  "rule": {
+   "judge_excludes_t0_pairs": true,
+   "t0_frame": 0
+  }
+ },
+ "li_crossing_record": {
+  "block_Li_in_slab_max": 8,
+  "slab_Li_out_max": 7,
+  "block_Li_in_slab_last": 6,
+  "slab_Li_out_last": 6,
+  "slab_half_A": 4.915,
+  "⚠": "기록만 — 판정 아님"
+ },
+ "csv": {
+  "path": "/home/kgy/work/runs/hj_md1_1120/readout/md1s1_md1.csv",
+  "columns": [
+   "t_ps",
+   "PO_inst",
+   "PO_persist",
+   "PO_persist_new",
+   "ZrS_inst",
+   "ZrS_persist",
+   "ZrS_persist_new",
+   "SO_inst",
+   "SO_persist",
+   "SO_persist_new",
+   "Li_block_in_slab",
+   "Li_slab_out"
+  ]
+ }
+}

@@ -1,0 +1,65 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "Nd",
+    "P",
+    "S",
+    "O",
+    "Cl"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {},
+  "formation": {
+    "Nd2(SO4)3": {
+      "reduced_formula": "Nd2(SO4)3",
+      "n_atoms": 34.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -2.6205,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabrhp-GGA",
+      "found": true
+    },
+    "Nd3PO7": {
+      "reduced_formula": "Nd3PO7",
+      "n_atoms": 66.0,
+      "n_P": 6.0,
+      "E_f_eV_per_atom": -3.63032,
+      "E_f_eV_per_P": -39.93356,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacqmbf-GGA",
+      "found": true
+    },
+    "NdPS4": {
+      "reduced_formula": "NdPS4",
+      "n_atoms": 48.0,
+      "n_P": 8.0,
+      "E_f_eV_per_atom": -1.39894,
+      "E_f_eV_per_P": -8.39367,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaafmc-GGA",
+      "found": true
+    },
+    "NdPO4": {
+      "reduced_formula": "NdPO4",
+      "n_atoms": 24.0,
+      "n_P": 4.0,
+      "E_f_eV_per_atom": -3.45019,
+      "E_f_eV_per_P": -20.70114,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaafhw-GGA",
+      "found": true
+    }
+  },
+  "formation_per_element": "P",
+  "⛔_formation_caveat": "이 표는 **반응에너지가 아니다.** `E_f_per_P` 는 O:P 비가 다른 상들을 한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — **순위 힌트**다. 판정은 균형반응(`reactions`)이 한다. 0 K · MP2020 보정 에너지이고 온도·엔트로피·pO₂ 를 안 본다. 여기 상들이 실제로 합성/석출된다는 뜻도 아니다."
+}

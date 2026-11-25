@@ -1,0 +1,1938 @@
+{
+ "slug": "liu2013_wet_cohesive_particles_transverse_mixing_rotating_drum_circulation_period",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic drawing of the forces acting on a particle i from a contacting particle j and a particle k via a pendular liquid bridge.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.3,
+    58.6,
+    230.3,
+    179.4
+   ],
+   "w": 866,
+   "h": 737,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    26.7,
+    53.2,
+    289.8,
+    182.8
+   ],
+   "auto_wh": [
+    1097,
+    541
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the whole column width with a wide empty left margin (blank 0.70) → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. An initial state with the grid showing cells for calculating mixing index: (a) end view; and (b) side view.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.5,
+    615.6,
+    240.5,
+    722.2
+   ],
+   "w": 654,
+   "h": 494,
+   "dpi": 300,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    36.5,
+    609.6,
+    299.6,
+    728.1
+   ],
+   "auto_wh": [
+    1097,
+    494
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the whole column width with wide empty side margins (blank 0.76) → re-cut by hand from the page (embedded 200 dpi raster + vector labels) at 300 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Temporal evolutions of the surface angle of particle flow with different surface tensions; and (b) the corresponding velocity fields. f=40% and Ω=15 rpm. With increasing cohesion, particles transit from continuous surface flow to discrete avalanches.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.4,
+    58.6,
+    239.7,
+    506.5
+   ],
+   "w": 962,
+   "h": 2554,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    26.7,
+    52.6,
+    289.8,
+    512.6
+   ],
+   "auto_wh": [
+    1097,
+    1917
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the whole column width with wide side margins → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The evolution of mixing patterns with different surface tensions. f=40% and Ω=15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    134.8,
+    60.0,
+    470.8,
+    272.4
+   ],
+   "w": 1450,
+   "h": 935,
+   "dpi": 300,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    148.1,
+    69.3,
+    476.7,
+    278.4
+   ],
+   "auto_wh": [
+    1370,
+    872
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop = the embedded raster box only: it cut off the vector column labels (γ = 0.0 / 0.033 / 0.073 N/m) and the row labels (1 rev / 5 revs, only 'v' 'vs' left) → re-cut by hand from the page (embedded 200 dpi raster + vector labels) at 300 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Evolution of the Lacey mixing index with time. The lines are the fitting results using Eq. (6); and (b) variation of the mixing rate with surface tension. f=40% and Ω=15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.5,
+    309.6,
+    251.5,
+    594.9
+   ],
+   "w": 988,
+   "h": 1651,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    36.5,
+    303.7,
+    299.6,
+    600.9
+   ],
+   "auto_wh": [
+    1097,
+    1239
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the whole column width with side margins → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Variations of mixing rate with rotation speed for different surface tensions. f=40%.",
+   "rotated_deg": 0,
+   "bbox": [
+    343.5,
+    310.7,
+    533.1,
+    465.9
+   ],
+   "w": 1119,
+   "h": 928,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    305.5,
+    304.2,
+    568.5,
+    471.9
+   ],
+   "auto_wh": [
+    1096,
+    700
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the whole column width with side margins → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Mixing patterns with different filling levels after 10 revolutions. γ=0.033 N/m and Ω=15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.7,
+    58.7,
+    461.0,
+    150.4
+   ],
+   "w": 1451,
+   "h": 432,
+   "dpi": 300,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    118.6,
+    52.6,
+    467.0,
+    156.5
+   ],
+   "auto_wh": [
+    1452,
+    434
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop was complete (raster + f labels) — re-cut only for a uniform 6 pt margin → re-cut by hand from the page (embedded 200 dpi raster + vector labels) at 300 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Variations of (a) mixing index; and (b) mixing rate after 10 revolutions with filling level for different surface tensions. Ω=15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.1,
+    184.3,
+    240.2,
+    484.4
+   ],
+   "w": 972,
+   "h": 1733,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    26.7,
+    384.0,
+    289.7,
+    490.3
+   ],
+   "auto_wh": [
+    1097,
+    443
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop held only the lower half of panel (b) (y 384–490 pt): panel (a) and the top of (b) were missing → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. The trajectory of a selected particle within five revolutions with different surface tensions at f=40% and Ω=15 rpm. The dash lines are the streamline in the solid bed. With increasing cohesion, the trajectories are becoming more collapsed together, indicating a reduced diffusion in the rapid flow layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    134.5,
+    58.6,
+    470.3,
+    171.9
+   ],
+   "w": 1932,
+   "h": 695,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    36.5,
+    53.1,
+    568.6,
+    177.9
+   ],
+   "auto_wh": [
+    2217,
+    521
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the full two-column width with wide side margins → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. (a) Distribution of particle displacement in the radial direction with different surface tensions (the line is the Gaussian fitting); and (b) distribution of circulation period with different surface tensions. f=40% and Ω=15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.6,
+    215.6,
+    252.2,
+    507.9
+   ],
+   "w": 997,
+   "h": 1690,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    36.5,
+    255.3,
+    299.6,
+    513.9
+   ],
+   "auto_wh": [
+    1097,
+    1079
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop started at y 255 pt and cut the top of panel (a) (0.35 tick, legend, peak markers) → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 7,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Variations of: (a), mean circulation periods; and (b), their standard deviations with filling level. Ω=15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    355.4,
+    215.6,
+    519.7,
+    517.5
+   ],
+   "w": 979,
+   "h": 1743,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    305.5,
+    209.5,
+    568.5,
+    523.5
+   ],
+   "auto_wh": [
+    1096,
+    1309
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the whole column width with side margins → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Comparisons of theoretical predictions (line) and simulation results (points) of (a) average; and (b) standard deviation of circulation period with dynamic filling level. Ω=15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.4,
+    58.6,
+    241.3,
+    354.2
+   ],
+   "w": 982,
+   "h": 1708,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    26.7,
+    52.6,
+    289.8,
+    360.9
+   ],
+   "auto_wh": [
+    1097,
+    1285
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop spanned the whole column width with side margins → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 8,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Schematic drawing of particle motion in the rolling regime.",
+   "rotated_deg": 0,
+   "bbox": [
+    331.0,
+    568.7,
+    521.3,
+    730.6
+   ],
+   "w": 1123,
+   "h": 965,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    315.1,
+    514.1,
+    558.7,
+    735.9
+   ],
+   "auto_wh": [
+    1017,
+    926
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop started at y 514 pt and swallowed Eq. (A.5) above the figure → re-cut by hand from the vector page at 400 dpi (tool default 300 dpi not lowered) over the figure region between the neighbouring caption / text blocks → ink bounding box (min RGB < 240) → uniform 6 pt white margin; caption excluded (tool convention · caption in this entry) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "page": 1,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract (PDF p.1, unnumbered): two vector panels — mixing rate k (rev⁻¹) vs filling level f for γ = 0.000 / 0.033 / 0.073 N/m (same data as Fig. 8b, including the mislabelled top tick '0.6' that sits at 0.55) and standard deviation of T, σ(T) (rev) vs dynamic filling level f_d for γ = 0.000 / 0.033 N/m with the two 'Theory' lines (same as Fig. 12b).",
+   "rotated_deg": 0,
+   "bbox": [
+    207.0,
+    279.1,
+    375.1,
+    344.8
+   ],
+   "w": 1000,
+   "h": 431,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "graphical abstract (no caption, not found by the caption-anchored tool) — hand-cut from the vector page at 400 dpi between the header rules (260.6 / 374.4 pt) → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 List of equations to calculate various kinds of forces (normal contact force: Hertz + nonlinear viscous damping; tangential contact force: μ_s-capped 3/2-power law; capillary force: Rabinovich 2005 revised by Lambert 2008; footnote = symbol definitions R̄, ξ_s,max, n̂_ij, V, γ, S, θ_c).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.5,
+    605.3,
+    552.8,
+    746.6
+   ],
+   "w": 1462,
+   "h": 851,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "tool missed it (near-miss candidate p2 'Table 1 List of equations to calculate various kinds of forces.', not cut) → hand-cut from the vector page at 400 dpi (tool default 300 dpi; 7.5–8 pt table type), caption line to the end of the footnote → ink bounding box (min RGB < 240) → uniform 6 pt margin; equations re-read against a 300 dpi render (text layer breaks the math) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Parameters and their values in simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.5,
+    60.2,
+    562.8,
+    243.3
+   ],
+   "w": 1462,
+   "h": 1083,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "auto_bbox": [
+    37.5,
+    31.8,
+    567.6,
+    751.6
+   ],
+   "auto_wh": [
+    2210,
+    3000
+   ],
+   "auto_dpi": 300,
+   "recrop": "tool crop was the whole page (2210x3000 px: Table 2, Fig. 2, both text columns) → hand-cut from the vector page at 400 dpi (tool default 300 dpi; 7.5–8 pt table type), caption line to the bottom rule (242.7 pt) → ink bounding box (min RGB < 240) → uniform 6 pt margin; values re-read against a 220 dpi render (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 4,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) Temporal evolution of the surface angle θ (degrees) over 2.5 revolutions for γ = 0.073 (top) · 0.033 · 0.000 N/m (bottom); f = 40 %, Ω = 15 rpm (panel-joint ticks are printed '60' where the lower panel's 0 should be).",
+   "rotated_deg": 0,
+   "bbox": [
+    78.4,
+    58.6,
+    238.9,
+    274.1
+   ],
+   "w": 958,
+   "h": 1263,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_3.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 4,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) Velocity fields (mean velocity arrows, scale 0.2 m/s; red dashed = rapid flow layer) for γ = 0.000 · 0.033 N/m and for γ = 0.073 N/m before and during an avalanche.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.6,
+    280.5,
+    239.7,
+    506.4
+   ],
+   "w": 961,
+   "h": 1321,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_3.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 5,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) Lacey mixing index M vs time (revs) for γ = 0.000 / 0.033 / 0.073 N/m (points every 0.25 rev) with Eq. (6) error-function fits; f = 40 %, Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.7,
+    309.6,
+    247.3,
+    448.6
+   ],
+   "w": 964,
+   "h": 838,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_5.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 5,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) Mixing rate k (rev⁻¹) vs surface tension γ (0, 0.013, 0.033, 0.053, 0.073, 0.093 N/m); f = 40 %, Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.5,
+    453.5,
+    251.5,
+    595.0
+   ],
+   "w": 988,
+   "h": 852,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_5.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 6,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8(a) Mixing index M after 10 revolutions vs filling level f (0.30, 0.40, 0.52, 0.64, 0.73, 0.83, 0.93 as plotted) for three surface tensions; Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.4,
+    184.3,
+    237.7,
+    330.5
+   ],
+   "w": 951,
+   "h": 878,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_8.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 6,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8(b) Mixing rate k (rev⁻¹) vs filling level f for three surface tensions; Ω = 15 rpm (top y tick printed '0.6' at the 0.55 position — half the regular 0.1 spacing).",
+   "rotated_deg": 0,
+   "bbox": [
+    77.1,
+    335.9,
+    240.2,
+    484.2
+   ],
+   "w": 972,
+   "h": 890,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_8.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f10a",
+   "kind": "figure",
+   "label": "10a",
+   "page": 7,
+   "file": "fig_10a.png",
+   "caption": "Fig. 10(a) Probability density of the radial displacement Δr (in d) between consecutive passes through the bisector, with Gaussian fits; f = 40 %, Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.8,
+    215.6,
+    249.1,
+    358.5
+   ],
+   "w": 979,
+   "h": 860,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_10.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f10b",
+   "kind": "figure",
+   "label": "10b",
+   "page": 7,
+   "file": "fig_10b.png",
+   "caption": "Fig. 10(b) Probability density of the circulation period T (rev) for three surface tensions; f = 40 %, Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.6,
+    363.3,
+    252.2,
+    507.9
+   ],
+   "w": 997,
+   "h": 869,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_10.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f11a",
+   "kind": "figure",
+   "label": "11a",
+   "page": 7,
+   "file": "fig_11a.png",
+   "caption": "Fig. 11(a) Mean circulation period ⟨T⟩ (rev) vs filling level f; Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    355.4,
+    215.6,
+    519.7,
+    363.7
+   ],
+   "w": 979,
+   "h": 889,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_11.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f11b",
+   "kind": "figure",
+   "label": "11b",
+   "page": 7,
+   "file": "fig_11b.png",
+   "caption": "Fig. 11(b) Standard deviation σ(T) (rev) vs filling level f; dry minimum at f = 0.64; Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    355.6,
+    367.3,
+    519.2,
+    517.4
+   ],
+   "w": 975,
+   "h": 900,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_11.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f12a",
+   "kind": "figure",
+   "label": "12a",
+   "page": 8,
+   "file": "fig_12a.png",
+   "caption": "Fig. 12(a) Average circulation period ⟨T⟩ vs dynamic filling level f_d — theory lines (Eq. A.7/A.9, ε = 6d dry / 8d wet) and simulation points; Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.4,
+    58.6,
+    241.3,
+    203.7
+   ],
+   "w": 982,
+   "h": 872,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_12.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f12b",
+   "kind": "figure",
+   "label": "12b",
+   "page": 8,
+   "file": "fig_12b.png",
+   "caption": "Fig. 12(b) Standard deviation σ(T) vs dynamic filling level f_d — theory lines (minimum ≈ 0.67 dry / 0.74 wet, second peak ≈ 0.84) and simulation points; Ω = 15 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.4,
+    206.7,
+    241.1,
+    354.1
+   ],
+   "w": 981,
+   "h": 885,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "panel crop (whole figure = fig_12.png) — hand-cut from the vector page at 400 dpi, split at the widest blank band between the panels → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_newton_translation_contact_capillary_gravity.png",
+   "caption": "Eq. (1), PDF p.2 (print p.100): m_i dv_i/dt = Σ_j (F^n_ij + F^s_ij + F^cap_ij) + m_i g — translation (normal + tangential contact + capillary + gravity)",
+   "rotated_deg": 0,
+   "bbox": [
+    302.1,
+    258.7,
+    552.5,
+    280.8
+   ],
+   "w": 1457,
+   "h": 189,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_rotation_tangential_torque_rolling_friction.png",
+   "caption": "Eq. (2), PDF p.2 (print p.100): I_i dω_i/dt = Σ_j (R_i × F^s_ij − μ_r R_i |F^n_ij| ω̂_i) — rotation (tangential torque + rolling friction, μ_r dimensionless = 10⁻³)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    302.7,
+    552.5,
+    324.8
+   ],
+   "w": 1459,
+   "h": 189,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "file": "eq_03_normal_viscous_force_liquid_bridge.png",
+   "caption": "Eq. (3), PDF p.3 (print p.101): F^n_vis = 6πμR̄²(v_n/S)(1 − 1/√(1 + V/πR̄S²))² — normal viscous force of the bridge (Pitois 2000); computed, then neglected (< 5 % of the energy loss at 5 cm/s)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    96.2,
+    293.3,
+    112.7
+   ],
+   "w": 1459,
+   "h": 158,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 3,
+   "file": "eq_04_tangential_viscous_force_liquid_bridge.png",
+   "caption": "Eq. (4), PDF p.3 (print p.101): F^t_vis = 6πμR̄v_t[8/15 ln(R̄/S) + 0.9588] — tangential viscous force (Goldman 1967); computed, then neglected (< 2 % of sliding friction)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    126.9,
+    293.5,
+    136.8
+   ],
+   "w": 1460,
+   "h": 121,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 3,
+   "file": "eq_05_lacey_mixing_index.png",
+   "caption": "Eq. (5), PDF p.3 (print p.101): M = (σ0² − σt²)/(σ0² − σr²) — Lacey index; σ0² = q(1−q), σr² = q(1−q)/p (p = mean particle number per 2d × 2d cuboid cell)",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    366.6,
+    562.5,
+    388.0
+   ],
+   "w": 1459,
+   "h": 185,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_mixing_index_error_function_fit.png",
+   "caption": "Eq. (6), PDF p.4 (print p.102): M(t) = M∞ erf(kt) — error-function fit of the Lacey index (k = mixing rate, rev⁻¹; M∞ = final index)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    157.1,
+    552.5,
+    165.2
+   ],
+   "w": 1459,
+   "h": 111,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 7,
+   "file": "eq_07_circulation_period_streamline_T_of_x.png",
+   "caption": "Eq. (7), PDF p.7 (print p.105): T = (1/π)[arccos(δ/√(x² + δ²)) + 2εx/(2δε + h² − 2h)] — circulation period (rev) of the streamline through (x, δ), continuous (rolling) regime (= Eq. A.6)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    578.9,
+    293.3,
+    602.9
+   ],
+   "w": 1457,
+   "h": 199,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA1",
+   "kind": "equation",
+   "label": "eqA1",
+   "page": 8,
+   "file": "eq_A1_parabolic_rapid_flow_layer_boundary.png",
+   "caption": "Eq. (A.1), PDF p.8 (print p.106): δ = δ0 − (ε/l²)x² — parabolic boundary of the rapid flow layer (unit drum radius; ε = maximum layer thickness, l = half-chord, δ0 = y of the maximum-thickness point)",
+   "rotated_deg": 0,
+   "bbox": [
+    302.1,
+    193.0,
+    552.5,
+    210.3
+   ],
+   "w": 1457,
+   "h": 162,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA2",
+   "kind": "equation",
+   "label": "eqA2",
+   "page": 8,
+   "file": "eq_A2_flow_rate_through_intersection.png",
+   "caption": "Eq. (A.2), PDF p.8 (print p.106): dQ = (v·n̂)ds — volumetric flow rate through the intersection arc ds",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    292.8,
+    552.5,
+    301.5
+   ],
+   "w": 1458,
+   "h": 114,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA3",
+   "kind": "equation",
+   "label": "eqA3",
+   "page": 8,
+   "file": "eq_A3_flow_rate_into_layer_dQ.png",
+   "caption": "Eq. (A.3), PDF p.8 (print p.106): dQ = 2πx(2εδ/l² − 1)dx — flow rate into the layer (time in revolutions, so independent of ω)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    371.0,
+    552.5,
+    390.4
+   ],
+   "w": 1458,
+   "h": 174,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA4",
+   "kind": "equation",
+   "label": "eqA4",
+   "page": 8,
+   "file": "eq_A4_control_area_dA.png",
+   "caption": "Eq. (A.4), PDF p.8 (print p.106): dA = L_f dδ − L_s dr — area of the circular control strip",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    441.6,
+    552.5,
+    450.8
+   ],
+   "w": 1458,
+   "h": 117,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA5",
+   "kind": "equation",
+   "label": "eqA5",
+   "page": 8,
+   "file": "eq_A5_control_area_dA_explicit.png",
+   "caption": "Eq. (A.5), PDF p.8 (print p.106): dA = [4εx²/l² − 2arccos(δ/√(x² + δ²))(1 − 2εδ/l²)x]dx",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    523.2,
+    552.5,
+    547.1
+   ],
+   "w": 1458,
+   "h": 199,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA6",
+   "kind": "equation",
+   "label": "eqA6",
+   "page": 9,
+   "file": "eq_A6_circulation_period_T_equals_dA_over_dQ.png",
+   "caption": "Eq. (A.6), PDF p.9 (print p.107): T = dA/dQ = (1/π)[arccos(δ/√(x² + δ²)) + 2εx/(2δε + h² − 2h)]",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    83.7,
+    293.5,
+    107.7
+   ],
+   "w": 1458,
+   "h": 199,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA7",
+   "kind": "equation",
+   "label": "eqA7",
+   "page": 9,
+   "file": "eq_A7_mean_circulation_period_fd_over_1_minus_delta0sq.png",
+   "caption": "Eq. (A.7), PDF p.9 (print p.107): ⟨T⟩ = (1/Q)∫₋ₗ⁰(dQ/dx)T dx = πf_d/∫_{δ0}^1 2πr dr = f_d/(1 − δ0²) — mean circulation period (rev), no core",
+   "rotated_deg": 0,
+   "bbox": [
+    43.4,
+    181.7,
+    293.3,
+    204.2
+   ],
+   "w": 1454,
+   "h": 191,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA8",
+   "kind": "equation",
+   "label": "eqA8",
+   "page": 9,
+   "file": "eq_A8_sd_circulation_period.png",
+   "caption": "Eq. (A.8), PDF p.9 (print p.107): σ(T) = √((1/Q)∫₋ₗ⁰[(dQ/dx)(T − ⟨T⟩)²]dx), Q = π(1 − δ0²) = total flow into the layer",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    215.1,
+    293.3,
+    239.1
+   ],
+   "w": 1457,
+   "h": 199,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA9",
+   "kind": "equation",
+   "label": "eqA9",
+   "page": 9,
+   "file": "eq_A9_mean_period_with_nonmixing_core.png",
+   "caption": "Eq. (A.9), PDF p.9 (print p.107): ⟨T⟩ = f_d — with a non-mixing core (δ0 < 0; core assumed to rotate with the drum)",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    313.0,
+    293.3,
+    321.5
+   ],
+   "w": 1451,
+   "h": 113,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eA10",
+   "kind": "equation",
+   "label": "eqA10",
+   "page": 9,
+   "file": "eq_A10_sd_period_with_nonmixing_core.png",
+   "caption": "Eq. (A.10), PDF p.9 (print p.107): σ(T) = √((1/Q)[∫₋ₗ⁰((dQ/dx)(T − ⟨T⟩)²)dx + ∫_0^{−δ0}(2πr(1 − ⟨T⟩)²)dr]) — printed prefactor 1/Q; the Fig. 12b theory lines are reproduced with the total weight π (card §3-7)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    332.7,
+    293.3,
+    372.9
+   ],
+   "w": 1457,
+   "h": 289,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eia",
+   "kind": "equation",
+   "label": "eq-inline-a",
+   "page": 3,
+   "file": "eq_inline_a_froude_omega2R_over_g_0p001_0p05.png",
+   "caption": "Inline, PDF p.3 (print p.101): rotation speed 5–35 rpm ↔ Froude number Fr = ω²R/g = 0.001–0.05 (R = drum radius 35 mm)",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    257.7,
+    562.8,
+    276.3
+   ],
+   "w": 1460,
+   "h": 169,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eib",
+   "kind": "equation",
+   "label": "eq-inline-b",
+   "page": 3,
+   "file": "eq_inline_b_rupture_distance_lian.png",
+   "caption": "Inline, PDF p.3 (print p.101): rupture distance S_rup = (1 + 0.5θ_c)V^{1/3} (Lian et al. 1993)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    467.9,
+    293.3,
+    478.3
+   ],
+   "w": 1458,
+   "h": 124,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eic",
+   "kind": "equation",
+   "label": "eq-inline-c",
+   "page": 4,
+   "file": "eq_inline_c_error_function_definition.png",
+   "caption": "Inline, PDF p.4 (print p.102): erf(x) = 2/√π ∫₀ˣ e^{−x²}dx; k and M∞ obtained from the fit",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    170.7,
+    552.5,
+    181.5
+   ],
+   "w": 1459,
+   "h": 126,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eid",
+   "kind": "equation",
+   "label": "eq-inline-d",
+   "page": 9,
+   "file": "eq_inline_d_dynamic_filling_level_h_phi.png",
+   "caption": "Inline, PDF p.9 (print p.107): 'dynamic' filling level f_d = bulk volume of the solid bed / drum volume in steady flow; h = 1 − cos φ, f_d = (φ − sin φ cos φ)/π (φ = half-filling angle)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    114.7,
+    293.6,
+    154.5
+   ],
+   "w": 1461,
+   "h": 287,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eie",
+   "kind": "equation",
+   "label": "eq-inline-e",
+   "page": 9,
+   "file": "eq_inline_e_half_chord_l_as_printed.png",
+   "caption": "Inline, PDF p.9 (print p.107): 'l=2h−h²' as printed — for a unit circle the half-chord obeys l² = 2h − h², which is what A.6 uses (card §3-7)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    57.8,
+    293.5,
+    75.9
+   ],
+   "w": 1459,
+   "h": 167,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eif",
+   "kind": "equation",
+   "label": "eq-inline-f",
+   "page": 8,
+   "file": "eq_inline_f_unit_normal_bed_velocity.png",
+   "caption": "Inline, PDF p.8 (print p.106): n̂ = (dδ/dx − 1)/√(1 + (dδ/dx)²) (as printed) and bed velocity components v_x = −ωδ, v_y = ωx",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    313.3,
+    552.6,
+    360.8
+   ],
+   "w": 1460,
+   "h": 330,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eig",
+   "kind": "equation",
+   "label": "eq-inline-g",
+   "page": 8,
+   "file": "eq_inline_g_streamline_lengths_Lf_Ls.png",
+   "caption": "Inline, PDF p.8 (print p.106): L_f = −2x (streamline length in the solid bed), L_s = 2r arccos(δ/r) (in the rapid flow layer), r = √(x² + δ²)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    462.3,
+    552.6,
+    512.1
+   ],
+   "w": 1460,
+   "h": 343,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "et1",
+   "kind": "equation",
+   "label": "eq-T1-normal",
+   "page": 2,
+   "file": "eq_t1_1_normal_contact_force_hertz_damping.png",
+   "caption": "Table 1 row, PDF p.2 (print p.100): F^n_ij = [(2/3)(Y/(1−σ̃²))√R̄ ξ_n^{3/2} − γ_n (Y/(1−σ̃²))√R̄ √ξ_n (v_ij·n̂_ij)] n̂_ij — Hertz elastic + nonlinear viscous damping",
+   "rotated_deg": 0,
+   "bbox": [
+    308.1,
+    648.2,
+    534.6,
+    659.9
+   ],
+   "w": 1324,
+   "h": 131,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "et2",
+   "kind": "equation",
+   "label": "eq-T1-tangential",
+   "page": 2,
+   "file": "eq_t1_2_tangential_contact_force_mindlin_type.png",
+   "caption": "Table 1 row, PDF p.2 (print p.100): F^s_ij = −sgn(ξ_s) μ_s |F^n_ij| [1 − (1 − min(ξ_s, ξ_s,max)/ξ_s,max)^{3/2}] — friction-capped 3/2-power tangential force",
+   "rotated_deg": 0,
+   "bbox": [
+    307.8,
+    661.7,
+    546.6,
+    671.1
+   ],
+   "w": 1393,
+   "h": 118,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "et3",
+   "kind": "equation",
+   "label": "eq-T1-capillary",
+   "page": 2,
+   "file": "eq_t1_3_capillary_force_rabinovich_lambert.png",
+   "caption": "Table 1 row, PDF p.2 (print p.100): F^cap_ij = 4πR̄γ cos θ_c / (1 + 1/[√(1 + V/(πR̄S²)) − 1]) n̂_ij — capillary force at fixed bridge volume (Rabinovich 2005 revised by Lambert 2008); wall = R → ∞",
+   "rotated_deg": 0,
+   "bbox": [
+    308.1,
+    673.0,
+    477.2,
+    687.0
+   ],
+   "w": 1005,
+   "h": 144,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "et4",
+   "kind": "equation",
+   "label": "eq-T1-defs",
+   "page": 2,
+   "file": "eq_t1_4_symbol_definitions.png",
+   "caption": "Table 1 footnote, PDF p.2 (print p.100): R̄ = R_iR_j/(R_i + R_j), ξ_s,max = μ_s[(2 − σ̃)/2(1 − σ̃)]ξ_n, n̂_ij = (R_i − R_j)/|R_i − R_j|; Y, σ̃, γ_n, μ_s, ξ_s, V, γ, S, θ_c",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    697.4,
+    552.6,
+    746.7
+   ],
+   "w": 1460,
+   "h": 340,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt math type) — band between the neighbouring text lines of the column (fraction bars are vector strokes, included) → ink bounding box (min RGB < 240) → uniform 6 pt white margin; equation number kept where printed; read against a 200–300 dpi render (the text layer breaks Greek letters and fractions) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp1-highlights-abstract",
+   "kind": "text",
+   "label": "p1_highlights_abstract",
+   "page": 1,
+   "file": "txt_p1_highlights_abstract.png",
+   "caption": "PDF p.1 (print p.99): highlights (cohesion in general reduces mixing; dry poorest at 64 % filling; circulation period and its variance; model) + abstract",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    264.8,
+    174.8,
+    366.9
+   ],
+   "pieces": [
+    [
+     1,
+     42.7,
+     264.8,
+     174.8,
+     366.9
+    ],
+    [
+     1,
+     206.9,
+     412.7,
+     562.6,
+     525.3
+    ]
+   ],
+   "w": 2042,
+   "h": 1281,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-intro-cohesion-mixing-conflicting-rep",
+   "kind": "text",
+   "label": "p2_intro_cohesion_mixing_conflicting_reports",
+   "page": 2,
+   "file": "txt_p2_intro_cohesion_mixing_conflicting_reports.png",
+   "caption": "PDF p.2 (print p.100): introduction — cohesion generally unfavourable vs moderate cohesion may enhance mixing (Shinbrot 1999 stick-slip; Chaudhuri 2006 Bond 0.1 slight gain, plug flow at higher cohesion; McCarthy 2003 optimum cohesion)",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    498.2,
+    284.1,
+    726.1
+   ],
+   "w": 1462,
+   "h": 1332,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-dem-viscoelastic-capillary-rabinovich",
+   "kind": "text",
+   "label": "p2_dem_viscoelastic_capillary_rabinovich_lambert_wall",
+   "page": 2,
+   "file": "txt_p2_dem_viscoelastic_capillary_rabinovich_lambert_wall.png",
+   "caption": "PDF p.2 (print p.100): symbols of Eqs (1)–(2), visco-elastic contact models, capillary force by bridge volume (Rabinovich 2005 / Lambert 2008), same equations for particle–wall with infinite wall radius, end-wall friction 0.05",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    332.4,
+    553.1,
+    518.4
+   ],
+   "w": 1463,
+   "h": 1099,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-p3-static-capillary-viscous-negligibl",
+   "kind": "text",
+   "label": "p2_p3_static_capillary_viscous_negligible",
+   "page": 2,
+   "file": "txt_p2_p3_static_capillary_viscous_negligible.png",
+   "caption": "PDF p.2–3 (print p.100–101): only the static capillary force; viscous forces of Eqs (3)–(4) computed (< 5 % of normal energy loss, < 2 % of sliding friction at 5 cm/s, d 1.3 mm, γ 0.073 N/m, μ 0.001 Pa s) and neglected; bridge deformation not modelled",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    520.6,
+    552.6,
+    591.3
+   ],
+   "pieces": [
+    [
+     2,
+     301.7,
+     520.6,
+     552.6,
+     591.3
+    ],
+    [
+     3,
+     42.7,
+     58.9,
+     293.5,
+     87.8
+    ],
+    [
+     3,
+     42.5,
+     145.2,
+     294.2,
+     268.3
+    ]
+   ],
+   "w": 1464,
+   "h": 1348,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp3-liquid-distribution-assumptions-smin-",
+   "kind": "text",
+   "label": "p3_liquid_distribution_assumptions_smin_fit_rupture",
+   "page": 3,
+   "file": "txt_p3_liquid_distribution_assumptions_smin_fit_rupture.png",
+   "caption": "PDF p.3 (print p.101): liquid-distribution assumptions (i)–(iii); S_min = fitting parameter; S_min 5 µm and 5 % of liquid in bridges from the 2011 comparison with experiment; rupture distance",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    270.7,
+    294.2,
+    478.4
+   ],
+   "w": 1464,
+   "h": 1220,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp3-setup-side-by-side-bond-froude-fillin",
+   "kind": "text",
+   "label": "p3_setup_side_by_side_bond_froude_filling_cpu",
+   "page": 3,
+   "file": "txt_p3_setup_side_by_side_bond_froude_filling_cpu.png",
+   "caption": "PDF p.3 (print p.101): set-up — 1.3 mm spheres initially side by side, identical but colour; γ 0.0–0.093 N/m at 0.5 % liquid ('so-called Bond number from 0 to around 7'); 5–35 rpm = Fr 0.001–0.05; filling level definition (packing density 0.6), 30–92 %; 15,000–47,000 particles; 4–15 CPU hours per simulated second",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    479.9,
+    293.6,
+    603.2
+   ],
+   "pieces": [
+    [
+     3,
+     42.5,
+     479.9,
+     293.6,
+     603.2
+    ],
+    [
+     3,
+     311.7,
+     257.7,
+     562.8,
+     337.5
+    ]
+   ],
+   "w": 1461,
+   "h": 1216,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp3-lacey-index-cell-size-2d",
+   "kind": "text",
+   "label": "p3_lacey_index_cell_size_2d",
+   "page": 3,
+   "file": "txt_p3_lacey_index_cell_size_2d.png",
+   "caption": "PDF p.3 (print p.101): Lacey index (Eq. 5), cuboid cells, sensitivity 2d–4d 'quite minimal' (not shown), 2d × 2d adopted",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    341.4,
+    562.6,
+    527.0
+   ],
+   "w": 1460,
+   "h": 1097,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp3-p4-flow-regime-repose-30-37-avalanchi",
+   "kind": "text",
+   "label": "p3_p4_flow_regime_repose_30_37_avalanching",
+   "page": 3,
+   "file": "txt_p3_p4_flow_regime_repose_30_37_avalanching.png",
+   "caption": "PDF p.3–4 (print p.101–102): flow regime — dry continuous, dynamic angle about 30°; 0.033 N/m continuous, ~37°, thicker layer; 0.073 N/m avalanching with plug-flow avalanches",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    592.5,
+    562.6,
+    747.0
+   ],
+   "pieces": [
+    [
+     3,
+     311.9,
+     592.5,
+     562.6,
+     747.0
+    ],
+    [
+     4,
+     32.7,
+     571.5,
+     284.0,
+     663.3
+    ]
+   ],
+   "w": 1462,
+   "h": 1456,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-mixing-delayed-erf-k-monotonic-no-gai",
+   "kind": "text",
+   "label": "p4_mixing_delayed_erf_k_monotonic_no_gain",
+   "page": 4,
+   "file": "txt_p4_mixing_delayed_erf_k_monotonic_no_gain.png",
+   "caption": "PDF p.4 (print p.102): mixing delayed by cohesion, clustering at 0.073 N/m; error-function fit (Eq. 6) better than exponential; M∞ = 1 at f = 40 %; k decreases monotonically with γ; no gain from moderate cohesion below 50 % filling (vs McCarthy 2003)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    665.6,
+    284.1,
+    746.9
+   ],
+   "pieces": [
+    [
+     4,
+     33.0,
+     665.6,
+     284.1,
+     746.9
+    ],
+    [
+     4,
+     302.0,
+     58.9,
+     552.8,
+     77.4
+    ],
+    [
+     4,
+     301.7,
+     79.8,
+     553.1,
+     316.5
+    ]
+   ],
+   "w": 1463,
+   "h": 1980,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-rotation-speed-per-rev-turnover-slip",
+   "kind": "text",
+   "label": "p4_rotation_speed_per_rev_turnover_slip",
+   "page": 4,
+   "file": "txt_p4_rotation_speed_per_rev_turnover_slip.png",
+   "caption": "PDF p.4 (print p.102): faster mixing with rotation speed in time, but per revolution k decreases for dry particles (bed turnover time not proportional; slip); wet k largely unaffected (cohesion reduces slipping); Chaudhuri 2006 Bond 120",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    351.8,
+    552.8,
+    548.1
+   ],
+   "w": 1460,
+   "h": 1157,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-p5-filling-nonmixing-core-dry-min-64",
+   "kind": "text",
+   "label": "p4_p5_filling_nonmixing_core_dry_min_64",
+   "page": 4,
+   "file": "txt_p4_p5_filling_nonmixing_core_dry_min_64.png",
+   "caption": "PDF p.4–5 (print p.102–103): filling level — non-mixing core above 60 %; sharp drops above 50 %; wet monotonic, dry minimum at f = 64 % then rise to 83 % and fall at 92 %; wet better at 60–70 %; same in k",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    550.6,
+    553.0,
+    746.9
+   ],
+   "pieces": [
+    [
+     4,
+     301.7,
+     550.6,
+     553.0,
+     746.9
+    ],
+    [
+     5,
+     42.7,
+     644.7,
+     293.8,
+     746.9
+    ],
+    [
+     5,
+     311.7,
+     508.8,
+     562.5,
+     548.3
+    ]
+   ],
+   "w": 1462,
+   "h": 1988,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp5-differs-previous-50pct-moderate-cohes",
+   "kind": "text",
+   "label": "p5_differs_previous_50pct_moderate_cohesion",
+   "page": 5,
+   "file": "txt_p5_differs_previous_50pct_moderate_cohesion.png",
+   "caption": "PDF p.5 (print p.103): differs from previous findings — poorest at 50 % (Hogg & Fuerstenau 1972; Figueroa 2010) vs ~65 % (Dury 1999); monotonic decrease with cohesion except 60–70 %",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    550.6,
+    562.8,
+    673.7
+   ],
+   "w": 1460,
+   "h": 750,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp5-p6-convective-diffusive-radial-gaussi",
+   "kind": "text",
+   "label": "p5_p6_convective_diffusive_radial_gaussian_circulation",
+   "page": 5,
+   "file": "txt_p5_p6_convective_diffusive_radial_gaussian_circulation.png",
+   "caption": "PDF p.5–6 (print p.103–104): mixing = tangential convection + radial diffusion; single-particle trajectories; radial displacement Gaussian, narrower with cohesion; circulation period T defined (revolutions per circulation), left-skewed, longer and wider for wet particles",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    707.5,
+    562.5,
+    746.9
+   ],
+   "pieces": [
+    [
+     5,
+     311.9,
+     707.5,
+     562.5,
+     746.9
+    ],
+    [
+     6,
+     32.7,
+     529.6,
+     283.8,
+     746.8
+    ],
+    [
+     6,
+     301.9,
+     184.4,
+     553.1,
+     265.7
+    ]
+   ],
+   "w": 1462,
+   "h": 1988,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6-mean-period-dilation-sd-minimum-64-pl",
+   "kind": "text",
+   "label": "p6_mean_period_dilation_sd_minimum_64_plug",
+   "page": 6,
+   "file": "txt_p6_mean_period_dilation_sd_minimum_64_plug.png",
+   "caption": "PDF p.6 (print p.104): mean ⟨T⟩ rises with filling and cohesion (cohesion-induced dilation); smaller σ(T) unfavourable; dry σ(T) minimum at 64 %; σ(T) at 64 % rises with cohesion; plug flow at 0.073 N/m; total un-mixing when full",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    268.1,
+    553.1,
+    600.5
+   ],
+   "w": 1463,
+   "h": 1913,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6-unclear-64-extension-ding-model",
+   "kind": "text",
+   "label": "p6_unclear_64_extension_ding_model",
+   "page": 6,
+   "file": "txt_p6_unclear_64_extension_ding_model.png",
+   "caption": "PDF p.6 (print p.104): 'not clear why filling level at 64% has the smallest standard deviation' · 'unclear if the current results can be extended to other systems' · Ding 2002 extended to the local circulation period",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    602.9,
+    553.1,
+    746.9
+   ],
+   "w": 1462,
+   "h": 866,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7-eq7-dynamic-filling-layer-6d-8d",
+   "kind": "text",
+   "label": "p7_eq7_dynamic_filling_layer_6d_8d",
+   "page": 7,
+   "file": "txt_p7_eq7_dynamic_filling_layer_6d_8d.png",
+   "caption": "PDF p.7 (print p.105): Eq. (7) symbols, dynamic filling level by image analysis, maximum layer thickness 6d (dry) / 8d (wet) from the simulations, mean-period agreement, core makes ⟨T⟩ independent of layer thickness",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    613.3,
+    294.2,
+    746.9
+   ],
+   "pieces": [
+    [
+     7,
+     42.5,
+     613.3,
+     294.2,
+     746.9
+    ],
+    [
+     7,
+     311.9,
+     561.0,
+     562.6,
+     663.2
+    ]
+   ],
+   "w": 1464,
+   "h": 1398,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7-p8-sd-minimum-67-74-overestimate-low-",
+   "kind": "text",
+   "label": "p7_p8_sd_minimum_67_74_overestimate_low_filling",
+   "page": 7,
+   "file": "txt_p7_p8_sd_minimum_67_74_overestimate_low_filling.png",
+   "caption": "PDF p.7–8 (print p.105–106): model σ(T) minimum at f_d ≈ 67 % (dry) / 74 % (wet), second peak 84 %; model overestimates σ(T) at low filling (no diffusion in the model); 'general method' claim",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    665.6,
+    563.2,
+    746.9
+   ],
+   "pieces": [
+    [
+     7,
+     311.9,
+     665.6,
+     563.2,
+     746.9
+    ],
+    [
+     8,
+     32.9,
+     404.2,
+     284.0,
+     464.5
+    ]
+   ],
+   "w": 1462,
+   "h": 875,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp8-conclusions",
+   "kind": "text",
+   "label": "p8_conclusions",
+   "page": 8,
+   "file": "txt_p8_conclusions.png",
+   "caption": "PDF p.8 (print p.106): conclusions",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    508.2,
+    284.0,
+    683.7
+   ],
+   "w": 1461,
+   "h": 1041,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp8-p9-appendix-rolling-nonslip-parabolic",
+   "kind": "text",
+   "label": "p8_p9_appendix_rolling_nonslip_parabolic_core",
+   "page": 8,
+   "file": "txt_p8_p9_appendix_rolling_nonslip_parabolic_core.png",
+   "caption": "PDF p.8–9 (print p.106–107): appendix assumptions — rolling regime, non-slipping, no diffusion inside the flow, parabolic layer (Ding 2002); non-mixing core for δ0 < 0 rotating with the drum",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    79.8,
+    552.6,
+    161.1
+   ],
+   "pieces": [
+    [
+     8,
+     301.9,
+     79.8,
+     552.6,
+     161.1
+    ],
+    [
+     9,
+     42.5,
+     245.7,
+     293.5,
+     306.5
+    ]
+   ],
+   "w": 1460,
+   "h": 878,
+   "dpi": 400,
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "manual_crop": "evidence paragraph(s) cited by the card — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the paragraph(s) → ink bounding box (min RGB < 240) → pieces stacked top-to-bottom in reading order (4 pt gap) → uniform 6 pt white margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "3d03ba82-DEM_study_of_the_transverse_mixing_of_wet_particles_in_rotating_drums.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "note_manual": "9-page Chem. Eng. Sci. article 86 (2013) 99–107 (PDF p.n = print p.98+n), no SI. Figures are mostly vector (Figs 1, 3, 5, 6, 8, 10–12, graphical abstract); Figs 2, 4, 7 and parts of 9 and 13 carry 200 dpi embedded rasters. Tool cut Figs 1–13 and Table 2 and missed Table 1 (near-miss). Kept none as-is: re-cut all 13 figures (fig_4 had lost its vector row / column labels, fig_8 held only half of panel b, fig_10 had lost the top of panel a, fig_13 had swallowed Eq. A.5, the rest = wide side margins) and tab_2 (tool = whole page); hand-cut tab_1, the graphical abstract (fig_GA) and 12 panel crops (fig_3a … fig_12b). Equations: 17 numbered (Eqs 1–7, A.1–A.10) + 7 inline (Froude, rupture distance, erf, dynamic filling level, half-chord as printed, unit normal / bed velocity, streamline lengths) + 4 Table 1 rows / footnote, all 400 dpi. 19 evidence-paragraph crops (≤ 20 rule; 9 stack consecutive pieces) · no page_* crops. Digitised values (vector markers and curves) = digitized.csv. All 75 crops opened and checked (2026-11-24, litdb-curator)."
+}

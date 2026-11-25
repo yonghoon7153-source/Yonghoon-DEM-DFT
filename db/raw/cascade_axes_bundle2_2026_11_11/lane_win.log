@@ -1,0 +1,276 @@
+조성 91 개 · 격자 전압 8 점 · 구간 규칙 — 격자 전압 V 의 산물 = get_element_profi…
+Retrieving ThermoDoc documents:   0%|          | 0/352 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 352/352 [00:00<00:00, 6741529.72it/s]
+[mp_api] 352 entries in Ag-Cl-Li-O-P-S (GGA_GGA+U hull)
+[1/91] Ag2O       ok  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/479 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 479/479 [00:00<00:00, 9344519.14it/s]
+[mp_api] 479 entries in Al-Cl-Li-O-P-S (GGA_GGA+U hull)
+[2/91] Al2O3      ok  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/157 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 157/157 [00:00<00:00, 4064850.17it/s]
+[mp_api] 157 entries in Al-Cl-Li-P-S (GGA_GGA+U hull)
+[3/91] Al2S3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/184 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 184/184 [00:00<00:00, 3657592.11it/s]
+[mp_api] 184 entries in Al-Br-Cl-Li-P-S (GGA_GGA+U hull)
+[4/91] AlBr3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/157 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 157/157 [00:00<00:00, 4039912.44it/s]
+[mp_api] 157 entries in Al-Cl-Li-P-S (GGA_GGA+U hull)
+[5/91] AlCl3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/198 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 198/198 [00:00<00:00, 4885130.54it/s]
+[mp_api] 198 entries in Al-Cl-F-Li-P-S (GGA_GGA+U hull)
+[6/91] AlF3       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/184 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 184/184 [00:00<00:00, 4979044.75it/s]
+[mp_api] 184 entries in Al-Cl-I-Li-P-S (GGA_GGA+U hull)
+[7/91] AlI3       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/254 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 254/254 [00:00<00:00, 5636789.50it/s]
+[mp_api] 254 entries in Al-Cl-Li-N-P-S (GGA_GGA+U hull)
+[8/91] AlN        ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/148 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 148/148 [00:00<00:00, 4110973.46it/s]
+[mp_api] 148 entries in As-Cl-Li-P-S (GGA_GGA+U hull)
+[9/91] As2S3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/346 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 346/346 [00:00<00:00, 8017840.80it/s]
+[mp_api] 346 entries in B-Cl-Li-O-P-S (GGA_GGA+U hull)
+[10/91] B2O3       ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/149 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 149/149 [00:00<00:00, 4370288.78it/s]
+[mp_api] 149 entries in Ba-Cl-Li-P-S (GGA_GGA+U hull)
+[11/91] BaCl2      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/369 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 369/369 [00:00<00:00, 8503836.13it/s]
+[mp_api] 369 entries in Ba-Cl-Li-O-P-S (GGA_GGA+U hull)
+[12/91] BaO        ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/248 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 248/248 [00:00<00:00, 6047601.12it/s]
+[mp_api] 248 entries in Ca-Cl-Li-N-P-S (GGA_GGA+U hull)
+[13/91] Ca3N2      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/167 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 167/167 [00:00<00:00, 4669658.45it/s]
+[mp_api] 167 entries in Br-Ca-Cl-Li-P-S (GGA_GGA+U hull)
+[14/91] CaBr2      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/139 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 139/139 [00:00<00:00, 3993207.23it/s]
+[mp_api] 139 entries in Ca-Cl-Li-P-S (GGA_GGA+U hull)
+[15/91] CaCl2      ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/174 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 174/174 [00:00<00:00, 4833171.50it/s]
+[mp_api] 174 entries in Ca-Cl-F-Li-P-S (GGA_GGA+U hull)
+[16/91] CaF2       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/345 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 345/345 [00:00<00:00, 8129409.44it/s]
+[mp_api] 345 entries in Ca-Cl-Li-O-P-S (GGA_GGA+U hull)
+[17/91] CaO        ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/139 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 139/139 [00:00<00:00, 3939244.97it/s]
+[mp_api] 139 entries in Ca-Cl-Li-P-S (GGA_GGA+U hull)
+[18/91] CaS        ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 2265.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 2264.19it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S (GGA_GGA+U hull)
+[19/91] CoO        ok  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/926 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 926/926 [00:00<00:00, 14601223.70it/s]
+[mp_api] 926 entries in Cl-Cr-Li-O-P-S (GGA_GGA+U hull)
+[20/91] Cr2O3      ok  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/182 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 182/182 [00:00<00:00, 4312787.16it/s]
+[mp_api] 182 entries in Cl-Cr-Li-P-S (GGA_GGA+U hull)
+[21/91] CrCl3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/926 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 926/926 [00:00<00:00, 14384909.27it/s]
+[mp_api] 926 entries in Cl-Cr-Li-O-P-S (GGA_GGA+U hull)
+[22/91] CrO3       ok  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/684 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 684/684 [00:00<00:00, 9927003.24it/s]
+[mp_api] 684 entries in Cl-Cu-Li-O-P-S (GGA_GGA+U hull)
+[23/91] Cu2O       ok  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1253 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1253/1253 [00:01<00:00, 1103.24it/s]Retrieving ThermoDoc documents: 100%|██████████| 1253/1253 [00:01<00:00, 1103.06it/s]
+[mp_api] 1253 entries in Cl-Fe-Li-O-P-S (GGA_GGA+U hull)
+[24/91] Fe2O3      ok  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/233 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 233/233 [00:00<00:00, 5340288.70it/s]
+[mp_api] 233 entries in Cl-Fe-Li-P-S (GGA_GGA+U hull)
+[25/91] FeCl3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/321 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 321/321 [00:00<00:00, 7966695.76it/s]
+[mp_api] 321 entries in Cl-Ga-Li-O-P-S (GGA_GGA+U hull)
+[26/91] Ga2O3      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/153 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 153/153 [00:00<00:00, 3450153.29it/s]
+[mp_api] 153 entries in Cl-Ga-Li-P-S (GGA_GGA+U hull)
+[27/91] Ga2S3      ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/153 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 153/153 [00:00<00:00, 4113644.31it/s]
+[mp_api] 153 entries in Cl-Ga-Li-P-S (GGA_GGA+U hull)
+[28/91] GaCl3      ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/284 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 284/284 [00:00<00:00, 7048416.19it/s]
+[mp_api] 284 entries in Cl-Ga-Li-N-P-S (GGA_GGA+U hull)
+[29/91] GaN        ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/297 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 297/297 [00:00<00:00, 6998361.17it/s]
+[mp_api] 297 entries in Cl-Gd-Li-O-P-S (GGA_GGA+U hull)
+[30/91] Gd2O3      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/327 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 327/327 [00:00<00:00, 7334424.64it/s]
+[mp_api] 327 entries in Cl-Ge-Li-O-P-S (GGA_GGA+U hull)
+[31/91] GeO2       ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/161 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 161/161 [00:00<00:00, 4722258.35it/s]
+[mp_api] 161 entries in Cl-Ge-Li-P-S (GGA_GGA+U hull)
+[32/91] GeS2       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/129 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 129/129 [00:00<00:00, 3680715.76it/s]
+[mp_api] 129 entries in Cl-Hf-Li-P-S (GGA_GGA+U hull)
+[33/91] HfCl4      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/295 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 295/295 [00:00<00:00, 6836020.33it/s]
+[mp_api] 295 entries in Cl-Hf-Li-O-P-S (GGA_GGA+U hull)
+[34/91] HfO2       ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/325 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 325/325 [00:00<00:00, 7925283.72it/s]
+[mp_api] 325 entries in Cl-In-Li-O-P-S (GGA_GGA+U hull)
+[35/91] In2O3      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/332 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 332/332 [00:00<00:00, 7823083.87it/s]
+[mp_api] 332 entries in Cl-La-Li-O-P-S (GGA_GGA+U hull)
+[36/91] La2O3      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/144 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 144/144 [00:00<00:00, 4080944.43it/s]
+[mp_api] 144 entries in Cl-La-Li-P-S (GGA_GGA+U hull)
+[37/91] LaCl3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/180 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 180/180 [00:00<00:00, 5033164.80it/s]
+[mp_api] 180 entries in Cl-F-La-Li-P-S (GGA_GGA+U hull)
+[38/91] LaF3       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/232 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 232/232 [00:00<00:00, 5897445.62it/s]
+[mp_api] 232 entries in Cl-Li-O-P-S (GGA_GGA+U hull)
+[39/91] Li2O       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 107/107 [00:00<00:00, 3275843.27it/s]
+[mp_api] 107 entries in Cl-Li-P-S (GGA_GGA+U hull)
+[40/91] Li2S       ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/189 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 189/189 [00:00<00:00, 5181199.06it/s]
+[mp_api] 189 entries in Cl-Li-N-P-S (GGA_GGA+U hull)
+[41/91] Li3N       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/131 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 131/131 [00:00<00:00, 3952905.21it/s]
+[mp_api] 131 entries in Br-Cl-Li-P-S (GGA_GGA+U hull)
+[42/91] LiBr       ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 107/107 [00:00<00:00, 2687368.43it/s]
+[mp_api] 107 entries in Cl-Li-P-S (GGA_GGA+U hull)
+[43/91] LiCl       ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/131 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 131/131 [00:00<00:00, 3815651.56it/s]
+[mp_api] 131 entries in Cl-F-Li-P-S (GGA_GGA+U hull)
+[44/91] LiF        ok  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/129 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 129/129 [00:00<00:00, 3978420.71it/s]
+[mp_api] 129 entries in Cl-I-Li-P-S (GGA_GGA+U hull)
+[45/91] LiI        ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/312 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 312/312 [00:00<00:00, 7931047.56it/s]
+[mp_api] 312 entries in Cl-Li-Mg-N-P-S (GGA_GGA+U hull)
+[46/91] Mg3N2      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/251 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 251/251 [00:00<00:00, 6156551.49it/s]
+[mp_api] 251 entries in Br-Cl-Li-Mg-P-S (GGA_GGA+U hull)
+[47/91] MgBr2      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/219 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 219/219 [00:00<00:00, 6248656.98it/s]
+[mp_api] 219 entries in Cl-Li-Mg-P-S (GGA_GGA+U hull)
+[48/91] MgCl2      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/251 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 251/251 [00:00<00:00, 6663103.19it/s]
+[mp_api] 251 entries in Cl-F-Li-Mg-P-S (GGA_GGA+U hull)
+[49/91] MgF2       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/244 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 244/244 [00:00<00:00, 6317346.77it/s]
+[mp_api] 244 entries in Cl-I-Li-Mg-P-S (GGA_GGA+U hull)
+[50/91] MgI2       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/431 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 431/431 [00:00<00:00, 9415338.67it/s]
+[mp_api] 431 entries in Cl-Li-Mg-O-P-S (GGA_GGA+U hull)
+[51/91] MgO        ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/219 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 219/219 [00:00<00:00, 5850653.35it/s]
+[mp_api] 219 entries in Cl-Li-Mg-P-S (GGA_GGA+U hull)
+[52/91] MgS        ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/1458 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1458/1458 [00:02<00:00, 725.96it/s]Retrieving ThermoDoc documents: 100%|██████████| 1458/1458 [00:02<00:00, 725.90it/s]
+[mp_api] 1458 entries in Cl-Li-Mn-O-P-S (GGA_GGA+U hull)
+[53/91] MnO        ok  (13s)
+Retrieving ThermoDoc documents:   0%|          | 0/581 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 581/581 [00:00<00:00, 8490908.10it/s]
+[mp_api] 581 entries in Cl-Li-Mo-O-P-S (GGA_GGA+U hull)
+[54/91] MoO3       ok  (5s)
+Retrieving ThermoDoc documents:   0%|          | 0/394 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 394/394 [00:00<00:00, 8180969.19it/s]
+[mp_api] 394 entries in Cl-Li-Na-O-P-S (GGA_GGA+U hull)
+[55/91] Na2O       ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/158 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 158/158 [00:00<00:00, 4221019.31it/s]
+[mp_api] 158 entries in Cl-Li-Na-P-S (GGA_GGA+U hull)
+[56/91] Na2S       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/184 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 184/184 [00:00<00:00, 5011376.21it/s]
+[mp_api] 184 entries in Cl-I-Li-Na-P-S (GGA_GGA+U hull)
+[57/91] NaI        ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/475 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 475/475 [00:00<00:00, 10653980.75it/s]
+[mp_api] 475 entries in Cl-Li-Nb-O-P-S (GGA_GGA+U hull)
+[58/91] Nb2O5      ok  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/192 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 192/192 [00:00<00:00, 5263440.31it/s]
+[mp_api] 192 entries in Cl-Li-Nb-P-S (GGA_GGA+U hull)
+[59/91] NbCl5      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/321 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 321/321 [00:00<00:00, 7782494.71it/s]
+[mp_api] 321 entries in Cl-Li-Nd-O-P-S (GGA_GGA+U hull)
+[60/91] Nd2O3      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/142 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 142/142 [00:00<00:00, 3970607.79it/s]
+[mp_api] 142 entries in Cl-Li-Nd-P-S (GGA_GGA+U hull)
+[61/91] NdCl3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/173 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 173/173 [00:00<00:00, 3986893.36it/s]
+[mp_api] 173 entries in Cl-F-Li-Nd-P-S (GGA_GGA+U hull)
+[62/91] NdF3       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/838 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 838/838 [00:00<00:00, 13783634.32it/s]
+[mp_api] 838 entries in Cl-Li-Ni-O-P-S (GGA_GGA+U hull)
+[63/91] NiO        ok  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/538 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 538/538 [00:00<00:00, 9098933.68it/s]
+[mp_api] 538 entries in Cl-Li-O-P-S-Sb (GGA_GGA+U hull)
+[64/91] Sb2O5      ok  (5s)
+Retrieving ThermoDoc documents:   0%|          | 0/198 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 198/198 [00:00<00:00, 5094921.42it/s]
+[mp_api] 198 entries in Cl-Li-P-S-Sb (GGA_GGA+U hull)
+[65/91] Sb2S3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/298 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 298/298 [00:00<00:00, 7439896.38it/s]
+[mp_api] 298 entries in Cl-Li-O-P-S-Sc (GGA_GGA+U hull)
+[66/91] Sc2O3      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/142 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 142/142 [00:00<00:00, 4024264.65it/s]
+[mp_api] 142 entries in Cl-Li-P-S-Sc (GGA_GGA+U hull)
+[67/91] ScCl3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/177 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 177/177 [00:00<00:00, 4554550.97it/s]
+[mp_api] 177 entries in Cl-F-Li-P-S-Sc (GGA_GGA+U hull)
+[68/91] ScF3       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/688 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 688/688 [00:00<00:00, 13611703.55it/s]
+[mp_api] 688 entries in Cl-Li-O-P-S-Si (GGA_GGA+U hull)
+[69/91] SiO2       ok  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/183 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 183/183 [00:00<00:00, 4827406.49it/s]
+[mp_api] 183 entries in Cl-Li-P-S-Si (GGA_GGA+U hull)
+[70/91] SiS2       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/300 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 300/300 [00:00<00:00, 7315646.51it/s]
+[mp_api] 300 entries in Cl-Li-O-P-S-Sm (GGA_GGA+U hull)
+[71/91] Sm2O3      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/137 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 137/137 [00:00<00:00, 3882565.19it/s]
+[mp_api] 137 entries in Cl-Li-P-S-Sm (GGA_GGA+U hull)
+[72/91] SmCl3      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/575 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 575/575 [00:00<00:00, 12119220.10it/s]
+[mp_api] 575 entries in Cl-Li-O-P-S-Sn (GGA_GGA+U hull)
+[73/91] SnO2       ok  (5s)
+Retrieving ThermoDoc documents:   0%|          | 0/177 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 177/177 [00:00<00:00, 5191551.10it/s]
+[mp_api] 177 entries in Cl-Li-P-S-Sn (GGA_GGA+U hull)
+[74/91] SnS2       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/146 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 146/146 [00:00<00:00, 4469842.22it/s]
+[mp_api] 146 entries in Cl-Li-P-S-Sr (GGA_GGA+U hull)
+[75/91] SrCl2      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/330 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 330/330 [00:00<00:00, 8190061.07it/s]
+[mp_api] 330 entries in Cl-Li-O-P-S-Sr (GGA_GGA+U hull)
+[76/91] SrO        ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/366 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 366/366 [00:00<00:00, 7452015.84it/s]
+[mp_api] 366 entries in Cl-Li-O-P-S-Ta (GGA_GGA+U hull)
+[77/91] Ta2O5      ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/163 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 163/163 [00:00<00:00, 4354595.87it/s]
+[mp_api] 163 entries in Cl-Li-P-S-Ta (GGA_GGA+U hull)
+[78/91] TaCl5      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/210 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 210/210 [00:00<00:00, 5951377.30it/s]
+[mp_api] 210 entries in Cl-Li-P-S-Ti (GGA_GGA+U hull)
+[79/91] TiCl4      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/210 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 210/210 [00:00<00:00, 4735504.52it/s]
+[mp_api] 210 entries in F-Li-P-S-Ti (GGA_GGA+U hull)
+[80/91] TiF4       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/709 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 709/709 [00:00<00:00, 10735601.21it/s]
+[mp_api] 709 entries in Cl-Li-O-P-S-Ti (GGA_GGA+U hull)
+[81/91] TiO2       ok  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1492 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1492/1492 [00:02<00:00, 609.79it/s]Retrieving ThermoDoc documents: 100%|██████████| 1492/1492 [00:02<00:00, 609.75it/s]
+[mp_api] 1492 entries in Cl-Li-O-P-S-V (GGA_GGA+U hull)
+[82/91] V2O5       ok  (15s)
+Retrieving ThermoDoc documents:   0%|          | 0/532 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 532/532 [00:00<00:00, 7292057.93it/s]
+[mp_api] 532 entries in Cl-Li-O-P-S-W (GGA_GGA+U hull)
+[83/91] WO3        ok  (5s)
+Retrieving ThermoDoc documents:   0%|          | 0/315 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 315/315 [00:00<00:00, 7549747.20it/s]
+[mp_api] 315 entries in Cl-Li-O-P-S-Y (GGA_GGA+U hull)
+[84/91] Y2O3       ok  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/136 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 136/136 [00:00<00:00, 4017079.89it/s]
+[mp_api] 136 entries in Cl-Li-P-S-Y (GGA_GGA+U hull)
+[85/91] YCl3       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/172 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 172/172 [00:00<00:00, 4841746.90it/s]
+[mp_api] 172 entries in Cl-F-Li-P-S-Y (GGA_GGA+U hull)
+[86/91] YF3        ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/548 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 548/548 [00:00<00:00, 11667404.02it/s]
+[mp_api] 548 entries in Cl-Li-O-P-S-Zn (GGA_GGA+U hull)
+[87/91] ZnO        ok  (5s)
+Retrieving ThermoDoc documents:   0%|          | 0/161 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 161/161 [00:00<00:00, 4562722.59it/s]
+[mp_api] 161 entries in Br-Li-P-S-Zr (GGA_GGA+U hull)
+[88/91] ZrBr4      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/161 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 161/161 [00:00<00:00, 4593761.52it/s]
+[mp_api] 161 entries in Cl-Li-P-S-Zr (GGA_GGA+U hull)
+[89/91] ZrCl4      ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/164 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 164/164 [00:00<00:00, 4810250.74it/s]
+[mp_api] 164 entries in F-Li-P-S-Zr (GGA_GGA+U hull)
+[90/91] ZrF4       ok  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/382 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 382/382 [00:00<00:00, 8950972.78it/s]
+[mp_api] 382 entries in Cl-Li-O-P-S-Zr (GGA_GGA+U hull)
+[91/91] ZrO2       ok  (3s)
+
+→ /data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_11/designs_win.jsonl

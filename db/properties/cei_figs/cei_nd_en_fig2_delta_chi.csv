@@ -1,0 +1,9 @@
+bond,anion,cation,delta_chi,pauling_ionic_character_pct_ordering_only
+P-S,S,P,0.39,3.73
+Nd-S,S,Nd,1.44,40.45
+Li-S,S,Li,1.6,47.27
+P-O,O,P,1.25,32.34
+Nd-O,O,Nd,2.3,73.35
+Li-O,O,Li,2.46,77.97
+Nd-Cl,Cl,Nd,2.02,63.94
+Li-Cl,Cl,Li,2.18,69.52

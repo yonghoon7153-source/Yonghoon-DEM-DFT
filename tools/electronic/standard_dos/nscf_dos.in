@@ -1,0 +1,29 @@
+&CONTROL
+    calculation = 'nscf'
+    prefix      = '${PREFIX}'
+    outdir      = './tmp'
+    pseudo_dir  = './pseudo'
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = ${NAT}
+    ntyp        = ${NTYP}
+    ecutwfc     = 60.0             ! match SCF
+    ecutrho     = 480.0
+    occupations = 'tetrahedra_opt' ! literature-standard DOS (= VASP ISMEAR=-5); NO smearing
+    nbnd        = ${NBND}          ! comp1 160 / modelc 190
+/
+&ELECTRONS
+    conv_thr    = 1.0d-10
+/
+ATOMIC_SPECIES
+${ATOMIC_SPECIES}
+
+CELL_PARAMETERS angstrom
+${CELL}
+
+ATOMIC_POSITIONS angstrom
+${POSITIONS}
+
+K_POINTS automatic
+12 12 12 0 0 0                     ! DOS wants dense. comp1 cubic 12^3. modelc: 8 8 3

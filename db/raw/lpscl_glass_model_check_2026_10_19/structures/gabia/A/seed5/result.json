@@ -1,0 +1,114 @@
+{
+ "plan": {
+  "system": "A",
+  "seed": 5,
+  "n_atoms": 120,
+  "composition": {
+   "Cl": 12,
+   "Li": 48,
+   "P": 12,
+   "S": 48
+  },
+  "start_density_g_cm3": 1.2,
+  "T_melt_K": 1200.0,
+  "T_final_K": 300.0,
+  "melt_ps": 100.0,
+  "quench_rate_K_s": 1000000000000.0,
+  "quench_ps": 900.0,
+  "hold_ps": 50.0,
+  "dt_fs": 2.0,
+  "save_ps": 1.0,
+  "G2_declared_before_results": true,
+  "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json",
+  "게이트_입력": {
+   "G2_quench_rate_K_s": 1000000000000.0,
+   "ensemble": "NPT",
+   "thermostat": "Berendsen",
+   "barostat": "Berendsen",
+   "target_pressure_GPa": 0.0,
+   "barostat_params": {
+    "taut_fs": 100.0,
+    "taup_fs": 1000.0,
+    "compressibility_au": 8.0
+   },
+   "⛔_엄밀성": "Berendsen 은 부피 변동을 정확한 NPT 분포로 표본화하지 않는다 (Bernetti–Bussi 2020) — 구조 생성용이지 앙상블 통계용이 아니다.",
+   "final_relax": {
+    "kind": "FIRE",
+    "fmax_eV_A": 0.05,
+    "cell": "fixed",
+    "⛔": "밀도는 **마지막 NPT 셀**의 값이고 구조 지표는 그 셀을 고정한 완화 구조의 값이다 (개정 ③ — '300 K 평형 유리의 평균값' 이 아니다)."
+   },
+   "G4_band_card": "db/properties/lpscl_li2s_layer1_amendment_2026_09_12.json",
+   "읽는_곳": "melt_quench_uma.py --gate_check <run_dir>"
+  },
+  "uma_inference_mode": "turbo"
+ },
+ "run": {
+  "quench_ps": 900.0,
+  "n_steps": {
+   "melt": 50000,
+   "quench": 450000,
+   "hold": 25000
+  },
+  "wall_min": 1979.3008822043737
+ },
+ "indicators": {
+  "PS4_fraction": 0.9166666666666666,
+  "P_S_coord_hist": {
+   "3": 1,
+   "4": 11
+  },
+  "bridging_S_P2S7_like": 0,
+  "P_P_bonds_P2S6_like": 0,
+  "Cl_Li_coord_hist": {
+   "3": 2,
+   "4": 10
+  },
+  "Cl_6coord_fraction": 0.0,
+  "ClCl_nearest_A": {
+   "median": 3.7948242119928737,
+   "min": 3.6198083979428013,
+   "in_window_fraction": 0.75,
+   "window_A": [
+    3.4,
+    3.9
+   ]
+  },
+  "S_Li8_fraction_Li2S_like": 0.0,
+  "S_Li_coord_hist": {
+   "1": 2,
+   "2": 7,
+   "3": 33,
+   "4": 6
+  },
+  "density_g_cm3": 1.6181271026545303,
+  "n_atoms": 120,
+  "cell_A": [
+   [
+    13.991570101537118,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    13.991570101537118,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    13.991570101537118
+   ]
+  ]
+ },
+ "E_final_eV": -506.8605051953351,
+ "files": [
+  "initial.xyz",
+  "traj.xyz",
+  "thermo.csv",
+  "final.xyz",
+  "final.vasp",
+  "gr_partials.csv"
+ ],
+ "⛔": "지표만 찍었다 — 문턱 대조는 카드 §2 판정_지표. 이 시드 하나로 판정하지 않는다 (G3)."
+}

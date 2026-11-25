@@ -1,0 +1,147 @@
+{
+ "schema": "hyeokju_md1_verdict/v1",
+ "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+ "amend": "⏩_개정_2_2026_11_20_MD1_결과_전",
+ "thresholds": {
+  "pairs_judged": [
+   [
+    "P",
+    "O",
+    1.8
+   ],
+   [
+    "Zr",
+    "S",
+    2.9
+   ]
+  ],
+  "pairs_record": [
+   [
+    "S",
+    "O",
+    1.8
+   ]
+  ],
+  "persist_ps": 1.0,
+  "save_fs": 100,
+  "prod_ps": 1000,
+  "T_K": 600,
+  "T_band_K": 15,
+  "n_seeds": 3,
+  "onset_seeds_min": 2,
+  "slab_elements": [
+   "Li",
+   "P",
+   "S",
+   "Cl"
+  ],
+  "block_elements": [
+   "Li",
+   "Zr",
+   "O"
+  ]
+ },
+ "amend3": {
+  "key": "⏩_개정_3_2026_11_22_MD1_결과_전_t0쌍",
+  "rule": {
+   "judge_excludes_t0_pairs": true,
+   "t0_frame": 0
+  }
+ },
+ "seeds": [
+  {
+   "json": "/home/kgy/work/runs/hj_md1_1120/readout/md1s1_md1.json",
+   "label": "md1s1",
+   "traj_sha256": "b6afba0724bcb3c6d8e20f5b4fad05a732a9078e7c3326acba524a09d3a7585b"
+  },
+  {
+   "json": "/home/kgy/work/runs/hj_md1_1120/readout/md1s2_md1.json",
+   "label": "md1s2",
+   "traj_sha256": "f234e8878d39da09ae1859e5b401b86bc1b3371ce5ec9a055beea24f0a1ea39e"
+  },
+  {
+   "json": "/home/kgy/work/runs/hj_md1_1120/readout/md1s3_md1.json",
+   "label": "md1s3",
+   "traj_sha256": "14181cc384c2ebb810d905974cbf2fbf585564b5859e105aa86d2edda1d98098"
+  }
+ ],
+ "tool": {
+  "path": "tools/oxidation/analyze_interface_decomp.py",
+  "sha256": "bb8dbee3a523b3de84a8aeb40751cea06c24baf0c9ffc5da872e52fe9f40e6b4"
+ },
+ "status": "판정",
+ "verdict": {
+  "P-O": {
+   "seeds_with_event": 0,
+   "of": 3,
+   "verdict": "관측창 안 개시 없음",
+   "counted": "n_events_new",
+   "first_onset_ps_per_seed": [
+    null,
+    null,
+    null
+   ],
+   "n_events_per_seed": [
+    0,
+    0,
+    0
+   ],
+   "obs_window": "관측창 (ν₀ 1e+13 s⁻¹ 가정 · 반응 기회 4 · 정상성 가정 · 600 K · 궤적 3e-09 s): 기대 사건 1 ≈ 0.60 eV (검출 63 %) · 95 % 검출 ≈ 0.55 eV",
+   "obs_window_n_sites_rule": "min(#A, #B) 원자 수 — 가정",
+   "first_onset_new_ps_per_seed": [
+    null,
+    null,
+    null
+   ],
+   "n_events_new_per_seed": [
+    0,
+    0,
+    0
+   ],
+   "n_t0_pairs_per_seed": [
+    0,
+    0,
+    0
+   ],
+   "record_amend2_seeds_with_event": 0,
+   "record_amend2_verdict": "관측창 안 개시 없음",
+   "⚠": "개정 3 — 판정은 생산 중 새로 문턱 안에 든 쌍만 센다 · record_amend2_* 는 t = 0 쌍까지 센 개정 2 셈 (기록만 · 판정 아님)"
+  },
+  "Zr-S": {
+   "seeds_with_event": 1,
+   "of": 3,
+   "verdict": "시드 하나에서만",
+   "counted": "n_events_new",
+   "first_onset_ps_per_seed": [
+    null,
+    null,
+    1.5
+   ],
+   "n_events_per_seed": [
+    0,
+    0,
+    2
+   ],
+   "obs_window": "관측창 (ν₀ 1e+13 s⁻¹ 가정 · 반응 기회 16 · 정상성 가정 · 600 K · 궤적 3e-09 s): 기대 사건 1 ≈ 0.68 eV (검출 63 %) · 95 % 검출 ≈ 0.62 eV",
+   "obs_window_n_sites_rule": "min(#A, #B) 원자 수 — 가정",
+   "first_onset_new_ps_per_seed": [
+    null,
+    null,
+    1.5
+   ],
+   "n_events_new_per_seed": [
+    0,
+    0,
+    2
+   ],
+   "n_t0_pairs_per_seed": [
+    1,
+    0,
+    0
+   ],
+   "record_amend2_seeds_with_event": 1,
+   "record_amend2_verdict": "시드 하나에서만",
+   "⚠": "개정 3 — 판정은 생산 중 새로 문턱 안에 든 쌍만 센다 · record_amend2_* 는 t = 0 쌍까지 센 개정 2 셈 (기록만 · 판정 아님)"
+  }
+ }
+}

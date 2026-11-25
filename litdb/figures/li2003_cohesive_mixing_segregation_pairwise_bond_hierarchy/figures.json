@@ -1,0 +1,653 @@
+{
+ "slug": "li2003_cohesive_mixing_segregation_pairwise_bond_hierarchy",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Phase diagram of cohesive mixing/segregation in a binary system. Comparing the three Bogi\u0007j (1-1, 2-2, 1-2) for varying size ratios and wetting angles (for identical densities) yields a phase diagram of the asymptotic segregation behavior of wet granular materials. Contrary to previous ﬁndings, we predict that there are particulate systems whereby segregation may be enhanced by cohesion. The solid lines represent the phase boundary between regions where interstitial moisture mitigates segregation (M phase, dark) and where it enhances segregation (E phase, light). The labeled points correspond to experiments in Figs. 2 and 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.3,
+    384.0,
+    294.5,
+    587.6
+   ],
+   "w": 1395,
+   "h": 1197,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.693,
+   "auto_bbox": [
+    45.9,
+    378.1,
+    303.1,
+    595.6
+   ],
+   "recrop": "Re-rendered from the vector page at 400 dpi (tool default 300 dpi; the figure is fully vector — curves, markers and labels): page region between the column top and the caption (x 45.9–303.1 pt, y 378.1–596.0 pt) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (33 px) margin; caption excluded (tool convention), printed caption kept from the text layer (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "상태도 (밀도비 1) — 가로 R1/R2 (작은/큰) · 세로 cos θ1/cos θ2 (작은/큰) · 회색 = M 상 (점착이 분리를 줄임) · 흰색 = E 상 (점착이 분리를 키움) · 점 8 개 = 그림 2 · 3 실험.  벡터 좌표로 경계 = 2/(1+r) (위) · (1+r)r²/2 (아래) 를 4 자리까지 확인 (digitized.csv)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "FIG. 2 (color). Instant mixing/segregation: just add water. (a) Particles of two differing sizes, but otherwise identical mechanical and surface properties (Fig. 1, point 2b) will segregate strongly when tumbled dry. (b) The same particles can be made to mix through the introduction of a small amount of interstitial moisture. (c) Particles with differing surface properties (red: hydrophilic and green: hydrophobic) but oth- erwise identical in all other respects [Fig. 1, point(s) 2d; note that the ‘‘larger’’ particle is undeﬁned in this case] will mix perfectly when tumbled dry; however, (d) when interstitial water is added, they will instead segregate.",
+   "rotated_deg": 0,
+   "bbox": [
+    328.5,
+    370.5,
+    546.7,
+    587.9
+   ],
+   "w": 1006,
+   "h": 1003,
+   "dpi": 315,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.122,
+   "auto_bbox": [
+    309.0,
+    364.2,
+    566.1,
+    593.9
+   ],
+   "src_native": [
+    954,
+    952
+   ],
+   "native_dpi": 315,
+   "recrop": "Re-cut from the embedded native raster (xref 4, 954×952 px ≈ 315 dpi JPEG, no resampling): ink bounding box (min RGB < 240) → uniform 6 pt (26 px) margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "물 ≈1 vol% 로 혼합 ↔ 분리를 뒤집은 두 실험 사진 — (a)→(b) 크기만 다른 유리 (0.4/0.75 mm) 가 젖으면 섞임 · (c)→(d) 크기 같고 젖음만 다른 유리 (θ ≈20° · 60°) 가 젖으면 분리.  판정은 사진 정성 (지수 없음)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "FIG. 3 (color). Varying size ratio and wetting angle. The left and right columns correspond to size ratios of 0.53 and 0.75, respectively. From top to bottom the images represent results when dry: (a),(b); wet with the larger particle (red/orange) being more hydrophobic: (c),(d); wet with both particles hydro- philic: (e),(f); and wet with the smaller particle (red/orange) being more hydrophobic: (g),(h). Results are in agreement with the predictions from theory (Fig. 1). Note that when the smaller particle (red/orange) is more hydrophobic —(g) and (h) — the two size ratios respond differently, as expected.",
+   "rotated_deg": 0,
+   "bbox": [
+    328.0,
+    46.5,
+    546.9,
+    488.8
+   ],
+   "w": 1010,
+   "h": 1988,
+   "dpi": 315,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.117,
+   "auto_bbox": [
+    309.0,
+    41.3,
+    566.1,
+    494.8
+   ],
+   "src_native": [
+    958,
+    1936
+   ],
+   "native_dpi": 315,
+   "recrop": "Re-cut from the embedded native raster (xref 9, 958×1936 px ≈ 315 dpi JPEG, no resampling): ink bounding box (min RGB < 240) → uniform 6 pt (26 px) margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "크기비 0.53 (왼쪽) · 0.75 (오른쪽) × 마름 / 젖음 세 조합 — (c)(d) 작은 쪽 친수 = E · (e)(f) 둘 다 친수 = M · (g)(h) 작은 쪽 소수 = 0.53 은 M · 0.75 는 경계 근처.  (c) 의 방사 줄무늬 = 이론이 다루지 않는 거시 무늬."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "FIG. 4 (color online). Varying density ratio. By changing the density ratio the relative size of the M and E phases changes; the M phase grows when the smaller particle is less dense and shrinks when it is more dense. (a) A phase diagram for density ratio of 0.56 (the smaller particle is more dense). The phase boundary is shown as a solid line, while the phase boundary for the inverse case (density ratio of 1.78) is shown as a dashed line, i.e., the lighter gray region becomes part of the E phase.When particles of size ratio 0.9 and wetting angle ratio 0.56 (in the E phase, point c) are tumbled: (b) dry, they will segregate radially only slightly; (c) add water and they segregate more profoundly.",
+   "rotated_deg": 0,
+   "bbox": [
+    140.7,
+    49.0,
+    472.0,
+    151.8
+   ],
+   "w": 1025,
+   "h": 343,
+   "dpi": 215,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.348,
+   "auto_bbox": [
+    45.9,
+    41.3,
+    566.1,
+    159.8
+   ],
+   "src_native": [
+    1003,
+    318
+   ],
+   "native_dpi": 215,
+   "recrop": "Re-cut from the embedded native raster (xref 14, 1003×318 px ≈ 215 dpi PNG, no resampling; the tool render at 300 dpi was an upsample of this raster and carried wide blank side margins): ink bounding box (min RGB < 240) → uniform 6 pt (18 px) margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "밀도비 0.56 (작은 아크릴 ρ 1.4 · R 0.9 mm · θ ≈50° / 큰 유리 ρ 2.5 · R 1.0 mm · θ ≈70°) 상태도 + 마름 (b) · 젖음 (c) 사진.  점 c = E 상 → 젖으면 더 분리."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 4,
+   "file": "fig_4a.png",
+   "panel_of": "4",
+   "caption": "FIG. 4 (a) — FIG. 4 (color online). Varying density ratio. By changing the density ratio the relative size of the M and E phases changes; the M phase grows when the smaller particle is less dense and shrinks when it is more dense. (a) A phase diagram for density ratio of 0.56 (the smaller particle is more dense). The phase boundary is shown as a solid line, while the phase boundary for the inverse case (density ratio of 1.78) is shown as a dashed line, i.e., the lighter gray region becomes part of the E phase.When particles of size ratio 0.9 and wetting angle ratio 0.56 (in the E phase, point c) are tumbled: (b) dry, they will segregate radially only slightly; (c) add water and they segregate more profoundly.",
+   "rotated_deg": 0,
+   "bbox": [
+    140.7,
+    50.0,
+    259.6,
+    150.5
+   ],
+   "w": 391,
+   "h": 336,
+   "dpi": 215,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.69,
+   "manual_crop": "panel (a) cut from the embedded native raster (xref 14, columns 0–370 px of 1003, left of the panel-b photograph which starts at column 373; no resampling, ≈215 dpi) → ink bounding box (min RGB < 240) → uniform 6 pt (18 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 밀도비 판 상태도 — 바깥 실선 (아래) = 밀도비 0.56 경계 (원래 화소 맞춤 ρ1/ρ2 0.557 · 카드 산술 (1+r)·0.56·r²/2 와 일치) · 어두운 회색의 오른쪽 경계 (캡션 '점선' = 반대 경우 1.78) 는 화소 맞춤 ρ1/ρ2 ≈ 2.10 · 세로 꺾임 R1/R2 ≈ 0.746 (1.78 이면 0.792) — 원문 안 어긋남 후보 (digitized.csv).  점 c (0.90, 1.77) [판독]."
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 1,
+   "file": "eq_01_pairwise_granular_bond_number_capillary.png",
+   "caption": "Eq. (1), PDF p.1 right column: Bo_g = 2πγR_e[cos(θ)]_m / ((4/3)πg[R³ρ]_m) = 3γR_e[cos(θ)]_m / (2g[R³ρ]_m) — pairwise granular Bond number (capillary force / weight of the lighter particle of the pair); R_e = 2R1R2/(R1 + R2), [cos θ]_m = smaller cos θ of the pair, [R³ρ]_m = smaller of the two masses (÷ 4π/3).",
+   "rotated_deg": 0,
+   "bbox": [
+    346.4,
+    610.5,
+    559.7,
+    637.0
+   ],
+   "w": 1251,
+   "h": 213,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.925,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9–11 pt type) — band between the neighbouring text lines ('we write' above, 'where γ …' below) → ink bounding box (min RGB < 230) → uniform 6 pt margin; printed exactly as typeset, equation number (1) included (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 쌍별 입상 Bond 수 — 힘 = 모세관 2πγR_e cos θ (액체 다리 · E 무관) · 무게 = 두 입자 중 가벼운 쪽 · 다른 젖음 = 작은 cos θ (min 규칙).  우리 논지 §2-1 의 Bo_ij ∝ W_ij R*_ij /(ρ g R³)_작은 쪽 과 크기 인자 (R_e = 2R*) · 무게 항이 같은 꼴 — 다른 점은 혼합쌍 세기 규칙 (min ↔ 기하평균)."
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract-moisture-switches-mix-segregate",
+   "page": 1,
+   "file": "txt_p1_abstract_moisture_switches_mix_segregate.png",
+   "caption": "PDF p.1 abstract: particle systems that would otherwise mix can be made to segregate and vice versa simply by adding moisture; theory-generated phase diagrams with mixed and segregated phases; phase boundaries manipulated via mechanical and surface properties; engineered agglomerates.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.8,
+    127.2,
+    506.3,
+    210.4
+   ],
+   "w": 2291,
+   "h": 528,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.872,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "초록 — '물기만 더해 섞임 ↔ 분리 뒤집기' · 상태도 · 경계를 기계 · 표면 성질로 옮긴다는 주장의 원문."
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-intro-cohesion-mitigates-origin-elusive-may-enhance",
+   "page": 1,
+   "file": "txt_p1_intro_cohesion_mitigates_origin_elusive_may_enhance.png",
+   "caption": "PDF p.1 left column (introduction): cohesion mitigating segregation known but origin elusive [4,16]; viscosity may matter more than surface tension in a poured heap [17]; a particle-scale theory predicting that cohesion may not only mitigate but enhance segregation (novel mechanism).",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    242.8,
+    297.8,
+    479.5
+   ],
+   "w": 1431,
+   "h": 1381,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.856,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "새로움 주장 ('점착이 분리를 키울 수도') 과 앞선 이해 ('점착은 분리를 줄인다 · 기원 불명') 의 원문 — G1 판정 근거."
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-asymptotic-state-drum-14cm-half-filled-silane",
+   "page": 1,
+   "file": "txt_p1_asymptotic_state_drum_14cm_half_filled_silane.png",
+   "caption": "PDF p.1 left + right columns: rate-independent segregation at an asymptotic state; binary glass or acrylic spheres in half-filled pseudo-2D glass tumblers treated with hydrophobic silane, ~14 cm diameter, 2 cm depth, rolling regime; mixing by collision-induced diffusion in the thin surface layer; analogy to an infinitely long chute; cannot decouple diffusive mixing from segregation; cohesion minimal role on mixing rate [18].",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    242.8,
+    560.2,
+    718.6
+   ],
+   "w": 1431,
+   "h": 2553,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin; multi-part paragraphs stacked top to bottom with a 10 pt gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "드럼 사양 (지름 ≈14 cm · 깊이 2 cm · 반 채움 · 구름 영역 · 벽 소수성 실란) · 점근 상태 정의 · 혼합과 분리를 못 가른다는 한계의 원문.",
+   "parts": [
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 1,
+     "clip": [
+      52.1,
+      481.9,
+      297.8,
+      718.6
+     ]
+    },
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 1,
+     "clip": [
+      315.1,
+      242.8,
+      560.2,
+      443.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x1d",
+   "kind": "text",
+   "label": "p1-pair-forces-6-9rpm-bog-definition",
+   "page": 1,
+   "file": "txt_p1_pair_forces_6_9rpm_bog_definition.png",
+   "caption": "PDF p.1 right column: asymptotic behaviour determined by forces on pairs; rotation restricted to 6–9 rpm so that only cohesion F_C and weight F_W matter (shear negligible); Bo_g = F_C/F_W [13] extended to nonuniform particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.1,
+    446.0,
+    560.2,
+    596.9
+   ],
+   "w": 1428,
+   "h": 904,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.863,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 회전 6–9 rpm 으로 전단을 뺐다 (G3 = 없음 근거) · Bo_g = F_C/F_W 의 출처 [13] = Nase 2001."
+  },
+  {
+   "key": "x1e",
+   "kind": "text",
+   "label": "p1-p2-eq1-terms-smaller-mass-re-larger-theta",
+   "page": 1,
+   "file": "txt_p1_p2_eq1_terms_smaller_mass_re_larger_theta.png",
+   "caption": "PDF p.1 right column → p.2 left column: γ interstitial fluid surface tension; (4/3)π[R³ρ]_m the smaller of the two masses (less massive particle's motion dominated by the more massive); θ wetting angle; R_e 'geometric mean radius' [R_e = 2R1R2/(R1 + R2)]; differing wetting by the larger θ [smaller cos θ]; scale-independent cohesion force in pseudostatic systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    51.7,
+    560.0,
+    718.9
+   ],
+   "w": 1428,
+   "h": 759,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.874,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin; multi-part paragraphs stacked top to bottom with a 10 pt gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 식 (1) 항의 정의 — 가벼운 쪽 질량 · R_e (원문은 'geometric mean' 이라 부르나 식은 조화평균 = 2R*) · 혼합쌍 = 큰 θ (min cos) 규칙 (근거 인쇄 없음).",
+   "parts": [
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 1,
+     "clip": [
+      314.9,
+      649.6,
+      560.0,
+      718.9
+     ]
+    },
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 2,
+     "clip": [
+      52.1,
+      51.7,
+      297.2,
+      97.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-bog-hierarchy-rule-m-e-phases",
+   "page": 2,
+   "file": "txt_p2_bog_hierarchy_rule_m_e_phases.png",
+   "caption": "PDF p.2 left + right columns: Bo_g for each pair (1-1, 2-2, 1-2; 2 = larger); boundaries analytically identified in the space of R1/R2, ρ1/ρ2 and cos θ1/cos θ2; Bo_12 > {Bo_11, Bo_22} (adhesive) → segregation limited; Bo_11 > Bo_12 or Bo_22 > Bo_12 → more segregation than dry; why Bo hierarchies rather than F_c (Bo_22 < 1 → effectively noncohesive; type 1 may still adhere to type 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    51.8,
+    560.0,
+    362.4
+   ],
+   "w": 1431,
+   "h": 2034,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.86,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin; multi-part paragraphs stacked top to bottom with a 10 pt gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★★ 위계 규칙 원문 — 다른 쌍 Bo 가 두 같은 쌍보다 크면 M (덮임 · 섞임 쪽) · 같은 쌍 하나라도 크면 E (뭉침 · 분리 쪽) · 'Bo < 1 = 사실상 비점착' (힘이 아니라 Bo 로 비교하는 이유).",
+   "parts": [
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 2,
+     "clip": [
+      52.1,
+      99.4,
+      297.8,
+      362.4
+     ]
+    },
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 2,
+     "clip": [
+      315.1,
+      51.8,
+      560.0,
+      133.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-fig1-caption-m-dark-e-light-enhanced",
+   "page": 2,
+   "file": "txt_p2_fig1_caption_m_dark_e_light_enhanced.png",
+   "caption": "PDF p.2 left column: Fig. 1 caption — phase diagram comparing the three Bo_g,ij for varying size ratios and wetting angles (identical densities); segregation may be enhanced by cohesion; M phase dark, E phase light; labeled points = experiments of Figs. 2 and 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    600.4,
+    297.2,
+    718.7
+   ],
+   "w": 1428,
+   "h": 723,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그림 1 의 정의 (같은 밀도 · 회색 = M · 흰색 = E)."
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2-fig2-caption-red-hydrophilic-green-hydrophobic",
+   "page": 2,
+   "file": "txt_p2_fig2_caption_red_hydrophilic_green_hydrophobic.png",
+   "caption": "PDF p.2 right column: Fig. 2 caption — (a) two sizes otherwise identical segregate dry (point 2b); (b) mix with a small amount of moisture; (c) differing surface properties (red: hydrophilic, green: hydrophobic), larger particle undefined (points 2d), mix dry; (d) segregate wet.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.1,
+    600.4,
+    560.0,
+    718.7
+   ],
+   "w": 1427,
+   "h": 723,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그림 2 색 표지 (빨강 = 친수 · 초록 = 소수) — 그림 3 캡션의 색 표지와 반대 (원문 안 어긋남 후보)."
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2-p3-exps-hf-glass-1pct-water-silane-angles-20-60",
+   "page": 2,
+   "file": "txt_p2_p3_exps_hf_glass_1pct_water_silane_angles_20_60.png",
+   "caption": "PDF p.2 right column → p.3 left column: soda-lime glass beads, initially completely segregated, ~30 revolutions to a time-invariant (asymptotic) state; dilute HF soak for clean, uniformly rough surfaces; exp 1 radii 0.75 and 0.4 mm (point 2b) segregate dry, mix with ≈1% water by volume; exp 2 identical roughened 0.4 mm beads, half hydrophobic silane (+ fluorescent green), half hydrophilic silane (+ red/orange), θ ≈ 20° and ≈ 60° measured on actual particle surfaces with microliter droplets; mix dry, segregate wet.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    51.8,
+    560.8,
+    348.2
+   ],
+   "w": 1431,
+   "h": 2686,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin; multi-part paragraphs stacked top to bottom with a 10 pt gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 실험 조건 원문 — 처음 완전 분리 · ≈30 바퀴 뒤 시간 불변 · HF 처리 · 물 ≈1 vol% · 젖음각을 입자 표면에서 따로 잼 (G2 판정 근거).",
+   "parts": [
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 2,
+     "clip": [
+      315.1,
+      135.2,
+      560.8,
+      348.2
+     ]
+    },
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 3,
+     "clip": [
+      52.1,
+      51.8,
+      297.8,
+      300.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-fig3-size-ratio-053-075-e-m-phases-macro-pattern",
+   "page": 3,
+   "file": "txt_p3_fig3_size_ratio_053_075_e_m_phases_macro_pattern.png",
+   "caption": "PDF p.3 left column: glass radii 0.4 or 1.0 mm with 0.75 mm beads → size ratios 0.53 and 0.75; dry = strong radial segregation; smaller (green) more hydrophilic → E; macroscopic pattern not addressed by the theory (time-varying surface angle → patterns [20]); similar wetting → M, mix more than dry; larger (green) more hydrophilic → 0.53 firmly M and mixes, 0.75 near the boundary, essentially unaffected.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    302.6,
+    297.2,
+    611.2
+   ],
+   "w": 1428,
+   "h": 1780,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.848,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그림 3 판정 원문 — 경계 근처 점 (0.75) 은 점착에 '사실상 영향 없음' · 이론은 거시 무늬를 다루지 않는다는 한계."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-fig3-caption-red-orange-hydrophobic",
+   "page": 3,
+   "file": "txt_p3_fig3_caption_red_orange_hydrophobic.png",
+   "caption": "PDF p.3 right column: Fig. 3 caption — size ratios 0.53 (left) and 0.75 (right); dry (a,b); wet with the larger particle (red/orange) more hydrophobic (c,d); both hydrophilic (e,f); smaller (red/orange) more hydrophobic (g,h); agreement with Fig. 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.1,
+    501.2,
+    560.2,
+    608.5
+   ],
+   "w": 1428,
+   "h": 662,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그림 3 색 표지 (빨강/주황 = 소수 · 초록 = 친수) — 그림 2 · p.3 처리 문단과 반대."
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-fig4-density-ratio-056-acrylic-glass-point-c",
+   "page": 3,
+   "file": "txt_p3_fig4_density_ratio_056_acrylic_glass_point_c.png",
+   "caption": "PDF p.3 left + right columns: Fig. 4(a) Bo_g analysis for the smaller particle less dense (density ratio 0.56); acrylic (ρ = 1.4 g/cm³; R = 0.9 mm; θ ≈ 50°) and glass beads (ρ = 2.5 g/cm³; R = 1.0 mm; θ ≈ 70°); dry = only mild radial segregation (density and size effects almost cancel); cohesive system evolves to a more segregated state as predicted (point c).",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    613.4,
+    559.9,
+    718.7
+   ],
+   "w": 1426,
+   "h": 892,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.869,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin; multi-part paragraphs stacked top to bottom with a 10 pt gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 밀도비 실험 원문 — 아크릴 · 유리의 ρ · R · θ (점 c 의 위치를 카드가 다시 계산: cos50/cos70 = 1.88).",
+   "parts": [
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 3,
+     "clip": [
+      52.1,
+      613.4,
+      296.9,
+      718.7
+     ]
+    },
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 3,
+     "clip": [
+      315.2,
+      637.0,
+      559.9,
+      670.3
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3d",
+   "kind": "text",
+   "label": "p3-p4-asymptotic-only-rate-avoided-conclusion",
+   "page": 3,
+   "file": "txt_p3_p4_asymptotic_only_rate_avoided_conclusion.png",
+   "caption": "PDF p.3 right column → p.4 left column: by looking only at the asymptotic state, rate-dependent phenomena (cohesion and bridging-liquid viscosity [17]) are expressly avoided; a particle-level model predicts previously unreported results; kinetics vital for a full description, but rational design impossible without the asymptotic behaviour.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    251.0,
+    560.0,
+    718.2
+   ],
+   "w": 1427,
+   "h": 1024,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.864,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin; multi-part paragraphs stacked top to bottom with a 10 pt gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결론 · 한계 — 속도 의존 (회전 · 점성) 을 일부러 뺐다 (G3 = 없음 · 우리 rpm 축의 빈칸).",
+   "parts": [
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 3,
+     "clip": [
+      315.1,
+      672.9,
+      560.0,
+      718.2
+     ]
+    },
+    {
+     "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+     "page": 4,
+     "clip": [
+      52.1,
+      251.0,
+      297.0,
+      368.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-fig4-caption-density-ratio-inverse-point-c",
+   "page": 4,
+   "file": "txt_p4_fig4_caption_density_ratio_inverse_point_c.png",
+   "caption": "PDF p.4 (full width): Fig. 4 caption — M phase grows when the smaller particle is less dense; (a) density ratio 0.56 '(the smaller particle is more dense)'; solid line vs dashed line for the inverse case (density ratio 1.78), lighter gray becomes E; point c: size ratio 0.9 and 'wetting angle ratio 0.56' in the E phase; (b) dry slight radial segregation; (c) wet segregate more.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    166.4,
+    560.2,
+    229.8
+   ],
+   "w": 2889,
+   "h": 418,
+   "dpi": 400,
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "blank": 0.871,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9.5–10.5 pt type), band between the white gaps just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그림 4 캡션 — 원문 안 어긋남 둘의 근거 ('smaller particle is more dense' ↔ 본문 'less dense' · 점 c 'wetting angle ratio 0.56' ↔ θ 50° · 70° 로는 1.88)."
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "note_manual": "4-page PRL, no SI, no tables. Figures 2–4 are single embedded rasters (re-cut from native pixels); Fig. 1 is vector (re-rendered at 400 dpi). Only one numbered equation (Eq. 1); the M/E hierarchy rule is inline text (txt_p2_bog_hierarchy_rule_m_e_phases.png). The phase-boundary equations are NOT printed — the card derives them (card arithmetic) and checks them against the Fig. 1 vector polylines (digitized.csv). 14 evidence-paragraph crops (≤ 20 rule) · no page_* images."
+}

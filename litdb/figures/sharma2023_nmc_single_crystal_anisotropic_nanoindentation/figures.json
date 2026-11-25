@@ -1,0 +1,277 @@
+{
+ "slug": "sharma2023_nmc_single_crystal_anisotropic_nanoindentation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-26",
+ "sources": [
+  "899bbfca-1-s2.0-S2352431622001961-main.pdf",
+  "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. NMC cathode and nanoindentation of anisotropic solids. (a) Layered lattice of LiNixMnyCo1−x−yO2 where Li atoms (light purple dots) and transition metal atoms Ni, Mn, and Co (blue dots) occupy the octahedral positions between the oxygen atoms (dark purple dots). The lattice planes (003) and (104) are marked in the atomic configuration. (b) Top view of the NMC lattice indicating the hexagonal packing structure. (c) An SEM image of NMC622 (LiNi0.6Mn0.2Co0.2O2) single crystalline particles. (d) Schematic of indentation on the polished surface of a randomly oriented NMC single crystalline particle. The orientation of the NMC particle in the 3D w.r.t. the laboratory reference frame (Xr; Yr; Zr) is defined using the Euler angles (ϕ1, Φ, and ϕ2) by following the Z-X-Z rotation. Initially, the basal planes of the NMC lattice are parallel to the Xr - Yr plane, and the prismatic face (or la",
+   "rotated_deg": 0,
+   "bbox": [
+    114.3,
+    53.8,
+    481.5,
+    354.0
+   ],
+   "w": 1530,
+   "h": 1251,
+   "dpi": 300,
+   "src": "899bbfca-1-s2.0-S2352431622001961-main.pdf",
+   "blank": 0.506,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (115.6, 55.3, 479.7, 352.0) +2 pt; content identical to the auto crop (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [31.6, 49.3, 563.7, 358.0])"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Grain growth during the sintering process. (a) An SEM image of the pristine NMC622 powder. (b) A cross-section image of the sintered NMC pellet. (c) The temperature profile inside the box furnace during the sintering process. (d) The XRD profiles of the sintered pellet in comparison with the pristine powder and the reference data (ICDD No. 00-066-0856). The higher ratio of (003) and (104) peaks demonstrates lower cation mixing of Li and Ni in NMC (the ratio for the pristine powder is 3.203 and for the sintered pellet is 3.087). There is a slight shift (0.107◦to the lower angle) of the (104) peak in the sintered pellet compared to the pristine powder.",
+   "rotated_deg": 0,
+   "bbox": [
+    106.7,
+    55.0,
+    489.5,
+    340.6
+   ],
+   "w": 1595,
+   "h": 1190,
+   "dpi": 300,
+   "src": "899bbfca-1-s2.0-S2352431622001961-main.pdf",
+   "blank": 0.583,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (107.7, 55.3, 487.6, 338.5) +2 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [31.6, 49.3, 563.7, 344.5])"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Indentation sites in the sintered NMC pellets and EBSD mapping of the lattice orientations. (a) and (c) SEM images of the polished surfaces of the sintered NMC pellets. (b) and (d) The corresponding EBSD mapping of the NMC grains.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.8,
+    53.3,
+    490.5,
+    379.5
+   ],
+   "w": 1603,
+   "h": 1359,
+   "dpi": 300,
+   "src": "899bbfca-1-s2.0-S2352431622001961-main.pdf",
+   "blank": 0.252,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (107.1, 55.3, 488.2, 377.4) +2 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [31.6, 49.3, 563.7, 383.4])"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Schematic representation of an anisotropic elastic half-space. (a) The origin (O) of the reference coordinate system (x1, x2, x3) is situated at the surface boundary of the half-space. Direction cosines (α1, α2, α3) define the surface orientation of the half-space boundary. An arbitrary unit vector t is situated on the half-space boundary, φ is the angle between the unit vector m and some fixed datum in a plane perpendicular to the vector t. (b) The position vector y and angle θ (w.r.t. some fixed datum) define the location of point P situated on the half-space boundary. For a unit load acting at the origin, w(y) is the displacement of the point P along the direction of the unit load. angle-dependent part of the surface Green’s function h (θ) and the distance from the point load r: Another function is ∫π h (θ + ϕ) √ α (e, ϕ) = 1 −e2 cos2 θ dθ. (7) [ ) ] ( = h (θ) y |y| w (y) = 1 ",
+   "rotated_deg": 0,
+   "bbox": [
+    106.2,
+    417.8,
+    489.2,
+    531.3
+   ],
+   "w": 1596,
+   "h": 473,
+   "dpi": 300,
+   "src": "899bbfca-1-s2.0-S2352431622001961-main.pdf",
+   "blank": 0.831,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (108.2, 419.8, 487.1, 529.0) +2 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [31.6, 413.8, 563.7, 535.0])"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. The elastic stiffness constants for NMC622. (a) The evaluated values of elsatic constants using the method defined in Table S1. The box plot contains values between the 1st quartile (25th percentile) and the 3rd quartile (75th percentile), and the black colored dot inside each box represents the mean value (C11 = 194.89 GPa, C12 = 133.74 GPa, C13 = 11.85 GPa, C14 = 8.61 GPa, C44 = 74.14 GPa, and C33 = 177.24 GPa). The black line represents the normal distribution of the data points. (b) Indentation moduli calculated along all NMC lattice planes using the stiffness constants in (a). The basal plane (0001) has a much higher indentation modulus than the prismatic planes. The variation of the indentation moduli across the prismatic planes is negligible.",
+   "rotated_deg": 0,
+   "bbox": [
+    62.0,
+    54.0,
+    533.6,
+    269.5
+   ],
+   "w": 1965,
+   "h": 898,
+   "dpi": 300,
+   "src": "899bbfca-1-s2.0-S2352431622001961-main.pdf",
+   "blank": 0.786,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (62.8, 55.3, 532.5, 267.5) +2 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [31.6, 49.3, 563.7, 273.5])"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Indentation moduli, hardness, and fracture toughness of different NMC compositions. (a) The indentation modulus for NMC111 = 192.78 ± 39.59 GPa (number of indents, N = 65), NMC622 = 150.88 ± 58.35 GPa (N = 80), and NMC811 = 229.9 ± 40.55 GPa (N = 80). The data for NMC532 = 200.81 ± 33.61 GPa (N = 25) is reproduced from our prior work [23]. (b) Hardness calculated using the Oliver–Pharr method. The hardness for NMC111 = 9.37 ± 2.94 GPa, NMC532 = 14.29 ± 2.53 GPa, NMC622 = 9.92 ± 3.11 GPa and NMC811 = 14.17 ± 3.32 GPa. (c) Load–displacement curve (blue color) obtained using the cubic corner indentation tip. The black dotted line represents the quadratic polynomial function fitted till 100 nm tip displacement (hmin). The abrupt increase in reduced stiffness (orange curve) is used to measure the pop-in events. The inset picture shows a cube corner tip impression (scale bar 1 µm). (d)",
+   "rotated_deg": 0,
+   "bbox": [
+    77.7,
+    53.3,
+    517.9,
+    435.6
+   ],
+   "w": 1834,
+   "h": 1593,
+   "dpi": 300,
+   "src": "899bbfca-1-s2.0-S2352431622001961-main.pdf",
+   "blank": 0.87,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (79.7, 55.3, 515.6, 433.6) +2 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [31.6, 49.3, 563.7, 439.6])"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Sensitivity of the ℎmin value on the fracture toughness measurements (𝑁= 174) for NMC622 single crystals. ℎmin defines the indentation depth before which no radial cracking is assumed to have taken place. While ℎmin = 50 nm discards too many tests (due to fewer pop-in events), ℎmin = 150 nm or higher values exhibit more spread of the fracture toughness values.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.6,
+    68.7,
+    518.4,
+    282.8
+   ],
+   "w": 1770,
+   "h": 892,
+   "dpi": 300,
+   "src": "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf",
+   "blank": 0.902,
+   "viewed": true,
+   "recrop": "FIXED: auto crop stopped at y 265.1 pt (caption block top from inflated Ghostscript font bbox) and CUT OFF the three panel labels 'h_min = 50nm / 100nm / 150nm' (ink y 268.8-278.6 pt). Clip = embedded raster (95.6, 72.0, 516.4, 280.8) +2 pt; caption ink starts at y 296.2 pt, so no caption text enters (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [66.0, 66.0, 549.1, 265.1])"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. An SEM image of the Berkovich indenter impression on the sintered NMC grain.",
+   "rotated_deg": 0,
+   "bbox": [
+    203.2,
+    70.0,
+    409.1,
+    261.3
+   ],
+   "w": 858,
+   "h": 797,
+   "dpi": 300,
+   "src": "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf",
+   "blank": 0.047,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (205.2, 72.0, 406.8, 259.1) +2 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [66.0, 66.0, 530.7, 265.1])"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Shear bands around the cube corner tip induced fracture in the NMC grains. The white scale bar is 2µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.0,
+    76.0,
+    542.3,
+    348.6
+   ],
+   "w": 1939,
+   "h": 1136,
+   "dpi": 300,
+   "src": "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf",
+   "blank": 0.245,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = embedded raster (72.0, 72.0, 540.0, 346.3) +2 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [66.0, 66.0, 549.0, 352.3])"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. XRD profiles for the sintered NMC111 and NMC811 pellets.",
+   "rotated_deg": 0,
+   "bbox": [
+    161.4,
+    70.0,
+    452.3,
+    568.5
+   ],
+   "w": 1212,
+   "h": 2077,
+   "dpi": 300,
+   "src": "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf",
+   "blank": 0.898,
+   "viewed": true,
+   "recrop": "white-border trim only: clip = union of the two embedded rasters (162.0, 72.0, 450.0, 305.3) and (162.0, 333.0, 450.0, 566.3) +2 pt (NMC111 top, NMC811 bottom). Note: the sintered (003) peaks are clipped by the plot frame IN THE ORIGINAL (not a crop defect) (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [66.0, 66.0, 456.0, 572.3])"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Algorithm used for the numerical calculation of stiffness constants. At each indented values of the 6 stiffness constants (𝐶11, 𝐶12, 𝐶13, 𝐶14, 𝐶33, 𝐶44) are modified iteratively to reduce the error between 𝑀cal (calculated indentation modulus) and 𝑀exp (experimental indentation modulus obtained from nanoindentation) at each indentation site. The tolerance is set as 0.1%.",
+   "rotated_deg": 0,
+   "bbox": [
+    112.2,
+    68.7,
+    506.5,
+    446.0
+   ],
+   "w": 1643,
+   "h": 1572,
+   "dpi": 300,
+   "src": "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf",
+   "blank": 0.91,
+   "viewed": true,
+   "recrop": "FIXED: auto crop (a) started at y 75.6 pt and dropped the thick top rule of the algorithm box (ink y 72.0-73.7) and (b) ran down to y 572 pt, pulling the whole 5-line 'Table S1.' CAPTION into the image. Clip = algorithm box + 'Euler angles ...' line + rotation matrix (ink y 72.0-442.3 pt); caption ink starts at y 466.1 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi; auto bbox was [67.0, 75.6, 548.0, 572.1])"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Expressions to calculate the effective indentation modulus, hardness, and fracture toughness from the load-displacement curves. β is a geometric factor (1.034 for the Berkovich tip), Ac is the calibrated contact area using a standard fused silica sample, S is the dynamic stiffness, υ is the Poisson’s ratio of NMC, Ei is the elastic modulus of the diamond indenter (1141 GPa) and υi the Poisson’s ratio of the indenter (0.07), F is the measured load, hm is the total measured tip displacement, hx is the tip displacement during the pop-in event, Q is the geometric constant (4.55 for the cube corner tip), E′ is the plane strain modulus (Mexp from Figure 6a is used for the respective NMC compositions to calculate the fracture toughness), α is another empirical constant (0.036 for the cube corner tip). The fracture toughness is calculated based on the assumption of penny-shaped radial cracks.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.0,
+    68.5,
+    516.0,
+    309.9
+   ],
+   "w": 1746,
+   "h": 1006,
+   "dpi": 300,
+   "src": "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf",
+   "blank": 0.939,
+   "viewed": true,
+   "manual_crop": "MANUAL: extract_figures.py rejected this table ('거의 백지(1.000)' — it looked below the caption, where the page is empty; the table sits ABOVE its caption). Clip = table rules x 99.7-512.4, y 72.0-306.4 pt (vector); caption ink starts at y 336.5 pt (2026-09-26; trim: white = all channels > 244, pad 14 px @300 dpi)"
+  }
+ ],
+ "note": "All 12 crops opened and checked by eye 2026-09-26 (main Fig 1-6 + SI Fig S1-S4 + SI Table S1-S2). Every crop was re-rendered by hand (see recrop / manual_crop per entry): fig_S1 (h_min panel labels were cut), tab_S1 (top rule dropped + caption pulled in) and tab_S2 (auto-rejected, cropped manually) were DEFECTS; the other 9 are white-border trims of the embedded raster with identical content. Re-running extract_figures.py --clean on this slug reverts all of this (see litdb/pdf_map.tsv)."
+}

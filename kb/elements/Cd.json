@@ -1,0 +1,79 @@
+{
+  "symbol": "Cd",
+  "name": "Cadmium",
+  "Z": 48,
+  "role": "Zn의 바로 아래 동족(group 12, 4d¹⁰ 닫힌껍질). Cd²⁺=4d¹⁰라 전자적으로 얌전한 단일 산화수(+2, redox 비활성) 이가 양이온 — 원리적으로 Zn²⁺류 이가치 도펀트(CdO/CdS) 유추종이다. Cd²⁺는 Zn²⁺보다 더 부드러운(soft) 산이라 S와의 친화가 강함(CdS 고전 반도체). 다만 독성이 크고 CdO/CdS가 ZnO/ZnS보다 밴드갭이 좁아 '클린 wide-gap'이라기엔 gap 여유가 적다 — 실제 우리 캠페인 원소는 아닌 백과사전/Zn-동족 참조종.",
+  "oxidation_states": [
+    "+2"
+  ],
+  "electronegativity": 1.69,
+  "ionic_radius_A": {
+    "Cd2+_IV": 0.78,
+    "Cd2+_VI": 0.95,
+    "Cd2+_VIII": 1.1,
+    "_note": "Shannon 1976: Cd²⁺(d¹⁰) 사면체 IV 0.78 A, 팔면체 VI 0.95 A, VIII 1.10 A. VI 0.95는 Zn²⁺ VI(0.745)보다 크고 Li⁺ VI(0.76)보다도 커서 Li 자리 이가치 치환 시 국소 팽창(Zn보다 큼); P⁵⁺ 사면체(IV 0.17)엔 부적합."
+  },
+  "representative_compounds": [
+    {
+      "formula": "CdS",
+      "context": "고전 II-VI 반도체 / soft Cd-S",
+      "battery_role": "Cd²⁺(soft acid)–S 친화 대표상; wide-gap 아닌 중간 gap",
+      "note": "wurtzite/zincblende CdS gap ~2.42 eV(ZnS 3.6보다 좁음); Cd 3d5/2 ~405.4 eV. 광촉매/QD로 유명"
+    },
+    {
+      "formula": "CdO",
+      "context": "이가 산화물 도펀트 유추(캐스케이드 산화물)",
+      "battery_role": "Zn²⁺→Cd²⁺ 유추 O-앵커 이가 도펀트 원",
+      "note": "rocksalt CdO는 좁은 gap(~2.2 eV) 축퇴 반도체 — ZnO(3.3) 대비 gap 좁아 클린도↓; Cd 3d5/2 ~404.3 eV"
+    },
+    {
+      "formula": "CdSe / CdTe",
+      "context": "II-VI 광전 반도체(비배터리 참조)",
+      "battery_role": "배터리 아님 — QD/태양전지 맥락",
+      "note": "Cd 칼코게나이드가 좁은 gap 반도체로 쓰이는 맥락(전자적으로 clean wide-gap 도펀트와는 거리)"
+    }
+  ],
+  "sei_relevance": "Cd는 native SE 원소가 아니고 독성 때문에 실사용은 안 하지만, Zn의 동족이라 이가치(Cd²⁺) 도펀트로 유추됨: 4d¹⁰ 닫힌껍질·단일 +2라 redox 비활성이라는 점은 Zn과 같아 Cu/Ag 같은 환원석출 단락 위험은 낮다. 그러나 Cd 칼코게나이드/산화물이 Zn 대응보다 밴드갭이 좁아 호스트 gap을 더 좁힐 우려가 있고(전자적 clean도↓), soft acid라 S와 강히 결합(CdS)해 골격 치환보다 Cd-S 상 형성 쪽으로 갈 수 있음. 결론: Zn-유사 얌전한 이가종이나 독성+좁은 gap으로 실용 우위는 없음 — 참조종.",
+  "xps": [
+    {
+      "core": "Cd 3d5/2",
+      "BE_eV": 405.0,
+      "assignment": "Cd metal / Cd⁰ (ISO 보정 ~405.0 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Cd 3d5/2",
+      "BE_eV": 405.4,
+      "assignment": "CdS / Cd²⁺ sulfide (보고 ~405.2-405.7 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Cd 3d5/2",
+      "BE_eV": 404.3,
+      "assignment": "CdO / Cd²⁺ oxide (보고 ~404.0-404.5 eV; 금속·황화물과 근접 → Auger MNN 병행 권장)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 305,
+      "assignment": "CdS 1LO 광학포논(wurtzite/zincblende 지문; 2LO ~605 cm-1)",
+      "ref": "CdS Raman 표준 참조"
+    }
+  ],
+  "dos_character": "Cd²⁺는 4d¹⁰ 닫힌껍질 → Cd 4d가 VBM 아래 깊은 반코어(~ -10 eV 이하)로 국소화돼 밴드엣지를 pin하지 않고, CBM은 Cd 5s. 단일 +2·d¹⁰라 redox 비활성이고 스핀분극 불필요 — 여기까진 Zn²⁺와 같은 '닫힌껍질 얌전한 이가종'. 다만 CdO/CdS 자체 gap이 ZnO/ZnS보다 좁아(각 ~2.2/~2.4 eV) 도핑 시 호스트 gap 여유를 Zn보다 덜 지키는 방향 — Zn/Ga/Ge류 clean wide-gap 군의 무거운·좁은-gap 사촌.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s²",
+    "electron_config": "[Kr] 4d¹⁰ 5s²",
+    "valence_orbitals": "4d¹⁰(닫힘) 5s² — 5s²만 내줘 Cd²⁺(4d¹⁰)로 고정. 단일 +2라 redox 비활성(닫힌껍질 d¹⁰), Zn 3d¹⁰4s²의 무거운 동족",
+    "band_character": "(일반) Cd²⁺=4d¹⁰ 닫힌껍질 → Cd 4d 깊은 반코어(밴드엣지 pin 안 함), CBM Cd 5s. Zn²⁺와 같은 clean 이가종 성격이나 CdO/CdS gap이 좁아(~2.2/2.4 eV) 호스트 gap 여유는 Zn보다 작음",
+    "bonding": "Cd–S: Cd²⁺는 soft acid라 S와 강히 결합(CdS), Cd 4d–S 3p 혼성은 약하나 Zn보다 soft·큼; Cd–O(CdO)도 가능. redox 비활성"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Cd²⁺ IV 0.78 / VI 0.95 A)",
+    "NIST XPS DB — Cd 3d5/2: Cd⁰ 405.0 / CdS 405.4 / CdO 404.3 eV (근접 → Auger MNN 병행)",
+    "CdS Raman 표준 — 1LO ~305 cm-1 (2LO ~605); II-VI 반도체 지문"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii · handbook). SSB 앵커 없음(비캠페인) — 백과사전 기본+orbital. 우리 db 절대값과 분리."
+}

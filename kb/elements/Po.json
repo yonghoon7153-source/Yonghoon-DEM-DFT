@@ -1,0 +1,56 @@
+{
+  "symbol": "Po",
+  "name": "Polonium",
+  "Z": 84,
+  "role": "칼코겐(group 16) S 동족 계열의 가장 무거운 원소 — 하지만 group 16에서 유일하게 진짜 금속(단순입방 금속결정)이고 강한 방사성(Po-210, α방출)이라 배터리와 무관. S<Se<Te<Po 동족 축의 극단으로 백과사전 완결성을 위한 참조종일 뿐, SE/도펀트로 쓸 수 없다(금속전도·방사성·독성). 밴드갭 개념이 사실상 없는 금속 칼코겐.",
+  "oxidation_states": [
+    "+4",
+    "+2",
+    "+6",
+    "-2"
+  ],
+  "electronegativity": 2.0,
+  "ionic_radius_A": {
+    "Po4+_VI": 0.94,
+    "Po6+_VI": 0.67,
+    "_note": "Shannon 1976: Po⁴⁺ VI 0.94 A(가장 안정한 산화상태), Po⁶⁺ VI 0.67 A. Po²⁻는 표에 없음(방사성으로 결정학 데이터 희소; 동족 외삽 시 ~2.3 A대로 추정, 불확실)."
+  },
+  "representative_compounds": [
+    {
+      "formula": "PoO2",
+      "context": "Po⁴⁺ 산화물(가장 안정)",
+      "battery_role": "없음 — 방사성 참조상",
+      "note": "형석(fluorite)형 결정; Po의 가장 특성적 산화물. 강방사성으로 취급 불가"
+    },
+    {
+      "formula": "Na2Po / metal polonide",
+      "context": "폴로나이드(Po²⁻)",
+      "battery_role": "없음 — 금속성 폴로나이드 참조",
+      "note": "Po²⁻ 음이온상이나 금속 성향; Li₂S/Li₂Se/Li₂Te 계열의 형식적 최말단(비실용)"
+    },
+    {
+      "formula": "PoH2",
+      "context": "폴로늄 수소화물",
+      "battery_role": "없음 — 학술 참조",
+      "note": "H₂S/H₂Se/H₂Te 동족의 최말단; 불안정·방사성"
+    }
+  ],
+  "sei_relevance": "해당 없음. Po는 강방사성(Po-210) 금속 칼코겐으로 배터리 계면·SEI와 전혀 무관하며, 금속전도성이라 SE의 전자절연 요건과 정면 배치. 동족 완결성(S→Se→Te→Po)을 위한 백과사전 항목으로만 존재.",
+  "xps": [],
+  "raman": [],
+  "dos_character": "Po는 금속(단순입방 α-Po) — 밴드갭이 없고 6p 밴드가 페르미준위를 가로지른다. 칼코겐이지만 S/Se/Te의 반도체적 성격이 완전히 사라져 금속전도. 무거운 원소라 SOC·상대론 효과가 크다. SE 관점에선 '전자전도 금속'이라 부적합의 극단.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁴",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴",
+    "valence_orbitals": "6s² 6p⁴ — 6p가 원자가(4f¹⁴5d¹⁰ 반코어). S 3p⁴의 가장 무거운 동족이나 금속화",
+    "band_character": "(일반) 6p 밴드가 페르미준위를 가로질러 금속(밴드갭 없음) — 칼코겐 반도체 성격 소멸. SOC·상대론 효과 큼. SE 부적합(금속전도)",
+    "bonding": "Po–Po 금속결합(α-Po 단순입방); 화합물에선 6s/6p 관여이나 강한 상대론·방사성으로 특이"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Po⁴⁺ VI 0.94 / Po⁶⁺ VI 0.67 A)",
+    "무기화학 handbook (Greenwood & Earnshaw 등) — Po = group 16 유일 금속, α-Po 단순입방, Po-210 강방사성",
+    "(XPS/Raman: 강방사성으로 신뢰할 핸드북 core-level·모드 데이터 부재 → 생략)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii · handbook). SSB 앵커 없음(비캠페인) — 백과사전 기본+orbital. 우리 db 절대값과 분리."
+}

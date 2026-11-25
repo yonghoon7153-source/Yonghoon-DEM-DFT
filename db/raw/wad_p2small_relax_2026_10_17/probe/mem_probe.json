@@ -1,0 +1,79 @@
+{
+ "model_dir": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_geometries_2026_10_17/P2S_s_outer/A",
+ "model": "P2S",
+ "registry": "A",
+ "term": "s_outer",
+ "init_sha256": "d6ceddfd90b9db732cedd2d3daa91a16de869bc97ad7056d313869aafed6e9eb",
+ "n_atoms": 398,
+ "fixed_n": 90,
+ "lateral_n": 0,
+ "preflight": {
+  "flags": [],
+  "mask_matches_policy": true
+ },
+ "ase": "3.29.0",
+ "fmax_target_eV_A": 0.02,
+ "max_steps": 3000,
+ "optimizer": "fire",
+ "cell_fixed": true,
+ "gpu_guard": {
+  "vram_cap_MiB": 4000.0,
+  "gpu_kill_total_MiB": 23500,
+  "gpu_start_max_MiB": 16000,
+  "start_gate": {
+   "ok": true,
+   "last_MiB": 15023,
+   "waited_s": 0.0,
+   "reason": "합계 15023 ≤ 16000"
+  },
+  "watchdog": "on (합계 > 23500 MiB 면 이 프로세스만 종료 3)"
+ },
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "vram_cap": {
+   "cap_MiB": 4000.0,
+   "device_total_MiB": 24154,
+   "fraction": 0.1656,
+   "⚠": "CUDA 컨텍스트(수백 MiB)는 이 상한 밖이다"
+  },
+  "fairchem.core": "2.21.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/home/kgy/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ],
+  "d3": {
+   "impl": "simple-dftd3 (python)",
+   "version": "1.6.0",
+   "method": "PBE",
+   "damping": "d3bj (2체)",
+   "params_expected": {
+    "functional": "PBE",
+    "damping": "BJ",
+    "s6": 1.0,
+    "s8": 0.7875,
+    "a1": 0.4289,
+    "a2": 4.4407,
+    "three_body": false
+   }
+  }
+ },
+ "mem_probe": {
+  "peak": {
+   "max_reserved_MiB": 2666,
+   "max_allocated_MiB": 2144
+  },
+  "gpu_total_after_MiB": 18046,
+  "n_atoms": 398,
+  "wall_s": 2.1,
+  "⛔": "힘 한 번 — 이완·에너지 기록 없음 (메모리만 잰다)"
+ }
+}

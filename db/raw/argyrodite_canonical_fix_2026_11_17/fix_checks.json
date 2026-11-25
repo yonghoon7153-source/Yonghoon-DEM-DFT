@@ -1,0 +1,193 @@
+{
+ "lpscl_F43m_24G_ideal_Clcage_2026_11_17": {
+  "source": "db/structures/lpscl_F43m_24G_canonical.cif",
+  "n": 52,
+  "a_A": [
+   10.2493,
+   10.2493,
+   10.2493
+  ],
+  "before": {
+   "S-X_min": 2.356,
+   "O-X_min": null,
+   "P-S_min": 2.082,
+   "Li-S_min": 2.401,
+   "Li-X_min": 2.797,
+   "anions_within_2.6_of_each_P_or_B": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "after": {
+   "S-X_min": 4.227,
+   "O-X_min": null,
+   "P-S_min": 2.082,
+   "Li-S_min": 2.401,
+   "Li-X_min": 2.328,
+   "anions_within_2.6_of_each_P_or_B": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "written": [
+   "db/structures/lpscl_F43m_24G_ideal_Clcage_2026_11_17.cif"
+  ]
+ },
+ "comp1_V0_cubic_Clcage_2026_11_17": {
+  "source": "paper_figures/comp1_V0_cubic.cif.BROKEN_Cl_in_4d_hole",
+  "n": 52,
+  "a_A": [
+   10.0551,
+   10.0551,
+   10.0551
+  ],
+  "before": {
+   "S-X_min": 2.311,
+   "O-X_min": null,
+   "P-S_min": 2.043,
+   "Li-S_min": 2.355,
+   "Li-X_min": 2.744,
+   "anions_within_2.6_of_each_P_or_B": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "after": {
+   "S-X_min": 4.147,
+   "O-X_min": null,
+   "P-S_min": 2.043,
+   "Li-S_min": 2.355,
+   "Li-X_min": 2.284,
+   "anions_within_2.6_of_each_P_or_B": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "written": [
+   "paper_figures/comp1_V0_cubic_Clcage_2026_11_17.cif",
+   "paper_figures/comp1_V0_cubic_Clcage_2026_11_17.vasp",
+   "paper_figures/comp1_V0_cubic_Clcage_2026_11_17.xyz"
+  ]
+ },
+ "lpscl_primitive_1fu_Clcage_2026_11_17": {
+  "source": "paper_figures/lpscl_primitive_1fu.cif.BROKEN_Cl_in_4d_hole",
+  "n": 13,
+  "a_A": [
+   7.2473,
+   7.2473,
+   7.2473
+  ],
+  "before": {
+   "S-X_min": 2.356,
+   "O-X_min": null,
+   "P-S_min": 2.082,
+   "Li-S_min": 2.401,
+   "Li-X_min": 2.797,
+   "anions_within_2.6_of_each_P_or_B": [
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    0
+   ]
+  },
+  "after": {
+   "S-X_min": 4.227,
+   "O-X_min": null,
+   "P-S_min": 2.082,
+   "Li-S_min": 2.401,
+   "Li-X_min": 2.328,
+   "anions_within_2.6_of_each_P_or_B": [
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    6
+   ]
+  },
+  "written": [
+   "paper_figures/lpscl_primitive_1fu_Clcage_2026_11_17.cif",
+   "paper_figures/lpscl_primitive_1fu_Clcage_2026_11_17.vasp"
+  ]
+ },
+ "lpscl_b2o3_scheme_F43m_Clcage_2026_11_17": {
+  "source": "db/structures/lpscl_b2o3_scheme_F43m.cif.BROKEN_Cl_in_4d_hole",
+  "n": 52,
+  "a_A": [
+   10.2493,
+   10.2493,
+   10.2493
+  ],
+  "before": {
+   "S-X_min": 2.356,
+   "O-X_min": 2.356,
+   "P-S_min": 2.082,
+   "Li-S_min": 2.401,
+   "Li-X_min": 2.797,
+   "anions_within_2.6_of_each_P_or_B": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "after": {
+   "S-X_min": 4.227,
+   "O-X_min": 4.227,
+   "P-S_min": 2.082,
+   "Li-S_min": 2.401,
+   "Li-X_min": 2.328,
+   "anions_within_2.6_of_each_P_or_B": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "Li_within_2.6_of_each_halide": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "written": [
+   "db/structures/lpscl_b2o3_scheme_F43m_Clcage_2026_11_17.cif"
+  ]
+ }
+}

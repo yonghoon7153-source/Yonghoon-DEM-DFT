@@ -1,0 +1,155 @@
+# pan2026_thesis_rate_capable_energy_dense_cathode_composites — figure readings (판독) · 2026-10-13
+# method: VISUAL reading of the 300 dpi renders (embedded rasters are 96-220 dpi) against the printed axis ticks — no marker fitting — TREND only.
+# precision: Fig 4.3 porosity +-0.3 %p, tortuosity +-0.005 ; capacities +-3 mAh/g ; normalized retention +-2 %p ; overpotential +-0.02 V ;
+#            log-axis quantities (Fig 5.2) +-0.1 decade ; peak voltages (Fig 5.7c) +-0.02 V.
+# printed-in-figure numbers (Fig 4.7 bar labels, Fig 4.3 fit line, Fig 5.4 peak labels, Fig S5 retention box) are [인쇄] in the card and are NOT repeated here.
+# cross-checks: Fig 5.9c Hybrid mid ~1.4e-10 cm2/s = 13.6 x 1.02e-11 (printed text, exponent missing) ; Fig 6.6 MF05 end ~68.5 = text (caption says <40).
+figure,cell_or_model,x,x_unit,y,y_unit,note
+Fig 4.3,PNM point 1,32.1,% porosity,1.35,tortuosity (PNM),9 points in total; samples not labelled; printed fit Y = 2.17 - 2.48X (R2 0.89)
+Fig 4.3,PNM point 2,37.0,% porosity,1.24,tortuosity (PNM),
+Fig 4.3,PNM point 3,37.1,% porosity,1.29,tortuosity (PNM),
+Fig 4.3,PNM point 4,37.9,% porosity,1.25,tortuosity (PNM),
+Fig 4.3,PNM point 5,39.6,% porosity,1.20,tortuosity (PNM),
+Fig 4.3,PNM point 6,39.7,% porosity,1.21,tortuosity (PNM),
+Fig 4.3,PNM point 7,40.3,% porosity,1.13,tortuosity (PNM),
+Fig 4.3,PNM point 8,41.2,% porosity,1.12,tortuosity (PNM),
+Fig 4.3,PNM point 9,43.1,% porosity,1.10,tortuosity (PNM),
+Fig 4.4a,example NCM811 cell (sample not named),0.0413,C (actual),184,mAh/g,end of discharge at 3.0 V
+Fig 4.4a,example NCM811 cell,0.0839,C (actual),183,mAh/g,
+Fig 4.4a,example NCM811 cell,0.1703,C (actual),168,mAh/g,
+Fig 4.4a,example NCM811 cell,0.4263,C (actual),157,mAh/g,
+Fig 4.4a,example NCM811 cell,0.6401,C (actual),145,mAh/g,
+Fig 4.4a,example NCM811 cell,0.8539,C (actual),143,mAh/g,
+Fig 4.4a,example NCM811 cell,1.2821,C (actual),120,mAh/g,
+Fig 4.4a,example NCM811 cell,1.7097,C (actual),84,mAh/g,
+Fig 4.4a,example NCM811 cell,2.5645,C (actual),32,mAh/g,
+Fig 4.4a,example NCM811 cell,3.4184,C (actual),10,mAh/g,
+Fig 4.4b,same example cell (panel b),0.0413,C (actual),176,mAh/g,panel b differs from panel a (see card 10)
+Fig 4.4b,same example cell (panel b),0.1703,C (actual),163,mAh/g,
+Fig 4.4b,same example cell (panel b),0.4263,C (actual),154,mAh/g,
+Fig 4.4b,same example cell (panel b),0.8539,C (actual),141,mAh/g,
+Fig 4.4b,same example cell (panel b),1.2821,C (actual),123,mAh/g,
+Fig 4.4b,same example cell (panel b),1.7097,C (actual),92,mAh/g,
+Fig 4.4b,same example cell (panel b),2.5645,C (actual),51,mAh/g,
+Fig 4.4b,same example cell (panel b),3.4184,C (actual),33,mAh/g,
+Fig 4.4b,same example cell (panel b),4.2732,C (actual),27,mAh/g,
+Fig 4.5,60 um bottom 0 % + 40 um porous top,3,C,51,% of first (0.05C) point,highest at 3C
+Fig 4.5,100 um single layer 40 %,3,C,2,% of first (0.05C) point,lowest at 3C
+Fig 4.6a,60 um bottom 40 % + porous top,1,C,74,% of 0.05C,text says close to 80 %
+Fig 4.6a,80 um bottom 40 % + porous top,1,C,54,% of 0.05C,
+Fig 4.6a,100 um single layer 40 %,1,C,33,% of 0.05C,text says around 35 %
+Fig 4.6a,60 um bottom 40 % + porous top,3,C,12,% of 0.05C,
+Fig 4.6a,80 um bottom 40 % + porous top,3,C,8,% of 0.05C,
+Fig 4.6a,100 um single layer 40 %,3,C,2,% of 0.05C,
+Fig 4.6b,100 um single layer 0 %,1,C,72,% of 0.05C,text says around 75 %
+Fig 4.6b,100 um single layer 20 %,1,C,59,% of 0.05C,
+Fig 4.6b,100 um single layer 40 %,1,C,33,% of 0.05C,
+Fig 4.6b,100 um single layer 0 %,3,C,24,% of 0.05C,
+Fig 4.6b,100 um single layer 20 %,3,C,3,% of 0.05C,
+Fig 4.8a,FB 60umcprs60,1,C,89,% of 0.1C,functional binder
+Fig 4.8a,FB 80umcprs80,1,C,82,% of 0.1C,
+Fig 4.8a,FB 100umcprs100,1,C,68.5,% of 0.1C,
+Fig 4.8a,PVDF 60umcprs60,1,C,65,% of 0.1C,
+Fig 4.8a,PVDF 80umcprs80,1,C,55.5,% of 0.1C,
+Fig 4.8a,PVDF 100umcprs100,1,C,53,% of 0.1C,
+Fig 4.8a,FB 60umcprs60,2,C,79.5,% of 0.1C,
+Fig 4.8a,FB 80umcprs80,2,C,65,% of 0.1C,
+Fig 4.8a,FB 100umcprs100,2,C,54,% of 0.1C,
+Fig 4.8a,PVDF 60umcprs60,2,C,36,% of 0.1C,
+Fig 4.8a,PVDF 80umcprs80,2,C,28,% of 0.1C,
+Fig 4.8a,PVDF 100umcprs100,2,C,14,% of 0.1C,
+Fig 4.8b,compression ratio 100 (uncompressed),36.7,% porosity,100,% thickness retained,three points at 36.7 / 37.0 / 37.8 %
+Fig 4.8b,compression ratio 80,34.0,% porosity,80,% thickness retained,three points at 34.0 / 34.4 / 37.9 %
+Fig 4.8b,compression ratio 60,28.5,% porosity,60,% thickness retained,three points at 28.5 / 28.6 / 30.5 % (Table 4.5 lists only 2 per ratio)
+Fig 4.10,laser etched NCM532 (legend),0.05,C,183,mAh/g,right axis; legend says NCM532 (chapter material is NCM811)
+Fig 4.10,normal NCM532 (legend),0.05,C,172,mAh/g,
+Fig 4.10,laser etched NCM532,1,C,129,mAh/g,
+Fig 4.10,normal NCM532,1,C,110,mAh/g,
+Fig 4.10,laser etched NCM532,2,C,78,mAh/g,
+Fig 4.10,normal NCM532,2,C,41,mAh/g,
+Fig 4.10,laser etched NCM532,3,C,26,mAh/g,
+Fig 4.10,normal NCM532,3,C,9,mAh/g,
+Fig 4.10,laser etched NCM532 VED,0.05,C,24.3,mAh/cm3,left axis 'Volumetric energy density (mAh/cm3)'
+Fig 4.10,normal NCM532 VED,0.05,C,22.8,mAh/cm3,
+Fig 4.10,laser etched NCM532 VED,1,C,17.1,mAh/cm3,
+Fig 4.10,normal NCM532 VED,1,C,14.7,mAh/cm3,
+Fig 4.10,laser etched NCM532 VED,2,C,10.3,mAh/cm3,
+Fig 4.10,normal NCM532 VED,2,C,5.4,mAh/cm3,
+Fig 5.2a,Carbon Black (thin),3.05,V,6.5e6,Ohm.cm,maximum (smoothed curve)
+Fig 5.2a,Hybrid mid,3.0,V,1.75e6,Ohm.cm,maximum
+Fig 5.2a,Hybrid dense,2.9,V,5.8e5,Ohm.cm,maximum
+Fig 5.2a,Carbon Black (thin),3.85,V,3.3e5,Ohm.cm,minimum
+Fig 5.2a,Hybrid dense,3.8,V,5.3e4,Ohm.cm,minimum
+Fig 5.2b,Carbon Black (thin),3.1,V,6e-12,cm2/s,dip minimum (smoothed); Fig 5.9c prints 3.35e-12
+Fig 5.2b,SWCNT,3.05,V,2.3e-11,cm2/s,dip minimum
+Fig 5.2b,Graphene,3.12,V,2.7e-11,cm2/s,dip minimum
+Fig 5.2b,Hybrid thin,3.1,V,1.4e-11,cm2/s,dip minimum
+Fig 5.2b,Carbon Black mid,3.22,V,1.7e-11,cm2/s,dip minimum (compressed sample still dips)
+Fig 5.2b,Graphene mid,3.2,V,1.7e-10,cm2/s,shallow minimum
+Fig 5.2b,Hybrid mid,3.35,V,1.7e-10,cm2/s,shallow minimum
+Fig 5.2b,Hybrid dense,3.1,V,5.5e-10,cm2/s,shallow minimum
+Fig 5.3b,Carbon Black (thin) R2,2.5-4.3,V,4.7e4-6.0e4,Ohm.cm,axis label 'R2 Resistivity (Ohm.cm)'
+Fig 5.3b,Carbon Black mid R2,2.5-4.4,V,5.5e4-7.8e4,Ohm.cm,
+Fig 5.3b,Hybrid thin R2,2.5-4.4,V,1.6e3-3.0e3,Ohm.cm,
+Fig 5.3b,Hybrid mid R2,2.5-4.4,V,2.3e3-4.0e3,Ohm.cm,
+Fig 5.3c,CB mid DRT charge-transfer peak,250,Hz,38,Ohm (gamma),at 4.0 V
+Fig 5.3c,CB mid DRT charge-transfer peak,400,Hz,30,Ohm (gamma),at 3.0 V (the '30 Ohm' of the text)
+Fig 5.3c,Graphene mid DRT peak,1000,Hz,13,Ohm (gamma),4.0 V and 3.0 V both ~13-14
+Fig 5.3d,Hybrid mid DRT peak,3000,Hz,1.4,Ohm (unnormalised h),the '1.3 Ohm' of the text
+Fig 5.5e,Carbon Black (thin),0.05,C,226,mAh/g,
+Fig 5.5e,Graphene,0.04,C,230,mAh/g,
+Fig 5.5e,SWCNT,0.05,C,232,mAh/g,
+Fig 5.5e,Hybrid thin,0.05,C,244,mAh/g,text >245
+Fig 5.5e,Carbon Black (thin),1,C,133,mAh/g,
+Fig 5.5e,Graphene,1,C,156,mAh/g,
+Fig 5.5e,SWCNT,1,C,152,mAh/g,
+Fig 5.5e,Hybrid thin,1,C,164,mAh/g,
+Fig 5.5e,Carbon Black (thin),5,C,16,mAh/g,
+Fig 5.5e,Graphene,5,C,80,mAh/g,
+Fig 5.5e,SWCNT,4.7,C,86,mAh/g,
+Fig 5.5e,Hybrid thin,5.08,C,101,mAh/g,text >104
+Fig 5.5f,Carbon Black (thin),5,C,1.53,V,initial overpotential
+Fig 5.5f,Graphene,5,C,1.22,V,
+Fig 5.5f,Hybrid thin,5,C,0.935,V,text prints -0.935 mV (unit slip)
+Fig 5.5f,SWCNT,4.7,C,0.80,V,
+Fig 5.6e,Carbon Black mid,5,C,1.79,V,initial overpotential (panel e = all 7 samples)
+Fig 5.6e,Graphene mid,5,C,1.45,V,
+Fig 5.6e,Hybrid dense,5,C,1.25,V,
+Fig 5.6e,Hybrid mid,5.36,C,0.925,V,the '925 mV' of the text (text calls it the sparse sample)
+Fig 5.6f,Hybrid thin,5,C,98,mAh/g,panel f = capacity vs C-rate (caption says voltage drop)
+Fig 5.6f,Hybrid mid,5.36,C,65,mAh/g,text says 85
+Fig 5.6f,Hybrid dense,5,C,54,mAh/g,panel d end ~63 at 4.99C
+Fig 5.6f,Graphene mid,5,C,46,mAh/g,
+Fig 5.6f,Carbon Black (thin),5,C,12,mAh/g,
+Fig 5.6f,Carbon Black mid,5,C,3,mAh/g,
+Fig 5.7c,Hybrid mid,5,C,3.52,V,most prominent peak location
+Fig 5.7c,SWCNT,5,C,3.51,V,
+Fig 5.7c,Hybrid thin,5,C,3.40,V,
+Fig 5.7c,Graphene,5,C,3.11,V,
+Fig 5.7c,Hybrid dense,5,C,3.03,V,
+Fig 5.7c,Graphene mid,5,C,2.87,V,
+Fig 5.7c,Carbon Black (thin),5,C,2.61,V,
+Fig 5.7c,Carbon Black mid,5,C,2.51,V,
+Fig 5.7b,Carbon Black mid,0.05,C,105,mAh/g/V,Anionic/Mn peak height
+Fig 5.7b,Carbon Black mid,5,C,1,mAh/g/V,Ni peak height (near zero)
+Fig 6.5a,LFP,0.5,C,148,mAh/g,
+Fig 6.5a,LMO,0.5,C,92,mAh/g,
+Fig 6.5a,MIX 30%LFP,0.5,C,95,mAh/g,
+Fig 6.5a,MF 05%LFP,0.5,C,78,mAh/g,
+Fig 6.5a,MF 10%LFP,0.5,C,60,mAh/g,
+Fig 6.5a,MF 30%LFP,0.5,C,43,mAh/g,
+Fig 6.5a,LFP,1,C,131,mAh/g,
+Fig 6.5a,LMO,1,C,86,mAh/g,
+Fig 6.5a,MIX 30%LFP,1,C,82,mAh/g,
+Fig 6.5a,MF 05%LFP,1,C,38,mAh/g,
+Fig 6.5a,MF 10%LFP,1,C,21,mAh/g,
+Fig 6.5a,MF 30%LFP,1,C,10,mAh/g,
+Fig 6.5a,LFP,2.5,C,99,mAh/g,
+Fig 6.5a,LMO,2.5,C,81,mAh/g,
+Fig 6.5a,MIX 30%LFP,2.5,C,66,mAh/g,below the linear mixing rule (~86)
+Fig 6.5a,MIX 30%LFP,0.05,C,119,mAh/g,
+Fig 6.5a,MF 30%LFP,0.05,C,111,mAh/g,
+Fig 6.6,MF 10%LFP,1,cycle,72,mAh/g,start; 52-54 after cycle 40
+Fig 6.6,MF 05%LFP,100,cycle,68.5,mAh/g,matches text 68.5 (caption: below 40)
+Fig S5a,CB mid,80,cycle,103,mAh/g,1C; start ~141
+Fig S5a,Hybrid mid,80,cycle,149,mAh/g,1C; start ~151

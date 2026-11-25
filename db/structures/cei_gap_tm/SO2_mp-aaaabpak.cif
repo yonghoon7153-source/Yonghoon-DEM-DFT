@@ -1,0 +1,31 @@
+data_image0
+_chemical_formula_structural       S2O4
+_chemical_formula_sum              "S2 O4"
+_cell_length_a       4.208418937793688
+_cell_length_b       4.208419789829911
+_cell_length_c       5.90349217
+_cell_angle_alpha    90.0
+_cell_angle_beta     90.0
+_cell_angle_gamma    92.92126674739784
+
+_space_group_name_H-M_alt    "P 1"
+_space_group_IT_number       1
+
+loop_
+  _space_group_symop_operation_xyz
+  'x, y, z'
+
+loop_
+  _atom_site_type_symbol
+  _atom_site_label
+  _atom_site_symmetry_multiplicity
+  _atom_site_fract_x
+  _atom_site_fract_y
+  _atom_site_fract_z
+  _atom_site_occupancy
+  S   S1        1.0  0.49613037  0.50386963  0.5  1.0000
+  S   S2        1.0  0.99613037  0.00386963  0.0  1.0000
+  O   O1        1.0  0.77356722  0.53369759  0.64201496  1.0000
+  O   O2        1.0  0.46630241  0.22643278  0.35798504000000003  1.0000
+  O   O3        1.0  0.9663024100000001  0.7264327800000001  0.14201496  1.0000
+  O   O4        1.0  0.27356722  0.03369759  0.85798504  1.0000

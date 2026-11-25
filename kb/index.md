@@ -1,0 +1,715 @@
+# kb 카탈로그 (생성물 — 손으로 고치지 말 것)
+
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-24 · managed-files: 649
+
+규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
+
+값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
+
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 440건)
+- 2026-11-24 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-11-24 · `kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` — ES 프롬프트 — W_ad a5 묶음 Codex ER (NO-GO) 고침 확인: 같은 트리 관문 위에 — 준비 폴더의 실행 기록 보존 · 끝 기록 · WAVECAR 지우기 전 관문 · 0 스텝은 0 행으로 설명될 때만 · 이력 줄 벽시계 = 끝 기록 · 기록 명령 · 포장 배타 잠금 · 중간 반송본 대비 관측 사실 후퇴 거부 · 끝 기록 잡 · 변형 · stage · POTCAR 해시 — 업체 발송 GO 여부 · 발송 · 회신 수령 2026-11-24 — NO-GO (P0 2 · …
+- 2026-11-24 · `kb/reviews/codex_ES_reply_wad_a5_er_fixes_2026_11_24.md` — ES 회신 — W_ad a5 묶음 1da64d0be (MANIFEST 50beb026…) · NO-GO (P0 2 · P1 2 · P2 1) · 회신 수령 2026-11-24 · NO-GO — 업체 발송 보류
+- 2026-11-24 · `kb/reviews/codex_ET_prompt_wad_a5_es_fixes_2026_11_24.md` — ET 프롬프트 — W_ad a5 묶음 Codex ES (NO-GO) 네 건 + P2 고침 확인만 (좁은 확인 한 번): 잠금 회수 한 명령만 · 중간 반송본 증거 보존 · 끝 기록 POTCAR 는 잰 값 · 이력 벽시계 원문 대조 · 잘린 열 제목 — 업체 발송 GO 여부 · 발송 · 회신 수령 2026-11-24 — GO (codex_ET_r…
+- 2026-11-24 · `kb/reviews/codex_ET_reply_wad_a5_es_fixes_2026_11_24.md` — ET 회신 — W_ad a5 묶음 990f8f84 (MANIFEST 01e39753…) · GO (업체 발송 가능) · 회신 수령 2026-11-24 · GO — 업체 발송 가능 (발송은 …
+- 2026-11-24 · `kb/projects/handoff_2026_11_24_litdb18_resume.md` — litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세션이 끊겨도 이어지게) · 끝
+- 2026-11-23 · `kb/reviews/codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` — EO 회신 — W_ad a5 묶음 (EN 고침) 확인: NO-GO (P0 1 · P1 4 · P2 1) — EN 의 재시작 모순 · 잘못된 행 머리는 막힘 · c2 첫 전자 반복행이 SDA: 에서 잘려도 1 행으로 세어 c1 보조 채택 · 영수증 판독 불일치 · 시작 기록 잡 이름 · 중단 시간 상한 · 장부 ↔ 보존 폴더 부분 복구 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 없음) · NO-…
+- 2026-11-23 · `kb/reviews/codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` — EP 프롬프트 — W_ad a5 묶음 Codex EO (NO-GO) 재승인 조건 ①–④ 고침 확인: 완전한 전자행 계수 · 영수증 · 시작 기록 일치 판독 · 중단 시간 · 상한 · 장부 ↔ 보존 폴더 (+ P2 끝 기록 시도 ID) — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
+- 2026-11-23 · `kb/reviews/codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md` — EP 회신 — W_ad a5 묶음 (EO 고침) 확인: NO-GO — EO 원래 반례는 막힘 · 숫자를 못 읽는 c2 행 (칸 수만 맞음) 으로 c1 보조 채택 · 'SDA' (콜론 앞) 절단을 0 스텝으로 받음 · 180 h 넘은 시도에 남의 0 초 영수증 한 장으로 c2 실행 · 채택 · 부분 복구 뒤 status.tsv 의 선행 c1 · 완료 시도 run_id · 빈 영수증 칸 · 비 UTF-8 사유 · 장부 순서 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…
+- 2026-11-23 · `kb/reviews/codex_EQ_prompt_wad_a5_ep_fixes_2026_11_23.md` — EQ 프롬프트 — W_ad a5 묶음 Codex EP (NO-GO) 재승인 조건 ①–④ 고침 확인: 숫자로 읽히는 행 · 콜론 앞 머리 절단 · 시간 출처는 보존 폴더 영수증만 · 시도 이력 (status.tsv) 대조 · 시작 · 끝 · 최종 목록 실행 ID (+ 조건부 영수증 칸 · UTF-8 · P2 장부 순서) — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
+- 2026-11-23 · `kb/reviews/codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md` — EQ 회신 — W_ad a5 묶음 (EP 고침) 확인: NO-GO — EP 원래 반례는 막힘 · 위협 범위 §1b 수용 (GO) · 범위 안 지적: 앞 공백 두 칸 뒤 'SDA' 절단 → 0 스텝 · 310 자리 숫자 행 → RUN_FAILED · 648,001 s 완료 시도에 남의 killed.json → c2 채택 · run/ 하나를 옛 체크포인트로 복구하면 유효한 기존 반송본을 덮어씀 · 0 바이트 status.tsv · 잘린 종료 기록으로 계속 · 재포장이 현장 오류를 지움 · final.json code 0 + REVIEW · 공백 세 칸 잡 ID · 저장 뒤 사유 바이트 손상 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…
+- 2026-11-23 · `kb/reviews/codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md` — ER 프롬프트 — W_ad a5 묶음 Codex EQ (NO-GO) 고침 확인: 트리 관문 하나 (러너 모든 진입점 — 다시 돌림 · 단 발사 직전 · PACK_ONLY · 포장 덮어쓰기 전 · 기록 명령 · 검사기 같은 규칙 · 같은 낱말) — 기록 문법 엄격 · 끝 기록 원자적 쓰기 · 끝 기록 + 끊김 기록 공존 거부 · 끊김 기록 결속 · 잔여 · 모르는 파일 · 기존 반송본 대조 · 끝 기록 code/state 조합 · 앞 빈칸 머리 조각 · 칸 길이 ≤ 24 · 필수 칸 빈칸 문자 · 기록 UTF-8 · 장부 단 순서 — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
+- 2026-11-23 · `kb/reviews/codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md` — ER 회신 — W_ad a5 묶음 (EQ 고침 · 트리 관문 하나) 확인: NO-GO — EQ 반례 (남의 killed.json · 완료 반송본 옆 과거 복구 · 잘린 종료 기록 · 재포장 .part) 는 막힘 · 필수 칸 · UTF-8 · 장부 순서 GO · 범위 안 지적: 준비 폴더 이름으로 옮긴 중단 c1 을 러너가 지움 · 마지막 단 종결 (final.json OK · A5 WAVECAR 삭제) 이 검사보다 먼저 · 첫 행 콜론 한 바이트 손상 ('SDA;' · 'SDA') 이 0 스텝 · attempt.json 648,001 → 48,001 한 자리 유실 (이력 행과 대조 안 함) · 기록 명령 둘 겹침 (잠금 없음) · 중간 반송본 전자행 7 개 후퇴 · 확정 영수증 UNKNOWN 후퇴 · 종료 기록 job/stage/attempt · POTCAR.sha256 대조 없음 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…
+- 2026-11-23 · `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안) · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…
+- 2026-11-23 · `kb/projects/handoff_2026_11_23_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-20 를 friendly 로 · fast-forward (2026-11-23) · litdb 정리 세션 · 로컬 웹앱 · W_ad ES 편지는 본 세션에서 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…
+- 2026-11-22 · `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부 · 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 …
+- 2026-11-22 · `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…
+- 2026-11-22 · `kb/reviews/codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` — EO 프롬프트 — W_ad a5 묶음 Codex EN (NO-GO · P0 1 · P1 3 · P2 1 · P3 1) 고침 확인: 끊긴 단의 원문 검사 · killed.json 대조 · 중단 영수증 · 시작점 유실 · 옛 반송 묶음 — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
+- 2026-11-22 · `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…
+- 2026-11-20 · `kb/reviews/internal_EM_prompt_wad_a5_package_2026_11_20.md` — EM 프롬프트 — 은 e70 far 재시도 a5 묶음 발송 전 독립 리뷰 · 발송 · 회신 수령 2026-11-20
+
+⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
+
+## concepts/ (16)
+- `kb/concepts/bandgap.md` — Band gap — 밴드 갭 (전자 밴드 간극)
+- `kb/concepts/beta-gate.md` — β 게이트 — 확산영역 판정 (diffusive-regime gate)
+- `kb/concepts/bvse.md` — BVSE — Bond Valence Site Energy (결합가 자리 에너지)
+- `kb/concepts/cohp.md` — COHP / ICOHP / ICOBI — 결합 분석 (Crystal Orbital 재투영)
+- `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리  (2026-09-23 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다))
+- `kb/concepts/dft.md` — DFT — Density Functional Theory (밀도범함수이론)
+- `kb/concepts/elastic.md` — Elastic constants — 탄성상수 $C_{ij}$ 와 VRH 평균
+- `kb/concepts/md.md` — MD (MLIP) / MSD / Arrhenius — 분자동역학 이온수송
+- `kb/concepts/msd_reading.md` — MSD 그림을 읽는 법 — 창 · σ · Ea 는 서로 무엇인가  (2026-09-07 · 확정 (개념 카드))
+- `kb/concepts/neb.md` — NEB / CI-NEB — 최소에너지경로 (Nudged Elastic Band)
+- `kb/concepts/neb_intermediate_minimum.md` — NEB 경로 가운데가 움푹 파이는 것 — 중간 준안정 자리  (2026-09-01 · 설명문)
+- `kb/concepts/nmr_shift.md` — NMR 화학적 이동 읽기 — 차폐 · ppm · up-field  (2026-10-28 · 확정 (개념 카드))
+- `kb/concepts/ordered_vs_disordered.md` — Ordered vs Disordered — 어떤 LPSCl 구조로 계산할 것인가
+- `kb/concepts/oxidation_vs_mechanical.md` — 산화안정성과 기계적물성 — 정의부터 DFT 계산까지  (2026-08-13 · 확정)
+- `kb/concepts/sdcp_self_doping_explainer_2026_08_26.md` — 자기도핑(self-doping)이란 무엇인가 — 프로톤이 아니라 수소 원자를 뗀다  (2026-08-26 · 정리완료)
+- `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로  (2026-11-09 · 확정 (개념 카드))
+
+## physics/ (6)
+- `kb/physics/260617_Nd2O3_doping_bandgap_narrowing_mechanism.md` — Nd₂O₃ 도핑 LPSCl 밴드갭: 왜 O 도핑인데 갭이 좁아지나
+- `kb/physics/br_substitution_effects.md` — Br Substitution Effects on Argyrodite Mechanical Properties
+- `kb/physics/li_ordering_sensitivity.md` — Li Ordering Sensitivity
+- `kb/physics/nd_4f_doping_consolidated_corrected_2026_06_24.md` — Nd / 란탄족 4f 도핑 — 통합·교정 노트 (March 개념노트 + June DFT/MP 결합)
+- `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
+- `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
+
+## methodology/ (58)
+- `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
+- `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
+- `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
+- `kb/methodology/adhesion_methods_comparison.md` — Adhesion Methods Comparison — v2 / v5 crystalline / MQA 500K
+- `kb/methodology/agent_toolkit_adoption_2026_08_11.md` — 외부 에이전트 툴킷 3종(ponytail · caveman · superpowers) 검토와 선별 채택  (2026-08-11 · 확정)
+- `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋  (2026-09-18 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지))
+- `kb/methodology/argyrodite_mechanical_pipeline.md` — Argyrodite Mechanical Properties — Multi-scale Computational Pipeline (v2)
+- `kb/methodology/b2o3_analysis_plan.md` — B₂O₃-doped champion — 추가 분석 plan (배위·결합·testable)
+- `kb/methodology/b2o3_doping_chemistry.md` — B2O3 Doping in LPSCl1.6 (BO-LPSC) — Chemistry Framework
+- `kb/methodology/beta_gate_seed_policy.md` — 확산영역 게이트(β)와 시드 정책 — 문턱은 폐기, 시드 규율은 유효  (2026-09-09 · SUPERSEDED (문턱) / 유효 (시드·정지 규칙))
+- `kb/methodology/cascade_composition_family_2026_08_16.md` — 캐스케이드 조성족 섞임 — 보편적 Cl 개선은 반증, 원소 수준 인과는 여전히 열림  (2026-08-16 · 확정 — 조성족 분류 완료. **효과 귀속은 열림**(2026-08-…)
+- `kb/methodology/cascade_design_contract_2026_08_28.md` — cascade 3,615행은 237설계였다 — 표본 계약을 다시 쓴다  (2026-08-28 · 채택)
+- `kb/methodology/cascade_lessons_transfer_2026_09_08.md` — hold 동안 얻은 것을 cascade 로 옮기기 — 해제조건에 붙는 5건  (2026-09-08 · 진행)
+- `kb/methodology/cascade_pipeline_anatomy_2026_08_13.md` — cascade 273 캠페인 해부 — 왜 풀이 47인가 (코드 계보 실측)  (2026-08-19 · 확정 — 원인 특정됨 (ESW 배치 커버리지). 회수 경로 있음)
+- `kb/methodology/cascade_rerank_runbook_2026_08_25.md` — cascade 재랭킹 런북 ①~⑤ — li_mobility_score 복구 후 실행  (2026-08-25 · ①~⑤완료)
+- `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나  (2026-09-16 · 진행)
+- `kb/methodology/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
+- `kb/methodology/computational_methods_canonical.md` — 계산 방법 Canonical — 단일 기준 (2026-07-23 재정리 · **2026-08-20 축 4개 추가** · **2026-09-09 인용지위 정정**)
+- `kb/methodology/defect_cell_size_metric_2026_08_16.md` — 점결함 셀 크기의 정본 지표 — λ₁(최단 격자 병진), 면 높이 아님  (2026-08-16 · 확정 — Codex 리뷰 P0 로 지표 정정, 도구 6건 반영)
+- `kb/methodology/dopant_screening_funnel_2026_06_13.md` — Dopant screening funnel provenance + multi-cation motif generalization
+- `kb/methodology/dopant_site_preference_literature.md` — Dopant Site Preference — Literature-Anchored Heuristic Assignments (v4.5.26)
+- `kb/methodology/doping_pipeline_critical_review.md` — Doping Pipeline — Critical Self-Review (2026-05-16, v4 championship)
+- `kb/methodology/doping_substitution_algorithm.md` — LPSCl 도핑 / 치환 알고리즘
+- `kb/methodology/elastic_constants.md` — Elastic Constants Calculation
+- `kb/methodology/electron_localization_framework_2026_07_08.md` — 전자 국소화 프레임워크 — LPSCl이 작동하는 이유, B₂O₃ 도핑이 그것을 강화하는 방식
+- `kb/methodology/eos_fitting.md` — EOS Fitting — Birch-Murnaghan Equation of State
+- `kb/methodology/esp_z590_setup.md` — esp-Z590-AORUS-MASTER Server Setup (new home/lab server)
+- `kb/methodology/estimand_before_running_2026_08_28.md` — 여덟 번 계산하고 여덟 번 반려된 이유 — 우리는 '제대로 돌렸나'만 리뷰했다  (2026-08-28 · 채택)
+- `kb/methodology/esw_grandpotential_staircase_explained.md` — 전기화학 안정성 창(ESW) — 전압별 분해 staircase 완전 해설
+- `kb/methodology/external_review_response_2026_05_16.md` — External Review Response (2026-05-16)
+- `kb/methodology/handoff_2026_08_20_night.md` — 인수인계 2026-08-20 밤 — 밤새 도는 것 · 아침에 볼 것  (2026-08-20 · 진행)
+- `kb/methodology/hard_dopant_handling_protocol.md` — Hard / Compound Dopant Handling Protocol (doping cascade)
+- `kb/methodology/kisti_setup.md` — KISTI Neuron — Software Installation & Environment Guide
+- `kb/methodology/kserver116_setup.md` — kserver116-27 Server Setup (new lab server)
+- `kb/methodology/li3nd_metal_protocol_note_2026_08_11.md` — Li₃Nd 독자 계산 — 착수 전 프로토콜 점검 (금속 · frozen-4f)  (2026-08-11 · 종결 — 코드 반영 + PP 확보 + 금속 실측 완료, NEB 파일럿…)
+- `kb/methodology/li_adatom_neb_protocol.md` — Li Adatom Diffusion NEB Protocol — UMA + DFT Verification  (2026-06-02 · confirmed)
+- `kb/methodology/li_annealing.md` — Li Annealing — Thermal Li Sublattice Re-optimization
+- `kb/methodology/litdb_shared_branch_convention_2026_08_19.md` — litdb 는 브랜치를 넘어 공유된다 — DEM 세션과 같은 서랍을 쓴다  (2026-08-19 · 확정 — 규약 원본은 DEM 세션 문서)
+- `kb/methodology/llm_wiki_adoption_2026_08_11.md` — LLM 위키 규율 채택 기록 — Karpathy 패턴(llm-wiki-kit 260730)의 이 repo 번안  (2026-08-11 · 확정)
+- `kb/methodology/md_adaptive_v2_protocol_2026_08_27.md` — MD 생산길이 표준 — `MDadaptive-v2` (200 ps 고정을 순차 연장으로 바꾼다)  (2026-08-27 · 채택)
+- `kb/methodology/md_axis_status_2026_09_07.md` — MD 축 현황 — 무엇이 살아있고 무엇이 죽었나 (2026-09-07 정리)  (2026-09-07 · 정본 색인)
+- `kb/methodology/md_conductivity_protocol.md` — MD 이온전도도 추출 프로토콜 (논문용 — 고정 설정)
+- `kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md` — 미세구조 ML 세미나에서 cascade 로 이전 가능한 것 — 화학이 아니라 설계·평가 방법론  (2026-08-25 · 진행)
+- `kb/methodology/modelC_v2_slab_fix.md` — modelC v2 Slab Construction — Convention Fix
+- `kb/methodology/name_vs_substance_2026_09_09.md` — 이름과 실체가 갈린다 — 하루에 여섯 번 (2026-09-09)  (2026-09-09 · 진행)
+- `kb/methodology/nd_vs_O_isolation_campaign_2026_06_18.md` — Nd vs O 분리 — "Nd가 특별한가, O 운반체일 뿐인가" 정량 캠페인
+- `kb/methodology/o2_muO_screening_2026_09_07.md` — LPSCl + O₂ — 산소 화학퍼텐셜(μ_O) 전방향 스크리닝  (2026-09-07 · 1차 결과)
+- `kb/methodology/offline_archive_index_2026_08_20.md` — 오프라인 백업 인덱스 — repo 밖에 있는 원자료가 어디 있나  (2026-08-24 · 실측 인덱스 (2026-08-20 전수조사))
+- `kb/methodology/probe_language_reference.md` — Probe 언어 레퍼런스 — 각 계산이 무엇이고, 어떻게 구하고, 논문/figure에 어떻게 쓰는가
+- `kb/methodology/ps4_libration_dopant_2026_08_28.md` — T16 — PS₄ 는 안 돈다(재확인). 그런데 **+O 가 흔들림 원뿔을 좁힌다**(신규)  (2026-08-28 · 채택)
+- `kb/methodology/qe_disk_reclaim_2026_09_12.md` — QE 디스크 회수 절차 — 파동함수는 스크래치, 정본은 텍스트 (kgy 2026-09-12, 306 GB)  (2026-09-12 · 채택)
+- `kb/methodology/selftest_blind_spots_2026_08_28.md` — selftest 를 통과한 채 나간 버그 9건 — 우리 테스트가 못 보는 네 곳  (2026-08-28 · 채택)
+- `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류  (2026-09-13 · 채택)
+- `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1  (2026-08-11 · 실행 대기 (도구 검증 완료 · 입력 2종 회수 필요))
+- `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
+- `kb/methodology/vanhove_plateau_70traj_2026_08_28.md` — van Hove 70궤적 — 고원은 세 계 공통이고, 고원 안 온도차는 대부분 못 읽는다  (2026-08-28 · 채택)
+- `kb/methodology/windows_reinstall_backup_2026_08_24.md` — Windows 재설치 전 백업 — C: 오판 정정과 실제 위험처  (2026-08-24 · 진행 — 스크린샷 판독은 확정, C: 실사는 미실시)
+- `kb/methodology/zn_cu_hull_estimand_2026_09_03.md` — 보고량 카드 — Cu–Zn convex hull (Zn ALZIB C1 후속)  (2026-09-03 · 제안)
+
+## results/ (96)
+- `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
+- `kb/results/README.md` — kb/results 지도 — 계별로 지금 유효한 것 / 마감 근거 / 접힌 역사  (2026-09-09 · 운영중)
+- `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
+- `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
+- `kb/results/adhesion_methodology_detail.md` — Adhesion Calculation — Detailed Methodology
+- `kb/results/adhesion_troubleshooting.md` — Adhesion Troubleshooting Log
+- `kb/results/adhesion_v23_v24_v25_extraction_complete.md` — Adhesion v23-v25 Maximum Extraction — Complete (2026-05-07)
+- `kb/results/adhesion_v26_method_stresstest_2026_05_07.md` — Adhesion v26 + v26b — All Method Stress-Test (2026-05-07)
+- `kb/results/adhesion_v5_full_report.md` — Adhesion v5 — Crystalline Slab xy-shift 방법론 상세 보고서
+- `kb/results/adhesion_v9_to_v22_session_2026_05_07.md` — Adhesion Method Iteration v9-v22 — Session Report (2026-05-07)
+- `kb/results/argyrodite_literature_review_2026_06_26.md` — Argyrodite 황화물 고체전해질 — 문헌 종합 리뷰 + 우리 DFT 프로그램 적용 맵 (2026-06-26)
+- `kb/results/argyrodite_review_comprehensive_2026_06_26.md` — Lithium Argyrodite 황화물 고체전해질: 구조–수송–안정성–계면–기계의 통합 리뷰
+- `kb/results/b2o3_SEMIFINAL_report_2026_07_09.md` — B₂O₃-doped LPSCl1.6 챔피언 — Semi-Final 통합 보고서
+- `kb/results/b2o3_anode_interface_2026_06_30.md` — B₂O₃-doped 챔피언의 anode 계면 안정성 — Li-metal에선 **악화**, Li-In에선 **완화**
+- `kb/results/b2o3_anode_interface_MD_dynamics_2026_07_06.md` — B₂O₃ champion — anode 계면 **동역학** MLIP-MD: 도핑이 Li-metal 분해를 **억제** (열역학 worst-case 반전)
+- `kb/results/b2o3_anode_interface_campaign_2026_07_07.md` — B₂O₃ anode 계면 — 통제 campaign 확정판: **"6× 억제" 철회**, 도핑 ≈ 무도핑(악화 없음), BS₃ 강건·LiB 없음
+- `kb/results/b2o3_arrhenius_curvature_2026_08_23.md` — b2o3 아레니우스가 800 K 위에서 굽는다 — 단일 Ea 를 철회한다  (2026-08-23 · 판정완료)
+- `kb/results/b2o3_bond_lengths_2026_06_29.md` — B₂O₃-doped LPSCl1.6 챔피언의 결합길이 분석 (+ 4a/4d Cl 부분별 Li–Cl)
+- `kb/results/b2o3_bvse_channel_2026_07_02.md` — B₂O₃ 도핑 → Li 채널 확장 (BVSE, b2o3 vs LPSCl1.6)
+- `kb/results/b2o3_cdd_2026_07_02.md` — B₂O₃ 챔피언 — CDD 전하밀도차 (슬라이드 24의 b2o3 판)
+- `kb/results/b2o3_champion_coordination_2026_06_29.md` — B₂O₃-doped LPSCl 챔피언 구조의 국소 배위: 삼각 BS₃ + free-S + phosphate P–O
+- `kb/results/b2o3_champion_status_2026_07_03.md` — B₂O₃ Champion — 작업 현황 (2026-07-03)
+- `kb/results/b2o3_charge_bader_lowdin_2026_06_30.md` — B₂O₃-doped 챔피언 — Bader + Löwdin 전하 → 산화상태 + XPS BE 경향
+- `kb/results/b2o3_convex_hull_2026_06_29.md` — B₂O₃-doped LPSCl1.6 convex-hull 안정성: 준안정(37.5 meV/atom), 분해산물이 BS₃를 예측
+- `kb/results/b2o3_elastic_analysis_2026_07_03.md` — B₂O₃ Champion — 탄성상수(Cij) 분석과 한계 (2026-07-03)
+- `kb/results/b2o3_elf_covalency_2026_07_02.md` — B₂O₃ 챔피언 — ELF 결합 공유결합성 (슬라이드 19의 b2o3 판)
+- `kb/results/b2o3_interface_window_integrated_2026_06_30.md` — B₂O₃-doped 챔피언 — anode(Li, Li-In) + cathode 계면을 **하나의 전기화학 창**으로 통합
+- `kb/results/b2o3_md_600K_multiseed_2026_07_02.md` — B₂O₃ MD 이온전도도 — 600K 다중시드 error bar (Ea = 0.21 ± 0.03 eV)
+- `kb/results/b2o3_phonon_stability_2026_06_30.md` — B₂O₃-doped LPSCl1.6 챔피언의 동역학적 안정성 (UMA Γ-point phonon)
+- `kb/results/b2o3_voronoi_disorder_2026_07_02.md` — B₂O₃-doped 챔피언 — Voronoi 부피 disorder 분석 (slide 9/17의 b2o3 판)
+- `kb/results/b2o3_vs_lpscl16_md_2026_07_02.md` — B₂O₃-doped vs LPSCl1.6 — MD 이온수송 종합 비교 (아레니우스·전도도·D분해·저온)
+- `kb/results/branch_state_2026_08_30.md` — 브랜치 현황 지도 2026-08-30 — 지금 살아 있는 것과 죽어 있는 것  (2026-08-30 · superseded — kb/results/branch_state_2…)
+- `kb/results/branch_state_2026_08_31.md` — 브랜치 현황 지도 2026-08-31 — 전수 조사 후  (2026-08-31 · 진행)
+- `kb/results/bvse_3system_conclusions_2026_07_21.md` — BVSE 3-시스템 결론 — LPSCl1.6 / LPSOCl(+O) / +B₂O₃ (2026-07-21 확정)
+- `kb/results/bvse_cubic_approx_2026_07_16.md` — BVSE 큐빅 근사 — "이상화 셀" 지적 대응 + LPSOCl 첫 BVSE (2026-07-16)
+- `kb/results/cascade_v23_literature_grounding_2026_06_25.md` — Cascade v23 — 문헌 기반 검증·novelty·reconciliation (2026-06-25)
+- `kb/results/champion_pool_size_bias_2026_08_18.md` — 챔피언 점수는 후보를 몇 개 뽑았느냐에 지배된다 — best-of-N 편향이 종간 산포보다 크다  (2026-08-18 · 확정)
+- `kb/results/comp1_supercell_md_reassessment_2026_08_20.md` — comp1 2×2×2 MD 궤적 재판정 — 밴을 풀었다 (정본 승격은 아니다)  (2026-08-20 · 판정완료)
+- `kb/results/deck_ionic_section_additions.md` — Slides 4–7 (Ionic conductivity) — 추가 슬라이드 콘텐츠 (2026-06-21)
+- `kb/results/doping_273_qa_log.md` — 273 Doping Cascade — QA Log
+- `kb/results/dualx_blocking_2026_06_29.md` — dual-x 도핑 농도 스크리닝: Li-channel blocking_fraction (x=0.0625 vs 0.25)
+- `kb/results/elastic_0K_protocol_status.md` — 0K Cij DFT Protocol Status (Paper #1)
+- `kb/results/halogen_wad_refutation.md` — Wad Mechanism Refutation — 직관적 설명
+- `kb/results/handoff_2026_08_29_stage_a.md` — 인수인계 2026-08-29 — Stage A 제출·회수 (보조 세션용)  (2026-08-29 · 진행)
+- `kb/results/interface_axes_90_2026_08_19.md` — 계면 축 4종을 90종에 붙였다 — 우리 산화 창은 계면을 예측하지 못한다  (2026-08-19 · 확정)
+- `kb/results/interface_reactivity_v2_voltage_resolved_2026_06_21.md` — Voltage-resolved SE/cathode interface reactivity (v2) — 2026-06-21
+- `kb/results/ionic_cage_descriptors_comp1_modelc.md` — LPSCl vs LPSCl1.6 — ionic conductivity, NEB-free geometric descriptors
+- `kb/results/ionic_conductivity_full_explained_2026_06_21.md` — 이온전도도 완전 정리 — LPSCl(comp1) vs LPSCl₁.₆(modelc)
+- `kb/results/ionic_conductivity_synthesis_comp1_modelc.md` — Ionic conductivity: LPSCl (comp1) vs LPSCl1.6 (modelC) — full synthesis
+- `kb/results/li3nd_endpoint_asymmetry_2026_08_12.md` — li3nd NEB 끝점 2.07 eV — 수치 인공물이 아니라 실제 자리 차이  (2026-08-12 · 진행)
+- `kb/results/li_interface_md_takeaways_2026_07_08.md` — Li|전해질 계면 MD — 이 시뮬레이션에서 우리가 얻은 것
+- `kb/results/li_neb_anode_free_report.md` — Li Adatom Diffusion on Anode-Free SSB Interphases — Li3N vs LiC6  (2026-06-02 · dft-scf-on-uma-confirmed_full-dft-neb-…)
+- `kb/results/litdb_aimd_survey_2026_08_04.md` — litdb AIMD 전수 조사 — "문헌 AIMD는 몇 ps를 돌았나" (2026-08-04)
+- `kb/results/litdb_session_map_2026_06_26.md` — litdb 세션 맵 (2026-06-26) — deck/논문용 1장 인덱스
+- `kb/results/lpscl_structural_analysis_v3.md` — LPSCl vs LPSCl1.6 — 구조/결합 정밀 분석 (v3, DFT V0)
+- `kb/results/lpscl_vs_lpscl16_FULL_report_2026_06_17.md` — LPSCl (comp1) vs LPSCl1.6 (modelC) — 종합 비교 보고
+- `kb/results/lpscl_vs_lpscl16_v3_comparison.md` — LPSCl vs LPSCl1.6 — v3 완성형 비교 (Pipeline v2 §8)
+- `kb/results/lpsocl_box_size_600K_2026_08_18.md` — LPSOCl 600 K 상자 크기 — D 는 1.5~1.7× 눌렸고, β 는 MTO 잣대에서 +0.05 움직인다  (2026-08-19 · 진행)
+- `kb/results/manuscript_dft_today_2026_08_29.md` — 오늘 원고에 넣을 수 있는 DFT 문장 — 새 계산 없이  (2026-08-29 · 사용 중)
+- `kb/results/md_beta_estimator_disagreement_2026_08_25.md` — β 는 시간·이온 대조를 못 가른다 — MTO/STO 가 순위를 뒤집는다  (2026-08-25 · 진행)
+- `kb/results/mlip_md_diffusive_gate_2026_08_01.md` — MLIP-MD 확산영역 게이트 — 저이동도 계의 Ea 는 전부 인용 보류 (2026-08-01)
+- `kb/results/nd2o3_FINAL_summary_2026_06_24.md` — Nd₂O₃-doped LPSCl1.6 — **최종 종합 (FINAL capstone)**
+- `kb/results/nd2o3_O_effect_transfer_2026_06_24.md` — Nd₂O₃-LPSCl1.6 — **O 효과 중심** 정리 (transfer용)
+- `kb/results/nd2o3_master_findings_2026_06_18.md` — Nd₂O₃-LPSCl1.6 — 종합 결과 + 메커니즘 (master findings, 문헌 매핑)
+- `kb/results/nd_anode_cathode_sei_formation_2026_06_24.md` — 음극향·양극향 SEI 이점 — **formation energy로 본 산물 선택** (Nd₂O₃-LPSCl1.6)
+- `kb/results/nd_oxidation_onset_honest_2026_06_24.md` — Nd₂O₃ 도핑 — 산화안정성 cost vs SEI passivation 이점 (정직한 정리)
+- `kb/results/nd_xps_literature_basis_2026_06_30.md` — Nd 3d XPS — 왜 DFT로 못 구하고 문헌(실험)값을 쓰는가 + 확실한 출처
+- `kb/results/neb_cell_size_trend_2026_08_20.md` — NEB 셀 크기 추세 — 작은 셀이 장벽을 1.3~3.3배 부풀린다 (UMA 정찰 6홉/4화합물)  (2026-08-20 · 측정완료)
+- `kb/results/oxidation_stability_VBM_vs_grandpotential_report_2026_06_18.md` — 보고서 — 산화안정성: VBM/UPS가 아니라 Grand-Potential 분해창으로 평가 (LPSCl vs LPSCl1.6)
+- `kb/results/paper_figure_plan_v3.md` — Paper Figure / Table Plan — LPSCl vs LPSCl1.6 v3
+- `kb/results/presentation_script_BVSE_ionic_2026_06_19.md` — 발표 스크립트 — 이온전도성: BVSE로 본 anti-site Cl 효과 (DFT 슬라이드)
+- `kb/results/presentation_script_LPSCl_vs_LPSCl16_2026_06_18.md` — 발표·보고용 스크립트 — LPSCl vs LPSCl1.6 (16 슬라이드, 상세판)
+- `kb/results/redox_orbital_control_PS4_vs_BS3_2026_07_08.md` — 왜 P–S만 끊기고 B–S/P–O는 사는가 — σ\* 궤도 제어 (환원분해의 미시 메커니즘)
+- `kb/results/report_mechanical_electronic_2026_06_21.md` — 보고용 정리 (2026-06-21) — 역학·전자밀도 descriptor + 구조 + 시각화 가능성
+- `kb/results/screen_volume_vs_energy_2026_08_18.md` — 부피로 떨어뜨린 100개가 "에너지로는 멀쩡한" 진짜 이유 — 조성 섞임이지 구조가 아니다  (2026-08-19 · 확정)
+- `kb/results/sdcp_linio2_binding_report.md` — SDCP Binder Anchoring on LiNiO₂ (104)  (2026-08-11 · 역사 문서 — 계면 결합값 전면 재계산 대상 (2026-08-03 슬…)
+- `kb/results/sdcp_master_summary_2026_07_16.md` — SDCP 종합 정리 — 오비탈 · 작용기 · DFT (마스터)  (2026-07-16 · phaseB-5of5-DONE_verdict-PENDING-v2 (d…)
+- `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응  (2026-09-30 · 닫힘 (2026-09-30 · 2단계 보류) — 값은 citable:…)
+- `kb/results/sdcp_ptfe_site_screen_summary_2026_08_11.md` — 자리 선호 스크리닝 — UMA 로 무엇을 봤고, 왜 값이 안 나왔고, VASP 에 무엇을 넘겼나  (2026-08-11 · UMA 단계 완료 · DFT+U 인계 준비 완료)
+- `kb/results/sdcp_slab_plateau_broken_2026_08_03.md` — SDCP 슬랩 plateau 를 깼다 — 원인은 계가 아니라 Broyden 이력 (2026-08-03)
+- `kb/results/sdcp_wave1_citable_2026_08_25.md` — SDCP wave1 인용 확정본 — 논문에 쓰는 값 한 장 (basin 일치분)  (2026-08-25 · 인용확정)
+- `kb/results/sdcp_wave1_explainer_2026_08_25.md` — SDCP wave1 결과 읽는 법 — 바인더가 NCM 표면 어디에 붙나  (2026-09-01 · 설명문)
+- `kb/results/sdcp_wave1_vasp_return_2026_08_25.md` — SDCP wave1 VASP 회신 — 자기 basin 이 갈랐다 (E_ads · 자리선호)  (2026-08-25 · 확정-부분)
+- `kb/results/section1_system_design.md` — Section 1 (Deep Dive) — 시스템 설계의 과학적 논리
+- `kb/results/section2_bader_cross_comp.md` — Section 2 — Bader Charge Cross-Composition: 4 Trends + 3 Anomaly Fingerprints + Br Effect on PS₄
+- `kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md` — cc333 — 같은 c-c 홉이 맞다. 3×3×3 에서 Nd 격자 재배열이 풀린다  (2026-08-27 · 진행)
+- `kb/results/session_handoff_2026_07_22.md` — 세션 핸드오프 — 2026-07-21 밤 → 07-22 새벽
+- `kb/results/session_timelog_2026_06_04.md` — Session Timelog — 2026-06-04/05 (multi-track)
+- `kb/results/single_li_neb_invalid_argyrodite_2026_08_21.md` — 무질서 Li₆PS₅Cl 에서 단일 Li NEB 는 성립하지 않는다 — 세 설정으로 확인  (2026-08-21 · 판정완료)
+- `kb/results/site_preference_bar_meaning_2026_08_18.md` — 자리 선호 그림의 막대는 시드가 아니라 도핑 수준이다 — 그리고 6종은 자리가 바뀐다  (2026-08-18 · 확정)
+- `kb/results/site_preference_findings_2026_06_19.md` — Dopant site preference (antisite-swap, all-UMA) — 81-system screen
+- `kb/results/site_thermodynamics_explained.md` — Site Distribution Thermodynamics — 왜 각 comp가 그 분포로 가장 안정한가?
+- `kb/results/slide2_lit_summary_revised_2026_06_21.md` — Slide 2 (Literature summary) — 개정 (2026-06-21)
+- `kb/results/uma_force_accuracy_li3ps4_2026_08_19.md` — UMA-s-1p1(omat) 힘 정확도 — Li₃PS₄ DFT 라벨 벤치 (외부 데이터, DFT 0회)  (2026-08-19 · 측정완료)
+- `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
+- `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
+
+## reviews/ (302)
+- `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-24 · 자동생성)
+- `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
+- `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
+- `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
+- `kb/reviews/codex_AB_prompt_stageA_v9_regate_2026_08_29.md` — Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리고 자체검토에서 나온 넷  (2026-08-29 · 회신 수령 (원문 파일 없음 — 근거: AD (Stage A v10)))
+- `kb/reviews/codex_AC_prompt_manuscript_v8_crosscheck_2026_08_30.md` — 회신 AC 요청 — 원고 v6 · SI v6 대조 (Methods/Table v8)  (2026-08-30 · 발송전)
+- `kb/reviews/codex_AD_prompt_stageA_v10_final_regate_2026_08_30.md` — 회신 AD 요청 — Stage A v10 최종 재게이트 (P0 8건 처리 후)  (2026-08-30 · 발송전)
+- `kb/reviews/codex_AE_prompt_stageA_v13_submit_gate_2026_08_30.md` — 회신 AE — 제출 게이트: sdcp_stageA_v13 + holdout_v4 (42잡) GO/NO-GO  (2026-08-30 · 발송전)
+- `kb/reviews/codex_AG_prompt_stageA_go_nogo_2026_08_30.md` — 회신 AG — Stage A 최종 GO/NO-GO: 회신 AF P0 넷을 닫았다  (2026-08-30 · sent)
+- `kb/reviews/codex_AH_prompt_am_i_lost_2026_08_30.md` — 회신 AH — 이걸 꼭 해야 하나: 길을 잃은 것 아닌지 판정 요청  (2026-08-30 · sent)
+- `kb/reviews/codex_AI_prompt_current_head_2026_08_30.md` — 회신 AI — 현재 HEAD 기준 재검토 + 비례성 판정 (AH 미회신 병합)  (2026-08-30 · sent)
+- `kb/reviews/codex_AJ_prompt_c12_submit_2026_08_30.md` — 회신 AJ — C-12 구현 완료 + 선언된 이탈 하나(clean slab) + 발송 승인 요청  (2026-08-30 · sent)
+- `kb/reviews/codex_AK_prompt_lpsocl_box331_md_2026_08_30.md` — 회신 AK — LPSOCl 3×3×1 MD 를 던지기 전에: estimand 와 범위  (2026-08-30 · sent)
+- `kb/reviews/codex_AK_reply_lpsocl_box331_md_2026_08_30.md` — 회신 AK 접수 — 조건부 GO (Q2=C). β 게이트를 되살린 것은 우리 실수였다  (2026-08-30 · 접수)
+- `kb/reviews/codex_AL_prompt_cascade_d_rel_2026_08_30.md` — 회신 AL — cascade 39설계 D_rel 을 던지기 전에: 예측기가 자기 자신을 재현 못 한다  (2026-08-30 · sent)
+- `kb/reviews/codex_AL_reply_cascade_d_rel_2026_08_30.md` — 회신 AL 접수 — NO-GO. 내 '같은 구조' 전제가 틀렸다  (2026-08-30 · 접수)
+- `kb/reviews/codex_AM_prompt_c12_incar_2026_08_31.md` — 회신 AM — C-12 INCAR 실물 감사: 진공 시험이 진공만 재지 않는다  (2026-08-31 · sent)
+- `kb/reviews/codex_AM_reply_c12_incar_2026_08_31.md` — 회신 AM 접수 — NO-GO. 분석기가 자기 번들을 못 읽는다  (2026-08-31 · 접수)
+- `kb/reviews/codex_AN_prompt_c12_v7_2026_08_31.md` — 회신 AN — C-12 v7 재심: estimand 를 고정기하 단일점으로 되돌렸다  (2026-08-31 · sent)
+- `kb/reviews/codex_AP_prompt_c12_v14_2026_08_31.md` — 리뷰 요청 AP — C-12 v14 (회신 AO 해제조건 9건 이행)  (2026-08-31 · 발송 대기)
+- `kb/reviews/codex_AQ_prompt_c12_v15_2026_08_31.md` — 리뷰 요청 AQ — C-12 v15 (회신 AP 해제조건 12건 이행)  (2026-08-31 · 회신 수령 — `kb/reviews/codex_AR_reply_c12…)
+- `kb/reviews/codex_AR_reply_c12_v15_2026_08_31.md` — 회신 AR — c12 v15 NO-GO (해제조건 10건)  (2026-08-31 · 이행 완료 (해제조건 10건 · v16 재생성 대기))
+- `kb/reviews/codex_AS_prompt_c12_v16_2026_08_31.md` — 리뷰 요청 AS — C-12 v16 (회신 AR 해제조건 10건 이행)  (2026-08-31 · 발송 대기)
+- `kb/reviews/codex_AT_prompt_c12_v17_2026_08_31.md` — 리뷰 요청 AT — C-12 v17 (회신 AS 해제조건 10건 이행)  (2026-08-31 · 회신 수령 — `kb/reviews/codex_AT_reply_c12…)
+- `kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md` — 회신 AT — C-12 v17 NO-GO (P0 5건 · 해제조건 9)  (2026-08-31 · 이행 완료 — v18 로 재제출 (AU))
+- `kb/reviews/codex_AU_prompt_c12_v18_2026_08_31.md` — 리뷰 요청 AU — C-12 v18 (회신 AT P0 5건 + 해제조건 9 이행)  (2026-08-31 · 회신 수령 — `kb/reviews/codex_AV_reply_c12…)
+- `kb/reviews/codex_AV_reply_c12_v18_2026_08_31.md` — 회신 AV — C-12 v18 NO-GO (P0 4건 · P1 1건 · 해제조건 8)  (2026-08-31 · 이행 완료 — P0-1 (895af2ed) · P0-2 (1b3fbe…)
+- `kb/reviews/codex_AW_prompt_webapp_audit_2026_09_01.md` — 리뷰 요청 AW — DFT 웹앱 전수 감사 (실패 2건 수선 · 마감/철회 화면 반영 · 인용위험 원장 합류 · 승인 게이트 fail-open 봉인)  (2026-09-01 · 회신 수령 — NO-GO · `kb/reviews/codex_AW_r…)
+- `kb/reviews/codex_AW_reply_webapp_audit_2026_09_01.md` — 회신 AW — 웹앱 전수 감사: NO-GO (P0 4건 · P1 6건 · 해제조건 6)  (2026-09-01 · 회신 수령 — 이행 중)
+- `kb/reviews/codex_AX_prompt_lpsocl_600K_amendment_2026_09_01.md` — 리뷰 요청 AX — LPSOCl 3×3×1 600 K 가 선언한 창에서 정의되지 않는다 (생산길이 개정 제안 + 판정 코드)  (2026-09-01 · 발송 대기)
+- `kb/reviews/codex_AY_prompt_c12_v19_2026_09_01.md` — 리뷰 요청 AY — C-12 v19 (회신 AV P0 4건 + P1 1건 + 해제조건 ⑧ 이행 · 재생성본)  (2026-09-01 · 발송 대기)
+- `kb/reviews/codex_AZ_prompt_c12_v20_2026_09_01.md` — 리뷰 요청 AZ — C-12 v20 (회신 AY P0 5건 + P1 전건 이행)  (2026-09-01 · 발송 대기)
+- `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
+- `kb/reviews/codex_BA_prompt_c12_v21_2026_09_02.md` — 리뷰 요청 BA — C-12 v21 (회신 AZ P0 7건 + P1 전건 이행)  (2026-09-02 · 회신 수령 — 후속 BB)
+- `kb/reviews/codex_BB_prompt_c12_v22_2026_09_02.md` — 리뷰 요청 BB — C-12 v22 (회신 BA 해제조건 8건 + 거버넌스 비준)  (2026-09-02 · 발송 대기)
+- `kb/reviews/codex_BC_prompt_c12_v23_2026_09_02.md` — 리뷰 요청 BC — C-12 v23 (회신 BB P0 6건 + P1 6건 이행 · clean tree 재생성)  (2026-09-02 · 발송 대기)
+- `kb/reviews/codex_BF_prompt_c12_v29_2026_09_03.md` — 리뷰 요청 BF — C-12 v29 (회신 BE P0 4건 + P1 3건 이행 · clean tree 재생성)  (2026-09-03 · 발송 대기)
+- `kb/reviews/codex_BF_reply_c12_v29_2026_09_03.md` — 회신 BF — C-12 v29 VASP 외주 번들 (실행 NO-GO · P0 4 · P1 4 · Q1–Q3)  (2026-09-03 · 회신반영)
+- `kb/reviews/codex_BG_prompt_webapp_aw_release_2026_09_07.md` — 리뷰 요청 BG — AW(웹앱 NO-GO) 해제 판정 + 그날 새로 만든 판정 셋  (2026-09-07 · 작성 — 발송 대기)
+- `kb/reviews/codex_BH_prompt_md_axis_audit_2026_09_07.md` — 리뷰 요청 BH — MD 축 전수 감사: 90런에 인용 가능한 Ea 가 0개다  (2026-09-07 · 작성 — 발송 대기)
+- `kb/reviews/codex_BI4_reply_2026_09_09.md` — 리뷰 BI-4 회신 — P0 셋 전면 수용 · 지적의 공통 축을 우리가 못 봤다  (2026-09-09 · 초안)
+- `kb/reviews/codex_BI_prompt_webapp_claim_binding_2026_09_08.md` — 리뷰 요청 BI — 결속 이주를 끝냈습니다 (전 표면 미결속 0) + 부인 어휘 신설 + 남은 넷의 마감 조건  (2026-09-08 · 발송)
+- `kb/reviews/codex_BI_reply_2026_09_09.md` — 리뷰 BI 회신 — NO-GO 전면 수용 · 규모 주장 넷 정정 · 우리가 먼저 올리는 넷  (2026-09-09 · 초안)
+- `kb/reviews/codex_BJ2_prompt_cascade_redesign_2026_09_09.md` — 리뷰 요청 BJ2 — cascade 재설계 A′: 설계 다섯 칸부터 다시 · 깔때기는 계획칸만 · GO 전까지 안 돌립니다  (2026-09-09 · 초안)
+- `kb/reviews/codex_BJ2_reply_2026_09_09.md` — 리뷰 BJ2 회신 원문 — NO-GO(A′ 전체) / GO(B1 제외 + B3 축소) · P0 3건 · 재심 조건 7  (2026-09-09 · 원문보관)
+- `kb/reviews/codex_BJ2_response_draft_2026_09_09.md` — 리뷰 BJ2 회신 대응 초안 — P0 3건·정정 6건 전부 재현, 우리 오류. 재심 조건 7 수용  (2026-09-09 · 초안)
+- `kb/reviews/codex_BJ_prompt_cascade_redesign_2026_09_09.md` — 리뷰 요청 BJ — cascade 를 컨셉부터 다시 짭니다: 보고량 카드 §1–3 + 재설계안 A/B/C (GO 전까지 안 돌립니다)  (2026-09-09 · 회신됨-NO-GO)
+- `kb/reviews/codex_BK_prompt_doping_question_2026_09_09.md` — 리뷰 요청 BK — 우리가 묻는 것이 무엇인가: 격자 치환 / 별도 코팅상 / 첨가상 (BJ 재작성의 전제)  (2026-09-09 · 초안)
+- `kb/reviews/codex_BK_reply_2026_09_09.md` — 리뷰 BK 회신 — A 선택 수용 · 정정 다섯을 전부 재현했다 · 우리 규율 둘을 고친다  (2026-09-09 · 초안)
+- `kb/reviews/codex_BL_prompt_lpsocl_gate_ambiguity_2026_09_11.md` — codex_BL_prompt_lpsocl_gate_ambiguity_2026_09_11  (2026-09-11 · 진행)
+- `kb/reviews/codex_BL_reply_lpsocl_gate_ambiguity_2026_09_11.md` — codex_BL_reply_lpsocl_gate_ambiguity_2026_09_11  (2026-09-11 · 진행)
+- `kb/reviews/codex_BL_response_lpsocl_gate_ambiguity_2026_09_11.md` — 회신 BL 대응 — NO-GO 수용(추가 MD·C3 실행 0), 감사 GO 항목 전부 착수: 개정안(post-hoc)·C3 도구 2판·C6 원장 등록  (2026-09-11 · 진행)
+- `kb/reviews/codex_BM_prompt_li2s_layer1_density_gate_2026_09_12.md` — 리뷰 BM 프롬프트 — LPSCl@Li₂S 1층: 비정질 밀도 게이트의 기준을 무엇에 두는가  (2026-09-12 · 발송대기)
+- `kb/reviews/codex_BM_reply_li2s_layer1_density_gate_2026_09_12.md` — 리뷰 BM 회신 원문 — 1층 밀도 게이트: G4 재설계 필요, 그러나 seed1 합격·2층 진행은 반대  (2026-09-12 · 수령)
+- `kb/reviews/codex_BN_prompt_cascade_rebuild_2026_09_12.md` — 회신 BN 요청 — cascade **재건** 계획의 선(先)심사
+- `kb/reviews/codex_BN_reply_cascade_rebuild_2026_09_12.md` — 회신 BN 접수 — NO-GO. 재건 방향 찬성, 카드 P0 5건  (2026-09-12 · 접수)
+- `kb/reviews/codex_BO_prompt_cascade_rebuild_v2_2026_09_12.md` — 회신 BO 요청 — 재건 카드 v2 · 정적대조·한 대비 파일럿 GO 요청
+- `kb/reviews/codex_BO_reply_cascade_rebuild_v2_2026_09_12.md` — 회신 BO 접수 — 조건부 GO (정적대조 2 SCF · 파일럿 30 런). 실행 전 수정 5 조건  (2026-09-12 · 접수)
+- `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의  (2026-09-13 · 발송대기)
+- `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님)  (2026-09-13 · 접수)
+- `kb/reviews/codex_BQ2_prompt_fix_verification_2026_09_13.md` — 회신 BQ-2 — **수정본 검증만** 묻는다 (스윕 대기 중 병렬)
+- `kb/reviews/codex_BQ2_reply_fix_verification_2026_09_13.md` — 회신 BQ-2 — 수정본 검증 (NO-GO)  (2026-09-13 · 회신됨-NO-GO)
+- `kb/reviews/codex_BQ3_prompt_sweep_complete_2026_09_13.md` — 회신 BQ-3 프롬프트 — 스윕 완결 · §4b 판정과 다음 런 사양  (2026-09-13 · 발송 대기)
+- `kb/reviews/codex_BQ3_reply_sweep_complete_2026_09_13.md` — 회신 BQ-3 — 스윕 완결 판정 (NO-GO 유지 · 10스윕 조건부 GO)  (2026-09-13 · 회신됨-NO-GO-조건부GO)
+- `kb/reviews/codex_BQ4_prompt_10sweep_basin_2026_09_13.md` — 회신 BQ-4 프롬프트 — 10스윕 완결 · 골짜기 비교 · §4b 최종 판정  (2026-09-13 · 회신됨-종결GO)
+- `kb/reviews/codex_BQ4_reply_10sweep_basin_2026_09_13.md` — 회신 BQ-4 — 종결 GO · 서술 정정 8건 · P1 2건 · 재개 조건 2범주  (2026-09-13 · 회신됨-종결GO)
+- `kb/reviews/codex_BQ5_prompt_eprime_card_2026_09_13.md` — 회신 BQ-5 프롬프트 — 보고량 카드 v5 (공통 총부피 E′) §1–3 심사  (2026-09-13 · 회신됨-방향GO-카드NO-GO)
+- `kb/reviews/codex_BQ5_reply_eprime_card_2026_09_13.md` — 회신 BQ-5 — E′ 방향 GO · 카드 확정·실행 NO-GO (집계식·MD 판정·비용 상한 세 묶음)  (2026-09-13 · 회신됨-방향GO-카드NO-GO)
+- `kb/reviews/codex_BQ6_prompt_eprime_v51_2026_09_13.md` — 회신 BQ-6 프롬프트 — 카드 v5.1: 해제조건 ①②③ 이행 확인  (2026-09-13 · 회신됨-②미해제)
+- `kb/reviews/codex_BQ6_reply_eprime_v51_2026_09_13.md` — 회신 BQ-6 — ①③ 해제 · ② 미해제 (도구가 검사하는 것 ≠ 카드가 선언한 것)  (2026-09-13 · 회신됨-②미해제)
+- `kb/reviews/codex_BQ7_prompt_eprime_v52_2026_09_13.md` — 회신 BQ-7 프롬프트 — 카드 v5.2: ② 를 도구 실검사와 맞췄다 (aggregation_eligible)  (2026-09-13 · 발송 대기)
+- `kb/reviews/codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 무질서 초격자에서 **per-구조 EOS V₀ 가 성립하는가** (§4b 차단)
+- `kb/reviews/codex_BQ_reply_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 예비 판정 (원문)
+- `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나  (2026-09-14 · 발송됨)
+- `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다  (2026-09-14 · 회신됨)
+- `kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 프롬프트 — LPSCl | Ag–C | VGCF 점착일: 기존 LPSCl|NCM 워크플로를 재사용해도 같은 양을 재는가 (v2)  (2026-09-23 · 발송됨 · 회신 수령 (NO-GO) → codex_BV_reply_w…)
+- `kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 회신 (Codex) — LPSCl | Ag–C | VGCF 점착일 계획 v2: NO-GO · 구조 검증부터  (2026-09-23 · 수신됨 — NO-GO (v2 대상 · 5687c4fa7). 새 P0 …)
+- `kb/reviews/codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md` — 리뷰 BW 프롬프트 — W_ad: 클러스터 없이(단일 노드 48 GB) 무엇을 검증할 수 있나 · MLIP+D3 본계산 + 작은 모델 DFT 검증으로 바꿔도 되는가  (2026-09-23 · 발송됨 · 회신 수령 (NO-GO · 제한 파일럿 조건부 GO) → …)
+- `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` — 리뷰 BW 회신 — W_ad: (A) 를 검증된 전체 계면 절대 W 로 전달 NO-GO · 범위를 좁힌 파일럿 조건부 GO (A′)  (2026-09-23 · 회신 수령 — NO-GO(현재 (A) 의 절대값 승인 논리) · 제한…)
+- `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나  (2026-09-25 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…)
+- `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함  (2026-09-25 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…)
+- `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | Ag · 흑연 점착일): 봉인 전 설계 검토  (2026-09-25 · 발송 완료 · 회신 수령 2026-09-25 **NO-GO** (`c…)
+- `kb/reviews/codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 회신 — A′ 파일럿 사전등록 카드: NO-GO (봉인·본계산 보류 · A′ 경로 자체는 찬성)  (2026-09-25 · 수령 (2026-09-25 · 1저자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` — 리뷰 BZ 프롬프트 — A′ 파일럿 사전등록 카드 v2: BY NO-GO 재승인 최소조건 6 의 이행 재심  (2026-09-25 · 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (…)
+- `kb/reviews/codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md` — 리뷰 BZ 회신 — A′ 카드 v2 재심: NO-GO (봉인·S2 보류 · 설계·비준 5건은 유지 · G2 우회 4경로 · G5 종결별 평균 · S1/S3 봉인 경계)  (2026-09-25 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…)
+- `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
+- `kb/reviews/codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` — 리뷰 CA 프롬프트 — A′ 파일럿 사전등록 카드 v3: BZ NO-GO 항목(G2 우회 4경로 · G5 집계 · S1/S3 경계) 이행 재심  (2026-09-25 · 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (…)
+- `kb/reviews/codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` — 리뷰 CA 회신 — A′ 카드 v3 재심: NO-GO (V2 측방 마스크 선택 입력 P0 · 인덱스 자동 변환 P1 · G3 문구 · 프로브 예외 · registry 주기영상) — BZ 주요 수정은 이행  (2026-09-25 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…)
+- `kb/reviews/codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 프롬프트 — A′ 파일럿 사전등록 카드 v4: CA 최소 해제조건 5 이행 재심 (V2 측방 마스크 · 인덱스 타입 · G3 문구 · 프로브 예외 · registry 주기영상)  (2026-09-25 · 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** …)
+- `kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 회신 — A′ 카드 v4 재심: 조건부 GO (CA 코드 결함 해제 · registry 명세 2 보완 + 선언한 미완료 채우면 S1 봉인 가능 · 본 계산 승인 아님)  (2026-09-25 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…)
+- `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…)
+- `kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 회신 — A′ V5 VASP 외주 준비본: NO-GO (P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성)  (2026-09-27 · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v2 커밋 e025…)
+- `kb/reviews/codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 프롬프트 — A′ V5 VASP 외주 준비본 v2 재리뷰 (CE NO-GO 대응: P0 4 · P1 5 · 3b′ · 3c · PP/버전 · D3 예산)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…)
+- `kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 회신 — A′ V5 VASP 외주 준비본 v2: NO-GO (P0 3 · P1 3 · D3 예산 조건부 찬성 · 3b′/3c 찬성)  (2026-09-27 · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v3 커밋 c8d7…)
+- `kb/reviews/codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 프롬프트 — A′ V5 VASP 외주 준비본 v3 재리뷰 (CF NO-GO 대응: 증거 먼저 · 등록부 필수 · G4 D3 동일성 · 마지막 레코드 · 실물 Edisp · 포장 실패)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…)
+- `kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 회신 — A′ V5 VASP 외주 준비본 v3: NO-GO (P1 3 · 새 P0 없음 · S3 찬성 · S4 조건부 찬성 · S5 찬성 · 선택 권고 3)  (2026-09-27 · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v4 → 재리뷰 CI)
+- `kb/reviews/codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 프롬프트 — A′ V5 VASP 외주 준비본 v4 재리뷰 (CG NO-GO 대응: 반송 허용 목록 · 봉인 파일럿 결속 · TITEL 접두 규칙 · 권고 3)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…)
+- `kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 회신 — A′ V5 VASP 외주 준비본 v4: NO-GO (CG P1 3 해제 · 새 P1 1 = 포장 단계 오류를 성공으로 승격 · S1–S6 찬성 · 정리 권고 3)  (2026-09-27 · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…)
+- `kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 프롬프트 — A′ V5 VASP 외주 준비본 v5 재리뷰 (CI NO-GO 대응: 포장 단계별 성공 확인 · TITEL_TRUNCATED · 정리 권고 3)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…)
+- `kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 회신 — A′ V5 VASP 외주 준비본 v5: NO-GO (CI 재현 3 경로 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1 · S1–S6 · 권고 3: sha 파이프 · 정리 실패 · 반송 문구)  (2026-09-27 · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…)
+- `kb/reviews/codex_CK_prompt_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` — 리뷰 CK 프롬프트 — A′ V5 VASP 외주 준비본 v6 재리뷰 (CJ NO-GO 대응: 관리 파일 목록 쓰기마다 검사 + 목록 내용 검증 · sha 명령/형식 분리 · 정리 실패 ⚠ · 발송 조건 · 지원 환경)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **GO** (`code…)
+- `kb/reviews/codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` — 리뷰 CK 회신 — A′ V5 VASP 외주 준비본 v6: GO (CJ 해제조건 충족 · 새 P0/P1 없음 · S1–S5 판정 · P2 정리 2 — 기술 검토 GO · 실행 승인 아님)  (2026-09-27 · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) — **GO…)
+- `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트  (2026-09-30 · 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅…)
+- `kb/reviews/codex_CM_reply_cei_nd_handoff_2026_09_30.md` — 회신 CM — CEI (Nd 계면) 외부 인계본 리뷰: NO-GO (P0 7 · P1 6) — 수치·무결성은 대체로 맞음 · 요약·교육 문구가 계산 범위를 넘음 · Fig. 2 재현 명령이 이력 파일을 덮음  (2026-09-30 · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` — CP 프롬프트 — cascade D_rel v7 탐침 카드 (초안): v6 방법상 무효 뒤 온도 하나만 바꾼다 · 무도핑 H0 탐침이 v6 자격을 먼저 통과한 가장 낮은 온도 T* · 확인 요청 다섯  (2026-10-03 · 발송 완료 2026-10-03 (사용자 'codex 돌아왔다 cp 보…)
+- `kb/reviews/codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` — 회신 CP — cascade D_rel v7 탐침 카드: 초안 그대로 실행 NO-GO · 온도 탐침 방향은 조건부 GO · P0 3 (온도 메타 결속 · 10 % 자격 기준의 통계적 역할 · H0 통과 → 40 런 자동 착수 끊기) · P1 (framework_alarm 은 보조 지표 · Q-CP-1 · Q-CP-4)  (2026-10-03 · 수령 (2026-10-03 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` — CT 프롬프트 — cascade D_rel v7 본 라운드 러너 (--main) 코드 리뷰: 이미 돌고 있는 40 런 · 조용히 틀린 경로 · 판정까지 이어지는가 · 확인 요청 여섯  (2026-10-07 · 발송 완료 2026-10-08 · ✅ 회신 수령 2026-10-08 …)
+- `kb/reviews/codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` — CT 회신 — cascade v7 본 라운드 러너: 조건부 GO · P0 없음 · P1 셋 (판독 입력 결박 · 미정산 시간 · 자식 생성 직후 정리) · P2 (이어받기 대조 · partial · watcher --log)  (2026-10-08 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` — CU 프롬프트 — P1b Ag(111)|흑연 3층 W_sep 마감 교체 (k9 넷 · 사전 규칙 REPLACE) 사후 감사: DEM 이 Ag–C 기본값으로 채택한 뒤 · 다음 DEM 편지 전 · 확인 요청 다섯  (2026-10-07 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…)
+- `kb/reviews/codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` — CU 회신 — P1b Ag(111)|흑연 3층 k9 마감 사후 감사: 조건부 GO · 값 유지 · P1 '기판만' 정정 (셀 c·영상 간격도 다름) · P2 라벨 좁히기 · 집계기 신원 검사 공백  (2026-10-08 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_CV_prompt_cei_easy_story_2026_10_07.md` — CV 프롬프트 — CEI 쉬운 스토리 4 단계 (P 가 양극 금속을 끌어가고 Nd 가 P 를 먼저 잡는다) + 그림 여섯: 계산이 받치는 범위를 넘는가 · 확인 요청 다섯  (2026-10-07 · 발송 2026-10-08 · ✅ 회신 수령 2026-10-08 → `…)
+- `kb/reviews/codex_CV_reply_cei_easy_story_2026_10_08.md` — CV 회신 — CEI 쉬운 스토리: 조건부 GO · 숫자 재현 · P0 '먼저 잡는다'·'계면에 남는 층' 교체 · P1 그림 대조군·조성 라벨·황산염 분류 오류·정수 반올림 · 추천 한 장 = NMC811 금속별 표  (2026-10-08 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_CW_prompt_seminar_lean_deck_aesthetics_2026_10_12.md` — CW 프롬프트 — 10-13 연구실 세미나 cascade 슬림판 덱 19장 미감 리뷰: 글 밀도 · AI 티 · 08-18 덱 문법 일관성 · 문헌 그림 · 확인 요청 여덟  (2026-10-12 · 발송 2026-10-13 · ✅ 회신 수령 2026-10-13 → `…)
+- `kb/reviews/codex_CW_reply_seminar_lean_deck_aesthetics_2026_10_13.md` — CW 회신 — 10-13 세미나 슬림판 덱 미감: 조건부 GO · P0 = p11 표가 없는 대응을 암시 · p12 문헌 그림과 우리 설계 구분 · p13 문헌 그림 역할 표시 · P1 = 그림 확대 · 글 덜기 · 규율 문장 반복 · 흐린 화살표  (2026-10-13 · 수령 2026-10-13 (사용자 붙여넣기 · 원문 보존 · 표는 붙…)
+- `kb/reviews/codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` — CY 프롬프트 — W_ad 외주 2차 설계 리뷰: 탄소 작은 모델 (P2′) 보고량 카드 + V5 은 쪽 ENCUT 짝 재시도 (개정 4) + 러너 고칠 점 · 빌드 전 · 범위·수렴·문턱부터  (2026-10-15 · 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `…)
+- `kb/reviews/codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` — CY 회신 — W_ad 외주 2차 설계 리뷰: 조건부 GO · 탄소 작은 모델 추가와 은 a4 재개 찬성 · 카드 그대로 실행 승인 아님 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ  (2026-10-15 · 수령 2026-10-15 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 프롬프트 — W_ad 외주 2차 묶음 리뷰: 탄소 P2′ · C–C · 은 a4 VASP 묶음 (코드 · 러너 사다리 · 판정 계약 · 검사기·집계기 · 봉인) · 발송 승인 여부  (2026-10-17 · 발송 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MAN…)
+- `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
+- `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱 + 발송 전 자체 검토 고침 (S1–S9) 이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부  (2026-10-22 · 발송 2026-10-22 (사용자 · 기준 커밋 3d684e502 ·…)
+- `kb/reviews/codex_DB_reply_wad_outsourcing_round2_v2_2026_10_22.md` — DB 회신 — W_ad 외주 2차 묶음 v2 (3d684e502 · MANIFEST b9450f6f…): NO-GO · 발송 보류 · P0 1 (시도 열거 — INCAR·attempt.json 없는 실행 흔적이 감사에서 빠짐) · P1 3 (불완전 시도의 커널 부정 증거 · KERNEL_UNVERIFIED 가 다른 결측을 가려 봉인 · 수동 초의 선행 0 = 8진수) · 해제 최소조건 넷  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DC_prompt_wad_outsourcing_round2_v3_2026_10_22.md` — DC 프롬프트 — W_ad 외주 2차 묶음 v3 확인: DB 해제조건 넷 + P2 가 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부  (2026-10-22 · 발송 2026-10-22 (사용자 · 기준 커밋 3e70329cb ·…)
+- `kb/reviews/codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md` — DC 회신 — W_ad 외주 2차 묶음 v3 (3e70329cb · MANIFEST bf7b2ac9…): NO-GO · P1 2 (시도 폴더 읽기 실패를 '시도 없음' 으로 — 새 회귀 · 러너 장부 elapsed_s 숫자 접두부만 검사 — 잔존) · Q-DC-2 · 3 · 5 GO · Q-DC-6 조건부 수용 (미등록 실행 흔적은 '감사되지 않음' 으로 구분) · 재승인 최소조건 셋  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DD_prompt_wad_outsourcing_round2_v4_2026_10_22.md` — DD 프롬프트 — W_ad 외주 2차 묶음 v4 확인: DC 재승인 최소조건 셋 (읽기 실패 ≠ 없음 · 장부 전체 값 · 결박 갱신) + 같은 종류 훑기 + 미등록 실행 흔적 자동 보류 · 발송 승인 여부  (2026-10-22 · 발송 2026-10-22 (사용자 · 기준 커밋 1e4d113d2 ·…)
+- `kb/reviews/codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md` — DD 회신 — W_ad 외주 2차 묶음 v4 (1e4d113d2 · MANIFEST 39522906…): NO-GO · P1 2 (run_aborted 루트 감사 불가 기록을 봉인 필터가 버림 — 새 fail-open · 뺀 bash rc 검사는 awk -v 이스케이프 해석 때문에 awk 검사와 동등하지 않음) · P2 2 (미등록 흔적 보장 범위 = 반송물에 도착한 흔적 · rc=-0 설명 정정) · Q-DD-2 · 3 GO · 재승인 최소조건 셋  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DE_prompt_wad_outsourcing_round2_v5_2026_10_22.md` — DE 프롬프트 — W_ad 외주 2차 묶음 v5 확인: DD 재승인 최소조건 셋 (봉인 필터의 루트 감사 불가 · rc 원문 검증 · 결박 갱신) + 같은 종류 (INCAR 이스케이프 · ENCUT 숫자 꼴) · 발송 승인 여부  (2026-10-22 · 발송 2026-10-22 (사용자 · 기준 커밋 9ddfbe448 ·…)
+- `kb/reviews/codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md` — DE 회신 — W_ad 외주 2차 묶음 v5 (9ddfbe448 · MANIFEST 714324cc…): GO · 발송 동의 · P0/P1 없음 · 비차단 P2 1 (selftest 시험 이름의 -0 설명)  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DF_prompt_li2s2_dense_window_card_2026_11_03.md` — DF 프롬프트 — li2s-2 새 트랙 설계: 실험 밀도에 고정해 다시 담금질한 두 유리 (a-Li₄PS₄Cl · a-Li₃PS₄) 의 측정 온도 창 → D 비 · Ea 차 + melt_quench_uma.py --fix_density  (2026-11-03 · 발송 2026-11-03 (사용자 · 기준 커밋 ff795d669) …)
+- `kb/reviews/codex_DF_reply_li2s2_dense_window_card_2026_11_03.md` — DF 회신 — li2s-2 새 트랙 설계 (ff795d669): NO-GO · 고정 밀도 NVT 방향은 조건부 찬성 · P0 1 (melt_check 시간창 ≠ 판정량) · P1 5 (종료코드 ≠ 카드 통과 · 시드 11·12 고정 빈 경로 · MD 압력 미기록 · T₅₀ 로 과냉각 액체 추론 철회 · 비용 합계·회계) · P2 4  (2026-11-03 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DG_prompt_li2s2_df_fixes_2026_11_03.md` — DG 프롬프트 — li2s-2 DF 고침 확인 (947e83ba0): 녹음 판독량 window_mto_v1 · 1 단계 시드 판정 소비자 · 시드 규칙 · 1 단계 러너 — 첫 담금질 전 조건이 닫혔나  (2026-11-03 · 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_…)
+- `kb/reviews/codex_DG_reply_li2s2_df_fixes_2026_11_03.md` — DG 회신 — li2s-2 DF 고침 확인 (947e83ba0): NO-GO · DF 핵심 MSD 반례 해제 · P0 3 (첫 시드 녹음 실패가 재시작에 안 남음 · 예외·사용자 중단 때 자식 남고 잠금 풀림 · 실행 중 상한 없음) · P1 5 (최종 구조·재시작 판정이 원자료에 안 묶임 · 다섯째 시드 미완인데 묶음 통과 · 잠금 비원자적 · 입력 검사 구멍 · 카드 본문 옛 시드 규칙) · P2 3  (2026-11-03 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DH_prompt_li2s2_dg_fixes_2026_11_03.md` — DH 프롬프트 — li2s-2 DG 고침 확인 (7abe7929): 닫는 사건의 재시작 유지 · 모든 탈출 경로의 자식 정리 · 실행 중 상한 · 판정의 원자료 결속 · 선언 시드 전부 판정 · flock · 입력 검사 — 첫 담금질 GO 여부  (2026-11-03 · 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_…)
+- `kb/reviews/codex_DH_reply_li2s2_dg_fixes_2026_11_03.md` — DH 회신 — li2s-2 DG 고침 확인 (7abe7929): NO-GO · DG 일반 반례 대부분 해제 · P0 3 (장부가 있기만 하면 빠진 비용을 0 으로 인정 · 폴더 시드와 실제 실행 시드 비결속 · 그룹 대표가 먼저 끝나면 남은 자식 미정리) · P1 2 (첫 시드 invalid 를 과학적 영구 종료로 기록 · 재판정이 이전 증거를 덮어씀)  (2026-11-03 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DI_prompt_li2s2_dh_fixes_2026_11_03.md` — DI 프롬프트 — li2s-2 DH 고침 확인 (dad10ecf): 장부 = 실행 목록 · 실행 식별자 run_id · 그룹 정리 (대표와 따로) · invalid ≠ 과학적 종료 · 재판정 이력 — 첫 담금질 GO 여부  (2026-11-03 · 발송 · 회신 수령 2026-11-03 (고침 묶음 · `codex_…)
+- `kb/reviews/codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` — DI 회신 — li2s-2 DH 고침 확인 (dad10ecf): NO-GO · P0 3 (fail 시드 재담금질 · 보존 실행 비용 누락 · 프로세스 조회 불가 = 빈 그룹) · P1 2 (정리 시간 · 벽시계 역행) → Codex 가 고침 묶음까지 (패치 · 검증 · 변이) — 실패 시드 재담금질 차단 · 보존 실행 비용 대조 · 그룹 판독 불가 = 모름 · 정리 시간 계상 · 같은 부팅 단조 시계 고아 상한  (2026-11-03 · 수령 2026-11-03 (사용자 업로드 zip `li2s2_DI_f…)
+- `kb/reviews/codex_DJ_prompt_li2s2_outage_rule_2026_11_03.md` — DJ 프롬프트 — li2s-2 DI 고침 적용 확인 (Linux) + 정전 복구 개정 (0f51518d): 끊긴 런 시드마다 1 회 재시도 · 재부팅 고아 런 증언 상한 — 첫 담금질 GO 여부  (2026-11-03 · 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_…)
+- `kb/reviews/codex_DJ_reply_li2s2_outage_rule_2026_11_03.md` — DJ 회신 — li2s-2 DI 적용 확인 + 정전 복구 개정 (0f51518d): NO-GO · 정전 복구 방향 찬성 · P0 3 (재시도 필드 빠지면 소비자 한도 검사 꺼짐 · 판독 불가 · 보존 누락에도 재시도 · 하한 미상이면 0 시간 증언 수용) · P1 1 (증언이 잠금 전 장부로 덮어씀) · Q1 결과와 무관한 재시도 사유 사전 명시 · Q2 MD 완료 / FIRE 미완 구분 · Q3 증언 필드 · Q4 cap 재시도 조건  (2026-11-03 · 수령 2026-11-03 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DK_prompt_li2s2_dj_fixes_2026_11_03.md` — DK 프롬프트 — li2s-2 DJ 고침 확인 (7ac0be8e): 재시도 이력 대조 · 판독 불가 · 보존 누락 차단 · 증언 하한 · 잠금 안 증언 · 결과와 무관한 재시도 사유 · MD/FIRE 구분 · 정전 추가 예산 — 첫 담금질 GO 여부  (2026-11-03 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · …)
+- `kb/reviews/codex_DK_reply_li2s2_dj_fixes_2026_11_03.md` — DK 회신 — li2s-2 DJ 고침 확인 (7ac0be8e): NO-GO · DJ 기존 반례는 차단 · P0 2 (손상된 완료 궤적이 md_incomplete 로 읽혀 재담금질 · 정전 예산 · 재시도 분류와 예산 집계가 다른 판정을 읽음) · P1 2 (프레임 수가 MD 완료를 증명하지 않음 · 소비자가 0 h 증언 상한을 받음)  (2026-11-04 · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DL_prompt_li2s2_dk_fixes_2026_11_04.md` — DL 프롬프트 — li2s-2 DK 고침 확인 (390441c4): MD 완료 기록 (프레임 셈 대신) · 실행 상태 한 곳 · 정전 추가 예산 없앰 · 증언 양수 — 첫 담금질 GO 여부  (2026-11-04 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · …)
+- `kb/reviews/codex_DL_reply_li2s2_dk_fixes_2026_11_04.md` — DL 회신 — li2s-2 DK 고침 확인 (390441c4): NO-GO · DK 기존 반례는 차단 · P0 1 (plan.json 이나 정식 완료 파일명이 없으면 남은 완료 증거를 무시하고 재담금질) · P1 2 (정전 보존 근거 없음 — 동기화 없음 · FIRE 전 기록 순서를 지키는 회귀시험 없음)  (2026-11-04 · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DM_prompt_li2s2_dl_fixes_2026_11_04.md` — DM 프롬프트 — li2s-2 DL 고침 확인 (04555774): 완료 증거가 남은 폴더는 보류 · 완료 기록 저장 순서 (fsync) · FIRE 진입 순서 시험 — 첫 담금질 GO 여부  (2026-11-04 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 2 · …)
+- `kb/reviews/codex_DM_reply_li2s2_dl_fixes_2026_11_04.md` — DM 회신 — li2s-2 DL 고침 확인 (04555774): NO-GO · DL 기존 재현은 막힘 · P0 2 (thermo 마지막 행의 시각 불일치를 '덜 쓴 꼬리' 로 받아 남은 완료 시각을 버림 · 판정 이력 · 임시 판정에 완료 증거가 있어도 파일명만 보고 '실행 전' 으로 분류)  (2026-11-04 · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DN_prompt_li2s2_dm_fixes_2026_11_04.md` — DN 프롬프트 — li2s-2 DM 고침 확인 (acc648b0): thermo 꼬리의 시각 · 판정 기록을 내용으로 (plan 전 끊김 · 도중 끊김 후보) — 첫 담금질 GO 여부  (2026-11-04 · 발송 · 회신 수령 2026-11-04 (NO-GO · P1 1 · …)
+- `kb/reviews/codex_DN_reply_li2s2_dm_fixes_2026_11_04.md` — DN 회신 — li2s-2 DM 고침 확인 (acc648b0): NO-GO · DM P0 두 건 해제 · P1 1 (판정 기록의 완료 필드 타입 오류를 '완료 흔적 없음' 으로 건너뜀 — n:\"130\" 으로 재실행 · stage1_pass) · P2 1 (NUL 만 남은 꼬리를 센다는 카드 문구가 구현과 다름)  (2026-11-04 · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DO_prompt_li2s2_dn_fixes_2026_11_04.md` — DO 프롬프트 — li2s-2 DN 고침 + DO 전 독립 리뷰 고침 확인 (802290db): 완료 필드 타입 · 첫 시드 녹음 fail 기록 순서 · 보존 폴더 판정 · MD 뒤 산출물 · 장부 꼴 — 첫 담금질 GO 여부  (2026-11-04 · 발송 · 회신 수령 2026-11-04 (NO-GO · P0 1 · …)
+- `kb/reviews/codex_DO_reply_li2s2_dn_fixes_2026_11_04.md` — DO 회신 — li2s-2 DN 고침 + DO 전 리뷰 고침 확인 (802290db): NO-GO · P0 1 (복구 때 본 녹음 fail 을 장부에 안 적어 뒤 손상으로 재시도 · stage1_pass) · P1 2 (판정 · 이력 · 장부의 같은 열쇠 둘 → 마지막 값 · 러너가 무효 장부를 정상 꼴로 덮어씀) · P2 2 (중첩 타입 오류로 요약이 죽어 이전 통과 파일이 남음 · 자식이 막힌 신호 마스크를 물려받음)  (2026-11-04 · 수령 2026-11-04 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DP_prompt_li2s2_do_fixes_2026_11_04.md` — DP 프롬프트 — li2s-2 DO 고침 + DP 발송 전 독립 리뷰 둘 고침 (4a269bac): 복구 · 확인 · 재판정에서 본 과학적 결과를 장부에 · 모든 기록 엄격 판독 · 못 읽은 장부를 다시 쓰지 않음 · 남은 임시 파일 · 요약 fail-closed · 신호 — 첫 담금질 GO 여부  (2026-11-05 · answered — 회신 codex_DP_reply_li2s2_do_…)
+- `kb/reviews/codex_DP_reply_li2s2_do_fixes_2026_11_04.md` — DP 회신 — li2s-2 DO 고침 + DP 전 리뷰 고침 확인 (4a269bac): NO-GO · P0 1 (저장 성공 뒤 미룬 신호로 관측한 fail 을 되돌려 지움) · P1 2 (현재 시드 폴더의 미해결 기록 · 판정 임시 파일로 다음 시드 실행 / 러너가 거부하는 장부 상태를 독립 요약은 통과) · P2 2 (terminal STOP 이 신호로 interrupted 로 덮임 · 변이 제외 설명이 넓음)  (2026-11-05 · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부  (2026-11-05 · 발송 완료 2026-11-05 · 회신 수령 2026-11-05 NO…)
+- `kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` — DQ 회신 — li2s-2 DP 고침 + DQ 전 리뷰 6 차 확인 (a4a29216): NO-GO · P1 2 (판정이 읽는 md_init_raw.xyz 가 지문 밖이라 입력 복구를 '같은 입력의 일시 오류' 로 자동 대체 / 첫 정본 판정 저장 실패로 이력 · 임시 파일만 남은 폴더를 놓치고 다른 시드 실행) · P2 1 (모순된 STOP 을 요약 · 러너가 다르게 읽음)  (2026-11-05 · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부  (2026-11-06 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…)
+- `kb/reviews/codex_DR_reply_li2s2_dq_fixes_2026_11_05.md` — DR 회신 — li2s-2 DQ 고침 + DR 전 리뷰 9 차 확인 (879cbc00): NO-GO · 새 P1 2 (장부 기준 앞의 완료된 입력 불일치 판정을 무시하고 자동 대체 / 경로가 있지만 파일이 아닌 md_init_raw.xyz 를 '없음' 으로 기록해 입력 복구를 최초 생성으로 승인) · P2 1 (Q5 요약문이 구현보다 좁음)  (2026-11-06 · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DS_prompt_li2s2_dr_fixes_2026_11_06.md` — DS 프롬프트 — li2s-2 DR 고침 + DS 전 독립 리뷰 고침 (6b124717): 기준 앞 면제는 실제 진행 중 incomplete 만 (입력 불일치는 앞뒤 없이 보류) · 경로 상태 (부재 / 정상 파일 / 링크 / 그 밖) · 생성 예외는 부재 → 정상 파일만 · seed_gate 가 비정상 경로를 입력 불일치로 · Q5 문구 — 첫 담금질 GO 여부  (2026-11-06 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…)
+- `kb/reviews/codex_DS_reply_li2s2_dr_fixes_2026_11_06.md` — DS 회신 — li2s-2 DR 고침 + DS 전 리뷰 3 차 확인 (6b124717): NO-GO · P1 1 (완료 여부 미확인을 md_complete_seen=False 로 기록해 완료 뒤 입력 변경을 '진행 중' 으로 면제) · P2 1 (판독기가 거부하는 판정 링크를 직접 수동 판정은 읽고 정상 파일로 바꿈)  (2026-11-06 · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DT_prompt_li2s2_ds_fixes_2026_11_06.md` — DT 프롬프트 — li2s-2 DS 고침 + DT 전 독립 리뷰 고침 (63331be6): 진행 판정 셋 (완료 · 진행 중 확인 · 확인 불가) · '진행 중' 지름길은 진행 중 확인 + 뒤 산출물 없음 + 같은 plan · 실행 전 기록 + 완료 기록 시각 앞 · 직접 판정 경로 검사 · quench_ps 카드 대조 · 첫 시드 녹음 판정 못 씀 → invalid — 첫 담금질 GO 여부  (2026-11-06 · 발송 완료 · 회신 수령 2026-11-06 조건부 GO (`code…)
+- `kb/reviews/codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` — DT 회신 — li2s-2 DS 고침 + DT 전 리뷰 3 차 확인 (63331be6): 조건부 GO · 새 P0 · P1 없음 · P2 1 (시계 차이가 늘 보수적 보류로만 실패한다는 설명이 틀림 — 같은 신뢰 시계 범위로 명문화하고 그 안에서 실행 · 판정 · 재개)  (2026-11-06 · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전)  (2026-11-09 · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…)
+- `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
+- `kb/reviews/codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` — DV 프롬프트 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1 재리뷰 (DU NO-GO 고침 · 도구 6 · 설계 · 과거 영향 · 계산 0 건)  (2026-11-09 · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…)
+- `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
+- `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …)
+- `kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` — DW 회신 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1 해제조건 확인: NO-GO · DV 묶음 1–3 닫힘 · 묶음 4 (판독기) 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서) · P2 비유한 기하 · P3 관측창 근사  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
+- `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …)
+- `kb/reviews/codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md` — DX 회신 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2 확인: NO-GO · DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1 1 (파일럿 결과를 8 단계 결과로 재사용 — 실행 목적 미구분) · P2 2 (실행기 내용 기준 중복 제거 · EOS 입력 유효성)  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
+- `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 …)
+- `kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` — DY 회신 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3 확인: GO (사용자 새 비준 조건) · DX P1-1 · P2-1 · P2-2 닫힘 · base seed 규칙 찬성 (SEED 는 실행 전에 정하고 재시도에서도 유지하는 운영 규칙 같이) · EOS 결과 파일 결속은 DFT 전  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — GO (1 …)
+- `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐  (2026-11-10 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…)
+- `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` — DZ 회신 — li2s-3 구조군 정의 · 본 시드 재사용 · 골격 게이트 · 2 단계 큐: NO-GO (P0 0 · P1 6 · P2 3) — 구조군 정의와 여섯 시드 재사용은 조건부 찬성 · 실행 · 재개 경로 결함과 보고량 조건이 남음  (2026-11-10 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …)
+- `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
+- `kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 프롬프트 — b2o3 B·O 배치: 파일럿 이완 에너지가 100 ps 까지 계속 내려간다 → 8 단계 (54 런 × 100 ps) 판독 전에 박은 어닐 시간 진단 (50 ps 프레임 이완 · 두 시점 가족 판독) 과 잠정 규칙이 충분한가  (2026-11-10 · 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종…)
+- `kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 회신 — b2o3 어닐 시간 진단 (개정 3): 개정 3 문구 · 비교 규칙 그대로의 최종 판정은 보류 (P0 0 · P1 2 · P2 2) — D1 · D2 진단은 찬성 · 54 런은 계속 · 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로)  (2026-11-10 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …)
+- `kb/reviews/codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` — EB 프롬프트 — li2s-3 회신 DZ 고침: 사후 검증 (v1 런) · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 판독 허가 문 · 압력 도구 · 대조 잡 — v1 런을 사후 검증으로 받아도 되는가 · 고친 큐 v2 를 추가 런 전으로 미뤄도 되는가  (2026-11-10 · Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리…)
+- `kb/reviews/codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` — EF 프롬프트 — b2o3 B·O 배치 9 단계 DFT 도구 · 카드 개정 5 (결과 전): 출력 결속 · EOS (E, P, V) 결과 파일 결속 (DY 확인 4) · k 탐침 발동 범위 · 기준 셀 · 10 단계 고르기 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia 검사 결과 넣음 · 발송 (사…)
+- `kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md` — EF 회신 — b2o3 9 단계 DFT 도구 · 카드 개정 5: NO-GO (P0 0 · P1 6 · P2 6) · DY 확인 4 아직 해제 못 함 · 세 쌍 탐침 해석 찬성 · 기준 셀 조건부 수용  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
+- `kb/reviews/codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md` — EG 프롬프트 — b2o3 9 단계 DFT 도구 v2 (Codex EF NO-GO 고침) 재확인: 한 출력 = 한 실행 · k 격자 대조 · 전자 수 · BFGS 기준 · 다시 결속 · EOS 보류 대상 null — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v2 검사 결과 넣음 (HEA…)
+- `kb/reviews/codex_EG_reply_b2o3_dft_stage9_v2_2026_11_13.md` — EG 회신 — b2o3 9 단계 DFT 도구 v2: NO-GO (P0 0 · P1 2 · P2 4) · 출력 상태 결속 (끼워 넣은 압력 · 좌표 · 힘 조각) · reject 대상 목록 · G5 캐시 · GPU 조회 종료코드 · 버전 혼합 복구 · DY 확인 4 아직 해제 못 함 · k 격자 대조 찬성  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
+- `kb/reviews/codex_EH_prompt_b2o3_dft_stage9_v3_2026_11_13.md` — EH 프롬프트 — b2o3 9 단계 DFT 도구 v3 (Codex EG NO-GO 고침) 재확인: 한 계산 상태 블록 문법 · 힘 원자 번호 · reject 대상 다시 결속 · G5 원자료 · GPU 조회 종료코드 · QE 판 고정 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v3 검사 결과 넣음 (HEA…)
+- `kb/reviews/codex_EH_reply_b2o3_dft_stage9_v3_2026_11_13.md` — EH 회신 — b2o3 9 단계 DFT 도구 v3: NO-GO (P1 2 · P2 2) · EG 여섯 반례 닫힘 확인 · 유한하지 않은 힘·좌표 승격 · 압력 토큰 앞부분 판독 · BFGS 판독 실패 시 대조 건너뜀 + 판정 저장 뒤 CLI 오류 · 응력 행렬 본문 미검사 · 블록 문법 ≠ 같은 실행 인증 · 판 문자열 ≠ 바이너리 동일성 · DY 확인 4 아직 해제 못 함  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
+- `kb/reviews/codex_EI_prompt_b2o3_dft_stage9_v4_2026_11_13.md` — EI 프롬프트 — b2o3 9 단계 DFT 도구 v4 (Codex EH NO-GO 고침) 재확인: 숫자 토큰 전체 · 유한 · 응력 본문 (3 행 × 6 · P = 대각합/3 · 두 단위) · BFGS 기록 필수 · 검사 뒤 쓰기 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v4 검사 결과 넣음 (HEA…)
+- `kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md` — EI 회신 — b2o3 9 단계 DFT 도구 v4: NO-GO (P1 1 · P2 1 · P3 1) · EH 네 지적 닫힘 · 유한한 분수 좌표 토큰이 셀 변환에서 inf 가 되어 전자구조 대상으로 · 판정 경로가 만들 입력 경로와 겹치면 덮어씀 · '판정은 맨 끝' 변이가 두 동작 · 응력 허용 타당 (상한 0.0057356) · CRLF 거부 = LF 범위 명시 · 쓰기 실패 범위 좁히기 · DY 확인 4 (EOS 결과 파일 결속) 해제 가능  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
+- `kb/reviews/codex_EJ_prompt_b2o3_dft_stage9_v5_2026_11_13.md` — EJ 프롬프트 — b2o3 9 단계 DFT 도구 v5 (Codex EI NO-GO 고침) 재확인: 이완 최종 좌표를 셀로 바꾼 구조의 기하 검사 · 판정 경로는 잡 · 구조 폴더 밖 · 변이 한 동작 · 쓰기 실패 범위 · LF 범위 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v5 검사 결과 넣음 (sel…)
+- `kb/reviews/codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md` — EJ 회신 — b2o3 9 단계 DFT 도구 v5: NO-GO (P2 1) · EI P1 (변환 뒤 기하) · P3 (변이) 닫힘 · 경로 충돌 P2 가 생성할 입력 쪽 링크 (디렉터리 링크 · 파일 링크) 로 남음 · 쓸 입력 · 구조의 실제 경로를 판정 목적지와 비교 · Q4 범위 문장 수용 · 부분 판정은 다음 단계가 JSONDecodeError 로 멈춤 · EOS (E, P, V) 결속 해제 유지  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
+- `kb/reviews/codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md` — EK 프롬프트 — b2o3 9 단계 DFT 도구 v6 (Codex EJ NO-GO 고침) 재확인: 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 겹침 거부 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v6 검사 결과 넣음 (HEA…)
+- `kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md` — EK 회신 — b2o3 9 단계 DFT 도구 v6: 조건부 GO (gabia/Linux 생성 · 판독 범위) · EJ P2 해제 · 실행은 사용자 비준 뒤 · Windows 짧은 경로명 (8.3) 과 긴 이름이 섞이면 같은 파일을 다르게 판단하는 별도 P2 (Linux 생산 경로 차단 사유 아님) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인  (2026-11-14 · 수령 2026-11-14 (사용자 붙여넣기) · 조건부 GO (gab…)
+- `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부  (2026-11-22 · 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 …)
+- `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택  (2026-11-22 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…)
+- `kb/reviews/codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` — EO 프롬프트 — W_ad a5 묶음 Codex EN (NO-GO · P0 1 · P1 3 · P2 1 · P3 1) 고침 확인: 끊긴 단의 원문 검사 · killed.json 대조 · 중단 영수증 · 시작점 유실 · 옛 반송 묶음 — 업체 발송 GO 여부  (2026-11-22 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…)
+- `kb/reviews/codex_EO_reply_wad_a5_en_fixes_2026_11_23.md` — EO 회신 — W_ad a5 묶음 (EN 고침) 확인: NO-GO (P0 1 · P1 4 · P2 1) — EN 의 재시작 모순 · 잘못된 행 머리는 막힘 · c2 첫 전자 반복행이 SDA: 에서 잘려도 1 행으로 세어 c1 보조 채택 · 영수증 판독 불일치 · 시작 기록 잡 이름 · 중단 시간 상한 · 장부 ↔ 보존 폴더 부분 복구  (2026-11-23 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 없음) · NO-…)
+- `kb/reviews/codex_EP_prompt_wad_a5_eo_fixes_2026_11_23.md` — EP 프롬프트 — W_ad a5 묶음 Codex EO (NO-GO) 재승인 조건 ①–④ 고침 확인: 완전한 전자행 계수 · 영수증 · 시작 기록 일치 판독 · 중단 시간 · 상한 · 장부 ↔ 보존 폴더 (+ P2 끝 기록 시도 ID) — 업체 발송 GO 여부  (2026-11-23 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…)
+- `kb/reviews/codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md` — EP 회신 — W_ad a5 묶음 (EO 고침) 확인: NO-GO — EO 원래 반례는 막힘 · 숫자를 못 읽는 c2 행 (칸 수만 맞음) 으로 c1 보조 채택 · 'SDA' (콜론 앞) 절단을 0 스텝으로 받음 · 180 h 넘은 시도에 남의 0 초 영수증 한 장으로 c2 실행 · 채택 · 부분 복구 뒤 status.tsv 의 선행 c1 · 완료 시도 run_id · 빈 영수증 칸 · 비 UTF-8 사유 · 장부 순서  (2026-11-23 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…)
+- `kb/reviews/codex_EQ_prompt_wad_a5_ep_fixes_2026_11_23.md` — EQ 프롬프트 — W_ad a5 묶음 Codex EP (NO-GO) 재승인 조건 ①–④ 고침 확인: 숫자로 읽히는 행 · 콜론 앞 머리 절단 · 시간 출처는 보존 폴더 영수증만 · 시도 이력 (status.tsv) 대조 · 시작 · 끝 · 최종 목록 실행 ID (+ 조건부 영수증 칸 · UTF-8 · P2 장부 순서) — 업체 발송 GO 여부  (2026-11-23 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…)
+- `kb/reviews/codex_EQ_reply_wad_a5_ep_fixes_2026_11_23.md` — EQ 회신 — W_ad a5 묶음 (EP 고침) 확인: NO-GO — EP 원래 반례는 막힘 · 위협 범위 §1b 수용 (GO) · 범위 안 지적: 앞 공백 두 칸 뒤 'SDA' 절단 → 0 스텝 · 310 자리 숫자 행 → RUN_FAILED · 648,001 s 완료 시도에 남의 killed.json → c2 채택 · run/ 하나를 옛 체크포인트로 복구하면 유효한 기존 반송본을 덮어씀 · 0 바이트 status.tsv · 잘린 종료 기록으로 계속 · 재포장이 현장 오류를 지움 · final.json code 0 + REVIEW · 공백 세 칸 잡 ID · 저장 뒤 사유 바이트 손상  (2026-11-23 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…)
+- `kb/reviews/codex_ER_prompt_wad_a5_eq_fixes_2026_11_23.md` — ER 프롬프트 — W_ad a5 묶음 Codex EQ (NO-GO) 고침 확인: 트리 관문 하나 (러너 모든 진입점 — 다시 돌림 · 단 발사 직전 · PACK_ONLY · 포장 덮어쓰기 전 · 기록 명령 · 검사기 같은 규칙 · 같은 낱말) — 기록 문법 엄격 · 끝 기록 원자적 쓰기 · 끝 기록 + 끊김 기록 공존 거부 · 끊김 기록 결속 · 잔여 · 모르는 파일 · 기존 반송본 대조 · 끝 기록 code/state 조합 · 앞 빈칸 머리 조각 · 칸 길이 ≤ 24 · 필수 칸 빈칸 문자 · 기록 UTF-8 · 장부 단 순서 — 업체 발송 GO 여부  (2026-11-23 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…)
+- `kb/reviews/codex_ER_reply_wad_a5_eq_fixes_2026_11_23.md` — ER 회신 — W_ad a5 묶음 (EQ 고침 · 트리 관문 하나) 확인: NO-GO — EQ 반례 (남의 killed.json · 완료 반송본 옆 과거 복구 · 잘린 종료 기록 · 재포장 .part) 는 막힘 · 필수 칸 · UTF-8 · 장부 순서 GO · 범위 안 지적: 준비 폴더 이름으로 옮긴 중단 c1 을 러너가 지움 · 마지막 단 종결 (final.json OK · A5 WAVECAR 삭제) 이 검사보다 먼저 · 첫 행 콜론 한 바이트 손상 ('SDA;' · 'SDA') 이 0 스텝 · attempt.json 648,001 → 48,001 한 자리 유실 (이력 행과 대조 안 함) · 기록 명령 둘 겹침 (잠금 없음) · 중간 반송본 전자행 7 개 후퇴 · 확정 영수증 UNKNOWN 후퇴 · 종료 기록 job/stage/attempt · POTCAR.sha256 대조 없음  (2026-11-23 · 수령 2026-11-23 (사용자 붙여넣기 · 첨부 둘) · NO-G…)
+- `kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` — ES 프롬프트 — W_ad a5 묶음 Codex ER (NO-GO) 고침 확인: 같은 트리 관문 위에 — 준비 폴더의 실행 기록 보존 · 끝 기록 · WAVECAR 지우기 전 관문 · 0 스텝은 0 행으로 설명될 때만 · 이력 줄 벽시계 = 끝 기록 · 기록 명령 · 포장 배타 잠금 · 중간 반송본 대비 관측 사실 후퇴 거부 · 끝 기록 잡 · 변형 · stage · POTCAR 해시 — 업체 발송 GO 여부  (2026-11-24 · 발송 · 회신 수령 2026-11-24 — NO-GO (P0 2 · …)
+- `kb/reviews/codex_ES_reply_wad_a5_er_fixes_2026_11_24.md` — ES 회신 — W_ad a5 묶음 1da64d0be (MANIFEST 50beb026…) · NO-GO (P0 2 · P1 2 · P2 1)  (2026-11-24 · 회신 수령 2026-11-24 · NO-GO — 업체 발송 보류)
+- `kb/reviews/codex_ET_prompt_wad_a5_es_fixes_2026_11_24.md` — ET 프롬프트 — W_ad a5 묶음 Codex ES (NO-GO) 네 건 + P2 고침 확인만 (좁은 확인 한 번): 잠금 회수 한 명령만 · 중간 반송본 증거 보존 · 끝 기록 POTCAR 는 잰 값 · 이력 벽시계 원문 대조 · 잘린 열 제목 — 업체 발송 GO 여부  (2026-11-24 · 발송 · 회신 수령 2026-11-24 — GO (codex_ET_r…)
+- `kb/reviews/codex_ET_reply_wad_a5_es_fixes_2026_11_24.md` — ET 회신 — W_ad a5 묶음 990f8f84 (MANIFEST 01e39753…) · GO (업체 발송 가능)  (2026-11-24 · 회신 수령 2026-11-24 · GO — 업체 발송 가능 (발송은 …)
+- `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
+- `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
+- `kb/reviews/codex_G_reply_to_F_2026_08_27.md` — 교차리뷰 G — 회신 F 수용 보고 + 후속 질문 (R3 설계·D_inc 오차·N_eff)  (2026-08-27 · 회신수령-반영완료 (→ codex_H_reply_to_G_2026_0…)
+- `kb/reviews/codex_H_reply_to_G_2026_08_27.md` — 교차리뷰 H — 회신 G 반영 보고 + 새 질문 5건 (200 ps 표준이 block 바닥 아래다)  (2026-08-27 · 회신수령-반영중 (회신 H 판정 §5 참조))
+- `kb/reviews/codex_I_neb_cc333_worth_it_2026_08_27.md` — 교차리뷰 I — 3주짜리 NEB 를 재개할 값어치가 있나 (싼 우회로가 물리적으로 막혔다)  (2026-08-27 · 회신완료)
+- `kb/reviews/codex_I_reply_neb_hold_2026_08_27.md` — 회신 I — 3주 NEB 는 HOLD (영구 폐기 아님). 우리 잠정판단 N3 이 기각됐고 P0 3건이 나왔다  (2026-08-27 · 반영중)
+- `kb/reviews/codex_J_prereq_go_nogo_2026_08_27.md` — 교차리뷰 J — 선행검사 2건 GO/NO-GO (돌리기 전에)  (2026-08-27 · 리뷰대기)
+- `kb/reviews/codex_K_what_next_after_seminar_2026_08_28.md` — 교차리뷰 K — 세미나 이후 무엇을 할 것인가 (데이터·모델은 늘었는데 축이 비어 있다)  (2026-08-28 · 리뷰대기)
+- `kb/reviews/codex_L_vanhove_regimes_2026_08_28.md` — 교차리뷰 L — van Hove 33궤적: 고원·시드폭발·독립재현 셋이 진짜인가  (2026-08-28 · 리뷰대기)
+- `kb/reviews/codex_M_sdcp_wave15_close_2026_08_28.md` — 교차리뷰 M — SDCP wave1.5 마감: basin-매칭 참조·자리선호 종결·라디칼 닫기 설계  (2026-08-28 · 회신반영)
+- `kb/reviews/codex_N_estimand_discipline_2026_08_28.md` — 교차리뷰 N — estimand 규율·마감 규율: 이게 작동할 규율인가, 아니면 또 하나의 안 읽는 문서인가  (2026-08-28 · 회신반영)
+- `kb/reviews/codex_O_prompt_sdcp_doped_estimand_2026_08_28.md` — Codex 회신 O 요청 프롬프트 — SDCP doped estimand 카드 (계산 전 심사)  (2026-08-28 · 회신 수령 — `kb/reviews/codex_O_sdcp_doped…)
+- `kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md` — 회신 O — SDCP doped estimand 카드 전면 반려 (P0, 슬랩 NO-GO)  (2026-08-28 · 접수 — 구현 중)
+- `kb/reviews/codex_P_prompt_wave1_incar_audit_2026_08_28.md` — Codex 회신 P 요청 프롬프트 — wave1 INCAR 전수 감사 + doped 마감 심사  (2026-08-28 · 회신 수령 — `kb/reviews/codex_P_wave1_inca…)
+- `kb/reviews/codex_P_wave1_incar_audit_reply_2026_08_28.md` — 회신 P — INCAR 감사 fail-open · 추출부호 철회 · LREAL 회계 정정 (P0 3건)  (2026-08-28 · 접수 — 구현 중)
+- `kb/reviews/codex_Q2_prompt_claim_and_normalization_2026_08_29.md` — Codex 회신 Q 요청 (재작성) — 기전이 철회된 뒤 원고가 쓸 수 있는 문장과 그 정규화  (2026-08-29 · 발송 대기)
+- `kb/reviews/codex_Q_prompt_neutral_ptfe_closure_2026_08_28.md` — Codex 회신 Q 요청 프롬프트 — neutral·PTFE 마감과 0.346 eV 헤드라인 심사  (2026-08-28 · 발송 대기)
+- `kb/reviews/codex_R2_doped_reopen_v3_reply_2026_08_28.md` — 회신 R2 — Stage 0 재차 NO-GO: 빌더 실물이 카드와 불일치 (P0 6건 + 최소수정 8)  (2026-08-28 · 접수 — 구현 완료 (R3 제출 대기))
+- `kb/reviews/codex_R2_prompt_doped_reopen_v3_2026_08_28.md` — Codex 회신 R2 요청 프롬프트 — 재개 설계 v3 재심사 (회신 R 조건 8 반영 확인)  (2026-08-28 · 회신 수령 — `kb/reviews/codex_R2_doped_reo…)
+- `kb/reviews/codex_R3_doped_reopen_impl_reply_2026_08_28.md` — 회신 R3 — Stage 0 재차 NO-GO: 실측 fail-open 5건 + 관측량 회수 계약 (GO 요건 9)  (2026-08-28 · 접수 — 구현 완료 (R4 제출 대기))
+- `kb/reviews/codex_R3_prompt_doped_reopen_impl_2026_08_28.md` — Codex 회신 R3 요청 프롬프트 — 최소수정 8 구현 재제출 (실물 .inp·manifest·음성 e2e 첨부)  (2026-08-28 · 회신 수령 — `kb/reviews/codex_R3_doped_reo…)
+- `kb/reviews/codex_R4_doped_reopen_impl2_reply_2026_08_29.md` — 회신 R4 — 조건부 GO: 중성 Stage A 8개 ORCA Opt만 승인, Stage 0·B·hybrid 전부 NO-GO  (2026-08-29 · 접수 — 조건 6 준수 하에 Stage A 착수 가능, P0-2~5 …)
+- `kb/reviews/codex_R4_prompt_doped_reopen_impl2_2026_08_28.md` — Codex 회신 R4 요청 프롬프트 — R3 P0 전건 구현 재제출 (receipt·analyzer·계약 증빙)  (2026-08-28 · 회신 수령 — `kb/reviews/codex_R4_doped_reo…)
+- `kb/reviews/codex_R_doped_reopen_v2_reply_2026_08_28.md` — 회신 R — Stage 0 NO-GO: 재심사 조건 8 (U_eff 자료부재 · 기체상 retention 자명 · conditioning 오염)  (2026-08-28 · 접수 — 구현 중)
+- `kb/reviews/codex_R_prompt_doped_reopen_v2_2026_08_28.md` — Codex 회신 R 요청 프롬프트 — doped 재개 설계 v2 의 계산 전 심사  (2026-08-28 · 회신 수령 — `kb/reviews/codex_R_doped_reop…)
+- `kb/reviews/codex_S_prompt_backbone_polaron_estimand_2026_08_31.md` — 리뷰 요청 S — SDCP 백본 폴라론 estimand (계산 전, §1–3 선심사)  (2026-08-31 · 회신 수령 (원문 파일 없음 — 근거: 후속 T (폴라론 pilot …)
+- `kb/reviews/codex_S_prompt_t13_msd_length_2026_08_29.md` — Codex 회신 S 요청 프롬프트 — T13 (MSD 생산길이 200 ps 타당성) 판정 + ⏭-2 착수 가부  (2026-08-29 · 회신 수령 (원문 파일 없음 — 근거: 판정 등재 db/propert…)
+- `kb/reviews/codex_T_prompt_polaron_pilot_seeds_2026_08_31.md` — 리뷰 요청 T — 폴라론 pilot, phase S 착수 전 (seed 생성 완료)  (2026-08-31 · 회신 수령 — `kb/reviews/codex_T_reply_pola…)
+- `kb/reviews/codex_T_prompt_sdcp_binding_energy_path_2026_08_29.md` — Codex 회신 T 요청 — 중성 SO₃H 흡착에너지를 원고에 넣는 최단 경로  (2026-08-29 · 회신 수령 (원문 파일 없음 — 근거: T P0-1 술포네이트 기전 …)
+- `kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md` — 회신 T — 폴라론 pilot phase S 착수 NO-GO (P0 4건 · 해제조건 6건)  (2026-08-31 · 이행 중)
+- `kb/reviews/codex_U_prompt_neutral_close_plan_2026_08_29.md` — Codex 회신 U 요청 — 중성 SDCP 흡착 **닫힘 조건 사전등록** + 자세·기준 동시 교정 계획  (2026-08-29 · 회신 수령 (원문 파일 없음 — 근거: U P0-2 가 회신 W 프롬…)
+- `kb/reviews/codex_U_prompt_polaron_S0_2026_08_31.md` — 리뷰 요청 U — 폴라론 S0 재제출 (회신 T P0 4건 + 해제조건 6 이행)  (2026-09-01 · 회신 수령 — 후속 V (P0 9건 이행 완료))
+- `kb/reviews/codex_U_reply_polaron_S0_2026_09_01.md` — 회신 U — 폴라론 S0 (NO-GO · P0 9건 · phase L 도 돌리지 말 것)  (2026-09-01 · 회신 수령 — 이행 대기)
+- `kb/reviews/codex_V_prompt_closure_incar_audit_2026_08_29.md` — Codex 회신 V 요청 — closure 번들 INCAR 실물 감사 (던지기 전 마지막 관문)  (2026-08-29 · 발송 대기)
+- `kb/reviews/codex_V_prompt_polaron_S0_2026_09_01.md` — 리뷰 요청 V — 폴라론 S0 (회신 U P0 9건 이행)  (2026-09-02 · 회신 수령 — 후속 W (P0 5건 이행))
+- `kb/reviews/codex_W_prompt_mlip_selector_validity_2026_08_29.md` — Codex 회신 W 요청 — MLIP 를 후보 선택기로 쓰는 것이 이 계에서 성립하나 (실측 오프셋 첨부)  (2026-08-29 · 발송 대기)
+- `kb/reviews/codex_W_prompt_polaron_S0_2026_09_02.md` — 리뷰 요청 W — 폴라론 S0 (회신 V P0 5건 이행 · 비준 대기)  (2026-09-02 · 발송 대기)
+- `kb/reviews/codex_X_bundle_reply_2026_08_29.md` — Codex 회신 X — prospective 번들 NO-GO · P0 6건 · Stage A/B 재설계  (2026-08-29 · 접수)
+- `kb/reviews/codex_X_prompt_polaron_S0_2026_09_02.md` — 리뷰 요청 X — 폴라론 S0 (회신 W P0 8건 이행 · 사전등록 비준 완료)  (2026-09-02 · 발송 대기)
+- `kb/reviews/codex_X_prompt_prospective_bundle_ready_2026_08_29.md` — Codex 회신 X 요청 — prospective 번들 40잡, 던지기 전 최종 감사 (실물 첨부)  (2026-08-29 · 회신 수령 — `kb/reviews/codex_X_bundle_rep…)
+- `kb/reviews/codex_Y_reply_polaron_S0_2026_09_03.md` — 회신 Y — 폴라론 S0 (NO-GO · P0 8 · P1 8 · Q1–Q5)  (2026-09-03 · 회신반영)
+- `kb/reviews/codex_stats_question_2026_08_11.md` — Codex 질문 — 통계 판정 3건 (β 귀무분포 · 사다리 설계 · BVSE 부호 · 판정바닥 ddof)  (2026-08-11 · 회신 대기)
+- `kb/reviews/decisions_pending_first_author_2026_09_09.md` — 1저자 결정 대기 — 2026-09-09 (Codex BI NO-GO + v3 재편 + cascade 재설계)  (2026-09-09 · 대기)
+- `kb/reviews/internal_BG_reply_c12_2026_09_03.md` — 회신 BG — C-12 내부 적대적 리뷰 (NO-GO · P0 1 · P1 8)  (2026-09-03 · 회신반영)
+- `kb/reviews/internal_BH_reply_c12_v32_2026_09_03.md` — 회신 BH — C-12 v32 내부 다중 감사 (7렌즈 · 3인 반박 · NO-GO · P0 1 · P1 6)  (2026-09-03 · 회신반영)
+- `kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` — EB 회신 (내부 반박 리뷰) — li2s-3 판독 도구 · 카드 개정 DZ: NO-GO (P0 1 · P1 6 · P2 7) — 생산 프레임 수 기대값이 실제 드라이버보다 하나 많다 (4001 대 4000) · 접근 (v1 런 사후 검증) 은 조건부 찬성  (2026-11-10 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…)
+- `kb/reviews/internal_EC_prompt_b2o3_amend4_diag_v2_2026_11_10.md` — EC 프롬프트 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 회신 EA 의 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) 이 채워졌는가  (2026-11-10 · 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · 사용자 '…)
+- `kb/reviews/internal_EC_reply_b2o3_amend4_diag_v2_2026_11_10.md` — EC 회신 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 조건부 GO (P0 0 · P1 2 · P2 5) — gabia 블록이 결과 공개 전 도구 고정을 기계로 안 지킨다 · 끝 구조만 걸린 100 ps 이완 실패가 성공 집합 규칙을 비켜 간다  (2026-11-10 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…)
+- `kb/reviews/internal_ED_prompt_cascade_bundle2_card_2026_11_10.md` — ED 프롬프트 (내부 반박 리뷰) — cascade 묶음 2 카드: 새 축 ④ 작동창 도펀트 행방 · ⑤ 분해 ΔV/V · ⑥ Li 쪽 산물 품질과 가중치 없는 전체 순위 (약점 순위 · 순위 벡터 Pareto 층) 가 결과 전에 잘 정의됐는가  (2026-11-10 · 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · Codex…)
+- `kb/reviews/internal_ED_reply_cascade_bundle2_card_2026_11_10.md` — ED 회신 (내부 반박 리뷰) — cascade 묶음 2 카드: 조건부 GO (P0 0 · P1 6 · P2 5) — ⑤ 반응물 회계가 스펙테이터 염 부피를 산물 쪽에만 넣는다 · 순위 기계 (R9 문장 · 축마다 다른 기준 집합 · 동률 폭 = 숨은 무게) · 표시 모름이 무리 A 를 덮는다 · ④ 전압 → 산물 대응 · 휘발 산물 · 규칙을 바꾸면서 '지킨다'  (2026-11-10 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…)
+- `kb/reviews/internal_EE_prompt_li2s3_queue_v2_2026_11_10.md` — EE 프롬프트 (내부 반박 리뷰) — li2s-3 큐 v2 (재실행 · cond550) 와 판독 v2 경로: DZ 의 v1 반례를 막는가 · 섞인 판독 · cond550 연결 · 비용 · 정지가 결과 전에 잘 정의됐는가  (2026-11-10 · 발송 2026-11-10 — 내부 반박 리뷰 (큐 v2 를 쓴 에이전…)
+- `kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md` — EE 회신 (내부 반박 리뷰) — li2s-3 큐 v2 · 판독 v2 경로: 조건부 GO (P0 0 · P1 3 · P2 6) — DZ 반례는 막는다 · 결과를 본 뒤 사다리 런을 다시 굴려 최종 갈래를 바꾸는 길 · 환경변수 카드 · 원장 · PHASE 로 첫 런 한도를 피하는 길이 남음  (2026-11-10 · 회신 원문 (독립 리뷰 에이전트 · 2026-11-10) — 저장소 …)
+- `kb/reviews/internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` — EL 프롬프트 (내부 반박 리뷰) — li2s-3 카드 개정 4: 큐 끝 줄 유실 인정이 '끝 줄 하나만 빠진 완료 큐' 만 받는가 (판독 보류 처리 · 결과 전)  (2026-11-15 · 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전…)
+- `kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md` — EL 회신 (내부 반박 리뷰) — li2s-3 카드 개정 4 큐 끝 줄 유실 인정: 조건부 GO (P0 1 · P1 1 · P2 8) — 순수 v1 사다리에서 받는 꼴은 맞고 정상 경로보다 좁다 · 그러나 인정이 장부 파일 전체를 묶어 v2 큐 (cond550 · rerun) 가 장부에 이어 쓰는 순간 v1 런이 모두 invalid (cond550 갈래가 결과 뒤 개정 없이는 막힌다) · 인정 결정 id 를 안 묶는다  (2026-11-14 · 회신 원문 (독립 리뷰 에이전트 · 2026-11-14) — 저장소 …)
+- `kb/reviews/internal_EM_prompt_wad_a5_package_2026_11_20.md` — EM 프롬프트 — 은 e70 far 재시도 a5 묶음 발송 전 독립 리뷰  (2026-11-20 · 발송 · 회신 수령 2026-11-20)
+- `kb/reviews/internal_EM_reply_wad_a5_package_2026_11_20.md` — EM 회신 — a5 묶음 독립 리뷰 (NO-GO · P0 2 · P1 4)  (2026-11-20 · 회신 수령 2026-11-20 · NO-GO · 고침 진행)
+- `kb/reviews/internal_Z2_reply_polaron_S0_2026_09_03.md` — 회신 Z-2 — 폴라론 S0 내부 적대적 리뷰 2차 (NO-GO · P0 2 · P1 9)  (2026-09-03 · 회신반영)
+- `kb/reviews/internal_Z3_reply_polaron_S0_2026_09_03.md` — 회신 Z-3 — 폴라론 S0 내부 적대적 리뷰 3차 (NO-GO · P0 1 · P1 7)  (2026-09-03 · 회신반영)
+- `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)  (2026-09-03 · 회신반영)
+- `kb/reviews/internal_lens_review_c12_v34_2026_09_03.md` — 내부 6렌즈 리뷰 — C-12 v34 (발송 전 마지막 리뷰) · NO-GO → v35 ✔읽음  (2026-09-03 · 진행)
+- `kb/reviews/internal_review_AX_lpsocl_600K_2026_09_04.md` — 내부 리뷰 AX — LPSOCl 600 K 개정 (Codex 대체 · 자체 적대적 리뷰)  (2026-09-04 · 판정 완료)
+- `kb/reviews/internal_review_wad_agc_fable_2026_09_23.md` — 내부 리뷰 (Fable) — LPSCl | Ag–C | VGCF 점착일 계획: NO-GO (현재 판)  (2026-09-23 · 수신됨 — NO-GO(현재 판) · P0 4건 원문 대조 확인 끝 ·…)
+- `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구  (2026-09-22 · 수신됨-회신함)
+- `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정  (2026-09-22 · 회신문-작성됨)
+- `kb/reviews/li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` — BT 수신 원문 — 정확값 지문 · N_eff 창 불일치 지적 · 부트스트랩 제안  (2026-09-22 · 수신됨-회신함)
+- `kb/reviews/li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` — BT 회신 — relax 프레임은 36 중에 없다 · §6 N_eff 철회 · 부트스트랩 전환  (2026-09-22 · 회신문-작성됨)
+- `kb/reviews/li2s1a_BU_addendum_block_rule_guards_2026_09_22.md` — BU 부록 — 합의한 블록 규칙을 코드로 내리다가 **규칙이 잡음에 걸리는 것**을 찾았다  (2026-09-22 · 보낼것)
+- `kb/reviews/li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` — BU 수신 원문 — 정확값 대조 다음 수 · 분산비 판정 규칙 · 블록 규칙 선박기  (2026-09-22 · 수신됨-회신함)
+- `kb/reviews/li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` — BU 회신 — 판정 규칙을 분산비로 교체 · 내 IQR 초안은 두 번 틀렸다 · 블록 규칙 선박기  (2026-09-22 · 회신문-작성됨)
+- `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송)  (2026-09-26 · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…)
+- `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토)  (2026-09-26 · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …)
+- `kb/reviews/li2s1a_CD_prompt_li2s_cc_report_2026_09_26.md` — CD 프롬프트 — li2s 소셀 유리 MD 회신 CC 이행 보고 (외부 1저자에게 발송 · 발송판은 kb/projects 에)  (2026-09-27 · 발송됨 (사용자) · 회신 CD 수령 2026-09-27 → `li2…)
+- `kb/reviews/li2s1a_CD_reply_li2s_cc_report_2026_09_27.md` — 회신 CD — 외부 1저자 (li2s 소셀 유리 MD): 회신 CC 이행 보고 판정 (Q-CC-1 MTO · σ 하한·보수값 · b_min 50 ps · 7 χ²₃ 쓰지 않음 · 8 상한 비교 보류 · 550 K 겸용 예외 · 새 항목 둘 · 게이트 A 메모)  (2026-09-27 · 수령 (2026-09-27 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게)  (2026-09-28 · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…)
+- `kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` — 회신 CH — 외부 1저자 (li2s 소셀 유리 MD): 편지 CH 판정 (Q-CH-1 2σ 로 상향 · Q-CH-2 600 K pre-register · Q-CH-3 수정안 수용 + S54 내력·seed4 일시 · 새 항목 둘 — 400 K 두 런 D 2.2 배 · 시드 간 P 이탈 산포)  (2026-09-28 · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` — CL 프롬프트 — li2s 소셀 유리 MD: 회신 CH 이행 · S54 내력 (전건) · 새 발견 둘 (교환망 · 두 보존율) · 600 K 파일럿 (초기구조 정정 공개) · 확인 요청 넷 (외부 1저자에게)  (2026-09-28 · 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) …)
+- `kb/reviews/li2s1a_CL_reply_li2s_ch_reply_s54_census_2026_09_28.md` — 회신 CL — 외부 1저자 (li2s 소셀 유리 MD): 초안 CL 수령 · Q-CL-2 먼저 답 (465 K '2 배' 확정 + 출처 단서) · Q-CL-1 확정 (가까운 쪽 문턱 · 양쪽 2σ) · Q-CL-3·4 는 결과와 같이 · 네 시드 전수는 발송 전 권장  (2026-09-28 · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` — CN 프롬프트 — li2s 소셀 유리 MD: CL 채움판 (600 K 파일럿 · 본 런 착수) + 본 런 판독 (C1 11/11 · C2 465 K 0/5 · 550 K 1/5) · 갈래1 확인 요청 · C2 미통과 원인 · 다섯 시드 전수 (Q-CL-3·4) (외부 1저자에게)  (2026-09-30 · 발송됨 (사용자 · 2026-09-30 · 초안 그대로) · ✅ 회신…)
+- `kb/reviews/li2s1a_CN_reply_li2s_main_readout_2026_09_30.md` — 회신 CN — 외부 1저자 (li2s 소셀 유리 MD): 갈래1 확정 · 마지막 문장 좁힘 · 주 표기 1/15 · Ea 적합 단위 질문 닫기 · P–S–S 문구 확정 · (가)(나) 채택 (다) 기각 · 마감 전 덧붙일 것 둘 (550 K 문턱 부근 · STO–MTO 폭)  (2026-09-30 · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` — CO 프롬프트 — li2s 소셀 유리 MD v2 카드 (잠정): 550 K 800 ps · 600 K 400 ps · 같은 5 시드 · 기계–시드 교차 · σ 사다리를 b_min 에 닿게 · 확인 요청 여섯 (외부 1저자에게)  (2026-10-04 · 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 …)
+- `kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md` — 회신 CO — 외부 1저자 (li2s 소셀 유리 MD v2 카드): Q-CO-1~6 · 800 ps σ 도 여전히 하한 · 두 온도 공통 b = 256 열 · 끝 두 b 판정 갈리면 경계 · near-miss σ 거리 다섯 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자를 지금 · 보조 창 50–200 ps 기록 열  (2026-10-04 · 수령 (2026-10-04 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` — CQ 프롬프트 — li2s 소셀 유리 MD v2 판독: 회신 CO 규칙을 결과 전에 넣고 한 번 판독 · 갈래 v2-2 (규칙 적용) · near-miss · 보조 창 · 골격 기록 · 확인 요청 다섯 (외부 1저자에게)  (2026-10-04 · 초안 (2026-10-04) — 사용자 검토 · 발송 대기)
+- `kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` — 회신 CQ — 외부 1저자 (li2s 소셀 유리 MD v2 판독): 갈래 v2-2 확정 · 마감 문장 끝 절 좁힘 (550 K = 문턱 부근 · 미통과 0) · 늦은 창 한 줄 (10 런 0.909–1.029) · 골격 ③ 일시 변화 수도 게이트 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (여기서 닫지 않는다) · p90² 따로 재서 넣기  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` — CR 프롬프트 — li2s 소셀 유리 MD: 회신 CQ 이행 보고 · 해설 문장 검산 셋 · 대조 계 a-Li₃PS₄ 유리 카드 초안 (600 K 400 ps · 5 담금질 시드 · D 상대차) · 확인 요청 여섯 (외부 1저자에게)  (2026-10-05 · 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90²…)
+- `kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` — 회신 CR — 외부 1저자 (li2s 소셀 유리 대조 계 카드): 검산 셋 수용 (1.49 eV⁻¹ · 산포 문장은 IQR 에만) · Q-CR-1~6 전건 · R 은 두 계 모두 통과 시드 ≥ 4 · 1 포함 문장에 검출한계 (결과 전 모의) · 골격 게이트 600 K 에서도 · 일시 변화 문턱은 A 실측에서 (예 5) · c2 = 1차 관측 · N_eff 열 · 밀도 −15 % 단서 · Tg 100 K 사전 문장 · 대조표 항목  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md` — CS 프롬프트 — li2s 소셀 유리 대조 계: 담금질 시작 · ⚠ 비용 견적 오류 정정 (시드당 3 h → 실측 ≈ 33–39 h 벽시계) · 총상한 80 GPU-h 를 MD 전에 넘는다 · 셈법·새 상한 140·그 사이 처리 확인 요청 셋 (외부 1저자에게)  (2026-10-05 · 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projec…)
+- `kb/reviews/li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` — 회신 CS — 외부 1저자 (li2s 소셀 유리 대조 계 비용): Q-CS-1 kgy 는 등분 가정으로 상한 비교 (과대평가 방향 = 보수적 · 벽시계 병기 · gabia 는 nvidia-smi 실측 · 기계별 방식 명시) · Q-CS-2 140 수용 + 셋 (80 이 틀린 이유 기록 · 다음 카드 비용 항목에 실측 장부 대조 필수 · 여유 14 % 얇음 → 160 또는 멈춤 경로 명시 · MD 40 을 v2 장부에서 다시) · Q-CS-3 그 처리로 됨 + 넷에서 멈출 때 규칙을 지금 박을 것 · 덧붙임 R 은 B 실제 산포 쪽 검출한계로 읽기  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안  (2026-10-19 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…)
+- `kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` — 회신 CX — 외부 1저자 (li2s 소셀 유리 대조 계 B 600 K 판독): Q-CX-1 c2 확정 · 문장 안에 단서 (경계 4 · 미통과 0 · C1 5/5) · 잣대 비대칭 한 줄 · N_eff 옆 금지 문구 · Q-CX-2 셋 수용 (③ 대조 잡은 상시 절차로) · Q-CX-3a 650 K 두 계 + Tg 거리 한계 결과 전 · 3b 순차 · 3c 문턱 5 + 통과 런도 네 지표 분포 기록 · p90² 포화 예상 · 3d 이 카드로 닫음 + 닫기 전 비용 0 둘 (A T₅₀ 네 시드 · 결정 Li₃PS₄ 1.88 의 상·출처) · 담금질 발견 둘 · 미해결 목록 7  (2026-10-19 · 수령 (2026-10-19 · 사용자 붙여넣기 'li2S는 이렇게 회…)
+- `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 모델 검증 (UMA–PBE p1 · p1 · BVSE) · 트랙 마감 제안 · 새 트랙 여부  (2026-10-30 · 발송 안 함 — 2026-10-30 사용자 위임 (외부 1저자 확인 …)
+- `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
+- `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
+- `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
+- `kb/reviews/sei_neb_li3nd_rereview_request_2026_08_11.md` — 재리뷰 요청 — SEI NEB 6종 · Li₃Nd 금속 분기 · P2 범위 축소 (착수 직전)  (2026-08-11 · 회신 대기)
+- `kb/reviews/self_audit_2026_08_06.md` — 🔍 자체 적대적 리뷰 — 2026-08-05~06 커밋 66개 (136 파일)
+- `kb/reviews/site_screen_codex_crossreview_2026_08_11.md` — Codex 교차검증 요청 — `site_screen.py` (자리 선호·자세 스크리닝)
+- `kb/reviews/site_screen_codex_crossreview_reply_2026_08_11.md` — 회답 — Codex `site_screen.py` × `ptfe_linio2_uma` 교차검증
+- `kb/reviews/site_screen_codex_round3_request_2026_08_11.md` — Codex 교차검증 Round 3 요청 — DFT+U 인계 · 쌍 선택 · 최종 수치
+- `kb/reviews/site_screen_selfreview_2026_08_11.md` — site_screen 자체 코드리뷰 (2026-08-11) — 10건 전부 실재 · 전건 수정
+- `kb/reviews/vasp_bundle_codex_reply_2026_08_11.md` — Codex 회신 접수 — VASP 번들 HOLD · v2 작업 목록  (2026-08-11 · HOLD 수용 — v2 구현 대기)
+- `kb/reviews/vasp_bundle_codex_request_2026_08_11.md` — Codex 검토 요청 — VASP 외주 원샷 번들 (자리 선호 + E_ads)  (2026-08-11 · 회신 대기)
+- `kb/reviews/vasp_bundle_v2_rereview_request_2026_08_11.md` — Codex 재검토 요청 — VASP 번들 v2 (HOLD 10항 반영 완료 · 발송 GO/NO-GO)  (2026-08-11 · 회신 대기 (GO/NO-GO))
+
+## reports/ (11)
+- `kb/reports/paper_first_author_requests_2026_08.md` — 논문 1저자 요청 — 답변 누적 (2026-08~)
+- `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
+- `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
+- `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안)  (2026-09-14 · 완료 (2026-09-14 · 다음 주 문서는 새 파일))
+- `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
+- `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
+- `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
+- `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안)  (2026-10-26 · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…)
+- `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안)  (2026-11-01 · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…)
+- `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안)  (2026-11-09 · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…)
+- `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안)  (2026-11-23 · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…)
+
+## projects/ (65)
+- `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
+- `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
+- `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
+- `kb/projects/PRESENTATION_digital_twin_overview.md` — AI 계산 기반 스크리닝 플랫폼 — 발표용 종합 정리 (구: Digital Twin)
+- `kb/projects/cascade_pipeline_fixes_2026_08_19.md` — cascade 파이프라인 수정 목록 — codex 교차리뷰용 (2026-08-19 전수 정독 산물)  (2026-08-19 · 진행 — 진단 확정, 수정 미착수 (내일 codex 교차리뷰 예정))
+- `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적)  (2026-10-04 · open)
+- `kb/projects/cascade_v23_review_2026_07_11.md` — Cascade v23 전체 리뷰 — 의도 지도 · 빠진 것 점검 · 후보군 구축 (2026-07-11)
+- `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30)  (2026-09-30 · 발송 대기 — 인계 묶음(zip)에 들어간다)
+- `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30)  (2026-09-30 · 발송 대기 — 인계 묶음(zip)에 들어간다)
+- `kb/projects/collab_rietveld_request_2026_07.md` — 협업자 Rietveld 데이터 요청 문안 + stable phase 사용현황 정리 — 2026-07-28
+- `kb/projects/decision_registry_design_2026_08_20.md` — 결정 레지스트리 설계 v2.1 — codex 3차 P0 반영 (MVP core 4결정)  (2026-08-20 · 설계 v2.1 — codex 3차 P0 3건 닫음 (구현 착수 대상 …)
+- `kb/projects/digital_twin_roadmap.md` — 디지털 트윈 + ML Screening 프로젝트 로드맵
+- `kb/projects/digital_twin_v2_roadmap.md` — Argyrodite Digital Twin Network — Long-term Vision (v2 roadmap)
+- `kb/projects/external_review_prompt_digital_twin_2026_05_18.md` — External Review Prompt — Digital Twin Platform Readiness (2026-05-18)
+- `kb/projects/handoff_2026_09_03_zn_nd.md` — 인수인계 — 2026-09-03 세션 (Zn ALZIB 협업 · Nd 교수님 지침 · 도구 2개)  (2026-09-03 · 활성)
+- `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility)  (2026-09-16 · 진행)
+- `kb/projects/handoff_2026_09_28_evacuation.md` — 대피 인계 — 2026-09-28 (friendly 세션 컨텍스트 소진 → 서브 브랜치 임시 작업)  (2026-09-28 · 진행)
+- `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29)  (2026-09-29 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
+- `kb/projects/handoff_2026_10_02_evacuation.md` — 대피 인계 — 2026-10-02 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계)  (2026-10-02 · 진행)
+- `kb/projects/handoff_2026_10_05_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05 · no-ff)  (2026-10-05 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
+- `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20)  (2026-10-20 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…)
+- `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함)  (2026-10-22 · 진행)
+- `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26)  (2026-10-26 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …)
+- `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계)  (2026-11-08 · 진행)
+- `kb/projects/handoff_2026_11_10_model_switch.md` — 모델 전환 인계 (2026-11-10 저녁) — 같은 세션 · 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 기한 있는 도구 둘 · 사용자 결정 대기 셋  (2026-11-10 · 진행)
+- `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달  (2026-11-10 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …)
+- `kb/projects/handoff_2026_11_11_token_limit.md` — 토큰 한도 인계 (2026-11-11 오후) — 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 다음 행동 · 사용자 결정 대기  (2026-11-11 · 인계 — 다음 세션이 이 카드부터 읽는다)
+- `kb/projects/handoff_2026_11_12_evacuation.md` — 대피 인계 — 2026-11-12 (friendly 세션 토큰 소진 → 서브 세션 · 머지 때 충돌 0 설계 · b2o3 8 단계 gabia · li2s-3 2 단계 kgy 진행 중)  (2026-11-12 · 진행)
+- `kb/projects/handoff_2026_11_17_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-12 를 friendly 로 · fast-forward (2026-11-17) · litdb 정리 세션 · 로컬 웹앱 맞추기  (2026-11-17 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…)
+- `kb/projects/handoff_2026_11_20_evacuation.md` — 대피 인계 — 2026-11-20 (friendly 세션 사용 한도 → 서브 세션 · 머지 때 충돌 0 · W_ad 은 a5 고침 이어하기 · [혁주] MD-1 판독)  (2026-11-20 · 진행)
+- `kb/projects/handoff_2026_11_23_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-20 를 friendly 로 · fast-forward (2026-11-23) · litdb 정리 세션 · 로컬 웹앱 · W_ad ES 편지는 본 세션에서  (2026-11-23 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…)
+- `kb/projects/handoff_2026_11_24_litdb18_resume.md` — litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세션이 끊겨도 이어지게)  (2026-11-24 · 끝)
+- `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
+- `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
+- `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획  (2026-11-22 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…)
+- `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` — li2s_glass_bmeas_650k_letter_DA_send_2026_10_19
+- `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` — li2s_glass_control_cost_letter_CS_send_2026_10_05
+- `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` — li2s_glass_control_readout_letter_CX_send_2026_10_14
+- `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` — li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고 (외부 1저자에게) · C2·C1 미통과 → '이 프로토콜로 400 K 는 측정되지 않는다' · 본 15런 400 K 처리 결정 요청  (2026-09-27 · 흡수됨 (미발송) — 회신 CD 가 먼저 와서 통합 편지 CH `kb…)
+- `kb/projects/li2s_glass_external_first_author_letter_2026_09_25.md` — li2s 소셀 유리 MD — 외부 1저자에게 보내는 보고 · 질문 (파일럿 결과 · 갈래0 멈춤 · 게이트 A 두 판 · Q1–Q8)  (2026-09-25 · 초안 — 사용자(실행자) 검토 뒤 외부 1저자에게 발송 · 판정은 외…)
+- `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안  (2026-09-26 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…)
+- `kb/projects/li2s_glass_external_first_author_report_send_2026_09_26.md` — li2s_glass_external_first_author_report_send_2026_09_26
+- `kb/projects/li_neb_anode_free.md` — Li Adatom Diffusion on Anode-Free SSB Interphases  (2026-06-01 · setup)
+- `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar  (2026-09-29 · 최종 — 09-29 01:4x KST 실측 (fast-forward …)
+- `kb/projects/merge_request_2026_10_05.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05)  (2026-10-05 · 최종 — 10-05 밤 실측 (no-ff · 가상 병합 텍스트 충돌 …)
+- `kb/projects/merge_request_2026_10_26.md` — 머지 요청 — 대피 브랜치 claude/evac-2026-10-22 → claude/friendly-meitner-lldvar (2026-10-26 · fast-forward · 충돌 0)  (2026-10-26 · 최종 — 10-26 실측 (friendly 끝 = 대피 인계 카드 a…)
+- `kb/projects/ml_opportunities_from_lab_ppt_2026_07.md` — 랩 ML 파이프라인(TabPFN)과 우리 캠페인의 접점 — 2026-07-28
+- `kb/projects/mlip_next_campaigns_2026_07.md` — MLIP(UMA) 차기 캠페인 후보 제안서 — cascade 확장 7건  (2026-07-27 · proposal)
+- `kb/projects/nd_q2_message_send_2026_10_26.md` — nd_q2_message_send_2026_10_26
+- `kb/projects/nd_site_q1_message_send_2026_10_23.md` — nd_site_q1_message_send_2026_10_23
+- `kb/projects/restart_runbook_2026_09_07.md` — 재기동 절차서 — 2026-09-07 재부팅 (gabia · desktop)  (2026-09-07 · 진행)
+- `kb/projects/screening_roadmap_2026_07.md` — AI 계산 스크리닝 로드맵 — 문헌 7편(2013–2020) 대비 우리 좌표와 실행 항목  (2026-07-28 · roadmap)
+- `kb/projects/sdcp_linio2_binding.md` — SDCP–LiNiO₂ Binding Anchoring Scan
+- `kb/projects/sdcp_master_v2_2026_07_11.md` — Self-Doped Conducting Polymer 전도성 바인더 — 물질·계면화학·매뉴스크립트·모델·로드맵 단일 레퍼런스 **v2**
+- `kb/projects/sdcp_phaseB_direction_2026_08_06.md` — 🎯 SDCP Phase-B 방향 정리 (2026-08-06)
+- `kb/projects/sdcp_v7c_structure_spectroscopy_report_2026_07_10.md` — SDCP v7c — 구조·분광 판정 보고 (입문자용 완전판)
+- `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
+- `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
+- `kb/projects/wad_dem_reply_4_send_2026_09_25.md` — DEM 회신 4 — 발송본 (부탁 1 잔류 응력 PBE/PBE+D3 · 부탁 2 수용 · 한 기하 뜻 확인 요청 · Ag 격자상수·변형률)  (2026-09-25 · 발송본 — 1저자 발송 (2026-09-25) · 아래 구분선 이후를…)
+- `kb/projects/wad_dem_reply_5_send_2026_09_26.md` — wad_dem_reply_5_send_2026_09_26
+- `kb/projects/wad_dem_reply_9_send_2026_10_06.md` — wad_dem_reply_9_send_2026_10_06
+- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-11-20 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…)
+- `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안  (2026-09-25 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…)
+- `kb/projects/wad_v5_vasp_r1_request_2026_10_08.md` — V5 VASP 외주 — far_i r1 재시도 승인 + 남은 잡 상시 승인 (VASP 5.x NELM 소진 판정 버그) · 전달 프롬프트  (2026-10-08 · 발송 대기 (사용자 2026-10-08 '전달할 프롬프트 부탁' = …)
+- `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-27 · 진행)
+
+## questions/ (12)
+- `kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md` — 코팅 계보 #6·#7·#8 digest 가 서로 다른 말을 하는 세 자리 — 우리 값이 문헌의 어느 양인가 [open]  (2026-09-13 · open)
+- `kb/questions/doped_declared_state_feasibility_2026_08_29.md` — doped E_ads 를 '상태 선언' 으로 살릴 수 있나 — NUPDOWN 은 홀 위치를 안 묶는다 [open]  (2026-08-29 · open)
+- `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 [open]  (2026-09-13 · open)
+- `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? [open]  (2026-10-26 · open)
+- `kb/questions/lpsocl_low_beta_mechanism.md` — 저β 런의 정체 — 케이지 절편인가, 진짜 sub-diffusion인가, 느린 전이인가 ⚠disputed [active]  (2026-08-12 · active)
+- `kb/questions/polaron_seed_localized_basis_cannot_express_ring_pi.md` — 폴라론 seed 가 안 먹는 이유 — 국재 기저에 '고리 π' 궤도가 없다 [open]  (2026-09-06 · open)
+- `kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md` — H-제거 n=6 라디칼 상태지도 — estimand 카드 v2 (회신 S 반영) [open]  (2026-08-31 · open)
+- `kb/questions/sdcp_doped_estimand_2026_08_28.md` — SDCP doped 흡착 — estimand 카드 (계산 전에 리뷰로 보내는 §1–3) [active]  (2026-08-28 · active)
+- `kb/questions/sdcp_doped_reopen_v2_2026_08_28.md` — sdcp_doped 재개 설계 v2 — 회신 O 재승인 조건 7 을 실제로 채우는 카드 [answered]  (2026-08-28 · answered)
+- `kb/questions/sdcp_doped_reopen_v3_2026_08_28.md` — sdcp_doped 재개 설계 v3 — 회신 R 재심사 조건 8 반영 (Stage 0 재심사용) [active]  (2026-08-28 · active)
+- `kb/questions/sdcp_site_preference.md` — SDCP 조각은 LiNiO₂(104)에서 Li 자리와 Ni 자리 중 어디에 붙는가 [active]  (2026-08-11 · active)
+- `kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md` — estimand 카드 — Stage A 홀드아웃: UMA 선택기가 DFT 순위를 맞히나 [open]  (2026-08-30 · open)
+
+## syntheses/ (9)
+- `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다  (2026-08-29 · 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보)
+- `kb/syntheses/cathode_coating_computational_lineage.md` — 양극 코팅 계산 계보 — Wolverton → Ceder → Mo 라인과 우리 LPSCl 산화축의 관계  (2026-09-12 · 진행)
+- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회)  (2026-10-06 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …)
+- `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)  (2026-08-13 · 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외…)
+- `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다  (2026-08-25 · 방어논지)
+- `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다  (2026-08-12 · 진행)
+- `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` — SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분)  (2026-09-14 · 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣…)
+- `kb/syntheses/why_so3h_not_deprotonated_2026_08_29.md` — 왜 SO₃H 만 계산했나 — 원고에 그대로 쓸 근거 5  (2026-08-29 · 초안 — 1저자·공저자 확인 대기 (2026-08-29 all-sto…)
+- `kb/syntheses/xu2026_li_nd_rebuttal.md` — Xu 2026 의 "Li–Nd alloy SEI" 주장은 열역학·전자구조로 기각된다  (2026-08-13 · 방어 중 — Li₃Nd c→c NEB **완료·인용 가능** (0.2…)
+
+## platforms/ (3)
+- `kb/platforms/literature_db_tools.md` — Literature DB 자동화 도구
+- `kb/platforms/ml_automation_platforms.md` — ML / Automation Platform Survey
+- `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서  (2026-09-24 · 완료)
+
+## descriptors/ (1)
+- `kb/descriptors/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
+
+## papers/ (24)
+- `kb/papers/adhesion_charts_comparison.md` — Adhesion Charts — 20 seeds vs Selected 5 seeds
+- `kb/papers/adhesion_literature_review.md` — Adhesion Interface Modeling — Literature Summary
+- `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영)  (2026-10-20 · 진행)
+- `kb/papers/choi2025_adoption_guide.md` — Choi 2025 — Adoption Guide for Our Paper
+- `kb/papers/computational_methods_draft.md` — Computational Methods — FINAL VERSION (2026-04-16)
+- `kb/papers/dft_sentences_for_manuscript_v6_2026_09_04.md` — 원고 v6 DFT 문장 — 삽입안 + 기존 문장 P0 2건  (2026-09-04 · 1저자 확인 대기)
+- `kb/papers/draft_v1.md` — Beyond Electrochemistry: Tailoring Mechanical Properties of Halogen-Substituted Argyrodites
+- `kb/papers/figure2e_dropin_v7_2026_09_05.md` — 원고 v6→v7 Figure 2e 드롭인 — 본문·캡션·Methods 교체안 (C-12 v36 설계 반영)  (2026-09-05 · 1저자 확인 대기)
+- `kb/papers/final_report_v2.md` — LPSCl Manuscript — Final Report v2 (Updated 2026-04-17)
+- `kb/papers/lpscl_vs_lpscl16_20min_script.md` — LPSCl vs LPSCl₁.₆ — 20분 학회 발표 대본 (full)
+- `kb/papers/lpscl_vs_lpscl16_seminar_script_outline.md` — LPSCl vs LPSCl₁.₆ 세미나 — 발표 개요 + 통합 대본 (2026-06-11)
+- `kb/papers/lpscl_vs_lpscl16_seminar_v1.md` — LPSCl vs LPSCl₁.₆ Seminar — Slide Master v1
+- `kb/papers/mechanism_anion_O_descriptor.md` — 메커니즘 — 할로겐 치환 Argyrodite / NCM 계면 접착
+- `kb/papers/narrative_with_literature_steps.md` — Paper #1 Narrative — Literature-Grounded Step-by-Step Guide
+- `kb/papers/ndo_lpscl16_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 4.5 DFT calculations — 기록대로 · B₂O₃ 와 같은 꼴 (본문판 + SI 판)  (2026-10-28 · 진행)
+- `kb/papers/origin_adhesion_guide.md` — Adhesion Bar Chart — Origin Guide (BML Standards)
+- `kb/papers/paper2_FINAL_briefing_2026_05_08.md` — Paper #2 — SE/NCM Adhesion: Final Comprehensive Briefing
+- `kb/papers/paper2_briefing_2026_05_08.md` — Paper #2 — SE/NCM Adhesion Mechanism: Briefing for First-Time Reader
+- `kb/papers/reviewer_qa_methods.md` — Reviewer Q&A Preparation — Computational Methods
+- `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열)  (2026-09-15 · 1저자 승인 — 삽입 위치 대기)
+- `kb/papers/si_figures_plan.md` — SI Figures Plan — Choi 2025 Analogs
+- `kb/papers/verified_refs_2026_05.md` — Verified Literature References — Paper #1 (2026-05-05)
+- `kb/papers/vesta_adhesion_figure_settings.md` — VESTA Adhesion Figure Settings (Paper)
+- `kb/papers/vesta_settings_guide.md` — VESTA Settings for Adhesion Interface Figure
+
+## literature_db/ (3)
+- `kb/literature_db/damore_2022_lpscl_symmetry_breaking_qha.md` — D'Amore et al. 2022 — LPSCl 대칭 깨짐 (phonon + QHA)
+- `kb/literature_db/pustorino_2025_lpscl_li_ordering_mechanical.md` — Pustorino et al. 2025 — LPSCl Li ordering → 기계적/전자 물성
+- `kb/literature_db/sundar_2025_lpscl_coating.md` — 📄 Sundar et al. 2025 — Computationally-Guided LPSCl Oxide Coating
+
+## seminars/ (32)
+- `kb/seminars/Research_Seminar_2026_08_cascade_final_README.md` — Research Seminar — Cascade final package
+- `kb/seminars/Research_Seminar_2026_08_cascade_final_defense_QA_ko.md` — Research Seminar — Cascade Defense Q&A
+- `kb/seminars/Research_Seminar_2026_08_cascade_final_script_ko.md` — Research Seminar — Cascade final speaker script
+- `kb/seminars/Research_Seminar_2026_08_cascade_final_source_ledger.md` — Research Seminar — Slide Source Ledger
+- `kb/seminars/Research_Seminar_2026_08_cascade_final_terminology_symbols.md` — Research Seminar — 용어·기호 규약
+- `kb/seminars/Research_Seminar_2026_10_13_cascade_defense_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 디펜스 (예상 질문 · 개념 설명 · 숫자 카드)  (2026-10-15 · 진행)
+- `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별)  (2026-10-16 · 진행)
+- `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용)  (2026-10-12 · 진행)
+- `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` — 연구세미나 2026-10-16 — cascade 1부 대본 쉬운 판 (1–15쪽 · 노트 칸 붙여넣기용)  (2026-10-16 · 진행)
+- `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 쪽별 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑  (2026-11-16 · 검토 완료 · 전달 여부는 사용자 몫)
+- `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌  (2026-10-12 · 진행)
+- `kb/seminars/cascade_content_edit_directive_2026_08_11.md` — Cascade 세미나 내용 편집 지시서 — 기준본 24장 (Codex 편집용)
+- `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12)  (2026-10-12 · 진행)
+- `kb/seminars/cascade_deck_3to7_script_2026_08_20.md` — cascade 세미나 — 덱 3~7장 대본 (재정비판)  (2026-08-20 · 초안 — 본 대본 병합 대기)
+- `kb/seminars/cascade_deck_8to12_script_2026_08_20.md` — 세미나 대본 — 덱 8~12장 (후보군 · 자리 · 구조생성 · MLIP 스크리닝)  (2026-08-20 · 초안)
+- `kb/seminars/cascade_dopant_screening_story_2026_08.md` — LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v6 · 덱과 1:1)  (2026-08-16 · 진행)
+- `kb/seminars/cascade_final_release_review_2026_08_11.md` — 최종 release 감사 보고 — Research_Seminar_2026_08_cascade_final (28장)
+- `kb/seminars/cascade_release_speaker_script_v2_ko.md` — 발표 대본 v2 — Research_Seminar_2026_08_cascade_release (29장, A3b 레이더 포함)
+- `kb/seminars/cascade_seminar_2026_08_build_v3.md` — 🎤 Research Seminar **BUILD SHEET v3** — 사진만 붙이면 끝나는 판
+- `kb/seminars/cascade_seminar_2026_08_script.md` — 🎙 Research Seminar 대본 — Screening cascade for sulfide SEs
+- `kb/seminars/cascade_seminar_2026_08_spec.md` — 🎤 Research Seminar spec — DFT-based screening cascade for sulfide SEs
+- `kb/seminars/cascade_seminar_2026_08_spec_codex.md` — Research Seminar spec — A gated MLIP-to-DFT screening cascade for LPSCl modification
+- `kb/seminars/cascade_seminar_2026_08_spec_v2.md` — 🎤 Research Seminar spec **v2** — Screening cascade for sulfide SEs
+- `kb/seminars/cascade_seminar_supporting_materials_README.md` — Cascade seminar supporting materials
+- `kb/seminars/cascade_speaker_script_FINAL_ko.md` — 발표 대본 최종본 — Research Seminar 2026-08 · Cascade
+- `kb/seminars/cascade_speaker_script_audit_rev6_ko.md` — Cascade audit-first research seminar — Korean master script
+- `kb/seminars/cascade_speaker_script_rev2_ko.md` — 발표 대본 최종본 — Research Seminar 2026-08 · Cascade
+- `kb/seminars/cascade_speaker_script_rev3_FINAL_ko.md` — 발표 대본 — Research Seminar 2026-08 · Cascade **rev3 (정본)**
+- `kb/seminars/cascade_speaker_script_rev4_ko.md` — Cascade rev4 발표 대본 — Research Seminar 2026-08  (2026-08-13 · 확정 — 사용자 작성본이 정본. 덱 30장과 1:1 대응 확인)
+- `kb/seminars/cascade_speaker_script_round3_ko.md` — Cascade round-3 audit research seminar — Korean master script
+- `kb/seminars/group_meeting_2026_09_03_nd_professor_directives.md` — ★ 지침 — 2026-09-03 그룹미팅 교수님 코멘트 (Nd/O 공치환 논문 방향)  (2026-09-03 · 활성)
+- `kb/seminars/seminar_redirect_2026_08_11.md` — 세미나 방향 전환 브리프 (2026-08-11 밤) — Codex 재구성용 재료 목록
+
+## fairchem/ (11)
+- `kb/fairchem/00_site_map.md` — Official site map and live audit
+- `kb/fairchem/01_models_and_tasks.md` — Models and task identities
+- `kb/fairchem/02_datasets_and_domains.md` — Datasets and application domains
+- `kb/fairchem/03_workflows_and_code.md` — Workflows and code architecture
+- `kb/fairchem/04_lpscl_research_crosswalk.md` — Fair-Chem capability to our LPSCl research
+- `kb/fairchem/05_papers_and_insight_workflow.md` — Papers and reusable manuscript insights
+- `kb/fairchem/06_claims_caveats_and_citations.md` — Claims, caveats and citation rules
+- `kb/fairchem/07_webapp_handoff_for_claude.md` — Claude handoff — Fair-Chem webapp section
+- `kb/fairchem/08_update_playbook.md` — Update and rebuild playbook
+- `kb/fairchem/09_source_coverage.md` — Source coverage and limits
+- `kb/fairchem/README.md` — Fair-Chem / UMA knowledge base
+
+## elements/ — 118개 (생성물/템플릿, 목록 생략)
+## templates/ — 3개 (생성물/템플릿, 목록 생략)
+
+## litdb/ — digest 656개 (정본 목록: litdb/INDEX.md)

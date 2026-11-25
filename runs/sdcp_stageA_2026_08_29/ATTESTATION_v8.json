@@ -1,0 +1,87 @@
+{
+ "schema": "bundle_attestation/v1",
+ "utc": "2026-08-29T13:10:56Z",
+ "verdict": "PASS",
+ "zip": {
+  "name": "sdcp_stageA_v8.zip",
+  "bytes": 462233,
+  "sha256": "56ee99ec07fececab0dbbc9dd1fb360b53854ac25a6af76ca1e6e88af13feb14"
+ },
+ "manifest_sha256": "7cae59ad1cf051219dbd56e59a81887a646da871d9e2b6d5cb509e85b7c5ca1c",
+ "candidate_set": {
+  "label": "calibration_pilot (frozen 94675e66e02c855a)",
+  "manifest_path": "/data/work/repo/db/properties/prospective_basins_2026_08_29.json",
+  "repo_path": "db/properties/prospective_basins_2026_08_29.json",
+  "sha256": "20fdde06760b36e15a9bd544925c71e4b1a52f430348ff64a2224f1bf61f6d6e",
+  "⚠": "16자리 접두어가 아니라 **전체 SHA** 다 (회신 AA P0-1)"
+ },
+ "clean_slab_sha256": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
+ "generated": {
+  "utc": "2026-08-29T13:10:55Z",
+  "argv": [
+   "--runs",
+   "/data/work/runs/sdcp_v4_sitescreen",
+   "--freeze",
+   "0.85",
+   "--from_basins",
+   "db/properties/prospective_basins_2026_08_29.json",
+   "--frags",
+   "sdcp_neutral",
+   "ptfe_c10",
+   "--roles",
+   "calibration",
+   "--both_seeds",
+   "--closure",
+   "--refs",
+   "--d3_pairs",
+   "--d3_seed_main_only",
+   "--no_refs_dense",
+   "--free_spin_refs",
+   "--out",
+   "/data/work/runs/sdcp_stageA_v8"
+  ]
+ },
+ "census_recomputed_from_disk": {
+  "jobs_on_disk": 40,
+  "phase_runs_on_disk": {
+   "static": 40
+  },
+  "files_on_disk": 246,
+  "note": "files_on_disk = 배포파일(files_sha256) + MANIFEST.json"
+ },
+ "manifest_census": {
+  "references": {
+   "endpoints": 8,
+   "d3_off_twins": 8,
+   "총": 16
+  },
+  "complexes": {
+   "pose×seed": 16,
+   "d3_off_twins": 8,
+   "총": 24
+  },
+  "총잡수": 40,
+  "pose당": "pm1/D3-on · pm1/D3-off · net4/D3-on — **net4/D3-off 는 만들지 않는다** (고정기하 D3 zero 는 구조 기반 additive correction 이라 자기상태에 무관)",
+  "audit_pose": 0,
+  "⚠": "이 표는 산출물에서 센 것이다 — 설명문이 아니라 실물이다"
+ },
+ "zip_entry_hazards": [],
+ "tooling": {
+  "generator_verifier": {
+   "path": "tools/sdcp/vasp_handoff_bundle.py",
+   "sha256": "586aba285842c4416e6637bcb6ace6487de33261aca5face6335562d5dc7bbd5"
+  },
+  "analyzer_in_bundle_sha256": "0a60bf6d32cb0ee29b6fa87eb0783c8c73cba0aa44c5f8c193578fc3e42e6a69",
+  "git_commit": "f087d853b88ed15f7305e2c6594029518d2b49cb",
+  "git_dirty": true,
+  "git_branch": "claude/friendly-meitner-lldvar"
+ },
+ "command": "--verify_zip /data/work/runs/sdcp_stageA_v8.zip --expect_jobs 40",
+ "verify_bundle_rc": 0,
+ "⛔_이_증서가_보증하지_않는_것": [
+  "verifier 자신의 의미론적 버그",
+  "과학적 estimand 의 타당성",
+  "실제 PP 트리·VASP build·스케줄러 환경",
+  "SCF 수렴·OUTCAR 형식"
+ ]
+}

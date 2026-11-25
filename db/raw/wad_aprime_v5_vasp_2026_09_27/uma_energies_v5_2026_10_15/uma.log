@@ -1,0 +1,3 @@
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+-> uma_energies_v5_2026_10_15.json
+{"V5_li_outer_A_bound": -585.5492900484443, "V5_li_outer_A_far": -581.2559895186117, "V5_li_outer_B_bound": -585.4730149645416, "V5_li_outer_B_far": -581.1378857968606, "V5_s_outer_A_bound": -679.062879285212, "V5_s_outer_A_far": -674.6167123909269, "V5_s_outer_A_G3_c2_bound": -679.0628765127431, "V5_s_outer_A_G3_c2_far_i": -674.6167137851131, "V5_s_outer_A_G3_c2_far_ii": -674.6167134405423, "V5_s_outer_A_p05_bound": -678.7449547907271, "V5_s_outer_B_bound": -678.9341080939328, "V5_s_outer_B_far": -674.3889567397467}

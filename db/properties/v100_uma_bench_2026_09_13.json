@@ -1,0 +1,68 @@
+{
+  "schema": "property_record_v1",
+  "kind": "machine_bench",
+  "date": "2026-09-13",
+  "status": "proposed",
+  "citable": false,
+  "제목": "V100 UMA 벤치 — 파일럿 30런 예산과 '왜 V100 을 골랐나'",
+  "왜": "gabia 는 el 이 ~6일 남았고 pw.x·UMA 동시 실행 금지, kgy 도 점유 중이었다. V100 을 새로 세우기로 하고, **던지기 전에 런당 비용을 재서** 30런 예산을 숫자로 만들었다.",
+
+  "기계": {
+    "이름": "V100 (machine.runyour.ai · 컨테이너 3f2c2428df7f)",
+    "GPU": "Tesla V100-PCIE-32GB · compute capability 7.0 (Volta)",
+    "⚠_Volta_제약": "bf16·TF32 없음. 우리 UMA 표준은 turbo 모드가 아니라 영향 없다.",
+    "python": "/home/ubuntu/miniforge3/envs/uma/bin/python (conda env `uma`, python 3.11)",
+    "torch": "2.14.0+cu126",
+    "fairchem": "2.22.0"
+  },
+
+  "⛔_torch_빌드가_처음에_틀렸다": {
+    "무엇": "`pip install torch --index-url .../cu121` 로 깔았더니 **torch 2.13.0+cu130** 이 왔고, 그 빌드의 `arch_list` 는 `['sm_75','sm_80','sm_86','sm_90','sm_100','sm_120']` — **sm_70 이 없다.**",
+    "왜_위험했나": "`torch.cuda.is_available()` 이 **True 를 반환한다.** 장치는 보이는데 커널이 없어서 실제 연산에서 터진다. `cuda True` 만 보고 넘어갔으면 MD 중간에 죽었을 것이다.",
+    "고친_것": "`--index-url .../cu126` 으로 재설치 → torch 2.14.0+cu126, `arch_list` 에 `sm_70` 포함. **그리고 실제 matmul 을 GPU 에서 돌려 확인**했다 (합계 -26400.08).",
+    "규율": "GPU 런타임도 `ldd` 교훈과 같다 — **추측하지 말고 바이너리에게 묻는다.** `torch.cuda.get_arch_list()` 가 그 질문이고, `is_available()` 은 아니다.",
+    "⚠_레시피_정정": "`kb/methodology/kisti_setup.md` 의 `cu121` 은 **다른 GPU 기준**이다. Volta 에 그대로 쓰면 안 된다."
+  },
+
+  "체크포인트": {
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "출처": "kgy → V100 rsync (1,173,759,575 B)",
+    "대조": "gabia · kgy · V100 **3기 동일** — uma_checkpoint_provenance_2026_09_13.json 의 기준값과 일치",
+    "HF_HUB_OFFLINE": "세 기계 모두 1 — upstream 이 갱신돼도 우리 결과는 안 흔들린다",
+    "⚠_토큰은_필요_없었다": "gabia·kgy 둘 다 토큰 파일·HF_TOKEN·history 의 `hf auth login` 이 **전부 없다.** 게이트 저장소라고 가정한 것이 틀렸다."
+  },
+
+  "측정": {
+    "도구": "tools/mlip/uma_engine_probe.py --timing (기존 도구 · 새로 만들지 않았다)",
+    "구조": "db/structures/cascade_pilot/P1_Al2O3_A.xyz",
+    "설정": "--reps 1 2 --steps 50 (워밍업 3회 제외)",
+    "원자료": "db/properties/mlip_engine_probe_probe.json (V100 생성)",
+    "rows": [
+      {"rep": 1, "n_atoms": 204, "s_per_step": 0.053538422584533694, "us_per_atom_step": 262.4432479634005},
+      {"rep": 2, "n_atoms": 1632, "s_per_step": 0.24010939121246339, "us_per_atom_step": 147.12585245861726}
+    ],
+    "verdict": "overhead_bound",
+    "⛔_무엇을_안_쟀나": "힘 호출만 잰다 — Langevin 적분·이웃목록·궤적 I/O·MSD 계산이 안 들어간다. **아래 예산은 하한이다.**"
+  },
+
+  "파일럿_예산_204원자_dt2fs": {
+    "생산_200ps": {"step": 100000, "런당_시간": 1.487, "30런_시간": 44.6},
+    "평형_5ps": {"step": 2500, "런당_시간": 0.037},
+    "합계": "런당 ~1.52 h · 30런 **~1.9일**",
+    "현실_보정": "I/O·적분 포함하면 런당 1.7~2 h 예상 ⇒ 30런 **2.1~2.5일**",
+    "판정": "✅ V100 한 대로 이틀대. gabia el 잔여 ~6일보다 빠르다"
+  },
+
+  "부수_관측_셀_크기": {
+    "사실": "원자 8배(204→1632)에 벽시계 4.5배 — 원자당 비용이 1.8배 싸진다.",
+    "통계_효율": "시간당 Li·ps = 204원자 12,100 / 1632원자 21,600 (**1.8×**)",
+    "관련": "#117 Makino `Fig. 9b` 가 결정 MSD 는 1 μs 에 계단 4–5개라고 했고, 우리 comp1 확산게이트 6/6 탈락도 같은 문제였다 — 홉 통계 부족.",
+    "⛔_그래도_설계를_안_바꿨다": "카드 v4 §1b 의 `2×2×1 = 204원자` 는 **비준된 설계**다. 바꾸려면 카드 v5 + 재비준이다. 그리고 지금 설계로 2일이면 되므로 예산 4.5배(8.3일)를 통계 1.8배와 맞바꿀 이유가 약하다. **이 항목은 숫자만 올려둔 것이고 제안이 아니다.**"
+  },
+
+  "이_기록이_하지_않는_것": [
+    "UMA 의 물리적 정확도를 말하지 않는다 (그건 static_pair 쪽이다)",
+    "MD 가 실제로 이 속도로 돌 것을 보증하지 않는다 — 힘 호출만 쟀다",
+    "V100 이 gabia·kgy 와 **같은 수를 낸다**고 말하지 않는다. 같은 체크포인트라는 것만 확인했고, 같은 계에서 같은 값이 나오는지는 아직 안 쟀다"
+  ]
+}

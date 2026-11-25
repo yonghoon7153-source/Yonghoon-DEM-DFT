@@ -1,0 +1,28 @@
+﻿# Figure S4b. Loewdin spin population on each thiophene ring of the six-unit oligomer, %.
+# spin_pct = ring atoms only (the definition used in the main text); the six values sum to 79.7.
+# spin_pct_incl_ring_H = reference including the terminal alpha-H of ring 0 and ring 5; sums to 79.5,
+# the -0.2 difference being spin polarization on the hydrogen adjacent to the radical.
+# ⚠ RING NUMBERING — two conventions are given on purpose and must not be mixed:
+#   ring_no    = 1..6, numbered from one chain end. **This is what the figure and the manuscript use.**
+#   ring_index = 0..5, the machine index used in the source log and in
+#                sdcp_nseries_spin_2026_09_08.json (keys ring0..ring5).
+# The hydrogen was removed from the sulfonate on **ring_no 4** (= ring_index 3).
+# ⛔ 2026-09-09 correction: this header previously said "on ring 3" without stating the
+#   convention. Read as 1-based that is the wrong ring, and it made the oxidation site look
+#   disjoint from the three high-spin rings (ring_no 4,5,6). It is not — the site is one of them.
+# ⛔⛔ 2026-09-09 — 이 표는 **원고에서 뺐다** (1저자 결정). 그림 S4 는 (a)(b) 둘이다.
+#   ⚠ 값은 **실측이라 지우지 않는다** — 다만 원고·SI 어디에도 안 실린다.
+#   왜: 고리별 값으로 말하려면 "왜 산화 자리가 최대가 아닌가" 에 답해야 하는데
+#   ① n=6 계산 1점·산화 자리 1개라 대조가 없다 ② fresh SCF 한 번(원장 금지_서술)
+#   ③ 오차막대가 없어 23.3 vs 20.0 이 유의한지 모른다.
+#   그리고 하려는 주장(폴라론이지 국재 라디칼이 아니다)에 고리 분해가 **필요하지 않다** —
+#   SO3 가 7.7 % 뿐이라는 것만으로 성립한다.
+#   사유 원본: kb/papers/self_doping_dft_paragraph_2026_09_08.md 결정 블록
+# Source: gabia sdcp_n6b analyze_n6_v2.log
+ring_no,ring_index,spin_pct,spin_pct_incl_ring_H,is_oxidation_site
+1,0,3.8,3.8,no
+2,1,7.3,7.3,no
+3,2,9.4,9.4,no
+4,3,15.9,15.9,yes
+5,4,23.3,23.3,no
+6,5,20.0,19.8,no

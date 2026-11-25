@@ -1,0 +1,75 @@
+{
+ "record_kind": "wad_p2small_geometries_build",
+ "date": "2026-10-17",
+ "card": "db/properties/wad_p2small_vasp_card_2026_10_15.json",
+ "decision": "D-2026-10-15-wad-p2small-vasp-card (active · 비준 2026-10-17)",
+ "builder": {
+  "path": "tools/wad/build_aprime_interfaces.py",
+  "sha256": "eabec70d035db90adba16aa24065121d04f1fbbb4459d731a81e169a8408cdf0",
+  "se_sym_slab_sha256": "7ec9e7b6c6538662d4c311a13b8af2f99c3103392e4722ac03724c371f23d3a1",
+  "bulk": "db/structures/comp1_V0_k444.cif",
+  "bulk_sha256": "1ef12658d2c64346485da32038caf6503b037faa9b1355c03ed1a5b7961b3aa1",
+  "commands": [
+   "python3 tools/wad/build_aprime_interfaces.py --build P2S --term s_outer --out db/inputs/wad_p2small_geometries_2026_10_17/P2S_s_outer",
+   "python3 tools/wad/build_aprime_interfaces.py --build P2S --term li_outer --out db/inputs/wad_p2small_geometries_2026_10_17/P2S_li_outer"
+  ],
+  "versions": {
+   "python": "3.11.15",
+   "numpy": "2.4.6",
+   "ase": "3.29.0"
+  }
+ },
+ "samples": {
+  "S_A": {
+   "dir": "P2S_s_outer/A",
+   "term": "s_outer",
+   "registry": "A",
+   "se_formula": "Li84P12S66Cl12",
+   "n_se": 174,
+   "n_ads": 224,
+   "nat": 398,
+   "ads_strain_pct_x_y": [
+    1.936,
+    0.89
+   ],
+   "registry_A_atom": 56,
+   "c_A": 34.9977,
+   "far_gap_direct_image_A": [
+    10.0,
+    11.0
+   ],
+   "n_fixed": 90,
+   "interface_check_flags": [],
+   "sha256": {
+    "bound": "d6ceddfd90b9db732cedd2d3daa91a16de869bc97ad7056d313869aafed6e9eb",
+    "far": "04f00ac7f07546ba106eb0f45aae89d733e009d1fa5e9548bd56aedfd6753c10"
+   }
+  },
+  "Li_A": {
+   "dir": "P2S_li_outer/A",
+   "term": "li_outer",
+   "registry": "A",
+   "se_formula": "Li60P12S54Cl12",
+   "n_se": 138,
+   "n_ads": 224,
+   "nat": 362,
+   "ads_strain_pct_x_y": [
+    1.936,
+    0.89
+   ],
+   "registry_A_atom": 43,
+   "c_A": 32.5515,
+   "far_gap_direct_image_A": [
+    10.0,
+    11.0
+   ],
+   "n_fixed": 69,
+   "interface_check_flags": [],
+   "sha256": {
+    "bound": "706b94a794b85451abe450359fd8c0544c67c3d74ea8a68578bf702600a61eae",
+    "far": "b4b2a167f04d6f1d4ce1dc28c99cb0440f8f541c46bc7a7bded3cdbfef4ac4e4"
+   }
+  }
+ },
+ "⛔": "초기 구조다 — 이완 전 · 에너지 없음 · 봉인 구조는 이완 (G1) 뒤 S3 와 같은 봉인 단계에서 만든다 · p05 는 이완한 부모에서 (p05_probe)"
+}

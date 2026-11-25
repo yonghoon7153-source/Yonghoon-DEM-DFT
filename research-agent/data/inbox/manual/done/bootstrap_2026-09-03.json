@@ -1,0 +1,80 @@
+[
+  {
+    "title": "Mechanofusion-derived cathode composite microstructures with scalable mixed conducting matrix coatings for solid state batteries",
+    "authors": ["Maximilian Kissel", "Finn Frankenberg", "Thomas Demuth", "Anton Lai", "Niklas Laser"],
+    "venue": "Nature Communications",
+    "year": 2026,
+    "doi": "10.1038/s41467-026-71305-2",
+    "url": "https://www.nature.com/articles/s41467-026-71305-2",
+    "keywords": ["dem battery"],
+    "source": "bootstrap",
+    "snippet": "scalable high-intensity dry mixing process to create tailored functional coatings on single-crystalline LiNi0.82Mn0.07Co0.11O2 via mechanofusion … linking process parameters obtained from discrete element method simulations with experimentally accessible morphological properties",
+    "abstract": "The successful implementation of solid state batteries not only requires the use of high-capacity anodes, but also high-performance composite cathodes. However, the production of solid state battery cathode composites with optimized microstructures remains a significant challenge, especially for large-scale fabrication. Here, we present a scalable high-intensity dry mixing process to create tailored functional coatings on single-crystalline LiNi0.82Mn0.07Co0.11O2 via mechanofusion. We investigate the coating of LiNi0.82Mn0.07Co0.11O2 with the malleable halide solid electrolyte Li3InCl6 under various process conditions, linking process parameters obtained from discrete element method simulations with experimentally accessible morphological properties to offer guidelines for further optimization. In this way nanometer-thin covering coatings as well as thick matrix coatings are successfully produced. Incorporating carbon black into the thick matrix coating results in well-performing mixed conducting matrices that can be used directly as composite cathodes without further treatment. The compositions investigated enable stable cycling with a specific capacity of up to qcomp = 100 mAh g−1 (based on the total mass of the composite cathode) at a C-rate of 1 C (60 min). While higher carbon black content is observed to improve CAM utilization, excessive amounts are detrimental for cell kinetics and chemo-mechanics, emphasizing the importance of the cathode mixing process and composition on overall cell performance.",
+    "extra": {"published": "2026-04-03", "affiliation": "Justus-Liebig-Universität Gießen (Janek group)", "evidence": "fulltext (nature.com)"}
+  },
+  {
+    "title": "Using resistor network models to predict the transport properties of solid-state battery composites",
+    "authors": ["Lukas Ketter", "Niklas Greb", "Tim Bernges", "Wolfgang G. Zeier"],
+    "venue": "Nature Communications",
+    "year": 2025,
+    "doi": "10.1038/s41467-025-56514-5",
+    "url": "https://www.nature.com/articles/s41467-025-56514-5",
+    "keywords": ["dem battery"],
+    "source": "bootstrap",
+    "snippet": "a resistor network model is presented that successfully describes the transport phenomena in solid-state battery composites, when benchmarked against experimental data of the electronic, ionic, and thermal conductivity of LiNi0.83Co0.11Mn0.06O2-Li6PS5Cl positive electrode composites",
+    "abstract": "Solid-state batteries use composites of solid ion conductors and active materials as electrode materials. The effective transport of charge carriers and heat thereby strongly determines the overall solid-state battery performance and safety. However, the phase space for optimization of the composition of solid electrolyte, active material, additive is too large to cover experimentally. In this work, a resistor network model is presented that successfully describes the transport phenomena in solid-state battery composites, when benchmarked against experimental data of the electronic, ionic, and thermal conductivity of LiNi0.83Co0.11Mn0.06O2-Li6PS5Cl positive electrode composites. To highlight the broadness of the approach, literature data are examined using the proposed model. As the model is easily accessible and expandable, without the need for high computing power, it offers valuable guidance for experimentalists helping to streamline the tedious process of performing a multitude of experiments to understand and optimize the effective transport of composite electrodes.",
+    "extra": {"published": "2025-02-06", "volume": "16:1411", "affiliation": "Forschungszentrum Jülich / Univ. Münster (Zeier group)", "evidence": "fulltext (nature.com)", "note": "2025년 논문이지만 내 resistor-network solver의 직접 선행연구라 bootstrap에 포함"}
+  },
+  {
+    "title": "Planar Li deposition and dissolution enable practical anode-free pouch cells",
+    "authors": ["Lei Liu", "Yuxuan Xiang", "Xingyu Lu", "Jianhui Wang"],
+    "venue": "Nature",
+    "year": 2026,
+    "doi": "10.1038/s41586-026-10402-0",
+    "url": "https://www.nature.com/articles/s41586-026-10402-0",
+    "keywords": ["anode-less assb"],
+    "source": "bootstrap",
+    "snippet": "Anode-free lithium metal batteries … uneven Li deposition and dissolution, rooted in the micro-heterogeneity and mechanical fragility of solid electrolyte interphase (SEI) … crossover-coupled electrolyte … reversible planar Li deposition and dissolution … 5.6 mAh cm−2, 508 Wh kg−1 pouch cells",
+    "abstract": "Anode-free lithium metal batteries (AFLMBs), which are manufactured without anode active material, offer great potential for high-energy-density, low-cost energy storage. However, AFLMBs face a long-standing challenge of short lifespan because of the harsh conditions of lacking excess Li resource and an anode host. This issue is associated with uneven Li deposition and dissolution, rooted in the micro-heterogeneity and mechanical fragility of solid electrolyte interphase (SEI). (이하 원문 초록은 nature.com 참조 — 첫 단락만 확보)",
+    "extra": {"published": "2026-03-17", "volume": "652:1211–1218", "affiliation": "Westlake University", "evidence": "fulltext (nature.com)", "note": "액체 전해질(LiDFOB/NDFA) 기반 — ASSB 아님"}
+  },
+  {
+    "title": "Domain oriented universal machine learning potential enables fast exploration of chemical space of battery electrolytes",
+    "authors": ["Feng Wang", "Yu-Hang Tang", "Ze-Bing Ma", "Yu-Cheng Jin", "Jun Cheng"],
+    "venue": "Nature Communications",
+    "year": 2026,
+    "doi": "10.1038/s41467-025-67982-0",
+    "url": "https://www.nature.com/articles/s41467-025-67982-0",
+    "keywords": ["dft battery"],
+    "source": "bootstrap",
+    "snippet": "universal machine learning potential for electrolytes using an iterative training approach on randomly composed datasets … coordination dynamics analysis of Li ion … coordination lifetime",
+    "abstract": "Li-ion batteries, widely used in electronic devices, electric vehicles, and aviation, demand high energy density, fast charging capabilities, and broad operating temperature ranges. Computations combined with experiments have gained increasing attention for electrolyte development. However, the inherent complexity of electrolytes poses a significant challenge. Classical molecular dynamics often fails due to inaccuracies in force field parameters, while ab initio calculations are limited by high computational costs. Recently, machine learning molecular dynamics has emerged as an efficient and accurate alternative. However, its application is hindered by limited transferability of machine learning potentials. In this work, we developed a universal machine learning potential for electrolytes using an iterative training approach on randomly composed datasets, enabling the accurate computation of key properties for a broad range of electrolytes via molecular dynamics. Furthermore, coordination dynamics analysis of Li ion, by quantifying the coordination lifetime, provides a direct, quantitative measure of solvation strength. The universal machine learning potential for electrolytes facilitates the prediction and optimization of electrolyte properties, offering a powerful tool for electrolyte design.",
+    "extra": {"published": "2025-12-31", "volume": "17:1226", "affiliation": "Xiamen University (Jun Cheng group)", "evidence": "fulltext (nature.com)", "note": "액체 전해질 uMLP — 황화물 SE 직접 언급 없음"}
+  },
+  {
+    "title": "Revealing the Neglected Role of Passivation Layers of Current Collectors for Solid-State Anode-Free Batteries",
+    "authors": [],
+    "venue": "Advanced Materials",
+    "year": 2025,
+    "doi": "10.1002/adma.202513090",
+    "url": "https://advanced.onlinelibrary.wiley.com/doi/10.1002/adma.202513090",
+    "keywords": ["anode-less assb"],
+    "source": "bootstrap",
+    "snippet": "passivation layers of current collectors … solid-state anode-free batteries (Western University / FZ Jülich / Univ. Twente)",
+    "abstract": "",
+    "extra": {"published": "2025-09-07", "evidence": "title only — 출판사 페이지 접근 불가(샌드박스). 로컬(교내망)에서 전문 확보 필요", "affiliation": "Western University, FZ Jülich, Univ. Twente"}
+  },
+  {
+    "title": "Porosity in electrochemical energy storage materials for superior performance gaining: insight into property performance and looking ahead",
+    "authors": ["Pan Shulin", "Walid Tahri", "Amani Khaskhoussi", "Mazen Alshaaer"],
+    "venue": "Frontiers in Chemistry",
+    "year": 2026,
+    "doi": "10.3389/fchem.2026.1809343",
+    "url": "https://www.frontiersin.org/journals/chemistry/articles/10.3389/fchem.2026.1809343/full",
+    "keywords": ["dem battery"],
+    "source": "bootstrap",
+    "snippet": "porous carbons, inorganic porous structures and coordinated hybrid/composite structures … capacitance, energy density and cycling stability … supercapacitor",
+    "abstract": "The use of renewable energy, electric vehicles, and high-density compact devices requires the power density, long-term stability, and long cycle life of the electrochemical energy storage (ESS) systems. Ion transport, charge storage and mechanical stability of the electrode can be improved with high specific surface area and porous electrodes with well-designed pore structures and high accessibility of electrolytes to the electrodes. The present work critically outlines the current trends in the porous electrode materials, which are porous carbons, inorganic porous structures and coordinated hybrid/composite structures.",
+    "extra": {"published": "2026-05-13", "evidence": "fulltext (frontiersin.org)", "note": "mini-review, 슈퍼커패시터 중심 — triage에서 제외될 것으로 예상 (파이프라인 검증용)"}
+  }
+]

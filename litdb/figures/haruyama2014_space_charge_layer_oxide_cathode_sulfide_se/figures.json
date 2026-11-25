@@ -1,0 +1,352 @@
+{
+ "slug": "haruyama2014_space_charge_layer_oxide_cathode_sulfide_se",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+  "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Surface structures of (a) LCO(110), (b) LNO(11̅0), (c) LNO(110), and (d) LPS(010), examined in this work. The Li, O, P, S, Co, and Nb atoms are depicted as light green, red, purple, yellow, blue, and green spheres, respectively. Blue, green, purple, and light green polyhedrons represent CoO6, NbO6, PS4, and LiS4 complexes, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    344.2,
+    570.5,
+    535.2
+   ],
+   "w": 1051,
+   "h": 797,
+   "dpi": 300,
+   "src": "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+   "blank": 0.666
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Optimized interface structures of (a) LCO(110)/ LNO(11̅0), (b) LCO(110)/LNO(110), (c) LCO(110)/ LPS(010), and (d) LNO (11̅0)/LPS(010). The same shapes and colors are used as in Figure 1. The periodic boundary of the simulation supercell is denoted with the solid lines. The insets show the detailed atomic networks consisting of CoO6, and NbO6 octahedrons and CoO4S pentahedrons.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    592.8
+   ],
+   "w": 1051,
+   "h": 2208,
+   "dpi": 300,
+   "src": "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+   "blank": 0.629
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. PDOSs of the optimized interfaces of (a) LCO(110)/ LNO(11̅0), (b) LCO(110)/LPS(010), and (c) LNO(11̅0)/LPS(010). Black line: total DOS. Blue line: LCO atoms. Green line: LNO atoms. Orange line: LPS atoms. Black dashed line: atoms in the ﬁrst LCO layer facing to the LNO or LPS slab. The tops of the valence bands (occupied states) are set to the energy origin.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    541.2
+   ],
+   "w": 1050,
+   "h": 1993,
+   "dpi": 300,
+   "src": "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Possible Li sites with their indices used in this work, in the (a) LCO(110)/LNO(11̅0), (b) LCO(110)/LPS(010), and (c) LNO (11̅0)/LPS(010) interfaces. The same shapes and colors are used as in Figure 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    250.2,
+    570.5,
+    498.8
+   ],
+   "w": 1052,
+   "h": 1037,
+   "dpi": 300,
+   "src": "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+   "blank": 0.571
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematic illustrations of the interfacial Li concentration. The equilibrium concentrations expected by the conventional model and indicated by the present calculations for the LCO/LPS interface (a and c) as well as the LCO/LNO/LPS (b and d). The Li concentrations in (e) and (f) describe the expected changes at the initial stage of charging for both interfaces, respectively, proposed in the present calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    382.0,
+    306.5,
+    683.2
+   ],
+   "w": 1051,
+   "h": 1256,
+   "dpi": 300,
+   "src": "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+   "blank": 0.666
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The unit cells used for the bulk crystal calculations. Hexagonal lattices of LCO (a) and LNO (b), and orthorhombic lattice of LPS (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    78.7,
+    92.6,
+    535.3,
+    287.0
+   ],
+   "w": 1904,
+   "h": 811,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The relaxed surface structures of LCO(110) (a), LNO(110) (b), LNO(110) (c), and LPS(010) (d) in the present geometry optimizations.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    117.4,
+    535.3,
+    478.0
+   ],
+   "w": 1902,
+   "h": 1503,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Calculated PDOSs of the surface slabs of LCO(110) (a), LNO(110) (b), LNO(110) (c), and LPS(010) (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    77.2,
+    137.4,
+    535.3,
+    558.8
+   ],
+   "w": 1910,
+   "h": 1757,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The initial interface structures of LCO(110)/LNO( 110) (a), LCO(110)/LNO(110) (b), LCO(110)/LPS (010) (c), and LNO(110)/LPS(010) (d) in the DFT+U geometry optimizations.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    217.4,
+    535.3,
+    581.4
+   ],
+   "w": 1902,
+   "h": 1518,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Systematic shifts of the two slabs of the LCO/LNO (a), the LCO/LPS (b), and the LNO/LPS (c) interfaces. The super periodicity of the LCO/LPS interface is displayed in (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    494.8,
+    535.3,
+    662.8
+   ],
+   "w": 1902,
+   "h": 701,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. The relaxed interface structures of LCO(110)/LNO(110) (a), LCO(110)/LNO(110) (b), LCO(110)/LPS (010) (c), and LNO(110)/LPS(010) (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    78.5,
+    113.8,
+    535.7,
+    587.1
+   ],
+   "w": 1906,
+   "h": 1973,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.581
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Molecular orbitals of the top of the valence band (a) and the bottom of the conduction band (b) in the LCO(110)/LPS(010) interface. The left and right figures show the side and front views, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.1,
+    116.3,
+    535.4,
+    420.9
+   ],
+   "w": 1906,
+   "h": 1270,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.791
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Calculated Li-Vacancy Formation Energies Ev(Lii) (i = LCn, LNn, LPn; n = 1−6) (eV) LCO(110)/LNO(11̅0) LC1 LC2 LC3 LN1 LN2 LN3 3.84 3.60 3.59 3.53 3.85 3.86 LCO(110)/LPS(010) LC1 LC2 LC3 LP1 LP2 LP3 3.49 3.98 3.18 3.27 1.44 3.03 LP4 LP5 LP6 2.90 2.71 2.62 LNO(11̅0)/LPS(010) LN1 LN2 LN3 LP1 LP2 LP3 3.13 3.32 3.26 2.90 2.42 3.18 LP4 LP5 LP6 2.99 3.07 3.14",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    250.2,
+    568.1,
+    498.8
+   ],
+   "w": 1042,
+   "h": 1037,
+   "dpi": 300,
+   "src": "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+   "blank": 0.57
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The lattice constants and the energy gaps of the bulk crystals of LCO, LNO and LPS in the present calculations and the experiments. Material 𝑎 (Å) 𝑏 (Å) 𝑐 (Å) 𝐸! (V) Calculation LCO 2.835 14.04 2.2 LNO 5.183 13.96 3.6 LPS 13.13 8.062 6.178 2.8 Experiment LCOS2 2.815 14.05 2.7 LNOS3,S4 5.148 13.86 3.8 LPSS5 13.07 8.015 6.101 not available",
+   "rotated_deg": 0,
+   "bbox": [
+    79.7,
+    94.5,
+    534.4,
+    746.6
+   ],
+   "w": 1896,
+   "h": 2718,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The calculated cell parameters, surface energies, and energy gaps. Surface 𝑎 (Å) 𝑏 (Å) 𝑊!\"#$ (eV/nm2) 𝐸! (eV) LCO(110) 4.910 14.04 14.08 0.70 LNO(110) 5.183 13.96 5.63 3.0 LNO(110) 8.977 13.96 6.45 3.1 LPS(010) 13.13 6.178 1.94 2.6",
+   "rotated_deg": 0,
+   "bbox": [
+    80.0,
+    118.4,
+    507.2,
+    386.9
+   ],
+   "w": 1781,
+   "h": 1119,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 5,
+   "file": "tab_S3.png",
+   "caption": "Table S3. The misfit parameters, the cell parameters, and the adhesion energies in the present calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.0,
+    98.8,
+    534.4,
+    700.3
+   ],
+   "w": 1894,
+   "h": 2507,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 7,
+   "file": "tab_S4.png",
+   "caption": "Table S4. The relative energies of the optimized interface structures in eV. The indices correspond to the labels in Figure S5. Index LCO(110) LCO(110)/ LCO(110)/ LNO(110) /LNO(110) LNO(110) LPS(010) /LPS(010) 1 7.22 3.71 6.19 1.07 2 6.12 2.58 1.77 × 3 8.70 1.99 1.41 × 4 4.77 3.73 0.00 × 5 3.85 3.58 -­‐ 5.04 6 5.70 2.58 -­‐ × 7 4.30 1.32 -­‐ × 8 9.07 2.84 -­‐ × 9 3.84 3.20 -­‐ 0.00 10 3.42 3.57 -­‐ -­‐ 11 5.03 1.47 -­‐ -­‐ 12 6.79 2.46 -­‐ -­‐ 13 5.97 1.66 -­‐ -­‐ 14 0.00 1.97 -­‐ -­‐ 15 8.74 0.00 -­‐ -­‐ 16 8.72 2.69 -­‐ -­‐",
+   "rotated_deg": 0,
+   "bbox": [
+    79.9,
+    118.4,
+    534.3,
+    533.0
+   ],
+   "w": 1894,
+   "h": 1728,
+   "dpi": 300,
+   "src": "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf",
+   "blank": 0.947
+  }
+ ]
+}

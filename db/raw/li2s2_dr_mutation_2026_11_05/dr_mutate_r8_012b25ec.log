@@ -1,0 +1,8 @@
+변이 448 개 (DQ 판 368 − 뺌 1 · 자리 옮김 13 · DR 81) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_r8_w*
+DR78_retry_inv_problems_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 8차 리뷰 P3: 산출물 폴더 목록 문제 (같은 run_id 폴더 둘) 면 영수증이 맞는 끊긴 런도 재시도 자격 invalid · 문제 없으면 그대로 통과 (True · None · True)
+DR80_ack_inv_problems_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 8차 리뷰 P3: 확인의 재시도 선언 검사 — 같은 run_id 폴더가 둘 (사본) 이면 맞는 정전 선언도 받지 않는다 ([])
+DR77_ack_unreadable_why_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 7차 리뷰 P3 (알려진 한계): 끊긴 첫 시드 폴더에 다른 규칙의 fail + 닫힘 · 지금 규칙 incomplete — 판독 불가로 정전 재시도 선언을 거부 (발사 0 · STOP 그대로 · 닫힘 안 옮김) · 거부 문구가 끊긴 런은 사람이 
+DR79_loop_inv_problems_dropped   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 8차 리뷰 P3 (이중 방어): 러너가 보는 산출물 폴더 목록에 문제 (같은 run_id 폴더 둘) 가 있으면 확인의 재시도 선언 검사가 거부 (STOP 그대로 · 발사 0) · 확인을 지난 뒤면 시드 루프의 재시도 자격이 invalid (발사 
+DR81_retry_unreadable_why_generic ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 7차 리뷰 P0: 옛 도구로 난 진짜 fail 이 장부에 안 적힌 채 폴더를 old12 로 옮기고 지금 도구로 다시 판정 (폴더 이름 때문에 invalid) 해도 판독 불가 — invalid 재시도 선언으로 확인해도 발사 0 · 재시도 행 없음 
+끝: 빨강 5 / 5

@@ -1,0 +1,199 @@
+{
+  "name": "H0_host",
+  "xyz_input": "db/structures/cascade_pilot/H0_host.xyz",
+  "n_atoms": 208,
+  "composition": {
+    "Cl": 16,
+    "Li": 96,
+    "P": 16,
+    "S": 80
+  },
+  "E_pre_anneal_per_atom": -4.16131917131296,
+  "E_post_anneal_per_atom": -4.16131917131296,
+  "eos": {
+    "V_points": [
+      3947.668700614529,
+      3988.366316084783,
+      4029.063931555038,
+      4069.7615470252895,
+      4110.459162495537,
+      4151.156777965795,
+      4191.854393436047
+    ],
+    "E_points": [
+      -865.2136852221959,
+      -865.4045250214931,
+      -865.5139135080512,
+      -865.5521656025388,
+      -865.5215827829188,
+      -865.4268443460858,
+      -865.271677444613
+    ],
+    "fractions": [
+      0.97,
+      0.98,
+      0.99,
+      1.0,
+      1.01,
+      1.02,
+      1.03
+    ],
+    "continuation": true,
+    "hysteresis": {
+      "E_up": [
+        -865.2136852221959,
+        -865.4045250214931,
+        -865.5139135080512,
+        -865.5521656025388,
+        -865.5215827829188,
+        -865.4268443460858,
+        -865.271677444613
+      ],
+      "E_down": [
+        -865.2120718996722,
+        -865.399489539194,
+        -865.5117546876677,
+        -865.552434357099,
+        -865.524240112318,
+        -865.4321137388936,
+        -865.2730397288127
+      ],
+      "reported_branch": "up",
+      "max_abs_dE_eV": 0.005269392807804252,
+      "level_offset_eV": 0.00010716225148956125,
+      "shape_max_abs_dE_eV": 0.005162230556314691,
+      "E_span_eV": 0.34036245742674964,
+      "tol_V0_rel": 0.01,
+      "\u26a0_dE_over_span_\ub294_\ucc3d\uc5d0_\uc758\uc874\ud55c\ub2e4": "\ubd84\ubaa8(E_span)\uac00 \ubd80\ud53c\ucc3d\uc5d0 \ub538\ub824 \uc904\uc5b4\ub4e0\ub2e4. \ucc3d\uc774 \ub2e4\ub978 \uc870\uac74\ub07c\ub9ac \uac19\uc740 \ubb38\ud131\uc73c\ub85c \ube44\uad50\ud558\uc9c0 \ub9c8\ub77c \u2014 \ud68c\uc2e0 BQ Q2. \ucc3d \ube44\uad50\ub294 \uc808\ub300\uac12(shape_max_abs_dE_eV)\uc73c\ub85c \ud55c\ub2e4",
+      "convergence_up": [
+        {
+          "fraction": 0.97,
+          "n_steps": 21,
+          "final_fmax_eV_A": 0.018737392500042915,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.98,
+          "n_steps": 9,
+          "final_fmax_eV_A": 0.015761956572532654,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.99,
+          "n_steps": 3,
+          "final_fmax_eV_A": 0.017564119771122932,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.0,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.015023669227957726,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.01,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.016035202890634537,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.02,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.01779354363679886,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.03,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.019375566393136978,
+          "converged": true,
+          "hit_step_limit": false
+        }
+      ],
+      "convergence_down": [
+        {
+          "fraction": 1.03,
+          "n_steps": 20,
+          "final_fmax_eV_A": 0.019776875153183937,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.02,
+          "n_steps": 9,
+          "final_fmax_eV_A": 0.01559663750231266,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.01,
+          "n_steps": 3,
+          "final_fmax_eV_A": 0.018599554896354675,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.0,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.014565940015017986,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.99,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.015817400068044662,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.98,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.01774466037750244,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.97,
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.019453518092632294,
+          "converged": true,
+          "hit_step_limit": false
+        }
+      ],
+      "V0_up": 4071.3221210261454,
+      "V0_down": 4073.440414981924,
+      "V0_rel_diff": 0.0005201610105668347,
+      "dE_over_span": 0.015481709844389324,
+      "tol_span": 0.1,
+      "ok": true
+    },
+    "convergence": null,
+    "V0": 4071.3221210261454,
+    "V0_per_atom": 19.57366404339493,
+    "E0": -865.5523731868424,
+    "B0_eV_per_A3": 0.16800735493656765,
+    "B0_GPa": 26.917745620181616,
+    "Bp": 5.816780434529879,
+    "r2": 0.9999834633393193,
+    "fit_quality_ok": true,
+    "fit_quality_reason": "OK",
+    "t_s": 8.002285242080688
+  },
+  "cell_policy": {
+    "step0_relax": "CellFilter(atoms) \u2014 \ud615\uc0c1 \ubb34\uc81c\ud55c",
+    "eos_v0_applied": false,
+    "\ud45c\ud604": "\uc140 \uac01\ub3c4\uc640 \uae38\uc774\ube44\ub97c \uace0\uc815\ud558\uace0 \ub4f1\ubc29 E(V) \uacbd\ub85c\uc5d0\uc11c \ubd80\ud53c\ub97c \ucd5c\uc801\ud654\ud55c\ub2e4. \ubaa9\ud45c \ud3c9\uade0\uc555\uc740 0 GPa \uc774\uba70, \uc2e4\uc81c \uc794\ub958 \ud3c9\uade0\uc555\uacfc \ud3b8\ucc28\uc751\ub825\uc744 \ubcc4\ub3c4\ub85c \ubcf4\uace0\ud55c\ub2e4"
+  },
+  "structures_written": {
+    "stage1_before_eos.xyz": "\u26a0 EOS\u00b7V\u2080 \uc801\uc6a9 **\uc804** \uad6c\uc870. \ud558\ub958\uac00 \uc9d1\uc5b4\uac00\uba74 \uc548 \ub41c\ub2e4",
+    "final_v0_applied.xyz": "\u2705 \uc140 \uc815\ucc45\uc774 \uc801\uc6a9\ub41c \ucd5c\uc885 \uad6c\uc870 \u2014 MD\u00b7\ud0c4\uc131\uc774 \uc2e4\uc81c\ub85c \uc4f4 \uac83",
+    "eos_v0_applied": false
+  }
+}

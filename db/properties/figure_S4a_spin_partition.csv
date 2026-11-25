@@ -1,0 +1,14 @@
+﻿# Figure S4a. Loewdin spin partition of the oxidized (deprotonated) SDCP oligomers vs chain length.
+# ORCA 6.1.1, r2SCAN-3c, optimized geometries, doublet. Percentages of the total spin population (1.000).
+# aryl_rings_pct = ring atoms only; ring hydrogens and side-chain ether oxygens are excluded.
+# For two and three repeat units the balance was not resolved into ether oxygens and hydrogens; it is
+# given in unresolved_remainder_pct and drawn hatched.
+# ⚠ oxidation_site uses **1-based ring numbering (ring_no 1..6)**, the same as Figure S4b and the
+#   manuscript. ⛔ 2026-09-09 correction: this column previously read "ring 3", which was the
+#   0-based machine index (ring_index 3 = ring_no 4). Cross-check figure_S4b_ring_profile.csv. n=1 (monomer) is excluded: it has no side-chain
+# ether oxygens, so its two-group partition is not comparable. Source: db/properties/sdcp_nseries_spin_2026_09_08.json
+n,oxidation_site,SO3_pct,aryl_rings_pct,ether_O_pct,other_H_linker_pct,unresolved_remainder_pct,total_pct
+2,terminal ring,62.3,32.6,,,5.1,100.0
+3,terminal ring,54.6,39.8,,,5.6,100.0
+3,internal ring,42.3,50.1,,,7.6,100.0
+6,ring 4,7.7,79.7,12.1,0.5,,100.0

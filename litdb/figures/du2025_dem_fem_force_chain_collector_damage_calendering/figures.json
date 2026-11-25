@@ -1,0 +1,2057 @@
+{
+ "slug": "du2025_dem_fem_force_chain_collector_damage_calendering",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Electrode preparation process for lithium batteries. Electrode manufacturing includes processes such as slurry mixing, coating, drying, and calendering. Each process plays a crucial role in the mechanical and electrochemical properties of electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    137.6,
+    482.1,
+    457.6,
+    715.9
+   ],
+   "w": 1383,
+   "h": 1024,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.111,
+   "src_native": [
+    1340,
+    980
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    475.4,
+    565.8,
+    721.3
+   ],
+   "recrop": "tool crop = page-width band (2227×1026 px, blank 0.446) with white side margins → re-cut from the embedded native raster (xref 47, 1340×980 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "공정 그림 (혼합 · 도포 · 건조 · 압연) — 값 없음. NMC (LiNi0.5Mn0.3Co0.2O2) · CB · 바인더 표지."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Mechanical properties of the coating. (a) illustrates the microstructure of the electrode coating. (b) depicts an SEM image of particle contacts, where red circles indicate contact regions and yellow dashed lines represent the paths of contact force transmission. (c) represents the contact regions and contact force transmission paths between particles in the DEM simulation, with red circles and yellow dashed lines corresponding to those shown in Fig. 2b. (d) exhibits the normal contact force-overlap relationship under uniaxial compression, which demonstrates the nonlinear mechanical behavior of particle contact during densification.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.4,
+    478.0,
+    467.5,
+    687.2
+   ],
+   "w": 1467,
+   "h": 922,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.288,
+   "src_native": [
+    1423,
+    878
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    471.3,
+    565.8,
+    692.6
+   ],
+   "recrop": "tool crop = page-width band (2227×923 px, blank 0.534) with white side margins → re-cut from the embedded native raster (xref 60, 1423×878 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(d) = EEPA 법선 힘–겹침 개념도: 하중 k1δⁿ · 제하 k2(δⁿ − δpⁿ) · 점착 −k_adhδⁿ · f0 (δ = 0 에서 음의 쪽에 그려짐) · f_min · δ_min · δp · δ_max. 수치 축 없음."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. DEM simulation of the calendering process. (a) shows the schematic of the calendering process. A, B, and C represent the three key positions of the electrode before and after entering the roller. (b) shows a simplified DEM model extracted from regions A, B, and C, which represents the particle configurations under different compression levels. The color of the particles in the figure corresponds to their diameters, with red representing larger particles (NMC) and blue representing smaller particles (CB).",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    56.2,
+    467.7,
+    464.9
+   ],
+   "w": 1467,
+   "h": 1753,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.47,
+   "src_native": [
+    1421,
+    1707
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.7,
+    565.8,
+    470.0
+   ],
+   "recrop": "tool crop = page-width band (2227×1752 px, blank 0.648) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 79, 1421×1707 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(a) 롤 기하 (R · θ · S · h1 · h2 · h3 · A/B/C · vPlate/vRoll 벡터) · (b) DEM RVE 100 × 100 µm (지름 색 1.0–16.0 µm · 'Current collector-Al foil'). 본문은 높이를 hA/hB/hC 로, 그림은 h1/h2/h3 로 적는다."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Coupling framework for DEM-FEM. The interaction of the particles within the coating is characterized by the DEM model. The contact force and displacement are transferred to the finite element model of the current collector layer through coupled calculations. The stress and deformation on the current collector are calculated by the FEM model.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    462.4,
+    467.7,
+    706.6
+   ],
+   "w": 1467,
+   "h": 1068,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.611,
+   "src_native": [
+    1421,
+    1022
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    455.9,
+    565.8,
+    711.7
+   ],
+   "recrop": "tool crop = page-width band (2227×1067 px, blank 0.735) with white side margins → re-cut from the embedded native raster (xref 105, 1421×1022 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "DEM→FEM 결합 고리 그림 (stl 가져오기 · axdt 하중 자료 · FEM 격자 · 경계 조건). 값 없음."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Comparison of the calendered electrodes in the experiment and simulation. (a) and (b) show the DEM simulation model of the electrode coating during calendering and the SEM image of the electrode cross-section in the ZX plane, respectively. The comparison indicates that the simulation model of the particle layer is highly similar to the real coating particles' morphology. (c) displays the results of the loading path curves in DEM simulation and experiment, showing good consistency and verifying the accuracy of the simulation. (d) represents the comparison of porosity evolution at different compression rates between experimental and simulated values, showing a consistent decreasing trend in porosity with increasing compression rate.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.1,
+    55.9,
+    552.2,
+    449.9
+   ],
+   "w": 2175,
+   "h": 1692,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.644,
+   "src_native": [
+    2129,
+    1646
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.5,
+    566.0,
+    455.0
+   ],
+   "recrop": "tool crop = page-width band (2228×1690 px, blank 0.647) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 114, 2129×1646 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(c) 압밀 압력 (MPa) vs 롤 간극 코팅 높이 (µm): DEM 8 점 · 실험 5 점 · 맞춤 곡선 둘 — 60 µm 에서 DEM ≈270 · 실험 ≈262 MPa [판독] · (d) 기공률 vs 압하율 0–40 %: DEM 52.0 → 18.9 % · 실험 50.0 → 16.9 % [판독]. 판독값 = digitized.csv."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Synergistic evolution of force chain density, strength, and orientation of coated particles during calendering. (a-d) depict the contact force network of the particles at compression rates of 10 %, 20 %, 30 %, and 40 %, respectively. The force chain network becomes denser and more stable as the compression rate increases. (e-h) show the three-dimensional distribution of the contact fabric, the radial length represents the orientation strength in that direction, and the colorbar represents the contact strength in that direction. (i) represents the probabilistic distribution of the contact strength at different compression rates, and the strong and weak force chains are distinguished at the point of f = 1. (j) displays the diagonal component of the contact deviation tensor, describing the change in contact anisotropy under compression. (k) exhibits the proportion of strong force chains, which can be obtained from the contact force probability distribution curve. (l) captures the number of particle contact pairs at different compression levels, which indirectly reflects the force chain density. (m) demonstrates the diagonal components of the coating mechanical stress and total stress tensor at different compression ratios. The overall strength of the coating stresses represents the mechanical response of the system to the action of the strong force chain.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    152.4,
+    467.7,
+    649.2
+   ],
+   "w": 1467,
+   "h": 2120,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.701,
+   "src_native": [
+    1421,
+    2074
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    145.9,
+    565.8,
+    654.3
+   ],
+   "recrop": "tool crop = page-width band (2227×2119 px, blank 0.789) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 127, 1421×2074 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(k) 강한 사슬 몫 21.49 · 11.06 · 10.59 · 9.73 % · (l) 접촉 수 23,940 · 31,484 · 36,260 · 41,816 [인쇄 라벨] · (j) F′zz +0.048 → −0.030 · (m) σzz 3.1 → 25.5 MPa (왼축) · σ 34.9 → 180.3 MPa (오른축) [판독]."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Damage mechanism of the current collector. (a-c) demonstrate the DEM particle structure at 10 %, 20 %, and 30 % compression rates. (d-f) exhibit the particle displacements at different compression rates. (g-i) display the force chain structures at different compression rates. The force chain strength is raised as the compression rate increases, while the strong force chains migrate to the collector side. (j-l) show the surface stress distribution on the collector, which indicates the widening of the high stress region and stress concentration with increasing compression.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.1,
+    56.5,
+    552.2,
+    537.9
+   ],
+   "w": 2175,
+   "h": 2056,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.623,
+   "src_native": [
+    2129,
+    2010
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    50.0,
+    566.0,
+    543.0
+   ],
+   "recrop": "tool crop = page-width band (2228×2055 px, blank 0.618) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 158, 2129×2010 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(g–i) 법선력 색 0.25–1.25 mN · (j–l) 집전체 응력 색 0–280 MPa (비선형 눈금) · 캡션 (a–c) = 10/20/30 % ↔ 본문 20/30/40 % (불일치)."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Evolution of the current collector damage. (a-c) demonstrate the strain distributions on the collector surface at different compression rates (20 %, 30 %, 40 %), showing a gradual enlargement of the damaged area. (d-f) display the magnified roughness and texture images of the aluminum foil surface, indicating that the damage area deepens and widens with compression. (g-i) exhibit the SEM images of the collector morphology under different compression rates. The higher the compression rate, the rougher the surface. (j-l) show the collector texture height profiles under different compression levels, which were obtained through CLSM measurements. The valleys of the curves represent the embedding depth of the particles. (m) shows the evolution curve of the number of pits on the collector surface, reflecting the accumulated surface damage with increasing compression. (n-o) extract experimental and simulation results of the maximum collector embedding depth and diameter, verifying the model's accuracy.",
+   "rotated_deg": 0,
+   "bbox": [
+    109.4,
+    55.7,
+    485.7,
+    622.2
+   ],
+   "w": 1618,
+   "h": 2410,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.594,
+   "src_native": [
+    1571,
+    2362
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.5,
+    565.8,
+    627.0
+   ],
+   "recrop": "tool crop = page-width band (2227×2407 px, blank 0.697) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 199, 1571×2362 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(m) 구멍 수 곡선 ≈148 / 443 / 546 / 640 (10/20/30/40 %) [판독] ↔ 본문 '20 % 에서 379' · (n) 깊이 계산 0.80 / 1.29 / 1.84 · 실험 0.96 / 1.25 / 2.32 µm · (o) 지름 계산 2.90 / 3.86 / 6.42 · 실험 3.81 / 5.51 / 7.80 µm [판독] — 실험이 5/6 칸에서 더 크다 (본문은 '계산이 실험보다 크다')."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Normal overlap of particles with the collector surface at different compression rates. (a-d) display the results of the DEM model at compression rates of 10 %, 20 %, 30 %, and 40 %. Larger pits imply larger stresses.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    56.5,
+    467.7,
+    338.9
+   ],
+   "w": 1467,
+   "h": 1227,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.477,
+   "src_native": [
+    1421,
+    1181
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    50.0,
+    566.0,
+    344.0
+   ],
+   "recrop": "tool crop = page-width band (2228×1226 px, blank 0.64) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 203, 1421×1181 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "AM–집전체 법선 겹침 지도 (색 1.33e-06 – 8.47e-04 mm = 최대 0.847 µm @ 40 %) [인쇄 색 막대]."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Contact damage on collector surfaces is affected by particle diameter. (a-c) show the DEM models for particle diameters of 7 μm, 9 μm and 13 μm, respectively, corresponding to the D50 values of the particle size distributions. The increase in particle size leads to changes in the particle contact network. (d-f) depict the corresponding force chain structure at 40 % compression rate. As the particle diameter increases, the force chains become more continuous and concentrated. (g-i) display the stress distribution on the surface of the current collector, the more localized stress concentration points are generated as the particle diameter increases. (j-l) show the magnified morphology on the aluminum foil surface after calendering, and the results show that as the particle size increases, the damage area also increases. (m-n) demonstrate the comparison of simulated and experimental values of embedding diameter and depth to verify the model's accuracy. (o) depicts the embedding behavior curves for different particle sizes at a 40 % compression rate, which reveals the competitive relationship between damage points and stress values. (p) demonstrates the relationship between compression rate, particle diameter, and stress on the collector.",
+   "rotated_deg": 0,
+   "bbox": [
+    121.9,
+    55.7,
+    473.0,
+    622.2
+   ],
+   "w": 1513,
+   "h": 2410,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.626,
+   "src_native": [
+    1466,
+    2362
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.5,
+    565.8,
+    627.0
+   ],
+   "recrop": "tool crop = page-width band (2227×2407 px, blank 0.742) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 218, 1466×2362 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(o) 응력 집중점 수 655 → 343 · 최대 응력 170 → 245 MPa (7 → 13 µm · 40 %) [인쇄 본문 · 판독 652/469/343 · 169.5/179.5/245.3] · (m) 깊이 계산 1.19/1.69/2.15 · 실험 1.32/1.70/2.59 µm · (n) 지름 계산 6.57/7.71/10.22 · 실험 7.42/8.31/12.00 µm [판독] · (p) Mises 응력 곡면."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 15,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Effect of particle distribution on collector surface damage. (a-c) show the coated particles in the DEM model under different particle distribution conditions (σ = 0.5, σ = 2 and σ = 4). (d-f) display the corresponding normal overlap between the AM particle layer and the current collector, highlighting that the increase in particle dispersion causes more embedded regions. (g) depicts the distribution of pits on the surface of the current collector at a compression rate of 40 % for the three distribution conditions. Higher dispersion (σ = 4) results in deeper and more widely distributed pits. (h) shows the comparison of maximum collector stress for different particle size and dispersion configurations. (i) exhibits a three-dimensional surface plot of the relationship between compression rate, PSD, and collector stress, which suggests that an increase in compression rate and particle dispersion together intensifies the mechanical loading on the collector, thereby accelerating structural damage.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.1,
+    56.0,
+    552.2,
+    492.0
+   ],
+   "w": 2175,
+   "h": 1866,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.603,
+   "src_native": [
+    2129,
+    1820
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.6,
+    566.0,
+    497.0
+   ],
+   "recrop": "tool crop = page-width band (2228×1865 px, blank 0.607) with white side margins and a caption that swallowed body text / the page number → re-cut from the embedded native raster (xref 222, 2129×1820 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "(h) 막대: 범례 파랑 = D50 11 µm · 주황 = 7 µm 인데 값 (51.9 → 167.0 · 73.2 → 212.5 MPa [판독]) 의 증가량 +115 · +139 는 본문 (7 µm +115 · 11 µm +139) 과 반대 짝 → 범례 · 본문 중 하나가 바뀜 · (d–f) 겹침 색 최대 3.20e-03 mm = 3.2 µm."
+  },
+  {
+   "key": "f2d",
+   "kind": "figure",
+   "label": "2d",
+   "page": 4,
+   "file": "fig_2d.png",
+   "caption": "Fig. 2(d) — EEPA normal contact force–overlap schematic: loading k1δⁿ, unloading k2(δⁿ − δpⁿ), adhesive branch −k_adhδⁿ, f0, f_min, δ_min, δp, δ_max (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    218.1,
+    478.0,
+    467.5,
+    687.2
+   ],
+   "w": 1089,
+   "h": 922,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.288,
+   "src_native": [
+    1423,
+    878
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 60, no resampling): box [381, 0, 1423, 878] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; a 8 px sliver of the neighbouring panel inside the box ([381, 40, 389, 878] px) was painted white",
+   "viewed": true,
+   "mpm_note_ko": "EEPA 세 가지 (식 A.6) 의 그림. 축에 수치 없음."
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 5,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — calendering schematic: roller radius R, contact angle θ, thickness reduction S, positions A (before entering), B (deforming), C (leaving) with thicknesses h1, h2, h3; velocity vectors v_Plate and v_Roll (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    56.2,
+    440.8,
+    239.1
+   ],
+   "w": 1355,
+   "h": 812,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.404,
+   "src_native": [
+    1421,
+    1707
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 79, no resampling): box [0, 0, 1421, 787] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "식 (1) θ = cos⁻¹((R − S)/R) · 식 (2) 의 기하. h3 > h2 로 그려짐 (출구 되돌아옴의 그림 표현 · 본문 수치 없음)."
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 5,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — simplified DEM models at positions A, B and C (100 μm × 100 μm RVE on 'Current collector-Al foil'), particles coloured by diameter 1.0–16.0 μm (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    129.6,
+    251.1,
+    467.7,
+    464.9
+   ],
+   "w": 1459,
+   "h": 941,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.485,
+   "src_native": [
+    1421,
+    1707
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 79, no resampling): box [0, 787, 1421, 1707] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "RVE 100 × 100 µm · 지름 색 1.0–16.0 µm (큰 = NMC · 작은 = CB)."
+  },
+  {
+   "key": "f5c",
+   "kind": "figure",
+   "label": "5c",
+   "page": 7,
+   "file": "fig_5c.png",
+   "caption": "Fig. 5(c) — compaction pressure (MPa) vs coating height at roll gap (μm): 'Compaction pressure of DEM' (red circles), 'Compaction pressure of experiment' (blue triangles) and the two fitted loading paths (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.1,
+    254.6,
+    296.6,
+    449.5
+   ],
+   "w": 1110,
+   "h": 862,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.93,
+   "src_native": [
+    2129,
+    1646
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 114, no resampling): box [0, 827, 1075, 1646] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "판독: DEM (60.1, 270.5) (62.0, 247.5) (65.0, 194.5) (70.2, 137.9) (75.2, 88.9) (80.1, 52.0) (85.0, 15.2) (90.1, ≈4) · 실험 (59.7, ≈262) (68.2, ≈175) (77.9, ≈81) (85.7, ≈33) (89.0, ≈20) — digitized.csv."
+  },
+  {
+   "key": "f5d",
+   "kind": "figure",
+   "label": "5d",
+   "page": 7,
+   "file": "fig_5d.png",
+   "caption": "Fig. 5(d) — porosity (%) vs compression rate (%) 0–40: 'DEM simulation' (red) and 'SEM experiment' (black dash-dot) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    303.5,
+    255.8,
+    547.2,
+    449.9
+   ],
+   "w": 1065,
+   "h": 859,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.951,
+   "src_native": [
+    2129,
+    1646
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 114, no resampling): box [1075, 827, 2129, 1646] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "판독: DEM 52.0 · 48.3 · 36.5 · 27.6 · 18.9 % · 실험 50.0 · 45.4 · 37.7 · 25.9 · 16.9 % (0/10/20/30/40 %) — 20 % 에서만 DEM < 실험."
+  },
+  {
+   "key": "f6eh",
+   "kind": "figure",
+   "label": "6e-h",
+   "page": 8,
+   "file": "fig_6eh.png",
+   "caption": "Fig. 6(e–h) — three-dimensional contact-fabric roses at compression rates 10–40 %, colour = contact force 0–0.1 mN, with the X–Y–Z triad (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    242.4,
+    460.2,
+    373.2
+   ],
+   "w": 1436,
+   "h": 595,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.639,
+   "src_native": [
+    1421,
+    2074
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 127, no resampling): box [0, 371, 1421, 930] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "방향 분포 그림 (길이 = 방향 세기 · 색 = 접촉력 0–0.1 mN). 본문 '30 % 부터 z 방향 방추형'."
+  },
+  {
+   "key": "f6i",
+   "kind": "figure",
+   "label": "6i",
+   "page": 8,
+   "file": "fig_6i.png",
+   "caption": "Fig. 6(i) — probability distribution P(f) vs relative contact force f (0–40) for ε = 10, 20, 30, 40 %, with an inset for f = 0–1.5 (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    132.2,
+    378.5,
+    322.3,
+    525.2
+   ],
+   "w": 842,
+   "h": 661,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.825,
+   "src_native": [
+    1421,
+    2074
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 127, no resampling): box [0, 940, 817, 1567] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "삽입: 40 % 의 f ≤ 1 여섯 칸 P 합 ≈0.686 · f = 1.08 · 1.25 · 1.42 세 칸 합 ≈0.128 [판독 · 카드 산술] > (k) 의 9.73 % → (k) 는 이 P(f) 의 f > 1 합으로 재현되지 않는다."
+  },
+  {
+   "key": "f6jk",
+   "kind": "figure",
+   "label": "6j-k",
+   "page": 8,
+   "file": "fig_6jk.png",
+   "caption": "Fig. 6(j) — diagonal components F′xx, F′yy, F′zz of the deviatoric fabric tensor vs compression rate; (k) — strong chains fraction (%) 21.49, 11.06, 10.59, 9.73 at 10–40 % (panels of Fig. 6; kept together because the (k) label sits beside the (j) axis title).",
+   "rotated_deg": 0,
+   "bbox": [
+    328.5,
+    381.2,
+    451.8,
+    526.6
+   ],
+   "w": 564,
+   "h": 656,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.849,
+   "src_native": [
+    1421,
+    2074
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 127, no resampling): box [818, 940, 1421, 1567] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "(j) 판독: 10 % −0.025 / −0.028 / +0.048 · 20 % −0.013 / −0.017 / +0.029 · 30 % +0.003 / 0.000 / −0.003 · 40 % +0.019 / +0.011 / −0.030 (xx / yy / zz) · (k) 인쇄 라벨."
+  },
+  {
+   "key": "f6l",
+   "kind": "figure",
+   "label": "6l",
+   "page": 8,
+   "file": "fig_6l.png",
+   "caption": "Fig. 6(l) — the number of force chain (contact pairs): 23940, 31484, 36260, 41816 at 10, 20, 30, 40 % (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    132.2,
+    530.0,
+    290.6,
+    649.2
+   ],
+   "w": 710,
+   "h": 547,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.812,
+   "src_native": [
+    1421,
+    2074
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 127, no resampling): box [0, 1567, 690, 2074] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "인쇄 라벨 그대로. 41,816/23,940 = 1.747 (+74.7 %) [카드 산술] ↔ 본문 · 결론 '+76.5 %'."
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6m",
+   "page": 8,
+   "file": "fig_6m.png",
+   "caption": "Fig. 6(m) — coating stress (MPa): diagonal components σxx, σyy, σzz (bars, left axis 0–40) and overall σ (red line, right axis 0–200) vs compression rate (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    294.7,
+    531.6,
+    467.7,
+    649.2
+   ],
+   "w": 771,
+   "h": 540,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.87,
+   "src_native": [
+    1421,
+    2074
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 127, no resampling): box [690, 1567, 1421, 2074] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "판독: σxx 2.2 · 4.9 · 10.3 · 21.2 · σyy 2.1 · 4.8 · 9.8 · 20.6 · σzz 3.1 · 7.0 · 12.1 · 25.5 MPa · σ 34.9 · 50.1 · 100.0 · 180.3 MPa (본문 35 → 182.6). σ 가 어느 대각 성분보다 7–11 배 크다 — σ 의 정의는 원문에 없다."
+  },
+  {
+   "key": "f8jl",
+   "kind": "figure",
+   "label": "8j-l",
+   "page": 12,
+   "file": "fig_8jl.png",
+   "caption": "Fig. 8(j–l) — CLSM texture height profiles (μm) vs measuring width (0–200 μm) of the Al collector at ε = 20, 30, 40 % (panels of Fig. 8).",
+   "rotated_deg": 0,
+   "bbox": [
+    109.9,
+    398.5,
+    319.8,
+    622.2
+   ],
+   "w": 925,
+   "h": 982,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.633,
+   "src_native": [
+    1571,
+    2362
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 199, no resampling): box [0, 1404, 882, 2362] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "선 한 줄 측정 (본문은 그림 8k · 8l 을 '평균 박힘 깊이' 1.43 · 1.86 µm 로 인용). 판독 (선 중심 · digitized.csv): 가장 깊은 골 −0.79 (20 %, 36 µm) · −1.40 (30 %, 97 µm) · −1.83 µm (40 %, 78.5 µm) · 선 아래 가장자리 −0.81 · −1.44 · −1.87 — 본문의 1.43 · 1.86 은 이 한 줄의 가장 깊은 골과 같고 골들의 평균이 아니다 (40 % 의 깊은 골 셋 1.83 · 1.54 · 1.45 의 평균 = 1.61 [카드 산술])."
+  },
+  {
+   "key": "f8mo",
+   "kind": "figure",
+   "label": "8m-o",
+   "page": 12,
+   "file": "fig_8mo.png",
+   "caption": "Fig. 8(m) — number of pits vs compression rate (0–40 %) with 'Rapid growth', 'Transition', 'Slow growth' zones; (n) pit depth and (o) pit diameter, simulation vs experiment at 20, 30, 40 % (panels of Fig. 8; m–o kept together because the (n) label sits beside the (m) axis title).",
+   "rotated_deg": 0,
+   "bbox": [
+    323.0,
+    398.5,
+    466.5,
+    619.0
+   ],
+   "w": 648,
+   "h": 969,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.824,
+   "src_native": [
+    1571,
+    2362
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 199, no resampling): box [886, 1404, 1571, 2362] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "(m) 판독 148 · 443 · 546 · 640 개 (10/20/30/40 %) · 전이 구간 ≈21–25 % · (n)(o) 판독값은 fig_8 의 메모 · digitized.csv."
+  },
+  {
+   "key": "f10mn",
+   "kind": "figure",
+   "label": "10m-n",
+   "page": 14,
+   "file": "fig_10mn.png",
+   "caption": "Fig. 10(m) pit depth and (n) pit diameter (μm), simulation vs experiment, for particle diameters 7, 9, 13 μm (panels of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    123.1,
+    382.6,
+    457.4,
+    501.0
+   ],
+   "w": 1443,
+   "h": 543,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.765,
+   "src_native": [
+    1466,
+    2362
+   ],
+   "native_dpi": 300,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 218, no resampling): box [0, 1350, 1466, 1861] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "판독: 깊이 계산 1.19 · 1.69 · 2.15 · 실험 1.32 · 1.70 · 2.59 µm · 지름 계산 6.57 · 7.71 · 10.22 · 실험 7.42 · 8.31 · 12.00 µm."
+  },
+  {
+   "key": "f10o",
+   "kind": "figure",
+   "label": "10o",
+   "page": 14,
+   "file": "fig_10o.png",
+   "caption": "Fig. 10(o) — number of stress concentration points (left axis) and maximum stress (MPa, right axis) vs particle diameter 7–13 μm at 40 % compression (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    123.4,
+    503.6,
+    305.5,
+    622.2
+   ],
+   "w": 809,
+   "h": 544,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.929,
+   "src_native": [
+    1466,
+    2362
+   ],
+   "native_dpi": 300,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 218, no resampling): box [0, 1861, 820, 2362] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; the '(p)' label of the neighbouring panel inside the box ([762, 1861, 820, 1912] px) was painted white",
+   "viewed": true,
+   "mpm_note_ko": "판독 652 · 469 · 343 개 · 169.5 · 179.5 · 245.3 MPa (본문 655 → 343 · 170 → 245) · '최적 9.9 µm' = 두 축 곡선의 교점 (축 범위 선택에 따라 움직임)."
+  },
+  {
+   "key": "f10p",
+   "kind": "figure",
+   "label": "10p",
+   "page": 14,
+   "file": "fig_10p.png",
+   "caption": "Fig. 10(p) — 3D surface of Mises stress (MPa) vs compression rate (10–40 %) and particle diameter (7–13 μm) (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    503.4,
+    462.4,
+    619.3
+   ],
+   "w": 706,
+   "h": 533,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.707,
+   "src_native": [
+    1466,
+    2362
+   ],
+   "native_dpi": 300,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 218, no resampling): box [762, 1861, 1466, 2362] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; the end of panel (o)'s right-axis title that reaches into the box ([762, 1912, 822, 2362] px) was painted white",
+   "viewed": true,
+   "mpm_note_ko": "집전체 응력이 Mises 등가 응력임을 보이는 유일한 축 이름. 곡면 값은 판독하지 않음."
+  },
+  {
+   "key": "f11gh",
+   "kind": "figure",
+   "label": "11g-h",
+   "page": 15,
+   "file": "fig_11gh.png",
+   "caption": "Fig. 11(g) — pit-diameter distributions (volume fraction vs pits diameter, μm) for σ = 0.5, 2, 4 at 40 %; (h) — maximum stress on collector (MPa) for particle size distribution σ = 0.5 and 4, legend D50 = 11 μm (blue) and D50 = 7 μm (orange) (panels of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    43.8,
+    335.0,
+    362.3,
+    488.4
+   ],
+   "w": 1377,
+   "h": 689,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.816,
+   "src_native": [
+    2129,
+    1820
+   ],
+   "native_dpi": 300,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 222, no resampling): box [0, 1141, 1340, 1820] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "(h) 판독 파랑 51.9 → 167.0 · 주황 73.2 → 212.5 MPa · (g) 판독 σ = 4 곡선 꼭대기 ≈8.5 µm · 반치폭 ≈7.5 µm (표준편차로 ≈3.2 µm ↔ 본문 '5 µm')."
+  },
+  {
+   "key": "f11i",
+   "kind": "figure",
+   "label": "11i",
+   "page": 15,
+   "file": "fig_11i.png",
+   "caption": "Fig. 11(i) — 3D surface of Mises stress (MPa) vs compression rate (0–40 %) and particle distribution σ (0.5–4) (panel of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    382.3,
+    337.4,
+    552.2,
+    492.0
+   ],
+   "w": 758,
+   "h": 694,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.698,
+   "src_native": [
+    2129,
+    1820
+   ],
+   "native_dpi": 300,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (xref 222, no resampling): box [1340, 1141, 2129, 1820] px chosen on all-white rows/columns between panels, ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin",
+   "viewed": true,
+   "mpm_note_ko": "곡면 값은 판독하지 않음."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Simulation parameters of DEM models — AM: density 4750 kg·m⁻³ [75], Young's modulus 142 GPa [72], Poisson's ratio 0.25 [73]; CB: 2250 [75], 0.45 GPa [74], 0.2 [73]; AL: 2700 [75], 68.9 GPa [72], 0.33 [73]; Steel: 7800 [75], 182 GPa [72], 0.3 [73]; Particle-particle: coefficient of static friction 0.25 [25], coefficient of rolling friction 0.01 [25], coefficient of restitution 0.25 [25], surface energy AM-AM 8 J·m⁻² [86], CB-CB 60 J·m⁻² [87], AM-CB 20 J·m⁻² [87], contact plasticity ratio 0.96 [27], constant pull-off force 10⁻⁵ N [88].",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    528.5,
+    559.5,
+    742.5
+   ],
+   "w": 1462,
+   "h": 1225,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.932,
+   "auto_bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "recrop": "re-rendered from the vector page at 400 dpi: clip [304, 528.5, 559.5, 742.5] pt (title line + table rules), ink trim, uniform 6 pt margin — the automatic crop (2213×2989 px, blank 0.746) ran from the top of the page and swallowed Fig. 3 and the left-column text",
+   "viewed": true,
+   "mpm_note_ko": "DEM 입력값 전부 (물성 4 재료 + 입자–입자 접촉 8 줄). ⚠ 입자–Al · 입자–강철 (판) 접촉 줄이 없다 (마찰 · 구름 · 반발 · 점착) · k1 · k2 · k_adh · n · 감쇠 · 시간 간격도 없다. he2026 카드 L99 의 '입자–Al 0.61 / 0.12 / 0.65 · JKR 1.5 J/m² = [41] Du 2025' 는 이 표에 없다."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "Eq. (1)",
+   "page": 4,
+   "file": "eq_01_roller_contact_angle_theta.png",
+   "caption": "Eq. (1), p.4: contact angle between the electrode and the roller surface — θ = cos⁻¹((R − S)/R) (R = roller radius, S = thickness reduction).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    409.9,
+    292.5,
+    437.5
+   ],
+   "w": 1457,
+   "h": 173,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "롤 접촉각. 원문은 θ 최대 < 1° [75] 라 쓰지만 이 논문 롤 (지름 200 mm → R 100 mm) 에서 S 40 µm (압하율 40 %) 이면 θ = 1.62° [카드 산술]."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "Eq. (2)",
+   "page": 4,
+   "file": "eq_02_plate_velocity_vroll_cos_theta.png",
+   "caption": "Eq. (2), p.4: plate compression velocity — v_Plate = v_Roll cos θ (as printed; the text says v_Plate is maximal at A, zero at B and reverses towards C).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    253.5,
+    561.5,
+    270.0
+   ],
+   "w": 1459,
+   "h": 107,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "인쇄 식은 cos θ — 본문 서술 (A 최대 · B 0) 과 맞는 것은 연직 성분 v_Roll sin θ [카드 관찰 · 판정 아님]. 실제 판 속도 값은 원문에 없음."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "Eq. (3)",
+   "page": 6,
+   "file": "eq_03_compression_rate_definition.png",
+   "caption": "Eq. (3), p.6: compression rate — ε = (H0 − Hc)/H0 × 100 % (H0 = coating thickness before calendering, Hc = final thickness after compression).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    75.0,
+    561.5,
+    102.5
+   ],
+   "w": 1458,
+   "h": 165,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "실험의 Hc = 압연 뒤 측정 두께 (되돌아옴 포함 · 뺀 뒤) ↔ DEM 은 판 위치 (누른 채) — 같은 ε 가 두 상태를 가리킨다."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "Eq. (4)",
+   "page": 8,
+   "file": "eq_04_contact_force_magnitude.png",
+   "caption": "Eq. (4), p.8: scalar contact-force magnitude at each contact — F_i = √(F²x,i + F²y,i + F²z,i), i = 1, 2, …, N (N = total number of contacts).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    53.5,
+    561.5,
+    77.0
+   ],
+   "w": 1460,
+   "h": 146,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.972,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "접촉마다 힘 크기 (벡터 평균 아님 — 원문 p.9 강조)."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "Eq. (5)",
+   "page": 8,
+   "file": "eq_05_force_normalised_by_max.png",
+   "caption": "Eq. (5), p.8: F_normalised = F_i / max(F_1, F_2, …, F_N).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    82.0,
+    561.5,
+    98.0
+   ],
+   "w": 1460,
+   "h": 110,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.955,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "최댓값 정규화 (그림 6a–d 의 망 그림용으로 보임 [카드 추론]) — 식 (7) 의 평균 정규화와 다르다."
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "Eq. (6)",
+   "page": 9,
+   "file": "eq_06_fabric_spherical_deviatoric_split.png",
+   "caption": "Eq. (6), p.9: fabric tensor decomposition — F_ij = (1/3) δ_ij + F′_ij (spherical + deviatoric, [99] Kanatani 1984).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    506.5,
+    292.5,
+    533.5
+   ],
+   "w": 1459,
+   "h": 158,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.986,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "본문은 F_ij 를 'a two-dimensional vector' 라 부른다 (2 차 텐서). F′zz 가 +0.048 → −0.030 [판독] = 수직 접촉 방향이 줄어드는 쪽인데 본문은 '수직 정렬' 로 읽는다."
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "Eq. (7)",
+   "page": 9,
+   "file": "eq_07_relative_contact_force_f.png",
+   "caption": "Eq. (7), p.9: relative contact force — f = F_i / ((1/N) Σ_{i=1..N} F_i); strong (f > 1) and weak (f ≤ 1) force chains, threshold = global mean [100,101].",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    75.0,
+    561.5,
+    113.5
+   ],
+   "w": 1465,
+   "h": 226,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.989,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 강한 / 약한 사슬의 판별 = 평균 접촉력 (f = 1) · 사슬 길이 · 각도 · 연결 판별은 없다 (접촉 하나 = '사슬' 하나)."
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "Eq. (8)",
+   "page": 9,
+   "file": "eq_08_probability_density_pf.png",
+   "caption": "Eq. (8), p.9: P(f) = (1/N) Σ_k n_k — n_k = number of particles within the k-th contact force interval, N = total number of particles (as printed).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    205.5,
+    561.5,
+    234.5
+   ],
+   "w": 1460,
+   "h": 177,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "f 는 접촉마다인데 n_k · N 은 '입자' 수로 인쇄 — 정규화 단위가 섞였다 [카드 관찰]."
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "Eq. (9)",
+   "page": 9,
+   "file": "eq_09_rve_average_stress_tensor.png",
+   "caption": "Eq. (9), p.9: stress tensor in a representative elementary volume V — σ_ij = (1/2V) Σ_{α=1..N} (r_1i F_1j + r_2i F_2j) (r_1i, r_2i = relative positions of the two particles of the pair; F_1j, F_2j = interaction forces) [102,103].",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    496.5,
+    561.5,
+    528.0
+   ],
+   "w": 1458,
+   "h": 184,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.977,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 우리 상별 virial (f_AM 규약 b) 과 같은 꼴 — 입자마다 (가지 벡터 × 힘) 를 나눠 더하는 형식. 원문은 전체 합만 낸다 (상별 · 접촉 종류별 분할 없음)."
+  },
+  {
+   "key": "eA1",
+   "kind": "equation",
+   "label": "Eq. (A.1)",
+   "page": 16,
+   "file": "eq_A01_equivalent_radius.png",
+   "caption": "Eq. (A.1), p.16: equivalent radius — R* = r_i r_j / (r_i + r_j).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    519.6,
+    561.5,
+    544.5
+   ],
+   "w": 2954,
+   "h": 162,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.993,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "등가 반지름."
+  },
+  {
+   "key": "eA2",
+   "kind": "equation",
+   "label": "Eq. (A.2)",
+   "page": 16,
+   "file": "eq_A02_equivalent_mass.png",
+   "caption": "Eq. (A.2), p.16: equivalent mass — m* = m_i m_j / (m_i + m_j).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    560.1,
+    561.5,
+    585.0
+   ],
+   "w": 2953,
+   "h": 162,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.991,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "등가 질량."
+  },
+  {
+   "key": "eA3",
+   "kind": "equation",
+   "label": "Eq. (A.3)",
+   "page": 16,
+   "file": "eq_A03_equivalent_youngs_modulus_printed_with_r.png",
+   "caption": "Eq. (A.3), p.16: 1/E* = (1 − ν_i²)/r_i + (1 − ν_j²)/r_j (as printed — the denominators are the radii r_i, r_j, not the Young's moduli).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    600.3,
+    561.5,
+    635.0
+   ],
+   "w": 2954,
+   "h": 206,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.991,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 인쇄 오식으로 보임: 표준 Hertz 는 분모가 E_i · E_j [카드 관찰 · 판정 아님]."
+  },
+  {
+   "key": "eA4",
+   "kind": "equation",
+   "label": "Eq. (A.4)",
+   "page": 16,
+   "file": "eq_A04_equivalent_shear_modulus_printed_with_r.png",
+   "caption": "Eq. (A.4), p.16: 1/G* = (2 − ν_i)/r_i + (2 − ν_j)/r_j (as printed — radii in the denominators).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    635.0,
+    561.5,
+    664.5
+   ],
+   "w": 2954,
+   "h": 181,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "⚠ (A.3) 와 같은 꼴의 인쇄 (분모 = 반지름) [카드 관찰]."
+  },
+  {
+   "key": "eA5",
+   "kind": "equation",
+   "label": "Eq. (A.5)",
+   "page": 16,
+   "file": "eq_A05_normal_force_hysteresis_plus_damping.png",
+   "caption": "Eq. (A.5), p.16: contact normal force — F_N = (F_hys + F_nd) u (u = unit normal from the contact point to the particle centre).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    689.8,
+    561.5,
+    711.0
+   ],
+   "w": 2952,
+   "h": 120,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.988,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "법선 힘 = 이력 탄성 + 법선 감쇠 (감쇠 계수 값은 원문에 없음)."
+  },
+  {
+   "key": "eA6",
+   "kind": "equation",
+   "label": "Eq. (A.6)",
+   "page": 17,
+   "file": "eq_A06_eepa_hysteretic_normal_force_three_branches.png",
+   "caption": "Eq. (A.6), p.17: EEPA hysteretic spring force — F_hys = f0 + k1δⁿ if k2(δⁿ − δ_pⁿ) ≥ k1δⁿ; f0 + k2(δⁿ − δᵖ) if k1δⁿ > k2(δⁿ − δ_pⁿ) > −k_adhδⁿ (as printed: the force term of this branch has δ with superscript p, while all three conditions use δ_pⁿ); f0 − k_adhδⁿ if −k_adhδⁿ ≥ k2(δⁿ − δ_pⁿ).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    48.0,
+    561.5,
+    112.5
+   ],
+   "w": 2952,
+   "h": 354,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.981,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 탄소성 점착 접촉의 세 가지 (하중 · 제하 · 점착 분리). k1 · k2 · k_adh · n 의 값은 원문에 없다 (λp 0.96 만 표 1). 점착 가지의 지수도 n 으로 인쇄 (Morrissey 원전은 별도 지수 — morrissey2013 카드)."
+  },
+  {
+   "key": "eA7",
+   "kind": "equation",
+   "label": "Eq. (A.7)",
+   "page": 17,
+   "file": "eq_A07_contact_plasticity_ratio.png",
+   "caption": "Eq. (A.7), p.17: contact plasticity ratio — λp = (1 − k1/k2) = δp/δmax.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    180.4,
+    561.5,
+    208.0
+   ],
+   "w": 2954,
+   "h": 173,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "λp = 0.96 (표 1 · [27]) → k2 = k1/(1 − λp) = 25 k1 [카드 산술]."
+  },
+  {
+   "key": "eA8",
+   "kind": "equation",
+   "label": "Eq. (A.8)",
+   "page": 17,
+   "file": "eq_A08_maximum_attachment_force_fmin.png",
+   "caption": "Eq. (A.8), p.17: maximum attachment force — f_min = π γ ϕ r (r = contact radius, γ = surface energy; ϕ is not defined in the text).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    233.5,
+    561.5,
+    248.7
+   ],
+   "w": 2959,
+   "h": 110,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.991,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "ϕ 정의 없음 [미확인]."
+  },
+  {
+   "key": "eA9",
+   "kind": "equation",
+   "label": "Eq. (A.9)",
+   "page": 17,
+   "file": "eq_A09_tangential_force.png",
+   "caption": "Eq. (A.9), p.17: contact tangential force — F_t = F_ts + F_td (tangential elastic + tangential damping).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    274.8,
+    561.5,
+    289.6
+   ],
+   "w": 2952,
+   "h": 107,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "접선 강성 · 감쇠 값 없음."
+  },
+  {
+   "key": "eA10",
+   "kind": "equation",
+   "label": "Eq. (A.10)",
+   "page": 17,
+   "file": "eq_A10_rolling_friction_torque.png",
+   "caption": "Eq. (A.10), p.17: rolling-friction torque — τ_i = −μ_r |F_hys| R_i ω_i (μ_r rolling friction coefficient, R_i contact-to-centre distance, ω_i unit angular velocity vector).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    304.7,
+    561.5,
+    325.0
+   ],
+   "w": 2952,
+   "h": 111,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.987,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "구름 마찰 (표 1 μ_r = 0.01 · 입자–입자만)."
+  },
+  {
+   "key": "eA11",
+   "kind": "equation",
+   "label": "Eq. (A.11)",
+   "page": 17,
+   "file": "eq_A11_coulomb_limit_with_adhesion.png",
+   "caption": "Eq. (A.11), p.17: critical sliding friction — F_ct ≤ μ |F_hys + k_adh δⁿ − f0| (Coulomb criterion with an adhesion term).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    376.6,
+    561.5,
+    393.4
+   ],
+   "w": 2952,
+   "h": 114,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from the stated clip (equation lines + equation number, from the text-layer line boxes), ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "he2026 식 (7) 과 같은 꼴."
+  },
+  {
+   "key": "eA",
+   "kind": "equation",
+   "label": "Appendix A (A.1–A.11)",
+   "page": 16,
+   "file": "eq_A_block_eepa_appendix_with_text.png",
+   "caption": "Appendix A, pp.16–17: 'Description of DEM' — EEPA contact model with its text: equivalent radius / mass / moduli (A.1–A.4), normal force (A.5), three-branch hysteretic force (A.6), contact plasticity ratio (A.7), maximum attachment force (A.8), tangential force (A.9), rolling-friction torque (A.10), Coulomb limit with adhesion (A.11).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    429.5,
+    561.5,
+    745.5
+   ],
+   "w": 2222,
+   "h": 2726,
+   "dpi": 300,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.928,
+   "parts": [
+    {
+     "page": 16,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      429.5,
+      561.5,
+      745.5
+     ]
+    },
+    {
+     "page": 17,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      47.0,
+      561.5,
+      393.5
+     ]
+    }
+   ],
+   "manual_crop": "appendix block cut by hand — vector page rendered at 300 dpi, two column-wide parts (p.16 from the 'Appendix A' heading to the page foot, p.17 from the top to Eq. A.11) stacked with a 3.4 pt gap, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "부록 A 전체 (식 + 문장). 계수 값은 없다 — 표 1 의 λp · γ · f0 · μ · μr · COR 만."
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract-strong-chains-migrate-30pc",
+   "page": 1,
+   "file": "txt_p1_abstract_strong_chains_migrate_above_30pc.png",
+   "caption": "p.1 abstract: coupled DEM–FEM of particle–collector interaction; 'force chain synergies within the coating are manifested by increased density, force transfer path formation, and continued conduction of the strong force chain'; 'strong force chains dominate stress transfer and migrate to the collector side when the calendering rate exceeds 30 %, leading to collector damage'; optimal particle size strategy.",
+   "rotated_deg": 0,
+   "bbox": [
+    200.0,
+    288.2,
+    561.5,
+    395.5
+   ],
+   "w": 2041,
+   "h": 637,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "고른 의도 '진짜 force-chain 정량' 의 원문 주장 문장."
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-dem-limitation-dem-fem-song29",
+   "page": 2,
+   "file": "txt_p2_dem_limitation_and_song29_bidirectional.png",
+   "caption": "p.2: 'However, DEM has limitations in describing the macroscopic mechanical behavior of materials (e.g., stress distribution, continuum deformation of materials). To address this, the coupled method of DEM and finite element method (FEM) has gradually become an effective tool …' + 'Song et al. [29] developed a DEM-FEM bidirectional coupled model to simulate particle embedding in the current collector … introduced the concept of force chains … but failed to investigate the dynamic evolution of force chains or their role in initiating and propagating microscopic damage.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    616.2,
+    292.5,
+    733.8
+   ],
+   "w": 1464,
+   "h": 1277,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "질문 k (DEM 한계 문장) · h (DEM→FEM 선례 · Song 2023 = 양방향 결합 · 정본 카드 없음).",
+   "parts": [
+    {
+     "page": 2,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      616.2,
+      292.5,
+      733.8
+     ]
+    },
+    {
+     "page": 2,
+     "pdf": "main",
+     "bbox": [
+      305.0,
+      155.9,
+      561.5,
+      263.1
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-materials-nmc532-90-5-5-roll-press",
+   "page": 3,
+   "file": "txt_p3_materials_nmc532_psd_ratio_al17_roll_press.png",
+   "caption": "p.3 §2.1: LiNi0.5Mn0.3Co0.2O2 (NMC, ρ = 2.42 g/cm³), carbon black (CB, ρ = 1.6 g/cm³), PVDF (ρ = 1.76 g/cm³); AM D10/D50/D90 = 3.5/7.2/13.8 μm, CB D50 = 2.5 μm [80]; 90:5:5 (NMC:CB:PVDF); NMP slurry 15.8–491 Pa·s; 17-μm aluminium foil; drying 85 °C 6 h; coating ≈100 μm; roller press MSK-2300A, roller diameter 200 mm, length 330 mm, room temperature, 1 m/min; gap ±0.6 μm (knob), feeler gauge ±1.5 μm; micrometer 0.1 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    109.0,
+    292.5,
+    446.3
+   ],
+   "w": 1461,
+   "h": 1912,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "재료 · 조성 · 압연 조건의 원문. 밀도 2.42 · 1.6 g/cm³ 는 표 1 (4750 · 2250 kg/m³) 과 다르다 (분말 · 겉보기 값으로 보임 [카드 추론])."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-three-particle-size-groups",
+   "page": 3,
+   "file": "txt_p3_three_particle_size_groups_7_9_13um.png",
+   "caption": "p.3: three electrode groups, identical formulation and calendering, only coating particle size varied — 7 μm (D10 3.6, D50 6.9, D90 11.5 μm), 9 μm (7.0, 9.2, 12.0 μm), 13 μm (9.9, 12.9, 16.7 μm), from the D50 of commercially available materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    93.1,
+    561.5,
+    179.4
+   ],
+   "w": 1460,
+   "h": 517,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "입경 효과 실험 (그림 10) 의 세 묶음."
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-eepa-large-deformation-claim",
+   "page": 4,
+   "file": "txt_p4_eepa_large_deformation_claim.png",
+   "caption": "p.4 §3.1.1: 'the Edinburgh Elasto-Plastic Adhesive contact model (EEPA) is used to reproduce the contact between the particles and the mechanical behaviors when undergoing large deformation [27,84,85]. By accurately modeling the elastic-plastic-adhesive behavior of particles and accounting for load path dependence, this model is capable of predicting the effects of defects on the collector surface …'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    145.5,
+    292.5,
+    263.1
+   ],
+   "w": 1460,
+   "h": 690,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "질문 e · k — 큰 변형을 다룬다는 주장 (유효 범위 · 겹침 상한 수치 없음)."
+  },
+  {
+   "key": "x4r",
+   "kind": "text",
+   "label": "p4-platen-approximation-rve-periodic",
+   "page": 4,
+   "file": "txt_p4_platen_approximation_theta_rve_periodic.png",
+   "caption": "p.4 §3.1.2: Schreiner [82] — roller rotation causes vortex-like rearrangement, 'However, this study focuses on the instantaneous normal force … and thus uses a platen compression approximation'; 'the maximum value of θ always remains less than 1° [75]'; positions A/B/C; v_Plate (Eq. 2); 'cubic representative volume element (RVE) with dimensions of 100 × 100 × 100 μm³'; steel plate = roller surface, aluminium foil = collector; Altair EDEM 2021, ANSYS 2022; particles generated from measured size distributions; RVE height 100 μm; 'periodic boundary conditions were applied in the (x- and y-directions)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    51.3,
+    561.5,
+    462.1
+   ],
+   "w": 1464,
+   "h": 2320,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 평판 근사 · RVE · 옆 주기 경계 · 코드 판. 판 속도 · 입자 수 · 시간 간격은 없다."
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-pvdf-implicit-fem-rve-c3d8r-static",
+   "page": 5,
+   "file": "txt_p5_pvdf_implicit_fem_rve_c3d8r_static.png",
+   "caption": "p.5: 'the EEPA model represents the deformation and elastic recovery of particles during the coating's loading and unloading processes through the plastic contact ratio (λp)'; PVDF 'is not explicitly modeled as individual particles … indirectly represented by adjusting the surface energy parameter (γ) and the adhesion force (f0) [27]'; FEM RVE of the collector 100 × 100 × 17 μm³, 'meshed with C3D8R solid elements, and aluminum was assigned as the material'; surface loads via the DEM–FEM interface; bottom surface fixed; 'A static analysis was performed'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    522.2,
+    292.5,
+    702.6
+   ],
+   "w": 1464,
+   "h": 1039,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 바인더 = 접촉 매개변수로 흡수 · 집전체 FEM = 정적 해석 (Al 구성식 · 항복 응력 미기재)."
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p5-p6-dem-limit-coupling-one-way-axdt",
+   "page": 5,
+   "file": "txt_p5_p6_dem_limit_coupling_axdt_3um_one_way.png",
+   "caption": "pp.5–6 §3.2: 'For porous electrodes, the DEM has limitations in obtaining the stress distribution of the current collector. Relying solely on the FEM faces challenges …'; the stl mesh defines the rigid collector geometry in DEM; the EDEM–ANSYS Workbench interface transfers contact forces (normal and tangential) and coordinates from DEM to the FEM mesh nodes (axdt file); 'A uniform interfacial mesh of 3 μm ensures one-to-one mapping between DEM contact points and FEM nodes'; 'Separate DEM simulations are conducted for each pressure level'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    731.9,
+    292.5,
+    744.9
+   ],
+   "w": 1464,
+   "h": 1800,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.834,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 질문 h — 한 방향 (DEM → FEM) · 압력 단계마다 따로 · 3 µm 일대일 · DEM 의 집전체 = 단단한 stl.",
+   "parts": [
+    {
+     "page": 5,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      731.9,
+      292.5,
+      744.9
+     ]
+    },
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      51.3,
+      292.5,
+      357.3
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-compression-rate-line-loads-validation",
+   "page": 6,
+   "file": "txt_p6_compression_rate_line_loads_validation_3p66pc.png",
+   "caption": "p.6 §3.3: compression rate ε = (H0 − Hc)/H0 (Eq. 3); four compression rates 10, 20, 30, 40 % with line loads 14, 110, 268 and 530 N/mm; SEM (Fig. 5b) vs DEM (Fig. 5a); loading paths 100 → 60 μm; 'The calendering pressure was calculated from the total force applied to the electrode divided by the electrode's cross-sectional area'; 'maximum deviation of 3.66 % observed in the low-pressure region (0–100 MPa)'; 'When the pressure reaches 200 MPa, the deviation decreases to 0.073 %'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    382.3,
+    292.5,
+    447.6
+   ],
+   "w": 1463,
+   "h": 2397,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "선하중 4 값 · 압력 환산 문장 · 편차 3.66 % / 0.073 % (편차의 정의 · 기준점 없음).",
+   "parts": [
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      382.3,
+      292.5,
+      447.6
+     ]
+    },
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      305.0,
+      51.3,
+      561.5,
+      412.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-porosity-method-dem-spherical-limit",
+   "page": 7,
+   "file": "txt_p7_porosity_method_spherical_morphology_limit.png",
+   "caption": "p.7: porosity = 1 − (solid volume from mass fractions and true densities)/(geometric volume from measured surface density and thickness) [79]; 'the simulated values are slightly higher than those of the experimental data … the simplified particle interactions and spherical morphology in the DEM model yield fewer compact contacts and simulated volume loss'; local porosity variations in the experiment.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    516.7,
+    292.5,
+    697.1
+   ],
+   "w": 1460,
+   "h": 1035,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.838,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "질문 k — 구형 · 단순 접촉의 한계 문장 · 기공률 연산자 (실험 쪽만 정의 · DEM 쪽 연산자 미기재)."
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-contact-pairs-23940-41816",
+   "page": 9,
+   "file": "txt_p9_contact_pairs_23940_41816_765pc.png",
+   "caption": "p.9 §4.1.1: 'As the compression rates increased from 10 % to 40 %, the number of contact points exhibited a nearly linear increase from 23,940 to 41,816. This increase led to a 76.5 % rise in the density of the contact force network'; 'the increase in the number of force chains does not necessarily accompany particle fracture [97,98]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    103.6,
+    292.5,
+    231.7
+   ],
+   "w": 1461,
+   "h": 749,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "41,816/23,940 = 1.747 (+74.7 %) [카드 산술] ↔ 인쇄 +76.5 %."
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9-fabric-deviator-fzz",
+   "page": 9,
+   "file": "txt_p9_fabric_deviator_fzz_0p048_to_minus0p03.png",
+   "caption": "p.9 §4.1.2: fabric tensor F_ij ('a two-dimensional vector') = (1/3)δ_ij + F′_ij [99]; 'as the compression rate increases from 10 % to 40 %, the eigenvalue F′zz decreases from 0.048 to −0.03, suggesting that the dominant orientation of the force chains gradually shifts toward the negative Z-axis. This implies that particle contacts progressively align along the vertical loading direction'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    459.3,
+    292.5,
+    654.0
+   ],
+   "w": 1462,
+   "h": 1110,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.873,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ F′zz 감소 (= 수직 방향 접촉 비율 감소) 를 '수직 정렬' 로 읽은 문장 — 수식의 뜻과 반대 [카드 관찰 · 판정 아님]."
+  },
+  {
+   "key": "x9c",
+   "kind": "text",
+   "label": "p9-strong-weak-threshold-fractions",
+   "page": 9,
+   "file": "txt_p9_strong_weak_threshold_fractions_2149_1106_973.png",
+   "caption": "p.9 §4.1.3: f = contact force / arithmetic mean; 'the global mean contact force (f = 1) is adopted as the threshold for classifying strong and weak force chains [100,101]'; P(f) = (1/N) Σ n_k with 'n_k … the number of particles within the k-th contact force interval and N … the total number of particles'; range narrows from 38.34 to 26.11; 'the contact force magnitude is increased to 1.25 mN'; strong chains 21.49 % (ε = 10 %) → 11.06 % (ε = 20 %) 'and tends to stabilize'; 'Eventually, 9.73 % of them align with the principal loading direction'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    118.5,
+    561.5,
+    451.3
+   ],
+   "w": 1468,
+   "h": 1886,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.863,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★★ 고른 의도의 핵심 문단 — 강한 사슬 = f > 1 인 접촉의 수 분율 (하중 몫 아님). 9.73 % 는 그림 6k 의 40 % 값과 같은 숫자."
+  },
+  {
+   "key": "x9d",
+   "kind": "text",
+   "label": "p9-coating-stress-35-to-1826",
+   "page": 9,
+   "file": "txt_p9_coating_stress_35_to_1826_mpa_422pc.png",
+   "caption": "p.9: stress tensor σ_ij in an REV (Eq. 9) [102,103]; 'as the compression rate increases uniformly from 10 % to 40 %, the stress σ rises sharply from 35 MPa to 182.6 MPa, resulting in a 422 % increase in the overall bearing capacity of the coating'; 'strong force chains are the key factor contributing to the overall stress enhancement of the system'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    448.8,
+    561.5,
+    638.3
+   ],
+   "w": 1462,
+   "h": 1091,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.874,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "σ 의 정의 (대각 성분과의 관계) 는 없다 — 그림 6m 에서 σ 가 σzz 의 7–11 배 [판독 · 카드 산술]."
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p10-p11-collector-stress-2565-buffer-displacement",
+   "page": 10,
+   "file": "txt_p10_p11_collector_stress_2565_weak_buffer_displacement.png",
+   "caption": "pp.10–11: collector surface stress — limited concentration at 20 %, strong chains run through the network at 30 %, at 40 % strong chains migrate toward the collector; 'reaching a maximum stress value of 256.5 MPa'; 'The weak force chain acts as a buffer zone'; particle displacement 'exhibits a distinct gradient layering, with a gradual attenuation from top to bottom. The particles close to the collector are restricted in movement, exhibiting almost no displacement …'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    616.1,
+    561.5,
+    744.2
+   ],
+   "w": 1461,
+   "h": 1848,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "최대 집전체 응력 256.5 MPa (40 %) · 바닥 근처 입자 거의 안 움직임 (질문 d · 조건 R1 의 정성 관찰).",
+   "parts": [
+    {
+     "page": 10,
+     "pdf": "main",
+     "bbox": [
+      305.0,
+      616.1,
+      561.5,
+      744.2
+     ]
+    },
+    {
+     "page": 11,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      51.3,
+      292.5,
+      252.6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x11b",
+   "kind": "text",
+   "label": "p11-pits-validation-sim-vs-exp",
+   "page": 11,
+   "file": "txt_p11_pits_validation_1p43_1p86_0p47_1p68.png",
+   "caption": "p.11 §4.3: 'In the initial compression stage (ε = 20%), the current collector surface remains smooth and intact, showing no visible deformation'; average embedding depth 1.43 μm (30 %, Fig. 8k) and 1.86 μm (40 %, Fig. 8l); maximum values used for validation (Fig. 8n–o); 'the simulated values at different compression rates exceed the experimental values, and the maximum deviations of the embedding depth and diameter are 0.47 μm and 1.68 μm'; collector roughness not modelled [104,105]; manual line-tracing bias (Hille [58]); 'more and deeper indentations are likely to form in the actual calendering process than predicted by the simulation'; DEM normal overlap analysis (Fig. 9).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    428.5,
+    292.5,
+    744.9
+   ],
+   "w": 1464,
+   "h": 2496,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.838,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 그림 8n–o 판독: 실험이 6 칸 중 5 칸에서 크다 → '계산이 실험보다 크다' 는 그림과 반대 · 같은 문단 끝 '실제가 더 깊다' 와는 맞음.",
+   "parts": [
+    {
+     "page": 11,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      428.5,
+      292.5,
+      744.9
+     ]
+    },
+    {
+     "page": 11,
+     "pdf": "main",
+     "bbox": [
+      305.0,
+      51.3,
+      561.5,
+      179.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x11c",
+   "kind": "text",
+   "label": "p11-pit-number-379-three-phases",
+   "page": 11,
+   "file": "txt_p11_pit_number_379_three_phases_1p83_6p37.png",
+   "caption": "p.11: three phases of pit quantity (Fig. 8m); 'During the moderate calendering (ε = 20%) … the number of craters increases rapidly to 379'; Mayr [57] (< 50 indentations uncalendered, up to 350 at 350 kN); 'As calendering progresses (ε = 20 ∼30%), the number of damage points shows no significant change'; above 30 % pit growth slows; 'At ε = 40%, the maximum pit depth and diameter reach 1.83 μm and 6.37 μm'; Song [29]: defects reduce tensile strength and fracture toughness of Al foil.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    176.8,
+    561.5,
+    535.1
+   ],
+   "w": 1463,
+   "h": 2028,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.838,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "그림 8m 판독 (20 % ≈443 · 30 % ≈546) 과 다름 · 1.83 / 6.37 µm = 그림 8n–o 의 계산 막대."
+  },
+  {
+   "key": "x13a",
+   "kind": "text",
+   "label": "p13-particle-size-655-343-170-245-optimum",
+   "page": 13,
+   "file": "txt_p13_particle_size_655_343_170_245_optimum_9p9um.png",
+   "caption": "p.13 §4.4: 'As the average particle diameter increases from 7 μm to 13 μm, the number of damage points decreases sharply from 655 to 343. However, the maximum stress … increasing from 170 MPa to 245 MPa'; 'the optimal particle diameter of 9.9 μm was determined from the intersection of the damage points and current collector strength curves in Fig. 10o'; at 40 % '417' points and '189 MPa'; 'each 1 % increase in compression rate raises the current collector stress by 5.63 MPa and 5.65 MPa' (7 and 9 μm); 13 μm / 40 % = 245 MPa, '1.45 times higher than that for 7 μm'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    471.2,
+    292.5,
+    703.9
+   ],
+   "w": 1464,
+   "h": 2148,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.836,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ '최적 9.9 µm' = 서로 다른 두 축 곡선의 교점 (축 범위가 바뀌면 교점도 바뀜 [카드 관찰]).",
+   "parts": [
+    {
+     "page": 13,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      471.2,
+      292.5,
+      703.9
+     ]
+    },
+    {
+     "page": 13,
+     "pdf": "main",
+     "bbox": [
+      305.0,
+      377.1,
+      561.5,
+      526.1
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x15a",
+   "kind": "text",
+   "label": "p15-psd-sigma-7-11um-115-139",
+   "page": 15,
+   "file": "txt_p15_psd_sigma_0p5_2_4_pits_212mpa_115_139.png",
+   "caption": "p.15 §4.5: σ = 0.5 and 2 — average pit diameters 7.35 and 7.86 μm, standard deviations 1.50 and 1.70 μm; σ = 4 — 8.5 μm, standard deviation 5 μm; maximum stress 212 MPa (Fig. 11i); with a 7 μm mean, σ 0.5 → 4 raises the maximum stress by about 115 MPa, 'lower than the increase of about 139 MPa observed for the 11 μm case'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    577.9,
+    292.5,
+    737.3
+   ],
+   "w": 1466,
+   "h": 1277,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "그림 11h 범례 (파랑 11 µm · 주황 7 µm) 와 증가량 짝이 반대 [판독].",
+   "parts": [
+    {
+     "page": 15,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      577.9,
+      292.5,
+      737.3
+     ]
+    },
+    {
+     "page": 15,
+     "pdf": "main",
+     "bbox": [
+      305.0,
+      577.9,
+      561.5,
+      643.2
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x16a",
+   "kind": "text",
+   "label": "p16-conclusions-limitations-platen",
+   "page": 16,
+   "file": "txt_p16_conclusions_765_422_2565_platen_limitation.png",
+   "caption": "p.16 Conclusions: 'increasing the compression rate from 10 % to 40 % leads to a 76.5 % increase in the density of the force chain network and improves the system's load-bearing capacity by 422 %'; strong chains migrate to the collector at 30 %, weak chains buffer; maximum 256.5 MPa; 'Since the platen-based DEM model cannot capture the full dynamics of calendering, future research will focus on the effects of roller rotation …'; 'the lack of a quantifiable threshold for contact damage penetration into the current collector necessitates further investigation through mechanical testing'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    166.4,
+    292.5,
+    357.3
+   ],
+   "w": 1464,
+   "h": 1616,
+   "dpi": 400,
+   "src": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut on the nearest all-white rows, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 저자 한계 문장 (질문 j · k) — 평판 근사 · 손상 문턱 없음.",
+   "parts": [
+    {
+     "page": 16,
+     "pdf": "main",
+     "bbox": [
+      36.0,
+      166.4,
+      292.5,
+      357.3
+     ]
+    },
+    {
+     "page": 16,
+     "pdf": "main",
+     "bbox": [
+      305.0,
+      72.2,
+      561.5,
+      168.9
+     ]
+    }
+   ]
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": [],
+ "note_manual": "2026-11-12 — published version (Journal of Energy Storage 138 (2025) 118688; 19 PDF pages, no SI; Appendix A = DEM contact model on pp.16–17). All plots in this PDF are embedded native rasters (300 dpi); no vector plots. Tool crops 12 (Figs. 1–11 + Table 1): all 12 re-cut — the 11 figures from their embedded native rasters (the tool crops were page-width bands with white side margins; several captions ran into body text), Table 1 re-rendered from the vector page at 400 dpi (the tool crop started at the page top and swallowed Fig. 3 and the left column). Missing labels 0. Hand crops 58 = panels 17 (2d · 3a 3b · 5c 5d · 6e–h 6i 6j–k 6l 6m · 8j–l 8m–o · 10m–n 10o 10p · 11g–h 11i; splits only on all-white rows/columns, three pairs kept together where a label sits beside the neighbouring axis title; masks listed in 'manual_crop') + equations 21 (Eqs. 1–9, A.1–A.11, Appendix A block) + evidence paragraphs 20. Total 70 crops, all opened with Read. Image panels without values (2a–c · 5a–b · 6a–d · 7a–l · 8a–i · 9a–d · 10a–l · 11a–f) are not cut separately — they stay inside the full-figure crops. Digitized (native rasters): Figs. 5c · 5d · 6i inset · 6j · 6m · 8j–l · 8m · 8n · 8o · 10m · 10n · 10o · 11g · 11h → digitized.csv.",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of) · t1 = Table 1 · e<N> = Eq. (N) · eA<N> = Eq. (A.N) · eA = Appendix A block (kind 'equation') · x<PDF page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1], stacked top→bottom) · page = PDF page = journal article page",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 163,
+  "method": "embedded native rasters (300 dpi; the PDF has no vector plots), numpy + Pillow only. Axes calibrated on the inward tick marks (least squares where several ticks were found; tick pixel positions are written in the 'note' column of every row). Markers = colour-mask connected components, centre = bbox or window centroid around the distance-transform core; bars = top edge (first dark row − 0.5 px) of each hue band; curves = column scans of the line colour. Touching bar pairs (Fig. 8n 30 %, Fig. 10m 9 μm) resolved band by band. Fig. 8j–l valleys = lowest dark pixel per column (tick columns and legend skipped), red dashed zero line used as a check (0.00 ± 0.02 μm). Card arithmetic made from these rows is marked [카드 산술] in the card."
+ }
+}

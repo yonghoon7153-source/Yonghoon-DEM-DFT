@@ -1,0 +1,1700 @@
+{
+ "slug": "benhadjali2026_oneway_chemomech_stress_stack_pressure_3d_assb_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+  "c4b1864d-42._Sup_A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Possible mechanical phenomena at the contact area between the AM and SE or CBD in ASSB composite positive electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    68.8,
+    540.8,
+    386.8
+   ],
+   "w": 2105,
+   "h": 1375,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.561,
+   "auto_bbox": [
+    0.0,
+    42.9,
+    595.3,
+    374.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: full page-width strip that took in the running-head rule and the vertical download watermark, caption cut off); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "개념도 — AM–SE · AM–CBD 접촉에서 생길 수 있는 기계 현상 넷 (전단 · 압축 응력 / 접촉 상실 · 박리 / 계면 저항 증가 / AM 부피 증가 · 기공 감소).  계산 결과가 아니다."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Our simulation workflow of ASSBs composite cathodes: from the wet manufacturing process (slurry to calendered electrode) followed by the half-cell mechano-electrochemistry assessment.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    270.6,
+    532.6,
+    520.9
+   ],
+   "w": 2071,
+   "h": 1093,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.871,
+   "auto_bbox": [
+    41.0,
+    189.0,
+    538.7,
+    500.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: the auto box started inside Table 1 (its last two rows) and cut the caption); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 사슬: 슬러리 → 건조 → 캘린더링 (거친 입자 동역학 · 구) → 메싱 → 전기화학 ↔ 역학.  그림 안 식 'ε = β × SOC' (β = 팽창 계수) 는 본문 식 (10) 의 (1/3)ΔcΩI 와 꼴이 다르다 · 응력 색 막대 −200 … 800 MPa."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Simulated ASSB half-cell boundary conditions; b) predefined volume expansion field applied on the AM phase (NMC811). Figure produced with data from Ref. [6].",
+   "rotated_deg": 0,
+   "bbox": [
+    47.4,
+    566.8,
+    548.0,
+    733.8
+   ],
+   "w": 2136,
+   "h": 746,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.82,
+   "auto_bbox": [
+    41.0,
+    559.7,
+    554.2,
+    713.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: caption cut off); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(a) 경계 조건 — 위 Li 면에 적층압 · 옆 '고정 벽' (녹색) · 집전체 바닥 고정 지지 · 분리막 · 집전체 강체.  (b) NMC811 ΔV/V₀ vs x(Li) 입력 (Koerver 2018 [6] 자료 · 26 점 판독 −7.05 % (x 0.146) → −0.19 % (x 0.907))."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Calculated electrochemical performance of the ASSB half-cell at different C-rates: a) C/5, b) C/10, and c) C/20 for different cycling conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    68.8,
+    542.9,
+    688.9
+   ],
+   "w": 1041,
+   "h": 2634,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.892,
+   "auto_bbox": [
+    0.0,
+    26.0,
+    595.3,
+    660.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: full page-width strip that took in the left-column body text, caption cut off; the auto caption swallowed the next paragraph); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "방전 곡선 셋 (C/5 · C/10 · C/20) × 세 조건 — 차이는 끝자락 확대창에서만 보인다 (C/20: 무팽창 187.2 · 9 MPa 187.4 · 68 MPa 187.5 mAh/g [판독])."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The spatial distribution of: a) Li concentration within NMC811; b) the displacement of different components within the composite cathode and within the global half-cell; and c) von Mises stress within the NMC811 phase for different C-rates and with an applied stack pressure of 9 MPa during discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    436.8,
+    539.1,
+    734.4
+   ],
+   "w": 2100,
+   "h": 1290,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.71,
+   "auto_bbox": [
+    41.0,
+    430.3,
+    545.4,
+    704.7
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: caption cut off); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "방전 끝 (9 MPa): (a) AM 안 Li 농도 · (b) 상별 · 반쪽 셀 z 변위 (그림 안 글자: 최대 0.428 · 0.707 · 1.11 µm = C/5 · C/10 · C/20) · (c) AM von Mises (색 막대 0–2 GPa · 넓게 포화)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) The evolution of the SOC for different C-rates; b) evolution of the separator displacement for different cycling rates; c) the evolution of the volume ratio for different phases in the cathode showing that the predominant contributor in the bulk deformation of the cathode is the AM; and d) evolution of the cathode expansion ratio for different C-rates. These results are under an applied stack pressure of 9 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.4,
+    67.8,
+    548.2,
+    432.8
+   ],
+   "w": 2137,
+   "h": 1571,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.94,
+   "auto_bbox": [
+    0.0,
+    42.9,
+    595.3,
+    402.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: full page-width strip with the running-head rule and watermark, caption cut off and truncated); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "9 MPa 시간 경과: (a) AM 'SOC' (리튬화 정도) vs DoD · (b) 분리막 z 변위 (y 눈금 글자 반올림 문제) · (c) C/10 상별 팽창 (AM 4.49 · SE 0.45 · CBD 0.21 % 인쇄) · (d) 양극 팽창률 끝 0.84 · 1.40 · 2.21 % [판독]."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) The impact of cycling stack pressure on the deformation of NMC half-cell and on the final thickness; b) the evolution of von Mises stress within the cathode for different C-rates and for different cycling conditions; and c) transition from tensile stresses to compressive stresses with increasing stack pressure within SE and CBD phases.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    68.8,
+    540.6,
+    563.9
+   ],
+   "w": 2106,
+   "h": 2113,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.878,
+   "auto_bbox": [
+    0.0,
+    42.9,
+    595.3,
+    534.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: full page-width strip with the running-head rule and watermark, caption cut off); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(a) 반쪽 셀 '처음 부피 대비' 팽창 — 9 MPa 0.78 · 1.61 · 2.53 % / 68 MPa −0.08 · 0.74 · 1.82 % (인쇄) · (b) AM 평균 von Mises vs DoD (DoD 0: 9 MPa ≈19 · 68 MPa ≈104 MPa [판독]) · (c) CBD (±5 MPa) · SE (±50 MPa) 압력장 (색 포화)."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a,b) Evolution of AM-SE and AM-CBD interfacial specific surface areas in function of SOC and for different cycling conditions; and c) this graph shows the geometrical changes that occur for AM-SE and AM-CBD interfacial areas at C/10 after applying stack pressure (denser and more compact with increasing the stack pressure).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.4,
+    67.8,
+    539.1,
+    497.6
+   ],
+   "w": 2099,
+   "h": 1841,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.811,
+   "auto_bbox": [
+    0.0,
+    42.9,
+    595.3,
+    467.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: full page-width strip with the running-head rule and watermark, caption cut off); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C/10 계면 비표면적 (m²/g · 세로축이 0.355 부터): AM–SE 무팽창 0.363 → 9 MPa 0.413 / 0.400 / 0.410 · 68 MPa 0.413 / 0.419 / 0.427 (DoD 20 / 40 / 60 %) [판독] · 산출법 미기재."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Cumulative pores volume fraction under different stress conditions at C/20: without volume change (black), with NMC811 volume expansion at 9 MPa (red), and at 68 MPa (blue).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    68.8,
+    289.0,
+    296.5
+   ],
+   "w": 1058,
+   "h": 999,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.894,
+   "auto_bbox": [
+    0.0,
+    42.9,
+    595.3,
+    267.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: full page-width strip that took in the right-column body text, caption cut off); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C/20 누적 기공 부피 분율 (정규화 · 총 기공 부피 없음) — 9 · 68 MPa 모두 작은 기공 몫이 준다 (≤ 1 µm: 0.773 → 0.644 · 0.652 [판독])."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 12,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Geometric tortuosity of SE phase at the end of C/10 discharge at different cycling conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.4,
+    317.2,
+    286.6,
+    526.8
+   ],
+   "w": 1047,
+   "h": 923,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.966,
+   "auto_bbox": [
+    41.0,
+    310.2,
+    296.4,
+    505.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: caption cut off; the auto caption swallowed the next paragraph); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SE 기하 굴곡 τ (C/10 끝): 7.736 (무팽창) · 8.182 (9 MPa) · 7.765 (68 MPa) — 본문 인쇄값 · 식 미기재."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The calculated evolution of the deformed geometry and the corresponding deformed mesh after volume expansion of NMC811 as an active material (AM) under a stack pressure of 9 MPa for the ASSB half-cell (CBD: Carbon Binder Domain, and SE: Solid Electrolyte).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    41.1,
+    566.0,
+    418.4
+   ],
+   "w": 2258,
+   "h": 1622,
+   "dpi": 300,
+   "src": "c4b1864d-42._Sup_A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.652,
+   "auto_bbox": [
+    30.0,
+    30.0,
+    571.8,
+    371.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: caption cut at the bottom margin); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "초기 / 변형 미세구조 × 초기 / 변형 메시 (사면체) — 9 MPa · 변형장 따라 메시를 다시 만든다 (본문 'dynamic remeshing')."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The pressure distribution within the AM phase for C/5 and C/20 C-rates. At C/5, the stress is very localized at the outer surface of AM particles, where the stress is more distributed at C/20 C-rate.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    46.9,
+    559.3,
+    469.5
+   ],
+   "w": 2230,
+   "h": 1811,
+   "dpi": 300,
+   "src": "c4b1864d-42._Sup_A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.758,
+   "auto_bbox": [
+    30.0,
+    30.0,
+    568.3,
+    438.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: caption cut at the bottom margin); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM 압력장 (색 막대 ±300 MPa · 포화) — C/5 는 입자 겉에 몰림 · C/20 은 퍼짐.  본문의 '최대 3 GPa' 는 이 색 막대로는 읽을 수 없다."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Comparative overview of some state of the art physics-based modeling studies on battery electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.9,
+    66.3,
+    548.5,
+    243.9
+   ],
+   "w": 2140,
+   "h": 790,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.867,
+   "auto_bbox": [
+    42.0,
+    11.9,
+    589.3,
+    771.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: the auto box ran from the page top to the page bottom (header, Fig. 2 and body text included)); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "선행 연구 비교표 — 이 연구 = FEM · 3D · 소성 'No' · 제조 모의 미세구조 · CBD 명시 · 불규칙 입자.  [38] = DEM (Si 계 ASSB · 3D · 소성 Yes)."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The electrochemical parameters adopted in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    61.2,
+    559.5,
+    756.3
+   ],
+   "w": 2234,
+   "h": 3391,
+   "dpi": 300,
+   "src": "c4b1864d-42._Sup_A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.952,
+   "auto_bbox": [
+    31.0,
+    54.0,
+    564.4,
+    766.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: two-page table — the auto crop held only the SI p.4 part (rows up to 'Cathode current collector thickness'); the SI p.5 continuation (δe,CC, RCC_AM, RCC_CBD) was missing); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator) · two parts stacked top→bottom (SI p.4 + SI p.5) with a 6 pt gap",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      36.1,
+      61.2,
+      559.5,
+      756.3
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      35.4,
+      40.5,
+      559.5,
+      141.3
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "전기화학 입력: Li 금속 (α 0.5 · i0 '3 A cm⁻²') · SE 분리막 20 µm · σ_ion 0.7 ('mS cm⁻²' 인쇄) · 양극 두께 36.8 µm · NMC811 200 mAh/g · c_max 49 mol/L · ρ 4.77 g/cm³ · σ_e 100 S/m · CBD 200 S/m · Al 10 µm · 300 S/m · R_CC 2×10⁻³ Ω m² — i0 · OCV · D 는 'See reference'."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The mechanical parameters adopted in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.4,
+    38.5,
+    559.5,
+    494.3
+   ],
+   "w": 2234,
+   "h": 1949,
+   "dpi": 300,
+   "src": "c4b1864d-42._Sup_A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "blank": 0.952,
+   "auto_bbox": [
+    31.0,
+    31.1,
+    564.4,
+    498.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: uneven margins (re-cut for a uniform margin)); re-cut by hand from the page rendered at 300 dpi (= the embedded raster's native resolution, no resampling): region = figure raster ∪ printed caption, stopping short of the Wiley download watermark (x ≈ 579 pt), the running-head rule (y ≈ 47–49 pt) and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption kept in the image (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 역학 입력: SE E 18.5 GPa · ν 0.3 · ρ 1.87 (출처 [S4] McGrogan · [S5] Sakuda = Li₂S–P₂S₅ 유리) · NMC811 E 175 GPa · ν 0.3 · ρ 5.03 ([S6] DFT) · CBD 0.35 GPa · 0.4 · 0.92 · Al 70 GPa · 0.35 · 2.7."
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 5,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — simulated ASSB half-cell and its boundary conditions (Li metal on top, stack pressure, fixed walls, fixed support under the current collector; phase colours AM / SE / CBD / CC).",
+   "rotated_deg": 0,
+   "bbox": [
+    56.7,
+    565.7,
+    366.3,
+    707.8
+   ],
+   "w": 1287,
+   "h": 635,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded; the '(b)' label of the neighbouring panel (raster x ≥ 1195 px, y ≤ 50 px) was whitened (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "경계 조건 그림 — 보고서 붙임용.",
+   "panel_of": "f3"
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 5,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — predefined volume change of NMC811, ΔV/V0 (%) vs x(Li) (data from Ref. [6]).",
+   "rotated_deg": 0,
+   "bbox": [
+    343.5,
+    565.7,
+    538.6,
+    707.8
+   ],
+   "w": 845,
+   "h": 620,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded; panel-(a) legend text left of raster x 1300 px below y 55 px was whitened so that the '(b)' label could be kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 입력 ΔV 곡선 — digitized.csv 26 점.",
+   "panel_of": "f3"
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 6,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — C/5 discharge curves (no volume change / volume change 9 MPa / 68 MPa) with end-of-discharge inset.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.6,
+    68.7,
+    543.0,
+    262.8
+   ],
+   "w": 1014,
+   "h": 859,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C/5 끝: 9 MPa 112.8 · 나머지 ≈113.0 mAh/g [판독].",
+   "panel_of": "f4"
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 6,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — C/10 discharge curves with end-of-discharge inset.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.7,
+    264.9,
+    542.8,
+    459.1
+   ],
+   "w": 1017,
+   "h": 859,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C/10: 156.0 mAh/g 에서 9 MPa 2.701 · 무팽창 2.713 · 68 MPa 2.716 V [판독].",
+   "panel_of": "f4"
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 6,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — C/20 discharge curves with end-of-discharge inset.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.2,
+    460.1,
+    542.3,
+    654.0
+   ],
+   "w": 1017,
+   "h": 858,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C/20 끝 (2.70 V): 187.18 · 187.40 · 187.53 mAh/g [판독].",
+   "panel_of": "f4"
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 8,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — evolution of the AM 'SOC' with depth of discharge for C/5, C/10, C/20 (9 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    96.6,
+    67.7,
+    285.7,
+    229.7
+   ],
+   "w": 838,
+   "h": 725,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SOC 출발 ≈0.22 → 끝 ≈0.975 (DoD 57.8 · 78.6 · 94.5 %) [판독].",
+   "panel_of": "f6"
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 8,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6(b) — out-of-plane displacement of the separator (= half-cell thickness change) vs depth of discharge (9 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.9,
+    67.7,
+    497.1,
+    229.7
+   ],
+   "w": 830,
+   "h": 725,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ y 눈금 글자 0.7 · 0.9 · 1.1 = 0.65 · 0.867 · 1.083 의 반올림 (같은 간격) — 끝값 ±0.05 µm 모호.",
+   "panel_of": "f6"
+  },
+  {
+   "key": "f6c",
+   "kind": "figure",
+   "label": "6c",
+   "page": 8,
+   "file": "fig_6c.png",
+   "caption": "Fig. 6(c) — expansion ratio of the AM, SE and CBD phases at C/10 (9 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    96.6,
+    233.6,
+    289.3,
+    397.0
+   ],
+   "w": 853,
+   "h": 731,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM 0.35 % (DoD 0) → 4.49 % · SE 0.45 · CBD 0.21 %.",
+   "panel_of": "f6"
+  },
+  {
+   "key": "f6d",
+   "kind": "figure",
+   "label": "6d",
+   "page": 8,
+   "file": "fig_6d.png",
+   "caption": "Fig. 6(d) — cathode expansion ratio vs depth of discharge (9 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.9,
+    233.6,
+    498.8,
+    397.0
+   ],
+   "w": 837,
+   "h": 731,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "끝 0.84 · 1.40 · 2.21 % [판독] ↔ 그림 7a 0.78 · 1.61 · 2.53 % (인쇄).",
+   "panel_of": "f6"
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 9,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — average von Mises stress in the NMC811 AM vs depth of discharge, 9 MPa (solid) and 68 MPa (dashed).",
+   "rotated_deg": 0,
+   "bbox": [
+    97.1,
+    345.1,
+    319.1,
+    526.8
+   ],
+   "w": 975,
+   "h": 807,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "DoD 0: ≈19 · ≈104 MPa · 끝: 318 / 338 (C/5) · 356 / 358 (C/10) · 452 / 463 (C/20) MPa [판독].",
+   "panel_of": "f7"
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 11,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8(a) — AM–SE interfacial specific surface area at C/10 (no volume change / 9 MPa / 68 MPa) at 20, 40, 60 % DoD.",
+   "rotated_deg": 0,
+   "bbox": [
+    102.2,
+    67.7,
+    276.0,
+    229.5
+   ],
+   "w": 774,
+   "h": 724,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "세로축 0.355 부터 (막대 높이 차가 커 보인다).",
+   "panel_of": "f8"
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 11,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8(b) — AM–CBD interfacial specific surface area at C/10.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.2,
+    67.7,
+    493.4,
+    229.9
+   ],
+   "w": 801,
+   "h": 726,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "panel crop cut by hand from the page rendered at 300 dpi (= native raster resolution): panel box placed in white gutters measured on the raster row/column ink profiles → ink bounding box → white canvas with a uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "무팽창 0.412 · 9 MPa 0.426 / 0.418 / 0.424 · 68 MPa 0.440 / 0.439 / 0.445 [판독].",
+   "panel_of": "f8"
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_li_conservation_in_am.png",
+   "caption": "Eq. (1), PDF p.4 right column: ∂c/∂t + ∇·J = 0 — Li conservation in the AM (c = Li molar concentration, J = Li flux).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    121.0,
+    547.9,
+    140.7
+   ],
+   "w": 1416,
+   "h": 175,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM 안 Li 보존."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 4,
+   "file": "eq_02_flux_chemomechanical_potential.png",
+   "caption": "Eq. (2), PDF p.4: J = −(D/RT) c ∇μ — flux driven by the chemo-mechanical potential μ.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.7,
+    195.1,
+    547.9,
+    213.5
+   ],
+   "w": 1417,
+   "h": 168,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "화학-기계 퍼텐셜 구배가 흐름을 만든다."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 4,
+   "file": "eq_03_stress_dependent_chemical_potential.png",
+   "caption": "Eq. (3), PDF p.4: μ = μ0 + RT ln X − Ωσh — stress-dependent chemical potential (σh = hydrostatic stress, Ω = partial molar volume, X = molar fraction); the −Ωσh term is the full stress–concentration coupling that this work drops.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    280.7,
+    547.9,
+    289.3
+   ],
+   "w": 1418,
+   "h": 114,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "완전결합이면 들어갈 항 — 이 논문은 뺀다."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_potential_without_stress_term.png",
+   "caption": "Eq. (4), PDF p.4: μ = μ0 + RT ln X — one-way coupling: no stress term in the chemical potential.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    393.1,
+    547.9,
+    401.6
+   ],
+   "w": 1418,
+   "h": 113,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 한 방향 결합의 정의 (응력 → 농도 되먹임 없음)."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_fick_diffusion_oneway.png",
+   "caption": "Eq. (5), PDF p.4: ∂c/∂t − D∇²c = 0 — plain Fick diffusion in the AM (text: 'Combining Equations (2) and (3)'; the reduction actually uses (1), (2) and (4)).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    446.6,
+    547.9,
+    466.2
+   ],
+   "w": 1416,
+   "h": 175,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM 확산 = 순수 Fick."
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_mechanical_equilibrium.png",
+   "caption": "Eq. (6), PDF p.4: ∇·σ + Fb = 0 — quasi-static mechanical equilibrium (Fb = 0 in this work).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.6,
+    620.5,
+    547.9,
+    628.8
+   ],
+   "w": 1412,
+   "h": 112,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "관성 없는 정적 평형 · 체적력 0."
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 5,
+   "file": "eq_07_hooke_law.png",
+   "caption": "Eq. (7), PDF p.5 left column: σ = C : εe — Hooke's law ('Hook's law' in the text) for AM, SE and CBD (all linear elastic).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.2,
+    206.0,
+    289.9,
+    214.2
+   ],
+   "w": 1414,
+   "h": 112,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "세 상 모두 선형 탄성 (항복 없음)."
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 5,
+   "file": "eq_08_total_strain_small_strain.png",
+   "caption": "Eq. (8), PDF p.5: εt = εe + εint = ½((∇u)ᵀ + ∇u) — small-strain kinematics with additive intercalation strain (the sentence after it mislabels εe as the total strain).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.2,
+    269.0,
+    289.9,
+    287.1
+   ],
+   "w": 1414,
+   "h": 167,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "작은 변형 가정 · 고유변형 덧셈 분해."
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 5,
+   "file": "eq_09_elastic_strain_split.png",
+   "caption": "Eq. (9), PDF p.5: εe = εt − εint.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.2,
+    354.3,
+    289.9,
+    362.4
+   ],
+   "w": 1414,
+   "h": 111,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "탄성 변형 = 전체 − 고유."
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 5,
+   "file": "eq_10_intercalation_strain_as_printed.png",
+   "caption": "Eq. (10) as printed, PDF p.5: εe = (1/3) Δc Ω I — the left-hand side should read εint (intercalation strain, analogous to thermal strain); Δc = concentration change from the initial state.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.2,
+    419.1,
+    289.9,
+    437.5
+   ],
+   "w": 1414,
+   "h": 168,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 리튬 고유변형 (열 변형과 같은 꼴) · 인쇄 좌변 오기."
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 5,
+   "file": "eq_11_volumetric_strain_lambda.png",
+   "caption": "Eq. (11), PDF p.5 right column: λ = (ΔV/V0 + 1)^(1/3) − 1 = ((V_{x=x} − V_{x=xmax})/V_{x=xmax} + 1)^(1/3) − 1 — linear strain from the unit-cell volume change (V_{x=xmax} = 'initial (with minimum lithium content)' volume, as printed).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.7,
+    65.3,
+    547.9,
+    88.1
+   ],
+   "w": 1417,
+   "h": 193,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "부피 변화 → 선형 변형 (세제곱근)."
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 5,
+   "file": "eq_12_partial_molar_volume.png",
+   "caption": "Eq. (12), PDF p.5: Ω = 3λ / ((x − xmax) C_total) — concentration-dependent partial molar volume.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.2,
+    157.7,
+    547.9,
+    178.6
+   ],
+   "w": 1414,
+   "h": 182,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "부분 몰 부피 (농도 의존)."
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 5,
+   "file": "eq_13_initial_condition_cmin.png",
+   "caption": "Eq. (13), PDF p.5: c = c_min at t = 0 — homogeneous minimum Li concentration in the NMC particles at the start.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.2,
+    280.0,
+    547.9,
+    287.9
+   ],
+   "w": 1414,
+   "h": 110,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "초기 조건 (값 미인쇄)."
+  },
+  {
+   "key": "e1_13",
+   "kind": "equation",
+   "label": "eq1..13",
+   "page": 4,
+   "file": "eq_01_13_governing_set.png",
+   "caption": "Eqs. (1)–(13) stacked top to bottom (PDF p.4 right column Eqs. 1–6, p.5 left column Eqs. 7–10, p.5 right column Eqs. 11–13) for pasting.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1418,
+   "h": 1504,
+   "dpi": 400,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring text lines (text-layer line boxes) → ink trim → uniform 6 pt white margin; equation number kept · thirteen bands stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "보고서용 지배식 묶음.",
+   "parts": [
+    {
+     "page": 4,
+     "eq": "1-6"
+    },
+    {
+     "page": 5,
+     "eq": "7-13"
+    }
+   ]
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-prior-models-oneway-definition",
+   "page": 2,
+   "file": "txt_p2_prior_models_oneway_definition.png",
+   "caption": "PDF p.2 left column + right column top (§1): prior models — microstructure-resolved but no mechanics [14–16]; linear elasticity [17–25] 'may not be valid for materials that experience volume changes exceeding several hundred percent'; simplified 1D [32] / 2D [33,34] / single-particle [35–37] geometries 'overlooking crucial local heterogeneities'; 'first attempt' claim; DEM for Si [38], 2D phase field [39], DEM by the group [40]; this study = 3D FEM, linear continuum mechanics, one-way coupling 'where electrochemistry drives mechanical deformations, while the mechanical field does not influence the electrochemical behavior'.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    449.0,
+    290.5,
+    734.8
+   ],
+   "w": 1064,
+   "h": 1707,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "선행 연구 한계 · 한 방향 결합의 정의 (§0-1 · §4-5).",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      47.0,
+      449.0,
+      290.5,
+      734.8
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      304.9,
+      400.7,
+      548.4,
+      506.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-p3-cgmd-microstructure-source",
+   "page": 2,
+   "file": "txt_p2_p3_cgmd_microstructure_source.png",
+   "caption": "PDF p.2 right column (§2) → p.3 left column: microstructure previously generated [41] and analysed electrochemically [16]; CGMD in LAMMPS [43]; slurry → drying → calendering; AM : Li6PS5Cl : CBD = 69 : 27.55 : 3.45 wt%, AM particle size 10 μm, ≈12 % porosity, carbon and binder not distinguished; force fields 'calibrated to match experimental observations'; calendering = uniform downward displacement of the top boundary, bottom fixed.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    557.6,
+    548.4,
+    734.8
+   ],
+   "w": 1067,
+   "h": 1607,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 제조 모의 구조의 출처 · 조성 · 기공 (§3-1).",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      304.9,
+      557.6,
+      548.4,
+      734.8
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      47.0,
+      541.8,
+      290.5,
+      733.8
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-extension-nmc811-20pct",
+   "page": 3,
+   "file": "txt_p3_extension_nmc811_20pct.png",
+   "caption": "PDF p.3 right column: the earlier electrochemical model [16] did not include 'the lithiation-induced volume expansion of NMC811 particles'; the present work adds it during a single discharge; 'we focus on a microstructure with 20% calendering degree'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    542.1,
+    548.3,
+    733.8
+   ],
+   "w": 1062,
+   "h": 846,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "20 % 캘린더링 구조 하나 · NMC811 팽창 추가 (§3-1)."
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-voxelization-overlap-innov",
+   "page": 4,
+   "file": "txt_p4_voxelization_overlap_innov.png",
+   "caption": "PDF p.4 left column (§3.1 'From Discrete to Continuum Modeling'): voxelization post-processing of the CGMD data 'to transform the particles from spherical to irregular shapes'; CBD–AM / CBD–SE overlaps resolved by 'reducing the volume attributed to the CBD and adding this reduced volume to the AM or SE'; justified by CBD porosity [46]; voxelization and multiphase volumetric meshing with the in-house software INNOV [47,48].",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    113.3,
+    290.4,
+    365.4
+   ],
+   "w": 1064,
+   "h": 1098,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 넘김의 정의 — 겹침 처리 · 복셀 · 메시 (§0-1 · §4-1)."
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-spherical-hypothesis-limit",
+   "page": 4,
+   "file": "txt_p4_spherical_hypothesis_limit.png",
+   "caption": "PDF p.4 left column: 'while the spherical particle hypothesis has been widely used … it is inherently limited in representing realistic electrode microstructures'; irregular geometries, polydispersity, anisotropic connectivity 'none of which can be adequately captured by idealized spherical approximations'.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    368.4,
+    290.4,
+    547.6
+   ],
+   "w": 1064,
+   "h": 795,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 구 입자 가정의 한계 문장 (질문 k)."
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4-comsol-halfcell-hardware",
+   "page": 4,
+   "file": "txt_p4_comsol_halfcell_hardware.png",
+   "caption": "PDF p.4 left column (§3.2): mesh imported into COMSOL; half-cell = 3D-resolved cathode + SE separator + Li metal anode + Al current collector; single discharge (lithiation); Matrics platform, one node with 500 GB RAM and 1 processor (Intel Xeon E5-2680 v4, 2.40 GHz, 28 cores).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    604.2,
+    290.4,
+    734.8
+   ],
+   "w": 1064,
+   "h": 588,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "계산 자원 (§4-4)."
+  },
+  {
+   "key": "x4d",
+   "kind": "text",
+   "label": "p4-oneway-simplification",
+   "page": 4,
+   "file": "txt_p4_oneway_simplification.png",
+   "caption": "PDF p.4 right column: definitions after Eq. (3); 'our study is focused on coupling concentration to strain/stress not the other way around'; Eqs. (4)–(5); 'This intentional simplification … in a controlled and computationally tractable manner. While it neglects mechanisms such as stress-assisted lithium transport and its impact on kinetics …'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    300.9,
+    548.3,
+    586.3
+   ],
+   "w": 1066,
+   "h": 1235,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "한 방향 결합의 이유 · 비용 (질문 l)."
+  },
+  {
+   "key": "x4e",
+   "kind": "text",
+   "label": "p4-p5-elastic-regime-linear-elastic",
+   "page": 4,
+   "file": "txt_p4_p5_elastic_regime_linear_elastic.png",
+   "caption": "PDF p.4 right column end → p.5 left column: NMC811 'relatively modest volume expansion (≈7%)'; 'the majority of the AM is expected to remain within the elastic regime' [18,56]; assumption 'widely adopted … even for materials with much larger expansions like Silicon … keeping the computational cost manageable'; AM, SE and CBD treated as linear elastic; Hooke's law.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    664.9,
+    548.3,
+    734.8
+   ],
+   "w": 1064,
+   "h": 905,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 소성을 뺀 이유 (질문 l).",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      304.9,
+      664.9,
+      548.3,
+      734.8
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      47.0,
+      65.8,
+      290.4,
+      195.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-p6-bc-rigid-separator-si-tables",
+   "page": 5,
+   "file": "txt_p5_p6_bc_rigid_separator_si_tables.png",
+   "caption": "PDF p.5 right column → p.6 left column: fixed support (u = θ0, as printed) at the external CC surface; fixed walls imitating the casing; external pressure on the Li-metal surface; separator and CC = rigid bodies; 'The mechanical contribution of the SE will be addressed in our future work'; Young's modulus and diffusion coefficient independent of Li concentration; other properties in Tables S1 and S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    302.2,
+    548.3,
+    542.8
+   ],
+   "w": 1065,
+   "h": 1610,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 경계 조건 · 강체 분리막 · 물성은 SI 표 (§4-3).",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      304.9,
+      302.2,
+      548.3,
+      542.8
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      47.0,
+      65.8,
+      290.4,
+      194.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-three-conditions-stack-pressures",
+   "page": 6,
+   "file": "txt_p6_three_conditions_stack_pressures.png",
+   "caption": "PDF p.6 left column (§4.1): voltage window 2.6–4.2 V vs Li+/Li; C/5, C/10, C/20; (i) no volume change ('framework previously reported by group[37]'), (ii) volume expansion with 9 MPa, (iii) with 68 MPa; 9 and 68 MPa 'provided by our industrial research collaborators as typical operating bounds'; small differences attributed to the one-way coupling; 68 MPa 'slightly improved capacity, especially at lower C-rates'.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    305.6,
+    290.5,
+    734.8
+   ],
+   "w": 1065,
+   "h": 1829,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "세 조건 · 압력 선택 근거 (§3-4)."
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-p7-strain-based-remeshing",
+   "page": 6,
+   "file": "txt_p6_p7_strain_based_remeshing.png",
+   "caption": "PDF p.6 right column end → p.7 left column top: Figure S1; at C/10 and 9 MPa 'the mesh is automatically refined by COMSOL based on the local strain field induced by the NMC811 expansion. This dynamic remeshing allows for accurate tracking of the evolving electrode morphology'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    701.6,
+    548.3,
+    734.8
+   ],
+   "w": 1064,
+   "h": 691,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "변형장 따른 재메싱 (§4-4).",
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      304.9,
+      701.6,
+      548.3,
+      734.8
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      47.0,
+      65.8,
+      290.5,
+      183.1
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-displacement-thickness-s2-peak",
+   "page": 7,
+   "file": "txt_p7_displacement_thickness_s2_peak.png",
+   "caption": "PDF p.7 (§4.2): C/5 'overall displacement of approximately 0.43 μm, which corresponds to a 0.98% increase in electrode thickness'; C/20 '1.11 μm, corresponding to a 2.52% increase'; SE and CBD displacement; von Mises concentration at particle surfaces at C/5; Figure S2 'peak stress values reach up to 3 GPa'; Fig. 6 — minimal change for DoD < 40 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    235.9,
+    290.4,
+    413.3
+   ],
+   "w": 1066,
+   "h": 2259,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 두께 변화 백분율 · 3 GPa 문장 (§3-5 · §3-7).",
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      47.0,
+      235.9,
+      290.4,
+      413.3
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      304.9,
+      65.8,
+      548.3,
+      413.3
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-c20-expansion-phase-contribution",
+   "page": 8,
+   "file": "txt_p8_c20_expansion_phase_contribution.png",
+   "caption": "PDF p.8 left column: C/20 'a total z-displacement of ≈1.2 μm and a cathode expansion ratio of ≈2.25%'; Fig. 6c — AM 4.49 % at ≈80 % DoD, SE 0.45 %, CBD 0.21 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    457.8,
+    290.4,
+    710.6
+   ],
+   "w": 1064,
+   "h": 1100,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "상별 팽창 (§3-6)."
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-p9-stack-pressure-thickness-change",
+   "page": 8,
+   "file": "txt_p8_p9_stack_pressure_thickness_change.png",
+   "caption": "PDF p.8 right column (§4.3) → p.9 left column top: 9 MPa — thickness expansion 0.78 %, 1.61 %, 2.53 % (C/5, C/10, C/20); 68 MPa 'significantly suppresses this expansion due to enhanced particle packing and improved interfacial contact' — C/5 contraction 0.08 %, C/10 0.74 %, C/20 1.82 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    581.1,
+    548.3,
+    734.8
+   ],
+   "w": 1063,
+   "h": 799,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 적층압 효과 수치 (§3-5).",
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      304.9,
+      581.1,
+      548.3,
+      734.8
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      47.0,
+      592.1,
+      290.4,
+      613.3
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-vonmises-68mpa-amplification",
+   "page": 9,
+   "file": "txt_p9_vonmises_68mpa_amplification.png",
+   "caption": "PDF p.9 (§4.3): Fig. 7b average von Mises stress within the NMC811 AM vs DoD; higher C-rates give higher stress beyond 40 % DoD; '68 MPa stack pressure intensifies the von Mises stress across all C-rates … it increases the elastic energy stored in the AM particles'.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    616.3,
+    290.4,
+    734.8
+   ],
+   "w": 1064,
+   "h": 1051,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "von Mises 해석 (§3-7).",
+   "parts": [
+    {
+     "page": 9,
+     "bbox": [
+      47.0,
+      616.3,
+      290.4,
+      734.8
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      304.9,
+      592.1,
+      548.2,
+      710.6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-se-cbd-pressure-sign-tension",
+   "page": 10,
+   "file": "txt_p10_se_cbd_pressure_sign_tension.png",
+   "caption": "PDF p.10 left column: Fig. 7c pressure fields in CBD and SE — 'tensile (negative pressure) and compressive (positive pressure) regions'; tension → cohesion loss / delamination risk; 'An overall transition from tensile to compressive stresses is observed in the SE and CBD phases with increasing stack pressure'.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    223.3,
+    290.4,
+    402.1
+   ],
+   "w": 1064,
+   "h": 793,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "압력 부호 규약 · SE 인장 (§3-7)."
+  },
+  {
+   "key": "x10b",
+   "kind": "text",
+   "label": "p10-interfacial-area-dod",
+   "page": 10,
+   "file": "txt_p10_interfacial_area_dod.png",
+   "caption": "PDF p.10 right column (§5.1): specific interfacial areas relative to the no-volume-change reference; 20 % DoD 'substantial increase'; 40 % DoD decrease at 9 MPa; 68 MPa 'restores interfacial contact'; AM–CBD changes smaller ('more compliant carbon binder matrix'); Fig. 8c renderings.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    89.6,
+    548.3,
+    498.7
+   ],
+   "w": 1064,
+   "h": 1751,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "계면적 해석 (§3-8)."
+  },
+  {
+   "key": "x10c",
+   "kind": "text",
+   "label": "p10-p11-pore-size-distribution",
+   "page": 10,
+   "file": "txt_p10_p11_pore_size_distribution.png",
+   "caption": "PDF p.10 right column (§5.2) → p.11 left column: at 9 MPa 'small and intermediate pores (0.2–2.6 μm) are significantly reduced and shifted toward smaller diameters, while larger pores (3–4.6 μm) are preserved'; at 68 MPa resemblance to the no-expansion curve in 1.8–3 μm, disappearance of pores > 3 μm; consistency with experiments [65,67].",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    543.9,
+    548.4,
+    734.8
+   ],
+   "w": 1063,
+   "h": 1766,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기공 크기 분포 해석 (§3-9).",
+   "parts": [
+    {
+     "page": 10,
+     "bbox": [
+      304.9,
+      543.9,
+      548.4,
+      734.8
+     ]
+    },
+    {
+     "page": 11,
+     "bbox": [
+      47.0,
+      518.7,
+      290.4,
+      734.8
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-p12-tortuosity-values",
+   "page": 11,
+   "file": "txt_p11_p12_tortuosity_values.png",
+   "caption": "PDF p.11 right column (§5.3) → p.12 left column: geometric tortuosity of the SE phase after a single C/10 discharge with DiffuDict (GeoDict 2024) on a desktop computer — τ = 7.736 (no expansion), 8.182 (9 MPa), 7.765 (68 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    543.0,
+    548.3,
+    734.8
+   ],
+   "w": 1064,
+   "h": 1159,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 굴곡 수치 (§3-10).",
+   "parts": [
+    {
+     "page": 11,
+     "bbox": [
+      304.9,
+      543.0,
+      548.3,
+      734.8
+     ]
+    },
+    {
+     "page": 12,
+     "bbox": [
+      47.0,
+      540.0,
+      290.4,
+      609.6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12-conclusions-small-strain-plasticity",
+   "page": 12,
+   "file": "txt_p12_conclusions_small_strain_plasticity.png",
+   "caption": "PDF p.12 right column (§6): 'one-way coupled linear framework … The assumption of small deformations was justified based on the limited volumetric expansion of the AM relative to its particle size … to capture more complex mechanical behaviors such as plastic deformation, contact losses, and interfacial debonding, our future work will focus on developing a fully coupled nonlinear model that incorporates plasticity'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    415.7,
+    548.4,
+    593.7
+   ],
+   "w": 1063,
+   "h": 790,
+   "dpi": 300,
+   "src": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 300 dpi (tool default), band = the text-layer block boxes of the cited paragraph(s) only (neighbouring lines, running heads and the download watermark excluded) → ink trim → white canvas with a uniform 6 pt margin; several parts stacked top→bottom with a 6 pt gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 저자 한계 · 소성은 다음 일 (질문 j · l)."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean) found every printed item: Fig. 1–10 · Table 1 (main, 14 pp) and Fig. S1–S2 · Tables S1–S2 (SI, 7 pp) — 15 crops, all opened.  All 15 were re-cut by hand (the auto boxes were page-width strips with the running-head rule and the Wiley download watermark, Fig. 2's box began inside Table 1, Table 1's box covered the whole page, Table S1 spans SI pp.4–5, and the main captions were cut off; the printed captions are now kept in the images and the swallowed auto captions of Fig. 4, 6, 10 and Table 1 were replaced by the printed ones).  Added by hand: 12 panel crops (Fig. 3a–b · 4a–c · 6a–d · 7b · 8a–b), 14 equation crops (Eqs. 1–13 one by one + the stacked set) and 20 evidence-paragraph crops (kind 'text').  Every one of the 61 crops was opened and checked after cutting.  Read-outs: digitized.csv (239 rows: Fig. 3b · 4 insets · 6a–d · 7b · 8a–b · 9) from the 300 dpi renders of the native rasters (2026-11-12, litdb-curator)",
+ "note_manual": "Printed inconsistencies visible in the crops: Eq. (10) prints εe on the left-hand side (should be εint) and the sentence after Eq. (8) calls εe the total strain; 'Fixed support (u = θ0)'; 'Combining Equations (2) and (3)' for Eq. (5); '[37]' is cited as the group's earlier framework but is von Kolzenberg, Latz, Horstmann; Fig. 6b tick labels 0.0/0.2/0.4/0.7/0.9/1.1/1.3 sit on equal steps (= rounded multiples of 1.3/6); thickness-change percentages differ between §4.2 (C/5 0.98 %, C/20 2.52 %), §4.3 / Fig. 7a (0.78 / 1.61 / 2.53 %) and Fig. 6d ends (≈0.84 / 1.40 / 2.21 %, read); '≈1.2 μm' (p.8) vs '1.11 μm' (p.7 and Fig. 5 labels) for C/20; Fig. S2 colour bar ±300 MPa while the text quotes peaks 'up to 3 GPa'; Fig. 8 caption 'in function of SOC' while the axis is depth of discharge ('dicharge'); Table S1 σ_ion unit 'mS.cm-2', ρ_NMC811 4.77 g cm−3 (Table S1) vs 5.03 × 10³ 'Kg·m3' (Table S2); 'SI references [69–70]' but no [70] in the list.",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of); e<eq> = equation crop (kind 'equation'); x<page><letter> = evidence paragraph (kind 'text'; several list their column/page 'parts'); the 15 tool items keep the tool keys (f1–f10 · fS1–fS2 · t1 · tS1–tS2) with 'auto_bbox' = the tool's original box and 'recrop' = why and how they were re-cut"
+}

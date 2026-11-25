@@ -1,0 +1,226 @@
+# Janek & Zeier 2016 Nat. Energy 1 16141 (Comment) - vector-path readout of Fig. 1. FIGURE VALUES ARE DIGITIZED (not printed); 'derived' and 'arithmetic' rows are OUR ARITHMETIC. tools/litdb/janek2016_readout.py
+figure,series,quantity,value,unit,note
+Fig. 1a,axis,calib_max_residual_year,0.0236494,yr,
+Fig. 1a,axis,calib_max_residual_w_vol,1.24409,Wh l-1,
+Fig. 1a,axis,calib_max_residual_w_grav,0.622046,Wh kg-1,
+Fig. 1a,w_vol marker (filled square),value@2012.04,647.295,Wh l-1,solid symbol (cell producers)
+Fig. 1a,w_vol marker (filled square),value@2016.03,771.161,Wh l-1,solid symbol (cell producers)
+Fig. 1a,w_grav marker (filled circle),value@2012.01,224.056,Wh kg-1,solid symbol (cell producers)
+Fig. 1a,w_grav marker (filled circle),value@2015.99,265.901,Wh kg-1,solid symbol (cell producers)
+Fig. 1a,w_vol_solid,start@1991.01,199.714,Wh l-1,vertices 12 · breaks 0
+Fig. 1a,w_vol_solid,end@2003.00,469.974,Wh l-1,
+Fig. 1a,w_vol_dashed,start@2003.00,469.971,Wh l-1,vertices 5 · breaks 0
+Fig. 1a,w_vol_dashed,end@2012.00,650.141,Wh l-1,
+Fig. 1a,w_grav_solid,start@1991.01,68.7929,Wh kg-1,vertices 12 · breaks 0
+Fig. 1a,w_grav_solid,end@2003.00,161.986,Wh kg-1,
+Fig. 1a,w_grav_dashed,start@2003.00,161.985,Wh kg-1,vertices 5 · breaks 0
+Fig. 1a,w_grav_dashed,end@2012.00,223.976,Wh kg-1,
+Fig. 1a,derived,ratio_w_vol_2016_over_1991,3.86133,-,caption 'almost a factor of four'
+Fig. 1a,derived,ratio_w_grav_2016_over_1991,3.86524,-,caption 'almost a factor of four'
+Fig. 1a,derived,implied_density@2012,2.88899,g cm-3,w_vol / w_grav = cell mass / cell volume
+Fig. 1a,derived,implied_volume_for_48g@2012,16.6148,cm3,48 g ÷ implied density
+Fig. 1a,derived,implied_density@2016,2.90018,g cm-3,w_vol / w_grav = cell mass / cell volume
+Fig. 1a,derived,implied_volume_for_48g@2016,16.5507,cm3,48 g ÷ implied density
+Fig. 1a,Physicochemical limit bar,year_range,—,yr,2001.19–2019.02
+Fig. 1a,Physicochemical limit bar,w_vol_bottom_edge,800.06,Wh l-1,gradient image bbox (no defined limit line)
+Fig. 1a,Physicochemical limit bar,w_vol_top_edge,865.632,Wh l-1,gradient image bbox
+Fig. 1a,derived,gap_2016_to_bar_bottom,28.8991,Wh l-1,
+Fig. 1b,axis,calib_max_residual_inv_T,2.63032e-07,1000/T,
+Fig. 1b,axis,calib_max_residual_log_sigma,0.00820334,dex,
+Fig. 1b,axis,calib_max_residual_top_vs_bottom,0.00990165,1000/T,
+Fig. 1b,room-temperature grey bar,center_1000_over_T,3.33413,1000 K-1,= 299.9 K
+Fig. 1b,Li10GeP2S12,x_hot_end,2.7103,1000 K-1,T 369.0 K · ref 5 · vertices 8 · breaks 0
+Fig. 1b,Li10GeP2S12,logsigma_hot_end,-1.1431,log S cm-1,
+Fig. 1b,Li10GeP2S12,x_cold_end,5.18711,1000 K-1,T 192.8 K
+Fig. 1b,Li10GeP2S12,logsigma_cold_end,-4.49795,log S cm-1,
+Fig. 1b,Li10GeP2S12,logsigma_at_grey_bar,-1.83469,log S cm-1,
+Fig. 1b,Li10GeP2S12,sigma_at_grey_bar,14.6324,mS cm-1,
+Fig. 1b,Li10GeP2S12,logsigma_at_353.15K,-1.28267,log S cm-1,
+Fig. 1b,Li10GeP2S12,logsigma_at_298.15K,-1.85923,log S cm-1,
+Fig. 1b,Li10GeP2S12,logsigma_at_297.00K,-1.87553,log S cm-1,
+Fig. 1b,Li10GeP2S12,logsigma_at_273.15K,-2.24468,log S cm-1,
+Fig. 1b,Li10GeP2S12,logsigma_at_253.15K,-2.68826,log S cm-1,
+Fig. 1b,Li10GeP2S12,logsigma_at_240.00K,-2.99103,log S cm-1,
+Fig. 1b,Li10GeP2S12,Ea_lsq_sigma_form,0.272644,eV,slope -1.3741 dex per 1000/T · σ form (not σT)
+Fig. 1b,Li10GeP2S12,max_dev_from_line,0.120209,dex,curvature of the drawn line
+Fig. 1b,P(EO)12-LiTFSI,x_hot_end,2.7243,1000 K-1,T 367.1 K · ref 22 · vertices 8 · breaks 0
+Fig. 1b,P(EO)12-LiTFSI,logsigma_hot_end,-1.95832,log S cm-1,
+Fig. 1b,P(EO)12-LiTFSI,x_cold_end,3.28156,1000 K-1,T 304.7 K
+Fig. 1b,P(EO)12-LiTFSI,logsigma_cold_end,-3.78174,log S cm-1,
+Fig. 1b,P(EO)12-LiTFSI,logsigma_at_grey_bar,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,P(EO)12-LiTFSI,sigma_at_grey_bar,—,mS cm-1,
+Fig. 1b,P(EO)12-LiTFSI,logsigma_at_353.15K,-2.13296,log S cm-1,
+Fig. 1b,P(EO)12-LiTFSI,logsigma_at_298.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,P(EO)12-LiTFSI,logsigma_at_297.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,P(EO)12-LiTFSI,logsigma_at_273.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,P(EO)12-LiTFSI,logsigma_at_253.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,P(EO)12-LiTFSI,logsigma_at_240.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,P(EO)12-LiTFSI,Ea_lsq_sigma_form,0.606429,eV,slope -3.0563 dex per 1000/T · σ form (not σT)
+Fig. 1b,P(EO)12-LiTFSI,max_dev_from_line,0.301032,dex,curvature of the drawn line
+Fig. 1b,Li3.25Ge0.25P0.75S4,x_hot_end,3.00638,1000 K-1,T 332.6 K · ref 23 · vertices 2 · breaks 0
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_hot_end,-1.93285,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,x_cold_end,4.29406,1000 K-1,T 232.9 K
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_cold_end,-3.65933,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_at_grey_bar,-2.37229,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,sigma_at_grey_bar,4.24338,mS cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_at_353.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_at_298.15K,-2.39895,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_at_297.00K,-2.41636,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_at_273.15K,-2.81053,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_at_253.15K,-3.19833,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,logsigma_at_240.00K,-3.48852,log S cm-1,
+Fig. 1b,Li3.25Ge0.25P0.75S4,Ea_lsq_sigma_form,0.266035,eV,slope -1.3408 dex per 1000/T · σ form (not σT)
+Fig. 1b,Li3.25Ge0.25P0.75S4,max_dev_from_line,4.44089e-16,dex,curvature of the drawn line
+Fig. 1b,Li7P3S11 glass ceramic,x_hot_end,3.26887,1000 K-1,T 305.9 K · ref 24 · vertices 5 · breaks 0
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_hot_end,-1.79484,log S cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,x_cold_end,4.13418,1000 K-1,T 241.9 K
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_cold_end,-3.07083,log S cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_at_grey_bar,-1.88669,log S cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,sigma_at_grey_bar,12.9812,mS cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_at_353.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_at_298.15K,-1.91468,log S cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_at_297.00K,-1.93295,log S cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_at_273.15K,-2.35316,log S cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_at_253.15K,-2.79349,log S cm-1,
+Fig. 1b,Li7P3S11 glass ceramic,logsigma_at_240.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li7P3S11 glass ceramic,Ea_lsq_sigma_form,0.293647,eV,slope -1.4799 dex per 1000/T · σ form (not σT)
+Fig. 1b,Li7P3S11 glass ceramic,max_dev_from_line,0.0139133,dex,curvature of the drawn line
+Fig. 1b,EC:DEC:LiPF6,x_hot_end,3.36458,1000 K-1,T 297.2 K · ref 25 · vertices 12 · breaks 0
+Fig. 1b,EC:DEC:LiPF6,logsigma_hot_end,-1.83764,log S cm-1,
+Fig. 1b,EC:DEC:LiPF6,x_cold_end,4.2389,1000 K-1,T 235.9 K
+Fig. 1b,EC:DEC:LiPF6,logsigma_cold_end,-2.93859,log S cm-1,
+Fig. 1b,EC:DEC:LiPF6,logsigma_at_grey_bar,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,EC:DEC:LiPF6,sigma_at_grey_bar,—,mS cm-1,
+Fig. 1b,EC:DEC:LiPF6,logsigma_at_353.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,EC:DEC:LiPF6,logsigma_at_298.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,EC:DEC:LiPF6,logsigma_at_297.00K,-1.84017,log S cm-1,
+Fig. 1b,EC:DEC:LiPF6,logsigma_at_273.15K,-2.11488,log S cm-1,
+Fig. 1b,EC:DEC:LiPF6,logsigma_at_253.15K,-2.48243,log S cm-1,
+Fig. 1b,EC:DEC:LiPF6,logsigma_at_240.00K,-2.80879,log S cm-1,
+Fig. 1b,EC:DEC:LiPF6,Ea_lsq_sigma_form,0.24621,eV,slope -1.2408 dex per 1000/T · σ form (not σT)
+Fig. 1b,EC:DEC:LiPF6,max_dev_from_line,0.075019,dex,curvature of the drawn line
+Fig. 1b,EC:PC:LiPF6,x_hot_end,3.37893,1000 K-1,T 296.0 K · ref 25 · vertices 174 · breaks 0
+Fig. 1b,EC:PC:LiPF6,logsigma_hot_end,-2.19032,log S cm-1,
+Fig. 1b,EC:PC:LiPF6,x_cold_end,4.39195,1000 K-1,T 227.7 K
+Fig. 1b,EC:PC:LiPF6,logsigma_cold_end,-3.8877,log S cm-1,
+Fig. 1b,EC:PC:LiPF6,logsigma_at_grey_bar,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,EC:PC:LiPF6,sigma_at_grey_bar,—,mS cm-1,
+Fig. 1b,EC:PC:LiPF6,logsigma_at_353.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,EC:PC:LiPF6,logsigma_at_298.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,EC:PC:LiPF6,logsigma_at_297.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,EC:PC:LiPF6,logsigma_at_273.15K,-2.49061,log S cm-1,
+Fig. 1b,EC:PC:LiPF6,logsigma_at_253.15K,-2.93668,log S cm-1,
+Fig. 1b,EC:PC:LiPF6,logsigma_at_240.00K,-3.36197,log S cm-1,
+Fig. 1b,EC:PC:LiPF6,Ea_lsq_sigma_form,0.332481,eV,slope -1.6756 dex per 1000/T · σ form (not σT)
+Fig. 1b,EC:PC:LiPF6,max_dev_from_line,0.140526,dex,curvature of the drawn line
+Fig. 1b,LiPON,x_hot_end,2.79691,1000 K-1,T 357.5 K · ref 26 · vertices 5 · breaks 0
+Fig. 1b,LiPON,logsigma_hot_end,-4.89555,log S cm-1,
+Fig. 1b,LiPON,x_cold_end,3.35387,1000 K-1,T 298.2 K
+Fig. 1b,LiPON,logsigma_cold_end,-6.12043,log S cm-1,
+Fig. 1b,LiPON,logsigma_at_grey_bar,-6.07706,log S cm-1,
+Fig. 1b,LiPON,sigma_at_grey_bar,0.000837421,mS cm-1,
+Fig. 1b,LiPON,logsigma_at_353.15K,-4.97173,log S cm-1,
+Fig. 1b,LiPON,logsigma_at_298.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,LiPON,logsigma_at_297.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,LiPON,logsigma_at_273.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,LiPON,logsigma_at_253.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,LiPON,logsigma_at_240.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,LiPON,Ea_lsq_sigma_form,0.436265,eV,slope -2.1987 dex per 1000/T · σ form (not σT)
+Fig. 1b,LiPON,max_dev_from_line,0.00335495,dex,curvature of the drawn line
+Fig. 1b,Li3.5Zn0.25GeO4,x_hot_end,1.55445,1000 K-1,T 643.3 K · ref 27 · vertices 16 · breaks 0
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_hot_end,-1.31743,log S cm-1,
+Fig. 1b,Li3.5Zn0.25GeO4,x_cold_end,3.10355,1000 K-1,T 322.2 K
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_cold_end,-5.46904,log S cm-1,
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_at_grey_bar,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li3.5Zn0.25GeO4,sigma_at_grey_bar,—,mS cm-1,
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_at_353.15K,-4.7277,log S cm-1,
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_at_298.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_at_297.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_at_273.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_at_253.15K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li3.5Zn0.25GeO4,logsigma_at_240.00K,—,log S cm-1,line not drawn there (no extrapolation)
+Fig. 1b,Li3.5Zn0.25GeO4,Ea_lsq_sigma_form,0.531692,eV,slope -2.6796 dex per 1000/T · σ form (not σT)
+Fig. 1b,Li3.5Zn0.25GeO4,max_dev_from_line,0.0301562,dex,curvature of the drawn line
+Fig. 1b,Li7La3Zr2O12,x_hot_end,2.612,1000 K-1,T 382.8 K · ref 28 · vertices 2 · breaks 0
+Fig. 1b,Li7La3Zr2O12,logsigma_hot_end,-2.36385,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,x_cold_end,4.30109,1000 K-1,T 232.5 K
+Fig. 1b,Li7La3Zr2O12,logsigma_cold_end,-5.05836,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,logsigma_at_grey_bar,-3.51583,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,sigma_at_grey_bar,0.304912,mS cm-1,
+Fig. 1b,Li7La3Zr2O12,logsigma_at_353.15K,-2.71426,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,logsigma_at_298.15K,-3.54755,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,logsigma_at_297.00K,-3.56827,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,logsigma_at_273.15K,-4.03725,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,logsigma_at_253.15K,-4.49865,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,logsigma_at_240.00K,-4.84392,log S cm-1,
+Fig. 1b,Li7La3Zr2O12,Ea_lsq_sigma_form,0.31653,eV,slope -1.5952 dex per 1000/T · σ form (not σT)
+Fig. 1b,Li7La3Zr2O12,max_dev_from_line,1.77636e-15,dex,curvature of the drawn line
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,x_hot_end,2.6861,1000 K-1,T 372.3 K · ref 29 · vertices 12 · breaks 0
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_hot_end,-2.40903,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,x_cold_end,4.73405,1000 K-1,T 211.2 K
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_cold_end,-6.14329,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_at_grey_bar,-3.59918,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,sigma_at_grey_bar,0.251663,mS cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_at_353.15K,-2.67636,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_at_298.15K,-3.6357,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_at_297.00K,-3.65955,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_at_273.15K,-4.17427,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_at_253.15K,-4.69995,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,logsigma_at_240.00K,-5.1058,log S cm-1,
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,Ea_lsq_sigma_form,0.360531,eV,slope -1.8170 dex per 1000/T · σ form (not σT)
+Fig. 1b,Li1.5Al0.5Ge1.5(PO4)3,max_dev_from_line,0.0133178,dex,curvature of the drawn line
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_297.00K,-0.0353607,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_290.00K,-0.0554931,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_280.00K,-0.101346,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_273.15K,-0.129802,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_263.15K,-0.170247,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_253.15K,-0.205822,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_243.15K,-0.193515,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:DEC:LiPF6,delta_logsigma_at_236.50K,-0.156429,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_297.00K,—,dex,one of the two lines not drawn at this T
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_290.00K,0.274228,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_280.00K,0.248617,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_273.15K,0.245932,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_263.15K,0.233873,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_253.15K,0.248422,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_243.15K,0.331898,dex,positive = solid above liquid
+Fig. 1b,Li10GeP2S12 minus EC:PC:LiPF6,delta_logsigma_at_236.50K,0.421404,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_297.00K,-0.0927803,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_290.00K,-0.12525,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_280.00K,-0.190337,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_273.15K,-0.238275,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_263.15K,-0.274472,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_253.15K,-0.311051,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_243.15K,-0.315499,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:DEC:LiPF6,delta_logsigma_at_236.50K,—,dex,one of the two lines not drawn at this T
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_297.00K,—,dex,one of the two lines not drawn at this T
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_290.00K,0.204471,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_280.00K,0.159625,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_273.15K,0.13746,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_263.15K,0.129648,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_253.15K,0.143193,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_243.15K,0.209914,dex,positive = solid above liquid
+Fig. 1b,Li7P3S11 glass ceramic minus EC:PC:LiPF6,delta_logsigma_at_236.50K,—,dex,one of the two lines not drawn at this T
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_383.1K,—,dex,Kamaya Fig.3 LGPS vertex -1.066 · this Comment line — · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_358.1K,0.00330962,dex,Kamaya Fig.3 LGPS vertex -1.241 · this Comment line -1.238 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_338.0K,0.0170048,dex,Kamaya Fig.3 LGPS vertex -1.446 · this Comment line -1.429 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_318.0K,0.0337581,dex,Kamaya Fig.3 LGPS vertex -1.672 · this Comment line -1.638 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_300.1K,0.0678869,dex,Kamaya Fig.3 LGPS vertex -1.901 · this Comment line -1.833 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_288.1K,0.105297,dex,Kamaya Fig.3 LGPS vertex -2.112 · this Comment line -2.007 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_273.0K,0.0879346,dex,Kamaya Fig.3 LGPS vertex -2.335 · this Comment line -2.247 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_258.0K,0.0937595,dex,Kamaya Fig.3 LGPS vertex -2.667 · this Comment line -2.573 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_238.0K,0.0669666,dex,Kamaya Fig.3 LGPS vertex -3.107 · this Comment line -3.040 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_227.5K,0.0562687,dex,Kamaya Fig.3 LGPS vertex -3.369 · this Comment line -3.312 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_213.0K,-0.0368285,dex,Kamaya Fig.3 LGPS vertex -3.734 · this Comment line -3.770 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_193.0K,-0.267181,dex,Kamaya Fig.3 LGPS vertex -4.222 · this Comment line -4.489 · + = Comment above
+Fig. 1b,Li10GeP2S12 vs kamaya2011,delta_at_173.0K,—,dex,Kamaya Fig.3 LGPS vertex -4.960 · this Comment line — · + = Comment above
+text/caption,arithmetic,cell_energy_Wh,12.775,Wh,3.5 Ah × 3.65 V (caption)
+text/caption,arithmetic,w_grav_from_48g,266.146,Wh kg-1,caption mass 48 g · text says 260 · caption says 270
+text/caption,arithmetic,vol_18650_cylinder,16.5405,cm3,우리 가정 18 mm × 65 mm · caption 'approximately 16 cm3'
+text/caption,arithmetic,w_vol_from_cylinder,772.347,Wh l-1,text · caption 770
+text/caption,arithmetic,w_vol_from_16cm3,798.438,Wh l-1,caption '16 cm3' taken literally
+text/caption,arithmetic,Li_theoretical_capacity,3861.33,mAh g-1,"F/(3.6·M_Li) · caption says '3,700 mA g-1' as 'energy density'"
+text/caption,arithmetic,Li_20um_areal_capacity,4.1239,mAh cm-2,text 20 µm Li · ρ 0.534 (우리 상수)
+text/caption,arithmetic,Li_1um_areal_capacity,0.206195,mAh cm-2,text thin-film ~1 µm Li cycled
+text/caption,arithmetic,voltage_only_gain_4p2_to_5V,19.0476,%,text '>20% … depending on additional cathode capacity'
+text/caption,arithmetic,Wh_per_kg_implied_by_cost,300,Wh kg-1,US$30 kg-1 ÷ US$100 kWh-1 (text)

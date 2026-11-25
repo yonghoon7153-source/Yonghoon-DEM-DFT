@@ -1,0 +1,138 @@
+{
+ "slug": "cooper2017_simulated_impedance_diffusion_porous_media",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "25. Simulated impedance of diffusion in porous media.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig.1. Simulated impedance spectra for 2D (l) and 3D (r) recreations of the 5 simple closed-pore geometries investigated by Keiser et al. [6]. The inset graphs show the spectra as normalised using Eq. (3), whereas the main axes employ a second normalisation such that all spectra converge to the same value as the straight pore (1), to allow for clearer comparison of the shapes.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    521.3,
+    568.7,
+    716.9
+   ],
+   "w": 2218,
+   "h": 815,
+   "dpi": 300,
+   "src": "25. Simulated impedance of diffusion in porous media.pdf",
+   "blank": 0.92,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Simulated impedance spectra of 7 simple open-pore geometries, each designed to have the same pore volume fraction and tortuosity factor in the direction normal to the stimulated boundary (vertical). The transport is occurring through the white phase of each geometry, with a constant zero concentration at the top surface and an applied sinusoidal concentration at the bottom.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    53.3,
+    290.8,
+    283.3
+   ],
+   "w": 1097,
+   "h": 959,
+   "dpi": 300,
+   "src": "25. Simulated impedance of diffusion in porous media.pdf",
+   "blank": 0.858,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Simulated impedance spectra of two 2D fractals, as the fractal order increases for (a) Sierpinski Carpet fractal with open boundaries and (b) Pythagoras Tree fractal with closed ends.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    504.3,
+    559.8,
+    725.4
+   ],
+   "w": 2218,
+   "h": 922,
+   "dpi": 300,
+   "src": "25. Simulated impedance of diffusion in porous media.pdf",
+   "blank": 0.908,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Simulated impedance spectra through two tomographic datasets of battery separator materials from a paper by the authors [43]. The axes of these two plots have been scaled such that the low frequency intercept of both samples align. Each plot contains an inset showing a small region of the segmented tomographic data, where transport is in the vertical direction. Analytical spectra of FLW with the same low frequency intercepts are also plotted for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    57.1,
+    299.7,
+    317.5
+   ],
+   "w": 1097,
+   "h": 1086,
+   "dpi": 300,
+   "src": "25. Simulated impedance of diffusion in porous media.pdf",
+   "blank": 0.899,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Simulated impedance spectra for a synthetic packing of spherical particles with porosity linearly increasing (blue lines) or decreasing (red lines) from bottom to top. The top boundary can be either open (solid lines) or closed (dashed lines). The inset shows the DRT for the cases with open boundaries.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    508.5,
+    299.6,
+    708.3
+   ],
+   "w": 1097,
+   "h": 834,
+   "dpi": 300,
+   "src": "25. Simulated impedance of diffusion in porous media.pdf",
+   "blank": 0.887,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Simulated phase angle against log frequency for three simple micro- structures each with a different ratio of the inlet to outlet area.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    547.7,
+    568.6,
+    725.4
+   ],
+   "w": 1097,
+   "h": 742,
+   "dpi": 300,
+   "src": "25. Simulated impedance of diffusion in porous media.pdf",
+   "blank": 0.887,
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

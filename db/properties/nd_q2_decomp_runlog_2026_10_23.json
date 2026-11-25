@@ -1,0 +1,133 @@
+{
+ "schema": "runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-23",
+ "track": "CEI (1저자 = 실험 쪽 · 결정은 '사용자')",
+ "card": "db/properties/nd_q2_decomp_estimand_2026_10_23.json",
+ "decision": "D-2026-10-23-nd-q2-decomp-card (active · 사용자 비준 10-23 · 상 vc-relax · 자리 kgy)",
+ "results_seen": false,
+ "✅_G0_골격_2026_10_23": "9 월 vc-relax 최종 구조 (kprobe.in 사본) argyrodite 네 기준 충족 — 구조 결정 D-2026-10-19 재개 ① 발동 안 함 (값은 카드 §4 G0)",
+ "✅_도구_결과_전_2026_10_23": {
+  "per_site_bond_analysis.py --framework": "09-18 손 판정 재현 selftest 11/11 · 깨기 5/5",
+  "convex_hull_ehull.py --mode mp": "분해 엔트리 id · MP DB 판 · 조회 시각 · selftest 10 · 깨기 2/2",
+  "dft_decomp_check.py": "--basis · 해 하나 검사 · --phase_structs / --save_phase_structs · 상 k 간격 · 상 계산 (vc-relax) · 설정 넘기기 · pseudo_dir 없는 기계에서 --pseudo_map 강제 (옛 경로는 Nd 기본값 = 4f 원자가 atompaw 로 조용히 샜다) · 쓴 입력 PP 이름 대조 · --collect 압력 어림 (B 중심 · 범위) · --pair Y · G_V · 분해능 · 상 Pulay — selftest 50 (옛 27 그대로 + 새 23) · 깨기 7/7 빨강 (처음엔 '해 하나 검사 뺌' 이 살아남았다 → 같은 조성 다형체 둘 시험을 보태 잡음)",
+  "과거_재현": "Y 기록 (y_site_preference_dft_2026_09_07.json §2 의 상 · 타깃 에너지) 에 옛 도구 (HEAD) 와 새 도구의 decomp_energy 가 비트까지 같다 (−0.057837396782 · −0.088329029086 eV/atom · 계수 같음)",
+  "Q1_재현": "volume_correction_eV 가 Q1 뒤돌아보기 (−0.098 eV/Nd · CLAUDE.md 2026-10-23) 를 selftest 안에서 다시 낸다"
+ },
+ "⏩_블록_①_2026_10_23": "gabia CPU (검사용 · QE 아님): MP hull 생성물 (도핑 modelc_nd_doped_DFTrelax.cif · host modelc_v3_62atom_V0.cif · 원소 Li Nd P S Cl O) + 9 월 탐침 출력의 '!' · 힘 · 응력 줄 + PAW psl 여섯 sha256 → db/raw/nd_q2_decomp_2026_10_23/step1/ — 사용자 실행 대기",
+ "⏭": "블록 ① 회수 → G5 (해 하나 · 음 아닌 계수 · 잔차) → 기저 파일 봉인 커밋 (QE 에너지 0 건) → 블록 ② gabia (상 구조 --save_phase_structs · MP 키) → 입력 (host 고정셀 이온 이완 k 3 3 2 · 상 vc-relax 간격 0.25) → kgy (PAW sha256 확인 · CPU 검사 프로브 · tmux)",
+ "by": "agent · 2026-10-23",
+ "✅_블록_①_회수_2026_10_23": {
+  "회수": "gabia push 804164101 → db/raw/nd_q2_decomp_2026_10_23/step1/ (7 파일)",
+  "G_F_도핑": "✅ 9 월 탐침 kprobe.out (sha256 4a3db754…) 최대 |F| 0.000976 Ry/bohr = 0.0251 eV/Å ≤ 0.05 → 그대로 쓴다 · Total force 0.004",
+  "G_V_도핑_압력": "P = −0.03 kbar (≈ 0 · 9 월 vc-relax 가 같은 PP 세트) → ΔE_V ≈ 0",
+  "E_도핑": "−6399.21429237 Ry (9 월 기록 E_k221 + ΔE 와 같다)",
+  "PAW_sha256_gabia": {
+   "Li": "785699766999b40fd07ed2b82069dffc3391c15ada838377ce03ee1b379642af",
+   "Nd": "18a3835e6437aa953c8a5b783aae1f5b8c83e48f0fa699f8992f6754bdc35101",
+   "P": "7bad261e718f8ece9fcf82dc4ec6a2c7b06badd552f95ad6f1faaf2183b58dd1",
+   "O": "7c4b6ed541f83d0afdf5c1d3a8c611340f073f3e2b11e95b7963bb2ee26929aa",
+   "S": "050bc08cac9e419863a5e35267110217be51cd560fe8db9bf7a4e1ed40611a6f",
+   "Cl": "b31db101b8b2754ad93f530a6c831e17dba53ef167d2ac5fac98ef7d49f2803a"
+  },
+  "kgy_PAW": "Nd · O 있음 (sha256 gabia 와 같음) · Li · P · S · Cl 없음 → 공식 사이트에서 받아 gabia sha256 과 같을 때만 넣는다 · GPU 3,078 / 24,576 MiB (cascade cv7main)",
+  "⛔_MP_hull_기본값": "엉터리 — host → Li + S + Li₃P + LiCl · 도핑 → NdS₂ · Li₂O · NdPS₄ · Li₃P · LiCl · S (엔트리 322 · r2SCAN 접미 · mp_api 기본 thermo type 이 혼합으로 바뀜) ⇒ 기저로 안 쓴다 · 카드 개정 11 (GGA_GGA+U 명시 · G5a 정상성)",
+  "by": "agent · 2026-10-23"
+ },
+ "✅_기저_봉인_입력_2026_10_23": {
+  "①b_회수": "gabia push dac0ad04f (첫 push 는 인증 실패 → 같은 작업 폴더에서 push 만 다시) → db/raw/nd_q2_decomp_2026_10_23/step1b/ · thermo GGA_GGA+U · 엔트리 321 (전부 GGA) · MP DB 2026.09.28",
+  "G5a_정상성": "✅ host = {Li₃PS₄, Li₂S, LiCl} (알려진 답) · 도핑 = Li₃PS₄ · LiCl · Li₃PO₄ · Nd₂S₃ · Li₂S · 원소상 없음 · 공통 세 상은 두 질의에서 같은 엔트리 · cif 바이트도 같음",
+  "G5": "✅ 기저 다섯 · 계수 5/5 (해 하나) · 잔차 ≤ 6e-14 · 음 아닌 계수 — 도핑 Li₃PS₄ 9.25 · Li₂S 1 · LiCl 16 · Li₃PO₄ 0.75 · Nd₂S₃ 1 / host 5 · 2 · 8 · 0 · 0",
+  "봉인": "db/inputs/nd_q2_decomp_2026_10_23/basis.json (sha256 3485bfef1762cb47… · QE 에너지 0 건)",
+  "다형_메모": "Li₃PS₄ 32 원자 사방정 · Li₂S 3 원자 · LiCl 육방 4 원자 (MP GGA 최저 · 실험은 암염) · Li₃PO₄ 16 원자 β · Nd₂S₃ 20 원자 α — 공통상 계수 차 (원자당) Li₃PS₄ −0.0036 · Li₂S −0.024 · LiCl +0.0043 ⇒ 공통상 다형 오차는 Y 에 대부분 상쇄 (Li₂S 10 meV/원자 오차 → Y ≈ 0.7 meV/원자) · 도핑에만 있는 Li₃PO₄ · Nd₂S₃ 는 상쇄 없음",
+  "입력": "db/inputs/nd_q2_decomp_2026_10_23/run/{Li2S,Li3PO4,Li3PS4,LiCl,Nd2S3,host}/scf.in (MANIFEST · SHA256SUMS) — 상 vc-relax (k 간격 0.25: 8 8 8 · 6 5 5 · 5 4 2 · 8 8 4 · 7 4 2) · host 고정셀 이온 이완 k 3 3 2 · 방법 설정 여섯 다 같고 9 월 탐침과 같다 · nosym .true. 로 통일 (러너의 설정 균일성 검사 · 대칭은 에너지를 안 바꾼다)",
+  "kgy_PAW": "✅ Li · P · S · Cl 공식 사이트에서 받아 gabia sha256 과 같음 확인 뒤 넣음 (Nd · O 는 원래 같았음)",
+  "⏭": "kgy: worktree → 입력 복사 · sha 확인 → GPU 프로브 (host · 120 초 · 어림 줄만) → 들어가면 tmux ndq2 (run_force_check_scf.sh · MIN_FREE_MIB = 어림 × 1.3 + 1024)",
+  "by": "agent · 2026-10-23"
+ },
+ "▶_kgy_발사_관측_2026_10_24": {
+  "출처": "사용자 붙여넣기 2026-10-24 11:38:51 KST (watch · run.log 끝 6 줄 · nvidia-smi · tmux ls) — 에너지 값은 안 찍었다",
+  "발사": "tmux ndq2 생성 10-24 02:49:45 KST · worktree ~/wt_ndq2_1023 (HEAD 305629d63) · run root ~/work/runs/nd_q2_decomp_2026_10_23 · 입력 SHA256SUMS ✓ · GPU 검사 프로브 (host · 120 초 · 어림 줄만) 뒤 MIN_FREE_MIB 16345 (= 어림 × 1.3 + 1024) · LOCK /tmp/nd_q2.lock · 러너 tools/doping/run_force_check_scf.sh",
+  "관측_11_38": "✓ host 165 분 (05:35:25) · ✓ Li2S 123 분 (07:39:03) · ✓ Li3PO4 201 분 (11:00:41) · Li3PS4 11:00 부터 · 남음 LiCl · Nd2S3 · VRAM 여유 21,076 MiB (문턱 16,345) · GPU 10,439 / 24,576 MiB · 99 % · 곁의 잡 = cascade v7 cv7main (10-20 19:37 재개)",
+  "회수_블록_이른_실행": "사용자가 회수 블록을 ndq2 가 돌 때 실행 → 가드 '⛔ ndq2 가 아직 돌아요' 로 아무것도 복사 · 삭제 안 함 (설계대로 · 러너가 이 worktree 의 스크립트로 돈다)",
+  "⚠_시간": "작은 셀이 오래 걸린 것은 nosym .true. 통일 때문이다 (Li2S k 8 8 8 을 대칭으로 줄이지 못함) — 값에는 영향 없음 · k 탐침은 대칭을 켜고 새 run root 로 돌린다 (러너 설정 균일성 검사가 run root 단위라서)",
+  "⏭": "ndq2 끝 ('끝 — 완료 6' 줄 · tmux 목록에 ndq2 없음) → 같은 회수 블록 (db/raw/nd_q2_decomp_2026_10_23/run_kgy/ · 입력 해시 대조 · SHA256SUMS_out) → Pulay · G_V · 완료 판정 → k 탐침 입력",
+  "by": "agent · 2026-10-26"
+ },
+ "✅_회수_게이트_2026_10_26": {
+  "회수": "kgy push d11e40a89 (10-26 09:51) → db/raw/nd_q2_decomp_2026_10_23/run_kgy/ — 잡 6 · 입력 SHA256SUMS ✓ · 출력 SHA256SUMS_out ✓ · run.log '끝 — 완료 6 · 건너뜀 0 · 실패 0 · 총 1333분' (10-25 01:03:38)",
+  "완료": "6/6 'bfgs converged' · JOB DONE · 'convergence NOT achieved' 0 — host relax 7 SCF · Li2S 6 · Li3PO4 11 · Li3PS4 29 · LiCl 14 · Nd2S3 11 (vc-relax 는 끝 SCF 포함)",
+  "G_상_이완_Pulay": "Li2S 0.038 · Li3PO4 0.273 · Li3PS4 0.006 · LiCl 0.045 · Nd2S3 0.033 meV/원자 — 전부 ≤ 0.5 ✓ (고친 파서 · 아래 ⚠)",
+  "G_V": "host P −0.34 kbar (−0.034 GPa) · 도핑 P −0.03 kbar (9 월 탐침) — 둘 다 |P| ≤ 2 GPa · 셀 간 원자당 보정 차 0.0022–0.0032 meV/atom (B 21.7–32.5) ≤ 1 ✓ ⇒ EOS 안 함",
+  "host_힘": "최대 힘 성분 0.0025 eV/Å (고정셀 이온 이완 끝)",
+  "상_부피_변화_vc_relax": "MP 구조 대비 Li2S −0.93 · Li3PO4 −1.43 · Li3PS4 −0.28 · LiCl −1.14 · Nd2S3 −1.22 % · 끝 압력 |P| ≤ 0.19 kbar",
+  "⛔_Y_안_봄": "이 단계에서 Y (두 셀 분해 구동력 차) 는 계산하지 않았다 — k 탐침 판정 뒤 --collect 한 번",
+  "by": "agent · 2026-10-26"
+ },
+ "⚠_조용히_틀린_경로_Pulay_2026_10_26": {
+  "무엇": "dft_decomp_check.py pulay_gap_meV_per_atom 이 끝 SCF 를 문구 'A final scf calculation at the relaxed structure' 로 찾았다 — QE 7.4.1 은 'Final scf calculation at the relaxed structure.' 로 찍는다 ('A' 없음 · 대문자 F) → 다섯 상 출력이 전부 None",
+  "결과였을_것": "--collect 는 Pulay 가 전부 None 이면 그 줄을 통째로 안 찍었다 — G_상_이완 게이트가 **조용히 빠진 채** Y 가 나왔을 것 (10-23 확장 selftest 의 fixture 가 6.x 문구라 초록이었다)",
+  "고침": "끝 SCF = 마지막 'End final coordinates' 뒤의 '!' · 마지막 BFGS = 그 앞의 '!' · 'bfgs converged' 필수 (러너 _fc_ok 와 같은 구조 기준 · 6.x · 7.x 둘 다) · collect: 입력이 vc-relax 인 상인데 끝 SCF 를 못 찾으면 거부 (끝 3) · G_phase_pass 를 결과 JSON · pair 에 기록 · 불통과면 Y 앞에 ⛔",
+  "시험": "selftest 66/66 (50 → 56 → 66 · QE 7.4.1 꼴 fixture · 6.x 문구 · 음성 (끝 SCF 없음 · nstep 소진) · 실물 Li2S 회귀 · collect 거부 · 통과 · 불통과) · 깨기 5/5 빨강 (문구 파서 되돌림 · collect 거부 끔 · bfgs 요구 끔 · G_phase 늘 통과 · Y 앞 ⛔ 끔)",
+  "과거_재현_상시절차": "Y 기록 (y_site_preference_dft_2026_09_07.json §2) 을 새 판 decomp_energy 로 다시 — −0.057837396782 · −0.088329029086 eV/atom 비트까지 같음 · 계수 같음 (Pulay 경로는 10-23 에 새로 생겨 과거 마감에 쓰인 적 없음)",
+  "by": "agent · 2026-10-26"
+ },
+ "▶_k_탐침_입력_2026_10_26": {
+  "카드": "§4 G_k_탐침 — host k 4 4 2 SCF 1 · 상마다 간격 0.18 Å⁻¹ SCF 1 → 상 |ΔE|/원자 > 1 meV 면 탐침 값 · host > 1 meV 면 Y 에 k 한계 + 도핑 k 4 4 1 (gabia) 재개 조건",
+  "도구": "dft_decomp_check.py --kprobe (결과 전 커밋 · 기하는 tools/sei/splice_relaxed.py · calculation 'scf' · &IONS · &CELL 뺌 · 설정 줄이 본 입력과 다르면 거부) · --kprobe_read (잡마다 원자당 차 · 판정 파일 · Y 안 셈) · selftest 66/66 · 깨기 9/9 빨강",
+  "명령": "python3 tools/doping/dft_decomp_check.py --kprobe --runs db/raw/nd_q2_decomp_2026_10_23/run_kgy --basis db/inputs/nd_q2_decomp_2026_10_23/basis.json --kspacing_phase 0.18 --kpoints '4 4 2' --phase_symmetry --out db/inputs/nd_q2_decomp_2026_10_23/kprobe",
+  "입력": {
+   "Li2S": {
+    "폴더": "phase",
+    "k": "8 8 8 → 11 11 11",
+    "nosym": ".false.",
+    "sha256": "f4b607813103c785"
+   },
+   "Li3PO4": {
+    "폴더": "phase",
+    "k": "6 5 5 → 8 7 6",
+    "nosym": ".false.",
+    "sha256": "7fa529bfe1ab72b5"
+   },
+   "Li3PS4": {
+    "폴더": "phase",
+    "k": "5 4 2 → 6 5 3",
+    "nosym": ".false.",
+    "sha256": "7a64f171ff686973"
+   },
+   "LiCl": {
+    "폴더": "phase",
+    "k": "8 8 4 → 11 11 6",
+    "nosym": ".false.",
+    "sha256": "70bf2e3cc6daef9b"
+   },
+   "Nd2S3": {
+    "폴더": "phase",
+    "k": "7 4 2 → 9 5 3",
+    "nosym": ".false.",
+    "sha256": "edb02b585cddb05e"
+   },
+   "host": {
+    "폴더": "target",
+    "k": "3 3 2 → 4 4 2",
+    "nosym": ".true.",
+    "sha256": "f1ceee04830027c6"
+   }
+  },
+  "설정": "상 다섯 키 e2a0f6d4 (nosym .false.) · host 키 dd8479b7 (= 본 런 · nosym .true.) — 러너 균일성 검사가 nosym 까지 보므로 phase/ · target/ 두 폴더",
+  "⚠_대칭": "상 탐침만 대칭을 켰다 — 수렴한 에너지를 바꾸지 않는 계산 기법이고 카드 설정 고정 목록 (PP · 컷오프 · smearing · conv_thr · mixing) 밖이다. 본 런은 러너 균일성 때문에 껐다 (그래서 작은 셀이 오래 걸렸다). host 는 본 런과 k 만 다르다",
+  "⏭": "kgy: worktree → 입력 복사 · 두 폴더 sha → GPU 검사 프로브 (host k442 · 120 초 · 어림 줄만) → tmux ndq2k (phase → target 차례) → 회수 → --kprobe_read → 판정대로 collect 폴더 → --collect 한 번",
+  "by": "agent · 2026-10-26"
+ },
+ "✅_k_탐침_판정_Y_2026_10_26": {
+  "회수": "kgy push 17b2a2b73 → db/raw/nd_q2_decomp_2026_10_23/kprobe_kgy/ (상 5 · host · 입력 SHA256SUMS ✓ · 출력 SHA256SUMS_out ✓ · 상 141 분 · host 78 분 · 실패 0)",
+  "G_k": "--kprobe_read → 상 ΔE(탐침 − 본) Li2S −0.003 · Li3PO4 −0.003 · Li3PS4 −0.000 · LiCl −0.000 · Nd2S3 −0.014 · host −0.279 meV/원자 — 전부 ≤ 1 → 본 값 · k 한계 없음",
+  "collect": "한 번 → Y 보정 전 −22.257 · B 25 −22.259 (B 21.7–32.5 −22.260 ~ −22.259) meV/atom · |Y| > 분해능 2 · G_V · G_상_이완 통과 · 독립 검산 같음",
+  "판독": "db/properties/nd_q2_decomp_readout_2026_10_26.json",
+  "by": "agent · 2026-10-26"
+ },
+ "✅_닫힘_2026_11_03": {
+  "마감": "D-2026-11-03-nd-q123-closed (db/properties/nd_q123_closed_2026_11_03.json) — Q2 허용 문장은 마감 §2 에 판독 파일 그대로 복사 · 재개 조건은 카드 §8 그대로",
+  "by": "agent · 2026-11-03"
+ }
+}

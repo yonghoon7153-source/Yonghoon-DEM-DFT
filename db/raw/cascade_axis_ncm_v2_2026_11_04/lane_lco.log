@@ -1,0 +1,549 @@
+종 91개 x 상대 2개 = 182 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/1137 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1137/1137 [00:00<00:00, 1155.38it/s]Retrieving ThermoDoc documents: 100%|██████████| 1137/1137 [00:00<00:00, 1155.17it/s]
+[mp_api] 1137 entries in Ag-Cl-Co-Li-O-P-S
+[1/91] Ag2O       vs LCO_full -0.3135 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1137 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1137/1137 [00:01<00:00, 897.55it/s]Retrieving ThermoDoc documents: 100%|██████████| 1137/1137 [00:01<00:00, 897.41it/s]
+[mp_api] 1137 entries in Ag-Cl-Co-Li-O-P-S
+[1/91] Ag2O       vs LCO_half -0.4467 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1316 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:01<00:00, 885.73it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:01<00:00, 885.61it/s]
+[mp_api] 1316 entries in Al-Cl-Co-Li-O-P-S
+[2/91] Al2O3      vs LCO_full -0.3500 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1316 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:01<00:00, 882.23it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:01<00:00, 882.10it/s]
+[mp_api] 1316 entries in Al-Cl-Co-Li-O-P-S
+[2/91] Al2O3      vs LCO_half -0.4856 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1316 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 606.88it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 606.82it/s]
+[mp_api] 1316 entries in Al-Cl-Co-Li-O-P-S
+[3/91] Al2S3      vs LCO_full -0.3850 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1316 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 608.31it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 608.26it/s]
+[mp_api] 1316 entries in Al-Cl-Co-Li-O-P-S
+[3/91] Al2S3      vs LCO_half -0.5343 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1377 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1377/1377 [00:01<00:00, 689.16it/s]Retrieving ThermoDoc documents: 100%|██████████| 1377/1377 [00:01<00:00, 689.10it/s]
+[mp_api] 1377 entries in Al-Br-Cl-Co-Li-O-P-S
+[4/91] AlBr3      vs LCO_full -0.3554 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1377 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1377/1377 [00:01<00:00, 772.04it/s]Retrieving ThermoDoc documents: 100%|██████████| 1377/1377 [00:01<00:00, 771.96it/s]
+[mp_api] 1377 entries in Al-Br-Cl-Co-Li-O-P-S
+[4/91] AlBr3      vs LCO_half -0.4900 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1316 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 657.35it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 657.29it/s]
+[mp_api] 1316 entries in Al-Cl-Co-Li-O-P-S
+[5/91] AlCl3      vs LCO_full -0.3497 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1316 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 631.18it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:02<00:00, 631.12it/s]
+[mp_api] 1316 entries in Al-Cl-Co-Li-O-P-S
+[5/91] AlCl3      vs LCO_half -0.4910 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1683 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1683/1683 [00:03<00:00, 499.63it/s]Retrieving ThermoDoc documents: 100%|██████████| 1683/1683 [00:03<00:00, 499.61it/s]
+[mp_api] 1683 entries in Al-Cl-Co-F-Li-O-P-S
+[6/91] AlF3       vs LCO_full -0.3497 (0 V)  (13s)
+Retrieving ThermoDoc documents:   0%|          | 0/1683 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1683/1683 [00:03<00:00, 523.98it/s]Retrieving ThermoDoc documents: 100%|██████████| 1683/1683 [00:03<00:00, 523.95it/s]
+[mp_api] 1683 entries in Al-Cl-Co-F-Li-O-P-S
+[6/91] AlF3       vs LCO_half -0.4910 (0 V)  (13s)
+Retrieving ThermoDoc documents:   0%|          | 0/1390 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 674.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 674.00it/s]
+[mp_api] 1390 entries in Al-Cl-Co-I-Li-O-P-S
+[7/91] AlI3       vs LCO_full -0.3497 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1390 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 636.52it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 636.47it/s]
+[mp_api] 1390 entries in Al-Cl-Co-I-Li-O-P-S
+[7/91] AlI3       vs LCO_half -0.4910 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1621 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1621/1621 [00:02<00:00, 632.75it/s]Retrieving ThermoDoc documents: 100%|██████████| 1621/1621 [00:02<00:00, 632.70it/s]
+[mp_api] 1621 entries in Al-Cl-Co-Li-N-O-P-S
+[8/91] AlN        vs LCO_full -0.3449 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1621 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1621/1621 [00:02<00:00, 612.76it/s]Retrieving ThermoDoc documents: 100%|██████████| 1621/1621 [00:02<00:00, 612.72it/s]
+[mp_api] 1621 entries in Al-Cl-Co-Li-N-O-P-S
+[8/91] AlN        vs LCO_half -0.4835 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1118 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1118/1118 [00:00<00:00, 1383.38it/s]Retrieving ThermoDoc documents: 100%|██████████| 1118/1118 [00:00<00:00, 1383.08it/s]
+[mp_api] 1118 entries in As-Cl-Co-Li-O-P-S
+[9/91] As2S3      vs LCO_full -0.2422 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1118 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1118/1118 [00:00<00:00, 1860.81it/s]Retrieving ThermoDoc documents: 100%|██████████| 1118/1118 [00:00<00:00, 1860.27it/s]
+[mp_api] 1118 entries in As-Cl-Co-Li-O-P-S
+[9/91] As2S3      vs LCO_half -0.3795 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1166 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:01<00:00, 1089.19it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:01<00:00, 1089.02it/s]
+[mp_api] 1166 entries in B-Cl-Co-Li-O-P-S
+[10/91] B2O3       vs LCO_full -0.3590 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1166 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:00<00:00, 1594.99it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:00<00:00, 1594.59it/s]
+[mp_api] 1166 entries in B-Cl-Co-Li-O-P-S
+[10/91] B2O3       vs LCO_half -0.4945 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1180 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 853.72it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 853.61it/s]
+[mp_api] 1180 entries in Ba-Cl-Co-Li-O-P-S
+[11/91] BaCl2      vs LCO_full -0.3247 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1180 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 808.86it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 808.76it/s]
+[mp_api] 1180 entries in Ba-Cl-Co-Li-O-P-S
+[11/91] BaCl2      vs LCO_half -0.4578 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1180 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 809.91it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 809.82it/s]
+[mp_api] 1180 entries in Ba-Cl-Co-Li-O-P-S
+[12/91] BaO        vs LCO_full -0.3136 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1180 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 842.63it/s]Retrieving ThermoDoc documents: 100%|██████████| 1180/1180 [00:01<00:00, 842.53it/s]
+[mp_api] 1180 entries in Ba-Cl-Co-Li-O-P-S
+[12/91] BaO        vs LCO_half -0.4445 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1514 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1514/1514 [00:02<00:00, 631.87it/s]Retrieving ThermoDoc documents: 100%|██████████| 1514/1514 [00:02<00:00, 631.82it/s]
+[mp_api] 1514 entries in Ca-Cl-Co-Li-N-O-P-S
+[13/91] Ca3N2      vs LCO_full -0.3225 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1514 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1514/1514 [00:01<00:00, 920.76it/s]Retrieving ThermoDoc documents: 100%|██████████| 1514/1514 [00:01<00:00, 920.66it/s]
+[mp_api] 1514 entries in Ca-Cl-Co-Li-N-O-P-S
+[13/91] Ca3N2      vs LCO_half -0.4543 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1260 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1260/1260 [00:01<00:00, 730.44it/s]Retrieving ThermoDoc documents: 100%|██████████| 1260/1260 [00:01<00:00, 730.37it/s]
+[mp_api] 1260 entries in Br-Ca-Cl-Co-Li-O-P-S
+[14/91] CaBr2      vs LCO_full -0.3260 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1260 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1260/1260 [00:01<00:00, 841.28it/s]Retrieving ThermoDoc documents: 100%|██████████| 1260/1260 [00:01<00:00, 841.18it/s]
+[mp_api] 1260 entries in Br-Ca-Cl-Co-Li-O-P-S
+[14/91] CaBr2      vs LCO_half -0.4604 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1194 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 1040.27it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 1040.11it/s]
+[mp_api] 1194 entries in Ca-Cl-Co-Li-O-P-S
+[15/91] CaCl2      vs LCO_full -0.3260 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1194 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 821.08it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 820.98it/s]
+[mp_api] 1194 entries in Ca-Cl-Co-Li-O-P-S
+[15/91] CaCl2      vs LCO_half -0.4604 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1557 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1557/1557 [00:02<00:00, 601.56it/s]Retrieving ThermoDoc documents: 100%|██████████| 1557/1557 [00:02<00:00, 601.52it/s]
+[mp_api] 1557 entries in Ca-Cl-Co-F-Li-O-P-S
+[16/91] CaF2       vs LCO_full -0.3260 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1557 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1557/1557 [00:02<00:00, 594.02it/s]Retrieving ThermoDoc documents: 100%|██████████| 1557/1557 [00:02<00:00, 593.98it/s]
+[mp_api] 1557 entries in Ca-Cl-Co-F-Li-O-P-S
+[16/91] CaF2       vs LCO_half -0.4604 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1194 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 1087.86it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 1087.68it/s]
+[mp_api] 1194 entries in Ca-Cl-Co-Li-O-P-S
+[17/91] CaO        vs LCO_full -0.3150 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1194 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 1053.33it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:01<00:00, 1053.17it/s]
+[mp_api] 1194 entries in Ca-Cl-Co-Li-O-P-S
+[17/91] CaO        vs LCO_half -0.4470 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1194 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:00<00:00, 1593.82it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:00<00:00, 1593.47it/s]
+[mp_api] 1194 entries in Ca-Cl-Co-Li-O-P-S
+[18/91] CaS        vs LCO_full -0.3260 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1194 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:00<00:00, 1363.91it/s]Retrieving ThermoDoc documents: 100%|██████████| 1194/1194 [00:00<00:00, 1363.64it/s]
+[mp_api] 1194 entries in Ca-Cl-Co-Li-O-P-S
+[18/91] CaS        vs LCO_half -0.4604 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3652.55it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3650.34it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[19/91] CoO        vs LCO_full -0.3151 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3689.28it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3687.05it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[19/91] CoO        vs LCO_half -0.4459 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1818 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:02<00:00, 610.55it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:02<00:00, 610.51it/s]
+[mp_api] 1818 entries in Cl-Co-Cr-Li-O-P-S
+[20/91] Cr2O3      vs LCO_full -0.3125 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1818 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 490.75it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 490.73it/s]
+[mp_api] 1818 entries in Cl-Co-Cr-Li-O-P-S
+[20/91] Cr2O3      vs LCO_half -0.4543 (0 V)  (13s)
+Retrieving ThermoDoc documents:   0%|          | 0/1818 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 520.08it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 520.06it/s]
+[mp_api] 1818 entries in Cl-Co-Cr-Li-O-P-S
+[21/91] CrCl3      vs LCO_full -0.3373 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1818 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:02<00:00, 737.40it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:02<00:00, 737.34it/s]
+[mp_api] 1818 entries in Cl-Co-Cr-Li-O-P-S
+[21/91] CrCl3      vs LCO_half -0.4735 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1818 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 532.27it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 532.24it/s]
+[mp_api] 1818 entries in Cl-Co-Cr-Li-O-P-S
+[22/91] CrO3       vs LCO_full -0.3205 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1818 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 576.57it/s]Retrieving ThermoDoc documents: 100%|██████████| 1818/1818 [00:03<00:00, 576.54it/s]
+[mp_api] 1818 entries in Cl-Co-Cr-Li-O-P-S
+[22/91] CrO3       vs LCO_half -0.4614 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1513 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1513/1513 [00:02<00:00, 578.34it/s]Retrieving ThermoDoc documents: 100%|██████████| 1513/1513 [00:02<00:00, 578.30it/s]
+[mp_api] 1513 entries in Cl-Co-Cu-Li-O-P-S
+[23/91] Cu2O       vs LCO_full -0.3180 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1513 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1513/1513 [00:02<00:00, 681.27it/s]Retrieving ThermoDoc documents: 100%|██████████| 1513/1513 [00:02<00:00, 681.22it/s]
+[mp_api] 1513 entries in Cl-Co-Cu-Li-O-P-S
+[23/91] Cu2O       vs LCO_half -0.4439 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/2198 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  91%|█████████ | 2000/2198 [00:04<00:00, 428.51it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:06<00:00, 307.97it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:06<00:00, 333.57it/s]
+[mp_api] 2198 entries in Cl-Co-Fe-Li-O-P-S
+[24/91] Fe2O3      vs LCO_full -0.3011 (0 V)  (16s)
+Retrieving ThermoDoc documents:   0%|          | 0/2198 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  91%|█████████ | 2000/2198 [00:03<00:00, 500.34it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:05<00:00, 371.21it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:05<00:00, 399.33it/s]
+[mp_api] 2198 entries in Cl-Co-Fe-Li-O-P-S
+[24/91] Fe2O3      vs LCO_half -0.4316 (0 V)  (16s)
+Retrieving ThermoDoc documents:   0%|          | 0/2198 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  91%|█████████ | 2000/2198 [00:03<00:00, 501.14it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:06<00:00, 321.35it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:06<00:00, 356.22it/s]
+[mp_api] 2198 entries in Cl-Co-Fe-Li-O-P-S
+[25/91] FeCl3      vs LCO_full -0.3299 (0 V)  (16s)
+Retrieving ThermoDoc documents:   0%|          | 0/2198 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  91%|█████████ | 2000/2198 [00:03<00:00, 520.99it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:05<00:00, 333.54it/s]Retrieving ThermoDoc documents: 100%|██████████| 2198/2198 [00:05<00:00, 369.85it/s]
+[mp_api] 2198 entries in Cl-Co-Fe-Li-O-P-S
+[25/91] FeCl3      vs LCO_half -0.4662 (0 V)  (15s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 759.79it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 759.70it/s]
+[mp_api] 1107 entries in Cl-Co-Ga-Li-O-P-S
+[26/91] Ga2O3      vs LCO_full -0.3081 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 857.43it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 857.31it/s]
+[mp_api] 1107 entries in Cl-Co-Ga-Li-O-P-S
+[26/91] Ga2O3      vs LCO_half -0.4508 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 816.67it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 816.57it/s]
+[mp_api] 1107 entries in Cl-Co-Ga-Li-O-P-S
+[27/91] Ga2S3      vs LCO_full -0.3391 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 1084.43it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 1084.24it/s]
+[mp_api] 1107 entries in Cl-Co-Ga-Li-O-P-S
+[27/91] Ga2S3      vs LCO_half -0.4910 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 1019.88it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 1019.73it/s]
+[mp_api] 1107 entries in Cl-Co-Ga-Li-O-P-S
+[28/91] GaCl3      vs LCO_full -0.3355 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:00<00:00, 1170.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:00<00:00, 1169.85it/s]
+[mp_api] 1107 entries in Cl-Co-Ga-Li-O-P-S
+[28/91] GaCl3      vs LCO_half -0.4730 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1450 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:01<00:00, 835.42it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:01<00:00, 835.33it/s]
+[mp_api] 1450 entries in Cl-Co-Ga-Li-N-O-P-S
+[29/91] GaN        vs LCO_full -0.3265 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1450 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:02<00:00, 637.46it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:02<00:00, 637.41it/s]
+[mp_api] 1450 entries in Cl-Co-Ga-Li-N-O-P-S
+[29/91] GaN        vs LCO_half -0.4671 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1078 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1078/1078 [00:00<00:00, 1390.60it/s]Retrieving ThermoDoc documents: 100%|██████████| 1078/1078 [00:00<00:00, 1390.29it/s]
+[mp_api] 1078 entries in Cl-Co-Gd-Li-O-P-S
+[30/91] Gd2O3      vs LCO_full -0.3161 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1078 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1078/1078 [00:01<00:00, 975.18it/s]Retrieving ThermoDoc documents: 100%|██████████| 1078/1078 [00:01<00:00, 975.04it/s]
+[mp_api] 1078 entries in Cl-Co-Gd-Li-O-P-S
+[30/91] Gd2O3      vs LCO_half -0.4523 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1134 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:01<00:00, 1067.96it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:01<00:00, 1067.79it/s]
+[mp_api] 1134 entries in Cl-Co-Ge-Li-O-P-S
+[31/91] GeO2       vs LCO_full -0.2599 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1134 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:00<00:00, 1750.97it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:00<00:00, 1750.50it/s]
+[mp_api] 1134 entries in Cl-Co-Ge-Li-O-P-S
+[31/91] GeO2       vs LCO_half -0.3926 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1134 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:01<00:00, 1048.56it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:01<00:00, 1048.38it/s]
+[mp_api] 1134 entries in Cl-Co-Ge-Li-O-P-S
+[32/91] GeS2       vs LCO_full -0.2847 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1134 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:01<00:00, 1102.67it/s]Retrieving ThermoDoc documents: 100%|██████████| 1134/1134 [00:01<00:00, 1102.46it/s]
+[mp_api] 1134 entries in Cl-Co-Ge-Li-O-P-S
+[32/91] GeS2       vs LCO_half -0.4214 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1089 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:01<00:00, 1086.71it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:01<00:00, 1086.51it/s]
+[mp_api] 1089 entries in Cl-Co-Hf-Li-O-P-S
+[33/91] HfCl4      vs LCO_full -0.3580 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1089 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:00<00:00, 1792.21it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:00<00:00, 1791.71it/s]
+[mp_api] 1089 entries in Cl-Co-Hf-Li-O-P-S
+[33/91] HfCl4      vs LCO_half -0.5031 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1089 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:01<00:00, 847.25it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:01<00:00, 847.13it/s]
+[mp_api] 1089 entries in Cl-Co-Hf-Li-O-P-S
+[34/91] HfO2       vs LCO_full -0.3362 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1089 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:00<00:00, 1500.73it/s]Retrieving ThermoDoc documents: 100%|██████████| 1089/1089 [00:00<00:00, 1500.40it/s]
+[mp_api] 1089 entries in Cl-Co-Hf-Li-O-P-S
+[34/91] HfO2       vs LCO_half -0.4769 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 827.20it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 827.10it/s]
+[mp_api] 1107 entries in Cl-Co-In-Li-O-P-S
+[35/91] In2O3      vs LCO_full -0.3010 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 854.47it/s]Retrieving ThermoDoc documents: 100%|██████████| 1107/1107 [00:01<00:00, 854.36it/s]
+[mp_api] 1107 entries in Cl-Co-In-Li-O-P-S
+[35/91] In2O3      vs LCO_half -0.4326 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1151 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 1076.17it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 1075.99it/s]
+[mp_api] 1151 entries in Cl-Co-La-Li-O-P-S
+[36/91] La2O3      vs LCO_full -0.3148 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1151 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 993.03it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 992.89it/s]
+[mp_api] 1151 entries in Cl-Co-La-Li-O-P-S
+[36/91] La2O3      vs LCO_half -0.4484 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1151 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 1134.19it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 1133.98it/s]
+[mp_api] 1151 entries in Cl-Co-La-Li-O-P-S
+[37/91] LaCl3      vs LCO_full -0.3395 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1151 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 816.68it/s]Retrieving ThermoDoc documents: 100%|██████████| 1151/1151 [00:01<00:00, 816.59it/s]
+[mp_api] 1151 entries in Cl-Co-La-Li-O-P-S
+[37/91] LaCl3      vs LCO_half -0.4714 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1508 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1508/1508 [00:01<00:00, 762.74it/s]Retrieving ThermoDoc documents: 100%|██████████| 1508/1508 [00:01<00:00, 762.66it/s]
+[mp_api] 1508 entries in Cl-Co-F-La-Li-O-P-S
+[38/91] LaF3       vs LCO_full -0.3350 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1508 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1508/1508 [00:01<00:00, 793.92it/s]Retrieving ThermoDoc documents: 100%|██████████| 1508/1508 [00:01<00:00, 793.85it/s]
+[mp_api] 1508 entries in Cl-Co-F-La-Li-O-P-S
+[38/91] LaF3       vs LCO_half -0.4732 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 1806.15it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 1805.57it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[39/91] Li2O       vs LCO_full -0.3117 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3635.35it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3633.00it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[39/91] Li2O       vs LCO_half -0.4417 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 2786.23it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 2784.92it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[40/91] Li2S       vs LCO_full -0.3227 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3507.63it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3505.74it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[40/91] Li2S       vs LCO_half -0.4549 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1276 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1276/1276 [00:01<00:00, 891.11it/s]Retrieving ThermoDoc documents: 100%|██████████| 1276/1276 [00:01<00:00, 891.00it/s]
+[mp_api] 1276 entries in Cl-Co-Li-N-O-P-S
+[41/91] Li3N       vs LCO_full -0.3175 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1276 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1276/1276 [00:01<00:00, 875.45it/s]Retrieving ThermoDoc documents: 100%|██████████| 1276/1276 [00:01<00:00, 875.35it/s]
+[mp_api] 1276 entries in Cl-Co-Li-N-O-P-S
+[41/91] Li3N       vs LCO_half -0.4468 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1061 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1061/1061 [00:00<00:00, 1548.25it/s]Retrieving ThermoDoc documents: 100%|██████████| 1061/1061 [00:00<00:00, 1547.88it/s]
+[mp_api] 1061 entries in Br-Cl-Co-Li-O-P-S
+[42/91] LiBr       vs LCO_full -0.3227 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1061 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1061/1061 [00:00<00:00, 1386.16it/s]Retrieving ThermoDoc documents: 100%|██████████| 1061/1061 [00:00<00:00, 1385.84it/s]
+[mp_api] 1061 entries in Br-Cl-Co-Li-O-P-S
+[42/91] LiBr       vs LCO_half -0.4549 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3716.02it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3713.78it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[43/91] LiCl       vs LCO_full -0.3240 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3585.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3582.89it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[43/91] LiCl       vs LCO_half -0.4541 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1345 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1345/1345 [00:01<00:00, 1105.32it/s]Retrieving ThermoDoc documents: 100%|██████████| 1345/1345 [00:01<00:00, 1105.15it/s]
+[mp_api] 1345 entries in Cl-Co-F-Li-O-P-S
+[44/91] LiF        vs LCO_full -0.3227 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1345 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1345/1345 [00:01<00:00, 853.91it/s]Retrieving ThermoDoc documents: 100%|██████████| 1345/1345 [00:01<00:00, 853.82it/s]
+[mp_api] 1345 entries in Cl-Co-F-Li-O-P-S
+[44/91] LiF        vs LCO_half -0.4549 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1073 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1073/1073 [00:00<00:00, 1529.87it/s]Retrieving ThermoDoc documents: 100%|██████████| 1073/1073 [00:00<00:00, 1529.48it/s]
+[mp_api] 1073 entries in Cl-Co-I-Li-O-P-S
+[45/91] LiI        vs LCO_full -0.3227 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1073 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1073/1073 [00:00<00:00, 2630.21it/s]Retrieving ThermoDoc documents: 100%|██████████| 1073/1073 [00:00<00:00, 2629.16it/s]
+[mp_api] 1073 entries in Cl-Co-I-Li-O-P-S
+[45/91] LiI        vs LCO_half -0.4549 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1649 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1649/1649 [00:02<00:00, 630.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1649/1649 [00:02<00:00, 630.02it/s]
+[mp_api] 1649 entries in Cl-Co-Li-Mg-N-O-P-S
+[46/91] Mg3N2      vs LCO_full -0.3420 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1649 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1649/1649 [00:02<00:00, 669.30it/s]Retrieving ThermoDoc documents: 100%|██████████| 1649/1649 [00:02<00:00, 669.25it/s]
+[mp_api] 1649 entries in Cl-Co-Li-Mg-N-O-P-S
+[46/91] Mg3N2      vs LCO_half -0.4813 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1418 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1418/1418 [00:01<00:00, 734.71it/s]Retrieving ThermoDoc documents: 100%|██████████| 1418/1418 [00:01<00:00, 734.65it/s]
+[mp_api] 1418 entries in Br-Cl-Co-Li-Mg-O-P-S
+[47/91] MgBr2      vs LCO_full -0.3354 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1418 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1418/1418 [00:02<00:00, 705.38it/s]Retrieving ThermoDoc documents: 100%|██████████| 1418/1418 [00:02<00:00, 705.32it/s]
+[mp_api] 1418 entries in Br-Cl-Co-Li-Mg-O-P-S
+[47/91] MgBr2      vs LCO_half -0.4682 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1343 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 849.58it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 849.48it/s]
+[mp_api] 1343 entries in Cl-Co-Li-Mg-O-P-S
+[48/91] MgCl2      vs LCO_full -0.3325 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1343 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 819.07it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 818.98it/s]
+[mp_api] 1343 entries in Cl-Co-Li-Mg-O-P-S
+[48/91] MgCl2      vs LCO_half -0.4695 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1779 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1779/1779 [00:02<00:00, 662.47it/s]Retrieving ThermoDoc documents: 100%|██████████| 1779/1779 [00:02<00:00, 662.43it/s]
+[mp_api] 1779 entries in Cl-Co-F-Li-Mg-O-P-S
+[49/91] MgF2       vs LCO_full -0.3325 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1779 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1779/1779 [00:02<00:00, 824.59it/s]Retrieving ThermoDoc documents: 100%|██████████| 1779/1779 [00:02<00:00, 824.52it/s]
+[mp_api] 1779 entries in Cl-Co-F-Li-Mg-O-P-S
+[49/91] MgF2       vs LCO_half -0.4695 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1424 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1424/1424 [00:01<00:00, 727.69it/s]Retrieving ThermoDoc documents: 100%|██████████| 1424/1424 [00:01<00:00, 727.61it/s]
+[mp_api] 1424 entries in Cl-Co-I-Li-Mg-O-P-S
+[50/91] MgI2       vs LCO_full -0.3325 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1424 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1424/1424 [00:01<00:00, 908.72it/s]Retrieving ThermoDoc documents: 100%|██████████| 1424/1424 [00:01<00:00, 908.62it/s]
+[mp_api] 1424 entries in Cl-Co-I-Li-Mg-O-P-S
+[50/91] MgI2       vs LCO_half -0.4695 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1343 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 734.69it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 734.62it/s]
+[mp_api] 1343 entries in Cl-Co-Li-Mg-O-P-S
+[51/91] MgO        vs LCO_full -0.3254 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1343 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 730.83it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 730.76it/s]
+[mp_api] 1343 entries in Cl-Co-Li-Mg-O-P-S
+[51/91] MgO        vs LCO_half -0.4598 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1343 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 725.78it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 725.71it/s]
+[mp_api] 1343 entries in Cl-Co-Li-Mg-O-P-S
+[52/91] MgS        vs LCO_full -0.3325 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1343 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 721.36it/s]Retrieving ThermoDoc documents: 100%|██████████| 1343/1343 [00:01<00:00, 721.30it/s]
+[mp_api] 1343 entries in Cl-Co-Li-Mg-O-P-S
+[52/91] MgS        vs LCO_half -0.4695 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/3979 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  50%|█████     | 2000/3979 [00:03<00:03, 566.60it/s]Retrieving ThermoDoc documents:  75%|███████▌  | 3000/3979 [00:07<00:02, 350.40it/s]Retrieving ThermoDoc documents: 100%|██████████| 3979/3979 [00:11<00:00, 306.40it/s]Retrieving ThermoDoc documents: 100%|██████████| 3979/3979 [00:11<00:00, 337.43it/s]
+[mp_api] 3979 entries in Cl-Co-Li-Mn-O-P-S
+[53/91] MnO        vs LCO_full -0.3162 (0 V)  (27s)
+Retrieving ThermoDoc documents:   0%|          | 0/3979 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  50%|█████     | 2000/3979 [00:04<00:03, 496.99it/s]Retrieving ThermoDoc documents:  75%|███████▌  | 3000/3979 [00:08<00:02, 342.01it/s]Retrieving ThermoDoc documents: 100%|██████████| 3979/3979 [00:12<00:00, 283.77it/s]Retrieving ThermoDoc documents: 100%|██████████| 3979/3979 [00:12<00:00, 313.73it/s]
+[mp_api] 3979 entries in Cl-Co-Li-Mn-O-P-S
+[53/91] MnO        vs LCO_half -0.4515 (0 V)  (28s)
+Retrieving ThermoDoc documents:   0%|          | 0/1381 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1381/1381 [00:02<00:00, 666.62it/s]Retrieving ThermoDoc documents: 100%|██████████| 1381/1381 [00:02<00:00, 666.56it/s]
+[mp_api] 1381 entries in Cl-Co-Li-Mo-O-P-S
+[54/91] MoO3       vs LCO_full -0.2422 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1381 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1381/1381 [00:01<00:00, 714.98it/s]Retrieving ThermoDoc documents: 100%|██████████| 1381/1381 [00:01<00:00, 714.92it/s]
+[mp_api] 1381 entries in Cl-Co-Li-Mo-O-P-S
+[54/91] MoO3       vs LCO_half -0.3743 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1310 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 758.70it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 758.63it/s]
+[mp_api] 1310 entries in Cl-Co-Li-Na-O-P-S
+[55/91] Na2O       vs LCO_full -0.3117 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1310 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 689.78it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 689.71it/s]
+[mp_api] 1310 entries in Cl-Co-Li-Na-O-P-S
+[55/91] Na2O       vs LCO_half -0.4417 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1310 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 675.02it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 674.95it/s]
+[mp_api] 1310 entries in Cl-Co-Li-Na-O-P-S
+[56/91] Na2S       vs LCO_full -0.3227 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1310 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 910.17it/s]Retrieving ThermoDoc documents: 100%|██████████| 1310/1310 [00:01<00:00, 910.06it/s]
+[mp_api] 1310 entries in Cl-Co-Li-Na-O-P-S
+[56/91] Na2S       vs LCO_half -0.4549 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1396 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1396/1396 [00:02<00:00, 659.89it/s]Retrieving ThermoDoc documents: 100%|██████████| 1396/1396 [00:02<00:00, 659.83it/s]
+[mp_api] 1396 entries in Cl-Co-I-Li-Na-O-P-S
+[57/91] NaI        vs LCO_full -0.3227 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1396 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1396/1396 [00:02<00:00, 664.17it/s]Retrieving ThermoDoc documents: 100%|██████████| 1396/1396 [00:02<00:00, 664.11it/s]
+[mp_api] 1396 entries in Cl-Co-I-Li-Na-O-P-S
+[57/91] NaI        vs LCO_half -0.4549 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1307 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 728.13it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 728.06it/s]
+[mp_api] 1307 entries in Cl-Co-Li-Nb-O-P-S
+[58/91] Nb2O5      vs LCO_full -0.2132 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1307 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 782.67it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 782.58it/s]
+[mp_api] 1307 entries in Cl-Co-Li-Nb-O-P-S
+[58/91] Nb2O5      vs LCO_half -0.3424 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1307 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 785.26it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 785.18it/s]
+[mp_api] 1307 entries in Cl-Co-Li-Nb-O-P-S
+[59/91] NbCl5      vs LCO_full -0.3006 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1307 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 775.84it/s]Retrieving ThermoDoc documents: 100%|██████████| 1307/1307 [00:01<00:00, 775.75it/s]
+[mp_api] 1307 entries in Cl-Co-Li-Nb-O-P-S
+[59/91] NbCl5      vs LCO_half -0.4258 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1120 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 965.00it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 964.87it/s]
+[mp_api] 1120 entries in Cl-Co-Li-Nd-O-P-S
+[60/91] Nd2O3      vs LCO_full -0.3198 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1120 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 743.66it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 743.57it/s]
+[mp_api] 1120 entries in Cl-Co-Li-Nd-O-P-S
+[60/91] Nd2O3      vs LCO_half -0.4542 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1120 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 914.50it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 914.37it/s]
+[mp_api] 1120 entries in Cl-Co-Li-Nd-O-P-S
+[61/91] NdCl3      vs LCO_full -0.3356 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1120 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 1016.46it/s]Retrieving ThermoDoc documents: 100%|██████████| 1120/1120 [00:01<00:00, 1016.30it/s]
+[mp_api] 1120 entries in Cl-Co-Li-Nd-O-P-S
+[61/91] NdCl3      vs LCO_half -0.4738 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1474 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1474/1474 [00:01<00:00, 752.15it/s]Retrieving ThermoDoc documents: 100%|██████████| 1474/1474 [00:01<00:00, 752.09it/s]
+[mp_api] 1474 entries in Cl-Co-F-Li-Nd-O-P-S
+[62/91] NdF3       vs LCO_full -0.3356 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1474 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1474/1474 [00:02<00:00, 635.59it/s]Retrieving ThermoDoc documents: 100%|██████████| 1474/1474 [00:02<00:00, 635.54it/s]
+[mp_api] 1474 entries in Cl-Co-F-Li-Nd-O-P-S
+[62/91] NdF3       vs LCO_half -0.4738 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1767 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1767/1767 [00:02<00:00, 630.57it/s]Retrieving ThermoDoc documents: 100%|██████████| 1767/1767 [00:02<00:00, 630.52it/s]
+[mp_api] 1767 entries in Cl-Co-Li-Ni-O-P-S
+[63/91] NiO        vs LCO_full -0.3180 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1767 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1767/1767 [00:03<00:00, 558.39it/s]Retrieving ThermoDoc documents: 100%|██████████| 1767/1767 [00:03<00:00, 558.36it/s]
+[mp_api] 1767 entries in Cl-Co-Li-Ni-O-P-S
+[63/91] NiO        vs LCO_half -0.4465 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1390 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 616.38it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 616.34it/s]
+[mp_api] 1390 entries in Cl-Co-Li-O-P-S-Sb
+[64/91] Sb2O5      vs LCO_full -0.1793 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1390 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 627.19it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 627.13it/s]
+[mp_api] 1390 entries in Cl-Co-Li-O-P-S-Sb
+[64/91] Sb2O5      vs LCO_half -0.3186 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1390 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 622.92it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:02<00:00, 622.87it/s]
+[mp_api] 1390 entries in Cl-Co-Li-O-P-S-Sb
+[65/91] Sb2S3      vs LCO_full -0.2382 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1390 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:01<00:00, 758.74it/s]Retrieving ThermoDoc documents: 100%|██████████| 1390/1390 [00:01<00:00, 758.66it/s]
+[mp_api] 1390 entries in Cl-Co-Li-O-P-S-Sb
+[65/91] Sb2S3      vs LCO_half -0.3864 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1085 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 1422.60it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 1422.26it/s]
+[mp_api] 1085 entries in Cl-Co-Li-O-P-S-Sc
+[66/91] Sc2O3      vs LCO_full -0.3264 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1085 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 1433.90it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 1433.56it/s]
+[mp_api] 1085 entries in Cl-Co-Li-O-P-S-Sc
+[66/91] Sc2O3      vs LCO_half -0.4677 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1085 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 2853.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 2851.85it/s]
+[mp_api] 1085 entries in Cl-Co-Li-O-P-S-Sc
+[67/91] ScCl3      vs LCO_full -0.3399 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1085 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 1547.58it/s]Retrieving ThermoDoc documents: 100%|██████████| 1085/1085 [00:00<00:00, 1547.21it/s]
+[mp_api] 1085 entries in Cl-Co-Li-O-P-S-Sc
+[67/91] ScCl3      vs LCO_half -0.4818 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1438 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1438/1438 [00:02<00:00, 660.63it/s]Retrieving ThermoDoc documents: 100%|██████████| 1438/1438 [00:02<00:00, 660.57it/s]
+[mp_api] 1438 entries in Cl-Co-F-Li-O-P-S-Sc
+[68/91] ScF3       vs LCO_full -0.3399 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1438 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1438/1438 [00:02<00:00, 629.93it/s]Retrieving ThermoDoc documents: 100%|██████████| 1438/1438 [00:02<00:00, 629.88it/s]
+[mp_api] 1438 entries in Cl-Co-F-Li-O-P-S-Sc
+[68/91] ScF3       vs LCO_half -0.4818 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1590 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 516.38it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 516.35it/s]
+[mp_api] 1590 entries in Cl-Co-Li-O-P-S-Si
+[69/91] SiO2       vs LCO_full -0.2857 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1590 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 462.39it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 462.36it/s]
+[mp_api] 1590 entries in Cl-Co-Li-O-P-S-Si
+[69/91] SiO2       vs LCO_half -0.4153 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1590 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 428.01it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 427.99it/s]
+[mp_api] 1590 entries in Cl-Co-Li-O-P-S-Si
+[70/91] SiS2       vs LCO_full -0.3170 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1590 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 494.18it/s]Retrieving ThermoDoc documents: 100%|██████████| 1590/1590 [00:03<00:00, 494.15it/s]
+[mp_api] 1590 entries in Cl-Co-Li-O-P-S-Si
+[70/91] SiS2       vs LCO_half -0.4533 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1096 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:01<00:00, 807.94it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:01<00:00, 807.83it/s]
+[mp_api] 1096 entries in Cl-Co-Li-O-P-S-Sm
+[71/91] Sm2O3      vs LCO_full -0.3223 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1096 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:01<00:00, 929.66it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:01<00:00, 929.54it/s]
+[mp_api] 1096 entries in Cl-Co-Li-O-P-S-Sm
+[71/91] Sm2O3      vs LCO_half -0.4579 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1096 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:01<00:00, 1016.98it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:01<00:00, 1016.83it/s]
+[mp_api] 1096 entries in Cl-Co-Li-O-P-S-Sm
+[72/91] SmCl3      vs LCO_full -0.3363 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1096 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:00<00:00, 1988.23it/s]Retrieving ThermoDoc documents: 100%|██████████| 1096/1096 [00:00<00:00, 1987.63it/s]
+[mp_api] 1096 entries in Cl-Co-Li-O-P-S-Sm
+[72/91] SmCl3      vs LCO_half -0.4749 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1421 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:01<00:00, 870.58it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:01<00:00, 870.49it/s]
+[mp_api] 1421 entries in Cl-Co-Li-O-P-S-Sn
+[73/91] SnO2       vs LCO_full -0.2508 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1421 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:01<00:00, 920.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:01<00:00, 919.96it/s]
+[mp_api] 1421 entries in Cl-Co-Li-O-P-S-Sn
+[73/91] SnO2       vs LCO_half -0.3852 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1421 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:01<00:00, 851.55it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:01<00:00, 851.46it/s]
+[mp_api] 1421 entries in Cl-Co-Li-O-P-S-Sn
+[74/91] SnS2       vs LCO_full -0.2769 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1421 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:02<00:00, 603.06it/s]Retrieving ThermoDoc documents: 100%|██████████| 1421/1421 [00:02<00:00, 603.02it/s]
+[mp_api] 1421 entries in Cl-Co-Li-O-P-S-Sn
+[74/91] SnS2       vs LCO_half -0.4144 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1163 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:01<00:00, 1018.65it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:01<00:00, 1018.49it/s]
+[mp_api] 1163 entries in Cl-Co-Li-O-P-S-Sr
+[75/91] SrCl2      vs LCO_full -0.3267 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1163 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:01<00:00, 821.18it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:01<00:00, 821.07it/s]
+[mp_api] 1163 entries in Cl-Co-Li-O-P-S-Sr
+[75/91] SrCl2      vs LCO_half -0.4555 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1163 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:01<00:00, 1161.86it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:01<00:00, 1161.66it/s]
+[mp_api] 1163 entries in Cl-Co-Li-O-P-S-Sr
+[76/91] SrO        vs LCO_full -0.3150 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1163 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:00<00:00, 1759.42it/s]Retrieving ThermoDoc documents: 100%|██████████| 1163/1163 [00:00<00:00, 1758.98it/s]
+[mp_api] 1163 entries in Cl-Co-Li-O-P-S-Sr
+[76/91] SrO        vs LCO_half -0.4454 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1164 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 1125.27it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 1125.09it/s]
+[mp_api] 1164 entries in Cl-Co-Li-O-P-S-Ta
+[77/91] Ta2O5      vs LCO_full -0.2368 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1164 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 1112.91it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 1112.73it/s]
+[mp_api] 1164 entries in Cl-Co-Li-O-P-S-Ta
+[77/91] Ta2O5      vs LCO_half -0.3647 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1164 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 997.44it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 997.29it/s]
+[mp_api] 1164 entries in Cl-Co-Li-O-P-S-Ta
+[78/91] TaCl5      vs LCO_full -0.3130 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1164 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 1068.72it/s]Retrieving ThermoDoc documents: 100%|██████████| 1164/1164 [00:01<00:00, 1068.56it/s]
+[mp_api] 1164 entries in Cl-Co-Li-O-P-S-Ta
+[78/91] TaCl5      vs LCO_half -0.4375 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1594 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 620.79it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 620.75it/s]
+[mp_api] 1594 entries in Cl-Co-Li-O-P-S-Ti
+[79/91] TiCl4      vs LCO_full -0.3014 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1594 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 565.78it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 565.75it/s]
+[mp_api] 1594 entries in Cl-Co-Li-O-P-S-Ti
+[79/91] TiCl4      vs LCO_half -0.4259 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1869 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1869/1869 [00:02<00:00, 756.10it/s]Retrieving ThermoDoc documents: 100%|██████████| 1869/1869 [00:02<00:00, 756.04it/s]
+[mp_api] 1869 entries in Co-F-Li-O-P-S-Ti
+[80/91] TiF4       vs LCO_full -0.2986 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1869 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1869/1869 [00:02<00:00, 631.58it/s]Retrieving ThermoDoc documents: 100%|██████████| 1869/1869 [00:02<00:00, 631.54it/s]
+[mp_api] 1869 entries in Co-F-Li-O-P-S-Ti
+[80/91] TiF4       vs LCO_half -0.4327 (0 V)  (12s)
+Retrieving ThermoDoc documents:   0%|          | 0/1594 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 734.88it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 734.82it/s]
+[mp_api] 1594 entries in Cl-Co-Li-O-P-S-Ti
+[81/91] TiO2       vs LCO_full -0.2740 (0 V)  (11s)
+Retrieving ThermoDoc documents:   0%|          | 0/1594 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 723.89it/s]Retrieving ThermoDoc documents: 100%|██████████| 1594/1594 [00:02<00:00, 723.83it/s]
+[mp_api] 1594 entries in Cl-Co-Li-O-P-S-Ti
+[81/91] TiO2       vs LCO_half -0.4046 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/2374 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  84%|████████▍ | 2000/2374 [00:05<00:00, 389.79it/s]Retrieving ThermoDoc documents: 100%|██████████| 2374/2374 [00:08<00:00, 263.14it/s]Retrieving ThermoDoc documents: 100%|██████████| 2374/2374 [00:08<00:00, 286.67it/s]
+[mp_api] 2374 entries in Cl-Co-Li-O-P-S-V
+[82/91] V2O5       vs LCO_full -0.1780 (0 V)  (19s)
+Retrieving ThermoDoc documents:   0%|          | 0/2374 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  84%|████████▍ | 2000/2374 [00:05<00:00, 386.82it/s]Retrieving ThermoDoc documents: 100%|██████████| 2374/2374 [00:08<00:00, 274.74it/s]Retrieving ThermoDoc documents: 100%|██████████| 2374/2374 [00:08<00:00, 296.44it/s]
+[mp_api] 2374 entries in Cl-Co-Li-O-P-S-V
+[82/91] V2O5       vs LCO_half -0.3209 (0 V)  (19s)
+Retrieving ThermoDoc documents:   0%|          | 0/1331 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1331/1331 [00:01<00:00, 734.23it/s]Retrieving ThermoDoc documents: 100%|██████████| 1331/1331 [00:01<00:00, 734.16it/s]
+[mp_api] 1331 entries in Cl-Co-Li-O-P-S-W
+[83/91] WO3        vs LCO_full -0.3163 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1331 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1331/1331 [00:01<00:00, 975.08it/s]Retrieving ThermoDoc documents: 100%|██████████| 1331/1331 [00:01<00:00, 974.95it/s]
+[mp_api] 1331 entries in Cl-Co-Li-O-P-S-W
+[83/91] WO3        vs LCO_half -0.4496 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1121 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:00<00:00, 1175.70it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:00<00:00, 1175.50it/s]
+[mp_api] 1121 entries in Cl-Co-Li-O-P-S-Y
+[84/91] Y2O3       vs LCO_full -0.3167 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1121 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:01<00:00, 815.66it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:01<00:00, 815.56it/s]
+[mp_api] 1121 entries in Cl-Co-Li-O-P-S-Y
+[84/91] Y2O3       vs LCO_half -0.4546 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1121 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:01<00:00, 839.24it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:01<00:00, 839.14it/s]
+[mp_api] 1121 entries in Cl-Co-Li-O-P-S-Y
+[85/91] YCl3       vs LCO_full -0.3357 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1121 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:00<00:00, 1651.72it/s]Retrieving ThermoDoc documents: 100%|██████████| 1121/1121 [00:00<00:00, 1651.32it/s]
+[mp_api] 1121 entries in Cl-Co-Li-O-P-S-Y
+[85/91] YCl3       vs LCO_half -0.4757 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1494 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1494/1494 [00:01<00:00, 839.21it/s]Retrieving ThermoDoc documents: 100%|██████████| 1494/1494 [00:01<00:00, 839.13it/s]
+[mp_api] 1494 entries in Cl-Co-F-Li-O-P-S-Y
+[86/91] YF3        vs LCO_full -0.3357 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1494 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1494/1494 [00:01<00:00, 877.09it/s]Retrieving ThermoDoc documents: 100%|██████████| 1494/1494 [00:01<00:00, 876.99it/s]
+[mp_api] 1494 entries in Cl-Co-F-Li-O-P-S-Y
+[86/91] YF3        vs LCO_half -0.4757 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/1399 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1399/1399 [00:01<00:00, 815.57it/s]Retrieving ThermoDoc documents: 100%|██████████| 1399/1399 [00:01<00:00, 815.49it/s]
+[mp_api] 1399 entries in Cl-Co-Li-O-P-S-Zn
+[87/91] ZnO        vs LCO_full -0.3184 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1399 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1399/1399 [00:01<00:00, 818.44it/s]Retrieving ThermoDoc documents: 100%|██████████| 1399/1399 [00:01<00:00, 818.36it/s]
+[mp_api] 1399 entries in Cl-Co-Li-O-P-S-Zn
+[87/91] ZnO        vs LCO_half -0.4499 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1162 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1162/1162 [00:00<00:00, 1347.22it/s]Retrieving ThermoDoc documents: 100%|██████████| 1162/1162 [00:00<00:00, 1346.96it/s]
+[mp_api] 1162 entries in Br-Co-Li-O-P-S-Zr
+[88/91] ZrBr4      vs LCO_full -0.2955 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1162 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1162/1162 [00:00<00:00, 1625.71it/s]Retrieving ThermoDoc documents: 100%|██████████| 1162/1162 [00:00<00:00, 1625.33it/s]
+[mp_api] 1162 entries in Br-Co-Li-O-P-S-Zr
+[88/91] ZrBr4      vs LCO_half -0.4291 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1178 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:00<00:00, 1267.19it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:00<00:00, 1266.96it/s]
+[mp_api] 1178 entries in Cl-Co-Li-O-P-S-Zr
+[89/91] ZrCl4      vs LCO_full -0.3590 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1178 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:01<00:00, 1083.71it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:01<00:00, 1083.55it/s]
+[mp_api] 1178 entries in Cl-Co-Li-O-P-S-Zr
+[89/91] ZrCl4      vs LCO_half -0.4961 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1450 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:01<00:00, 973.81it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:01<00:00, 973.70it/s]
+[mp_api] 1450 entries in Co-F-Li-O-P-S-Zr
+[90/91] ZrF4       vs LCO_full -0.2955 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1450 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:01<00:00, 894.92it/s]Retrieving ThermoDoc documents: 100%|██████████| 1450/1450 [00:01<00:00, 894.82it/s]
+[mp_api] 1450 entries in Co-F-Li-O-P-S-Zr
+[90/91] ZrF4       vs LCO_half -0.4291 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/1178 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:01<00:00, 1140.21it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:01<00:00, 1140.03it/s]
+[mp_api] 1178 entries in Cl-Co-Li-O-P-S-Zr
+[91/91] ZrO2       vs LCO_full -0.2708 (0 V)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1178 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:01<00:00, 1136.86it/s]Retrieving ThermoDoc documents: 100%|██████████| 1178/1178 [00:01<00:00, 1136.67it/s]
+[mp_api] 1178 entries in Cl-Co-Li-O-P-S-Zr
+[91/91] ZrO2       vs LCO_half -0.4007 (0 V)  (8s)
+
+→ /data/work/wt_axis_ncm/db/raw/cascade_axis_ncm_v2_2026_11_04/designs_lco.jsonl

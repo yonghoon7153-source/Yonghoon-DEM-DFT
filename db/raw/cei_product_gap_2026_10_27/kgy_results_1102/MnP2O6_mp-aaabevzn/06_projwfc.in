@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'MnP2O6_mp-aaabevzn'
+  outdir = './tmp'
+  filpdos = 'MnP2O6_mp-aaabevzn'
+  degauss = 0.007
+  ngauss = 0
+/

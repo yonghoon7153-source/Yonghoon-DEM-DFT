@@ -1,0 +1,293 @@
+{
+ "slug": "aykol2016_ht_cathode_coating_design",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+  "107. Sup) Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 | The ﬂowchart of the HT coating design framework. The ﬁlters applied on each design attribute are listed along with the number of compounds that pass each ﬁlter. G0 s-HF is the excess reactivity limit.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.6,
+    280.0,
+    557.6,
+    582.0
+   ],
+   "w": 1085,
+   "h": 1260,
+   "dpi": 300,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.541
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2 | Stability and lithiation of Li2TiO3 coating. (a) Ternary Li–Ti–O phase diagram obtained from the OQMD, where the stable and unstable phases are shown as circles and crosses, respectively. Compounds marked as a,b,c,d,e correspond to Li2TiO3, Li4Ti5O12, Li4TiO4, LiTi2O4 and LiTiO2, respectively. The O2 chemical potential corresponds to T ¼ 298 K and P ¼ 1 atm. Dotted-line shows the lithiation path of Li2TiO3, and the ﬁrst phase region along this path is highlighted with bold tie-lines. The corresponding voltage proﬁle of Li2 þ xTiO3 as a function of x along this path is given in b, where the arrow points at the highest voltage step; that is, the discharge potential criterion (Ed) of this coating candidate as we use in the framework.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.6,
+    63.6,
+    557.7,
+    368.0
+   ],
+   "w": 1085,
+   "h": 1269,
+   "dpi": 300,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3 | Electrochemical stability window of the coating. The schematic compares the operating voltage window of a cathode to charge and discharge potentials (that is, Ec and Ed, respectively) of an electrochemically stable coating.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.6,
+    502.2,
+    557.7,
+    614.3
+   ],
+   "w": 1085,
+   "h": 468,
+   "dpi": 300,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4 | Matrix plot of attributes employed within the coating design framework for pair-wise comparison. Panels a–f represent each unique attribute pair. Based on the ideal trends of attributes for different types of coatings listed in Table 1, materials on the Pareto-front for each coating type are determined. Top 30 coating materials found by weighted-sum method are also shown for each coating category.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    64.9,
+    557.7,
+    325.4
+   ],
+   "w": 2168,
+   "h": 1086,
+   "dpi": 300,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5 | Material rankings for functional coatings. The rankings for the top 30 candidates obtained with weighted-sum and rank aggregation methods for physical barrier, HF-barrier and HF-scavenger coatings are shown. Individual attributes, fi(x) and the resulting global objective F(x) are given for each material. Individual attributes and global objectives are also given in the rank aggregation panels, to allow comparisons between each method. The highest- rank material is on top in each list. Note f(x) of Gs \u0002 HF denotes opposite ideal limits for HF-barrier and HF-scavengers as deﬁned in Table 1. Here we select two of the most common cathodes that represent the layered and spinel families; that is, LiCoO2 and LiMn2O4, and search for optimized HF-scavenger coating materials among the B5,200 thermodynamically stable candi- dates using the approach outlined here. To summarize, we ﬁrst su",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    79.7,
+    557.7,
+    539.5
+   ],
+   "w": 2168,
+   "h": 1916,
+   "dpi": 300,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6 | Statistical analysis of effectiveness of material classes for HF-scavenging. (a) Principal component analysis (PCA) for HF-scavenger coating attributes for the B5,200 thermodynamically stable oxides. The promising HF-scavengers listed in Fig. 5 are marked with a ‘ þ ’ sign, and their approximate region in the plot is highlighted by a rectangular window. This highlighted window is magniﬁed in b. In c, we compare the distribution of material classes among all stable O-bearing compounds to that of all promising HF-scavengers from b. O-bearing compounds are exclusively classiﬁed on the basis of the (poly)-anion forming elements they have in addition to oxygen; namely, P, Si, Cl, B, S, As, H, F, I, Br, N and C. For example, compounds labeled as O do not include those labeled as O–P, and similarly O–H–P or O–F–P are not subsets of the O–P category.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    548,
+    556,
+    676
+   ],
+   "w": 2151,
+   "h": 534,
+   "dpi": 300,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": null,
+   "note": "manual crop (auto-detect dropped: caption-adjacent block was a short axis label)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1. Coating attribute matrix in presence of LiCoO2. Each subplot from (a) to (f) in the matrix plot compares pairs of attributes when LiCoO2 is included in the chemical space.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.5,
+    361.5
+   ],
+   "w": 2011,
+   "h": 1232,
+   "dpi": 300,
+   "src": "107. Sup) Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Fig. 2. Coating attribute matrix in presence of LiMn2O4. Each subplot from (a) to (f) in the matrix plot compares pairs of attributes when LiMn2O4 is included in the chemical space.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.6,
+    361.5
+   ],
+   "w": 2003,
+   "h": 1232,
+   "dpi": 300,
+   "src": "107. Sup) Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Fig. 3. Histograms of design attributes for oxides, borates and silicates in MOOP framework. The distribution of thermodynamic attributes of HF-scavenger borates and silicates are similar to that of oxides, except for the stability against reduction, where borates and silicates yield more low voltage candidates (i.e. stable) compared to oxides. As all other attributes are similar, the additional electrochemical stability makes borates and silicates more effective candidates in our framework.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.5,
+    545.3
+   ],
+   "w": 2003,
+   "h": 1998,
+   "dpi": 300,
+   "src": "107. Sup) Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig. 4. Distribution of normalized attributes used in the design framework. These attributes are charge and discharge potentials (including discharge potential of HF-scavenging reaction products) and HF-scavenging reaction energies. It is clearly observed that shapes of distributions, including the means vary among attributes. For example, charge potential is emphasized more than the other attributes in the global-objective function F(x) since it skewed more towards higher f(x) values.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    304.6
+   ],
+   "w": 2000,
+   "h": 994,
+   "dpi": 300,
+   "src": "107. Sup) Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 | Coating functionalities and corresponding attributes used in the HT coating design framework. HF reactivity Physical barrier High High — HF-scavenger High High High HF-barrier High High Low Functionality Thermodynamic Electrochemical stability stability HF, hydroﬂuoric acid.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.6,
+    10.7,
+    556.7,
+    763.7
+   ],
+   "w": 2059,
+   "h": 2992,
+   "dpi": 286,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.771
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 | Optimal and nearly-optimal coatings for LiCoO2 and LiMn2O4. Cathode Optimal coatings Nearly optimal coatings LiCoO2 Li2SrSiO4, Li2CaSiO4, CaIn2O4, SrHClO, SrBrOH, SrHfO3 Li5ReO6, Sr2MgWO6, Li4H3BrO3, Li4H3ClO3, Sr2LiReO6, Sr2CaWO6, SrZrO3 LiMn2O4 Li2GeO3, Sr2Nb2O7, Pb3Cl2O2, Pb3Br2O2, Li2TiGeO5, Li2TiSiO5, Li4NiTeO6, Ca2Mn3O8, Li2MnO3, Pb2SO2, PbHClO, PbBrOH, Ba2Hg3Pd7O14 CaTa2O6, Pb3O4, SrBrOH, Ba2TiSi2O8, Ba2Ti4Fe2O14, Sr2TaFeO6, SrPd3O4, SrHClO, Sr2NbFeO6, CaPd3O4 Nearly-optimal coatings correspond to the relaxed Ec ﬁlter as explained in the text.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    10.7,
+    556.7,
+    763.7
+   ],
+   "w": 2043,
+   "h": 2992,
+   "dpi": 286,
+   "src": "107. Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 5,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. Systematic reactions observed for selected cathode materials. These are found automatically within the framework based on the bulk materials available in the OQMD, and therefore do not necessarily represented the actual insertion/extraction reactions, but provide approximate limits obtained from bulk thermodynamics.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    544.5,
+    510.2
+   ],
+   "w": 1990,
+   "h": 1846,
+   "dpi": 300,
+   "src": "107. Sup) Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2. Experimental data used in the framework. The listed data is employed for gaseous reference states, dilute-limit HF in electrolyte and liquid H2O in our framework along with the OQMD free energies and standard electrode potentials.1,2 Entropies of gases are used to approximate the room temperature free energy of formation of compounds using the 0 K DFT data from the OQMD as explained in the manuscript. To the Δ'𝐺((HF) listed below, we further add an activity contribution (298𝑅 × ln[𝑎𝑐𝑡𝑖𝑣𝑖𝑡𝑦]) assuming an HF concentration of 10-6 for completeness (where R is the gas constant). However, it is worth noting that the absolute value of the free energy of HF is only a constant in all HF-scavenging reactions, and therefore does not alter the relative rankings of coatings with respect to reaction energies. Water, on the other hand, competes with the OQMD phases that contain ",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    545.8,
+    682.2
+   ],
+   "w": 1996,
+   "h": 2563,
+   "dpi": 300,
+   "src": "107. Sup) Aykol2016_HT_Computational_Design_Cathode_Coatings_ncomms13779.pdf",
+   "blank": 0.923
+  }
+ ]
+}

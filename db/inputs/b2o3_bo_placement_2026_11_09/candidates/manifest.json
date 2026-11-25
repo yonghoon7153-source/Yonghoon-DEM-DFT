@@ -1,0 +1,3333 @@
+{
+ "schema": "b2o3_enumerate_manifest/v1",
+ "argv": [
+  "--base",
+  "db/structures/modelc_V0_k663.xyz",
+  "--supercell",
+  "1",
+  "2",
+  "1",
+  "--n_B",
+  "2",
+  "--n_O",
+  "3",
+  "--fix_halogen",
+  "--top",
+  "45",
+  "--o_motif_top",
+  "all",
+  "--out",
+  "db/inputs/b2o3_bo_placement_2026_11_09/candidates"
+ ],
+ "tool_sha256": "6a46488d0b2a2dab1597b8fdfa151d50f4f48df171f12ba95e698302b27368b0",
+ "params": {
+  "base": "db/structures/modelc_V0_k663.xyz",
+  "rietveld_cif": null,
+  "primitive": false,
+  "dopant": "B",
+  "n_li_fill": null,
+  "supercell": [
+   1,
+   2,
+   1
+  ],
+  "n_B": 2,
+  "n_O": 3,
+  "n_samples": 80000,
+  "top": 45,
+  "o_motif_top": "all",
+  "fix_halogen": true,
+  "li_min_dist": 2.1,
+  "cation_min_dist": 2.6,
+  "li_fill": "auto",
+  "li_exhaustive_cap": 1000000,
+  "allow_infeasible": false,
+  "legacy_o_fallback": false,
+  "seed": 0,
+  "out": "db/inputs/b2o3_bo_placement_2026_11_09/candidates"
+ },
+ "li_candidates": {
+  "method": "void_finder (명시한 생성법 · 2026-11-09 · spglib 경로 없음)",
+  "n": 50,
+  "file": "li_candidates.json",
+  "sha256": "1d3642f65ab2c99124a999c524f46439a62619855d75835c2dbd1727498f97eb"
+ },
+ "n_configs_scored": 45,
+ "n_infeasible": 0,
+ "fill_modes": [
+  "exhaustive"
+ ],
+ "dopant": "B",
+ "families": [
+  "bo4",
+  "distributed",
+  "free_s"
+ ],
+ "base_formula_counts": {
+  "Li": 58,
+  "P": 8,
+  "S": 44,
+  "Cl": 16,
+  "B": 2
+ },
+ "target_formula_counts": {
+  "Li": 58,
+  "P": 8,
+  "S": 41,
+  "Cl": 16,
+  "B": 2,
+  "O": 3
+ },
+ "expect": {
+  "n_bases": 45,
+  "n_motif_bases": 45,
+  "n_motif_files": 135
+ },
+ "bases": [
+  {
+   "rank": 0,
+   "name": "cfg0000_E-2256.634",
+   "ewald_eV": -2256.6338,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    30,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.4535,
+     6.5386,
+     30.2084
+    ],
+    [
+     0.4725,
+     0.3269,
+     22.9579
+    ],
+    [
+     2.5531,
+     6.2117,
+     26.5615
+    ],
+    [
+     2.4987,
+     0.0,
+     27.6186
+    ]
+   ],
+   "file": "base_noO/cfg0000_E-2256.634.cif",
+   "sha256": "f1a9c826f95bf1fa2e91db9d9011d76a18f45909547e6077e5fa7c936d045baa",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0000_E-2256.634_O-bo4.cif",
+     "sha256": "5de4fc3c539ac39d9df7b8d4197602884b4a0c5863428977dd3810c562766be1",
+     "O_sites_orig": [
+      97,
+      102,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0000_E-2256.634_O-distributed.cif",
+     "sha256": "2f9ea53e14db3776bd0b22acc585107faaab44c9b4df60dee2e92dfd2aea3d78",
+     "O_sites_orig": [
+      32,
+      33,
+      34
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0000_E-2256.634_O-free_s.cif",
+     "sha256": "54934fcc55aab120819ef143920025a4f8ecd47f0e238e69e770f492633a75cd",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 1,
+   "name": "cfg0001_E-2255.860",
+   "ewald_eV": -2255.8599,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    30,
+    31
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     6.2485,
+     5.5578,
+     26.8173
+    ],
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     2.4987,
+     0.0,
+     27.6186
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ]
+   ],
+   "file": "base_noO/cfg0001_E-2255.860.cif",
+   "sha256": "ab1cd679594ba1bf4c0ed192c90d5f5bd3d7f841f77ab9737817f4a961274bef",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0001_E-2255.860_O-bo4.cif",
+     "sha256": "4da18ee173808747be7fa34c5ea14e49718583dfb43417de640062314150fed8",
+     "O_sites_orig": [
+      45,
+      50,
+      51
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0001_E-2255.860_O-distributed.cif",
+     "sha256": "6f428eca36dcc589e8c8ab309227da15ee03d0f23f407ed88a7441ed462aea5b",
+     "O_sites_orig": [
+      44,
+      103,
+      107
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0001_E-2255.860_O-free_s.cif",
+     "sha256": "87ec137311437a26b8025181583c1a8d57a64d0678fa0592c9d8682392a623b1",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 2,
+   "name": "cfg0002_E-2255.792",
+   "ewald_eV": -2255.7922,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    90
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.0014,
+     4.2501,
+     9.6832
+    ],
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     2.9305,
+     4.2501,
+     4.6351
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0002_E-2255.792.cif",
+   "sha256": "153166089c1e195da92648a74bfc7aa271640b0ee0ae56640dfa7e14187eba4f",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0002_E-2255.792_O-bo4.cif",
+     "sha256": "bfa531273c5c342d919b477a21b4bb7998570fabf5cb264fb2745c825f4f0387",
+     "O_sites_orig": [
+      32,
+      37,
+      100
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0002_E-2255.792_O-distributed.cif",
+     "sha256": "8dbaa25c7bfa6f7396c65c7d53a3cbcd1cef5919b9c1661fbf26f93fdf9efa60",
+     "O_sites_orig": [
+      35,
+      44,
+      94
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0002_E-2255.792_O-free_s.cif",
+     "sha256": "cb9024f84daa854aaa0259d1c3e7d5e27723714d14eba601166acae5b8adff47",
+     "O_sites_orig": [
+      53,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 3,
+   "name": "cfg0003_E-2255.483",
+   "ewald_eV": -2255.4832,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    90,
+    91
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     7.4996,
+     11.1156,
+     16.9219
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ]
+   ],
+   "file": "base_noO/cfg0003_E-2255.483.cif",
+   "sha256": "4d36f125817fb2f8dd8adc14303fad2e9d65e0a8a98e8f4d378cad40a8cc0778",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0003_E-2255.483_O-bo4.cif",
+     "sha256": "2e17b7129a895eb8d0380ce6f10977c08bca93c94d7db17d647b67450c7afae4",
+     "O_sites_orig": [
+      101,
+      105,
+      106
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0003_E-2255.483_O-distributed.cif",
+     "sha256": "da57d9ef1acdd9fbb1d76d4c9f93623ab2f99e338fc3cd0f0cf37ccb9a3eb427",
+     "O_sites_orig": [
+      43,
+      46,
+      98
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0003_E-2255.483_O-free_s.cif",
+     "sha256": "b45d9c37ebdac88f3ec9712b30b939781590e6156ebd84a2c00b48e06c3e5360",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 4,
+   "name": "cfg0004_E-2255.404",
+   "ewald_eV": -2255.4043,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    30,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     6.2485,
+     5.5578,
+     26.8173
+    ],
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     2.4987,
+     0.0,
+     27.6186
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ]
+   ],
+   "file": "base_noO/cfg0004_E-2255.404.cif",
+   "sha256": "405de80ae4698d6f2adf5f5e306b89163386fbe58a9c8d1e1d41a86645ddef6e",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0004_E-2255.404_O-bo4.cif",
+     "sha256": "6f15cffc01a46b85eee42ce2d6aecda538feb4fc1b26fdf88b67b23b7169cfa6",
+     "O_sites_orig": [
+      98,
+      103,
+      113
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0004_E-2255.404_O-distributed.cif",
+     "sha256": "199e2c3395b4b5add0b4c98c70e9f59c6f544bd2a65bc6425e49985c3307c072",
+     "O_sites_orig": [
+      37,
+      95,
+      102
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0004_E-2255.404_O-free_s.cif",
+     "sha256": "91cd3b41057f01b953c8b74e941385edca4576a2f4e95655527bb2f30a0bffd6",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 5,
+   "name": "cfg0005_E-2255.140",
+   "ewald_eV": -2255.14,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    28
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.0014,
+     4.2501,
+     9.6832
+    ],
+    [
+     1.0505,
+     1.9616,
+     14.6966
+    ],
+    [
+     2.9305,
+     4.2501,
+     4.6351
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0005_E-2255.140.cif",
+   "sha256": "cc87086b9f39e6aa98942ee452108478a1509f874adcfbf38d78763c858e3f78",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0005_E-2255.140_O-bo4.cif",
+     "sha256": "e7ecb7375f6e81f0f97714cc7d6c7216cb012ed54f30724a300e3d87cb5bb90d",
+     "O_sites_orig": [
+      32,
+      43,
+      48
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0005_E-2255.140_O-distributed.cif",
+     "sha256": "87e5e1b1ac395aded052e65571600e2318698ebaaa5956d5494e54679895e47b",
+     "O_sites_orig": [
+      46,
+      99,
+      102
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0005_E-2255.140_O-free_s.cif",
+     "sha256": "b695e5f89b8f8dbe8d8ce1b2744a4a168381913fb081f4dc64493ce7b9793051",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 6,
+   "name": "cfg0006_E-2255.067",
+   "ewald_eV": -2255.0673,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    30,
+    90
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     6.2485,
+     5.5578,
+     26.8173
+    ],
+    [
+     7.4996,
+     11.1156,
+     16.9219
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ]
+   ],
+   "file": "base_noO/cfg0006_E-2255.067.cif",
+   "sha256": "e206a5b93b2f57251b5176460e738ed103f27ae431d903ef32a99470b2dfd6e8",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0006_E-2255.067_O-bo4.cif",
+     "sha256": "4afeb07d0673c6535eaf18ff0b759d840ad0334a3b7ddd90367eb8eb096da017",
+     "O_sites_orig": [
+      40,
+      45,
+      105
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0006_E-2255.067_O-distributed.cif",
+     "sha256": "83682701ebd964b99ae5659028ef1ab752a59bd90477d5ef588c7ebafef1d8bb",
+     "O_sites_orig": [
+      33,
+      34,
+      97
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0006_E-2255.067_O-free_s.cif",
+     "sha256": "38f734c890ba2ec3367098abbce20938ac0f4d0827792dc64b129c2448ddfe3b",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 7,
+   "name": "cfg0007_E-2254.978",
+   "ewald_eV": -2254.9776,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    89
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     7.4996,
+     11.1156,
+     10.4786
+    ],
+    [
+     5.776,
+     5.2309,
+     6.6784
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0007_E-2254.978.cif",
+   "sha256": "0f981c2a0a2a41288f445971ab0ee07c324b91fbc77e302ddef03124fb3ff88c",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0007_E-2254.978_O-bo4.cif",
+     "sha256": "d55795d25c82f223509e26d43d758e5857188a79cd8a27a5510859b44b4b8b71",
+     "O_sites_orig": [
+      32,
+      99,
+      109
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0007_E-2254.978_O-distributed.cif",
+     "sha256": "4ca861b166d567feab8fb9407f187f26be27ca4c2b9a11d3f38d4abf96e61c58",
+     "O_sites_orig": [
+      38,
+      96,
+      108
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0007_E-2254.978_O-free_s.cif",
+     "sha256": "cb49374e9f7f0e37f547e16a7c34196ea86f229ad0531482742d6509b50760f6",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 8,
+   "name": "cfg0008_E-2254.892",
+   "ewald_eV": -2254.892,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    89,
+    90
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.6643,
+     9.154,
+     8.0409
+    ],
+    [
+     5.725,
+     10.1348,
+     13.0807
+    ],
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ]
+   ],
+   "file": "base_noO/cfg0008_E-2254.892.cif",
+   "sha256": "f2272919dd888fa2c36511818bf81f5f617091951d1decf07f58f99aa156f91c",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0008_E-2254.892_O-bo4.cif",
+     "sha256": "f2ecd1e836ede7e16ed37b693302f13b921694262ba633eac08662706c1e5e63",
+     "O_sites_orig": [
+      99,
+      100,
+      110
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0008_E-2254.892_O-distributed.cif",
+     "sha256": "ce45fe6dd60efabdb23b5866491be7a7a055bf97a79196f49e92a682769e3b6a",
+     "O_sites_orig": [
+      34,
+      50,
+      51
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0008_E-2254.892_O-free_s.cif",
+     "sha256": "e706cf02d38d70a520131d88093f1af241323aa5bd78a7eb66f9163fb8f86f04",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 9,
+   "name": "cfg0009_E-2254.873",
+   "ewald_eV": -2254.8732,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    30,
+    91
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     0.5779,
+     1.6347,
+     22.3445
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ]
+   ],
+   "file": "base_noO/cfg0009_E-2254.873.cif",
+   "sha256": "e40cd42de37e1931bc8b6b41dabfb8640640ca7a1dbe9e3f81f22228a799703b",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0009_E-2254.873_O-bo4.cif",
+     "sha256": "29ac84fb28c1b0b5fbc9ad8348082f45d8b6dcb7486c06d59daa441befdc4405",
+     "O_sites_orig": [
+      35,
+      45,
+      101
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0009_E-2254.873_O-distributed.cif",
+     "sha256": "05edccc4190185f69e10bd400175bd84a516cf9450dc5de31aab4d0d2aeb3c06",
+     "O_sites_orig": [
+      51,
+      98,
+      104
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0009_E-2254.873_O-free_s.cif",
+     "sha256": "b6ec1eb9430267afc55e3dd978ee8410558975260a074214ea28a58918c959f0",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 10,
+   "name": "cfg0010_E-2254.741",
+   "ewald_eV": -2254.7407,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    31,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.9266,
+     0.0,
+     23.6105
+    ],
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     4.4637,
+     5.5578,
+     31.8275
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ]
+   ],
+   "file": "base_noO/cfg0010_E-2254.741.cif",
+   "sha256": "cf12bd2802a3cc235db58f69acee139945d032969f4aeeb413c84bd85a7923b7",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0010_E-2254.741_O-bo4.cif",
+     "sha256": "7552eae594337d27020eaf6d7d0d27a0e92d8259676d21844bdb83dbfbb2ee1c",
+     "O_sites_orig": [
+      36,
+      46,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0010_E-2254.741_O-distributed.cif",
+     "sha256": "44992b67c53947ea98a30d1e671e316b7175d7361570dd075181313039f06ca2",
+     "O_sites_orig": [
+      96,
+      110,
+      111
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0010_E-2254.741_O-free_s.cif",
+     "sha256": "6c20db65041bdea76fac1fd9f79c3563a8fccafc8d7a15897900963f93609db0",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 11,
+   "name": "cfg0011_E-2254.709",
+   "ewald_eV": -2254.7086,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    90
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     6.4049,
+     1.9616,
+     15.3718
+    ],
+    [
+     5.5346,
+     5.5578,
+     13.5185
+    ],
+    [
+     7.4996,
+     11.1156,
+     16.9219
+    ]
+   ],
+   "file": "base_noO/cfg0011_E-2254.709.cif",
+   "sha256": "c743264b335bc4cd9f436edcb50ba914a81e89b9afa1933c6c1d779bbcf0b28c",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0011_E-2254.709_O-bo4.cif",
+     "sha256": "8716d48c7f12fd505cf769b9a336c2604f09559ca941bc6a2655a192eadcee9b",
+     "O_sites_orig": [
+      38,
+      48,
+      105
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0011_E-2254.709_O-distributed.cif",
+     "sha256": "2d7eb2b8907f02b091ccd25e5f08a8954a6501b9117759f96bf064b68180bd39",
+     "O_sites_orig": [
+      42,
+      102,
+      103
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0011_E-2254.709_O-free_s.cif",
+     "sha256": "e510e69b90b09cee6da9bd50b2f82fa446518a93b3d42b980e9c90061e58d238",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 12,
+   "name": "cfg0012_E-2254.602",
+   "ewald_eV": -2254.6021,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    91
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     1.0505,
+     1.9616,
+     14.6966
+    ],
+    [
+     5.5346,
+     5.5578,
+     13.5185
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ]
+   ],
+   "file": "base_noO/cfg0012_E-2254.602.cif",
+   "sha256": "fdb8a447d0478398562309a7c46ad1e77dd01e95d09f2cbb58d54c6c74642c98",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0012_E-2254.602_O-bo4.cif",
+     "sha256": "2e5be94f7f95a2dcafb0924d7123afce92a7f708e897097e06188bcdcd9945c5",
+     "O_sites_orig": [
+      101,
+      106,
+      111
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0012_E-2254.602_O-distributed.cif",
+     "sha256": "886ccb539960bd36f17689db42acfa30e7df65534dcaa97885a7ed95eaffc83f",
+     "O_sites_orig": [
+      32,
+      36,
+      108
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0012_E-2254.602_O-free_s.cif",
+     "sha256": "49f3cc8e8e4b13259e284c81ed787f3b7e46eb873912e7479843e686f3e8ae8c",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 13,
+   "name": "cfg0013_E-2254.514",
+   "ewald_eV": -2254.5138,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    31
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.0014,
+     4.2501,
+     9.6832
+    ],
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     3.5288,
+     3.9232,
+     38.2718
+    ],
+    [
+     4.4637,
+     5.5578,
+     31.8275
+    ]
+   ],
+   "file": "base_noO/cfg0013_E-2254.514.cif",
+   "sha256": "0c4baba17999a8d5e50a1e69dc410e1f538c075e6767083dba0c330d8330d7ab",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0013_E-2254.514_O-bo4.cif",
+     "sha256": "46cab81b0c6519e60448a5fa84590418d8e1cfbd891c619d2c612fd9bfa5f9c2",
+     "O_sites_orig": [
+      37,
+      46,
+      51
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0013_E-2254.514_O-distributed.cif",
+     "sha256": "e42754b14c1160bf1128429ade465ecdd49cb159d1340610c18ab227979d0471",
+     "O_sites_orig": [
+      43,
+      49,
+      96
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0013_E-2254.514_O-free_s.cif",
+     "sha256": "11fe8ba3d71758db26fe52b7ae2059800361ad319811750cc003be13fec939db",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 14,
+   "name": "cfg0014_E-2254.460",
+   "ewald_eV": -2254.4598,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    92,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.6585,
+     7.5194,
+     25.9481
+    ],
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     2.4987,
+     0.0,
+     27.6186
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ]
+   ],
+   "file": "base_noO/cfg0014_E-2254.460.cif",
+   "sha256": "50cae412e03367418fb1922f368bfb7cfe533453435f99294ef2b3ed5e4ec38d",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0014_E-2254.460_O-bo4.cif",
+     "sha256": "f8f010087586c64068e9af0b744085851bf4fc33085158f9086a900a0f3df8d4",
+     "O_sites_orig": [
+      102,
+      103,
+      108
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0014_E-2254.460_O-distributed.cif",
+     "sha256": "f32436cab19752b3c686cf1068badd99c7bd8da609092818ca53b76308f9c16e",
+     "O_sites_orig": [
+      33,
+      95,
+      105
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0014_E-2254.460_O-free_s.cif",
+     "sha256": "489ee82009af15b1df87be7803b14002f0ff8748ff8ca2400df1fa0e85e49702",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 15,
+   "name": "cfg0015_E-2254.436",
+   "ewald_eV": -2254.4364,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    30
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     6.2485,
+     5.5578,
+     26.8173
+    ],
+    [
+     2.9305,
+     4.2501,
+     4.6351
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0015_E-2254.436.cif",
+   "sha256": "13e05edca6d6a1eb2b9b6fe76fbce0bcd2425f53ce2d8ffe0042ae87a2f50574",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0015_E-2254.436_O-bo4.cif",
+     "sha256": "2240343a363da12c6c2583f5cabda207ee7b3c891ace2b78123a7130fdd2c2b1",
+     "O_sites_orig": [
+      32,
+      37,
+      42
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0015_E-2254.436_O-distributed.cif",
+     "sha256": "15f8cc08ff567a00d55a7fecd127c668c37ddbbe53b5fffb6037d758aa8ddbfb",
+     "O_sites_orig": [
+      39,
+      97,
+      110
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0015_E-2254.436_O-free_s.cif",
+     "sha256": "4bed3f04dc7796eb4d11f3363faa47dcf8e2e00f940870f18b91009c685c2b7c",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 16,
+   "name": "cfg0016_E-2254.317",
+   "ewald_eV": -2254.3168,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    31,
+    90
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     3.3928,
+     5.5578,
+     33.2227
+    ],
+    [
+     7.4996,
+     11.1156,
+     16.9219
+    ]
+   ],
+   "file": "base_noO/cfg0016_E-2254.317.cif",
+   "sha256": "07cf7b6203f22926b93e65af59b43eedc212b54edd6c26b45b46b1cf9b7f6cd1",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0016_E-2254.317_O-bo4.cif",
+     "sha256": "2de3325f020e1763e959d4f7af814b79e783d1975b0faf0a28c968ed262ab930",
+     "O_sites_orig": [
+      41,
+      46,
+      51
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0016_E-2254.317_O-distributed.cif",
+     "sha256": "845bef651a52911016c0ed2b14f24071448901f21147cc7eee4de4fd47aef22a",
+     "O_sites_orig": [
+      37,
+      96,
+      109
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0016_E-2254.317_O-free_s.cif",
+     "sha256": "0ddb451634c0733510e369a7820741be6c2289925712be1c2ca11c2fa9273e2f",
+     "O_sites_orig": [
+      53,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 17,
+   "name": "cfg0017_E-2254.242",
+   "ewald_eV": -2254.2416,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    90,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.6585,
+     7.5194,
+     25.9481
+    ],
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     7.4996,
+     11.1156,
+     16.9219
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ]
+   ],
+   "file": "base_noO/cfg0017_E-2254.242.cif",
+   "sha256": "604d991c0e8f9a0be7f7ea56fa1da33ad53732e6605cc81b580bb95adaf66257",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0017_E-2254.242_O-bo4.cif",
+     "sha256": "fa8953f421f37b1470bb38d700668d374895d89c89b27e95047add95a32facf9",
+     "O_sites_orig": [
+      95,
+      97,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0017_E-2254.242_O-distributed.cif",
+     "sha256": "94f4029032cab43481b77c9316684e74198477231f084162e9b39cf20f3e40a5",
+     "O_sites_orig": [
+      50,
+      101,
+      106
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0017_E-2254.242_O-free_s.cif",
+     "sha256": "93ba6ae5830a4fbfb6bcc4b375a2df6745a8e62c4e6546bd683f781bef2fb7e3",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 18,
+   "name": "cfg0018_E-2254.225",
+   "ewald_eV": -2254.2254,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    91,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.6585,
+     7.5194,
+     25.9481
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ]
+   ],
+   "file": "base_noO/cfg0018_E-2254.225.cif",
+   "sha256": "352a105a2a9b037bc3c6129653577595fd624994aeb22a107dce897222d71af7",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0018_E-2254.225_O-bo4.cif",
+     "sha256": "d98b55af1b2772b6e5d1097d1fd0f422732f0262cbd71b863b9f320f9620d7b1",
+     "O_sites_orig": [
+      101,
+      102,
+      111
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0018_E-2254.225_O-distributed.cif",
+     "sha256": "df0265c5f61c47b5049ab1427c85a095216af2dffffafaf95d3b9e85821d8814",
+     "O_sites_orig": [
+      50,
+      98,
+      110
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0018_E-2254.225_O-free_s.cif",
+     "sha256": "71102fd297f43614bff6b292d69333953b3f6b88424aad96e87a1df662fc70b7",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 19,
+   "name": "cfg0019_E-2254.209",
+   "ewald_eV": -2254.2094,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    30
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     1.0505,
+     1.9616,
+     14.6966
+    ],
+    [
+     6.2485,
+     5.5578,
+     26.8173
+    ],
+    [
+     5.5346,
+     5.5578,
+     13.5185
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ]
+   ],
+   "file": "base_noO/cfg0019_E-2254.209.cif",
+   "sha256": "a28b2cecb994e1918225290cc936a852f9640a53cb9e77fab76f4a6c85a65052",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0019_E-2254.209_O-bo4.cif",
+     "sha256": "d06fd64da62e2d18e7f4853df214e018c86ff92adf76abaa21248904ca2f6e21",
+     "O_sites_orig": [
+      35,
+      45,
+      48
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0019_E-2254.209_O-distributed.cif",
+     "sha256": "c7d44cbdaa01c5cf4394c21cdbb319408820dcc6c9cedd325e6d4b84e7b9f95d",
+     "O_sites_orig": [
+      34,
+      110,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0019_E-2254.209_O-free_s.cif",
+     "sha256": "3e602b1bfe8c4a2215d041fff6dbd42b46cc6fb629234d225b7754ecc4891337",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 20,
+   "name": "cfg0020_E-2254.057",
+   "ewald_eV": -2254.0572,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    31,
+    91
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     4.4637,
+     5.5578,
+     31.8275
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ]
+   ],
+   "file": "base_noO/cfg0020_E-2254.057.cif",
+   "sha256": "12246ba36f1b79183f0a45e40bf264ec4efe3e6d36fa44666bae20ac7e9c7a99",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0020_E-2254.057_O-bo4.cif",
+     "sha256": "9efb55ac2bf605448e19db302adf17ff7b91404a6656664737a88a5ac97b4817",
+     "O_sites_orig": [
+      36,
+      106,
+      111
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0020_E-2254.057_O-distributed.cif",
+     "sha256": "38f29394003550a023162ba166a1c45eac63eabcef62a6381090d4f60597dca8",
+     "O_sites_orig": [
+      34,
+      42,
+      99
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0020_E-2254.057_O-free_s.cif",
+     "sha256": "44da00e0fa6da949500298535273828111750cebb711919b5ca62ba1c9ddb043",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 21,
+   "name": "cfg0021_E-2254.015",
+   "ewald_eV": -2254.0151,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    30,
+    89
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.6643,
+     9.154,
+     8.0409
+    ],
+    [
+     6.2485,
+     5.5578,
+     26.8173
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ]
+   ],
+   "file": "base_noO/cfg0021_E-2254.015.cif",
+   "sha256": "2bb08ad9c641a3f43ad183fec000dddb785a83a936bc3a8337ca0ac78f5ce859",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0021_E-2254.015_O-bo4.cif",
+     "sha256": "844f8bc3e876b92c9d51b8e4637d2904db93e904fe38471ea9997878d9442f75",
+     "O_sites_orig": [
+      35,
+      104,
+      109
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0021_E-2254.015_O-distributed.cif",
+     "sha256": "1689f1ff980d7faef46a88b34e44e9bc1dd0c944a1f175f2f20cf2c2c7ceabbb",
+     "O_sites_orig": [
+      46,
+      48,
+      49
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0021_E-2254.015_O-free_s.cif",
+     "sha256": "8a7df05e7d95fc8dd520fe919adb42290cb1f10813a794bd9e6cf3cc1fb361e4",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 22,
+   "name": "cfg0022_E-2253.923",
+   "ewald_eV": -2253.9232,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    89
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.6643,
+     9.154,
+     8.0409
+    ],
+    [
+     5.725,
+     10.1348,
+     13.0807
+    ],
+    [
+     1.0505,
+     1.9616,
+     14.6966
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ]
+   ],
+   "file": "base_noO/cfg0022_E-2253.923.cif",
+   "sha256": "3c2031ffb9e04447408d3ff23a72f3b48dbb8791d03aef904b57ea945fb5967a",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0022_E-2253.923_O-bo4.cif",
+     "sha256": "62ed5a9447f0733e3fe71175491b1a2310f65ce2c4c69930e50b8aa54a4037a8",
+     "O_sites_orig": [
+      33,
+      43,
+      109
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0022_E-2253.923_O-distributed.cif",
+     "sha256": "188406ba49eb30fafb740ff8393f2a8f565cb9fb1374a2cd3046bd54f9bb2d9e",
+     "O_sites_orig": [
+      98,
+      106,
+      110
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0022_E-2253.923_O-free_s.cif",
+     "sha256": "40100e4523e3c2b701dc98d68903a3648aa217790d7fe0e31555b34234f814c2",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 23,
+   "name": "cfg0023_E-2253.919",
+   "ewald_eV": -2253.9194,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    91
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.9305,
+     4.2501,
+     4.6351
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0023_E-2253.919.cif",
+   "sha256": "ab0ced998d064353f211e52a11584568586162f1e3a1794925c082a4e0367a10",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0023_E-2253.919_O-bo4.cif",
+     "sha256": "a38ac5e8b93996bf5a1b7ec0113ae441314ab08898eecb8de77392ecf60349f1",
+     "O_sites_orig": [
+      32,
+      37,
+      111
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0023_E-2253.919_O-distributed.cif",
+     "sha256": "06b9564c6449934e2c2534fb5e8078c1a182f76cc90acd3b77d2e61da54317bc",
+     "O_sites_orig": [
+      43,
+      105,
+      113
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0023_E-2253.919_O-free_s.cif",
+     "sha256": "d5556f3bd2937c6e57553bd10483953b33f8c7c0cc726ab98c3cb449cb26620b",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 24,
+   "name": "cfg0024_E-2253.918",
+   "ewald_eV": -2253.9177,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    31,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     1.4278,
+     0.0,
+     29.8193
+    ],
+    [
+     3.3928,
+     5.5578,
+     33.2227
+    ]
+   ],
+   "file": "base_noO/cfg0024_E-2253.918.cif",
+   "sha256": "2aa43af4f6ef6928c5afc75fc3fbd665ab2b6a20ed4c6cc2b63032d0d22625eb",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0024_E-2253.918_O-bo4.cif",
+     "sha256": "2eee3495b88cda24c0ec6926d6728a5d4f99372949eb8e3915da879f215511e1",
+     "O_sites_orig": [
+      51,
+      108,
+      113
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0024_E-2253.918_O-distributed.cif",
+     "sha256": "828f6bc2ec65cc5634879518e416f35c1d052fae3dc2b9cf92b3194e0c41b1d3",
+     "O_sites_orig": [
+      35,
+      37,
+      100
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0024_E-2253.918_O-free_s.cif",
+     "sha256": "256d087477a425137284d9e6c20ecfc8c1279dae2a4535d60da151fe2649d2d8",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 25,
+   "name": "cfg0025_E-2253.580",
+   "ewald_eV": -2253.5798,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.6585,
+     7.5194,
+     25.9481
+    ],
+    [
+     2.9305,
+     4.2501,
+     4.6351
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0025_E-2253.580.cif",
+   "sha256": "0309af563d20b75fcb17503e0391a4d965146f5773d3a5c3cee70d080fdf432b",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0025_E-2253.580_O-bo4.cif",
+     "sha256": "440fa7462913ba96b5f3474cdc52cab1456972982f59b1b5d8fe8cf69ea9173d",
+     "O_sites_orig": [
+      97,
+      102,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0025_E-2253.580_O-distributed.cif",
+     "sha256": "6409fa4a5b301cc660f37dff1ce1c056f1e3a0ed4fade4e9165e60935da660c3",
+     "O_sites_orig": [
+      40,
+      101,
+      105
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0025_E-2253.580_O-free_s.cif",
+     "sha256": "10e8dbb832b03bce40ac4f64e3de9ae3a112a4fd5143a3607369c5f195f512a8",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 26,
+   "name": "cfg0026_E-2253.426",
+   "ewald_eV": -2253.426,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    29,
+    30
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.0563,
+     3.5962,
+     17.7301
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     6.2485,
+     5.5578,
+     26.8173
+    ],
+    [
+     5.9221,
+     2.6154,
+     31.0656
+    ]
+   ],
+   "file": "base_noO/cfg0026_E-2253.426.cif",
+   "sha256": "40e00202231a6cb872657066f158b9276455b0451ce568e6ee568c9f8365ea21",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0026_E-2253.426_O-bo4.cif",
+     "sha256": "e2fdeb219ef0814d3552dba484fb71a0200b0a5e78be3552d891338cbb3e661b",
+     "O_sites_orig": [
+      34,
+      40,
+      50
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0026_E-2253.426_O-distributed.cif",
+     "sha256": "49498573faf55c4a22523007b0366392cafa452b613390bf20888512c76f211d",
+     "O_sites_orig": [
+      104,
+      105,
+      113
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0026_E-2253.426_O-free_s.cif",
+     "sha256": "f9a14741c85bc7cf6b6bb2766090b98f28aa94b40edae04a41c09f7c54a41872",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 27,
+   "name": "cfg0027_E-2253.406",
+   "ewald_eV": -2253.4059,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    31
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     6.4049,
+     1.9616,
+     15.3718
+    ],
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     4.4637,
+     5.5578,
+     31.8275
+    ],
+    [
+     5.5346,
+     5.5578,
+     13.5185
+    ]
+   ],
+   "file": "base_noO/cfg0027_E-2253.406.cif",
+   "sha256": "109d67b8f994b259d59cd03a1df305e5aee8d2fcf81507ea5e7f2bf111914f22",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0027_E-2253.406_O-bo4.cif",
+     "sha256": "73f71a383894b8bf24d0d3c4ad7bd99dff54333ab35c1b0d3721b6b48fc8da46",
+     "O_sites_orig": [
+      36,
+      43,
+      48
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0027_E-2253.406_O-distributed.cif",
+     "sha256": "174c384c279bda4539af895e648fd3c8574e4b9cb686ee409b5a3f48083766a7",
+     "O_sites_orig": [
+      100,
+      109,
+      110
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0027_E-2253.406_O-free_s.cif",
+     "sha256": "6689a988e5130faf3bfd184b79e777683128e3a931bee8b197e7203ed3c5a509",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 28,
+   "name": "cfg0028_E-2253.398",
+   "ewald_eV": -2253.3981,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    90,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.7741,
+     7.8463,
+     16.0807
+    ],
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     2.4987,
+     0.0,
+     27.6186
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0028_E-2253.398.cif",
+   "sha256": "9c328641b4121409e94bc59eefe120b56349e0818aa78b1b8514cda91f3d7ea3",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0028_E-2253.398_O-bo4.cif",
+     "sha256": "3cced15435d7be1459674716a474a530adfcbd3e519d4eea3781e17e357e2c09",
+     "O_sites_orig": [
+      98,
+      108,
+      110
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0028_E-2253.398_O-distributed.cif",
+     "sha256": "910f9ceae7ecf657717e43033815334b014522dfb5e0218e6f718d20ccf2b4c4",
+     "O_sites_orig": [
+      33,
+      96,
+      99
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0028_E-2253.398_O-free_s.cif",
+     "sha256": "df7a1c7f19997ab8082f689adce2213c7a217c86b1f46a3c24ac6ca18c385295",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 29,
+   "name": "cfg0029_E-2253.369",
+   "ewald_eV": -2253.3694,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.6585,
+     7.5194,
+     25.9481
+    ],
+    [
+     1.0505,
+     1.9616,
+     14.6966
+    ],
+    [
+     5.5346,
+     5.5578,
+     13.5185
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ]
+   ],
+   "file": "base_noO/cfg0029_E-2253.369.cif",
+   "sha256": "75c764ba78257ddb0f79424e62b645275f1af79a114a57b2f6bca9e7d8cb3a45",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0029_E-2253.369_O-bo4.cif",
+     "sha256": "7a5a5cc83e86295b8d9eb6f5c6207760a4a2de7c2a98ef4173de41f0089aef9d",
+     "O_sites_orig": [
+      43,
+      97,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0029_E-2253.369_O-distributed.cif",
+     "sha256": "7c95f77b99ff9f2b4ec329e114c8d22a52daa9c65b9c9fe569d848a11bbdba9f",
+     "O_sites_orig": [
+      42,
+      108,
+      109
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0029_E-2253.369_O-free_s.cif",
+     "sha256": "4074d44cd52a24acb8d0fde39be02e61dbd6ebe4b1e8f736eba5cb87c59a974a",
+     "O_sites_orig": [
+      53,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 30,
+   "name": "cfg0030_E-2253.338",
+   "ewald_eV": -2253.3378,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    89,
+    91
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.6643,
+     9.154,
+     8.0409
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ]
+   ],
+   "file": "base_noO/cfg0030_E-2253.338.cif",
+   "sha256": "24514088ba9f4f5d65a298d75e995a16d61c9291df6c9a1a499312e0f7b4ccb6",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0030_E-2253.338_O-bo4.cif",
+     "sha256": "7e7c9622801fb25359f51edab626603620541c8e69bd95d4744c0bddc0805c40",
+     "O_sites_orig": [
+      104,
+      109,
+      111
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0030_E-2253.338_O-distributed.cif",
+     "sha256": "275bd6084bc3d7509089c6254a3719971875baad1b63fa86a85f07e112c2ec1a",
+     "O_sites_orig": [
+      36,
+      40,
+      97
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0030_E-2253.338_O-free_s.cif",
+     "sha256": "dce7a63739a2cc5b65e8f77b0b28447bdce3d8e00b0e4d827fcf1cb6151bcca6",
+     "O_sites_orig": [
+      53,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 31,
+   "name": "cfg0031_E-2253.187",
+   "ewald_eV": -2253.1869,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    91,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     2.4987,
+     0.0,
+     27.6186
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ]
+   ],
+   "file": "base_noO/cfg0031_E-2253.187.cif",
+   "sha256": "8cad2570716042a5cdfe81f8286637b056f82819703050ea92fc92817a57ea6a",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0031_E-2253.187_O-bo4.cif",
+     "sha256": "226aafe115b86c292ce93190fe15a334dc08f3f62ced24f348989b6f642183b1",
+     "O_sites_orig": [
+      103,
+      106,
+      111
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0031_E-2253.187_O-distributed.cif",
+     "sha256": "2f178663088da03c34252f0e5382106a48dbd1e76d1e8fe080c1c74d6bce143e",
+     "O_sites_orig": [
+      33,
+      40,
+      49
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0031_E-2253.187_O-free_s.cif",
+     "sha256": "77da7da403a6706938b0b55affcbd5c303192c77627b54f5ecb84bc705d7e751",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 32,
+   "name": "cfg0032_E-2253.172",
+   "ewald_eV": -2253.1724,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    31,
+    89
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     7.4996,
+     11.1156,
+     10.4786
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ],
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     3.3928,
+     5.5578,
+     33.2227
+    ]
+   ],
+   "file": "base_noO/cfg0032_E-2253.172.cif",
+   "sha256": "c1f0eebbcbfb1d2da736b4985bd8452ab790474758a82059ac67306aa8ad22d5",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0032_E-2253.172_O-bo4.cif",
+     "sha256": "5c84d864187b5ed43b72058a98be02121d6ae29d397e0f7be71121f6f777f071",
+     "O_sites_orig": [
+      41,
+      46,
+      51
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0032_E-2253.172_O-distributed.cif",
+     "sha256": "8f6b3865d2563ddfec6c2d19fc993fce3fed0229249df28cbdd5c05ef4c53a41",
+     "O_sites_orig": [
+      50,
+      100,
+      105
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0032_E-2253.172_O-free_s.cif",
+     "sha256": "e4b8aa6ffa4478a9b814430fc4e862137b8aac7e234aecc0ecad6a9d4b5410f5",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 33,
+   "name": "cfg0033_E-2253.158",
+   "ewald_eV": -2253.1579,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    89,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.6643,
+     9.154,
+     8.0409
+    ],
+    [
+     2.6585,
+     7.5194,
+     25.9481
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ]
+   ],
+   "file": "base_noO/cfg0033_E-2253.158.cif",
+   "sha256": "dc91ec36a57ebfd27aeb3c1126be779c91ac78040524718d5e657413d53c92b6",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0033_E-2253.158_O-bo4.cif",
+     "sha256": "d28b49e046f32c40b893fb4bd7700322fe903a41cfabfbd81e2b704426a4b58f",
+     "O_sites_orig": [
+      94,
+      107,
+      109
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0033_E-2253.158_O-distributed.cif",
+     "sha256": "321b126bf738eec10b9955932abb8adbea3e257ff61df518e77413f496d056ca",
+     "O_sites_orig": [
+      34,
+      43,
+      48
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0033_E-2253.158_O-free_s.cif",
+     "sha256": "e60ca8775275361d3ba4773c055349f291d0146c6ab272793f6063df50dfb982",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 34,
+   "name": "cfg0034_E-2252.947",
+   "ewald_eV": -2252.9474,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    29,
+    92
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     2.6585,
+     7.5194,
+     25.9481
+    ],
+    [
+     3.0563,
+     3.5962,
+     17.7301
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     7.8871,
+     8.1733,
+     34.469
+    ]
+   ],
+   "file": "base_noO/cfg0034_E-2252.947.cif",
+   "sha256": "12c189e6f692e0857d4360d7aab053749a8d715cb798da7e6de216b6b9721ee9",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0034_E-2252.947_O-bo4.cif",
+     "sha256": "28e2bc5ba92a9afdd839dd1b62c3a3b9b9dc34b11b53ce6f7d0fc75bb47a560b",
+     "O_sites_orig": [
+      34,
+      44,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0034_E-2252.947_O-distributed.cif",
+     "sha256": "e1a8f4542c7f3946d942009ac357b1150148e684cc26bbcc506bf96cd12a2fe3",
+     "O_sites_orig": [
+      35,
+      101,
+      105
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0034_E-2252.947_O-free_s.cif",
+     "sha256": "cbbb232b83683866f504bb286c0146b4ae485ef86fe64f00efc52f2a5cba6f91",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 35,
+   "name": "cfg0035_E-2252.927",
+   "ewald_eV": -2252.9268,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    29
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     1.0505,
+     1.9616,
+     14.6966
+    ],
+    [
+     3.0563,
+     3.5962,
+     17.7301
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     5.5346,
+     5.5578,
+     13.5185
+    ]
+   ],
+   "file": "base_noO/cfg0035_E-2252.927.cif",
+   "sha256": "d750a84ee9f0d61c15fa762706cc6a308235fb130957583ef1440c02f8a8a64e",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0035_E-2252.927_O-bo4.cif",
+     "sha256": "d7807dd2ae12425ac6657b0f4f2224ec1c3d2051e6101b02478cfc3c5661d34d",
+     "O_sites_orig": [
+      34,
+      43,
+      44
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0035_E-2252.927_O-distributed.cif",
+     "sha256": "5a5690c9715fe4a62632a313f2e0c52badaaf19e23c2da52e08e268044b8d819",
+     "O_sites_orig": [
+      94,
+      95,
+      102
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0035_E-2252.927_O-free_s.cif",
+     "sha256": "1fd7cbc3b41feb0057ef2c664e4854be147b45a999f65dc195dac34f23096aeb",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 36,
+   "name": "cfg0036_E-2252.653",
+   "ewald_eV": -2252.6533,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    89,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.6643,
+     9.154,
+     8.0409
+    ],
+    [
+     5.725,
+     10.1348,
+     13.0807
+    ],
+    [
+     2.7741,
+     7.8463,
+     39.4377
+    ],
+    [
+     1.4278,
+     0.0,
+     29.8193
+    ]
+   ],
+   "file": "base_noO/cfg0036_E-2252.653.cif",
+   "sha256": "f5c1e2dd53a358715082aebcf99c345658ae414225ee31a1a6855b07c035c4ce",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0036_E-2252.653_O-bo4.cif",
+     "sha256": "d7490daaf226e835ef9b1d2ee7ebf3090b84a9b9ce38fd4b56ebd94e438207f4",
+     "O_sites_orig": [
+      99,
+      108,
+      113
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0036_E-2252.653_O-distributed.cif",
+     "sha256": "f5926d3fb2c8ae1ba2714d1c7ab2a9ed993ed1d4064855820e0cd71e5fb2b769",
+     "O_sites_orig": [
+      36,
+      44,
+      97
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0036_E-2252.653_O-free_s.cif",
+     "sha256": "021d7a1e02b06d369e2b11bfcdc884e78283baf46899179e4be2d3d0ea62656a",
+     "O_sites_orig": [
+      53,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 37,
+   "name": "cfg0037_E-2252.640",
+   "ewald_eV": -2252.64,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     5.776,
+     5.2309,
+     6.6784
+    ],
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     1.4278,
+     0.0,
+     29.8193
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0037_E-2252.640.cif",
+   "sha256": "d1c9d24c37e9c20696ef96e00c13a1a220a5071b38f6a3f1335d1b65f338dc00",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0037_E-2252.640_O-bo4.cif",
+     "sha256": "10c534a44ed0307b184001e041407bcafaa763238ff84151149586a3ea983987",
+     "O_sites_orig": [
+      42,
+      108,
+      113
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0037_E-2252.640_O-distributed.cif",
+     "sha256": "c69954daf2d7d28dd34521dd01a59ddda73c6663b397e4ad446628f63dd61d85",
+     "O_sites_orig": [
+      48,
+      51,
+      94
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0037_E-2252.640_O-free_s.cif",
+     "sha256": "9414789760a0f74e9826afa032ec2aa107d47f3d859c56e7d1291b159822fc4c",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 38,
+   "name": "cfg0038_E-2252.500",
+   "ewald_eV": -2252.4996,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    29,
+    90
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     1.0505,
+     1.9616,
+     14.6966
+    ],
+    [
+     3.3724,
+     7.5194,
+     17.9035
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     7.4996,
+     11.1156,
+     16.9219
+    ]
+   ],
+   "file": "base_noO/cfg0038_E-2252.500.cif",
+   "sha256": "6392bb7147c8aa7e798d95f64bbc41865a61f24bc2e721129ae4ed704260b2a6",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0038_E-2252.500_O-bo4.cif",
+     "sha256": "f5f8a30cca5b81d7a58dfcdecffcf21918f9e2d6823d42149c76779965478885",
+     "O_sites_orig": [
+      34,
+      95,
+      110
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0038_E-2252.500_O-distributed.cif",
+     "sha256": "3ef86a8738e69a1953e8c046665431f5c485c03bbc796ff3ac072e424dfde9ef",
+     "O_sites_orig": [
+      97,
+      103,
+      113
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0038_E-2252.500_O-free_s.cif",
+     "sha256": "df1ac561c5229962f1ecdd582d9b1302e7fc89b037704b0e3f344b330f0e4fea",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 39,
+   "name": "cfg0039_E-2252.471",
+   "ewald_eV": -2252.4714,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    28,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     6.4049,
+     1.9616,
+     15.3718
+    ],
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     2.4987,
+     0.0,
+     27.6186
+    ],
+    [
+     5.5346,
+     5.5578,
+     13.5185
+    ]
+   ],
+   "file": "base_noO/cfg0039_E-2252.471.cif",
+   "sha256": "5fa40082f4011154d03b5628503638ae84c6323359ce9243c0e5b890b2b32f66",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0039_E-2252.471_O-bo4.cif",
+     "sha256": "d13b57dcc9af5b593de38e3528eaf7e34eb36d81dbdeab6d90565d1b3f546cbb",
+     "O_sites_orig": [
+      33,
+      43,
+      48
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0039_E-2252.471_O-distributed.cif",
+     "sha256": "771e3c7387d05fc2a1ef8e5ced3f8fbc31ea45ad8094c33f0717a46698a9da0b",
+     "O_sites_orig": [
+      44,
+      96,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0039_E-2252.471_O-free_s.cif",
+     "sha256": "9771f1dcd62af329693cc384017c9a7b988ba553eee6ff5f73c5fb4eef04d5a7",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 40,
+   "name": "cfg0040_E-2252.241",
+   "ewald_eV": -2252.2415,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    29,
+    91
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.0359,
+     5.5578,
+     21.7408
+    ],
+    [
+     5.0008,
+     11.1156,
+     25.1443
+    ],
+    [
+     3.9266,
+     0.0,
+     15.959
+    ],
+    [
+     6.7109,
+     6.8655,
+     26.41
+    ]
+   ],
+   "file": "base_noO/cfg0040_E-2252.241.cif",
+   "sha256": "e9de1ce040ad516a7b4f2cc6653a804bcb2cbfe2df9184d7c574905968c1983a",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0040_E-2252.241_O-bo4.cif",
+     "sha256": "4123c59acd3db15a4523f2e3426c55f8d6f4056db131348c79292001ca183b46",
+     "O_sites_orig": [
+      49,
+      101,
+      106
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0040_E-2252.241_O-distributed.cif",
+     "sha256": "e6f6734e0769b427005ffbe6beb080036fdfedf971f65ab3cc84d60a8b8936b9",
+     "O_sites_orig": [
+      33,
+      36,
+      102
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0040_E-2252.241_O-free_s.cif",
+     "sha256": "6b76b5a32e476d1be709d13eab285b8b740fa4f781ee4e784da0237719287d35",
+     "O_sites_orig": [
+      53,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 41,
+   "name": "cfg0041_E-2251.915",
+   "ewald_eV": -2251.915,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    29,
+    31
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.0563,
+     3.5962,
+     17.7301
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     1.4074,
+     1.9616,
+     33.83
+    ],
+    [
+     4.4637,
+     5.5578,
+     31.8275
+    ]
+   ],
+   "file": "base_noO/cfg0041_E-2251.915.cif",
+   "sha256": "a8a280de939e1a9e290fd56612f51df26694ca60ff73f59e54cf8d43976135c9",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0041_E-2251.915_O-bo4.cif",
+     "sha256": "c33964da881193753636e5245eeec1a54bdea7ebe733262c4db7cd53c7acea72",
+     "O_sites_orig": [
+      41,
+      44,
+      51
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0041_E-2251.915_O-distributed.cif",
+     "sha256": "c82b5f86dba84e2eb9e283587787466a65a870f8b621cf8beb985f8b7ca9914f",
+     "O_sites_orig": [
+      40,
+      48,
+      106
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0041_E-2251.915_O-free_s.cif",
+     "sha256": "84a102739cc47e099907bdc2b608125607944c42f690eeb779a9be0ca6784600",
+     "O_sites_orig": [
+      56,
+      115,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 42,
+   "name": "cfg0042_E-2251.775",
+   "ewald_eV": -2251.7751,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    27,
+    29
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.0563,
+     3.5962,
+     17.7301
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     2.9305,
+     4.2501,
+     4.6351
+    ],
+    [
+     8.9274,
+     11.1156,
+     14.9274
+    ]
+   ],
+   "file": "base_noO/cfg0042_E-2251.775.cif",
+   "sha256": "4c385156dcfa657235aba91677cf035876f188d0982ee6d03f2f1bb07ac89cd3",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0042_E-2251.775_O-bo4.cif",
+     "sha256": "624454b6a091d925b5259b4a5902de619b1a36e11bca408cb7480f669616356d",
+     "O_sites_orig": [
+      32,
+      37,
+      42
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0042_E-2251.775_O-distributed.cif",
+     "sha256": "8f638dbbe416651f8818f84d238d042978e1575e54075cfe5a2c2385b86abbe1",
+     "O_sites_orig": [
+      43,
+      46,
+      112
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0042_E-2251.775_O-free_s.cif",
+     "sha256": "e63768ca0eb64beacef49002b611c6de11d68abffcf364ab725bc0afafc0cc4a",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 43,
+   "name": "cfg0043_E-2251.319",
+   "ewald_eV": -2251.3192,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    29,
+    89
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     4.6643,
+     9.154,
+     8.0409
+    ],
+    [
+     3.0563,
+     3.5962,
+     17.7301
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     6.7211,
+     5.8847,
+     11.518
+    ]
+   ],
+   "file": "base_noO/cfg0043_E-2251.319.cif",
+   "sha256": "3b5b0ca434d88ba820dea61328edff076af8c9569f08c56dbdd9926780a197c8",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0043_E-2251.319_O-bo4.cif",
+     "sha256": "ee0da07b2b6ace5ecc2439512c6e33b4f288d811126c83e1c240cd0909bf7ad3",
+     "O_sites_orig": [
+      34,
+      99,
+      104
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0043_E-2251.319_O-distributed.cif",
+     "sha256": "bc5b22aeb8a99c2e220e9eb74bafcc327a3e7ac9f7af369b25b42db037cbb32a",
+     "O_sites_orig": [
+      40,
+      45,
+      97
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0043_E-2251.319_O-free_s.cif",
+     "sha256": "b45c90e7e6fd18b288a84432c86d7398531b05558e081deef2b622fd72d8cb4e",
+     "O_sites_orig": [
+      53,
+      56,
+      118
+     ],
+     "legacy_fallback": false
+    }
+   }
+  },
+  {
+   "rank": 44,
+   "name": "cfg0044_E-2250.840",
+   "ewald_eV": -2250.8397,
+   "fill_mode": "exhaustive",
+   "dopant_sites_orig": [
+    29,
+    93
+   ],
+   "free_S_sites_orig": [
+    53,
+    56,
+    115,
+    118
+   ],
+   "li_fill_xyz": [
+    [
+     3.0563,
+     3.5962,
+     17.7301
+    ],
+    [
+     4.2733,
+     0.9808,
+     23.003
+    ],
+    [
+     3.7294,
+     7.5194,
+     37.0368
+    ],
+    [
+     1.4278,
+     0.0,
+     29.8193
+    ]
+   ],
+   "file": "base_noO/cfg0044_E-2250.840.cif",
+   "sha256": "dab0d0306b0d82b78d9a64816d32367b939fc7bea2c70f9365648587538ac8d0",
+   "motifs": {
+    "bo4": {
+     "file": "cif/cfg0044_E-2250.840_O-bo4.cif",
+     "sha256": "6fc1b17d42e494f76408a1ce61d16b667ec6c63a6724350ff338057e29716f47",
+     "O_sites_orig": [
+      44,
+      49,
+      108
+     ],
+     "legacy_fallback": false
+    },
+    "distributed": {
+     "file": "cif/cfg0044_E-2250.840_O-distributed.cif",
+     "sha256": "3142153bc55c3e4b3824f8cc2e022e8abfae35e3535da1af1db8870b61821d00",
+     "O_sites_orig": [
+      32,
+      51,
+      95
+     ],
+     "legacy_fallback": false
+    },
+    "free_s": {
+     "file": "cif/cfg0044_E-2250.840_O-free_s.cif",
+     "sha256": "1f20a1f59b0678d229e920895dc20e91dc554ba2d4180aed6632257007c9bba4",
+     "O_sites_orig": [
+      53,
+      56,
+      115
+     ],
+     "legacy_fallback": false
+    }
+   }
+  }
+ ],
+ "⛔_못_하는_것": [
+  "배치의 실제 안정성 판정 (형식전하 Ewald 거르기일 뿐)",
+  "O 꼴은 가족마다 표본 하나 (rng) — '선언한 표본에서 찾은 최저' 까지만",
+  "대칭 등가 배치를 합치지 않는다 (Ewald 반올림 중복 제거 안 함 — Codex DU P1-3)"
+ ]
+}

@@ -1,0 +1,1827 @@
+{
+ "created": "2026-09-11",
+ "repo_commit": "d82b7a4ce42cf7b4d2e8f68e378289f16c58e96c",
+ "bundle_version": "v3",
+ "bundle_label": "sdcp_c12_v41",
+ "gate_version": "60f63b8265d9",
+ "freeze_frac_dft": 0.85,
+ "kmesh": {
+  "relax": "2 3 1",
+  "static": "3 4 1",
+  "dense": "4 6 1"
+ },
+ "nslab": 192,
+ "seeds_full": [
+  "afm2424_pm1",
+  "afm2424_net4"
+ ],
+ "seed_main": "afm2424_pm1",
+ "potcar_spec": {
+  "C": "C",
+  "F": "F",
+  "H": "H",
+  "Li": "Li_sv",
+  "Ni": "Ni_pv",
+  "O": "O",
+  "S": "S"
+ },
+ "fragments": [
+  "ptfe_c10",
+  "sdcp_neutral"
+ ],
+ "pairs": {},
+ "refs": {
+  "clean_slab": [
+   "refs/clean_slab__afm2424_pm1",
+   "refs/clean_slab__afm2424_net4"
+  ],
+  "mol__ptfe_c10__box20": "refs/mol__ptfe_c10__box20",
+  "mol__ptfe_c10__box24": "refs/mol__ptfe_c10__box24",
+  "mol__sdcp_neutral__box20": "refs/mol__sdcp_neutral__box20",
+  "mol__sdcp_neutral__box24": "refs/mol__sdcp_neutral__box24"
+ },
+ "planned": {
+  "prospective/ptfe_c10__b00__afm2424_pm1": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "ptfe_c10",
+    "role": "primary",
+    "seed": "afm2424_pm1",
+    "basin_id": "b00",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "C",
+     "F"
+    ]
+   }
+  },
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "ptfe_c10",
+    "role": "primary",
+    "seed": "afm2424_pm1",
+    "basin_id": "b00",
+    "vacconv": "c2",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "C",
+     "F"
+    ]
+   }
+  },
+  "prospective/ptfe_c10__b00__afm2424_net4": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "ptfe_c10",
+    "role": "primary",
+    "seed": "afm2424_net4",
+    "basin_id": "b00",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "C",
+     "F"
+    ]
+   }
+  },
+  "prospective/ptfe_c10__b52__afm2424_pm1": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "ptfe_c10",
+    "role": "sensitivity",
+    "seed": "afm2424_pm1",
+    "basin_id": "b52",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "C",
+     "F"
+    ]
+   }
+  },
+  "prospective/ptfe_c10__b52__afm2424_net4": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "ptfe_c10",
+    "role": "sensitivity",
+    "seed": "afm2424_net4",
+    "basin_id": "b52",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "C",
+     "F"
+    ]
+   }
+  },
+  "prospective/sdcp_neutral__b00__afm2424_pm1": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "sdcp_neutral",
+    "role": "primary",
+    "seed": "afm2424_pm1",
+    "basin_id": "b00",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  },
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "sdcp_neutral",
+    "role": "primary",
+    "seed": "afm2424_pm1",
+    "basin_id": "b00",
+    "vacconv": "c2",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  },
+  "prospective/sdcp_neutral__b00__afm2424_net4": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "sdcp_neutral",
+    "role": "primary",
+    "seed": "afm2424_net4",
+    "basin_id": "b00",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  },
+  "prospective/sdcp_neutral__b12__afm2424_pm1": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "sdcp_neutral",
+    "role": "stress_sensitivity",
+    "seed": "afm2424_pm1",
+    "basin_id": "b12",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  },
+  "prospective/sdcp_neutral__b12__afm2424_net4": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "prospective_pose",
+    "fragment": "sdcp_neutral",
+    "role": "stress_sensitivity",
+    "seed": "afm2424_net4",
+    "basin_id": "b12",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  },
+  "refs/clean_slab__afm2424_pm1": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "clean_ref",
+    "seed": "afm2424_pm1",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O"
+    ]
+   }
+  },
+  "vacconv/clean_slab__afm2424_pm1__c2": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "clean_ref",
+    "seed": "afm2424_pm1",
+    "vacconv": "c2",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O"
+    ]
+   }
+  },
+  "refs/clean_slab__afm2424_net4": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "clean_ref",
+    "seed": "afm2424_net4",
+    "species_order": [
+     "Li",
+     "Ni",
+     "O"
+    ]
+   }
+  },
+  "refs/mol__ptfe_c10__box20": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "mol_ref",
+    "fragment": "ptfe_c10",
+    "species_order": [
+     "C",
+     "F"
+    ]
+   }
+  },
+  "refs/mol__ptfe_c10__box24": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "mol_ref",
+    "fragment": "ptfe_c10",
+    "species_order": [
+     "C",
+     "F"
+    ]
+   }
+  },
+  "refs/mol__ptfe_c10__box24__nzmag": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "mol_ref",
+    "fragment": "ptfe_c10",
+    "species_order": [
+     "C",
+     "F"
+    ]
+   }
+  },
+  "refs/mol__sdcp_neutral__box20": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "mol_ref",
+    "fragment": "sdcp_neutral",
+    "species_order": [
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  },
+  "refs/mol__sdcp_neutral__box24": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "mol_ref",
+    "fragment": "sdcp_neutral",
+    "species_order": [
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  },
+  "refs/mol__sdcp_neutral__box24__nzmag": {
+   "phases": [
+    "static"
+   ],
+   "required": true,
+   "meta": {
+    "kind": "mol_ref",
+    "fragment": "sdcp_neutral",
+    "species_order": [
+     "O",
+     "S",
+     "C",
+     "H"
+    ]
+   }
+  }
+ },
+ "magnetic_lineage": "부격자 원장으로 확정 (tools/sdcp/afm_ledger.py). QE 원본 db/inputs/sdcp_v2/slab_relax/relax.in 의 Ni1/Ni2 를 슬랩(= 그 셀의 1×4×1 슈퍼셀)에 좌표로 매칭했다. 부호는 2026-08-08 납품 계보 승계: Ni2=−1 · Ni1=+1. ⚠ 2026-08-12 정정 — v2 초판의 '파일 순서 앞 24 / 뒤 24' seed 는 실제 부격자와 24/48(동전 던지기) 일치라 **다른 자기 배치**였다. 그 seed 로 만든 번들은 무효.",
+ "afm_ledger": {
+  "element": "Ni",
+  "supercell_matrix": [
+   [
+    1,
+    0,
+    0
+   ],
+   [
+    0,
+    4,
+    0
+   ],
+   [
+    0,
+    0,
+    1
+   ]
+  ],
+  "n_replicas": 4,
+  "counts": {
+   "Ni1": 24,
+   "Ni2": 24
+  },
+  "max_residual_A": 0.1372,
+  "min_second_nearest_margin_A": 2.7277,
+  "qe_site_usage": {
+   "Ni2#0": 4,
+   "Ni1#1": 4,
+   "Ni1#2": 4,
+   "Ni1#3": 4,
+   "Ni2#4": 4,
+   "Ni2#5": 4,
+   "Ni2#6": 4,
+   "Ni1#7": 4,
+   "Ni1#8": 4,
+   "Ni2#9": 4,
+   "Ni2#10": 4,
+   "Ni1#11": 4
+  },
+  "sign_convention": {
+   "Ni1": 1.0,
+   "Ni2": -1.0
+  },
+  "sign_source": {
+   "Ni1": "starting_magnetization=+0.3",
+   "Ni2": "starting_magnetization=-0.3"
+  },
+  "net_moment_muB": 0.0,
+  "sign_by_slab_index": {
+   "1": -1.0,
+   "5": 1.0,
+   "9": 1.0,
+   "13": 1.0,
+   "17": -1.0,
+   "21": -1.0,
+   "25": -1.0,
+   "29": 1.0,
+   "33": 1.0,
+   "37": -1.0,
+   "41": -1.0,
+   "45": 1.0,
+   "49": -1.0,
+   "53": 1.0,
+   "57": 1.0,
+   "61": 1.0,
+   "65": -1.0,
+   "69": -1.0,
+   "73": -1.0,
+   "77": 1.0,
+   "81": 1.0,
+   "85": -1.0,
+   "89": -1.0,
+   "93": 1.0,
+   "97": -1.0,
+   "101": 1.0,
+   "105": 1.0,
+   "109": 1.0,
+   "113": -1.0,
+   "117": -1.0,
+   "121": -1.0,
+   "125": 1.0,
+   "129": 1.0,
+   "133": -1.0,
+   "137": -1.0,
+   "141": 1.0,
+   "145": -1.0,
+   "149": 1.0,
+   "153": 1.0,
+   "157": 1.0,
+   "161": -1.0,
+   "165": -1.0,
+   "169": -1.0,
+   "173": 1.0,
+   "177": 1.0,
+   "181": -1.0,
+   "185": -1.0,
+   "189": 1.0
+  },
+  "rows": [
+   {
+    "slab_index": 1,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 5,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 9,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 13,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 17,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 21,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 25,
+    "sublattice": "Ni2",
+    "residual_A": 0.0815,
+    "margin_A": 2.7322
+   },
+   {
+    "slab_index": 29,
+    "sublattice": "Ni1",
+    "residual_A": 0.0839,
+    "margin_A": 2.7277
+   },
+   {
+    "slab_index": 33,
+    "sublattice": "Ni1",
+    "residual_A": 0.078,
+    "margin_A": 2.7373
+   },
+   {
+    "slab_index": 37,
+    "sublattice": "Ni2",
+    "residual_A": 0.1372,
+    "margin_A": 2.8583
+   },
+   {
+    "slab_index": 41,
+    "sublattice": "Ni2",
+    "residual_A": 0.1266,
+    "margin_A": 2.86
+   },
+   {
+    "slab_index": 45,
+    "sublattice": "Ni1",
+    "residual_A": 0.1325,
+    "margin_A": 2.86
+   },
+   {
+    "slab_index": 49,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 53,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 57,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 61,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 65,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 69,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 73,
+    "sublattice": "Ni2",
+    "residual_A": 0.0815,
+    "margin_A": 2.7322
+   },
+   {
+    "slab_index": 77,
+    "sublattice": "Ni1",
+    "residual_A": 0.0839,
+    "margin_A": 2.7277
+   },
+   {
+    "slab_index": 81,
+    "sublattice": "Ni1",
+    "residual_A": 0.078,
+    "margin_A": 2.7373
+   },
+   {
+    "slab_index": 85,
+    "sublattice": "Ni2",
+    "residual_A": 0.1372,
+    "margin_A": 2.8583
+   },
+   {
+    "slab_index": 89,
+    "sublattice": "Ni2",
+    "residual_A": 0.1266,
+    "margin_A": 2.86
+   },
+   {
+    "slab_index": 93,
+    "sublattice": "Ni1",
+    "residual_A": 0.1325,
+    "margin_A": 2.86
+   },
+   {
+    "slab_index": 97,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 101,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 105,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 109,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 113,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 117,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 121,
+    "sublattice": "Ni2",
+    "residual_A": 0.0815,
+    "margin_A": 2.7322
+   },
+   {
+    "slab_index": 125,
+    "sublattice": "Ni1",
+    "residual_A": 0.0839,
+    "margin_A": 2.7277
+   },
+   {
+    "slab_index": 129,
+    "sublattice": "Ni1",
+    "residual_A": 0.078,
+    "margin_A": 2.7373
+   },
+   {
+    "slab_index": 133,
+    "sublattice": "Ni2",
+    "residual_A": 0.1372,
+    "margin_A": 2.8583
+   },
+   {
+    "slab_index": 137,
+    "sublattice": "Ni2",
+    "residual_A": 0.1266,
+    "margin_A": 2.86
+   },
+   {
+    "slab_index": 141,
+    "sublattice": "Ni1",
+    "residual_A": 0.1325,
+    "margin_A": 2.86
+   },
+   {
+    "slab_index": 145,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 149,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 153,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 157,
+    "sublattice": "Ni1",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 161,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 165,
+    "sublattice": "Ni2",
+    "residual_A": 0.0,
+    "margin_A": 2.878
+   },
+   {
+    "slab_index": 169,
+    "sublattice": "Ni2",
+    "residual_A": 0.0815,
+    "margin_A": 2.7322
+   },
+   {
+    "slab_index": 173,
+    "sublattice": "Ni1",
+    "residual_A": 0.0839,
+    "margin_A": 2.7277
+   },
+   {
+    "slab_index": 177,
+    "sublattice": "Ni1",
+    "residual_A": 0.078,
+    "margin_A": 2.7373
+   },
+   {
+    "slab_index": 181,
+    "sublattice": "Ni2",
+    "residual_A": 0.1372,
+    "margin_A": 2.8583
+   },
+   {
+    "slab_index": 185,
+    "sublattice": "Ni2",
+    "residual_A": 0.1266,
+    "margin_A": 2.86
+   },
+   {
+    "slab_index": 189,
+    "sublattice": "Ni1",
+    "residual_A": 0.1325,
+    "margin_A": 2.86
+   }
+  ],
+  "source_qe": "/data/work/repo/db/inputs/sdcp_v2/slab_relax/relax.in",
+  "source_slab": "/data/work/repo/db/structures/linio2_104_sym_1x4L4_relaxed.vasp",
+  "naive_block_halves": {
+   "n": 48,
+   "agree": 24,
+   "agree_flipped": 24,
+   "verdict": "다른 자기 topology"
+  }
+ },
+ "protocol_delta_vs_phaseB": "의도된 개선: LASPH T(납품 F) · LDIPOL T(납품 F) · ISMEAR 0/0.05(납품 1/0.2) · **LREAL .FALSE.(납품 Auto)** — 고정기하 단일점에서 LREAL 오차는 조각 간 대비에서 소거되지 않는다 (회신 U P0-5). **상 구성은 납품과 같은 단일점**이고, 이번 판이 바꾼 것은 기하 출처(UMA 이완)와 자기 seed 2종이다. 승계: U 6.2 · IVDW 11 · ENCUT 520 · Ni_pv.",
+ "kmesh_override": null,
+ "kmesh_effective": {
+  "relax": "2 3 1",
+  "static": "3 4 1",
+  "dense": "4 6 1"
+ },
+ "kmesh_note": "`kmesh_effective` 가 실제 배포된 KPOINTS 다. `kmesh` 는 도구 기본값이고 `kmesh_override` 로 덮인다 — 인용은 effective 로.",
+ "dense_calibrators": null,
+ "clean_slab": {
+  "path": "/data/work/repo/db/structures/c12_frozen/clean_slab_f0.85.vasp",
+  "sha256": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
+  "n_sources_identical": 1
+ },
+ "z_cut_shared_A": 17.396,
+ "contract_expected_pairs": {
+  "ptfe_c10": 5,
+  "ptfe_dimer": 3,
+  "sdcp_neutral": 5,
+  "sdcp_doped": 5
+ },
+ "allow_partial": false,
+ "pair_audit": {},
+ "pose_rule_binding": {
+  "W0_eV": 0.15,
+  "규칙": "primary = MLIP 전역 최소. 대안 자세는 ΔE_pose ≤ W0 이면 `sensitivity`, 넘으면 **`stress_sensitivity`** — 저에너지 대안이 아니라 **응력 시험**이라는 뜻이다. 둘 다 primary 와 **min·평균·순위에 섞지 않는다**. 오직 '다른 앵커에서도 방향이 유지되는가' 만 본다 (회신 AJ ④)",
+  "c12_poses_sha256": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "source_basins": "db/properties/prospective_basins_2026_08_29.json",
+  "⛔": "역할 분류 규칙의 정본은 **protocol**(비준 대상)이다. 자세 파일은 데이터이고, 거기 적힌 W0·규칙은 적용 기록이지 정본이 아니다 (회신 BC P0-4)."
+ },
+ "candidate_set": "c12 (frozen cc87f6eeae5f9c3a)",
+ "emitted_roles": [
+  "primary",
+  "sensitivity",
+  "stress_sensitivity"
+ ],
+ "emitted_basin_roles": [
+  "primary",
+  "sensitivity",
+  "stress_sensitivity"
+ ],
+ "from_basins": {
+  "path": "/data/work/repo/db/properties/c12_poses_2026_08_30.json",
+  "sha256": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "declared_freeze": "cc87f6eeae5f9c3a0114a3851e13cd975cb2cd6b45caa4cfc4e82baa069cff70",
+  "audit_seed": null
+ },
+ "slab_lineage_max_disp_A": 0.277,
+ "mol_topology": {
+  "ptfe_c10": {
+   "C–C": 9,
+   "C–F": 22
+  },
+  "sdcp_neutral": {
+   "C–C": 8,
+   "C–H": 15,
+   "C–S": 3,
+   "O–S": 3,
+   "H–O": 1,
+   "C–O": 6
+  }
+ },
+ "magnetic_controls": [
+  "refs/clean_slab__afm2424_pm1",
+  "refs/clean_slab__afm2424_net4"
+ ],
+ "estimand_job_keys": {
+  "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
+  "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
+  "E_G_sdcp": "refs/mol__sdcp_neutral__box24",
+  "E_G_control": "refs/mol__ptfe_c10__box24",
+  "formula": "D = (E_C_sdcp - E_G_sdcp) - (E_C_control - E_G_control)",
+  "branch": "afm2424_pm1",
+  "⛔": "net4 와 대안 자세(sensitivity·stress_sensitivity)는 **D 에 안 들어간다** — 자기 분기·자세 민감도 병기용이다. 조각별 최솟값을 다시 쓰지 않는다",
+  "E_S": "refs/clean_slab__afm2424_pm1",
+  "formula_absolute": "E_ads(f) = E_C_f - E_S - E_G_f  [절대값 — E_S 에 민감하다]",
+  "⚠_E_S_는_D_에_안_들어간다": "D 는 두 대괄호에서 E_S 가 대수적으로 소거된다. 그래서 D 의 식은 clean slab 유무와 무관하게 같다. E_S 는 **절대값에만** 쓰인다 — clean slab 이 basin 을 어긋나면 절대값만 막고 D 는 살린다."
+ },
+ "estimand_job_keys_net4": {
+  "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_net4",
+  "E_C_control": "prospective/ptfe_c10__b00__afm2424_net4",
+  "E_G_sdcp": "refs/mol__sdcp_neutral__box24",
+  "E_G_control": "refs/mol__ptfe_c10__box24",
+  "formula": "D_net4 = (E_C_sdcp - E_G_sdcp) - (E_C_control - E_G_control)",
+  "branch": "afm2424_net4",
+  "⛔": "이것은 **민감도**다. 사전등록 보고값은 pm1 조건부 D 이고, D_net4 − D_pm1 은 자기 분기 민감도로만 병기한다. net4 가 다른 basin 이어도 pm1 조건부 D 를 지우지 않는다"
+ },
+ "estimand_job_keys_pose_alt": {
+  "role_pair": {
+   "E_C_sdcp": "prospective/sdcp_neutral__b12__afm2424_pm1",
+   "E_C_control": "prospective/ptfe_c10__b52__afm2424_pm1",
+   "E_G_sdcp": "refs/mol__sdcp_neutral__box24",
+   "E_G_control": "refs/mol__ptfe_c10__box24",
+   "formula": "D_pose[role_pair] = (E_C_sdcp - E_G_sdcp) - (E_C_control - E_G_control)",
+   "reported": "D_pose[role_pair] - D_pm1 (자세 민감도)",
+   "branch": "afm2424_pm1",
+   "gate": "두 complex 가 같은 자기 branch (전역 반전 동치) · 두 잡 모두 게이트 없음 · 두 에너지 모두 회수 — 하나라도 어긋나면 값과 status 를 함께 막는다",
+   "⚠_역할_비대칭": "두 조각의 대안 자세가 **다른 이유로** 골렸다 — sdcp_neutral=['stress_sensitivity'] · ptfe_c10=['sensitivity']. 따라서 이 값은 '같은 종류의 자세 변화' 가 아니라 '두 조각을 각자의 사전등록 대안 자세로 옮겼을 때' 의 대비다.",
+   "roles": {
+    "sdcp_neutral": [
+     "stress_sensitivity"
+    ],
+    "ptfe_c10": [
+     "sensitivity"
+    ]
+   },
+   "⛔_해석_미정": "이 봉인은 **계산식·게이트·status 만** 정의한다. 값이 크게 나왔을 때 그것이 '자세 민감도가 크다' 인지 '사전등록 자세 선택이 틀렸다' 인지는 아직 정하지 않았다 (리뷰 AS Q4). 결과를 본 뒤 고르면 결과 의존적 선택이 되므로, 식만 먼저 박고 해석은 열어 둔다."
+  },
+  "⛔": "이것은 **자세 민감도**다. 사전등록 보고값은 primary 자세의 pm1 조건부 D 이고, 이 값들을 대신 쓰거나 평균하지 않는다. 자세 min 을 다시 뽑지도 않는다 (champion pool size bias)"
+ },
+ "kconv_pair": {
+  "status": "not_designed",
+  "prereg_entry": "축_설계_제외_2026_09_03",
+  "why": "δ_k(k 격자 수렴, static 3×4×1 → dense 4×6×1) 축을 **설계에서 뺀다**. dense 2잡이 최장 잡을 299.6 h 로 만들어 전체 일정을 12.5일로 끌었다 (vasp_cost_estimate 실측: dense 200 h + static 100 h). static 만이면 최장 111 h · 동시 8잡 기준 8.16일.",
+  "50행과의_관계": "50행 '축이 하나라도 없으면 NUMERIC_BUDGET_INCOMPLETE' 는 **설계에 있는 축이 결측일 때**의 규칙으로 읽는다. 설계에서 뺀 축은 '결측' 이 아니라 '미설계' 다 — 분석기가 `axes_not_designed` 로 따로 세고 `B_num` 은 시험한 두 축(Δ_vac·δ_gas)만 합산한다. ⚠ 이 재해석은 2026-09-02 비준 이후의 것이라 여기서 명시적으로 비준한다. 비준 전 번들(v32–v34)은 이 항 없이 같은 경로를 열었다 — 발송하지 않았다.",
+  "⛔_잃는_것": "'전체 값의 0.01 eV 안정성' 을 주장하지 않는다 (`overall_citable_at_0.01eV=False`). 시험한 두 축의 envelope 만 말한다. `rounded_value_under_tested_axes_eV` 는 '시험한 축 기준' 이라는 한정어를 원고에서 떼어내지 않는다. verdict 문자열에 '사전등록 축 없음(δ_k)' 꼬리가 붙는다.",
+  "🔁_재개_조건_결과_보기_전에_선언": {
+   "규칙": "재개하지 않는다. |D_raw| < 0.05 eV 는 프로토콜 §7 미해결 · §8 '계산을 확장하지 않는다'. |D_raw| ≥ 0.05 eV 면 k 가드밴드(0.01 eV)가 부호·판정을 못 바꾼다. 경계 구간 0.05 ≤ |D_raw| < 0.06 eV 에서는 분석기가 KCONV_UNTESTED_AXIS_AT_THRESHOLD 자문을 내고 원고는 '미시험 축에 판정이 민감하다' 를 적는다 — 계산은 추가하지 않는다.",
+   "판정량": "D_raw_eV",
+   "문턱_eV": 0.05,
+   "가드밴드_eV": 0.01,
+   "비교": "boundary",
+   "충족시": "자문만 (KCONV_UNTESTED_AXIS_AT_THRESHOLD) — dense 추가 없음 · 원고에 민감성 명시",
+   "⛔_사후변경_금지": "이 조건은 결과를 보기 전에 선언했다. 이 밖의 이유로 dense 를 추가하면 '결과를 보고 게이트를 바꾼 것' 이다."
+  },
+  "⚠_UMA_로_미리_판단_금지": "조각 간 UMA 비교는 무효(오프셋 sdcp ~1.070 vs ptfe ~0.167 eV · 차등 0.90 eV). |ΔE_ads| 가 클 것이라 가정하지 않는다."
+ },
+ "wave": "1+refs",
+ "claim_policy": {
+  "ptfe_c10": {
+   "quantities": [
+    "D = ΔE_ads (reference energy) — 조각 하나만으로는 만들어지지 않는다"
+   ],
+   "not_claimed": [
+    "E_ads · dE_site — 이 묶음의 산출물이 아니다",
+    "배향 분해(2×2 없음)",
+    "전역 자리 선호",
+    "고립 흡착·평형 결합·실제 전극 피복률로의 일반화"
+   ],
+   "note": "이 조각은 D 의 **한 항**이다. 조각별 값을 단독으로 인용하지 않는다 (회신 AT 해제조건 8)"
+  },
+  "sdcp_neutral": {
+   "quantities": [
+    "D = ΔE_ads (reference energy) — 조각 하나만으로는 만들어지지 않는다"
+   ],
+   "not_claimed": [
+    "E_ads · dE_site — 이 묶음의 산출물이 아니다",
+    "배향 분해(2×2 없음)",
+    "전역 자리 선호",
+    "고립 흡착·평형 결합·실제 전극 피복률로의 일반화"
+   ],
+   "note": "이 조각은 D 의 **한 항**이다. 조각별 값을 단독으로 인용하지 않는다 (회신 AT 해제조건 8)"
+  }
+ },
+ "governance_binding": {
+  "⛔": "이 결과를 해석하려면 아래 decision 이 **비준(active)** 이어야 한다. `proposed` 상태로 계산을 돌리고 나중에 비준하면 결과가 정책 결정에 압력을 준다 — 사전등록의 의미가 사라진다 (회신 AZ P0-6 · BA 해제조건 3).",
+  "decisions": {
+   "D-2026-08-30-sdcp-c12-path": {
+    "state": "active",
+    "digest": "93ae1556c15ed0a821d2d9e7c660ae876379ea4f51262c5bf3b0fdcb961e8762",
+    "recorded_digest": "sha256:93ae1556c15ed0a821d2d9e7c660ae876379ea4f51262c5bf3b0fdcb961e8762",
+    "ratification_base_commit": "2f96eeb4d41ccfb99e476097338dc389ca39996b",
+    "digest_matches": true,
+    "ratified": true
+   },
+   "D-2026-08-28-closure-criteria-first": {
+    "state": "active",
+    "digest": "14f4db5f4fecd38971d5c6a95088dd3c2f3c19d536c3ae03b896a4558ebc318e",
+    "recorded_digest": "sha256:14f4db5f4fecd38971d5c6a95088dd3c2f3c19d536c3ae03b896a4558ebc318e",
+    "ratification_base_commit": "2f96eeb4d41ccfb99e476097338dc389ca39996b",
+    "digest_matches": true,
+    "ratified": true
+   }
+  },
+  "⛔_base_commit_은_내용_앵커가_아니다": "`ratification_base_commit` 은 비준을 누른 시점의 HEAD 다. 그 커밋을 받아도 비준된 내용이 나온다는 뜻이 아니다 — 내용 앵커는 `recorded_digest`(비준 당시 내용의 sha256) 이고, `digest_matches` 가 지금 원장 내용과 같은지를 말한다 (회신 BB P0-3).",
+  "reference_files_sha256": {
+   "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "7242623f5c37e2f25e9f7a1c646652ad822a86e7db1a59369c39d208daf06925",
+   "db/properties/sdcp_c12_protocol_2026_08_30.json": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+   "db/properties/c12_poses_2026_08_30.json": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39"
+  },
+  "reference_files_state": {
+   "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": {
+    "status": "ratified",
+    "ratified": true,
+    "superseded": false,
+    "has_ratification_record": true,
+    "record_problems": [],
+    "digest_recomputed": "aa7fb52d5f1b2a1e57a6aa7652de63243a1e6fa7818f855c8d934c00ff12b0a7",
+    "digest_recorded": "aa7fb52d5f1b2a1e57a6aa7652de63243a1e6fa7818f855c8d934c00ff12b0a7",
+    "digest_matches": true,
+    "why": null,
+    "role": "claim"
+   },
+   "db/properties/sdcp_c12_protocol_2026_08_30.json": {
+    "status": "ratified",
+    "ratified": true,
+    "superseded": false,
+    "has_ratification_record": true,
+    "record_problems": [],
+    "digest_recomputed": "c9d83f0c292710b5e2f5308d1f2a92e986d55c726e90bcf42b2344861ec03ac0",
+    "digest_recorded": "c9d83f0c292710b5e2f5308d1f2a92e986d55c726e90bcf42b2344861ec03ac0",
+    "digest_matches": true,
+    "why": null,
+    "role": "claim"
+   },
+   "db/properties/c12_poses_2026_08_30.json": {
+    "status": null,
+    "ratified": false,
+    "superseded": false,
+    "has_ratification_record": false,
+    "record_problems": [
+     "actor(by/actor_id) 없음",
+     "timestamp(at/timestamp) 없음",
+     "state/role 이 문자열이 아니다"
+    ],
+    "digest_recomputed": "bbb0b79e7370697d9e1bfacbbb64a8a792ed0422f31a49640a03482520caa5d5",
+    "digest_recorded": null,
+    "digest_matches": false,
+    "why": "비준 기록에 `content_digest` 가 없다",
+    "role": "frozen_input"
+   }
+  },
+  "⛔_참조_두_종류": "claim(보고량·프로토콜)은 **사람 비준**이 있어야 하고, frozen_input(자세 집합 같은 데이터)은 **내용 결박**(sha256)이 있으면 된다. 데이터 파일에 비준을 요구하면 고무도장이 되어 비준이 아무것도 뜻하지 않게 된다 (회신 BB P0-2 이행 중 1저자 판단 · 2026-09-02).",
+  "decisions_all_ratified": true,
+  "reference_files_all_ratified": true,
+  "frozen_inputs_all_bound": true,
+  "all_ratified": true,
+  "⛔_요약은_판정이_아니다": "회신 BB P0-3 — 분석기는 이 불리언을 **믿지 않는다.** decision 항목마다 state·ratified·digest 를, 참조 문서마다 status·비준 기록을 각각 본다. 요약이 개별 항목과 어긋나면 그 자체가 차단 사유다 (fail-open 차단).",
+  "⚠_비준_전_발송_금지": "비준되지 않은 번들은 **탐색 목적으로도** 결과 해석을 시작하지 않는다. 분석기가 개별 항목을 읽고 citation_status 를 막는다.",
+  "bundled_sources": {
+   "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "governance/sdcp_c12_claim_prereg_2026_08_31.json",
+   "db/properties/sdcp_c12_protocol_2026_08_30.json": "governance/sdcp_c12_protocol_2026_08_30.json",
+   "db/properties/c12_poses_2026_08_30.json": "governance/c12_poses_2026_08_30.json",
+   "db/governance/decisions.json": "governance/decisions.json"
+  },
+  "⛔_bundled_sources": "분석기는 이 사본에서 상태·digest 를 **다시 계산**해 위 주장과 항목마다 대조한다 (회신 BE P0-4). 사본이 없거나 어긋나면 인용 불가 — manifest 만 고쳐 놓는 경로가 닫힌다. 사본이 우리 repo 원본과 같은지는 reference_files_sha256 으로 리뷰어가 대조한다."
+ },
+ "reported_quantity": {
+  "name": "E_ads (fixed-geometry adsorption energy) 절대값 2건 + 그 차 ΔE_ads",
+  "korean": "고정기하 흡착에너지 E_ads 절대값(sdcp·ptfe) 과 그 차 ΔE_ads — 셋 다 보고한다",
+  "formula": "E_ads(f) = E_C(f) − E_S − E_G(f)   [**보고한다** — clean slab 을 실었다] ; ΔE_ads = E_ads(sdcp) − E_ads(ptfe)   [**보고한다** · E_S 가 소거되므로 clean slab 의 오차에 둔감하다]",
+  "formula_note": {
+   "E_S_는_어디서_오나": "`refs/clean_slab__<주seed>` 의 static 에너지. 복합체와 **같은 셀·같은 k·같은 AFM seed** 다 — 그래야 뺄 수 있다.",
+   "⚠_두_값의_신뢰도가_다르다": "ΔE_ads 는 E_S 가 소거돼 clean slab 의 오차에 **둔감**하다. E_ads 절대값은 E_S 를 직접 빼므로 **민감**하다 — clean slab 이 복합체와 다른 자성 basin 에 앉으면 그 차이가 통째로 절대값에 실린다. 그래서 `BASIN_MISMATCH_SLAB` 게이트가 절대값 쪽에만 걸린다.",
+   "⚠_절대값에만_남는_오염": "단일점이라 **변형에너지**(조각이 휘는 값 + 표면이 눌리는 값)가 값에 들어간다. ΔE_ads 에서는 두 조각·두 표면이 서로 상당 부분 상쇄되지만 **절대값에서는 상쇄되지 않는다.** ⇒ 완전 이완으로 계산한 문헌 binding energy 와 **같은 표에 놓지 않는다.**",
+   "⛔_종전_식": "`E_ads(f) = E_C(f) − E_G(f)` 는 **틀렸다** (E_S 누락). v20 까지 이 식이 MANIFEST 에 있었다 — 회신 AZ P0-4 정정."
+  },
+  "⚠_반드시_함께_적는_단서": {
+   "ko": "MLIP(UMA-s-1p1) 이완 기하 위의 **단일점** 계산이며 DFT 이온 이완을 하지 않았다. 조각·표면 변형에너지와 고정 gas conformer 선택 효과가 값에 포함된다.",
+   "en": "Single-point calculations on MLIP-relaxed (UMA-s-1p1) geometries; no DFT-level ionic relaxation. Fragment and surface deformation energies and the fixed gas-conformer choice are included.",
+   "⛔": "이 단서가 빠지면 이름이 재는 것과 어긋난다 — 그때는 인용 불가다."
+  },
+  "⛔_부르면_안_되는_이름_v19": [
+   "binding energy · free energy — 평형·고립계 양이 아니다",
+   "⚠ 이름이 아니라 **용법 금지**: 옛 wave1 의 E_ads 와 **같은 표에** 두지 않는다 (프로토콜이 다르고 그쪽은 마감·보류 상태다)"
+  ],
+  "포함되는_것": [
+   "조각 변형에너지",
+   "표면 변형에너지",
+   "고정된 gas conformer 선택 효과"
+  ],
+  "제외되는_것": [
+   "기하 이완",
+   "영점·열적 기여",
+   "용매·계면 전기장"
+  ],
+  "gas_conformer_provenance": {
+   "출처": "MLIP(UMA) 로 고른 조각 conformer 하나를 **모든 자세에 공통**으로 쓴다",
+   "선택_규칙": "사전 동결한 자세 파일(--from_basins)의 조각 기하 그대로",
+   "⚠": "평형 분자가 아니다 — 그래서 D 는 '고정 conformer 조건부' 다"
+  },
+  "coverage_scope": {
+   "정책": "이 셀 조건으로 **한정**한다 (lateral-size 대조를 넣지 않는다)",
+   "왜": "주기영상 항의 소거를 **주장하지 않는다**. ⚠ 근거 정정(AZ P1): 공통 슬랩은 두 복합체가 **같다**(Li48 Ni48 O96 · 192원자). 비소거 위험은 **복합체 전체의 조성·기하와 주기영상 항이 조각마다 다르다**는 데서 온다. 그래서 값을 이 셀 조건으로 **한정**해 보고한다. lateral 확장은 잡당 원자수 2배(비용 ~4배·9일)라 이 단계의 질문에 비해 과하다",
+   "⛔_금지": "고립 분자 흡착·실제 전극 피복률로 확장 금지. 원고 문장에 셀 조건(면적·분자 밀도·최소 이미지 거리)을 **반드시 병기**한다",
+   "재개_조건": "피복률 의존성을 물으면 별도 wave 로 lateral 대조를 연다",
+   "⚠_D3": "D3 는 pairwise 라 서로 다른 조각의 주기영상 항이 정확히 소거된다는 보장이 없다 — 위 한정이 그 답이다 (AS Q7)",
+   "lateral_cell_A": [
+    18.272,
+    11.512
+   ],
+   "lateral_area_A2": 199.643,
+   "molecules_per_cell": 1,
+   "coverage_per_nm2": 0.5009,
+   "min_lateral_cell_vector_A": 11.512,
+   "molecule_image_min_distance_A": {
+    "ptfe_c10": {
+     "primary": 5.646,
+     "sensitivity": 6.05
+    },
+    "sdcp_neutral": {
+     "primary": 4.894,
+     "stress_sensitivity": 4.613
+    }
+   },
+   "molecule_image_min_primary_A": {
+    "ptfe_c10": 5.646,
+    "sdcp_neutral": 4.894
+   },
+   "⚠_자세를_뭉개지_않는다": "종전엔 조각별 **최솟값 하나**만 실어, 대안 자세의 worst case 가 primary 값처럼 보였다. 보고량은 primary 자세의 조건이므로 `molecule_image_min_primary_A` 가 그 값이고, 대안 자세는 별개다 (회신 AT Q1)",
+   "⛔_철회한_근거": "'공통 주기영상 항이 상당 부분 소거된다' 는 **삭제한다.** ⚠ 회신 BA P1 정정: 종전에 적은 이유('슬랩 원자 수가 48/192 로 다르다')는 **거짓**이었다 — 공통 슬랩은 두 복합체가 같다 (`Li48 Ni48 O96` · 192원자). 결론은 유지하고 이유를 고친다: **복합체 전체의 조성·기하가 조각마다 다르고**(흡착 조각이 다르다) 최대 변위가 약 0.296 Å 이라 주기영상 항이 공통이라는 보장이 없다. 잔여 lateral-size 의존은 **추정하지 않는다** — 한정 문구로만 다룬다",
+   "⚠_수치_출처": "셀 벡터와 **실제 복합체 좌표**에서 직접 계산. 격자벡터 길이(min_lateral_cell_vector_A)와 분자-이미지 최단거리(molecule_image_min_distance_A)는 **다른 양**이다 — 후자가 피복률 논의의 대상이다"
+  },
+  "⚠_사람이_읽을_것": "이 필드가 원고 문장의 상한이다. 더 강한 이름으로 바꿔 쓰지 말 것 (회신 AS Q2)"
+ },
+ "claim_scope": "두 조각 모델의 **고정기하 복합체−기체기준 차등에너지** 하나 (adsorption energy difference (ΔE_ads)). ⛔ 각 항을 adsorption energy 라고 부르지 않는다 — 평형·고립계 양이 아니고 조각·표면 변형을 포함한다 (회신 AS Q2). ⚠ 고정 기하(MLIP 이완) 단일점이고, 기체 기준은 조각당 conformer 하나를 모든 자세에 공통으로 쓴다. 값은 pm1 자기 branch 조건부이고 비교하는 잡들이 같은 realized topology 여야 한다. ⚠ **이 셀 조건에 한정**한다 — 사전등록한 lateral 셀에서의 대비이고 고립 분자 흡착이나 실제 전극 피복률로 일반화하지 않는다 (회신 AS Q7, 옵션 a). ⛔ 개별 절대 흡착에너지·자리 선호(Li vs Ni)·평형 결합에너지·자유에너지·고분자 전체의 결합력으로 확장 금지.",
+ "molecular_spin_controls": {
+  "mol__ptfe_c10__box24": "refs/mol__ptfe_c10__box24__nzmag",
+  "mol__sdcp_neutral__box24": "refs/mol__sdcp_neutral__box24__nzmag"
+ },
+ "invocation": {
+  "argv": [
+   "--from_basins",
+   "db/properties/c12_poses_2026_08_30.json",
+   "--frags",
+   "sdcp_neutral",
+   "ptfe_c10",
+   "--refs",
+   "--refs_minimal",
+   "--clean_slab",
+   "--both_seeds",
+   "--single_point",
+   "--allow_no_pin",
+   "--potcar_identity",
+   "post_hoc",
+   "--no_kconv",
+   "--cell_c",
+   "36.6551",
+   "--cell_c2",
+   "40.6551",
+   "--min_vacuum",
+   "15.0",
+   "--roles",
+   "primary",
+   "sensitivity",
+   "stress_sensitivity",
+   "--cores",
+   "192",
+   "--concurrency",
+   "4",
+   "--node_mem_gb",
+   "188",
+   "--mem_safety",
+   "2.0",
+   "--out",
+   "runs/sdcp_c12_2026_08_30/sdcp_c12_v41"
+  ],
+  "flags": {
+   "allow_no_pin": true,
+   "both_seeds": true,
+   "cell_c": 36.6551,
+   "cell_c2": 40.6551,
+   "clean_slab": true,
+   "concurrency": 4,
+   "cores": 192,
+   "frags": [
+    "sdcp_neutral",
+    "ptfe_c10"
+   ],
+   "freeze": 0.85,
+   "from_basins": "db/properties/c12_poses_2026_08_30.json",
+   "global_champion_meV": 20.0,
+   "mag_controls": true,
+   "mem_safety": 2.0,
+   "min_vacuum": 15.0,
+   "no_kconv": true,
+   "node_mem_gb": 188.0,
+   "nslab": 192,
+   "out": "runs/sdcp_c12_2026_08_30/sdcp_c12_v41",
+   "potcar_identity": "post_hoc",
+   "qe": "/data/work/repo/db/inputs/sdcp_v2/slab_relax/relax.in",
+   "refs": true,
+   "refs_minimal": true,
+   "roles": [
+    "primary",
+    "sensitivity",
+    "stress_sensitivity"
+   ],
+   "runs": "/data/work/runs/sdcp_v4_sitescreen",
+   "single_point": true
+  },
+  "⚠": "`argv` 는 이 번들을 만든 실제 명령이다. 재생성은 이것을 그대로 쓴다 — 번들 내용에서 플래그를 역추론하지 마라"
+ },
+ "job_census": {
+  "references": {
+   "endpoints": 8,
+   "d3_off_twins": 0,
+   "총": 8
+  },
+  "complexes": {
+   "pose×seed": 8,
+   "d3_off_twins": 0,
+   "총": 8
+  },
+  "vacuum_convergence": {
+   "cells": 3,
+   "d3_off_twins": 0,
+   "총": 3,
+   "⚠": "c2 셀 잡이다 — 자세도 기준계도 아니다"
+  },
+  "meta_없어_분류불가": 0,
+  "⛔_분류_근거": "`meta.kind`·`meta.vacconv` 로 나눈다 — **잡 키 접두어로 추측하지 않는다.** 종전엔 `startswith(\"prospective/\")` 라서 vacconv 잡이 references 로 세어졌다 (실물 refs 6 + vacconv 2 + 자세 8 이 references 8 + complexes 8 로 보고됐다 · 회신 BB P1). meta 가 없으면 **모른다**로 세지 references 로 넣지 않는다.",
+  "총잡수": 19,
+  "pose당": "pm1/D3-on · net4/D3-on — **D3-off 쌍둥이를 만들지 않는다** (C3 는 D3-on OUTCAR 의 Edisp 로 낸다)",
+  "audit_pose": 0,
+  "⚠": "이 표는 산출물에서 센 것이다 — 설명문이 아니라 실물이다"
+ },
+ "d3_off_twins": {},
+ "c3_source": "Edisp (eV) from the D3-on OUTCAR — no twin jobs",
+ "d3_off_note": "쌍둥이 없음 — C3 는 D3-on OUTCAR 이 직접 찍는 `Edisp (eV)` 로 낸다. D3(IVDW=11)는 SCF 에 안 들어가는 additive 항이라 고정기하에서 `E_on − E_off = Edisp` 가 **항등식**이고, 쌍둥이 잡은 정보가 0이다. 실물 확인: runs/sdcp_phaseB_vasp_v1_2026_08_08 의 세 OUTCAR (slab −27.49493 · mol −0.71798 · complex −28.58614 ⇒ δ −0.373230 eV).",
+ "n_fixed_all_slab_jobs": 144,
+ "gas_geometry_policy": {
+  "fixed_geometry_static": true,
+  "why": "box20/box24 가 각각 독립 이완하면 δ_gas 가 셀 효과와 이완 차이를 함께 잰다 (회신 AR Q2). 단일점 판에서는 둘 다 고정기하 static 이고, 같은 원본 분자를 각 상자 중심으로 **강체 평행이동**만 한다",
+  "dipol": "각 상자의 COM 으로 갱신 (VASP 권고)"
+ },
+ "staged_runner": "run_staged.sh",
+ "run_all_omitted": "staged 구성이라 run_all.sh 를 넣지 않는다 — 전체 제출 경로가 있으면 1단계 정지 규칙이 무력화된다",
+ "n_jobs": 19,
+ "run_census": {
+  "job_keys": [
+   "prospective/ptfe_c10__b00__afm2424_net4",
+   "prospective/ptfe_c10__b00__afm2424_pm1",
+   "prospective/ptfe_c10__b52__afm2424_net4",
+   "prospective/ptfe_c10__b52__afm2424_pm1",
+   "prospective/sdcp_neutral__b00__afm2424_net4",
+   "prospective/sdcp_neutral__b00__afm2424_pm1",
+   "prospective/sdcp_neutral__b12__afm2424_net4",
+   "prospective/sdcp_neutral__b12__afm2424_pm1",
+   "refs/clean_slab__afm2424_net4",
+   "refs/clean_slab__afm2424_pm1",
+   "refs/mol__ptfe_c10__box20",
+   "refs/mol__ptfe_c10__box24",
+   "refs/mol__ptfe_c10__box24__nzmag",
+   "refs/mol__sdcp_neutral__box20",
+   "refs/mol__sdcp_neutral__box24",
+   "refs/mol__sdcp_neutral__box24__nzmag",
+   "vacconv/clean_slab__afm2424_pm1__c2",
+   "vacconv/ptfe_c10__b00__afm2424_pm1__c2",
+   "vacconv/sdcp_neutral__b00__afm2424_pm1__c2"
+  ],
+  "stage_of": {
+   "prospective/ptfe_c10__b00__afm2424_pm1": "1",
+   "vacconv/ptfe_c10__b00__afm2424_pm1__c2": "1",
+   "prospective/ptfe_c10__b00__afm2424_net4": "2",
+   "prospective/ptfe_c10__b52__afm2424_pm1": "2",
+   "prospective/ptfe_c10__b52__afm2424_net4": "2",
+   "prospective/sdcp_neutral__b00__afm2424_pm1": "1",
+   "vacconv/sdcp_neutral__b00__afm2424_pm1__c2": "1",
+   "prospective/sdcp_neutral__b00__afm2424_net4": "2",
+   "prospective/sdcp_neutral__b12__afm2424_pm1": "2",
+   "prospective/sdcp_neutral__b12__afm2424_net4": "2",
+   "refs/clean_slab__afm2424_pm1": "1",
+   "vacconv/clean_slab__afm2424_pm1__c2": "1",
+   "refs/clean_slab__afm2424_net4": "2",
+   "refs/mol__ptfe_c10__box20": "1",
+   "refs/mol__ptfe_c10__box24": "1",
+   "refs/mol__ptfe_c10__box24__nzmag": "1",
+   "refs/mol__sdcp_neutral__box20": "1",
+   "refs/mol__sdcp_neutral__box24": "1",
+   "refs/mol__sdcp_neutral__box24__nzmag": "1"
+  },
+  "stage_counts": {
+   "1": 12,
+   "2": 7
+  },
+  "n_jobs": 19,
+  "⛔": "러너는 실행 전에 이 **집합**과 **분류**를 디스크와 대조한다. 개수만 맞고 구성이 다른 것을 통과시키지 않는다 (회신 AR P0-7)"
+ },
+ "potcar_identity_policy": {
+  "mode": "post_hoc",
+  "manuscript_citable": false,
+  "무엇을_보증하나": "root 봉인은 '이 계산들이 하나의 트리에서 나왔고 그 트리가 생산 전에 고정됐다' 까지만 보증한다. **그 트리가 승인된 PAW dataset 인지는 보증하지 않는다** — VASP 는 여러 PAW 세트·suffix variant 를 배포한다.",
+  "⛔_post_hoc_의_한계": "사후 POTCAR_PROVENANCE.json 은 **무엇을 썼는지**는 기록하지만 그것이 승인된 dataset 인지 **판정하지 못한다**. 그래서 이 모드의 결과는 탐색용이고 원고 인용 자격이 서지 않는다 (회신 AZ P0-7·Q4).",
+  "원고용으로_가는_두_길": [
+   "① 생성 전 `--potcar_pin <json>` — 외주처 sysadmin 에게 원본 SHA256·VASP 버전·승인 트리 확인을 받아 채운다 (외부 기준)",
+   "② 생성 시 `--potcar_identity require_attestation` — 외주처가 첫 VASP 실행 **전에** `bash MAKE_POTCAR_ATTESTATION.sh` 를 돌려야 러너가 시작한다. 그리고 1저자가 조건부-PP 정책을 비준한다"
+  ],
+  "1저자_결정_2026_09_01": {
+   "선택": "post_hoc 유지 — attestation 을 **강제하지 않는다**",
+   "근거": "POTCAR 트리 관리는 외주처 소관이다. 절차를 늘려 발송을 막는 것보다 README 권고 + 인용 단서로 처리한다 (1저자 판단, 두 번 재확인)",
+   "받아들인_대가": [
+    "⛔ 이 묶음의 결과는 **원고 인용용이 아니다** (회신 BA P0-3·Q5: 사후 attestation 으로 승격 불가). 탐색용으로만 쓰고, 쓸 때는 Methods 에 그 단서를 반드시 적는다 (아래 Methods_필수문장)",
+    "외주처가 attestation 을 돌려주면 dataset 신원 **기록**이 더해진다 — 원고 인용 자격은 그대로 없다 (회신 BA P0-3 · 렌즈4 P1-1: 종전 '조건부가 풀린다' 는 거짓)",
+    "'승인된 공식 PAW 세트를 썼다' 는 문장은 **쓰지 않는다** — 확인 안 됐다"
+   ],
+   "Methods_필수문장": {
+    "ko": "PAW 유사퍼텐셜은 계산 수행 기관이 관리하는 트리에서 조립됐으며, 전 잡이 동일 트리에서 나왔음이 생산 전 해시 봉인으로 확인된다. 해당 트리의 공식 배포판 여부는 본 연구에서 독립 확인하지 않았다.",
+    "en": "PAW potentials were assembled from a POTCAR tree maintained by the computing site; a pre-production hash seal confirms that all jobs used the same tree. The tree's correspondence to an official distribution was not independently verified in this work."
+   },
+   "⚠_리뷰어_판정": "회신 AZ Q4 = '현재 형태로는 원고용 불가'. 1저자가 그 판정을 **알고** post_hoc 을 선택했다 — 몰라서가 아니다. 이 기록이 그 구분의 증거다"
+  },
+  "현재_판정": "⛔ **탐색용** — 원고 인용 불가 (승인 dataset 확인 없음)"
+ },
+ "potcar_pin": null,
+ "potcar_pin_note": "pin 미고정. 이 번들은 **이전 wave 와의 PP 동등성을 주장하지 않는다** — 대신 `SEAL_POTCAR_ROOT.sh` 가 첫 VASP 실행 **전에** variant 별 원본 SHA256 을 `POTCAR_ROOT_SEAL.json` 에 봉인하고, 분석기가 전 잡의 provenance 를 그 봉인과 대조한다 (회신 AO Q1). ⚠ 봉인한 트리가 공식 배포판인지는 확인하지 못한다 — site allowlist 가 그 신원을 진다. 외부 기준과 대조하려면 `--potcar_pin <json>`",
+ "vacuum": {
+  "declared_A": 15.0,
+  "c_before_A": 30.2609,
+  "c_after_A": 36.6551,
+  "min_before_A": 15.38,
+  "min_after_A": 21.773,
+  "n_below_before": 0,
+  "n_dipol_rescaled": 13,
+  "n_jobjson_rescaled": 13,
+  "target_c_A": 36.6551,
+  "gas_refs_untouched": true,
+  "per_job_A": {
+   "prospective/ptfe_c10__b00__afm2424_net4": 24.139,
+   "prospective/ptfe_c10__b00__afm2424_pm1": 24.139,
+   "prospective/ptfe_c10__b52__afm2424_net4": 22.199,
+   "prospective/ptfe_c10__b52__afm2424_pm1": 22.199,
+   "prospective/sdcp_neutral__b00__afm2424_net4": 22.973,
+   "prospective/sdcp_neutral__b00__afm2424_pm1": 22.973,
+   "prospective/sdcp_neutral__b12__afm2424_net4": 21.773,
+   "prospective/sdcp_neutral__b12__afm2424_pm1": 21.773,
+   "vacconv/ptfe_c10__b00__afm2424_pm1__c2": 28.138,
+   "vacconv/sdcp_neutral__b00__afm2424_pm1__c2": 26.972
+  },
+  "⚠": "분리거리만 보장한다 — 남은 영상 오차의 **크기**는 같은 자세를 두 c 로 돌리는 수렴 시험으로만 안다",
+  "per_job_A_measured_after_all_jobs": true,
+  "⛔_per_job_출처": "잡이 **다 만들어진 뒤 디스크의 POSCAR 에서** 다시 쟀다. 종전엔 c1 한 번의 결과를 그대로 실어 vacconv(c2) 잡이 c1 값을 반복했다 (회신 BD P1). 기체 기준계는 슬랩이 없어 여기 없다."
+ },
+ "vacuum_convergence": {
+  "schema": "vacuum_convergence/v1",
+  "c1_A": 36.6551,
+  "c2_A": 40.6551,
+  "jobs": {
+   "vacconv/clean_slab__afm2424_pm1__c2": {
+    "changed": true,
+    "c_before_A": 36.6551,
+    "c_after_A": 40.6551,
+    "n_dipol": 1,
+    "n_jobjson": 1,
+    "image_separation_A": null,
+    "⚠": "흡착종 없음 — 분리거리 미정의"
+   },
+   "vacconv/ptfe_c10__b00__afm2424_pm1__c2": {
+    "changed": true,
+    "c_before_A": 36.6551,
+    "c_after_A": 40.6551,
+    "n_dipol": 1,
+    "n_jobjson": 1,
+    "image_separation_A": 28.138,
+    "⚠": null
+   },
+   "vacconv/sdcp_neutral__b00__afm2424_pm1__c2": {
+    "changed": true,
+    "c_before_A": 36.6551,
+    "c_after_A": 40.6551,
+    "n_dipol": 1,
+    "n_jobjson": 1,
+    "image_separation_A": 26.972,
+    "⚠": null
+   }
+  },
+  "판정": "두 조각의 **대비 변화** |D(c2) − D(c1)| ≤ 0.005 eV — 이것 하나가 hard gate 다 (회신 AM Q1 · AY P0-3 · AZ P0-3)",
+  "0.01_eV_반올림": "표시 안정성 **정보**일 뿐 판정에 안 들어간다. 반올림만 갈리면 Figure 삭제가 아니라 불확도 병기 또는 한 자리 추가 보고",
+  "왜_대비인가": "기체 기준과 슬랩 항은 c 에 무관하거나 두 조각에 공통이라 대비를 취하면 소거된다. 조각별 변화가 아니라 대비 변화가 판정 대상",
+  "5_meV_출처": "물리 상수가 아니라 **보고 최소단위(0.01 eV)의 절반**",
+  "실패시": "추가 셀 탐색 없이 Figure 2e 를 제거한다"
+ },
+ "cost_frozen": {
+  "total_wall_h": 332.2,
+  "core_h": 63786,
+  "longest_job_h": 28.9,
+  "cores_per_job": 192,
+  "par_speedup_vs_baseline": 3.73,
+  "k_parallel_cap": 4,
+  "k_parallel_cap_by_job": [
+   1,
+   4
+  ],
+  "⚠_k_parallel_cap": "min(KPAR 4, k점 7.2). KPAR 이 없으면 VASP 기본값 1 이라 코어를 늘려도 k 병렬이 안 걸린다 — 2026-09-04 정정.",
+  "⚠_속도향상": "par_speedup 은 벤치마크가 아니라 두 구간 어림이다 (±50 %). 잡 시간 자체도 모형이라 ±2배 — 곱하면 넓다",
+  "baseline_kpar": 1,
+  "nelm": 200,
+  "nelm_ceiling_longest_h": 76.9,
+  "queue_cap_h": 91.0,
+  "fits_queue_cap": true,
+  "n_jobs_over_queue_cap": 0,
+  "⚠_천장의_뜻": "= 추정 × NELM / 상별 전자스텝 가정. **시나리오이지 보장이 아니다** (2026-09-07 Codex v37 P0-2 로 '결정론' 주장 철회 — NELM 은 횟수를 묶지 시간을 묶지 않고, 스텝당 시간이 ±2배인 그 양이다). ⛔ 기동 **1회**의 값이라 여러 상을 직렬로 도는 잡의 전체 벽시계도, 한 할당에서 여러 잡을 도는 **단계 벽시계**도 아니다 — 후자는 stage_alloc_h 를 보라. relax 는 NSW×NELM 이라 여기서 제외된다.",
+  "makespan_d": {
+   "4": 3.95,
+   "8": 2.13,
+   "12": 1.69,
+   "20": 1.2
+  },
+  "parent_geom_chains": 2,
+  "⚠_물결_사슬": "`__nzmag` 대조 잡은 `PARENT_GEOM` 으로 부모의 최종 기하를 받으므로 부모와 **직렬**이다. 종전엔 나란히 돌 수 있는 것처럼 셌다 (2026-09-04 정정).",
+  "⚠_kconv_pair_의_숫자는_이_계획이_아니다": "`kconv_pair.why` 는 **비준 사전등록 원문을 그대로 복사**한 것이라 δ_k 를 뺄 때의 근거(48코어/잡 기준 · dense 299.6 h · static 최장 111 h · 동시 8잡 8.16일)를 말한다. 그건 **결정의 역사**이고 손대면 비준 지문이 깨진다. 이 묶음이 실제로 계획한 값은 이 `cost_frozen` 이다 — 192코어/잡 · 동시 4잡.",
+  "⚠_makespan_d_는_단계를_무시한다": "makespan_d 는 전 잡을 한 물결로 돌린다고 본 값이다. staged 번들은 1단계가 **전부 끝나고 게이트를 통과해야** 2단계가 열리므로 실제 벽시계는 makespan_staged_d 다 (2026-09-03 정정 — 종전 문서는 절반 값을 실었다).",
+  "makespan_staged_d": {
+   "2": 7.48,
+   "4": 4.46,
+   "6": 3.24,
+   "8": 2.37,
+   "12": 2.34,
+   "20": 2.34
+  },
+  "makespan_계산_규칙": "단계별 stage_alloc_h(사전순 FIFO + 물결 장벽)의 합. LPT 아님 (2026-09-08 정정 · 종전 4.14 → 4.46 일).",
+  "stage_jobs": {
+   "1": 12,
+   "2": 7
+  },
+  "stage_longest_h": {
+   "1": 28.9,
+   "2": 26.0
+  },
+  "stage_alloc_h": {
+   "정의": "그 단계를 한 할당 안에서 다 도는 데 필요한 벽시계 (동시 4잡). 잡 최장이 아니라 **이것으로 큐를 잡아야 한다.**",
+   "★_계산_규칙": "러너 run_staged.sh 와 **같은 순서**로 센다 — 경로 사전순 FIFO (sorted(glob) → xargs -P) + PARENT_GEOM 물결 장벽. LPT 가 아니다. 2026-09-08 재검토: 같은 잡 시간에 LPT 47.9 / LPT+장벽 49.2 / FIFO+장벽 55.6 h — 러너가 하지 않는 최적화를 추정기가 하면 안 된다.",
+   "중앙_추정": {
+    "1": 55.6,
+    "2": 51.5
+   },
+   "NELM_시나리오": {
+    "1": 148.2,
+    "2": 137.4
+   },
+   "요청_h": 156,
+   "⛔_큐_충족": "알려진 잡당 큐 상한 91 h 로는 **충족되지 않는다** (요청 156 h). 더 긴 할당 가용성을 확인하거나 완료 잡 사이에서 단계를 이어가는 운영 계약이 필요하다.",
+   "⚠_보장_아님": "NELM 은 **전자스텝 수**를 묶지 시간을 묶지 않는다. 스텝당 시간이 바로 ±2배인 그 양이므로 이 수도 같은 폭을 안고 있다. 2026-09-07 이전 문서의 '결정론적 77 h 상한' 은 철회했다.",
+   "⛔_안_들어간_것": "큐 대기 · 노드 확보 지연 · 1단계 반송 뒤 사람의 판정 왕복"
+  },
+  "⛔_직렬_하한_d": 2.29,
+  "⛔_사람_왕복_미포함": "1단계 반송 → 우리 분석 → 2단계 지시의 왕복 시간은 위 어느 값에도 없다. 그건 계산 시간이 아니다.",
+  "estimator": "tools/sdcp/vasp_cost_estimate.py",
+  "estimator_baseline_source": "/data/work/repo/runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz",
+  "estimator_baseline_sha256": "30a81b51c96326a9468fc1b7424676b67fd6e70c48e93a12112dbe9e7a284e06",
+  "estimator_baseline_sec_per_estep": 524.7854,
+  "repo_commit": "d82b7a4ce42cf7b4d2e8f68e378289f16c58e96c",
+  "uncertainty": "±2배 (모형이지 벤치마크가 아니다)"
+ },
+ "memory_model": {
+  "schema": "vasp_node_memory/v1",
+  "worst_job": "vacconv/ptfe_c10__b00__afm2424_pm1__c2",
+  "floor_GB": 119.42,
+  "repl_GB_per_rank": 0.9,
+  "usable_frac": 0.85,
+  "정의": "노드당 GB = (floor_GB + 랭크수 × repl_GB_per_rank) ÷ 잡이_걸친_노드수 × 그_노드의_동시잡수",
+  "계획_랭크": 192,
+  "계획_랭크_잡_전체_GB": 292.2,
+  "⚠_모형이다": "±2배가 예상 범위(모형 자체의 폭). ⛔ 2026-09-07 철회 (Codex v37 P1-1): 종전에 2026-09-04 실패에서 오차계수를 0.98~2.85배로 **역산했다**고 적었으나 그 역산은 성립하지 않는다 — 159.8 GB 는 관측된 OOM 임계가 아니라 우리 계획값(188×0.85)이고, 슬랩과 분자에 같은 계수를 적용할 근거도 없다. 남는 사실은 '슬랩은 죽고 분자는 살았다' 는 **순서**뿐이며, 그것은 모형이 두 부류를 옳게 갈랐다는 뜻이지 계수를 정하지 않는다.",
+  "⛔_실측_아님": "실제 사용량을 재지 않는다. 사전검사 통과는 안전 보증이 아니라 '명백한 불가' 를 시작 전에 거른 것이다.",
+  "출처": "tools/sdcp/vasp_cost_estimate.py job_memory() — 모형의 단일 출처",
+  "권고": {
+   "노드_메모리_GB": 188.0,
+   "가용_GB": 159.8,
+   "안전계수": 2.0,
+   "최소_노드_per_잡": 2,
+   "최소일때_견디는_모형오차": 1.09,
+   "권고_노드_per_잡": 4,
+   "그때_노드당_GB": 73.1,
+   "견디는_모형오차": 2.19,
+   "동시잡": 4,
+   "필요_총_노드": 16,
+   "왜_최소가_아닌가": "최소 노드 수는 **모형이 정확할 때만** 산다. 모형 폭이 ±2배이므로 여유가 1배 언저리면 사실상 여유가 없다. ⚠ 안전계수가 '어떤 상단을 덮는다' 는 주장은 하지 않는다 — 상단이 얼마인지 우리는 모른다 (2026-09-07 Codex v37 P1-1 로 역산 주장 철회). 2.0 은 모형 폭만큼은 견디게 하자는 **선택**이다."
+  }
+ },
+ "submission": {
+  "cores_per_job": 192,
+  "max_concurrency": 4,
+  "parallelization": {
+   "NCORE": 4,
+   "KPAR": 4,
+   "⛔_VASP_NPROC_제약": "랭크 수는 KPAR(4) × NCORE(4) = **16 의 배수**여야 한다. 아니면 k-그룹당 랭크가 NCORE 로 안 나뉘어 VASP 가 배치를 거부하거나 조용히 NCORE 를 되돌린다. run_staged.sh 가 실행 전에 검사한다.",
+   "쓸_수_있는_랭크_예": [
+    48,
+    64,
+    96,
+    128,
+    192,
+    256,
+    384,
+    512
+   ],
+   "이_묶음이_계획한_랭크": 192,
+   "⚠_메모리": "KPAR 은 k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어난다**. 모자라면 랭크를 줄이지 말고 노드를 늘려야 한다 (랭크를 줄이면 KPAR 배수 조건이 깨진다).",
+   "⚠_에너지_불변": "KPAR·NCORE 는 병렬화 태그다 — 결과를 바꾸지 않으므로 물리 감사(AUDIT_KEYS) 대상이 아니다. 다만 INCAR 해시에는 들어간다."
+  },
+  "phase_dependencies": "⛔ **잡 사이에 의존성이 있다** (staged 구성). canary(*__nzmag)는 PARENT_GEOM 이 가리키는 부모의 최종 기하를 받고, 2단계는 1단계 게이트를 통과해야 열린다. dense 상은 이 묶음에 없다 (δ_k 설계 제외). 순서는 run_staged.sh 가 강제한다 — 배열로 한꺼번에 던지면 안 된다.",
+  "n_static": 19,
+  "n_dense_mandatory": 0,
+  "n_vasp_executions_total": 19,
+  "n_by_phase": {
+   "static": 19
+  },
+  "n_dense_candidates_packaged": 0,
+  "adaptive_dense": "DISABLED — 이 번들에 dense_cand/ 도 run_dense_selected.sh 도 없다. ⚠ branch 경합은 **게이트로 막지 않는다** — headline 이 branch-minimum 이 아니라 같은 seed(pm1) 대비이기 때문이다. 경합은 pairs[*].branch_tie 에 기록만 하고, 실제 보호막은 seed 산포 게이트(≤10 meV)다",
+  "branch_policy": "pm1 same-seed conditional — **branch minimum 미주장**. 어느 자기 branch 가 바닥인지 말하려면 각 끝점의 최저 branch 에 dense 가 필요한데 이 판엔 없다",
+  "max_optional_dense": 0,
+  "estimator": "tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json",
+  "estimator_baseline": "runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz — 192원자·NKPTS 4·48코어·525 s/전자스텝",
+  "estimator_uncertainty": "±2배 (모형이지 벤치마크가 아니다)",
+  "runner_note": "⛔ 실행 경로는 `bash run_staged.sh {1|2}` **하나뿐**이다. run_all.sh 는 이 묶음에 넣지 않았고, 배열 제출도 쓰지 않는다 (1단계 정지 규칙이 무력화된다). 러너는 실행 전에 MANIFEST 해시·exact 잡 집합·단계 분류를 확인하고(run_census), POTCAR_ROOT_SEAL.json 을 매번 요구한다.",
+  "required_returns": [
+   "각 잡: static/OUTCAR (또는 .gz)",
+   "각 잡: static/OSZICAR",
+   "각 잡: static/POSCAR — **실행된 기하** (부모↔canary 기하 대조·기하 감사. 없으면 CANARY_GEOM_UNCHECKED 로 막힙니다)",
+   "각 잡: POTCAR_PROVENANCE.json (조립기가 자동 생성)",
+   "각 잡: job.json (받으신 그대로 — 분석기가 잡의 정체·상 목록을 이것으로 읽습니다 · 없으면 그 잡은 차단)",
+   "각 잡: EXECUTABLE_RECEIPT.tsv — 상별 실행파일 해시 (run_staged 경로가 자동 생성 · 분석기가 root seal 과 대조합니다)",
+   "묶음 루트: MANIFEST.json (받으신 그대로 — 분석기가 가장 먼저 읽습니다)",
+   "묶음 루트: POTCAR_ROOT_SEAL.json (첫 실행 전 봉인)",
+   "묶음 루트: ZIP_SHA256.txt",
+   "묶음 루트: RESULTS.json (run_staged 가 판정 때 만듦 — 있으면 그대로)",
+   "묶음 루트: PLACEMENT_PROBE.json — 첫 VASP 전 배치 프로브 기록 (2026-09-08 · 랭크가 실제로 어느 노드에 놓였는지 · 잡 사이 겹침 없음의 증거)",
+   "묶음 루트: STAGE1_PASS.json (1단계 통과 receipt)",
+   "묶음 루트: POTCAR_ATTESTATION.json — **선택** (탐색용 정책). 없어도 러너는 돌아갑니다. ⚠ 다만 그 결과는 **원고 인용 자격이 없습니다** — 사후 provenance 는 무엇을 썼는지만 기록하고 그것이 승인된 PAW dataset 인지 판정하지 못합니다 (회신 AZ P0-7·Q4). 만들려면 `MAKE_POTCAR_ATTESTATION.sh` 를 **첫 VASP 실행 전에만** 돌릴 수 있습니다 (회신 AR P0-6)"
+  ],
+  "⚠_실행수": "n_vasp_executions_total 은 **상(phase) 수**다. 잡 수와 다르다 — relax 가 있는 잡은 잡 하나에 실행 둘이다 (회신 AR Q6)"
+ },
+ "return_contract": {
+  "⚠_정본": "이 구조가 반송 계약의 정본이다 — README·SUBMIT 은 이것의 렌더다 (회신 AV P0-4)",
+  "per_job": [
+   "static/OUTCAR (또는 .gz)",
+   "static/OSZICAR",
+   "static/POSCAR — **실행된 기하** (부모↔canary 기하 대조·기하 감사. 없으면 CANARY_GEOM_UNCHECKED 로 막힙니다)",
+   "POTCAR_PROVENANCE.json (조립기가 자동 생성)",
+   "job.json (받으신 그대로 — 분석기가 잡의 정체·상 목록을 이것으로 읽습니다 · 없으면 그 잡은 차단)",
+   "EXECUTABLE_RECEIPT.tsv — 상별 실행파일 해시 (run_staged 경로가 자동 생성 · 분석기가 root seal 과 대조합니다)"
+  ],
+  "dense_extra": {
+   "jobs": [],
+   "files": [
+    "dense/OUTCAR (또는 .gz)",
+    "dense/OSZICAR"
+   ],
+   "why": "없으면 k 수렴을 못 재서 KCONV_NOT_MEASURED"
+  },
+  "relax_extra": {
+   "jobs": [],
+   "files": [
+    "relax/OUTCAR",
+    "relax/CONTCAR"
+   ],
+   "why": "canary 가 부모 relax 최종 기하를 승계한다"
+  },
+  "root": [
+   "MANIFEST.json (받으신 그대로 — 분석기가 가장 먼저 읽습니다)",
+   "POTCAR_ROOT_SEAL.json (첫 실행 전 봉인)",
+   "ZIP_SHA256.txt",
+   "RESULTS.json (run_staged 가 판정 때 만듦 — 있으면 그대로)",
+   "PLACEMENT_PROBE.json — 첫 VASP 전 배치 프로브 기록 (2026-09-08 · 랭크가 실제로 어느 노드에 놓였는지 · 잡 사이 겹침 없음의 증거)",
+   "STAGE1_PASS.json (1단계 통과 receipt)",
+   "POTCAR_ATTESTATION.json — **선택** (탐색용 정책). 없어도 러너는 돌아갑니다. ⚠ 다만 그 결과는 **원고 인용 자격이 없습니다** — 사후 provenance 는 무엇을 썼는지만 기록하고 그것이 승인된 PAW dataset 인지 판정하지 못합니다 (회신 AZ P0-7·Q4). 만들려면 `MAKE_POTCAR_ATTESTATION.sh` 를 **첫 VASP 실행 전에만** 돌릴 수 있습니다 (회신 AR P0-6)"
+  ],
+  "how": "가장 쉬운 방법 — 푼 디렉터리를 **통째로** 다시 압축해 보내 주십시오 (배포 입력·MANIFEST 포함 · 위 목록이 자동으로 충족됩니다). 예: `tar --exclude=CHGCAR --exclude=WAVECAR --exclude=POTCAR -czf 반송.tgz <푼 디렉터리>`  ⛔ **POTCAR 는 반드시 빼 주십시오** (라이선스 — 2026-09-07 Codex v37 P1-2). 종전 명령은 CHGCAR·WAVECAR 만 빼서 조립된 POTCAR 가 딸려 왔습니다. 증빙인 `POTCAR_PROVENANCE.json` · `POTCAR_ROOT_SEAL.json` · `EXECUTABLE_RECEIPT.tsv` 는 **그대로 두십시오** — 그게 판정에 쓰이는 것이고, POTCAR 원문은 저희가 받으면 안 되는 것입니다.",
+  "not_required": [
+   "CHGCAR·WAVECAR (용량 — 압축에서 빼셔도 됩니다 · ⚠ 서버에서는 지우지 말고 두십시오)",
+   "vasprun.xml (선택)"
+  ],
+  "failed_jobs": "발산·미수렴 잡도 지우지 말고 그대로 보내 주십시오 — 실패도 판정의 일부입니다"
+ },
+ "files_sha256": {
+  "MAKE_POTCAR_ATTESTATION.sh": "490d1f50ccf05ad85a34a7feb50d11b7a2fff0fc3e9a5034d8e009bddce5da7d",
+  "POTCAR_ATTESTATION_REQUEST.md": "d4469d891fb38f924fde1e35d3b679ce854c939e5001025c8e0e465b08bbe8c0",
+  "POTCAR_SPEC.txt": "8923157f8b5009ca599b93be6ea6810ba697944dd2abfa5b36aacc008e38b859",
+  "README_REQUEST.md": "c7ada5117c21fde4042d38d406cd22f76e93e0be1138035c26e1682d49ab5828",
+  "SEAL_POTCAR_ROOT.sh": "6c783eb088bdb8b44a97de6a120a61259b0d172c11a76c576fee5caeb50608ba",
+  "SUBMIT_CONTRACT.md": "c5c8f17152bc567dfefd2fdd507a020eb1da1ffc674d16eb4ea5376c881fb3e7",
+  "analyze_results.py": "ae55fe6267311cb1151ac31f0b892cb2dbfbffa2c01b8fa9a65275ca3531a826",
+  "census.py": "10c6144e6da5e6e74975efead62b082a946d3ff48d71facb5b6ceaea445da1ce",
+  "governance/c12_poses_2026_08_30.json": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "governance/decisions.json": "4dcd839882eb5bc27136141bc39ef5a0d7af11c528937bfddcc9fd1dabd64816",
+  "governance/sdcp_c12_claim_prereg_2026_08_31.json": "7242623f5c37e2f25e9f7a1c646652ad822a86e7db1a59369c39d208daf06925",
+  "governance/sdcp_c12_protocol_2026_08_30.json": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+  "prospective/ptfe_c10__b00__afm2424_net4/POSCAR": "4daf62fd8cf1e3c9aeee1293ca8ce36885aa8783de5951df645177b815fe594a",
+  "prospective/ptfe_c10__b00__afm2424_net4/POTCAR_ASSEMBLE.sh": "aceecec42ecac3150de41051322ccf42cfe91828f102647b99f1ea15115784c9",
+  "prospective/ptfe_c10__b00__afm2424_net4/job.json": "c88946fcbb55485d0e89358ff953dd44e299bfe706a4a845776a8505cea9ca5e",
+  "prospective/ptfe_c10__b00__afm2424_net4/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/ptfe_c10__b00__afm2424_net4/static/INCAR": "c8249b360dbb8b887167cd5bbf7d4bcb323ba5440a6ef4e46a3ef09837dae287",
+  "prospective/ptfe_c10__b00__afm2424_net4/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "prospective/ptfe_c10__b00__afm2424_pm1/POSCAR": "4daf62fd8cf1e3c9aeee1293ca8ce36885aa8783de5951df645177b815fe594a",
+  "prospective/ptfe_c10__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh": "aceecec42ecac3150de41051322ccf42cfe91828f102647b99f1ea15115784c9",
+  "prospective/ptfe_c10__b00__afm2424_pm1/job.json": "25fc3e73d6eff5221a73f4eeb61855349bd7edb3c27b75a69316c5db843c3845",
+  "prospective/ptfe_c10__b00__afm2424_pm1/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/INCAR": "f9fc63a2b1407156544e90bda2546f2153509670ce54418ba288876938749a14",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "prospective/ptfe_c10__b52__afm2424_net4/POSCAR": "30777c2e732f1e58fb8f1b93e98a1b69618a994351286bbe77d4d6b4047077f2",
+  "prospective/ptfe_c10__b52__afm2424_net4/POTCAR_ASSEMBLE.sh": "aceecec42ecac3150de41051322ccf42cfe91828f102647b99f1ea15115784c9",
+  "prospective/ptfe_c10__b52__afm2424_net4/job.json": "06a1910bab9204cfc69da0b571ee7a59995c44c63eb8608ad503f0ad0d41eb4e",
+  "prospective/ptfe_c10__b52__afm2424_net4/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/ptfe_c10__b52__afm2424_net4/static/INCAR": "f99d6585967e0994b423a9a1d449dfaeaafc7db13c96fd779c575d099214c5fe",
+  "prospective/ptfe_c10__b52__afm2424_net4/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "prospective/ptfe_c10__b52__afm2424_pm1/POSCAR": "30777c2e732f1e58fb8f1b93e98a1b69618a994351286bbe77d4d6b4047077f2",
+  "prospective/ptfe_c10__b52__afm2424_pm1/POTCAR_ASSEMBLE.sh": "aceecec42ecac3150de41051322ccf42cfe91828f102647b99f1ea15115784c9",
+  "prospective/ptfe_c10__b52__afm2424_pm1/job.json": "8e3c1536f93bdf08e77f406eaa050ae9be71bb10c59e679a5fbcc24aea896d56",
+  "prospective/ptfe_c10__b52__afm2424_pm1/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/ptfe_c10__b52__afm2424_pm1/static/INCAR": "ad9b1207024f77b86fae63aba810e077f27bf0fdcf2636a06b1c02e78507d0cd",
+  "prospective/ptfe_c10__b52__afm2424_pm1/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "prospective/sdcp_neutral__b00__afm2424_net4/POSCAR": "4780e416a2d803dc81c681fd71d82d2f53783c5197a85715061f721c3dd42676",
+  "prospective/sdcp_neutral__b00__afm2424_net4/POTCAR_ASSEMBLE.sh": "02769a79783112f41db034895aed49e43fde3de16c21ad5c446b46dbfe4d0302",
+  "prospective/sdcp_neutral__b00__afm2424_net4/job.json": "ed825489eb65257ad56dbcb92d07197540fd14f97e23334911fdc68301706633",
+  "prospective/sdcp_neutral__b00__afm2424_net4/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/sdcp_neutral__b00__afm2424_net4/static/INCAR": "d6b38a2c28bfe3883d5aa644525bcfe55658fcc1a5e1752b35c6f50f8ceb318b",
+  "prospective/sdcp_neutral__b00__afm2424_net4/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/POSCAR": "4780e416a2d803dc81c681fd71d82d2f53783c5197a85715061f721c3dd42676",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh": "02769a79783112f41db034895aed49e43fde3de16c21ad5c446b46dbfe4d0302",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/job.json": "1995dc5ea228a5ef91aeff56fc4ec952f29ac406dc03f1a165acceefee4501e5",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR": "a83650c276dce85e5caa570537a439cab1e557254fad3ee8f37174e29f005a7a",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "prospective/sdcp_neutral__b12__afm2424_net4/POSCAR": "6c6e8ea02ccf3c49bcabf2d3888f913a84446dbefff8770f676e496e807d1e4d",
+  "prospective/sdcp_neutral__b12__afm2424_net4/POTCAR_ASSEMBLE.sh": "02769a79783112f41db034895aed49e43fde3de16c21ad5c446b46dbfe4d0302",
+  "prospective/sdcp_neutral__b12__afm2424_net4/job.json": "badec9a65e61ff99b7cb9b126a34455f4d3e84d8ae9e12a789de9911d07e7a26",
+  "prospective/sdcp_neutral__b12__afm2424_net4/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/sdcp_neutral__b12__afm2424_net4/static/INCAR": "cdbe306e8dca111b6a8edd4f43a7a8fb615e39469ce3174aa5a9f43000ca3bef",
+  "prospective/sdcp_neutral__b12__afm2424_net4/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "prospective/sdcp_neutral__b12__afm2424_pm1/POSCAR": "6c6e8ea02ccf3c49bcabf2d3888f913a84446dbefff8770f676e496e807d1e4d",
+  "prospective/sdcp_neutral__b12__afm2424_pm1/POTCAR_ASSEMBLE.sh": "02769a79783112f41db034895aed49e43fde3de16c21ad5c446b46dbfe4d0302",
+  "prospective/sdcp_neutral__b12__afm2424_pm1/job.json": "e9cb4a011ea93e0825f0d4542b03995f31f4b4cc167a3d5149107d93a09c5d95",
+  "prospective/sdcp_neutral__b12__afm2424_pm1/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "prospective/sdcp_neutral__b12__afm2424_pm1/static/INCAR": "1ebf46f30d27281cdf634b872342f54b7bcede5f573bf14cd219908e833e1f75",
+  "prospective/sdcp_neutral__b12__afm2424_pm1/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "refs/clean_slab__afm2424_net4/POSCAR": "a57ab2f03a2f50073308039cc337c6d0652ae41483d47f1eccaaadceb9aa3220",
+  "refs/clean_slab__afm2424_net4/POTCAR_ASSEMBLE.sh": "058ef8a9eaeec3e7034dbdec52e0ae691a286b05019cb1ab1d253015b1c967de",
+  "refs/clean_slab__afm2424_net4/job.json": "30194c98acf72628aa5766e8cc41965efe3d3a4fdaf8fd6183349f2a64db7c25",
+  "refs/clean_slab__afm2424_net4/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/clean_slab__afm2424_net4/static/INCAR": "66daaa81c195514971f0f6228759e98af952cb95478361bb80f27846f1cfe1de",
+  "refs/clean_slab__afm2424_net4/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "refs/clean_slab__afm2424_pm1/POSCAR": "a57ab2f03a2f50073308039cc337c6d0652ae41483d47f1eccaaadceb9aa3220",
+  "refs/clean_slab__afm2424_pm1/POTCAR_ASSEMBLE.sh": "058ef8a9eaeec3e7034dbdec52e0ae691a286b05019cb1ab1d253015b1c967de",
+  "refs/clean_slab__afm2424_pm1/job.json": "de3847b0911bfd009e68736015ca1052d7055a11c77664d63b5cee0fd6be2627",
+  "refs/clean_slab__afm2424_pm1/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/clean_slab__afm2424_pm1/static/INCAR": "86909daeeaa42f19bb21f886aedac1f0dee02c7d3697a6a1219dabeed6d7ad6f",
+  "refs/clean_slab__afm2424_pm1/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "refs/mol__ptfe_c10__box20/POSCAR": "35f44354ab9da8f713f672879e73b59bf00920c23edbdb47868038fd67907800",
+  "refs/mol__ptfe_c10__box20/POTCAR_ASSEMBLE.sh": "0e7c398c05e144bf8977d32466906f128ab6b676d4533dbcf7f3f6da1389f4a4",
+  "refs/mol__ptfe_c10__box20/job.json": "0add7474897d784550729b8db7053b4fa19ba152424f1d39c1c76269f257b36e",
+  "refs/mol__ptfe_c10__box20/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/mol__ptfe_c10__box20/static/INCAR": "bff127233eebcc787f08826034976a73fbd9dccfff9efae10a47e739dd9a7be0",
+  "refs/mol__ptfe_c10__box20/static/KPOINTS": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+  "refs/mol__ptfe_c10__box24/POSCAR": "12b8a3dab446569f5bbf1ea874c60875f694e7054808eb5c7bea216a64f3ad4d",
+  "refs/mol__ptfe_c10__box24/POTCAR_ASSEMBLE.sh": "0e7c398c05e144bf8977d32466906f128ab6b676d4533dbcf7f3f6da1389f4a4",
+  "refs/mol__ptfe_c10__box24/job.json": "1f26b11f0999e8a0d20c14c503dc322951cd91e0af139c22ddc35e9aa00cab0b",
+  "refs/mol__ptfe_c10__box24/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/mol__ptfe_c10__box24/static/INCAR": "e8f41ba857884530abbd961cf39235656e9dc4a0ced6cf43616cbece958be785",
+  "refs/mol__ptfe_c10__box24/static/KPOINTS": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+  "refs/mol__ptfe_c10__box24__nzmag/PARENT_GEOM": "29185dd80ac8a396f7f926ccf8fc7c0a72d3970bd964918dbcd1151caae3fc87",
+  "refs/mol__ptfe_c10__box24__nzmag/POSCAR": "12b8a3dab446569f5bbf1ea874c60875f694e7054808eb5c7bea216a64f3ad4d",
+  "refs/mol__ptfe_c10__box24__nzmag/POTCAR_ASSEMBLE.sh": "0e7c398c05e144bf8977d32466906f128ab6b676d4533dbcf7f3f6da1389f4a4",
+  "refs/mol__ptfe_c10__box24__nzmag/job.json": "648e2b2c83ffd7820f925c7f7c7d9a6c78cdb6365a0fa2f261fa522ea8a6a0ea",
+  "refs/mol__ptfe_c10__box24__nzmag/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/mol__ptfe_c10__box24__nzmag/static/INCAR": "0722c9c80e01d70507380c84be43a574c2559b167a2d10c96797cee1a9b745bc",
+  "refs/mol__ptfe_c10__box24__nzmag/static/KPOINTS": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+  "refs/mol__sdcp_neutral__box20/POSCAR": "a46ece2e77bb37661825c234bc9057f84765df683afae1244d3550c1e06d293b",
+  "refs/mol__sdcp_neutral__box20/POTCAR_ASSEMBLE.sh": "a0b86deefefca3a85736dae87968d67178b98c81dca00fc6bab5d7f26e21bb44",
+  "refs/mol__sdcp_neutral__box20/job.json": "cc3d83d458f3ce117243408a809ab26678f157a3f3a4abe196335cc546befaa5",
+  "refs/mol__sdcp_neutral__box20/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/mol__sdcp_neutral__box20/static/INCAR": "44ae72d3355c7a0215ac8cc1eac9387e5b447b3885ea2f3c8423ad9dc51fd6f5",
+  "refs/mol__sdcp_neutral__box20/static/KPOINTS": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+  "refs/mol__sdcp_neutral__box24/POSCAR": "2ac2034757f4dc3e32ce7b842fc0f5441a099ca5fc04ef02c736981dc1f51d2f",
+  "refs/mol__sdcp_neutral__box24/POTCAR_ASSEMBLE.sh": "a0b86deefefca3a85736dae87968d67178b98c81dca00fc6bab5d7f26e21bb44",
+  "refs/mol__sdcp_neutral__box24/job.json": "66ddf15b19189564229ad555ea005fa4382f0aa3aec7ef96eb75c7b395021a93",
+  "refs/mol__sdcp_neutral__box24/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/mol__sdcp_neutral__box24/static/INCAR": "00c52dc7ead75189a4fce4ab96ce6f6fefe36f348b57b458979f316cc8694db1",
+  "refs/mol__sdcp_neutral__box24/static/KPOINTS": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+  "refs/mol__sdcp_neutral__box24__nzmag/PARENT_GEOM": "948eb275fc74c5612a5dab6d70b9440394998304f889943140268f8b77537b92",
+  "refs/mol__sdcp_neutral__box24__nzmag/POSCAR": "2ac2034757f4dc3e32ce7b842fc0f5441a099ca5fc04ef02c736981dc1f51d2f",
+  "refs/mol__sdcp_neutral__box24__nzmag/POTCAR_ASSEMBLE.sh": "a0b86deefefca3a85736dae87968d67178b98c81dca00fc6bab5d7f26e21bb44",
+  "refs/mol__sdcp_neutral__box24__nzmag/job.json": "39fed48620276a4fa5122fdb2b9ddbd03648f40ce9b490d1c2fc69ce56a0a425",
+  "refs/mol__sdcp_neutral__box24__nzmag/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/INCAR": "53ad05d3213d3c07f4c7898f5b38ecb3d2cdd7b137a5bc88779af8c56ff919c4",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/KPOINTS": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+  "run_staged.sh": "2bb8aeaea383565054b3cee664c1a42e5243989506612bdcd4880f4f5077d1e5",
+  "vacconv/clean_slab__afm2424_pm1__c2/POSCAR": "cbd6fe3e0d9d0102483f69038c8076b95f4332fbc15e98983f2950dc09a913a1",
+  "vacconv/clean_slab__afm2424_pm1__c2/POTCAR_ASSEMBLE.sh": "058ef8a9eaeec3e7034dbdec52e0ae691a286b05019cb1ab1d253015b1c967de",
+  "vacconv/clean_slab__afm2424_pm1__c2/job.json": "8f9b49c0d876f4406d00039e735cca86cbf2e9c01da96ca5d679f57431a3af13",
+  "vacconv/clean_slab__afm2424_pm1__c2/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/INCAR": "4f3e5675f323f5ff0646edbfa3e44cd9ce549908567cd4d0964fa9278e7a4f5b",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/POSCAR": "171cf6d4781922445a01a356f1f3c056713a8abe4074a8298ebff466d6d14c47",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/POTCAR_ASSEMBLE.sh": "aceecec42ecac3150de41051322ccf42cfe91828f102647b99f1ea15115784c9",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/job.json": "96270b986a842c112654e9a6b41d396e67c4e3b3b57be698aabc8f58ddebf72c",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/INCAR": "b67979009b0d3d3063806af6b4b90e7b21713de19cab5bf6ad7f072d09fa5fdc",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/POSCAR": "9dd45929bd6d13f62c24573a3a9e7085e603f963a3fdae34ac12013d7609bf77",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/POTCAR_ASSEMBLE.sh": "02769a79783112f41db034895aed49e43fde3de16c21ad5c446b46dbfe4d0302",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/job.json": "64044f9a95bb27f0f48e2c2e56504878a995f8265437b0eb12d3c2bb8a9cc193",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/run_job.sh": "33db42ccf85b0500c1474ff8670ae0e4313bd16707de4bde180892ab990bdadd",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/INCAR": "e434e33061455aa83c1d9fdb3f07d25a93e6c4f94d5b72385d6dfe4d2fdb92a4",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/KPOINTS": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0"
+ },
+ "generated_argv": [
+  "--from_basins",
+  "db/properties/c12_poses_2026_08_30.json",
+  "--frags",
+  "sdcp_neutral",
+  "ptfe_c10",
+  "--refs",
+  "--refs_minimal",
+  "--clean_slab",
+  "--both_seeds",
+  "--single_point",
+  "--allow_no_pin",
+  "--potcar_identity",
+  "post_hoc",
+  "--no_kconv",
+  "--cell_c",
+  "36.6551",
+  "--cell_c2",
+  "40.6551",
+  "--min_vacuum",
+  "15.0",
+  "--roles",
+  "primary",
+  "sensitivity",
+  "stress_sensitivity",
+  "--cores",
+  "192",
+  "--concurrency",
+  "4",
+  "--node_mem_gb",
+  "188",
+  "--mem_safety",
+  "2.0",
+  "--out",
+  "runs/sdcp_c12_2026_08_30/sdcp_c12_v41"
+ ],
+ "generated_utc": "2026-09-11T07:13:47Z",
+ "provenance": {
+  "schema": "bundle_provenance/v1",
+  "repo_root": "/data/work/repo",
+  "files": {
+   "tools/sdcp/vasp_handoff_bundle.py": {
+    "kind": "generator",
+    "sha256": "ec387ea78741b8b6447c72817a8b5c2be7baea7b4425213635758d981b92a0de",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "tools/sdcp/site_screen.py": {
+    "kind": "imported_module",
+    "sha256": "a2e903672ec4aeeb95957e016cddf032c12d90547ae6e970be720ad82c7d8938",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "tools/sdcp/afm_ledger.py": {
+    "kind": "imported_module",
+    "sha256": "8ea68c6c674c068b7376c8731920fda71eca11d987eea9c1cae184ff943d3a6d",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "tools/sdcp/vasp_cost_estimate.py": {
+    "kind": "imported_module",
+    "sha256": "e6916f252cdc459a847a97c642e6929bd9c0b21c145653fbdf5af7ea86cf168f",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/properties/c12_poses_2026_08_30.json": {
+    "kind": "input",
+    "sha256": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/c12_frozen/clean_slab_f0.85.vasp": {
+    "kind": "input",
+    "sha256": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/properties/sdcp_c12_protocol_2026_08_30.json": {
+    "kind": "input",
+    "sha256": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/c12_frozen/ptfe_c10__Ni_top__fib05__r270.xyz": {
+    "kind": "input",
+    "sha256": "4e6659fcec53b99497327977b1939b8b6c66e8f9156491bef6b75c2ee0c33d54",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/c12_frozen/ptfe_c10__O_top__fib04__r090.xyz": {
+    "kind": "input",
+    "sha256": "8a21109f560d6a5e981f5ce46c5542be9cf883a17f2da714d76ddb2750223b93",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/c12_frozen/sdcp_neutral__O_top__fib08__r000.xyz": {
+    "kind": "input",
+    "sha256": "a687e0601db82feb304d1deca48c8d73d08f1d55049523c23fdc2da69a5b4a13",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/c12_frozen/sdcp_neutral__LiNi_bridge__fib11__r270.xyz": {
+    "kind": "input",
+    "sha256": "17c0e130243c687b89c2383573bff233def61acd2bea203abd699696a79f4a6d",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/governance/decisions.json": {
+    "kind": "input",
+    "sha256": "4dcd839882eb5bc27136141bc39ef5a0d7af11c528937bfddcc9fd1dabd64816",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": {
+    "kind": "input",
+    "sha256": "7242623f5c37e2f25e9f7a1c646652ad822a86e7db1a59369c39d208daf06925",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/linio2_104_sym_1x4L4_relaxed.vasp": {
+    "kind": "input",
+    "sha256": "26a48473060243fef55e86d151050b6a27d6e65801b4d3ccd818678913aee25e",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/ptfe_c10f22_r2scan3c.xyz": {
+    "kind": "input",
+    "sha256": "66dd0bcc4badd26d6db42cc3ed429fbd9ec50a0d467f76a07d2532329efc2d57",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/structures/sdcp_v7c_neutral.xyz": {
+    "kind": "input",
+    "sha256": "fc5ed6da243b33923aecd7c3c5781f98366da6dba48c222ca76b9f4ba67039e0",
+    "scope": "repo",
+    "git": "clean"
+   },
+   "db/inputs/sdcp_v2/slab_relax/relax.in": {
+    "kind": "input",
+    "sha256": "dfd9359778b46d1e9f2b5a6c5ffe4c17d3d307ec7631a0eda1eacc9c32eedca7",
+    "scope": "repo",
+    "git": "clean"
+   }
+  },
+  "n_files": 17,
+  "dirty": [],
+  "unknown_git_state": [],
+  "external_inputs": [],
+  "n_inputs": 13,
+  "clean": true,
+  "⚠_외부_입력": null,
+  "scope": "실행 중인 생성기 + repo 안에서 import 된 모든 모듈 + 생성기가 `_prov_note` 로 등록한 입력. **등록하지 않은 입력은 여기 없다** — 그래서 이것은 '우리가 본 범위' 이지 절대적 폐포가 아니다.",
+  "⛔_dirty_면": "회신 BB P0-5 · Q5 — 생성기든 dependency 든 input 이든 커밋본과 다르면 그 번들은 **폐기**다. 범위를 사후에 확정할 수 없으면 clean tree 에서 다시 만든다. 분석기가 이 값을 읽고 인용을 막는다."
+ }
+}

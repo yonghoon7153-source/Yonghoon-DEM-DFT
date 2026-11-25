@@ -1,0 +1,115 @@
+{
+ "slug": "ma2025_active_learning_electrolyte_solvent_screening_anodefree",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "e5b5751a-76._Active_learning_accelerates_electrolyte_solvent_screening_for_anodefree_lithium_metal_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Background and design of experiments (DoE) formulation. a Schematic illustration of Cu | |LFP cell conﬁguration as an example of anode-free lithium metal batteries (LMBs) utilized in the present study. b Illustrative examples for anode-free LMB capacity retention curves. The curves shown do not represent real data. Dis- charge capacity at 20th cycle normalized with respect to positive electrode theo- retical capacity is selected as target property to balance the effects of initial Coulombic efﬁciency and long-term stability. c Workﬂow describing creation of the virtual search space. d Schematic illustration of the active learning workﬂow, consisting of ﬁve steps in an iterative closed-loop, leading to batched optimization",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    64.6,
+    543.5,
+    398.8
+   ],
+   "w": 2125,
+   "h": 1393,
+   "dpi": 300,
+   "src": "e5b5751a-76._Active_learning_accelerates_electrolyte_solvent_screening_for_anodefree_lithium_metal_batteries.pdf",
+   "blank": 0.671
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Progress of AL suggestion and experimental acquisition and surrogate model interpretability. a 2D t-SNE plots depicting location of suggested molecules on the virtual chemical search space across different batches. b Performance of electrolytes acquired in each batch (Cu||LFP, discharge capacity at 20th cycle, averaged from two replicated cells; violin = distribution, square = mean). c Fraction of exclusive ether molecules in the top suggestions in each batch. d Fraction of exclusive ether molecules in the molecules acquired from each batch ('Batch 0' = in-house dataset). e Fraction of common molecules in the top suggestions from pairs of consecutive batches. f t-SNE plot of labeled electrolyte solvent molecules on the complete search space; 7 best solvents marked by purple stars. g SHAP summary plot for C20norm prediction (rational quadratic surrogate, batch 7). h Molecular substructures contributing most to the top fingerprints. i Fraction of labeled molecules containing the three substructures and their average C20norm.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    36.0,
+    565.0,
+    758.0
+   ],
+   "w": 2208,
+   "h": 3001,
+   "dpi": 300,
+   "src": "e5b5751a-76._Active_learning_accelerates_electrolyte_solvent_screening_for_anodefree_lithium_metal_batteries.pdf",
+   "blank": 0.0,
+   "note": "manual crop — 캡션이 다음 페이지(f2)이거나 페이지 하단이라 자동 앵커가 놓쳤다"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Performance of AL-discovered electrolytes. a Cycling performance of Cu | |LFP cells at 20 °C using AL discovered electrolytes with 1 M LiFSA in F5DEE and 4 M LiFSA in DME as controls. 1 C = 150 mA g-1. b Normalized discharge capacity of Cu | |LFP cells at 20 °C using AL discovered electrolytes with 1 M LiFSA in F5DEE and 4 M LiFSA in DME as controls. Two replicated cells are shown for each electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    45.0,
+    565.0,
+    470.3
+   ],
+   "w": 2215,
+   "h": 1773,
+   "dpi": 300,
+   "src": "e5b5751a-76._Active_learning_accelerates_electrolyte_solvent_screening_for_anodefree_lithium_metal_batteries.pdf",
+   "blank": 0.232,
+   "note": "재크로핑 — 자동 앵커가 패널 a,b(사이클링 곡선)를 놓쳐서 전체 영역으로 다시 잘랐다"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Ion solvation structure and ion transport. a Raman peak of FSA anion in AL discovered electrolytes at 1 M LiFSA. SSIP: solvent separated ion pair; CIP: contact ion pair; AGG: salt aggregates. b Lithium redox potential (ELi referenced to Fc/Fc+) at 1 M LiFSA measured at room temperature (25 +- 2 C). c Ionic conductivity of 1 M LiFSA in AL-discovered solvents as a function of temperature (error bars = std of three replicates). d Diffusivity of Li+ (DLi) and FSA- (DFSA) and lithium transference number (tLi).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    36.0,
+    565.0,
+    355.0
+   ],
+   "w": 2215,
+   "h": 1330,
+   "dpi": 300,
+   "src": "e5b5751a-76._Active_learning_accelerates_electrolyte_solvent_screening_for_anodefree_lithium_metal_batteries.pdf",
+   "blank": 0.0,
+   "note": "manual crop — 캡션이 다음 페이지(f2)이거나 페이지 하단이라 자동 앵커가 놓쳤다"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | SEI composition. a F 1s XPS spectra of lithium metal SEI at different etching time. b O 1s XPS spectra of lithium metal SEI at different etching time. Atomic ratio quantified from XPS with (c) no etching and (d) 3 minutes of etching.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    36.0,
+    565.0,
+    430.0
+   ],
+   "w": 2215,
+   "h": 1642,
+   "dpi": 300,
+   "src": "e5b5751a-76._Active_learning_accelerates_electrolyte_solvent_screening_for_anodefree_lithium_metal_batteries.pdf",
+   "blank": 0.0,
+   "note": "manual crop — 캡션이 다음 페이지(f2)이거나 페이지 하단이라 자동 앵커가 놓쳤다"
+  }
+ ]
+}

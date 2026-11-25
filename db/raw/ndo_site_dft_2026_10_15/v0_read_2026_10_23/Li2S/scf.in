@@ -1,0 +1,50 @@
+&CONTROL
+    calculation = 'vc-relax'
+    prefix      = 'Li2S'
+    outdir      = './tmp'
+    pseudo_dir  = '/home/kgy/work/pseudo'
+    tprnfor     = .true.
+    tstress     = .true.
+    etot_conv_thr = 1.0d-6
+    forc_conv_thr = 1.0d-4
+    nstep        = 200
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = 3
+    ntyp        = 2
+    ecutwfc     = 52.0
+    ecutrho     = 520.0
+    occupations = 'smearing'
+    smearing    = 'mv'
+    degauss     = 0.01
+    nosym       = .true.
+/
+&ELECTRONS
+    conv_thr     = 1.0d-8
+    electron_maxstep = 100
+    mixing_mode  = 'plain'
+    mixing_beta  = 0.2
+    mixing_ndim  = 8
+    diagonalization = 'david'
+/
+&IONS
+    ion_dynamics = 'bfgs'
+/
+&CELL
+    cell_dynamics = 'bfgs'
+    press_conv_thr = 0.5
+/
+ATOMIC_SPECIES
+  Li  6.9410  li_pbe_v1.4.uspp.F.UPF
+  S  32.0650  s_pbe_v1.4.uspp.F.UPF
+CELL_PARAMETERS angstrom
+    4.0095337390    0.0000000000    0.0000000000
+    2.0047663792    3.4723567050    0.0000000000
+    2.0047666305    1.1574532937    3.2737696175
+ATOMIC_POSITIONS crystal
+  Li    0.2500000000    0.2500000000    0.2500000000
+  Li    0.7500000000    0.7500000000    0.7500000000
+  S    0.0000000000    0.0000000000    0.0000000000
+K_POINTS automatic
+  4 4 4 0 0 0

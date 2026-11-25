@@ -1,0 +1,151 @@
+{
+ "slug": "cho2025_multicompositional_argyrodite_experimental_active_learning",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The multi-compositional search space design for a) P-free and b) P-included search space. The P-free search space consists of two ternary search space for both metallic and halide sites in the Argyrodite structure. The P-included search space consists of a quaternary space for metallic components and a binary diagram for Halide components (I-Br). The 𝛼value is also represented as a bar type in the range from 0.5 to 1.5. The processing parameters such as temperature and cooling time constitute a search space represented as a segmented bar type. The stepwise PSO-driven convergence procedures are presented for c) P-free and d) P-included systems. The dots spread in each search space at every PSO round stands for the swarm of Argyrodite SSEs. The convergence gradually takes place over 5 swarms, which is well schematically described as dot spread and merge for both P-free and P-incl",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.1,
+    650.7
+   ],
+   "w": 2118,
+   "h": 2418,
+   "dpi": 300,
+   "src": "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The maximum and average 𝜎Li as a function of PSO round number (swarm number). a) the evolution of the maximum 𝜎Li along with the entire entry distribution for each swarm for P-free (top) and P-included (bottom) Argyrodite systems, b) the average 𝜎Li at each PSO round for P-free (top) and P- included (bottom) Argyrodite systems. The average is slightly lower than the maximum but the same trend holds. c) and d) the compositional evolution represented in radar chart format for P-free (top) and P-included (bottom) Argyrodite systems, respectively. Since these radar charts are constituted using the averaged composition at each PSO round, the compositional evolution of these plots should be considered as just a rough average but do not represent the exact composition for a speciﬁc Argyrodite with promising performances. The subsets in (d) present zoomed-in radar charts focusing on ha",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    318.3
+   ],
+   "w": 2118,
+   "h": 1032,
+   "dpi": 300,
+   "src": "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Schematic descriptions of the two EIS measurement protocols: the conventional measurement conducted without pressure after preliminary pressurization (left) and the pressurized measurement (right). b) 𝜎Li values measured under both conventional and pressurized EIS measurement protocols for Li7.625-𝛼(Ge0.25Si0.375Sb0.375)S6-𝛼I𝛼(𝛼= 1.05–1.25), and c) the replotted results from b) in cyan, along with reference data for conventional Li6PS5Cl-based Argyrodites in red, conﬁrming a linear relationship between the two EIS measurement protocols.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.5,
+    552.9,
+    388.4
+   ],
+   "w": 2118,
+   "h": 1326,
+   "dpi": 300,
+   "src": "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Presentation of a) the band structure and density of states (DOS), b) the electrochemical stability window and grand potential phase diagram (GPPD), and c) Arrhenius plots for A1 (left), A2 (middle), and A3 (right). The reactions used for the electrochemical stability window calculations are listed in Table S5 (Supporting Information). The A1 and A2 compositions are approximated for calculations, closely matching but not identical to the actual values used in experiments.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    479.7
+   ],
+   "w": 2118,
+   "h": 1706,
+   "dpi": 300,
+   "src": "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) LSV of SS | Li-In | SSE | SSE + CF | SS cells (SSE = A1 and A2) at 0.1 mV s−1. The voltage was scanned from OCV. b) Voltage variations during Li plating/stripping in symmetric SS | Li | SSE | Li | SS cells. c) Capacity retention of Li l SSE l TiS2 full cells at 1 C. Inset shows representative C/D proﬁles. d) Rate capability and CEs of a Li l A1 l TiS2 full cell. Numbers indicate C-rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    416.2,
+    550.0,
+    689.8
+   ],
+   "w": 2118,
+   "h": 1141,
+   "dpi": 300,
+   "src": "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. The ionic conductivity for Li7.625-𝛼(Ge0.25Si0.375Sb0.375)S6-𝛼I𝛼(𝛼= 0.9–1.25). Composition Temperature [°C] Cooling Ionic conductivity [mS cm−1] Li6.725Ge0.25Si0.375Sb0.375S5.1I0.9 450 Quenching 4.96 Li6.575Ge0.25Si0.375Sb0.375S4.95I1.05 450 Quenching 6.96 Li6.525Ge0.25Si0.375Sb0.375S4.9I1.1 450 Quenching 6.36 Li6.475Ge0.25Si0.375Sb0.375S4.85I1.15 450 Quenching 5.99 Li6.425Ge0.25Si0.375Sb0.375S4.8I1.2 450 Quenching 7.45 Li6.375Ge0.25Si0.375Sb0.375S4.75I1.25 450 Quenching 5.63",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.7
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2. AIMD-calculated ionic conductivity for A1, A2, and A3.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.7
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf",
+   "blank": 0.893
+  }
+ ]
+}

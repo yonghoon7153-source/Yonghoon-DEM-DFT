@@ -1,0 +1,452 @@
+{
+ "slug": "hyun_han_argyrodite_moisture_degradation_design_principles",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-15",
+ "sources": [
+  "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+  "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of anion-mixed Li-argyrodite (Li6PS5Cl, LPSCl) structure (A) Schematic of a 50% S-Cl-mixed Li-argyrodite structure. (B) Changes of DFT energy with the degree of S-Cl mixing. (C) Radial distribution function (RDF) for Li and Cl in unmixed argyrodite (black) and 50% anion-mixed Li-argyrodite (red), respectively. Data were obtained from the AIMD simulation at a temperature of 800 K. positions of the Cl−ion. The energy convex hull of LPSCl was located slightly above the ground-state structure (+0.08 eV/ atom, obtained from the Materials Project database31). SSEs have also been reported but are not fully related to the re­ action with moisture.30 Thus, it can be said that the mechanisms underlying the structural degradation of LPSCl initiated by mois­ ture remain unclear. We confirmed a more stable configuration by partially swap­ ping S at 4c with Cl at the 4a sites, as s",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    38.4,
+    558.3,
+    373.5
+   ],
+   "w": 2104,
+   "h": 1398,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Supposed H2S generation pathway by one H2O molecule (A) Schematic illustration of the reaction steps in H2S production from H2O on the LPSCl(001) surface. (B) Corresponding Gibbs free energy for each step in (A).",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    26.0,
+    603.0,
+    575.4
+   ],
+   "w": 2290,
+   "h": 2290,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Effects of preadsorbed oxygen (A) Scheme of before (left) and after (right) oxygen adsorption on LPSCl(001) surface. (B) Projected density of states (PDOS). PDOS data were extracted from one P, S, and O atom from the tetrahedron of (A), respectively. hybridizes with the O-2p orbital slightly below the Fermi level. Furthermore, sharp peaks of S-O orbital hybridization appeared around −6 and −7 eV, and the non-bonding peak of the S-3p orbital near the Fermi level decreased in the O*/LPSCl(001) surface.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    38.4,
+    310.4,
+    221.6
+   ],
+   "w": 1098,
+   "h": 765,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Effect of preadsorbed oxygen on the hydrolysis reaction pathway (A) Schematic illustration of the reaction steps in H2S production from H2O on the LPSCl(001) surface with preadsorbed oxygen. (B) Gibbs free energy of LPSCl(001) plane (top) and LPSCl(001) plane (bottom) with preadsorbed oxygen, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    366.6,
+    543.3,
+    699.1
+   ],
+   "w": 2068,
+   "h": 1387,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Effect of d-orbital-containing dopants (V5+, Mo6+, and W6+) on the hydrolysis reaction pathway (A) The Gibbs free energy diagram of H2S generation reaction on the V-, Mo-, and W-doped LPSCl(001) surface. Solid and dashed horizontal lines mean the reaction with or without generating MS3O tetrahedron (M: P, V, Mo, and W), respectively. (B) Corresponding projected density of states (PDOS) of central metal (in order from the top: P, V, Mo, and W) and bound sulfur atom. (C) Crystal orbital Hamilton population (COHP) plot of each dopant. Ef means the Fermi level of each system.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    38.4,
+    557.9,
+    581.6
+   ],
+   "w": 2102,
+   "h": 2265,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Effect of without-d-orbital dopants (As5+, Sb5+, and Bi5+) on the hydrolysis reaction pathway (A) The Gibbs free energy diagram of H2S generation reaction on As-, Sb-, and Bi-doped LPSCl(001) surface. Solid and dashed horizontal lines mean the reaction with or without generating MS3O tetrahedron (for dopant M), respectively. (B) Corresponding projected Density of states (PDOS) of central metal (In order from the top: P, As, and Sb) and bound sulfur atom. (C) Crystal orbital Hamilton population (COHP) plot of each dopant.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.1,
+    38.4,
+    576.0,
+    585.9
+   ],
+   "w": 2263,
+   "h": 2283,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic of dopant size-dependent degradation of PS4 substructure in LPSCl (A) The S-S formation between tetrahedron substructures above LPSCl(001) structure upon Bi doping. (B) The sulfur–sulfur bond distribution by LPSCl(001) structure after cation doping M (P5+, As5+, Sb5+, and Bi5+). Furthermore, when Bi5+ replaced P5+, it disrupted the tetrahedral structure and simultaneously displaced S atoms to form chemi­ cal bonds with the S atoms near the LPSCl(001) surface, as shown in Figure 7A. For Bi doping, the S–S bond was detected, as shown in Figure 7B, which is within the range of typical S–S bond lengths (1.8–3.0 A˚ ),43 as confirmed by the charge density differences (Figure S8); this indicates the formation of S–S bonds, as shown in Figure 7B. The structural change is driven by the large ionic radius of Bi5+ (>0.510 A˚ ), three times that of P5+ (0.17 A˚ ), resulting in an",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    38.4,
+    300.6,
+    208.2
+   ],
+   "w": 1057,
+   "h": 709,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 Schematic illustrations of unmixed Li-argyrodite bulk structure.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    528.7,
+    249.6
+   ],
+   "w": 1928,
+   "h": 711,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 Average distance between lithium and chloride ion (dLi-Cl) in the unmixed",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.6,
+    317.8
+   ],
+   "w": 1945,
+   "h": 996,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 Surface energy of 50% S-Cl anion-mixed LPSCl surface for different Miller",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.6,
+    281.1
+   ],
+   "w": 1945,
+   "h": 843,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Adsorption morphology of two H2O molecules on LPSCl(001) surface. (A)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.6,
+    267.7
+   ],
+   "w": 1945,
+   "h": 787,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Effect of pre-adsorbed H2O on H2S generation reaction. (A) Schematic",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.6,
+    386.8
+   ],
+   "w": 1945,
+   "h": 1283,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Effect of pre-adsorbed oxygen on electronic structure of LPSCl. (A)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.6,
+    310.8
+   ],
+   "w": 1945,
+   "h": 966,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 Ab-initio molecular dynamics simulation (AIMD) results for undoped Li-",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    529.3,
+    444.0
+   ],
+   "w": 1931,
+   "h": 1522,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 14,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. The S-S formation upon Bi5+ doping and the resulting charge density",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.7,
+    532.6,
+    305.8
+   ],
+   "w": 1945,
+   "h": 977,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 15,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Sulfur-sulfur bond distribution in LPSCl(001) structure at reaction",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.6,
+    312.3
+   ],
+   "w": 1945,
+   "h": 973,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 16,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Projected Density of states (pDOS) of Indium bound sulfur atom and its",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    76.1,
+    532.6,
+    275.0
+   ],
+   "w": 1945,
+   "h": 830,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. The Gibbs free energy difference in the thermodynamic limiting step (ΔGL) of H2S generation reaction (See also Figure 5) Cation ΔGL (eV) P5+ 0.534 V5+ 0.648 Mo6+ 2.264 W6+ 2.393 See also Figure 5.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.1,
+    100.0,
+    299.4,
+    202.4
+   ],
+   "w": 1048,
+   "h": 428,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.647
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2. The Gibbs free energy difference in the thermodynamic limiting step (ΔGL) of H2S generation reaction Cation Ionic radius (A˚ ) ΔGL (eV) P5+ 0.17 0.534 As5+ 0.335 0.491 Sb5+ 0.510 0.555 Bi5+ >0.510 1.956",
+   "rotated_deg": 0,
+   "bbox": [
+    48.1,
+    634.5,
+    299.4,
+    725.6
+   ],
+   "w": 1048,
+   "h": 381,
+   "dpi": 300,
+   "src": "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "blank": 0.621
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The Wyckoff sites of unmixed Li-argyrodite bulk and corresponding",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    82.5,
+    531.6,
+    269.7
+   ],
+   "w": 1937,
+   "h": 781,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Adsorption sites of each adsorbate involved in H2S generation reaction. To",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    82.5,
+    531.6,
+    430.8
+   ],
+   "w": 1937,
+   "h": 1452,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 11,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Ionic radius, doping energy (Ed), and electron conﬁguration of each dopant",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    82.5,
+    531.6,
+    450.6
+   ],
+   "w": 1937,
+   "h": 1535,
+   "dpi": 300,
+   "src": "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf",
+   "blank": 0.918
+  }
+ ]
+}

@@ -1,0 +1,797 @@
+{
+  "source_csv": "db/properties/cei_figs/cei_x_scan_panels.csv",
+  "dopant": "Nd",
+  "n_conditions": 48,
+  "takes_P_fraction": 0.6875,
+  "endpoint_excluded": [
+    "comp1@4.0V/LiMnO2",
+    "comp1@4.3V/LiCoO2",
+    "comp1@4.3V/LiMnO2",
+    "comp1@4.5V/LiCoO2",
+    "comp1@4.5V/LiMnO2",
+    "comp1@4.5V/NMC811",
+    "modelc@4.5V/LiMnO2"
+  ],
+  "rows": [
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.09479
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.09479
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.0704
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.06545
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.09662
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.0738
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.0704
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.06626
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "LiNd(PO3)4",
+          "channel": "phosphate",
+          "n_dopant": 0.0995
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.04651
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.04382
+        }
+      ],
+      "channels": [
+        "sulfate"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "LiNd(PO3)4",
+          "channel": "phosphate",
+          "n_dopant": 0.0619
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "NdP5O14",
+          "channel": "phosphate",
+          "n_dopant": 0.1481
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.1379
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.05382
+        }
+      ],
+      "channels": [
+        "sulfate"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.06264
+        }
+      ],
+      "channels": [
+        "sulfate"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "NdP5O14",
+          "channel": "phosphate",
+          "n_dopant": 0.1481
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.1379
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.06936
+        }
+      ],
+      "channels": [
+        "sulfate"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.013576
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "channel": "phosphate",
+          "n_dopant": 0.06227
+        }
+      ],
+      "channels": [
+        "phosphate",
+        "sulfate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "NdP5O14",
+          "channel": "phosphate",
+          "n_dopant": 0.1481
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.1379
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "Nd(PO3)3",
+          "channel": "phosphate",
+          "n_dopant": 0.07742
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "Nd(PO3)3",
+          "channel": "phosphate",
+          "n_dopant": 0.1319
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.06329
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.06329
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.05069
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.04789
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.0641
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.05319
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.0514
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "channel": "phosphate",
+          "n_dopant": 0.0483
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "LiNd(PO3)4",
+          "channel": "phosphate",
+          "n_dopant": 0.06536
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.03738
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.04878
+        }
+      ],
+      "channels": [
+        "sulfate"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "phases": [
+        {
+          "formula": "LiNd(PO3)4",
+          "channel": "phosphate",
+          "n_dopant": 0.04973
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "NdP5O14",
+          "channel": "phosphate",
+          "n_dopant": 0.08333
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.08
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.05084
+        }
+      ],
+      "channels": [
+        "sulfate"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "channel": "sulfate",
+          "n_dopant": 0.05084
+        }
+      ],
+      "channels": [
+        "sulfate"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "NdP5O14",
+          "channel": "phosphate",
+          "n_dopant": 0.08333
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.08
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "Nd(PO3)3",
+          "channel": "phosphate",
+          "n_dopant": 0.05505
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "phases": [
+        {
+          "formula": "Nd(PO3)3",
+          "channel": "phosphate",
+          "n_dopant": 0.07792
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "NdP5O14",
+          "channel": "phosphate",
+          "n_dopant": 0.08333
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "NdCl3",
+          "channel": "chloride",
+          "n_dopant": 0.08
+        }
+      ],
+      "channels": [
+        "chloride"
+      ],
+      "takes_P": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "Nd(PO3)3",
+          "channel": "phosphate",
+          "n_dopant": 0.07792
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "phases": [
+        {
+          "formula": "NdP5O14",
+          "channel": "phosphate",
+          "n_dopant": 0.01871
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "channel": "phosphate",
+          "n_dopant": 0.06043
+        }
+      ],
+      "channels": [
+        "phosphate"
+      ],
+      "takes_P": true
+    }
+  ],
+  "⛔": "최소 꺾임 하나만. 도펀트가 인산염으로 안 가는 조건에서는 교환에너지(cei_tm_exchange)가 적용되지 않는다 — 그 레코드의 chemsys 에는 Cl·S 가 없어 이 채널들을 볼 수 없었다."
+}

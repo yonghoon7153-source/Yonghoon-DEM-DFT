@@ -1,0 +1,63 @@
+# 출처: 사용자 붙여넣기 2026-10-28 (gabia root@kserver116-27 · 읽기만 · kb/papers/ndo_lpscl16_methods_2026_10_28.md '확인할 것 1' 블록 세 줄)
+# 둘째 줄 grep (nspin|hubbard|tot_magnetization in /data/work/runs/cei_gap/*/0*.in) 출력 = 없음 → 곧바로 폴더 수 '10'
+# 대조 (이 세션 · 10-28): 같은 grep 을 생성기 출력 db/inputs/cei_product_gap_2026_10_27/work/NiP2O6_mp-aaaabchz/0*.in 에 걸면
+#   'nspin = 2' ×4 · 'tot_magnetization = 8' ×1 · 'HUBBARD (ortho-atomic)' ×4 가 찍힌다 (양성 대조) · P2O5 는 0 줄 (음성 대조)
+# 09-19 폴더 파일 이름 = 01_vcrelax.* (db/properties/gabia_gpu_parallel_qe_2026_09_17.json '실측 로그' 줄) → 0*.in 글롭이 파일을 잡았다
+align_report_in_base.json
+align_report_in.json
+align_report_out_base.json
+align_report_out.json
+bfgs_trace.json
+ep_final
+ep_initial
+final.xyz
+initial.xyz
+li3nd.axsf
+li3nd.crd
+li3nd.dat
+li3nd.int
+li3nd.path
+li3nd.xyz
+meta.json
+neb.dat
+neb.in
+neb.out
+neb.out.noCI
+== /data/work/runs/sei_neb_v2_ccpath/li3nd/neb.in
+K_POINTS automatic
+  3 3 3 0 0 0
+ATOMIC_SPECIES
+  Li     6.940  li_pbe_v1.4.uspp.F.UPF
+  Nd   144.242  Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF
+
+== /data/work/runs/sei_neb_v2_ccpath/li3nd/pw_1.in
+K_POINTS automatic
+  3 3 3 0 0 0
+ATOMIC_SPECIES
+  Li     6.940  li_pbe_v1.4.uspp.F.UPF
+  Nd   144.242  Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF
+ATOMIC_POSITIONS angstrom
+== /data/work/runs/sei_neb_v2_ccpath/li3nd/pw_2.in
+K_POINTS automatic
+  3 3 3 0 0 0
+ATOMIC_SPECIES
+  Li     6.940  li_pbe_v1.4.uspp.F.UPF
+  Nd   144.242  Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF
+ATOMIC_POSITIONS angstrom
+     Program NEB v.7.4.1 starts on 13Aug2026 at 16:42: 3
+10
+/data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in:ATOMIC_SPECIES
+/data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in-  Li     6.940  li_pbe_v1.4.uspp.F.UPF
+/data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in-  O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
+/data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in-  P     30.974  P.pbe-n-rrkjus_psl.1.0.0.UPF
+/data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in-
+/data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in-CELL_PARAMETERS angstrom
+/data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in-   4.899171380   0.000000000   0.000000000
+--
+/data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in:ATOMIC_SPECIES
+/data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in-  Cl    35.450  cl_pbe_v1.4.uspp.F.UPF
+/data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in-  Li     6.940  li_pbe_v1.4.uspp.F.UPF
+/data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in-
+/data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in-CELL_PARAMETERS angstrom
+/data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in-   5.149094314   0.000000000   0.000000000
+/data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in-  -0.000000000   5.149094314   0.000000000

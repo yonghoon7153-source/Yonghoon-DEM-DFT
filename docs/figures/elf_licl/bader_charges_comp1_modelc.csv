@@ -1,0 +1,9 @@
+system,element,bader_charge_e,std_e,formal_charge,character
+comp1_LPSCl,Li,0.877,0.01,+1,"ionic (~+1, e 거의 다 줌)"
+comp1_LPSCl,P,4.686,0.358,+5,"covalent (<+5, PS4 공유)"
+comp1_LPSCl,S,-1.807,0.186,-2,"covalent (>-2, PS4 공유)"
+comp1_LPSCl,Cl,-0.914,0.004,-1,ionic (~-1)
+modelc_LPSCl1.6,Li,0.883,0.009,+1,ionic
+modelc_LPSCl1.6,P,4.34,0.525,+5,covalent
+modelc_LPSCl1.6,S,-1.736,0.271,-2,covalent
+modelc_LPSCl1.6,Cl,-0.918,0.004,-1,ionic

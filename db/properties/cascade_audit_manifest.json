@@ -1,0 +1,845 @@
+{
+ "property": "cascade_audit_manifest",
+ "schema_version": 2,
+ "artifact_id": "cascade-audit-2026-08-14",
+ "owner": "tools/cascade/build_cascade_audit_manifest.py",
+ "owner_note": "이 파일의 writer 는 위 도구 **하나뿐**이다. plot_cascade_audit_2026_08.py 와 rebuild_pool_inputs.py 는 sidecar 만 쓴다 (Codex Round-3 P0-1).",
+ "status": "audit_current__leaderboard_unavailable",
+ "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+ "source_commit_note": "패널 고정 커밋. **artifact 마다 자기 source_commit 이 있고 그쪽이 우선한다** — ranked_v2 는 Na₂S 정정 이후 산출물이다.",
+ "source_of_truth": "docs/reviews/cascade_dftweb_source_of_truth_2026_08_14.md",
+ "approval_status_vocabulary": [
+  "historical",
+  "recovered_unvalidated",
+  "approved",
+  "superseded",
+  "invalid",
+  "audit_current"
+ ],
+ "use_scope_vocabulary": [
+  "default_visible",
+  "archive_only",
+  "diagnostic_only",
+  "blocked"
+ ],
+ "headline": {
+  "planned_slots": 273,
+  "completed_slots": 270,
+  "completed_species": 90,
+  "historical_snapshot_species": 47,
+  "approved_current_leaderboard_species": 0,
+  "explicit_pair_property_labels": 0
+ },
+ "headline_basis": "273 = master_batch_273.sh 의 **91종 계획 입력 로스터** × 3 라벨. ⛔ 91종은 PLANNED INPUT ROSTER 이지 shortlist 가 아니다. 270 = enabled-workflow 완주 슬롯(As₂S₃ 3건 seed 실패). completed_species 는 ESW 회수분에서 센다. approved = 0 은 판정이다 — 결측이 아니라 점수·게이트 타당성이 미해결.",
+ "actual_x": 0.25,
+ "actual_x_note": "라벨 x002/x005/x010 은 1×1×1 · 4 f.u. 셀의 정수 치환 때문에 셋 다 실측 x=0.25 다. 농도 스윕도 반복실험도 아니다.",
+ "host": {
+  "formula_hint": "Li₆PS₅Cl 계열 (Cl:P = 1.0)",
+  "evidence": "ESW 반응식 좌변 Li22P4(S5Cl)4 계열",
+  "not": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 가 아니다"
+ },
+ "datasets": {
+  "historical_47": {
+   "approval_status": "historical",
+   "use_scope": "archive_only",
+   "species_count": 47,
+   "slot_count": 141,
+   "actual_x": 0.25,
+   "pool_id": "cascade-v23-o37-f10-2026-06",
+   "phase_set_id": null,
+   "phase_set_assumption": "mp-gga-gga-u__lis4-included (가정 — 행 단위 기록 없음)",
+   "limitations": [
+    "historical campaign snapshot",
+    "pool-relative ranks",
+    "not current campaign coverage"
+   ]
+  },
+  "recovered_90_gp": {
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "species_count": 90,
+   "actual_x": 0.25,
+   "pool_id": "cascade-v23-completed-90-2026-07",
+   "phase_set_id": null,
+   "phase_set_assumption": "mp-gga-gga-u__lis4-included (가정 — 행 단위 기록 없음)",
+   "overlap_with_historical": 141,
+   "overlap_oxidation_drift_count": 0,
+   "limitations": [
+    "not fully re-ranked or re-gated",
+    "G3 phase-set identity absent",
+    "G4 must be rebuilt with canonical softBV"
+   ]
+  },
+  "current_approved_leaderboard": {
+   "approval_status": "approved",
+   "use_scope": "blocked",
+   "species_count": 0,
+   "limitations": [
+    "존재하지 않는다 — 승인된 current ranking 은 0종이다"
+   ]
+  }
+ },
+ "metric_contract": {
+  "G3": {
+   "display_name": "MP phase-set onset",
+   "historical_host_onset_V": 2.14,
+   "alternate_host_onset_V": 2.256,
+   "rule": "compare candidate and host within the same phase_set_id",
+   "record_present_species": 90,
+   "phase_set_comparable_pairs": "270/270",
+   "operational_factorial_coverage": "17/17 chain rows",
+   "element_level_causal_attribution": "not_claimed",
+   "structural_realization_validated": "0/11",
+   "matched_transform": {
+    "exact": 10,
+    "multi_transform": 7,
+    "multi_transform_species": [
+     "B2O3",
+     "MoO3",
+     "WO3"
+    ]
+   },
+   "record_vs_comparable": "'기록이 있다' ≠ '같은 방법으로 비교했다' ≠ '효과를 귀속할 수 있다'. phase_set_id 기록 + 같은 실행 host 로 두 번째 층은 닫혔다. 세 번째 층은 열려 있다 — chain generator 17행 중 10행만 plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이고, 7행(B2O3·MoO3·WO3)은 치환 자리와 Li/P 화학량론까지 다르다. plain 도 host 대비 여러 원자가 함께 바뀌므로 'dopant effect' 가 아니라 'recipe-level host contrast' 다.",
+   "lis4_exposure": {
+    "onset_reactions_containing_LiS4": 124,
+    "of_records": 270
+   }
+  },
+  "G4": {
+   "display_name": "legacy BVS + 4A foreign-center composite",
+   "blocking_definition": "fraction of Li within 4 A of atoms outside {Li,P,S,Cl}",
+   "historical_rule": "blocking<0.60 ? 0.10+0.90*minmax(BVS) : 0.05",
+   "circularity": "blocking 컷 탈락자는 BVS 값이 버려지고 norm 이 0.05 로 강제된다. 컷 0.30 보다 낮으므로 blocking 탈락 = G4 탈락이 결정론적으로 따라온다. 두 독립 신호의 AND 로 읽으면 안 된다.",
+   "pool_relative": "min-max 정규화라 같은 종의 점수가 로스터에 따라 움직인다 — B2O3 blocking-free 는 historical 47 풀에서 0.1000, recovered 88 풀에서 0.1998 이다 (둘 다 fail).",
+   "not_equivalent_to": [
+    "canonical BVSE",
+    "migration barrier",
+    "diffusivity",
+    "conductivity"
+   ]
+  },
+  "G5": {
+   "display_name": "UMA relaxed-ion elastic screen",
+   "presence_vs_validity": "field presence 로 세면 88/1/1 이지만, 비물리 탄성(B_hill·G_hill ≤ 0) 을 거르면 all-label-valid 86 · partial AlBr3|MgI2|Na2S · dropped AlI3 · usable 89 다.",
+   "reciprocal_metric_warning": "열 이름은 pugh 지만 값은 G/B 다. B/G 는 행별로 뒤집은 뒤 통계를 내야 한다 — 1/mean(G/B) ≠ mean(B/G)."
+  }
+ },
+ "source_hashes": {
+  "db/properties/oxidation_stability_cascade_v2.json": {
+   "sha256": "9ef15dcb83de7f1cd08b4fca57ec3610eb6947cc7a4aca865d53c95c9388cca8",
+   "bytes": 134513,
+   "sha256_lf": "9ef15dcb83de7f1cd08b4fca57ec3610eb6947cc7a4aca865d53c95c9388cca8"
+  },
+  "db/properties/cascade_v23_all.csv": {
+   "sha256": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba",
+   "bytes": 1436260,
+   "sha256_lf": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba"
+  },
+  "db/properties/oxidation_stability_cascade.json": {
+   "sha256": "70b269c254f9001c1e7d070d7d884f4b5a5290483a07a4dffe6f65bd3ffbbba8",
+   "bytes": 71306,
+   "sha256_lf": "70b269c254f9001c1e7d070d7d884f4b5a5290483a07a4dffe6f65bd3ffbbba8"
+  }
+ },
+ "recovered_artifacts": {
+  "db/properties/cascade_v23_champions_v2.csv": {
+   "sha256": "15114e95ed90c62c51cc4917245f8abef3db827ebf7853b88cf36d5333b7852d",
+   "bytes": 57541,
+   "sha256_lf": "6bd18eaff5f92c9b0d33754064682a5f3591596584e29f083585dd6f63998c0c",
+   "rows": 270
+  },
+  "db/properties/cascade_v23_litransport_v2.csv": {
+   "sha256": "113b2466b8a4099bc829976ae0071eab7f52f5d64ea13950e6928789546aa2f9",
+   "bytes": 22903,
+   "sha256_lf": "7400735cb74b4492bc87713b9f38126f13a0c8170d1454a7e4cb9108a2e97fbc",
+   "rows": 270
+  },
+  "db/properties/oxidation_stability_cascade_v2.csv": {
+   "sha256": "2f351cdaedee8b1504efb56fcbb975ee1b5fe2ad35f049e9c2ed7dddde0f06e2",
+   "bytes": 4456,
+   "sha256_lf": "3086244e562e9704abb4622c953a29a94305fe5651990d58d8f632a20005fb1a",
+   "rows": 90
+  },
+  "db/properties/cascade_v23_ranked_v2.csv": {
+   "sha256": "1995ce8d95d746db61bbc23d5804acd0f0a9784851525d4b913cb042077344f9",
+   "bytes": 4828,
+   "sha256_lf": "024e12eb412d3e9c195e670925a125e31fb3fb77ded8f486c8c25d060ade7166",
+   "rows": 89
+  },
+  "_gate_completeness": {
+   "G1": {
+    "all_label_complete_species": "88",
+    "partial": "MgI2",
+    "dropped": "AlI3",
+    "approved_for_current_ranking": "0",
+    "method_status": "recovered_diagnostic",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G2": {
+    "all_label_complete_species": "90",
+    "partial": "",
+    "dropped": "",
+    "approved_for_current_ranking": "0",
+    "method_status": "recovered_unvalidated",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G3": {
+    "all_label_complete_species": "90",
+    "partial": "",
+    "dropped": "",
+    "approved_for_current_ranking": "0",
+    "method_status": "recovered_diagnostic",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G4": {
+    "all_label_complete_species": "88",
+    "partial": "",
+    "dropped": "AlI3|MgI2",
+    "approved_for_current_ranking": "0",
+    "method_status": "historical_only",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G5": {
+    "all_label_complete_species": "88",
+    "partial": "MgI2",
+    "dropped": "AlI3",
+    "approved_for_current_ranking": "0",
+    "method_status": "recovered_diagnostic",
+    "completeness_basis": "field_presence (validity-aware columns alongside)",
+    "validity_aware_all_label_species": "86"
+   }
+  },
+  "_ingestion_audit": {
+   "n_esw": 90,
+   "n_evaluable": 89,
+   "n_complete": 88,
+   "dropped": {
+    "AlI3": "gate 입력 전면 결측 — champion 0/3 · litransport 0/3. ESW 만 있고 평가 불가"
+   },
+   "partial": {
+    "MgI2": "부분 결측 — champion 2/3 · litransport 2/3. 남은 라벨 평균으로 평가됨"
+   }
+  },
+  "_note": "행이 있다 ≠ 비교 가능하다. G3 는 record-complete 90 인데 phase-set comparable 270/270 이지만 효과 귀속은 0/17 이다 (chain generator 17행 중 exact 대응 10 · multi-transform 7)."
+ },
+ "render_provenance": {
+  "figure_font": "Liberation Sans (Arial metric-compatible)",
+  "note": "옛 판은 C:/Windows/Fonts/arial.ttf 하나에 묶여 있어 Linux 에서 도구가 아예 안 돌았다. 지금은 Arial → Liberation Sans(메트릭 호환) → DejaVu Sans 폴백이다. 폰트가 다르면 PNG 해시가 달라지므로 재생성 시 원장을 같이 갱신해야 한다."
+ },
+ "artifacts": [
+  {
+   "artifact_id": "cascade-v23-cascade_v23_all",
+   "source_path": "db/properties/cascade_v23_all.csv",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "완주 원자료 (unified_dataset_273.csv 회수분)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "UMA 상대값",
+    "일부 열은 재계산 세대가 섞여 있을 수 있음"
+   ],
+   "sha256": "10d4882d772b28d4b5ac11c728e32dd819a8831aa368d90753a1980fda3a09ac",
+   "bytes": 1755334,
+   "sha256_lf": "73f0a25e1d934db04de674b102cef1385e76f86bfe37a6b845f6befa07057b73",
+   "rows": 3615
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_champions_v2",
+   "source_path": "db/properties/cascade_v23_champions_v2.csv",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "champion 270행 (rank_combined==1)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "champion 재선정 안 함",
+    "Na2S_x100 은 B_hill 음수 — 탄성 계산 실패 행 (소비자가 걸러야 한다)"
+   ],
+   "sha256": "15114e95ed90c62c51cc4917245f8abef3db827ebf7853b88cf36d5333b7852d",
+   "bytes": 57541,
+   "sha256_lf": "6bd18eaff5f92c9b0d33754064682a5f3591596584e29f083585dd6f63998c0c",
+   "rows": 270
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_litransport_v2",
+   "source_path": "db/properties/cascade_v23_litransport_v2.csv",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "G4 정적 프록시 270행",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "legacy Adams-2003 BVS — 정본 softBV 아님",
+    "blocking 은 4 Å foreign-center count",
+    "min–max 정규화라 풀 상대값"
+   ],
+   "sha256": "113b2466b8a4099bc829976ae0071eab7f52f5d64ea13950e6928789546aa2f9",
+   "bytes": 22903,
+   "sha256_lf": "7400735cb74b4492bc87713b9f38126f13a0c8170d1454a7e4cb9108a2e97fbc",
+   "rows": 270
+  },
+  {
+   "artifact_id": "cascade-v23-oxidation_stability_cascade_v2",
+   "source_path": "db/properties/oxidation_stability_cascade_v2.csv",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "grand-potential ESW 90종 — **record-complete 90 · phase-set comparable 270/270 · 효과 귀속 0/17**",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "phase_set_id·mp-ID·MP 스냅샷 미기록 — 재현 불가",
+    "host onset 2.140 V 는 phase set 의존 (LiS4 제외 시 2.256 V)",
+    "270 회수 반응 중 124건에 LiS4 가 들어 있다"
+   ],
+   "sha256": "2f351cdaedee8b1504efb56fcbb975ee1b5fe2ad35f049e9c2ed7dddde0f06e2",
+   "bytes": 4456,
+   "sha256_lf": "3086244e562e9704abb4622c953a29a94305fe5651990d58d8f632a20005fb1a",
+   "rows": 90
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_ranked_v2",
+   "source_path": "db/properties/cascade_v23_ranked_v2.csv",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "합성점수 랭킹 89종 (AlI3 제외) — acquisition 전용",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "922332c0",
+   "limitations": [
+    "G4 순환 (blocking 이 BVS 를 덮어씀)",
+    "G5 median 컷은 로스터 상대",
+    "가중치 수작업",
+    "min-max 정규화라 풀이 바뀌면 값이 바뀜"
+   ],
+   "sha256": "1995ce8d95d746db61bbc23d5804acd0f0a9784851525d4b913cb042077344f9",
+   "bytes": 4828,
+   "sha256_lf": "024e12eb412d3e9c195e670925a125e31fb3fb77ded8f486c8c25d060ade7166",
+   "rows": 89,
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "Na2S ductility retraction — Na2S_x100 has B_hill = -36.27 GPa (failed elastic calculation) and was averaged in, producing a false B/G = 2.50. plot_cascade_insights.py now drops non-positive Hill moduli; Na2S is B/G 1.22. Only unphysical row in 270. No audit panel reads this file."
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_all_20260629_47species",
+   "source_path": "db/properties/cascade_v23_all_20260629_47species.csv",
+   "approval_status": "historical",
+   "use_scope": "archive_only",
+   "description": "2026-06-29 취합 경계판 (47종)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "캠페인 커버리지 기준으로 superseded"
+   ],
+   "sha256": "15be321fb779e0629b96dda60bc2686ed9a8ee85c2fcdd7547c20f76253d04f8",
+   "bytes": 779245,
+   "sha256_lf": "dc651c4c1862009a89c4af8debae7b20d7657c51baa5d11cf5c53b2978419beb",
+   "rows": 2025
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_ranked",
+   "source_path": "db/properties/cascade_v23_ranked.csv",
+   "approval_status": "superseded",
+   "use_scope": "archive_only",
+   "description": "47종 랭킹 — 역사 스냅샷",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "결과로 인용 금지",
+    "90종 회수 이전 판"
+   ],
+   "sha256": "2f7eae91d8acc2acba99b1210f6962396aca548a7674a71d5c3f0867f1ad6c18",
+   "bytes": 2598,
+   "sha256_lf": "d352415afdd79fbd4d6b46d5e88db64787a4bf74c4debde411f56bbd9c44c7ae",
+   "rows": 47
+  },
+  {
+   "artifact_id": "cascade-v23-oxidation_stability_cascade_v3_pinned",
+   "source_path": "db/properties/oxidation_stability_cascade_v3_pinned.json",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "G3 v3 pinned — 후보·host 를 같은 실행·같은 entry set 에서 (phase_set_id 기록) + 조성족 감사",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "regenerated by esw_cascade_batch.py --annotate (2026-08-16) · window_V 재유도 2026-09-22 (8a0e202d3) · 82 행 안정창 없음 정정 2026-10-01",
+   "limitations": [
+    "후보 identity 포함 — 공개 금지, acquisition/diagnostic 전용",
+    "phase-set 비교는 270/270 닫힘 · **효과 귀속은 0/17 열림**",
+    "chain 17행 중 exact 대응 10 · multi-transform 7 (B2O3·MoO3·WO3 는 치환 자리까지 다름)",
+    "onset 초과율 9.63배·2.59배는 둘 다 사후 기술통계 — 인과 효과 아님",
+    "도펀트 없는 Cl-only host(Li23P4S19Cl5) 기준이 없어 Cl 분해 불가",
+    "window_V 는 2026-09-22 재유도본(ox − ocv · 356 행) · 나머지 82 행은 교환 0 구간이 없어 안정창 없음(window_V null · 2026-10-01 정정 — 09-22 의 '재유도 불가' 표시는 오해) · 옛 값은 legacy 필드"
+   ],
+   "sha256": "4f25a2059964965cd72bad41f7cf4c69ed7b2de6b1ca185ca668acc932cc5e7f",
+   "bytes": 2615904,
+   "sha256_lf": "4f25a2059964965cd72bad41f7cf4c69ed7b2de6b1ca185ca668acc932cc5e7f",
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "f9 재감사: composition_family_audit · matched_transform · dft_deep_composition_collision · 09-22 ESW 환원 가장자리 정정 (HZ-esw-reduction-limit-label) · D-2026-10-01-cascade-esw-no-stable-window"
+  },
+  {
+   "artifact_id": "cascade-v23-oxidation_matched_factorial",
+   "source_path": "db/properties/oxidation_matched_factorial.json",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "description": "matched 2x2 operational contrast — H_plain/H_Cl/D_plain/D_Cl 을 chemsys 마다 같은 pinned entry set 에서",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "c0c879ac",
+   "limitations": [
+    "조성 수준 operational contrast — **원소 수준 인과 아님**",
+    "baseline(undoped) contrast 0 ≠ Cl 효과 0. 조건부(D_Cl−D_plain)는 종마다 양·음·0",
+    "11종의 H 셀은 같은 두 조성 — 독립 표본 11개가 아니라 11개 확장 roster 반복",
+    "캐스케이드 B2O3·MoO3·WO3 의 plain 챔피언은 P_4b 자리라 여기 D_plain(Li_24g)과 다른 물건",
+    "캐스케이드 값과의 일치는 round-trip consistency 검사이지 독립 물리 검증 아님",
+    "onset 반응식은 tie 영향 가능 — 재실행 전까지 기전 근거로 쓰지 말 것",
+    "LiS4 포함/제외 phase-roster 민감도(2.140 vs 2.256)는 그대로 열려 있다",
+    "structural realization 0/11"
+   ],
+   "sha256": "073dc6aaf45ca464c1e8bbcf9f78cbca19c48a292a96da4bfbeac5bfafb7b5ed",
+   "bytes": 404979,
+   "sha256_lf": "073dc6aaf45ca464c1e8bbcf9f78cbca19c48a292a96da4bfbeac5bfafb7b5ed"
+  },
+  {
+   "artifact_id": "cascade-v23-oxidation_matched_factorial_nolis4",
+   "source_path": "db/properties/oxidation_matched_factorial_nolis4.json",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "matched 2x2 — **LiS4 제외 phase set**. contrast 가 roster 의존인지 보는 robustness 판",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "17d9a373",
+   "limitations": [
+    "⛔ **다른 phase set 이다** — 기본판과 절대 onset 을 섞지 말 것 (host 2.256 vs 2.140)",
+    "conditional contrast 가 크게 움직인다: WO3 +0.216→0.000 · Al2O3 +0.214→+0.098 · MoO3 +0.216→+0.129",
+    "B2O3 만 +0.283 불변 · Sc2O3 -0.017→-0.046",
+    "부호는 대체로 유지되나 크기는 안 버틴다 — 인용 시 roster 를 반드시 같이 적을 것",
+    "사다리 없음 (ladder_steps=0) — 사다리는 기본판에만 있다"
+   ],
+   "sha256": "3743cdfa47866b7649095696be992cdf97375494ea3e8d1a3d140ea8fa4fbffd",
+   "bytes": 381159,
+   "sha256_lf": "3743cdfa47866b7649095696be992cdf97375494ea3e8d1a3d140ea8fa4fbffd",
+   "derived_from": "db/properties/oxidation_matched_factorial.json",
+   "override_reason": "phase-roster robustness 1차 — 기전을 본문 결론으로 못 올리는 이유"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_label_scatter_audit",
+   "source_path": "db/properties/cascade_label_scatter_audit.json",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "세 농도 라벨의 실체 + 3점 집계가 게이트 축에 넣는 배치 잡음",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9afe33c3 → 재감사 정정본",
+   "limitations": [
+    "⛔ 2026-08-16 재감사로 **앞 판 수치 철회**: base 종이 아니라 raw dopant 로 묶어 81종만 봤다(정확히는 90종) · 조성 불일치 22 → **31** · 교차 칸 0 → **7**",
+    "'조성 동일 여부가 자리 종류로 완전히 결정된다' 는 **성립하지 않는다** (교차 7종)",
+    "G1 열이 screen_de_per_atom 이 아니라 rerank_de_post_anneal — 비 0.08 → **0.205**",
+    "G4 는 3점 평균이 아니라 **x005 한 점**을 임의 대표로 쓴다 (평균이 망친 게 아니다)",
+    "eos_B0_GPa 는 게이트 입력이 아니다 — 참고용",
+    "비는 경고선이지 통계 문턱이 아니다 (표본 3점 · 종내에 자리·조성·anneal 잡음이 섞임) — '살았다/죽었다' 판정 금지",
+    "흩어짐이 물리(자리 의존성)인지 수치(국소최소)인지 구별 못 한다"
+   ],
+   "sha256": "dd4c4c02ab6c40b7f5113cf78c3bb174a97053bedad76745c515b65f8b088324",
+   "bytes": 17301,
+   "sha256_lf": "dd4c4c02ab6c40b7f5113cf78c3bb174a97053bedad76745c515b65f8b088324"
+  },
+  {
+   "artifact_id": "cascade-v23-b2o3_esw",
+   "source_path": "db/properties/b2o3_esw.json",
+   "approval_status": "historical",
+   "use_scope": "archive_only",
+   "description": "legacy B2O3 ESW (DFT-deep 셀 Li58P8S41Cl16B2O3, onset 2.03 V)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "손으로 압축한 요약 (2026-06-29) — 생성기 없음 · 2026-09-22 머리 경고(⛔_window_V)만 추가 · 데이터 불변",
+   "limitations": [
+    "method_status **unverified** — phase_set_id·entry_ids·MP 버전 없음",
+    "캐스케이드 챔피언(Li17B2P4S16Cl5O3, 2.317 V)과 **다른 조성**이다",
+    "부호 반전은 관측됐지만 원인을 조성 하나로 확정할 수 없다 (Codex f9 P0-2)",
+    "도펀트 라벨(B2O3)만으로 validation join 금지"
+   ],
+   "sha256": "e5872d6f8a924011d40387db2d63968a26fa8b169baa11e1986d4bb5e285f3f4",
+   "bytes": 3793,
+   "sha256_lf": "e5872d6f8a924011d40387db2d63968a26fa8b169baa11e1986d4bb5e285f3f4"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_screening_funnel",
+   "source_path": "db/properties/cascade_screening_funnel.json",
+   "approval_status": "historical",
+   "use_scope": "archive_only",
+   "description": "47종 게이트 감사",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "G3 phase set 미기록",
+    "G4 순환",
+    "G5 로스터 상대",
+    "창은 옛 정의(ox − 마지막 환원 계단 · 계통적으로 넓다) — 2026-09-22 머리 경고만 추가 · 재생성 안 함 (역사 스냅샷)"
+   ],
+   "sha256": "3cafbfd5c4cf9e856fe1aee6350343a7e5ad241a2dea2ab676ba3d961dc3db9a",
+   "bytes": 86458,
+   "sha256_lf": "3cafbfd5c4cf9e856fe1aee6350343a7e5ad241a2dea2ab676ba3d961dc3db9a"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_screening_funnel_v2",
+   "source_path": "db/properties/cascade_screening_funnel_v2.json",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "89종 게이트 감사",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "regenerated by build_screening_funnel.py (2026-10-01 · ESW 정정 창)",
+   "limitations": [
+    "위와 동일 + 풀 상대 정규화 재계산됨",
+    "G2 = 정정 창(ox − ocv) — 교환 0 구간이 없는 21종은 안정창 없음(탈락) (2026-10-01)"
+   ],
+   "sha256": "89232eeac7170bf8772694295d1cea881d84d525a121ddd2960a442e689e034d",
+   "bytes": 117309,
+   "sha256_lf": "89232eeac7170bf8772694295d1cea881d84d525a121ddd2960a442e689e034d",
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "ESW 환원 가장자리 정정을 G2 에 적용 — D-2026-10-01-cascade-funnel-esw-corrected-window · D-2026-10-01-cascade-esw-no-stable-window (트랙 ESW · 사용자 = 1저자)"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_audit_g3_phase_set",
+   "source_path": "db/properties/cascade_audit_g3_phase_set.csv",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "G3 phase-set 감사 (종명 포함)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
+   "limitations": [
+    "공개 금지 — 후보 identity 는 acquisition 전용"
+   ],
+   "sha256": "f814af7c03cd6f4ec4bde05b45e60b034e56c008fb3a57614e5b981f30166a84",
+   "bytes": 1153,
+   "sha256_lf": "f814af7c03cd6f4ec4bde05b45e60b034e56c008fb3a57614e5b981f30166a84",
+   "rows": 4,
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "Round-3 P1: synthetic phase_set_id 제거 + phase_set_assumption 분리"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_audit_g4_rescore",
+   "source_path": "db/properties/cascade_audit_g4_rescore.csv",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "G4 재점수 감사 (종명 포함)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
+   "limitations": [
+    "공개 금지 — 후보 identity 는 acquisition 전용",
+    "min–max 정규화라 풀 상대값 (pool_id 열 참조)"
+   ],
+   "sha256": "9ddec5818a27fd4074c68453ff1c576cf49ac5f086f5518851eacd08b2f29a9a",
+   "bytes": 956,
+   "sha256_lf": "9ddec5818a27fd4074c68453ff1c576cf49ac5f086f5518851eacd08b2f29a9a",
+   "rows": 6,
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "Round-3 P1: pool_id·normalization_n·BVS min/max·actual_x 추가"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_seminar_g3_sensitivity_round3",
+   "source_path": "db/properties/cascade_seminar_g3_sensitivity_round3.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "description": "G3 host 민감도 — 공개판 (후보 phase_set_id 없음)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "codex round3 package (2026-08-14)",
+   "limitations": [
+    "Scenario A/B 는 host-only 민감도다. 후보 비교로 쓰면 안 된다"
+   ],
+   "sha256": "3c06553dfbb5db548f44b49d5d784588d38b8981d8ff82bdf8d13c04b7a97370",
+   "bytes": 487,
+   "sha256_lf": "3c06553dfbb5db548f44b49d5d784588d38b8981d8ff82bdf8d13c04b7a97370",
+   "rows": 2
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_seminar_g4_anonymized_round3",
+   "source_path": "db/properties/cascade_seminar_g4_anonymized_round3.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "description": "G4 분해 — 공개 익명판 (Case A–F)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "codex round3 package (2026-08-14)",
+   "limitations": [
+    "후보 identity 는 acquisition 전용이라 익명화됐다",
+    "historical 47종 정규화 · 실측 x=0.25 · 전도도가 아니다"
+   ],
+   "sha256": "062f4fd77cdc07b86ddd0ff4c0fc0ae309d8d189d64a1282aeb7a8ca22679525",
+   "bytes": 1283,
+   "sha256_lf": "062f4fd77cdc07b86ddd0ff4c0fc0ae309d8d189d64a1282aeb7a8ca22679525",
+   "rows": 6
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_seminar_gate_denominators_round3",
+   "source_path": "db/properties/cascade_seminar_gate_denominators_round3.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "description": "게이트 분모 계약 — record_present ≠ method_valid",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "codex round3 package (2026-08-14)",
+   "limitations": [
+    "G3 는 record 90 인데 method_valid 0 이다"
+   ],
+   "sha256": "d129b990ef3363299249c5c861ac40b3bc58246e004ed89bf1fe2f8f5571b9e7",
+   "bytes": 989,
+   "sha256_lf": "d129b990ef3363299249c5c861ac40b3bc58246e004ed89bf1fe2f8f5571b9e7",
+   "rows": 4
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_pool_audit_v2",
+   "source_path": "db/properties/cascade_pool_audit_v2.json",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "default_visible",
+   "description": "gate 입력 ingestion 감사 (행 존재만 본다)",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "limitations": [
+    "값의 물리성은 안 본다 — validity-aware 판정은 gate_completeness 표를 볼 것"
+   ],
+   "sha256": "34cae6e439e9a653a7e2b137092e7803aaee0542bbca4fcbf51bada231433f43",
+   "bytes": 1297,
+   "sha256_lf": "34cae6e439e9a653a7e2b137092e7803aaee0542bbca4fcbf51bada231433f43"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_audit_g3_phase_set-png",
+   "source_path": "docs/figures/cascade/cascade_audit_g3_phase_set.png",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "G3 phase-set (종명 포함) — 공개 금지, acquisition 전용",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "Round-3: 후보 identity 는 acquisition 전용. 공개판은 익명본.",
+   "limitations": [
+    "후보 이름이 그림에 그대로 있다"
+   ],
+   "sha256": "783b7ebb561aeb810bf7d9df50b74f7b03bde09583ce6a822a9ffd308b9070e5",
+   "bytes": 47934,
+   "sha256_lf": "e475f2faa498e9aaa4a0794a44f239cb2bb1fac7c91bfdcd164267215e51b581"
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_audit_g4_rescore-png",
+   "source_path": "docs/figures/cascade/cascade_audit_g4_rescore.png",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "G4 재점수 (종명 포함) — 공개 금지, acquisition 전용",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "Round-3: 후보 identity 는 acquisition 전용. 공개판은 익명본.",
+   "limitations": [
+    "후보 이름이 그림에 그대로 있다"
+   ],
+   "sha256": "bdda98cfe1662de09039bdf7b7ac00e565093f991e56d22e7ca502e13ed30119",
+   "bytes": 62354,
+   "sha256_lf": "a0e5d09405c363ef2bfb039f8f973c866e83d95b2e7dbe508e659d3a855e5405"
+  }
+ ],
+ "figures": [
+  {
+   "panel": "cascade_audit_campaign_status",
+   "title": "캠페인 현황",
+   "image": "docs/figures/cascade/cascade_audit_campaign_status.png",
+   "csv": "db/properties/cascade_audit_campaign_status.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "e0162410c9f4a80c8b6418aa6d346ad7bf01fd0d43933f768b64207a3663b04a",
+   "image_bytes": 56836,
+   "csv_sha256": "c7487cf341d14c02030f63c62beb35c67d3b7d0f6fa19ff8250eb80a180d5ccb",
+   "csv_sha256_lf": "c7487cf341d14c02030f63c62beb35c67d3b7d0f6fa19ff8250eb80a180d5ccb",
+   "csv_bytes": 245,
+   "csv_rows": 6
+  },
+  {
+   "panel": "cascade_seminar_g3_sensitivity_round3",
+   "title": "G3 host 민감도 (공개판 — 후보 phase_set_id 없음)",
+   "image": "docs/figures/cascade/cascade_seminar_g3_sensitivity_round3.png",
+   "csv": "db/properties/cascade_seminar_g3_sensitivity_round3.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "cb5cafdf76af3624f2475abb877d93ba452128d924daa6160abe1afcb416a05d",
+   "image_bytes": 102591,
+   "csv_sha256": "3c06553dfbb5db548f44b49d5d784588d38b8981d8ff82bdf8d13c04b7a97370",
+   "csv_sha256_lf": "3c06553dfbb5db548f44b49d5d784588d38b8981d8ff82bdf8d13c04b7a97370",
+   "csv_bytes": 487,
+   "csv_rows": 2
+  },
+  {
+   "panel": "cascade_seminar_g4_anonymized_round3",
+   "title": "G4 분해 (공개판 — 익명 Case A–F)",
+   "image": "docs/figures/cascade/cascade_seminar_g4_anonymized_round3.png",
+   "csv": "db/properties/cascade_seminar_g4_anonymized_round3.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "c3727a6b56dc77217c36bb68da2a3094cee476a41dd2880e65a1987395181783",
+   "image_bytes": 101417,
+   "csv_sha256": "062f4fd77cdc07b86ddd0ff4c0fc0ae309d8d189d64a1282aeb7a8ca22679525",
+   "csv_sha256_lf": "062f4fd77cdc07b86ddd0ff4c0fc0ae309d8d189d64a1282aeb7a8ca22679525",
+   "csv_bytes": 1283,
+   "csv_rows": 6
+  },
+  {
+   "panel": "cascade_audit_interface_axes",
+   "title": "계면 축 (47종 post-hoc)",
+   "image": "docs/figures/cascade/cascade_audit_interface_axes.png",
+   "csv": "db/properties/cascade_audit_interface_axes.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "20e34c1b2fc069383404d3239fc21047fab7b271933c4b6345682fd6540c54e8",
+   "image_bytes": 46165,
+   "csv_sha256": "5c6e9c71f42c2f178d4fb9c1ec9c51ee5fb0b37d407a5490027d0c3cec197eed",
+   "csv_sha256_lf": "5c6e9c71f42c2f178d4fb9c1ec9c51ee5fb0b37d407a5490027d0c3cec197eed",
+   "csv_bytes": 313,
+   "csv_rows": 4
+  },
+  {
+   "panel": "cascade_audit_ml_validation",
+   "title": "ML 검증 · acquisition",
+   "image": "docs/figures/cascade/cascade_audit_ml_validation.png",
+   "csv": "db/properties/cascade_audit_ml_validation.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "6a657a2a8dc2a8cc90c58f94471901b97664826278dcd414446616fe233228f6",
+   "image_bytes": 62420,
+   "csv_sha256": "901add0f85b06765c42e391f720fe87f4f75bb50d648c6ebb1671e9897acc6b8",
+   "csv_sha256_lf": "901add0f85b06765c42e391f720fe87f4f75bb50d648c6ebb1671e9897acc6b8",
+   "csv_bytes": 394,
+   "csv_rows": 5
+  }
+ ],
+ "supporting_tables": [
+  {
+   "path": "db/properties/cascade_seminar_gate_denominators_round3.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "sha256": "d129b990ef3363299249c5c861ac40b3bc58246e004ed89bf1fe2f8f5571b9e7",
+   "bytes": 989,
+   "sha256_lf": "d129b990ef3363299249c5c861ac40b3bc58246e004ed89bf1fe2f8f5571b9e7",
+   "rows": 4
+  },
+  {
+   "path": "db/properties/cascade_audit_gate_completeness.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
+   "sha256": "28990ac20d090ac2afeb9d79acb4160bd347b1c057b6bf039e08926541d178c7",
+   "bytes": 2100,
+   "sha256_lf": "28990ac20d090ac2afeb9d79acb4160bd347b1c057b6bf039e08926541d178c7",
+   "rows": 5,
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "completeness_basis 열과 G5 validity-aware 열 추가. presence 로 세면 88/1/1 이지만 비물리 탄성(B_hill·G_hill ≤ 0)을 거르면 86 / AlBr3·MgI2·Na2S / AlI3 / usable 89 다. 기존 presence 수치는 그대로 두고 옆에 병기했다."
+  }
+ ]
+}

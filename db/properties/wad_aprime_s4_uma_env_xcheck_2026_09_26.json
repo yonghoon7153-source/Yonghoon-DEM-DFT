@@ -1,0 +1,123 @@
+{
+ "schema": "wad_aprime_uma_env_xcheck/v1",
+ "date": "2026-09-26",
+ "track": "W_ad (사용자 1저자)",
+ "what": "S4 UMA 단일점 에너지를 kgy(fairchem 2.21.0)에서 냈다 — S1 결박은 gabia fairchem 2.19.0. 같은 체크포인트(uma-s-1p1 sha256 07068e9c76702ca1… · default · omat · 3축 pbc)에서 두 버전이 같은 값을 주는지 S2 relaxed.extxyz 4 개로 대조했다.",
+ "결박(S1)": {
+  "checkpoint_sha256_prefix": "07068e9c76702ca1",
+  "fairchem.core": "2.19.0",
+  "torch": "2.8.0+cu128",
+  "inference": "default",
+  "task": "omat",
+  "machine": "gabia"
+ },
+ "실측_kgy": {
+  "checkpoint_sha256_prefix": "07068e9c76702ca1",
+  "fairchem.core": "2.21.0",
+  "inference": "default",
+  "task": "omat",
+  "device": "cuda (RTX 3090 · 공유)",
+  "tool": "tools/wad/relax_uma_d3.py --energies (24e76a15a)"
+ },
+ "교차대조_S2_relaxed(E_UMA = S2 opt.log 최종(UMA+D3) − 외부 D3(simple-dftd3 1.6.0 · 3축 pbc · 여기서 계산))": {
+  "top_fcc": {
+   "E_UMA_gabia_2.19.0_eV": -103.888163,
+   "E_D3_S2_relaxed_eV": -6.855431151764056,
+   "S2_final_eV": -110.743594
+  },
+  "top_hcp": {
+   "E_UMA_gabia_2.19.0_eV": -103.889244,
+   "E_D3_S2_relaxed_eV": -6.8554270763216065,
+   "S2_final_eV": -110.744671
+  },
+  "bridge": {
+   "E_UMA_gabia_2.19.0_eV": -103.888162,
+   "E_D3_S2_relaxed_eV": -6.8554311560174614,
+   "S2_final_eV": -110.743593
+  },
+  "hollow_fcc": {
+   "E_UMA_gabia_2.19.0_eV": -103.88922,
+   "E_D3_S2_relaxed_eV": -6.855424405091816,
+   "S2_final_eV": -110.744644
+  }
+ },
+ "kgy_2.21.0_S2_relaxed_E_UMA_eV": {
+  "V2_top_fcc": -103.88816,
+  "V2_top_hcp": -103.88924,
+  "V2_bridge": -103.88816,
+  "V2_hollow_fcc": -103.88921847752987
+ },
+ "Δ_meV": {
+  "V2_top_fcc": -0.003,
+  "V2_top_hcp": -0.005,
+  "V2_bridge": -0.005,
+  "V2_hollow_fcc": 0.002
+ },
+ "판정": "|Δ| ≤ 0.005 meV (기준값 반올림 0.01 meV 자리) → 이 체크포인트·구조에서 2.21.0 ≡ 2.19.0. S4 의 UMA 에너지(kgy · 2.21.0)를 결박값과 **등가**로 쓴다. 결박 편차는 기록한다 — 조용히 넘기지 않는다.",
+ "S4_UMA_에너지(kgy · stage2 끝점 · eV)": {
+  "V2_top_fcc": {
+   "bound": -103.88800575822731,
+   "far": -104.00626382910852
+  },
+  "V2_top_hcp": {
+   "bound": -103.88909820644503,
+   "far": -104.0066650366537
+  },
+  "V2_bridge": {
+   "bound": -103.8880066912188,
+   "far": -104.0062661827916
+  },
+  "V2_hollow_fcc": {
+   "bound": -103.88907280363128,
+   "far": -104.00664873050698
+  }
+ },
+ "외부_D3_stage2_끝점(정보 · 개정 1 잔차 보고용 · simple-dftd3 1.6.0 · 60 Bohr · PBE-BJ 2체)": {
+  "top_fcc": {
+   "bound_eV": -6.8555470351938075,
+   "far_eV": -6.199978258641545,
+   "dD3_ext_eV": 0.6555687765522622,
+   "dD3_ext_J_m2": 0.48794556078176393
+  },
+  "top_hcp": {
+   "bound_eV": -6.855546421900214,
+   "far_eV": -6.199992306509639,
+   "dD3_ext_eV": 0.6555541153905748,
+   "dD3_ext_J_m2": 0.4879346483511889
+  },
+  "bridge": {
+   "bound_eV": -6.855546873886288,
+   "far_eV": -6.199978333197997,
+   "dD3_ext_eV": 0.6555685406882912,
+   "dD3_ext_J_m2": 0.4879453852261521
+  },
+  "hollow_fcc": {
+   "bound_eV": -6.855543541209284,
+   "far_eV": -6.200000506036418,
+   "dD3_ext_eV": 0.6555430351728662,
+   "dD3_ext_J_m2": 0.4879264012484641
+  }
+ },
+ "미리_본_것(판정 아님)": {
+  "W_UMA_only_J_m2": {
+   "top_fcc": -0.088,
+   "top_hcp": -0.0875,
+   "bridge": -0.088,
+   "hollow_fcc": -0.0875
+  },
+  "W_UMA_plus_extD3_J_m2": {
+   "top_fcc": 0.3999,
+   "top_hcp": 0.4004,
+   "bridge": 0.3999,
+   "hollow_fcc": 0.4004
+  },
+  "읽기": "UMA(omat) 단독은 그래핀/Ag 를 안 붙인다(−0.088) · D3 항이 +0.488 을 준다 → UMA+D3 ≈ 0.40. 정본 UMA+D3 W 는 개정 1 대로 QE D3 항으로 낸다 (외부 D3 는 잔차 정보)."
+ },
+ "raw": {
+  "kgy": [
+   "~/incoming/uma_energies_v2_stage2_2026_09_26.json",
+   "~/incoming/uma_energies_s2_relaxed_xcheck_2026_09_26.json"
+  ],
+  "repo_예정": "db/raw/wad_aprime_s4_v2s2_2026_09_26/ (V100 원출력과 함께 커밋)"
+ }
+}

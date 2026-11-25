@@ -1,0 +1,32 @@
+  ✓ Al2O3 → Al³⁺ 0.535 Å · O not a host anion
+  ✓ Sb³⁺ / Sb⁵⁺ get their own radii
+  ✓ LiClO4 refused (no silent default)
+  ✓ Xx2O3 refused (no silent default)
+  ✓ FeO refused (no silent default)
+  ✓ additive model recovers planted anion effects exactly
+  ✓ planted signal found under leave-one-cation-out (Q² 1.00 · p 0.017)
+  ✓ pure noise not found (Q² -0.05 · p 0.43)
+  ✓ no leakage: noise in-sample R² 0.44 · held-out Q² -2.38
+  ✓ enrichment 4 for a perfect ranking · 0 reversed · direction honoured
+  ✓ Spearman averages ties
+  ✓ noise ratio ≈ 0.5 for SD 0.5 (0.52) · ≈ 0 for clean (0.012)
+  ✓ a label made of the anion family alone shows family R² ≈ 1
+  ✓ Li18Al2O3Cl4P4S17: host + Al2O3 → config + 3 Li2S
+  ✓ Li17Al2O3Cl5P4S16: + 4 Li2S − 1 LiCl
+  ✓ Li2O with O on an S site counts by O: host + Li2O → config + Li2S
+  ✓ LiCl (host elements only) counts by Li
+  ✓ x-label copies collapse to one configuration per slot (median · one odd copy does not move it)
+  ✓ duplicate names: v23 row kept, other family dropped
+  ✓ unbalanceable composition refused
+  ✓ dissolution energy arithmetic (5.200 eV per unit)
+  ✓ analyse() writes JSON + CSVs with and without bands
+  ✓ a feature subset gives exactly those columns, in order
+  ✓ extra feature carries a hidden signal (Q² -0.04 → 1.00)
+  ✓ feature set refused (missing value)
+  ✓ feature set refused (13 > n/5 = 10)
+  ✓ feature set refused (unknown name)
+  ✓ composition probe ρ 1.00 (swap label) · 0.00 (random)
+  ✓ error rows refused (NCM811: MPRestError rows)
+  ✓ interface Δ vs host read for 91 precursors (LCO 4.00 V)
+  ✓ unknown cathode refused
+selftest: 31/31

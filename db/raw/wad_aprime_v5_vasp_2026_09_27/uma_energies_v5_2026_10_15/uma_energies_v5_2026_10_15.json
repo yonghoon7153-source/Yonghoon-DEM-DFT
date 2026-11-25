@@ -1,0 +1,190 @@
+{
+ "schema": "uma_energies/v1",
+ "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)",
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "vram_cap": {
+   "cap_MiB": 3000.0,
+   "device_total_MiB": 24154,
+   "fraction": 0.1242,
+   "⚠": "CUDA 컨텍스트(수백 MiB)는 이 상한 밖이다"
+  },
+  "fairchem.core": "2.21.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/home/kgy/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ]
+ },
+ "energies": {
+  "V5_li_outer_A_bound": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_li_outer_A_bound.extxyz",
+   "sha256": "def48d251c0d85b8cbfd0d7bba0ab51146cec46b3241534190b666d6af87081a",
+   "n_atoms": 176,
+   "formula": "Ag84Cl8Li40P8S36",
+   "E_UMA_eV": -585.5492900484443,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_li_outer_A_far": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_li_outer_A_far.extxyz",
+   "sha256": "ae1e45971d1d236411a8ff1fd5230649ab93614bf8019a7eacad1094d1fc6f24",
+   "n_atoms": 176,
+   "formula": "Ag84Cl8Li40P8S36",
+   "E_UMA_eV": -581.2559895186117,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_li_outer_B_bound": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_li_outer_B_bound.extxyz",
+   "sha256": "19be9edae8bc91948ea0b4724b1ceffe08c10659c77ac50db9958a4c469b9c8f",
+   "n_atoms": 176,
+   "formula": "Ag84Cl8Li40P8S36",
+   "E_UMA_eV": -585.4730149645416,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_li_outer_B_far": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_li_outer_B_far.extxyz",
+   "sha256": "727e44983e7557786e4afe29f7b28434bb2351f2f26bf541fdd6ae50121a87cb",
+   "n_atoms": 176,
+   "formula": "Ag84Cl8Li40P8S36",
+   "E_UMA_eV": -581.1378857968606,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_A_bound": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_A_bound.extxyz",
+   "sha256": "21f2d5a4f7eb746d054dd853708db0f3f0eb79238e20afcfc2554c819523a44e",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -679.062879285212,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_A_far": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_A_far.extxyz",
+   "sha256": "520bbfa9b2838f1001b898aec0ef03ed85facfdc13733846d4bc09f9bfd68a84",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -674.6167123909269,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_A_G3_c2_bound": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_A_G3_c2_bound.extxyz",
+   "sha256": "940f6b54443a2d3e3b4a2fb346eb1912d4da8d7caad3d19eea8e81df23f0de0e",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -679.0628765127431,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_A_G3_c2_far_i": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_A_G3_c2_far_i.extxyz",
+   "sha256": "4ebdc83001cb2bce00edb3ca16362af69927fdb40a41d7cc744efbd866c9e9ff",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -674.6167137851131,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_A_G3_c2_far_ii": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_A_G3_c2_far_ii.extxyz",
+   "sha256": "a4b34a65eafcb1e488127b4cb87c233b9919ce409009f86b76fbb05bef8f20eb",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -674.6167134405423,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_A_p05_bound": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_A_p05_bound.extxyz",
+   "sha256": "61c08e1497518f86f301ed0e0da9952ae99e0fe4188b0c408269ee0fed62f8d4",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -678.7449547907271,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_B_bound": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_B_bound.extxyz",
+   "sha256": "3e5ff11d0205fed36a092784dfa31e49dd76d7e5aad0e0aa9da0b7347c4e0f44",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -678.9341080939328,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V5_s_outer_B_far": {
+   "struct": "/home/kgy/work/runs/wad_v5_uma_2026_10_15/s/V5_s_outer_B_far.extxyz",
+   "sha256": "894263ea0330881705630f0dc30be519b9922d2ba4160e3b338cd6754aa6342a",
+   "n_atoms": 200,
+   "formula": "Ag84Cl8Li56P8S44",
+   "E_UMA_eV": -674.3889567397467,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  }
+ },
+ "gpu_guard": {
+  "vram_cap_MiB": 3000.0,
+  "gpu_kill_total_MiB": 23500,
+  "gpu_start_max_MiB": 13000,
+  "start_gate": {
+   "ok": true,
+   "last_MiB": 6333,
+   "waited_s": 0.1,
+   "reason": "합계 6333 ≤ 13000"
+  },
+  "watchdog": "on (합계 > 23500 MiB 면 이 프로세스만 종료 3)",
+  "peak": {
+   "max_reserved_MiB": 1776,
+   "max_allocated_MiB": 1191
+  },
+  "gpu_total_after_MiB": 8467
+ }
+}

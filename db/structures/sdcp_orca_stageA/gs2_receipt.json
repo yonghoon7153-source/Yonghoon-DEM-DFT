@@ -1,0 +1,21 @@
+{
+ "schema": "sdcp_stage_a_orca_receipt/v1",
+ "seed_tag": "dp6_gs2_neutral",
+ "returncode": 0,
+ "canonical_dir": "/data/work/runs/sdcp_stageA/gs2",
+ "canonical_inp_sha256": "cb8299245c19779857919c7cd9e9e7cc869bf06cae56be261df8d26ffbc70410",
+ "canonical_xyz_sha256": "122aa7af8000d2a51fb5378b80042d1419f7b228b71e16d22853752e3b361fb8",
+ "executed_inp_sha256": "5ed3a74bb24b7d8a125db80be836f1f14ec8b0637f354ceb3bdfe704496f6180",
+ "executed_inp_differs_only_by": "%pal nprocs 줄 1개 (병렬화). 정본은 손대지 않았다",
+ "start_xyz_sha256": "122aa7af8000d2a51fb5378b80042d1419f7b228b71e16d22853752e3b361fb8",
+ "final_xyz_sha256": "4b08ff060def89ecc3db24f89863cf34e1c642650d080960993373230341dcf8",
+ "out_sha256": "5912d2f1a57b0b1df77b2f8e2ae957bd094f4ff1d7c6f5adcbc74492aae65f14",
+ "orca_version": null,
+ "command": "/data/apps/orca-6.1.1/orca dp6_gs2_neutral_run.inp",
+ "builder_sha256": "071052c77d5726469a6946e9882a594945a1bb27455ef6fabd70975a71bcfeb8",
+ "repo_commit": "e80dd480295610e4d5051da741ff12057cea57a1",
+ "⛔_조건6": "이 결과로 Stage B 를 열지 않는다 — P0-2~5 수정 후 실제 Stage A 산출물로 재심사 (회신 R4)",
+ "⚠": "이 8개는 서로 다른 시작 conformer 이지 통계적으로 독립인 8개 반복측정이 아니다 (회신 R4)",
+ "orca_terminated_normally": true,
+ "relaxed": true
+}

@@ -1,0 +1,232 @@
+{
+ "schema": "raw_result/v1",
+ "date": "2026-09-25",
+ "what": "A′ 선행 배치 9 잡 (`db/inputs/wad_aprime_prep_2026_09_25`) — `se_sym_slab.py --aprime_prep` 출력 (V100 붙여넣기 · 전체는 V100 $RUN/aprime_prep_result.json + $STORE/runs 사본)",
+ "run": "V100 /home/ubuntu/runs/wad_aprime_prep_2026_09_25 · code_id 3fc5613d8 · 9/9 rc 0 · 벽시계 합 62 min (13번 53 min)",
+ "jobs_run": [
+  {
+   "dir": "08_ag_fcc_pbe_e52_k20",
+   "wall_s": 61,
+   "peak_total_MiB": 848
+  },
+  {
+   "dir": "08_ag_fcc_pbe_e70_k20",
+   "wall_s": 66,
+   "peak_total_MiB": 866
+  },
+  {
+   "dir": "08_ag_fcc_pbe_e70_k24",
+   "wall_s": 113,
+   "peak_total_MiB": 868
+  },
+  {
+   "dir": "09_ag_fcc_pbe_d3_e52_k20",
+   "wall_s": 85,
+   "peak_total_MiB": 848
+  },
+  {
+   "dir": "10_graphene_pbe_e52_k24",
+   "wall_s": 34,
+   "peak_total_MiB": 1102
+  },
+  {
+   "dir": "10_graphene_pbe_e70_k24",
+   "wall_s": 38,
+   "peak_total_MiB": 1214
+  },
+  {
+   "dir": "11_graphene_pbe_d3_e52_k24",
+   "wall_s": 33,
+   "peak_total_MiB": 1102
+  },
+  {
+   "dir": "12_cubic_relax_pbe_d3",
+   "wall_s": 103,
+   "peak_total_MiB": 10350
+  },
+  {
+   "dir": "13_epi_vcrelax_pbe_d3",
+   "wall_s": 3161,
+   "peak_total_MiB": 10372
+  }
+ ],
+ "result": {
+  "ag_fcc": {
+   "a_A_by_job": {
+    "08_ag_fcc_pbe_e52_k20": 4.14482,
+    "08_ag_fcc_pbe_e70_k20": 4.14517,
+    "08_ag_fcc_pbe_e70_k24": 4.14486
+   },
+   "a_PBE_A": 4.14482,
+   "a_exp_A_plan_table": 4.086,
+   "final_scf_stress_kbar": {
+    "08_ag_fcc_pbe_e52_k20": 0.11,
+    "08_ag_fcc_pbe_e70_k20": 0.02,
+    "08_ag_fcc_pbe_e70_k24": 0.03,
+    "09_ag_fcc_pbe_d3_e52_k20": 0.31
+   },
+   "da_D3_A": -0.07437,
+   "a_PBE_D3_A": 4.07045
+  },
+  "graphene": {
+   "a_A_by_job": {
+    "10_graphene_pbe_e52_k24": 2.46681,
+    "10_graphene_pbe_e70_k24": 2.46696
+   },
+   "a_PBE_A": 2.46681,
+   "a_exp_A_plan_table": 2.46,
+   "final_scf_stress_kbar": {
+    "10_graphene_pbe_e52_k24": 0.02,
+    "10_graphene_pbe_e70_k24": 0.03,
+    "11_graphene_pbe_d3_e52_k24": 0.01
+   },
+   "da_D3_A": -0.00077,
+   "a_PBE_D3_A": 2.46604
+  },
+  "strain": {
+   "P1_Ag111_2r3x7_on_SE1x2": {
+    "PBE": {
+     "a_A": 4.14482,
+     "cell_A": [
+      10.1527,
+      20.5158
+     ],
+     "eps_pct_x_y": [
+      -0.961,
+      -1.977
+     ]
+    },
+    "PBE+D3": {
+     "a_A": 4.07045,
+     "cell_A": [
+      9.9705,
+      20.1477
+     ],
+     "eps_pct_x_y": [
+      0.848,
+      -0.186
+     ]
+    },
+    "exp_plan_table": {
+     "a_A": 4.086,
+     "cell_A": [
+      10.0086,
+      20.2247
+     ],
+     "eps_pct_x_y": [
+      0.464,
+      -0.566
+     ]
+    }
+   },
+   "P2_graphene_4x7r3_on_SE1x3": {
+    "PBE": {
+     "a_A": 2.46681,
+     "cell_A": [
+      9.8672,
+      29.9085
+     ],
+     "eps_pct_x_y": [
+      1.904,
+      0.859
+     ]
+    },
+    "PBE+D3": {
+     "a_A": 2.46604,
+     "cell_A": [
+      9.8642,
+      29.8991
+     ],
+     "eps_pct_x_y": [
+      1.936,
+      0.89
+     ]
+    },
+    "exp_plan_table": {
+     "a_A": 2.46,
+     "cell_A": [
+      9.84,
+      29.8259
+     ],
+     "eps_pct_x_y": [
+      2.186,
+      1.138
+     ]
+    }
+   }
+  },
+  "label_stress": {
+   "sign": "GPa · 인장 + (QE 출력 kbar 의 부호를 뒤집고 /10) · p_GPa 는 압력 (압축 +)",
+   "axes": "x·y = 입방 [100]·[010] (면내) · z = [001] (슬랩 법선)",
+   "cubic_fixed_cell": {
+    "PBE": {
+     "xx": -1.298,
+     "yy": 0.654,
+     "zz": 0.661,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": -1.08,
+     "p_GPa": -0.006
+    },
+    "PBE+D3": {
+     "xx": 0.706,
+     "yy": 2.651,
+     "zz": 2.658,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": -1.109,
+     "p_GPa": -2.005
+    }
+   },
+   "epi_inplane_fixed": {
+    "PBE": {
+     "xx": -1.385,
+     "yy": 0.357,
+     "zz": 0.007,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": 0.015,
+     "p_GPa": 0.341
+    },
+    "PBE+D3": {
+     "xx": -0.209,
+     "yy": 1.08,
+     "zz": 0.006,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": 0.02,
+     "p_GPa": -0.292
+    },
+    "PBE+D3_c_vector_A": {
+     "c_A": 9.4024,
+     "tilt_deg": 3.561
+    }
+   }
+  },
+  "bulk_control": {
+   "12_cubic_relax_pbe_d3": {
+    "E_pbe_first_Ry": -1022.94625093,
+    "ref_Ry": -1022.94625093,
+    "diff_Ry": 0.0,
+    "ok": true
+   },
+   "13_epi_vcrelax_pbe_d3": {
+    "E_pbe_first_Ry": -1022.94625093,
+    "ref_Ry": -1022.94625093,
+    "diff_Ry": 0.0,
+    "ok": true
+   }
+  },
+  "flags": [],
+  "missing": {}
+ },
+ "읽기_결과_전_규칙_적용": {
+  "R_a0_conv": "Ag |a52−a70| 0.00035 · |a70k20−a70k24| 0.00031 ≤ 0.002 ✓ → a_PBE = 4.14482 (52 Ry/k20) · 그래핀 |a52−a70| 0.00015 ✓ → 2.46681",
+  "R_final_scf_stress": "전부 ≤ 0.31 kbar (문턱 0.5) ✓ — Pulay 깃발 없음",
+  "R_D3_shift": "Ag Δa_D3 = −0.0744 Å → a_PBE+D3 = 4.0705 (실험 4.086 · PBE 4.145 — D3 가 실험 아래로 내린다) · 그래핀 Δa_D3 = −0.0008 (무시할 크기)",
+  "R_strain_결정7": "P1 Ag(111) 2√3×7 on SE 1×2: PBE+D3 **+0.85 / −0.19 %** (PBE −0.96 / −1.98 · 실험 +0.46 / −0.57) · P2 graphene 4×7√3 on SE 1×3: PBE+D3 **+1.94 / +0.89 %** (PBE +1.90 / +0.86 · 실험 +2.19 / +1.14) · V2 graphene 2×2 on Ag(111) (√3×√3)R30° (a_Ag PBE+D3): Ag 셀 4.9853 Å vs 그래핀 4.9321 → 그래핀 **+1.08 %** (a_Ag PBE 면 +2.89 %). ⇒ **3 % 재개 규칙 미발동** (전부 |ε| < 3 %)",
+  "R_ctrl_bulk": "12·13 첫 SCF PBE 부분 = −1022.94625093 = 01·04 (차 0.0) ✓ — 설정 동일",
+  "R_label_stress": "cubic 고정 PBE+D3: xx +0.71 · yy +2.65 · zz +2.66 · yz −1.11 GPa · **p −2.01 GPa (인장 정수압)** / epi 면내 고정 PBE+D3: xx −0.21 · yy +1.08 · zz +0.01 · yz +0.02 · p −0.29 · c 9.4024 Å (10.0551 → −6.5 %) · tilt 3.56°"
+ },
+ "⚠_읽기_판정_아님": "PBE 에서는 지정 comp1 셀이 거의 무압(p −0.006)이지만 **PBE+D3 에서는 −2.0 GPa 인장 정수압** — D3 평형 부피가 더 작아서 지정 셀(PBE 평형)이 D3 아래서는 늘어난 상태다 (c 를 풀면 6.5 % 줄어든다). 헤드라인이 PBE+D3 라 이 잔류 응력이 SE 기판 라벨의 조건이다 (`reference-state-policy`: comp1 V0 는 안 바꾼다 · 라벨로 따라간다). 기판 참조 셀을 PBE+D3 평형으로 바꾸는 것은 **새 결정**이다 (1저자)."
+}

@@ -1,0 +1,1671 @@
+{
+ "slug": "park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-22",
+ "sources": [
+  "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic diagram of an electron-blocking cell used for tortuosity analysis, and (b) hypothetical chronoamperometric curve showing steady-state current (Iss), together with the equations for tortuosity estimation.",
+   "rotated_deg": 0,
+   "bbox": [
+    167.2,
+    92.4,
+    454.8,
+    587.6
+   ],
+   "w": 1199,
+   "h": 2064,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.796,
+   "auto_bbox": [
+    160.0,
+    92.4,
+    566.8,
+    587.6
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "전자 차단 셀 (SUS | Li | SE 층 | 복합 전극 | SE 층 | Li | SUS) 모식 + 가상 정전위 전류 곡선 · 식 넷 — ⚠ 그림 안 첫 식은 R_ion,total = I_ss/ΔE 로 인쇄 (본문 p.4 는 ΔE/I_ss · 그림이 거꾸로)",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Scanning electron micrographs of different shapes of aluminum oxide (Al2O3) powder. (a) Sphere, (b) plate, and (c) fiber.",
+   "rotated_deg": 0,
+   "bbox": [
+    164.6,
+    92.3,
+    429.7,
+    661.0
+   ],
+   "w": 1106,
+   "h": 2371,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.09,
+   "auto_bbox": [
+    160.1,
+    92.3,
+    566.9,
+    661.0
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "Al₂O₃ 세 모양 — (a) 구 (b) 판 (c) 섬유 (응집 · 미세 기공) — ⚠ 섬유는 눈금 막대로 µm 굵기 · 수–수십 µm 길이로 보인다 ↔ §3.1 카탈로그 '지름 2–6 nm · 길이 200–400 nm' [판독]",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Chronoamperometric curves at (a) low (εSE,1 = 0.32) and (b) high (εSE,2 = 0.72) volume fractions of solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    170.1,
+    176.9,
+    461.9,
+    700.1
+   ],
+   "w": 1217,
+   "h": 2181,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.917,
+   "auto_bbox": [
+    160.4,
+    176.9,
+    565.3,
+    700.1
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "정전위 (ΔE 100 mV) 전류–시간 — (a) ε_SE 0.32: I_ss 구 0.150 · 판 0.101 · 섬유 0.022 mA (0–120 s) (b) 0.72: 구 0.678 · 섬유 0.667 · 판 0.652 mA (0–60 s) [판독 · 래스터 화소]",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a,b) Tortuosities and (c,d) porosities of the composite electrodes containing different shapes of Al2O3 powders. (a,b) Low electrolyte volume fraction (εSE,1 = 0.32); (c,d) high electrolyte volume fraction (εSE,2 = 0.72).",
+   "rotated_deg": 0,
+   "bbox": [
+    157.5,
+    90.0,
+    553.1,
+    454.7
+   ],
+   "w": 1649,
+   "h": 1520,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.929,
+   "auto_bbox": [
+    157.5,
+    90.0,
+    566.9,
+    454.7
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "모양별 τ · 기공 상자그림 (109 MPa) — (a) τ @0.32 중앙 구 12.4 · 판 28.6 · 섬유 47.7 (b) τ @0.72 4.4 · ≈4.6 · 4.2 (c) 기공 @0.32 19.7 · 19.5 · 43.2 % (d) 기공 @0.72 ≈17.4 · ≈17.8 · 20.0 % [판독] — ⚠ 캡션 '(a,b) 0.32 · (c,d) 0.72' 는 패널 글자 ((a,c) 0.32 · (b,d) 0.72) 와 다르다",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Cross-sectional views of the composite electrodes containing (a) plate-shaped and (b) fibrous particles at low volume fraction of solid electrolyte (εSE,1 = 0.32). AM: active material. SE: solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    167.2,
+    95.4,
+    462.8,
+    544.5
+   ],
+   "w": 1233,
+   "h": 1872,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.122,
+   "auto_bbox": [
+    160.1,
+    95.4,
+    566.8,
+    544.5
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "단면 SEM @ε_SE 0.32 — (a) 판이 기판과 나란히 눕는다 · AM 사이 기공 (b) 섬유 응집 '미세 기공' + 긴 큰 기공",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Tortuosities of the composite electrodes containing fibrous Al2O3 as a function of volume fraction of solid electrolyte. The black symbols and red dotted line are the experimental results and fitted curve by Bruggeman equation, respectively. Blue dotted circle represents the experimental tortuosity values at low electrolyte volume fraction (or high Al2O3 volume fraction), showing significant deviation from Bruggeman relation.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.2,
+    423.3,
+    441.2,
+    702.8
+   ],
+   "w": 1159,
+   "h": 1166,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.843,
+   "auto_bbox": [
+    160.4,
+    423.5,
+    565.3,
+    702.8
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "섬유 전극 τ vs ε_SE (0.32–0.73) + 'τ = ε^−3.13' — ⚠ 그려진 점선은 ≈ε^−2.8 (전인자 1) 로 읽힌다 [판독] · 점: ε 0.32 41.7–49.7 · 0.35–0.40 20–24 · 0.43 12.1 · 0.46–0.48 6.3–7.8 · 0.60 5.3 · 0.72–0.73 4.0–4.2 [판독]",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Scanning electron micrographs of spherical Al2O3 powders with different average particle sizes. (a) 10 µm, (b) 70 µm, and (c) 100 µm. (d) Particle size analysis data.",
+   "rotated_deg": 0,
+   "bbox": [
+    164.0,
+    213.8,
+    523.5,
+    491.4
+   ],
+   "w": 1499,
+   "h": 1158,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.295,
+   "auto_bbox": [
+    160.0,
+    213.8,
+    566.5,
+    491.4
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "구 Al₂O₃ 세 크기 SEM (200 µm 눈금) + 부피 입도 — D_avg 12.60 · 72.08 · 107.6 µm (그림 안 인쇄)",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) Tortuosities, (b) porosities, and (c) Bruggeman coefficients of the composite electrodes containing spherical Al2O3 powders with different average particle sizes of 10 µm (S10), 70 µm (S70), and 100 µm (S100).",
+   "rotated_deg": 0,
+   "bbox": [
+    162.4,
+    94.1,
+    540.9,
+    446.0
+   ],
+   "w": 1578,
+   "h": 1467,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.948,
+   "auto_bbox": [
+    160.4,
+    94.1,
+    567.0,
+    446.0
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "크기별 (ε_SE 0.32 · 109 MPa) τ · 기공 · α — τ 중앙 12.2 · 14.1 · 14.9 · 기공 18.9 · 17.7 · ≈22 % · α 2.25 · 2.45 · 2.48 [판독]",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Variations in (a) tortuosity, (b) porosity, and (c) Bruggeman coefficient of the composite electrodes containing different shapes of Al2O3 powders with pressing pressure. The regions A and B in the figures represent variations for fibrous Al2O3 contacting electrode at low- and high-pressure regions, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    164.5,
+    148.9,
+    514.0,
+    482.3
+   ],
+   "w": 1457,
+   "h": 1390,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.872,
+   "auto_bbox": [
+    160.1,
+    148.9,
+    566.9,
+    482.3
+   ],
+   "recrop": "2026-11-22 litdb-curator: re-cut to the union of the embedded raster image rects (page.get_image_rects) + 6 pt on every side — the tool box spanned the text-column width (and its caption text ran on into the next body paragraph) with uneven white margins; content unchanged · caption field cleaned to the printed caption only · 300 dpi",
+   "note_ko": "압력 (44 · 109 · 327 · 545 · 655 MPa — 327 · 545 는 [판독]) 별 τ · 기공 · α (ε_SE 0.32 로 보인다 [카드 추론 · 109 MPa 점 = 그림 4 와 같음])",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 5,
+   "file": "fig_1a.png",
+   "caption": "Panel (a) of Figure 1 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    176.0,
+    98.4,
+    446.4,
+    305.3
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f1",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "셀 단면 모식 (구 그림은 그림일 뿐 — 계산 아님) · L_SE · A_SE 표시",
+   "w": 1127,
+   "h": 863,
+   "blank": 0.573,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 5,
+   "file": "fig_1b.png",
+   "caption": "Panel (b) of Figure 1 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    173.2,
+    305.4,
+    448.8,
+    581.6
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f1",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "I_ss 와 식 넷 (R_total · R_electrode = R_total − 2L_SE/(σ·A_SE) · σ_eff = L_electrode/(R·A_SE) · τ = (σ_electrolyte/σ_eff)·ε_SE) — 첫 식 I_ss/ΔE 는 인쇄 오류 (본문 ΔE/I_ss)",
+   "w": 1149,
+   "h": 1152,
+   "blank": 0.932,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 6,
+   "file": "fig_2a.png",
+   "caption": "Panel (a) of Figure 2 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    171.4,
+    98.3,
+    422.8,
+    279.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f2",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "구 Al₂O₃ (20 µm · 5 µm 눈금 · ≈2–15 µm 로 보인다 [판독]) — 모양 연구의 구 = S10 (8–12 µm 등급) 으로 보인다 [카드 추론]",
+   "w": 1048,
+   "h": 757,
+   "blank": 0.022,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 6,
+   "file": "fig_2b.png",
+   "caption": "Panel (b) of Figure 2 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    170.6,
+    279.8,
+    423.7,
+    468.1
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f2",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "판 Al₂O₃ (α 상 · 각진 판 · 수–10 µm [판독])",
+   "w": 1056,
+   "h": 786,
+   "blank": 0.02,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f2c",
+   "kind": "figure",
+   "label": "2c",
+   "page": 6,
+   "file": "fig_2c.png",
+   "caption": "Panel (c) of Figure 2 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    172.1,
+    468.8,
+    422.5,
+    655.0
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f2",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "섬유 Al₂O₃ — 응집 · 미세 기공 (인쇄 치수와 그림 척도 불일치 [판독])",
+   "w": 1044,
+   "h": 777,
+   "blank": 0.016,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 7,
+   "file": "fig_3a.png",
+   "caption": "Panel (a) of Figure 3 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    181.1,
+    182.9,
+    451.1,
+    428.3
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f3",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "ε_SE 0.32 — 정상 상태가 늦고 I_ss 가 작다 · 섬유 I_ss = 구의 ≈1/7 [판독]",
+   "w": 1126,
+   "h": 1023,
+   "blank": 0.911,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 7,
+   "file": "fig_3b.png",
+   "caption": "Panel (b) of Figure 3 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    176.1,
+    428.8,
+    455.9,
+    694.1
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f3",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "ε_SE 0.72 — 세 모양 I_ss 차 ≤ 4 % [판독]",
+   "w": 1167,
+   "h": 1107,
+   "blank": 0.908,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 8,
+   "file": "fig_4a.png",
+   "caption": "Panel (a) of Figure 4 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    163.5,
+    96.0,
+    354.47,
+    272.9
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f4",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel cut from the single 4-panel raster by its white gutters (raster columns 342-349 · rows 317-324 have no ink → split at raster x 346 · y 320.5 = 354.47 · 272.9 pt) — no neighbouring axis title / label leaks in · 300 dpi",
+   "note_ko": "τ @ ε_SE 0.32: 구 중앙 12.4 (상자 11.4–13.7 · 수염 10.2–16.3 · 평균 12.7) · 판 28.6 (27.0–30.2 · 24.9–31.2) · 섬유 47.7 (47.3–49.0 · 위 수염 49.7 · 낮은 점 41.7) [판독]",
+   "w": 796,
+   "h": 738,
+   "blank": 0.921,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 8,
+   "file": "fig_4b.png",
+   "caption": "Panel (b) of Figure 4 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    354.47,
+    96.0,
+    547.1,
+    272.9
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f4",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel cut from the single 4-panel raster by its white gutters (raster columns 342-349 · rows 317-324 have no ink → split at raster x 346 · y 320.5 = 354.47 · 272.9 pt) — no neighbouring axis title / label leaks in · 300 dpi",
+   "note_ko": "τ @ ε_SE 0.72: 구 4.39 · 판 ≈4.6 · 섬유 4.22 (상자 4.1–4.9) [판독] — 모양 차 거의 사라짐",
+   "w": 804,
+   "h": 738,
+   "blank": 0.928,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 8,
+   "file": "fig_4c.png",
+   "caption": "Panel (c) of Figure 4 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    163.5,
+    272.9,
+    354.47,
+    448.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f4",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel cut from the single 4-panel raster by its white gutters (raster columns 342-349 · rows 317-324 have no ink → split at raster x 346 · y 320.5 = 354.47 · 272.9 pt) — no neighbouring axis title / label leaks in · 300 dpi",
+   "note_ko": "기공 @0.32: 구 19.7 % (17.1–21.1 · 15.9–24.0) · 판 19.5 (18.1–21.4 · 16.8–22.8) · 섬유 43.2 (42.8–43.6) [판독]",
+   "w": 796,
+   "h": 733,
+   "blank": 0.926,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f4d",
+   "kind": "figure",
+   "label": "4d",
+   "page": 8,
+   "file": "fig_4d.png",
+   "caption": "Panel (d) of Figure 4 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    354.47,
+    272.9,
+    547.1,
+    448.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f4",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel cut from the single 4-panel raster by its white gutters (raster columns 342-349 · rows 317-324 have no ink → split at raster x 346 · y 320.5 = 354.47 · 272.9 pt) — no neighbouring axis title / label leaks in · 300 dpi",
+   "note_ko": "기공 @0.72: 구 ≈17.4 (16.9–17.6) · 판 ≈17.8 (17.5–18.5) · 섬유 20.0 (19.1–20.7) [판독]",
+   "w": 804,
+   "h": 733,
+   "blank": 0.924,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 9,
+   "file": "fig_5a.png",
+   "caption": "Panel (a) of Figure 5 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    175.5,
+    101.4,
+    454.0,
+    310.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f5",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "판 전극 단면 — SE 가 기지 (어둡고 잔금 무늬) · 판 사이 기공 두 곳 표시",
+   "w": 1161,
+   "h": 873,
+   "blank": 0.02,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 9,
+   "file": "fig_5b.png",
+   "caption": "Panel (b) of Figure 5 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    173.2,
+    324.9,
+    456.8,
+    538.5
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f5",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "섬유 전극 단면 — 섬유 굵기 ≈2 µm 로 보인다 (10 µm 눈금 대조) [판독] · 응집 미세 기공 · 큰 기공",
+   "w": 1183,
+   "h": 891,
+   "blank": 0.019,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 11,
+   "file": "fig_7a.png",
+   "caption": "Panel (a) of Figure 7 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    170.0,
+    219.8,
+    340.4,
+    350.6
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f7",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "S10 (200 µm 눈금)",
+   "w": 711,
+   "h": 546,
+   "blank": 0.022,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 11,
+   "file": "fig_7b.png",
+   "caption": "Panel (b) of Figure 7 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    349.1,
+    220.4,
+    517.5,
+    349.4
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f7",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "S70 (200 µm 눈금)",
+   "w": 703,
+   "h": 538,
+   "blank": 0.016,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f7c",
+   "kind": "figure",
+   "label": "7c",
+   "page": 11,
+   "file": "fig_7c.png",
+   "caption": "Panel (c) of Figure 7 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    170.0,
+    352.4,
+    340.4,
+    483.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f7",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "S100 (200 µm 눈금)",
+   "w": 711,
+   "h": 548,
+   "blank": 0.059,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f7d",
+   "kind": "figure",
+   "label": "7d",
+   "page": 11,
+   "file": "fig_7d.png",
+   "caption": "Panel (d) of Figure 7 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    349.3,
+    350.6,
+    517.3,
+    485.4
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f7",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "부피 입도 분포 · D_avg 12.60 (S10) · 72.08 (S70) · 107.6 µm (S100) [인쇄 · 그림 안] — ⚠ S10 막대는 0–≈20 µm 에 걸치고 높은 막대가 10 µm 아래 ('<10 µm 가루를 뺐다' 와 겉보기로 어긋남 [판독])",
+   "w": 701,
+   "h": 563,
+   "blank": 0.734,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 12,
+   "file": "fig_8a.png",
+   "caption": "Panel (a) of Figure 8 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    168.4,
+    100.1,
+    349.1,
+    271.2
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f8",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "τ: S10 12.2 (12.0–13.1) · S70 14.1 (13.6–15.1) · S100 14.9 (14.1–17.1) [판독]",
+   "w": 754,
+   "h": 713,
+   "blank": 0.929,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 12,
+   "file": "fig_8b.png",
+   "caption": "Panel (b) of Figure 8 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    358.2,
+    102.5,
+    534.9,
+    269.3
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f8",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "기공: S10 18.9 % (17.2–20.9) · S70 17.7 (16.5–18.5) · S100 ≈22 (21.8–23.3) [판독]",
+   "w": 737,
+   "h": 696,
+   "blank": 0.927,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f8c",
+   "kind": "figure",
+   "label": "8c",
+   "page": 12,
+   "file": "fig_8c.png",
+   "caption": "Panel (c) of Figure 8 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    261.6,
+    271.7,
+    441.3,
+    440.0
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f8",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "α: S10 2.25 (2.22–2.28) · S70 2.45 (2.39–2.50) · S100 2.48 (2.44–2.61 · 평균 ≈2.52) [판독]",
+   "w": 749,
+   "h": 702,
+   "blank": 0.913,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f9a",
+   "kind": "figure",
+   "label": "9a",
+   "page": 13,
+   "file": "fig_9a.png",
+   "caption": "Panel (a) of Figure 9 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    170.5,
+    154.9,
+    337.9,
+    317.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f9",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "τ: 구 17.8 → 12.2 → 8.1 → ≈4.5 → ≈4.4 · 판 40.0 → 25.4 → 11.0 → 5.5 → 5.5 · 섬유 74.4 → 48.2 → 28.5 → 14.2 → 12.9 [판독 · 1 px = 0.32] — 구는 545 · 655 MPa 에서 판 기호에 가려 아래 호로 읽음",
+   "w": 698,
+   "h": 679,
+   "blank": 0.907,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f9b",
+   "kind": "figure",
+   "label": "9b",
+   "page": 13,
+   "file": "fig_9b.png",
+   "caption": "Panel (b) of Figure 9 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    347.0,
+    156.2,
+    508.0,
+    316.3
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f9",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "기공 %: 구 20.4 → 20.0 → 16.4 → ≈15 → 15.4 · 판 23.5 → 19.5 → 18.1 → 15.0 → 15.3 · 섬유 50.6 → 43.6 → 32.1 → 29.5 → 29.3 [판독] · 영역 A (섬유 저압 = 기공 급감) · B (고압 = 기공 평탄)",
+   "w": 672,
+   "h": 668,
+   "blank": 0.746,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "f9c",
+   "kind": "figure",
+   "label": "9c",
+   "page": 13,
+   "file": "fig_9c.png",
+   "caption": "Panel (c) of Figure 9 (see the parent figure's caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    260.2,
+    318.1,
+    418.4,
+    476.3
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "panel_of": "f9",
+   "manual_crop": "2026-11-22 litdb-curator 패널 크롭 — panel = its own embedded raster image rect (page.get_image_rects) — no neighbouring panel inside · 300 dpi",
+   "note_ko": "α: 구 2.51 → 2.19 → 1.81 → 1.43 → 1.38 · 판 3.17 → 2.60 → 2.11 → 2.04 → 2.01 · 섬유 3.37 → 3.38 → 3.45 → 2.89 → 2.78 [판독] — ⚠ 그림 9a 의 τ 와 식 (3) · ε 0.32 로 다시 계산되지 않는 점이 있다 (카드 §11)",
+   "w": 660,
+   "h": 660,
+   "blank": 0.767,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_tau_path_ratio.png",
+   "caption": "Equation (1), p.3 §2: τ = I_real / I_direct (printed symbol I = a length: actual ion transport distance in the electrolyte ÷ vertical straight transport distance) — cited to Clennell [38].",
+   "rotated_deg": 0,
+   "bbox": [
+    330.0,
+    244.0,
+    562.0,
+    274.5
+   ],
+   "w": 967,
+   "h": 128,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.98,
+   "manual_crop": "2026-11-22 litdb-curator: equation region rendered by hand from text-layer line coordinates (native LaTeX/pdfTeX PDF with an intact text layer) — equation number kept, neighbouring prose excluded · 300 dpi",
+   "note_ko": "식 (1) τ = I_real/I_direct (인쇄 기호 I = 길이) — 기하 정의 (우리 τ_geo 자리 · 이 논문은 이 식으로 계산하지 않았다)",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "file": "eq_02_tau_sigma_ratio_times_eps.png",
+   "caption": "Equation (2), p.3 §2: τ = (σ_electrolyte / σ_eff)·ε — σ_electrolyte intrinsic electrolyte conductivity, σ_eff effective conductivity, ε electrolyte volume fraction; the text claims Eq. (1) 'is identical' to Eq. (2) [39].",
+   "rotated_deg": 0,
+   "bbox": [
+    318.0,
+    355.0,
+    562.0,
+    389.0
+   ],
+   "w": 1017,
+   "h": 142,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-22 litdb-curator: equation region rendered by hand from text-layer line coordinates (native LaTeX/pdfTeX PDF with an intact text layer) — equation number kept, neighbouring prose excluded · 300 dpi",
+   "note_ko": "식 (2) τ = (σ_electrolyte/σ_eff)·ε — 실제 계산식 = 우리 tau2 (수송 tortuosity · √ 아님) · 원문은 (1) 과 '같다' 고 쓴다 (일반적으로 같지 않다)",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "file": "eq_03_bruggeman_tau_eps_minus_alpha.png",
+   "caption": "Equation (3), p.3 §2: τ = ε^−α (Bruggeman relation [40,41]) — the text calls ε 'the porosity' and then 'the ratio of the electrolyte that can move ions'; α = Bruggeman coefficient ('connectivity' [42]).",
+   "rotated_deg": 0,
+   "bbox": [
+    336.0,
+    435.0,
+    562.0,
+    457.0
+   ],
+   "w": 942,
+   "h": 93,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.987,
+   "manual_crop": "2026-11-22 litdb-curator: equation region rendered by hand from text-layer line coordinates (native LaTeX/pdfTeX PDF with an intact text layer) — equation number kept, neighbouring prose excluded · 300 dpi",
+   "note_ko": "식 (3) τ = ε^−α (Bruggeman · 전인자 1) ⇒ σ_eff/σ₀ = ε^(1+α) [카드 산술]",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_r_electrode_minus_two_se_layers.png",
+   "caption": "Equation (4), p.4 §3.2: R_ion,electrode = R_ion,total − 2 × L_SE / (σ_electrolyte·A_SE) — the two solid-electrolyte layers' bulk resistance (σ_electrolyte = 0.174 S/m, L_SE ≈ 600 µm, A_SE = 1.33 cm²) is subtracted from ΔE/I_ss; nothing else (Li|SE interfaces) is subtracted.",
+   "rotated_deg": 0,
+   "bbox": [
+    262.0,
+    417.0,
+    562.0,
+    454.0
+   ],
+   "w": 1251,
+   "h": 155,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-22 litdb-curator: equation region rendered by hand from text-layer line coordinates (native LaTeX/pdfTeX PDF with an intact text layer) — equation number kept, neighbouring prose excluded · 300 dpi",
+   "note_ko": "식 (4) SE 두 층 bulk 저항만 뺀다 (σ 0.174 S/m · L_SE ≈600 µm · A 1.33 cm² → 51.9 Ω [카드 산술]) — Li | SE 계면 · 층 사이 접촉 저항은 남는다",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_porosity_vreal_vtheo.png",
+   "caption": "Equation (5), p.4 §3.2: n = (V_real − V_theo) / V_real — porosity n = free volume excluding particle volume.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.0,
+    534.0,
+    562.0,
+    566.0
+   ],
+   "w": 1017,
+   "h": 134,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-22 litdb-curator: equation region rendered by hand from text-layer line coordinates (native LaTeX/pdfTeX PDF with an intact text layer) — equation number kept, neighbouring prose excluded · 300 dpi",
+   "note_ko": "식 (5) 기공 n = (V_real − V_theo)/V_real",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_vreal_thickness_area.png",
+   "caption": "Equation (6), p.4 §3.2: V_real = L_electrode·A_electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    600.0,
+    562.0,
+    619.0
+   ],
+   "w": 1101,
+   "h": 80,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.955,
+   "manual_crop": "2026-11-22 litdb-curator: equation region rendered by hand from text-layer line coordinates (native LaTeX/pdfTeX PDF with an intact text layer) — equation number kept, neighbouring prose excluded · 300 dpi",
+   "note_ko": "식 (6) V_real = L_electrode·A_electrode",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 4,
+   "file": "eq_07_vtheo_mass_over_theoretical_density.png",
+   "caption": "Equation (7), p.4 §3.2: V_theo = m_AM/ρ_AM + m_SE/ρ_SE + m_CA/ρ_CA — ρ = theoretical densities (values not printed).",
+   "rotated_deg": 0,
+   "bbox": [
+    292.0,
+    619.5,
+    562.0,
+    650.5
+   ],
+   "w": 1126,
+   "h": 130,
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-22 litdb-curator: equation region rendered by hand from text-layer line coordinates (native LaTeX/pdfTeX PDF with an intact text layer) — equation number kept, neighbouring prose excluded · 300 dpi",
+   "note_ko": "식 (7) V_theo = Σ m/ρ (이론 밀도 · 값 미인쇄)",
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract_45_below15.png",
+   "caption": "Main p.1 Abstract: DC chronoamperometry with an electron-blocking cell; Al2O3 as a hypothetical active material; fibrous material at high AM ratio → tortuosity 'as high as 45' from insufficient filling of aggregation micropores; tortuosity 'decreased below 15' with pressing pressure; differs from liquid-electrolyte LIB.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    241.9,
+    564.0,
+    434.9
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 초록 — '45 까지' · '15 아래' · 전자 차단 DC · Al₂O₃ 가상 AM",
+   "w": 1671,
+   "h": 806,
+   "blank": 0.846,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-limited-ductility",
+   "page": 1,
+   "file": "txt_p1_limited_ductility_filling.png",
+   "caption": "Main p.1 Introduction (first paragraph, whole): 'the limited ductility of a solid electrolyte makes it difficult to cover the rough surface of the active material and penetrate the micropores of the electrode' → low contact and filling rate vs liquid LIB [4]; ion transport limited by the low filling factor and SE distribution/connectivity [9,10].",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    513.5,
+    564.0,
+    751.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 서론 첫 문단 — SE 의 '제한된 연성' → AM 표면 · 미세 기공을 못 채운다 ([4]) · 낮은 채움률 · SE 분포 · 연결 문제가 이온 수송을 제한 ([9,10])",
+   "w": 1671,
+   "h": 994,
+   "blank": 0.832,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-simulation-eis-limits",
+   "page": 2,
+   "file": "txt_p2_simulation_eis_limits_high_am.png",
+   "caption": "Main p.2: most tortuosity studies are computational [20-25] (So et al. [22] DEM pressure; Hlushkou [23]); 'a limit to perfectly simulating the microstructure of an actual electrode because it is difficult to implement the non-uniform distribution of particles or closed pores'; EIS artifacts [27-36]; at high AM ratio the SE does not sufficiently fill the gaps → random pores, 'complex and unpredictable' paths [36].",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    309.8,
+    564.0,
+    661.2
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 계산 모사 한계 진술 (DEM 을 직접 겨냥하지 않음) · EIS 인공물 · 고 AM 비에서 무작위 기공",
+   "w": 1671,
+   "h": 1465,
+   "blank": 0.834,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-p3-aim-model-system",
+   "page": 2,
+   "file": "txt_p2p3_aim_dc_al2o3_model_system.png",
+   "caption": "Main p.2-3: aim = tortuosity of high-AM-ratio ASSB electrodes; variables = AM shape and size (design) and pressing pressure (process); electron-blocking cell + DC chronoamperometry to minimise error; Al2O3 (non-conductive) as hypothetical AM to exclude AM/SE interface reactions; tortuosity, porosity and Bruggeman coefficient; comparison with liquid LIB.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    661.3,
+    564.0,
+    774.1
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "목적 · 변수 · DC 법 · Al₂O₃ 모형계",
+   "w": 1671,
+   "h": 901,
+   "blank": 0.827,
+   "pages": [
+    2,
+    3
+   ],
+   "pieces": [
+    {
+     "page": 2,
+     "clip": [
+      163.0,
+      661.3,
+      564.0,
+      774.1
+     ]
+    },
+    {
+     "page": 3,
+     "clip": [
+      163.0,
+      96.5,
+      564.0,
+      196.7
+     ]
+    }
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-theory",
+   "page": 3,
+   "file": "txt_p3_theory_tau_eq1_eq2_bruggeman.png",
+   "caption": "Main p.3 §2 Theoretical Background: τ = l_real/l_direct (1) [38]; 'Equation (1) is identical to the equation below [39]' τ = (σ_electrolyte/σ_eff)·ε (2); Bruggeman τ = ε^−α (3) [40,41]; 'ε is the porosity' / 'the ratio of the electrolyte that can move ions'; α = connectivity [42].",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    206.7,
+    564.0,
+    502.2
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 식 (1)–(3) 과 정의 문장 — '(1) 은 (2) 와 같다' · 'ε 는 기공' (실제로는 SE 부피분율)",
+   "w": 1671,
+   "h": 1232,
+   "blank": 0.907,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-materials",
+   "page": 3,
+   "file": "txt_p3_materials_al2o3_lpscl_cb.png",
+   "caption": "Main p.3 §3.1: five Al2O3 powders (small sphere 8-12 µm Lumi-M; medium and large spheres from a sieved 90 µm powder; plate α-Al2O3 Sigma-Aldrich; fiber 'diameter of 2-6 nm and length of 200-400 nm' Sigma-Aldrich); FESEM MIRA3; laser diffraction LS 13 320; Li6PS5Cl 3 µm (CIS); acetylene carbon black; no binder; SE volume ratio 0.32-0.72.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    541.1,
+    564.0,
+    779.5
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 재료 — Al₂O₃ 다섯 · LPSCl 3 µm (CIS) · 아세틸렌 CB · 바인더 없음 · ε_SE 0.32–0.72",
+   "w": 1671,
+   "h": 994,
+   "blank": 0.836,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-pellet",
+   "page": 4,
+   "file": "txt_p4_pellet_80mg_109mpa_44_655.png",
+   "caption": "Main p.4: Thinky AR-100 10 min 2000 rpm; 80 mg pressed in a Φ13 mm mold at ~109 MPa → 'thick film pellet' ~250-350 µm; shape study fixed at 109 MPa; pressure varied 44-655 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    96.5,
+    564.0,
+    196.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 80 mg · Φ13 mm · 109 MPa · 250–350 µm · 44–655 MPa",
+   "w": 1671,
+   "h": 418,
+   "blank": 0.83,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-cell-dc",
+   "page": 4,
+   "file": "txt_p4_cell_dc_100mv_sigma_0174.png",
+   "caption": "Main p.4 §3.2: SUS 444 10 µm foil substrate; Li foil 10 µm on both sides; electrolyte layers block electrons; ΔE = 100 mV → steady-state current I_ss; R = ΔE/I_ss = total ion transport resistance (composite + two electrolyte layers); SE layer σ_electrolyte = 0.174 S/m, L_SE ≈ 600 µm, A_SE = 1.33 cm² subtracted.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    206.6,
+    564.0,
+    413.3
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 셀 · ΔE 100 mV · σ_electrolyte 0.174 S/m · L_SE ≈600 µm · A 1.33 cm²",
+   "w": 1671,
+   "h": 863,
+   "blank": 0.84,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4-sigma-porosity-defs",
+   "page": 4,
+   "file": "txt_p4_sigma_eff_porosity_theoretical_density.png",
+   "caption": "Main p.4: σ_eff from A_SE and L_electrode, τ from Eq. (2); porosity n = free volume excluding particle volume (Eq. 5-7) with masses and 'respective theoretical densities' (values not printed); Ar glove box KK-011AS; potentiostat BCS 810 (Biologic).",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    460.1,
+    564.0,
+    537.9
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "σ_eff · 기공 정의 (이론 밀도 · 값 없음) · 장비",
+   "w": 1671,
+   "h": 828,
+   "blank": 0.863,
+   "pages": [
+    4
+   ],
+   "pieces": [
+    {
+     "page": 4,
+     "clip": [
+      163.0,
+      460.1,
+      564.0,
+      537.9
+     ]
+    },
+    {
+     "page": 4,
+     "clip": [
+      163.0,
+      567.2,
+      564.0,
+      593.8
+     ]
+    },
+    {
+     "page": 4,
+     "clip": [
+      163.0,
+      652.1,
+      564.0,
+      740.0
+     ]
+    }
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-p7-eps-032-072",
+   "page": 6,
+   "file": "txt_p6p7_eps_se_032_072.png",
+   "caption": "Main p.6-7: SE ratio εSE,1 = 0.32 (high AM ratio), εSE,2 = 0.72; six conditions; steady state after a rapid initial decrease; high AM ratio took longer and gave a lower I_ss; tortuosity from I_ss (Figure 4a,b).",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    703.4,
+    564.0,
+    778.6
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "ε_SE,1 0.32 · ε_SE,2 0.72 정의 · 정상 상태",
+   "w": 1671,
+   "h": 640,
+   "blank": 0.841,
+   "pages": [
+    6,
+    7
+   ],
+   "pieces": [
+    {
+     "page": 6,
+     "clip": [
+      163.0,
+      703.4,
+      564.0,
+      778.6
+     ]
+    },
+    {
+     "page": 7,
+     "clip": [
+      163.0,
+      96.5,
+      564.0,
+      171.6
+     ]
+    }
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-shape",
+   "page": 8,
+   "file": "txt_p8_shape_two_three_times.png",
+   "caption": "Main p.8: at εSE,1 plate and fiber tortuosity 'two times and three times higher than the spherical shape'; sphere and plate porosity ~20 %, fiber about twice; plates aligned parallel to the substrate [21] (Figure 5a).",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    504.3,
+    564.0,
+    718.2
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ '두 배 · 세 배' · 기공 ≈20 % · 섬유 두 배 · 판 정렬",
+   "w": 1671,
+   "h": 892,
+   "blank": 0.831,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-p10-fiber-porosity",
+   "page": 9,
+   "file": "txt_p9p10_fiber_twice_porosity.png",
+   "caption": "Main p.9-10: fiber electrodes twice the porosity — SE did not penetrate the micropores of the aggregated fibers (Figure 2c, 5b); liquid electrolyte would wet fibrous AM [43]; attention to low SE filling with fibrous AM.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    602.4,
+    564.0,
+    765.5
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "섬유 미세 기공 미충전 (저자 해석) · 액체 전해질과 대비",
+   "w": 1671,
+   "h": 797,
+   "blank": 0.832,
+   "pages": [
+    9,
+    10
+   ],
+   "pieces": [
+    {
+     "page": 9,
+     "clip": [
+      163.0,
+      602.4,
+      564.0,
+      765.5
+     ]
+    },
+    {
+     "page": 10,
+     "clip": [
+      163.0,
+      96.4,
+      564.0,
+      121.4
+     ]
+    }
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-bruggeman-313",
+   "page": 10,
+   "file": "txt_p10_low_am_bruggeman_313_simulation.png",
+   "caption": "Main p.10: at low AM ratio the fiber/other differences shrink (Figure 4b,d); 'not easy to use computer simulation ... in which active material aggregation and insufficient electrolyte filling occur'; Bruggeman fit for εSE > 0.45 → coefficient 'approximately 3.13'; for AM ≥ ~60 % (εSE < 0.6) measured τ larger than Bruggeman.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    121.5,
+    564.0,
+    422.7
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ Bruggeman 3.13 (ε_SE > 0.45) · AM ≥ ≈60 % 에서 Bruggeman 위 · 계산 모사 경고",
+   "w": 1671,
+   "h": 1256,
+   "blank": 0.829,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-size",
+   "page": 11,
+   "file": "txt_p11_size_effect_froboese.png",
+   "caption": "Main p.11 §4.2: S10/S70/S100 average diameters ~10, 70, 100 µm; powder < 10 µm removed (aggregation); tortuosity slightly increased with AM size — opposite to Froboese [36] whose electrolyte volume ratio was 50-90 %; here 32 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    96.3,
+    564.0,
+    212.3
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 크기 효과 — <10 µm 뺌 · 크기 ↑ → τ 약간 ↑ · Froboese [36] 와 반대 (그쪽 SE 50–90 %)",
+   "w": 1671,
+   "h": 1176,
+   "blank": 0.846,
+   "pages": [
+    11
+   ],
+   "pieces": [
+    {
+     "page": 11,
+     "clip": [
+      163.0,
+      96.3,
+      564.0,
+      212.3
+     ]
+    },
+    {
+     "page": 11,
+     "clip": [
+      163.0,
+      531.7,
+      564.0,
+      694.8
+     ]
+    }
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12-size-porosity-alpha",
+   "page": 12,
+   "file": "txt_p12_size_porosity_alpha.png",
+   "caption": "Main p.12: S10 and S70 porosity statistically similar → S70's higher τ from poor SE connectivity in large gaps; S100 porosity higher; Bruggeman coefficient change (Figure 8c).",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    498.3,
+    564.0,
+    673.8
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "크기별 기공 · α 해석",
+   "w": 1671,
+   "h": 732,
+   "blank": 0.834,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x12b",
+   "kind": "text",
+   "label": "p12-p13-pressure",
+   "page": 12,
+   "file": "txt_p12p13_pressure_40_660.png",
+   "caption": "Main p.12-13 §4.3: pressing improves contact; Figure 9a-c over '40-660 MPa'; tortuosity decreases monotonically for every shape; fiber porosity pattern differs.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    683.7,
+    564.0,
+    774.5
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ '40–660 MPa' (방법 절은 44–655) · τ 단조 감소",
+   "w": 1671,
+   "h": 602,
+   "blank": 0.853,
+   "pages": [
+    12,
+    13
+   ],
+   "pieces": [
+    {
+     "page": 12,
+     "clip": [
+      163.0,
+      683.7,
+      564.0,
+      774.5
+     ]
+    },
+    {
+     "page": 13,
+     "clip": [
+      163.0,
+      96.4,
+      564.0,
+      146.5
+     ]
+    }
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x13a",
+   "kind": "text",
+   "label": "p13-p14-contact-regions",
+   "page": 13,
+   "file": "txt_p13p14_contact_regions_ductility.png",
+   "caption": "Main p.13-14: sphere/plate porosity change insignificant while the Bruggeman coefficient decreased → 'improved contact between electrolyte particles (reduction in lithium-ion migration resistance at electrolyte grain boundaries)' [46]; fiber region A = porosity falls (SE fills aggregate micropores), region B = 'limited electrolyte ductility', contact improves.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    546.4,
+    564.0,
+    784.8
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 구 · 판: 기공 변화 작음 → SE 입자 접촉 개선 (입계 저항 ↓) [46] · 섬유 A / B · '제한된 SE 연성'",
+   "w": 1671,
+   "h": 1215,
+   "blank": 0.837,
+   "pages": [
+    13,
+    14
+   ],
+   "pieces": [
+    {
+     "page": 13,
+     "clip": [
+      163.0,
+      546.4,
+      564.0,
+      784.8
+     ]
+    },
+    {
+     "page": 14,
+     "clip": [
+      163.0,
+      96.5,
+      564.0,
+      146.5
+     ]
+    }
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x14a",
+   "kind": "text",
+   "label": "p14-summary",
+   "page": 14,
+   "file": "txt_p14_summary_liquid_contrast.png",
+   "caption": "Main p.14: in ASSB electrodes pressing lowers tortuosity — 'not observed in a lithium-ion battery using a liquid electrolyte' where pressing increases it [47]; effective 'within a range where the mechanical destruction of the active material does not occur' [48].",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    146.7,
+    564.0,
+    284.6
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "★ 액체 LIB 와 반대 (가압 → τ ↑ [47]) · 'AM 기계적 파괴가 없는 범위' [48]",
+   "w": 1671,
+   "h": 575,
+   "blank": 0.829,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  },
+  {
+   "key": "x14b",
+   "kind": "text",
+   "label": "p14-conclusions",
+   "page": 14,
+   "file": "txt_p14_conclusions.png",
+   "caption": "Main p.14 §5 Conclusions 1-3: order sphere < plate < fiber at high AM ratio; fiber porosity ~2×; size ↑ → τ ↑ (S100 porosity ↑); pressure ↓ τ for all shapes; fiber porosity changes only at low pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.0,
+    294.5,
+    564.0,
+    764.9
+   ],
+   "dpi": 300,
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "manual_crop": "2026-11-22 litdb-curator 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "결론 1–3",
+   "w": 1671,
+   "h": 1961,
+   "blank": 0.848,
+   "viewed": true,
+   "viewed_how": "2026-11-22 litdb-curator: Read (single file or check montage)"
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "note_manual": "2026-11-22 litdb-curator: 58 crops = tool 9 (main Figures 1-9 — all re-cut: content box = union of the embedded raster rects + 6 pt, the tool boxes spanned the column width and their caption fields ran on into the next body paragraph) + hand 49 (panels 23 · equations 7 = Eq. (1)-(7) · evidence paragraphs 19). No tables in the paper (tool vote: none). No SI. All files opened after rendering (single Read or check montage). No page_* images (11-12 rule).",
+ "key_note": "f<N> = main Figure N (tool, re-cut) · f<N><letter> = panels (panel_of) · e<NN> = Equation (NN) · x<page><letter> = main-text evidence paragraph (kind 'text'; multi-piece ones list 'pieces') · 'page' = PDF page = printed page (MDPI 'n of 17')",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 198,
+  "method": "all plots are embedded rasters (no vector paths) — read at their own pixels (xref 179/180 Fig 3 · 216 Fig 4 · 274 Fig 6 · 343-345 Fig 8 · 373-375 Fig 9); axes from frame lines + inside tick marks; markers = colour masks (bbox centre of the hollow marker), box plots = coloured horizontal lines at the category column, Fig 6 curve = red-pixel column means; values are [판독] with the px resolution in method_note"
+ }
+}

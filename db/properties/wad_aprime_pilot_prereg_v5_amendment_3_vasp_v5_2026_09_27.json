@@ -1,0 +1,195 @@
+{
+ "schema": "prereg_amendment/v1",
+ "date": "2026-09-27",
+ "version": "v6.1",
+ "title": "A′ 카드 v5 개정 3 (초안 v6) — V5 를 VASP 외주로 돌리는 경로 · 준비만 (실행 미정) · Codex CE·CF·CG·CI·CJ NO-GO 반영",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+ "amends_after": [
+  "amendment_1 (W_UMA+D3 := W_UMA + ΔE_D3,QE)",
+  "amendment_2 (쌍극자 구간)"
+ ],
+ "status": "ratified",
+ "개정_이력": [
+  {
+   "v": "v1",
+   "commit": "8f76b912dd70f47b32a23cbcc1ad96525a97e69c",
+   "content_digest": "sha256:04b1a71ad01a303b48463b0ed807bccd948b032cd4ffe137246d790813a574d5",
+   "MANIFEST_sha256_of_file": "ae434e671ba74ef5851d5826a9672ee85eb56f69ecf3a27d0f6859e92ee188b9",
+   "리뷰": "Codex CE NO-GO (kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md) — P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성"
+  },
+  {
+   "v": "v2",
+   "commit": "e025c0db78754ab0d6117aff34b4e1133dd6968e",
+   "content_digest": "sha256:243ccf8c7536800e624a1df90501b77319b0e266ca97298c77c3ed94b26ecf8d",
+   "MANIFEST_sha256_of_file": "ab945a7b07928a27d0a66f442c10ec9ebfd68b3e9fda912e7f7ee1fae5ae0561",
+   "무엇": "P0-1–4 · P1-1–5 반영 (도구 v2 · 패키지 재생성 · 이 문서) · 3b 원안 폐기 → 3b′ 진단 · 3c 채택안 · PP PBE_54 고정 · VASP 버전 일치 규칙 · D3 검사 두 층 · 파일럿 2 잡 재사용 규칙",
+   "리뷰": "Codex CF NO-GO (kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md) — P0 3 (모순+실패 조합을 r1 이 덮음 · 등록부 없이 최종 승인 · G4 D3 불일치가 수렴 실패를 가림) · P1 3 (마지막 NaN 에너지 · 실물 Edisp 무콜론 형식 · 포장 실패 exit 0) · D3 예산 조건부 찬성 · 3b′/3c 찬성"
+  },
+  {
+   "v": "v3",
+   "commit": "c8d77dfd599cf2a867afa7bfdd3aef4c331b0ed3",
+   "content_digest": "sha256:a4ac661db7a5dc0215e0b93f8cc964219985195a08ca933562cf0a662458640c",
+   "MANIFEST_sha256_of_file": "da260794745bdbda2d827f116162115af90e82e229f897aad00166aff16dcdd4",
+   "무엇": "CF P0-1–3 · P1-1–3 반영 + R2 (INCAR 에코 제외 · D3 계수 해석값 · DIPOL 증거 두 길) + R4 (G5 상태 순서 · 사용 자격에 등록부) + 권고 (total_w_citable · run_id 형식 · 원자적 mkdir · README 재실행 문구) · 도구 v3 · 패키지 재생성",
+   "리뷰": "Codex CG NO-GO (kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md) — 새 P0 없음 · P1 3 (실패·PACK_ONLY 경로에서 POTCAR 본문이 반송 묶음에 들어감 · 봉인 파일럿 run_id 미대조 · 정상 TITEL 접두만 찍힌 조기 종료를 모순으로 오판) · S3 찬성 · S4 조건부 찬성 · S5 찬성 · 선택 권고 3 (빈 에너지 레코드 · tar/sha 쌍 승격 · 등록부 attempt/OUTCAR sha)"
+  },
+  {
+   "v": "v4",
+   "commit": "c25e0ce2008b5c33dc6113b249cc8aa22097db2e",
+   "content_digest": "sha256:dbcbc486f54e5a05fc1b72430f7f7f0b8c7ef0f7f4866d79ce048676b5cb5e2f",
+   "MANIFEST_sha256_of_file": "ccbc0988f6debfa716e1c2e2d7f7327939cc41cd378a3d0a35f5523ed11bcfb5",
+   "무엇": "CG P1-1 (반송 묶음 허용 목록 · 구성원 검사 · 준비 실패 시 부분 POTCAR 삭제 · 검사기 forbidden_files 보고) · P1-2 (파일럿 채택 시도 run_id = 등록부 from_pilot · PILOT_NOT_SEALED) · P1-3 (미완료 출력의 정상 TITEL 접두 = 결측 · 접두 아님 = 모순 · 성공 시도 접두 = 미검증) · 권고 1·2·3 (빈 레코드도 마지막 레코드 · tar·sha 쌍 임시→승격 · 등록부 schema v3 from_pilot_sha256) · 도구 v4 · 패키지 재생성 (입력 불변)",
+   "리뷰": "Codex CI NO-GO (kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md · 재현 묶음 db/raw/codex_CI_repro_2026_09_27) — CG P1 3 해제 확인 · 새 P0 없음 · P1 1 (러너 pack() 이 find/sort/tar tzf 실패를 성공으로 승격 — 관리 파일 3 개 묶음 · 종료 0 · 기존 묶음 교체) · S1–S6 찬성 · 정리 권고 3 (cut '기록만·게이트 아님' 문구 · 결정 원장 v3/129 표기 · '옛 쌍 그대로' 표현)"
+  },
+  {
+   "v": "v5",
+   "commit": "a2374014b625fcc827d297529a6aba8104db32c2",
+   "content_digest": "sha256:2b3a0ad4f2eeb5768d270a7aa63ec48888e7e07a34b4b940dd93b3ac0cc860b8",
+   "MANIFEST_sha256_of_file": "85bfebdb1c6c4c6a42649f5ae8ae0dfe1ba8e2405ba572c875e4c38bc7ecf623",
+   "무엇": "CI P1 (pack() 단계별 성공 확인 — find · 허용 필터(grep 무매치 1 ≠ 오류 ≥ 2) · sort · 목록 쓰기 · tar · tar tzf 열람 · 금지 검사 · 구성원↔목록 대조 · sha · mv — 실패 = 종료 4 · 임시 묶음 삭제 · 기존 쌍 보존) · S3 TITEL_TRUNCATED 상태(자동 확인 불가 설명) · 권고 3 (cut 게이트 문구 · 결정 원장 표기 · '옛 쌍' 표현 좁힘) · 도구 v5 · 패키지 재생성 (입력 불변)",
+   "리뷰": "Codex CJ NO-GO (kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md · 재현 묶음 db/raw/codex_CJ_repro_2026_09_27) — CI 재현 3 경로 해제 확인 · 새 P0 없음 · 같은 P1 의 남은 경로 1 (관리 파일 목록 쓰기 `{ echo …; cat …; } || …` 가 앞 echo 실패를 못 잡아 23·24 구성원 묶음을 종료 0 으로 승격) · S1–S6 찬성 · 권고 3 (sha 파이프 종료값 · 마지막 rm 이 pack 반환값 = 거짓 종료 4 · README 발송 문구 충돌 · 지원 환경 명시)"
+  },
+  {
+   "v": "v6",
+   "무엇": "CJ P1 (관리 목록 초기화·이름 쓰기·MANIFEST 쓰기·cat 을 쓰기마다 검사 + 목록 내용 검증: 줄 수 = 1 + 디스크의 관리 파일 수 + 허용 파일 수 · MANIFEST.sha256 · 디스크에 있는 관리 파일이 목록에 있어야) · 권고 (sha256sum 명령 성공과 hex64 형식 분리 · 정리 rm 실패 = ⚠ 경고·종료 0 · 발송 조건 = 종료 0 또는 1 + sha256sum -c · 지원 환경 Linux/GNU 명시) · 도구 v6 · 패키지 재생성 (입력 불변)",
+   "commit": "f4441c426701bc35690541737d4664a37da4db36",
+   "content_digest": "sha256:eb5e36fa09b25ba1f3c394e404963d0bdb256a959fa03b4111e5354eb5e14153",
+   "MANIFEST_sha256_of_file": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+   "리뷰": "Codex CK **GO** (kb/reviews/codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md · 재현 묶음 db/raw/codex_CK_repro_2026_09_27) — CJ 해제조건 충족 · CJ 주입 17 + 추가 16 전부 종료 4 · 새 P0/P1 없음 · S1–S5 판정 · P2 정리 2 (러너 설명 안의 옛 '종료 0 뒤 발송' · 파일럿 절의 '개정 v3')"
+  },
+  {
+   "v": "v6.1",
+   "무엇": "CK P2 문구 정리만 — 러너(v6) 안의 옛 발송 문장을 이력으로 표시 · 파일럿(v6) '이 개정 v3' → '이 개정 (현재판)' · CK S1 의 잔여 위험 문장 추가. 규칙·패키지(MANIFEST 8118bbc0…)·도구(1d0f4566…) 불변 — GO 받은 실물 그대로"
+  }
+ ],
+ "results_seen": false,
+ "results_seen_note": "V5 는 한 번도 DFT 로 계산되지 않았다 (RESOURCE_BLOCKED). 열람한 것: V2 결과 · V2 QE↔s-dftd3 D3 교차대조 · V2 ATM 열 · V4 GPU 시험 피크 · V5 기하의 s-dftd3 2체 D3 에너지(기하 고정 · DFT 아님 · v2 에서 VASP 절단으로 재계산). ⚠ 따라서 이 개정의 3b′·D3 예산은 'V2 결과 및 V5 D3 진단을 본 뒤, V5 전자에너지 전에' 정한 것이다 (완전히 결과와 무관한 원래 사전등록이라 부르지 않는다 · CE §5). (v3 추가: 이 저장소의 VASP 5.4.4 실물 OUTCAR 한 건(SDCP C12 정적 · 다른 계)을 파서 형식 확인에만 읽었다 — V5 결과가 아니다.)",
+ "왜": "V5 (SE 2층 + Ag(111) 3층 · 176–200 원자) 는 QE CPU 추정 89–109 GB @70 Ry · 축소 변형 61–80 GB 로 우리 GPU 한 장(48 GB)에 안 들어가 RESOURCE_BLOCKED → G5 NOT_TESTED → 전체 계면 UMA 예측은 내부 전용 (갈래0). 큰 메모리 CPU 노드의 VASP 로는 들어간다 (VASP PAW Ag 11 전자 · 파동함수 합 ≤ ~16 GB 추정).",
+ "고정_불변": {
+  "기하": "봉인 S3v2 구조 13 개 그대로 (구조 파일 sha 결박 · 빌더가 다르면 패키지를 만들지 않는다) — 새 이완 없음 · 단일점만",
+  "표본": "G5 표본 ①–⑤ (① s_outer_A · ② s_outer_B · ③ li_outer_A · ④ li_outer_B · ⑤ s_outer_A_p05 (bound 만 · far 는 ① 공유 · ① 과 상관))",
+  "끝점·G3_셀": "S3v2 그대로 (분리 직접 8 · 영상 9 · G3 c+2 두 검사)",
+  "식·문턱": "W = [F(far) − F(bound)]/A (F = 자유에너지 · E(σ→0) 병기) · G3 |ΔW| ≤ 0.01 두 검사 · G4 |ΔW| ≤ 0.02 변형마다 · G5 표본마다 |Δ| ≤ 0.10 · 종결 군 |mean Δ| ≤ 0.05 (S ①②⑤ · Li ③④) · 5/5 유효 · G3·G4 PASS · 분모 5 고정 · 교체 금지 · (v2) W 의 에너지 규약 = 'MP1 σ 0.136 eV 에서의 TOTEN 차 / A' (아래 smearing)",
+  "D3_장부": "개정 1 과 같은 구조 — W_UMA+D3 := W_UMA + ΔE_D3,DFT · 이번에는 ΔE_D3 를 VASP OUTCAR 의 Edisp 에서 읽는다 ⇒ Δ = W_PBE,VASP − W_UMA (D3 항이 양쪽에서 같아 상쇄)",
+  "3체": "결정 D-2026-09-23-wad-d3-twobody-atm-separate 그대로 — 헤드라인 2체 · ATM 은 같은 기하 s-dftd3 로 별도 열",
+  "UMA": "S1 결박 UMA (uma-s-1p1 · default · omat) — 우리 쪽에서 `relax_uma_d3.py --energies` 로 9 구조 단일점 (업체 몫 아님)"
+ },
+ "바뀌는_것_QE→VASP": {
+  "코드": "QE 7.4.1 GPU → VASP (업체 보유 버전) — 버전·빌드를 반송에 기록 · **파일럿과 본 배치는 같은 빌드** (OUTCAR 첫 줄 · 검사기 VERSION_INCONSISTENT / 등록부와 다르면 VERSION_MISMATCH). VDW_S6 사용자 조정은 문서상 VASP 6.6.0 부터 — 우리 s6 = 1.0 은 PBE 기본값과 같아 구버전이어도 값은 같지만, '명시 태그가 다 적용됐다' 는 실제 버전 확인 뒤에만 말한다 (6.6 이상을 요구하지 않는다 · CE Q4).",
+  "PP": "GBRV USPP (Li·S·Cl) · PSL rrkjus (P) · ONCV (Ag 19 e) → **PAW_PBE PBE_54 고정**: Li_sv `PAW_PBE Li_sv 10Sep2004` · P `PAW_PBE P 06Sep2000` · S `PAW_PBE S 06Sep2000` · Cl `PAW_PBE Cl 06Sep2000` · Ag `PAW_PBE Ag 02Apr2005` (TITEL 날짜 포함 · ZVAL 3/5/6/7/11). PBE_64 는 금지가 아니지만 쓰려면 전 비교군을 사전에 그 세트로 고정해야 한다 — 이 개정은 54 (CE Q6). 파일럿 뒤 종별 sha · 조립본 sha · VASP 버전 줄을 **등록부로 봉인** (`--seal_pp`) 하고 이후 모든 잡을 그 등록부와 대조. ⚠ PBE_54 인지 **내용 해시로 보증하지 못한다** (공개 기준 해시 없음) — TITEL 날짜 · 업체 진술 · 봉인 뒤 일관성까지만.",
+  "컷오프": "52/520 Ry → ENCUT 520 eV (G4 변형 650 eV · QE e70 자리)",
+  "smearing": "MV 0.01 Ry → Methfessel–Paxton 1차 σ 0.136 eV (같은 폭 숫자이지 같은 적분법이 아니다 · VASP 에 MV 없음) · G4 변형 σ 0.068. **W 는 'MP1 σ=0.136 eV 에서의 TOTEN(자유에너지) 차' 로 명시** — 0 K 점착에너지·실제 전자온도 자유에너지로 부르지 않는다 (CE Q2). E(σ→0) 와 끝점 −TS 항 차(J/m²)를 같은 단위로 병기 (집계 도구가 자동 기록). σ 일괄 교체는 하지 않는다.",
+  "k": "Γ 3×2×1 그대로 (G4 변형 4×3×1)",
+  "D3": "QE 내장 grimme-d3 v4 → IVDW 12 · VDW_S6/S8/A1/A2 = 1.0/0.7875/0.4289/4.4407 · (v2) **VDW_RADIUS 50.2 Å · VDW_CNRADIUS 21.17 Å 명시** (공식 문서 기본값 — 버전별 기본값 변화를 막는다) · 2체 (ATM 은 별도 열) · 기준값 = 같은 절단의 s-dftd3 2체 (disp2 50.2 Å · cn 21.17 Å · s9 = 0) · (v3) DFTD3 구획이 찍는 **해석값** VDW_S6/S8/A1/A2/RADIUS/CNRADIUS 를 기대값과 대조 (계수 ±5e-4 · 절단 ±0.01 Å · 못 읽으면 SETTINGS_UNVERIFIED)",
+  "쌍극자": "QE 톱니 구간(emaxpos·eopreg) → LDIPOL · IDIPOL 3 · DIPOL_z = (구간 중심 − ½) mod 1 — **CE Q3 확인** (VASP 보정의 불연속이 DIPOL ± ½ 에 놓인다). 4 Å 는 **핵-구간 여유 검사**일 뿐 전자밀도 확인이 아니다 → 파일럿 OUTCAR 의 'min pos' 줄과 NGZF 로 실제 cut 위치를 확인 — (v5 정정 · CI 권고) **cut 위치의 설정 일치 검사(DIPOL 줄 또는 min pos/NGZF · ±2 격자)는 게이트다** (SETTINGS_MISMATCH/UNVERIFIED) · 전자밀도가 cut 에서 작은지는 검증하지 않는다 (물리 게이트 아님 · 파일럿에서 버전·NGZF·min pos·기대 cut·격자 편차를 기록). EFIELD 는 넣지 않는다 (되울림 ≠ 0 이면 SETTINGS_MISMATCH). · (v3) DIPOL 해석값 증거는 두 길: (가) 해석값 DIPOL 줄 · (나) `direction 3 min pos` / NGZF(dimension 줄) 로 본 cut 위치 = (DIPOL_z + ½) mod 1 (±2 격자) — (나) 의 뜻은 실물로 확인 (VASP 5.4.4 · INCAR DIPOL_z 0.4278 → min pos 520 / NGZF 560 = 0.9286 · 기대 0.9278 · 0.43 격자 차). 둘 다 없으면 SETTINGS_UNVERIFIED (자동 통과 없음 · CF R2). 5.4.4 는 DIPOL 줄을 찍지 않는다 (실물).",
+  "SCF": "EDIFF 1e-6 · NELM 200 · ALGO Normal · LREAL F · LASPH T · ISYM 0 · ISPIN 1 · 사전등록 재시도 1 회 (AMIX 0.1 · BMIX 0.01 · NELM 300 · 그 밖 동일) — **자격 = 첫 시도가 실행됐고 실행 실패·미종료·미수렴** 일 때만 (무결성·PP·설정 위반·첫 시도 없음은 승격 안 함 · CE P1-3). 그래도 실패면 그 잡 값 없음 (다른 설정으로 더 돌리지 않는다 · 금속 슬랩이라고 ALGO All·믹싱 탐색을 미리 넣지 않는다 · LDIPOL 수렴 문제가 실물에서 나오면 AMIN 등은 별도 개정 후보 · CE Q5)."
+ },
+ "비교군": "**VASP PBE+D3(BJ) V5 비교군** — QE 값(V2 · V4 · SE|SE)과 빼거나 한 표에서 섞지 않는다. VASP V5 의 W 는 'P1′ 지정 표본의 작은 모델 값 (SE 2층)' 이지 두꺼운 계면 대표값이 아니다 (카드 V5 지위 그대로).",
+ "G5_해석_주의": "UMA(OMat24)의 학습 기준이 VASP PBE (PAW · PBE_54 계열) 라 VASP V5 와의 G5 는 '코드 계열 차이를 줄인 설계' 다. ⚠ 그것이 '오차가 작아졌다' 는 뜻은 아니다 — 이번 σ·PP·스핀·슬랩 설정이 학습 표적과 같다는 보증도 없다 (CE Q1). 보증은 여전히 지정 유한 표본의 오차 제한뿐. V2 VASP 다리는 권고이지 이번 발송의 필수조건이 아니다 (CE Q1 · 추가하지 않음).",
+ "D3_검사_두_층(P1-4)": {
+  "①_큰_오설정_탐지": "잡마다 |Edisp_VASP − ref| ≤ 1 % |ref| (ref = 같은 절단 s-dftd3 2체) — 감쇠·3체·계수 오설정만 잡는다. **오차 예산이 아니다** (표본 ① 기대값에서 1 % 두 끝이 반대로 틀리면 ΔD3 허용 폭 0.094886 J/m² · CE P1-4).",
+  "②_오차_예산(결과_전_제안·1저자_비준_대상)": {
+   "표본_쌍_차이": "|ΔD3_VASP − ΔD3_ref| ≤ **0.005 J/m²** (= G5 표본 문턱 0.10 의 5 %) — 넘으면 그 표본의 총 W 에 '⛔ PBE+D3(BJ) 값으로 인용 금지' 라벨. W_PBE 와 G5 Δ 는 D3 가 양쪽에서 같아 상쇄되므로 영향 없음.",
+   "G3_차이의_차이": "|(ΔD3_VASP − ΔD3_ref)(G3 c+2, 검사 x) − (ΔD3_VASP − ΔD3_ref)(①)| ≤ **0.001 J/m²** (= G3 문턱 0.01 의 10 %) — 넘으면 G3 = 'INCOMPLETE (D3 차이의 차이 예산 초과)' (PASS·FAIL 을 내지 않는다)",
+   "배분_근거": "기존 문턱의 고정 비율 (G5 표본 5 % · G3 10 %) — 결과가 지나가도록 고른 값이 아니다. V2 실측 QE↔s-dftd3 (쌍 0.0025 · 차이의 차이 0.0001 J/m²) 은 달성 가능성 참고일 뿐 근거가 아니다 (그 수치를 본 뒤 정했다는 사실은 적는다).",
+   "G5_와의_관계": "G5 의 대수적 D3 상쇄(Δ = W_PBE − W_UMA)와 총 W·G3 의 D3 수치 신뢰성은 별개다 (CE P1-4)"
+  },
+  "③_G4_같은_기하_동일성(CF_P0-3)": "G4 변형(e70 · k1 · s05)은 표본 ① 과 같은 POSCAR·셀·D3 설정이라 D3 항이 같아야 한다 — 끝점마다 |Edisp(변형) − Edisp(①)| ≤ 1e-4 eV (VASP 인쇄 5 자리). 넘으면 그 변형 = 'INCOMPLETE (D3 불일치)' · G4 전체 PASS 불가 · 사용 자격 없음. 리뷰어 재현(ΔW 0.021 FAIL → far 에 −0.0252 eV 같은 이동 → 0.019 PASS)을 막는다.",
+  "⚠_예산의_뜻(CF_R3)": "0.005 · 0.001 J/m² 은 등록한 문턱의 일부를 배정한 **운영 예산**이지 물리적 유일 허용오차나 통계적 신뢰구간이 아니다. 예산 통과를 '기준 D3 대비 오차 0' 으로 읽지 않는다. 잔차(G5 Δ) 사용 자격과 총 W 인용 자격은 별개다."
+ },
+ "결과_전_예측_D3만": {
+  "뜻": "DFT 없이 s-dftd3 2체만으로 G3 변화를 미리 본다 (기하 고정 · 결정적)",
+  "V2_검정": "D3 만 예측 +0.0132 vs 실측(QE 전체) +0.0136 J/m² — G3(ii) 변화의 97 % 가 D3 꼬리",
+  "V5_①": "(i) 영상 검사 +0.0055653 · (ii) 직접 검사 **+0.0095396272** J/m² (s-dftd3 기본 절단 · v1 기대값) · VASP 절단(50.2/21.17 Å)으로 재계산 +0.0055582 · **+0.0095355740** — 문턱 0.01 까지 여유 ≈ 0.00046 J/m² ⇒ V5 G3 는 **경계선**이다.",
+  "⚠_정정(P1-5)": "v1 은 'PBE 몫이 V2 처럼 +0.0004 만 보태도 FAIL' 이라고 적었다 — **틀렸다**: 0.0095396272 + 0.0004 = 0.0099396272 < 0.01 (문턱 안). 양의 추가분이 약 0.00046 을 넘어야 0.01 을 넘는다. '경계선' 서술만 유지하고, V5 FAIL 예측이나 규칙 변경의 근거로 쓰지 않는다. 실제 V5 PBE 변화량은 모르며 V2 에서 자동 승계되지 않는다.",
+  "결과": "G3 FAIL 이면 카드상 G5 는 PASS 불가 (오차표만 · 3c) — 외주 비용을 쓰고 G5 가 구조적으로 막힐 위험은 남는다. 그 위험을 알고 외주할지는 1저자가 비용 대비 가치로 고른다 (CE §5: 'G5 가 반드시 열려야 한다' 는 전제는 필요 없다)."
+ },
+ "G3_G5_결정(CE_§5)": {
+  "3c_채택안": "총 W 의 G3 FAIL 이면 G5 = **'INCOMPLETE (G3 FAIL · G4 <상태> — 오차표만)'** (검사했는데 탈락한 것을 NOT_TESTED 로 바꾸지 않는다). 별도 필드: `raw_error_criteria_met` (Δ 문턱 충족 여부) · `usage_eligible` (원시 기준 ∧ UMA 입력 검사 ∧ G3 PASS ∧ G4 PASS). G3 FAIL 에서 갈래1/DEM 전달을 열지 않는다.",
+  "3b_원안": "**폐기** — G5 자격용 G3 를 W_PBE 로 대체하지 않는다. 대수는 맞지만 (Δ = W_PBE − W_UMA) 승인하는 보고량이 바뀌고, W_PBE 의 G3 통과가 Δ 의 끝점 민감도를 보장하지 않는다 (δΔ = δW_PBE − δW_UMA · CE §5).",
+  "3b′_제한된_잔차_진단": {
+   "이름": "G3 끝점 잔차 진단 (3b′)",
+   "정의": "δΔ_x = [W − (W_UMA + ΔD3_VASP)](G3 c+2 셀, 검사 x) − Δ(①) = δW_PBE − δW_UMA (x = i 영상 · ii 직접)",
+   "필요": "G3 세 구조(V5_s_outer_A_G3_c2_bound · far_i · far_ii)의 UMA 단일점 — 우리 쪽 (`relax_uma_d3.py --energies` · S1 결박 UMA · 싸다). 없으면 진단은 비운다.",
+   "문턱": "없음 — 기록만 (판정 아님 · 비준 전)",
+   "허용_문구": "'G3 셀 변형에서 PBE−UMA 잔차의 변화 δΔ = … J/m² (진단 · 판정 아님)'",
+   "DEM_사용_제한": "3b′ 로 G5 자격·DEM 전달을 열지 않는다. 3c 의 usage_eligible 은 총 W G3 로만 정해진다.",
+   "기록_문구": "V2 결과 및 V5 D3 진단을 본 뒤, V5 전자에너지 전에 채택한 개정 (CE §5 · 원 판정 보존)"
+  },
+  "G5_상태_순서(CF_R4)": "UMA 입력 BLOCKED → PP 등록부 없음 BLOCKED → 분모 INCOMPLETE → G3/G4 비통과면 'INCOMPLETE (G3 x · G4 y — 오차표만 · 원시 기준 충족/미충족)' → 원시 FAIL → PASS. G3/G4 가 통과하지 않은 상태의 원시 FAIL 은 문자열과 raw_error_criteria_met=false 로 드러내고 판정은 INCOMPLETE.",
+  "usage_eligible(CF_P0-2)": "원시 기준 ∧ UMA 입력 검사 ∧ **봉인 PP 등록부 검증** ∧ G3 PASS ∧ G4 PASS",
+  "total_w_citable(CF_권고)": "표본마다 기계 필드 — 봉인 등록부 ∧ D3 쌍 오차 ≤ 0.005 ∧ G3 PASS ∧ G4 PASS 일 때만 true · 아니면 total_w_labels 에 이유 (잔차 PASS 와 섞지 않게)"
+ },
+ "패키지": {
+  "path": "db/inputs/wad_aprime_v5_vasp_2026_09_27",
+  "version": "v6",
+  "MANIFEST_sha256_of_file": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+  "jobs": 18,
+  "max_runs": 36,
+  "tool": "tools/wad/build_v5_vasp_package.py",
+  "tool_sha256": "1d0f4566ab93694c39a3031d041a4751383c5df23db8eacc84e079fc176424be",
+  "검증": "selftest 194/194 (CE·CF·CG·CI·CJ 재현 전부 음성 · BASH_ENV 주입 26 종 — 리뷰어 mgmt_echo_error·manifest_echo_error 그대로 + '일은 다 하고 실패 보고' 변형(echo·cat·wc·cut 이 쓰고/찍고 73) + 조용히 버리기·두 번 쓰기·다른 이름 쓰기(목록 내용 검증) + sha 정상 출력 뒤 73·64 자리 비-hex + 정리 rm 실패 = 종료 0 ⚠ · 리뷰어 스크립트 둘(repro_pack_ci.sh · probe_pack_cj.py --assert-fixed)이 있으면 selftest 가 그대로 돌림) · 돌연변이 CJ 12/12 빨간불 (첫 판 6/11 — 관리 목록 검사 5 개가 뒤 검사(줄 수·존재·cmp)에 가려 살아남아 표적 주입을 더함 · 그 과정에서 제품 결함 하나를 더 잡았다: 줄 수 검증이 '쓴 mgmt 파일' 기준이라 이름이 두 번 쓰여도 통과했다 → 기준을 디스크의 관리 파일 수로) · 실제 재생성 패키지 v6 에 리뷰어 probe_pack_cj.py --assert-fixed 종료 0 (주입 17 건 전부 종료 4·쌍 보존 · 양성 3 · 정리 실패 종료 0) · repro_ci.py --assert-fixed 종료 0",
+  "v1_대비": "POSCAR·KPOINTS·POTCAR.spec 불변 (구조 sha 동일) · INCAR/INCAR.r1 에 VDW_RADIUS·VDW_CNRADIUS 두 줄 추가 · D3 기대값을 VASP 절단으로 재계산 (최대 차 0.031 eV · 0.05 %) · run_all.sh · jobs.json · README 갱신",
+  "estimate": {
+   "nel_min": 1356.0,
+   "nel_max": 1452.0,
+   "nb_max": 826,
+   "npw_520": 185434,
+   "npw_650": 243934,
+   "wfc_only_GB": 16.1
+  },
+  "v2_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (입력 동일 · D3 기대값 동일) · run_all.sh (원자적 mkdir · 포장 실패 4 · PACK_ONLY) · README (재실행 문구 · 종료코드 · 포장 재시도) · jobs.json (schema v3 · 도구 sha · 설정 필드)",
+  "v3_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (입력 동일 · D3 기대값 동일 · 93 파일 중 jobs.json·run_all.sh 만 변경) · run_all.sh (허용 목록 포장 · 구성원 검사 · 부분 POTCAR 삭제 · tar/sha 쌍 승격) · README (허용 목록 · 파일럿 결속 문구) · jobs.json (schema v4 · 도구 sha · return_allowed/forbidden · 등록부 schema v3)",
+  "v4_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (93 파일 중 jobs.json·run_all.sh 만 변경) · run_all.sh (pack() 단계별 확인 · pack_fail 임시 삭제 · 머리말 v5) · README (포장 실패 문구 · 발송 조건 = 종료 0 + sha256sum -c) · jobs.json (schema v5 · 도구 sha)",
+  "v5_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (93 파일 중 jobs.json·run_all.sh 만 변경) · run_all.sh (관리 목록 쓰기 검사 · 목록 내용 검증 · sha 명령/형식 분리 · 정리 실패 ⚠ · 머리말 v6 · 발송 조건 · 지원 환경) · README (6 · 7 항) · jobs.json (schema v6 · 도구 sha)"
+ },
+ "허용_서술": {
+  "기본(Q10)": "'지정한 P1′ 2층 모델의 고정 기하·끝점에서, VASP PAW/PBE·MP1 σ=0.136 eV·2체 D3(BJ) 기준의 등록된 비교를 수행했다'",
+  "G5_PASS_시": "카드 1a 의 G5 문장 그대로 + 'VASP PBE+D3(BJ) (PAW) 기준 · 코드가 V2 와 다르다' 라벨 · ①/⑤ 는 far 를 공유하므로 독립 5 회 검증이 아니다 · P2 나 두꺼운 P1 검증으로 확장되지 않는다",
+  "전체_계면_UMA+D3": "여전히 미검증 예측 · DEM 민감도 시나리오 (CE Q10)"
+ },
+ "금지_서술": [
+  "VASP V5 의 W 를 QE V2 값과 같은 표에서 빼거나 평균",
+  "V5 W 를 두꺼운 LPSCl|Ag 계면 대표값으로",
+  "G5 PASS 를 '전체 계면 UMA 예측이 검증됐다' 로 (지정 유한 표본의 오차 제한까지만)",
+  "업체 반송이 --check OK 가 아닌 잡의 값 사용",
+  "지정 표본의 ±0.10 / ±0.05 를 새 계면의 신뢰구간이나 물리적 상하한으로",
+  "G5 PASS 를 DEM 전달 자동 승인으로 (카드의 DEM 면적가중·동일 초기 기판·고정 마스크 조건 확인과 별도 합의가 그대로 필요)",
+  "W 를 0 K 점착에너지나 실제 전자온도 자유에너지로 (MP1 σ 0.136 eV TOTEN 차)",
+  "D3 쌍 오차 예산 초과 표본의 총 W 를 PBE+D3(BJ) 값으로",
+  "'코드 계열을 맞췄으니 오차가 작다' (설계 차이 축소 ≠ 오차 감소)",
+  "3b′ 진단으로 G5 자격·DEM 전달을 여는 것"
+ ],
+ "재개_조건": [
+  "✅ Codex CK GO (2026-09-27 · 준비본 v6 기술 검토 · 커밋 f4441c426) — 리뷰 사슬 CE→CF→CG→CI→CJ→CK 종료 (실행·인용 승인 아님)",
+  "**1저자 비준: 이 개정 v6.1** → 결정 D-2026-09-27-wad-aprime-v5-vasp-route 를 active 로 (3c · 3b′ 진단 · PP PBE_54 · VASP 버전 일치 · D3 운영 예산 + G4 동일성 · 최종 판정 등록부 필수 + 파일럿 결속 · DIPOL 증거 두 길(게이트) · 파서 적응 정책 · 반송 허용 목록 · 포장 단계별 확인 + 목록 내용 검증 · 발송 조건 · 지원 환경 · S1 잔여 위험 선언)",
+  "업체·예산 확정 → 파일럿 2 잡 → --seal_pp 봉인 (schema v3) → 나머지 16 잡 → --collect (등록부) · 파일럿에서 실제 버전·NGZF·min pos·기대 cut·격자 편차를 기록 (CG S4 · CI S6) · 업체 도구가 GNU 가 아니면 계산 전 PACK_ONLY smoke (CJ S3)",
+  "비준 뒤 방법(입력·판정 규칙·러너)이 바뀌어야 하면 새 개정 + Codex 재리뷰 (패키지 sha 가 바뀌면 파일럿은 구판 진단으로) · S2 의 grep -q → > /dev/null 권고는 그때 함께"
+ ],
+ "비용_규모": "18 잡 · 실행 최대 36 회 (파일럿 재사용 · 잡마다 r1 1 회) · NIONS 176–200 · NELECT 1356–1452 · 기본 NBANDS ~826 · 평면파 최대 ~185,434/k (ENCUT 520) · ~243,934/k (ENCUT 650 · G4 2 잡) · 파동함수 몫 ~16 GB (**peak RSS 아님** — FFT·투영자·작업 배열·MPI 복제 별도) · 환원 k 추정 Γ3×2×1 ≈ 4 · Γ4×3×1 ≈ 7 (IBZKPT 확인) · 업체에 버전/PP · 잡별 NIONS·NELECT·k·ENCUT·셀 · 실패/재시도 상한을 주고, 견적은 파일럿 peak RSS·벽시계로 (CE Q9).",
+ "content_digest": "sha256:8a1554e945d36dbc56c45637b002507caa6edee19e92004a33554ff6a53067e3",
+ "파서_적응_정책(결과_전)": "실물로 확인한 OUTCAR 형식은 VASP 5.4.4 한 건이다 (REAL_OUTCAR_544 픽스처 · 저장소 원본과 줄 대조). 업체 버전의 형식이 다르면 파일럿 원문으로 **파서만** 적응한다 — 판정 규칙·문턱·기대값·상태 순서 불변 · 적응 내용·전후 selftest·새 도구 sha 를 기록 · 적응 전에는 못 읽은 항목이 미검증으로 막힌다 (자동 통과 없음).",
+ "결속_금지_서술(v4)": "등록부 검증은 'PP·버전 신원 대조' 와 '봉인 파일럿 재사용 검증' 두 가지를 다 한다 (CG S2) — v3 까지는 앞것만이었다. 두 문장을 섞어 쓰지 않는다.",
+ "러너(v6)": "run_all.sh — 시도 폴더는 **원자적 mkdir** 로 새로만 · 성공 = rc 0 ∧ 종료 ∧ 수렴 ∧ OUTCAR 실행 1 개 · 성능 파일 제한 문법 · 잡마다 attempt.json (run_id·시각·rc·sha) · POTCAR 는 반송하지 않고 TITEL/ZVAL 줄 · 종별·조립본 sha 만 · 반송 묶음은 임시 파일에 쓰고 성공해야 승격 · **포장 실패 = 종료 4** ('✅ 끝' 금지) · `PACK_ONLY=1` 로 계산 없이 포장만 재시도 · 종료 0/1/2/4 · 수동 재실행은 새 승인 (README). (v4 · CG P1-1) 반송 묶음은 **허용 목록**으로만 담는다 — run/<잡>/{OUTCAR OSZICAR INCAR KPOINTS POSCAR IBZKPT POTCAR.titel POTCAR.sha256 POTCAR.species.sha256 attempt.json stdout.log} + run/status.tsv · run/env.txt · MANIFEST.sha256. 정상 실행 뒤 삭제에 기대지 않는다 · 준비 실패·중단·PACK_ONLY 도 같은 pack() · 묶음 구성원에 금지 이름이 있으면 만들지 않는다(종료 4) · 준비 실패 때 조립 중이던 POTCAR 도 지운다 · tar 와 sha 둘 다 임시 파일로 완성한 뒤 승격 · sha 파일은 최종 이름으로 (`sha256sum -c` 통과). (v5 · CI P1) pack() 은 **단계마다 성공을 확인**한다 — find 열거 · 허용 필터(grep 정상 무매치 1 은 정상 = 잡 파일 없는 run/ 은 관리 파일만 포장 · ≥ 2 는 오류) · sort · 목록 쓰기 · tar · tar tzf 열람(실패는 '금지 없음' 이 아니라 실패) · 금지 검사 · 묶음 구성원 집합 = 목록 집합 대조 · sha(64 자리) · mv. 어느 하나라도 실패하면 임시 묶음(.part)을 지우고 1 → 러너 종료 4 · '✅' 없음 · 기존 tgz/sha 쌍 불변. ⚠ 두 번째 mv 실패는 종료 4 로 드러나지만 **새 tgz + 옛 sha** 가 남을 수 있다 (선언된 틈 · CI S5 수용) → [v5 당시 문장: '발송은 종료 0 뒤 sha256sum -c 까지 통과한 쌍만' — v6 에서 아래 '종료 0 또는 1 + sha256sum -c' 로 대체됨 · 이력으로만 남김] (v6 · CJ P1) 관리 파일 목록은 **쓰기마다 검사**한다 (`: > mgmt` · `echo run/env.txt` · `echo run/status.tsv` · `echo MANIFEST.sha256` · `cat`) — 어느 쓰기가 실패해도 종료 4. 그 위에 **목록 내용 검증**: 줄 수 = 1 + **디스크에 있는** 관리 파일 수 + 허용 파일 수 · MANIFEST.sha256 과 디스크의 관리 파일이 목록에 있어야 한다 (쓰기 실패가 어떤 식으로 가려졌더라도 · 중복·바뀐 이름도 잡는다). sha256sum 은 파일로 받아 **명령 성공**과 **`^[0-9a-fA-F]{64}$`** 를 따로 본다. 마지막 진단 폴더 정리(rm) 실패는 포장 실패가 아니다 (⚠ 경고 · 종료 0 — 묶음·sha 는 이미 정상). **보내는 것** = 일반 실행 종료 0 **또는 1**(실패 잡 있음 · 실패도 기록) 뒤 `sha256sum -c` 통과 쌍 · 종료 4 → PACK_ONLY 종료 0 + sha 확인. **지원 환경 = Linux · bash ≥ 4 · GNU coreutils/tar** (bsdtar 는 tar tzf 출력 CRLF 로 구성원 대조가 거짓 실패 → 계산 전 PACK_ONLY smoke). (v6.1 · CK S1 잔여 위험) **성공을 반환하는 열거 도구(find)의 잘못된 출력은 포장 단계의 잔여 위험이다** — 같은 구현을 다시 돌려 세는 것은 독립 보증이 아니라 검사하지 않는다. 수신 검사(`--check/--collect`)는 잡 폴더·필수 입력·실행 기록·입출력 해시·OUTCAR 증거의 결측을 막지만, **모든 보조 반송 파일(예: stdout.log)의 완전성을 보증하지는 않는다** (리뷰어 실측: find 가 stdout.log 둘만 빼고 0 을 돌려주면 23 구성원 묶음이 종료 0 · 수신 양성 픽스처도 stdout.log 없이 통과).",
+ "반송_검사(v6)": "`tools/wad/build_v5_vasp_package.py --check/--collect --manifest_sha256 <고정값>` fail-closed. 입구: 외부 고정 MANIFEST sha + 목록 전 파일 대조. 잡 판정 순서 (CF P0-1): 실행 기록(attempt.json: run_id 형식 · t_start ≤ t_end · rc 정수 · 입출력 sha) → 입력 무결성(INCAR 를 VASP 의미로) → 복수 실행 → **있는 증거의 모순** (POTCAR 기록 결측·형식 · TITEL/ZVAL · OUTCAR TITEL · 등록부 종별·조립본 sha · 등록부 버전 · 설정 해석값 · Edisp 1 %) = 재시도 자격 없음 · `conflicts` 목록에 전부 → 실행 상태 (rc ≠ 0 · 미종료 · 미수렴 = r1 자격 · 증거가 **없는** 조기 종료는 모순이 아니다) → 완결성 (성공한 실행만: TITEL·NIONS·NELECT·설정·에너지·Edisp 결측 = 미검증). 잡 사이 POTCAR·버전 일관성은 첫 시도·r1 모든 시도에서 모은다. 설정은 OUTCAR 의 **INCAR 에코 구획을 뺀** 해석값에서만 읽는다 (CF R2). 에너지는 **마지막 레코드**의 토큰을 유한수로 해석 — TOTEN·E(σ→0)·E(무엔트로피)는 마지막 'FREE ENERGIE OF THE ION-ELECTRON SYSTEM' 구획 뒤의 것만 (VASP 는 SCF 단계 TOTEN 에 D3 를 넣지 않는다 — 실물) · Edisp 는 `Edisp (eV)  x` (5.4.4 실물 · 콜론 없음)·콜론·등호 형식. 최종 집계(`--collect`)는 봉인 PP 등록부 + 고정 sha 필수 (없으면 종료 2) · 등록부 내용 검증 (schema · PBE_54 · 전 종 TITEL · 종별·조립본 sha · 버전 줄 · 패키지 MANIFEST · 파일럿 run_id) · 파일럿 단계 집계는 `--collect --pilot` 만 (G5 = BLOCKED · total W 인용 불가). 종료코드: --check 0/3/2 · --collect 0 PASS/10 FAIL/11 INCOMPLETE·BLOCKED/12 UMA 없음/3 잡 미완/2 승인본·등록부 · 진단 JSON 은 실패해도 · allow_nan=False. (v4 · CG) OUTCAR TITEL 은 기대 목록의 **정상 접두**(같은 순서·문자열로 앞부분만)면 잘린 출력의 결측이지 모순이 아니다 — 미완료 시도(rc ≠ 0 · 미종료)는 r1 자격 유지 · 성공 시도인데 접두만이면 POTCAR_UNVERIFIED (통과·r1 자격 아님) · 접두가 아닌 것(다른 종·날짜·순서 · 기대 뒤 추가)은 계속 POTCAR_MISMATCH (r1 자격 없음). 등록부가 있으면 **파일럿 두 잡의 채택 시도**(0 또는 정당한 r1)의 run_id 가 등록부 from_pilot 과 같아야 하고, 같은 run_id 라도 attempt.json·OUTCAR sha 가 봉인(from_pilot_sha256 · 등록부 schema v3)과 다르면 PILOT_NOT_SEALED (자동 교체 없음 · 재실행은 새 승인 · 잡 미완 → 종료 3 · G5 분모 INCOMPLETE · ① total W 인용 불가). 에너지·Edisp 레코드는 '존재' 와 '값' 을 분리 — 값이 빈 마지막 레코드도 마지막 레코드(None → 미검증) · 값 패턴이 줄을 넘지 않는다. 반송 폴더에 금지 파일(POTCAR 본문·WAVECAR·CHGCAR·CHG·vasprun.xml)이 있으면 return_bundle.forbidden_files 로 보고한다 (판정 아님 · 저장하지 말고 지운다). (v5 · CI S3) 앞 항목은 다 맞고 **마지막 TITEL 이 기대의 앞부분 문자열**(줄 중간에서 잘림)이면 새 상태 TITEL_TRUNCATED — 모순 확정이 아니라 자동 확인 불가 · 통과·r1 자격 없음 · 원문 확인·새 승인으로만 해제 (POTCAR_MISMATCH 와 구분).",
+ "파일럿(v6)": "**2 잡 — 표본 ① bound + far**. 파일럿 전에 VASP 버전 일치 규칙 · PP 세트 · 수치 설정 · 파서 · 실패 규칙을 이 개정(현재판 — 개정_이력의 마지막 v) + 패키지 MANIFEST 로 고정한다. W 의 부호·게이트를 보고 설정을 고르지 않는다. 파일럿 반송 → `--check` (등록부 없이 · 등록 전 단계) → `--seal_pp` (종별·조립본 sha · 버전 줄 · 파일럿 run_id + **봉인 당시 attempt.json·OUTCAR sha** — 스스로 검증 · 등록부 schema v3) → 등록부 커밋·sha 기록 → 나머지 16 잡 → `--collect --pp_registry R --pp_registry_sha256 H` (최종). 재사용: 패키지 sha 가 같으면 파일럿 두 잡을 본 배치에 그대로 쓴다 (실행 최대 36 회). 방법 변경이 불가피하면 파일럿은 구판 진단으로 보존하고 새 패키지 버전. (v4 · CG P1-2) 재사용의 뜻 = 최종 반송에 파일럿 두 잡의 폴더가 **봉인한 그 실행 그대로** 들어 있는 것 — 다른 폴더에서 다시 돌린 파일럿(다른 run_id)이나 같은 run_id 아래 바뀐 파일은 PILOT_NOT_SEALED 로 막힌다 · 파일럿 재실행은 새 승인 대상.",
+ "status_history": [
+  {
+   "at": "2026-09-30",
+   "state": "ratified",
+   "note": "1저자 '이거 외주 보냈엉' (2026-09-30) — 배포 zip wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip 을 업체에 발송 (sha256 5b7cad0b… = 준비 기록 wad_aprime_v5_vasp_handoff_v6_2026_09_27.json 값 · 대조함). ⚠ 순서: 준비 기록의 '비준 전에는 보내지 않는다' 와 달리 비준 기록이 발송 뒤에 적혔다 — 1저자의 발송을 비준(개정 v6.1 · Codex CK GO 판 그대로)으로 기록한다. 트랙 W_ad → 1저자 = 사용자. 실행 순서는 준비 기록대로 (업체 보유 POTCAR · 파일럿 2 잡 먼저). 빌더 selftest 194/194 (비준 직전 재실행)."
+  }
+ ],
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-30",
+  "by": "1저자",
+  "content_digest": "7d3a56b308157214b675df4031aa78b576ee8b915a63983efc5f90cd16d50814",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-30T03:25:17Z",
+  "commit": "e5e854e0962205496ba052f52a1b511340d5028e",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
+  "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
+ }
+}

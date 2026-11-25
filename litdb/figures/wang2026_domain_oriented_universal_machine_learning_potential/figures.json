@@ -1,0 +1,352 @@
+{
+ "slug": "wang2026_domain_oriented_universal_machine_learning_potential",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "1. NatCommun_2026_Wang_Domain_oriented_uMLP_battery_electrolytes_MAIN.pdf",
+  "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Training Universal Machine Learning Potential for Electrolytes. a Illustration of the applications and basic components of LIBs, along with a brief overview of the key properties of electrolytes. b The high-dimensional chemical space of electrolytes, illustrating the process of component optimization through",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    498.0,
+    251.4
+   ],
+   "w": 1936,
+   "h": 870,
+   "dpi": 300,
+   "src": "1. NatCommun_2026_Wang_Domain_oriented_uMLP_battery_electrolytes_MAIN.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Accuracy of universal machine learning potential for electrolytes. a The predicted errors of potential energies, atomic forces and virial tensors on training datasets. The distribution of prediction errors is presented in the corresponding inset. b The predicted errors of potential energies, atomic forces and virial tensors on validation datasets. The distribution of prediction errors is presented in the",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    544.0,
+    444.1
+   ],
+   "w": 2127,
+   "h": 1673,
+   "dpi": 300,
+   "src": "1. NatCommun_2026_Wang_Domain_oriented_uMLP_battery_electrolytes_MAIN.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Property calculations. The radial distribution functions (RDF, g(r)) of (a) Li+ −ODMC, (b) Li + \u0001 OFSI\u0001, and c. Li+ −OBTFE, along with (d) the corresponding coordination numbers (CN) in diluted, concentrated LiFSI/DMC electrolytes and localized highly concentrated electrolytes. e The vibrational density of states (vDOS) of aqueous electrolytes with varying concentrations of LiTFSI, showing the blue shift of the O-H stretching mode from ∼3400cm−1 to ∼3600cm−1 with increasing",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    550.4,
+    302.5
+   ],
+   "w": 2154,
+   "h": 1083,
+   "dpi": 300,
+   "src": "1. NatCommun_2026_Wang_Domain_oriented_uMLP_battery_electrolytes_MAIN.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Ionic Conductivity. a Ionic conductivity σ at different concentrations and b ionic conductivity of electrolytes atdifferent temperatures from experiments and computed by MLMD simulations. The circular points (∘) represent experimental values, and the crossed points (×) are obtained through MLMD calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    63.3,
+    300.8,
+    382.7
+   ],
+   "w": 1114,
+   "h": 1332,
+   "dpi": 300,
+   "src": "1. NatCommun_2026_Wang_Domain_oriented_uMLP_battery_electrolytes_MAIN.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Solvation Dynamics. a Coordination lifetime of Li+-FAN and Li+ −FSI−at various temperatures. The ionic conductivity from MLMD and experiments are plotted together for comparison. b The conductivities are plotted as a function of coordination lifetime (\u0001τ), illustrating the correlation between ion transport and the",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.8,
+    466.9,
+    288.6
+   ],
+   "w": 1806,
+   "h": 1021,
+   "dpi": 300,
+   "src": "1. NatCommun_2026_Wang_Domain_oriented_uMLP_battery_electrolytes_MAIN.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Validation of cutoff radius (Rcut) of local environments in machine learning potential descriptors. The initial learning rate is set to 1.0×10−3 and it decayed to 1.0×10−8 in 2,000,000 training steps. The cutoff radius for MLP training is set to 8.0 Å. The predicted errors of potential energies, atomic forces and virial tensors on training data sets are plotted with red, blue and green dots.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    206.1,
+    562.6,
+    343.2
+   ],
+   "w": 2133,
+   "h": 572,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. a. The number of datasets with different model sizes. b. The number of atoms for each element in the training dataset. c. Unsupervised machine learning of Li+ solvation structures in the training data set. A structural-similarity map of local environments is obtained via UMAP. SOAP descriptor is applied to describe the local environments of Li+. Color coding indicates the number of O, N and F atoms within 2.5 Å, and the number of C, S, P, B, and Cl atoms within 3.5 Å.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    93.8,
+    561.3,
+    574.6
+   ],
+   "w": 2128,
+   "h": 2005,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.774
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The predicted errors of potential energies, atomic forces and virial tensors on datasets of glyme (G3) based electrolytes with different concentration of LiTFSI.4 The C, H, O, N, S, F and Li atoms are in gray, white, red, blue, yellow, green and pink, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    57.8,
+    561.3,
+    310.0
+   ],
+   "w": 2128,
+   "h": 1052,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The predicted errors of potential energies, atomic forces and virial tensors on datasets of a. water-in-salt electrolyte, b. LiTFSI/FAN and c. LiTFSI/water/DMF hybrid electrolyte. d. 1 mol L−1 CF3COOLi/EC/EMC/DMC (vol 1:1:1) electrolyte. The C, H, O, N, S, F and Li atoms are in gray, white, red, blue, yellow, green and pink, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    57.8,
+    562.0,
+    506.8
+   ],
+   "w": 2131,
+   "h": 1872,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. a. The structure of 1 mol L−1 LiPF6/EC-DEC electrolytes. The radial distribution functions for b. Li+-OEC c. Li+-ODEC and d. Li+-FPF− 6 from AIMD and MLMD simulations. The C, H, O, P, F and Li atoms are in gray, white, red, tan, green and pink, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    57.8,
+    556.3,
+    345.7
+   ],
+   "w": 2107,
+   "h": 1201,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. a, b and c show predicted errors in potential energies, atomic forces, and virial tensors for a dataset of electrolytes composed of 40 PC molecules and 10 LiFSI derivatives, where the F atoms on the FSI anion are substituted with three different fluoroalkyl groups in a, b and c, respectively. The structures of the modified anions are highlighted in the last snapshot of 1 ns MLMD trajectories. The dataset was generated by computing the corresponding potential energies, atomic forces, and virial tensors with DFT every 10 ps along the MLMD trajectories. d shows predicted errors in potential energies, atomic forces, and virial tensors for a dataset of electrolyte composed of 150 PC, 83 DEC, and 2 LiETFSI molecules, representing a 0.1 M LiETFSI in EC/DEC (v/v = 1:1)5. The dataset was generated by computing the corresponding potential energies, atomic forces, and virial tensors with",
+   "rotated_deg": 0,
+   "bbox": [
+    50.4,
+    57.8,
+    562.6,
+    527.9
+   ],
+   "w": 2134,
+   "h": 1960,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. a. Comparison of densities obtained from experiments and MLMD simulations for various electrolyte systems, including LiFSI/FAN, LiTFSI/FAN, LiPF6/EC-EMC, and LiTFSI/DOL-DME, across different concentrations. Circular points (◦) denote experimental values, while crossed points (×) represent MLMD simulation results. b. Density comparison for selected solvents between experimental measurements and MLMD simulations, illustrating the accuracy of the uMLP-based approach.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.4,
+    57.8,
+    561.3,
+    236.4
+   ],
+   "w": 2130,
+   "h": 745,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Radial distribution functions (RDFs) for 3.69 mol/L LiTFSI/PC electrolyte, comparing results from AIMD, uMLP-based MLMD, and MLMD using an MLP trained on a single system. The C, H, O, N, S, F and Li atoms are in gray, white, red, blue, yellow, green and pink, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.3,
+    57.8,
+    561.3,
+    201.7
+   ],
+   "w": 2130,
+   "h": 601,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Comparison between computed viscosities from MLMD simulations and experimental values for various electrolyte systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    57.8,
+    532.9,
+    302.2
+   ],
+   "w": 2010,
+   "h": 1020,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Coordination lifetime (τ) of Li+ and other species in 1.2 M LiFSI/FAN, LiTFSI/FAN, and LiPF6/EC-EMC (3:7) electrolytes, illustrating the dynamic behavior of solvation structures in different electrolyte systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    57.8,
+    561.8,
+    310.2
+   ],
+   "w": 2130,
+   "h": 1053,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 13,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Coordination lifetime (τ) of Li+ with different species under different temperature in 1.2 M LiTFSI/FAN, 1.0 M LiPF6/EC-EMC(3:7) and 1.0 M LiTFSI/DOL-DME(1:1) electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    57.8,
+    561.3,
+    202.8
+   ],
+   "w": 2128,
+   "h": 605,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The details of concurrent learning for training uMLP for electrolytes. The number of initial configurations for MLMD simulations is 2000. Iteration Composition Cations Ensemble Timestep T (K) P (bar) 0 to 5 1 solvent and 1 salt Li+ NVT 0.5 300/400/500/600/700/800 - 5 to 10 1 solvent and 1 salt Li+ NpT 0.5 300/400/500 1 11 to 20 1 solvent and 1 salt Li+ NpT 0.5 300/400/500 1 21 to 30 1/2/3 solvent and 1/2/3 salt Li+ NpT 0.5 300/400/500/600 1 31 to 40 1/2/3 solvent and 1/2/3 salt Li+, ionic liquids NpT 0.5 400/600/700/800 1/10/100 41 to 50 4/5/6 solvent and 1/2/3 salt Li+, Na+,K+ NpT 0.5 300/400/500/600 1/10/100 51 to 60 1/2/3 solvent and 1/2/3 salt Zn2+ NpT 2.0 300/400/500/600 1/10/100 61 to 70 3/4/5 solvent and 1/2/3 salt Na+, K+, Zn2+ NpT 2.0 300/400/500/600 1/10/100 71 to 80 4/5/6 solvent and 1/2/3 salt Zn2+, Mg2+, Ca2+ NpT 2.0 300/400/500/600 1/10/100 81 to 91 4/5/6 solvent ",
+   "rotated_deg": 0,
+   "bbox": [
+    50.9,
+    61.1,
+    561.6,
+    765.2
+   ],
+   "w": 2128,
+   "h": 2935,
+   "dpi": 300,
+   "src": "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf",
+   "blank": 0.944
+  }
+ ]
+}

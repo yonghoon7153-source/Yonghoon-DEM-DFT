@@ -1,0 +1,8 @@
+﻿# MLIP committee disagreement vs temperature (modelc / LPSCl1.6)
+# fixed break threshold 0.3669 eV/A from T600 p95; scaled = threshold x (force_scale_T / force_scale_T600)
+T_K,n_frames,force_scale_eV_per_A,median_abs_eV_per_A,median_relative,n_above_fixed,n_above_scaled,scaled_threshold_eV_per_A,relative_Cl,relative_Li,relative_P,relative_S
+400,200,0.59058,0.26528,0.44920,0,34,0.29472,0.18527,0.24400,0.35211,0.28801
+500,200,0.66822,0.29564,0.44243,1,19,0.33346,0.18335,0.24027,0.33985,0.28228
+600,200,0.73518,0.31748,0.43184,10,10,0.36688,0.18168,0.23467,0.33311,0.27668
+800,200,0.86429,0.34241,0.39618,59,8,0.43131,0.18669,0.22861,0.31494,0.26448
+1000,200,0.97340,0.38045,0.39085,118,4,0.48576,0.18521,0.22369,0.30307,0.25887

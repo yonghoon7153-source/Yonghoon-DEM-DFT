@@ -1,0 +1,7 @@
+&PROJWFC
+    prefix  = '${PREFIX}'
+    outdir  = './tmp'
+    filpdos = '${PREFIX}.pdos'
+    DeltaE  = 0.01
+    ! sum per-orbital PDOS afterwards: S 3p (VBM), P 3s/3p + S + Li (CBM), Cl 3p
+/

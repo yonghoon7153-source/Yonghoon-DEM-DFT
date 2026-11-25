@@ -1,0 +1,81 @@
+{
+  "symbol": "Hg",
+  "name": "Mercury",
+  "Z": 80,
+  "role": "80번 5d 후전이금속(Group 12, Zn/Cd 동족). SSB 앵커 없음 — 백과사전/전극(역사적)·독성학 관점. 상온에서 유일한 액체 금속(상대론적 6s² 안정화로 Hg–Hg 결합 약화). +2가 대표(HgO, HgS, HgCl₂), +1은 이량체 Hg₂²⁺(칼로멜 Hg₂Cl₂). 칼로멜 기준전극(SCE)·적하수은전극(폴라로그래피)으로 전기화학사에서 중요하나 SSB 아님. 아말감·형광등·HgCdTe 적외선 검출기도 용도. 미나마타병의 독성 중금속.",
+  "oxidation_states": [
+    "+2",
+    "+1"
+  ],
+  "electronegativity": 2.0,
+  "ionic_radius_A": {
+    "Hg2+_II": 0.69,
+    "Hg2+_IV": 0.96,
+    "Hg2+_VI": 1.02,
+    "Hg22+_VI": 1.19,
+    "_note": "Shannon 1976: Hg²⁺(d¹⁰) 선형 II 0.69 Å, 사면체 IV 0.96 Å, 팔면체 VI 1.02 Å; Hg⁺(Hg₂²⁺ 이량체) VI 1.19 Å. Hg²⁺는 d¹⁰이라 선형 2배위 선호(HgCl₂). 중금속이라 SSB 격자 치환 대상 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "HgS (진사/cinnabar)",
+      "context": "황화물(+2)",
+      "battery_role": "SSB 무관 — 적색 안료(주사/vermilion)·주광물; 반도체(α 진사 gap ~2 eV)",
+      "note": "α-HgS(삼방정) Raman A1 ~253 cm⁻¹. β-HgS(metacinnabar)는 흑색 섬아연광형. Hg–S지만 Li⁺ SE와 무관"
+    },
+    {
+      "formula": "HgO",
+      "context": "산화물(+2)",
+      "battery_role": "SSB 무관 — 적/황색 산화물; 과거 수은전지(Zn/HgO) 양극재였으나 독성으로 퇴출",
+      "note": "Hg 4f7/2 ~101 eV(Hg²⁺)"
+    },
+    {
+      "formula": "Hg2Cl2 (칼로멜)",
+      "context": "일가 수은 화합물(Hg₂²⁺)",
+      "battery_role": "SSB 무관 — 포화칼로멜 기준전극(SCE)의 활물질(수계 기준전극)",
+      "note": "Hg–Hg 결합의 Hg₂²⁺ 이량체; 백색 난용성"
+    },
+    {
+      "formula": "아말감 · HgCdTe",
+      "context": "합금/반도체",
+      "battery_role": "SSB 무관 — 치과·금 추출 아말감(Hg 합금), HgCdTe(MCT) 적외선 검출기",
+      "note": "액체 금속이 합금·전극 조성에 활용; HgTe는 위상절연체 모델"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 전기화학사 접점(칼로멜 SCE·적하수은전극 폴라로그래피)은 수계 기준/작업전극 맥락이지 황화물 SE 계면과 별개. 과거 Zn/HgO 수은전지 양극이었으나 독성으로 폐기 — 현행 SSB와 무관. Group 12 동족 Zn(SSB 산화물 도펀트 후보)과 달리 Hg는 독성·액체라 실전 재료 아님.",
+  "xps": [
+    {
+      "core": "Hg 4f7/2",
+      "BE_eV": 100.0,
+      "assignment": "Hg metal / Hg⁰ (4f5/2 ~+4.0 eV 더블릿; 보고 ~99.9-100.0 eV). 주의: Si 2p(~99-104 eV) 영역과 겹침",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Hg 4f7/2",
+      "BE_eV": 101.0,
+      "assignment": "HgO / HgS / Hg²⁺ (~100.7-101.2 eV; 산화상태 이동 작아 화학종 구분 주의)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 253,
+      "assignment": "α-HgS(진사) A1 대칭 신축(+ E 모드 ~283, 343 cm⁻¹) — 적색 주사 안료 지문",
+      "ref": "cinnabar α-HgS Raman 참조"
+    }
+  ],
+  "dos_character": "5d¹⁰6s² 후전이금속 — Hg는 상대론적 6s² 안정화로 6s 밴드가 깊어지고 원자간 결합이 약해 상온 액체 금속(전도성은 있으나 약한 금속). 채워진 5d¹⁰는 E_F 훨씬 아래. Hg²⁺(d¹⁰)는 선형 2배위 선호. HgS·HgO는 반도체, HgTe는 준금속/위상물성. SSB 절연 밴드갭 논의와 무관한 중금속 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — Group 12(Zn/Cd/Hg)·상대론 효과",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Hg²⁺ VI 1.02 Å)",
+    "Bard & Faulkner, Electrochemical Methods 2nd ed. — 칼로멜(SCE)·적하수은전극"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s²",
+    "valence_orbitals": "5d¹⁰ 6s² — 채워진 d와 s(정상). 6s²만 관여해 Hg²⁺(5d¹⁰)로, 일부는 Hg₂²⁺(Hg–Hg 결합)로. 상대론적 6s 수축이 액체·화학의 근원",
+    "band_character": "상대론적 6s² 안정화로 6s 밴드 깊어지고 원자간 결합 약화 → 상온 액체 금속(약한 금속성); 5d¹⁰는 E_F 훨씬 아래. Hg²⁺(d¹⁰) 선형 2배위, HgS/HgO 반도체·HgTe 위상물성. SSB 밴드엣지와 무관",
+    "bonding": "Hg–S soft–soft(HgS 진사)·Hg–Cl(HgCl₂ 선형, Hg₂Cl₂ Hg–Hg)·아말감 금속결합. 상대론으로 약한 Hg–Hg 결합·액체상"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

@@ -1,0 +1,193 @@
+{
+ "slug": "schmitt2026_chemomech_stability_dry_cathode_separator_sheets",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-06",
+ "sources": [
+  "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+  "71. Sup) Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Preparation, formulation, and conductivity of the cathode and separator sheets. (a) Schematic representation of the manufacturing process of the cathode, including premixing of materials by ball milling, fibrillation, and sheet preparation. The PTFE fibers present in the composite cathode are highlighted in the SEM image on the right-hand side. (b) Ionic conductivity of separator sheets containing different fractions of PTFE, namely 0%, 0.2%, 0.5%, 0.75%, and 1 wt.%, measured at room temperature. (c) Schematic representation of cell configurations used for determining the electronic and ionic partial conductivities of the cathode sheets. (d) Composition of the formulations tested and (e) ionic and electronic conductivities of the respective cathode sheets with 0.5 wt.% PTFE. Regarding the electronic partial conductivity of the different cathode sheets, relatively low values of 7.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    453.2
+   ],
+   "w": 2228,
+   "h": 1684,
+   "dpi": 300,
+   "src": "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.737
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. The different SSB architectures tested in this work (CAM loading: ~13.8 mgNCM85 cm−2, SE separator thickness: ~1000 µm). three different cell configurations at C/10 and at 45◦C, with all of them exhibiting characteristic voltage profiles of layered Ni-rich oxide CAMs. In case of the “uncoated” cathode, the “sheet-powder” configuration delivered the highest initial specific discharge capacity of 207 mAh g−1, followed closely by “sheet-sheet” with 204 mAh g−1, while “powder- powder” showed by far the lowest capacity with 183 mAh g−1 (see Fig. 3a). For the “coated” cathode, the performance gap between the three cell configurations was narrowed (see Fig. 3b), with “sheet-sheet” achieving the highest specific discharge capacity of 207 mAh g−1, fol­ lowed by “sheet-powder” (205 mAh g−1) and “powder-powder” (194 mAh g−1). The addition of carbon black, referring to “coated + C65”, furthe",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    221.3
+   ],
+   "w": 2228,
+   "h": 717,
+   "dpi": 300,
+   "src": "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.683
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Electrochemical performance of the different SSB architectures at 45◦C: (a, d, g, j, m) “uncoated”, (b, e, h, k, n) “coated”, and (c, f, i, l, o) “coated + C65”. (a‒ c) Initial voltage profiles at C/10. (d‒f) Coulomb efficiencies for the first two cycles at C/10. (g‒i) Specific discharge capacities over 100 cycles at C/5. The rate performance test in the beginning is indicated. (j‒l) Capacity retentions calculated from the capacities achieved at C/5 in the beginning and at the end of cycling. (m‒o) Specific discharge capacities at various C-rates. Data are averaged from at least two identical cells. at high C-rates, achieving ~171 mAh g−1 at 1C for “sheet-sheet”. This underscores the beneficial effect of the LiNbO3 surface modification and PTFE binder on suppressing adverse electrochemical and chemo­ mechanical processes. In particular, the “sheet-sheet” configuration delivered t",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    636.9
+   ],
+   "w": 2228,
+   "h": 2449,
+   "dpi": 300,
+   "src": "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Low- and high-magnification cross-sectional SEM images of the “coated” cathode (“sheet-sheet” cell configuration) taken (a) before cycling and (b) after 50 and (c) 100 cycles at C/5. (d) Corresponding SEM-EDX analysis after 50 cycles with individual elemental maps and an overlay image. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    424.6,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1237,
+   "dpi": 300,
+   "src": "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.518
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. ToF-SIMS results for the “coated” cathode in the “sheet-sheet” and “powder-powder” cell configurations before and after cycling. (a, b) Images representing overlay ion maps of the NiO−, NiO2 −fragments (green, indicating the SE) and the PO−, PO2 −, MnO2 −, and CoO2 −fragments (blue, indicating the CAM), as well as of the PS−, PS2 −, and PS3 −, and (f) S2 −, and PO3 − fragments (pink, indicating the CEI). Corresponding box plots of the normalized intensities of (c) PO3 −, (d) SO3 −, (e) CF3 −fragments. 7",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    249.2,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1888,
+   "dpi": 300,
+   "src": "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.624
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. In situ gas analysis of the “coated” cathode in the “powder-powder” and “sheet-sheet” cell configurations. (a, b) First- and second-cycle voltage profiles at C/ 20 and 25◦C, as well as the time-resolved evolution rates and cumulative amounts for H2, O2, CO2, and SO2. 9",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    430.2,
+    565.7,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1214,
+   "dpi": 300,
+   "src": "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Comparison of the first-cycle specific discharge capacity and initial Coulomb efficiency of dry-processed SSB cells, based on data from the literature and our own work (denoted as stars). The respective references are given in Table S1 (Supporting Information). (b) Comparison of cycling performances of the “coated + C65” cathode in various dry- and wet-processed cell configurations. First-cycle Coulomb efficiencies at C/10: “sheet-powder” 91.1% (red) and “sheet-sheet” 92.1% (green). (c) Schematic representation of the different processes affecting the cyclability of SSBs with pelletized or sheet-type cathode. tested at a higher temperature of 60◦C instead of 45◦C. A key difference from most literature cells is that both the cathode and the separator in the respective cell configurations described herein were manufactured using a dry process. The vast majority of published sys",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    406.8
+   ],
+   "w": 2228,
+   "h": 1490,
+   "dpi": 300,
+   "src": "71. Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.558
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Nyquist plots of the room-temperature impedance of Li|SE|Li cells after assembly and after 24 h of rest. (a) LPSCl powder, (b) LPSCl sheet containing 0.5 wt.% PTFE binder, and (c) corresponding calculated resistances.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    190.7,
+    533.9,
+    371.6
+   ],
+   "w": 1955,
+   "h": 755,
+   "dpi": 300,
+   "src": "71. Sup) Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. DEMS analysis of gas evolution during the first charge of cells based on the coated cathode composite for (a) powder-powder- and (b) sheet-sheet-type cells. The gas release for m/z = 32 (O2), m/z = 44 (CO2), and normalized ion current for m/z = 64 (SO2) are plotted as a function of potential. Enlarged views highlight the high- voltage region where pronounced outgassing occurs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    534.0,
+    551.8
+   ],
+   "w": 1955,
+   "h": 2030,
+   "dpi": 300,
+   "src": "71. Sup) Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries.pdf",
+   "blank": 0.89
+  }
+ ],
+ "missing_labels": []
+}

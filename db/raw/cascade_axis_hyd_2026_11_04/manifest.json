@@ -1,0 +1,62 @@
+{
+ "decision": "D-2026-11-04-cascade-axis-hydrolysis",
+ "card": "db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json",
+ "started_utc": "2026-11-04T10:40:27Z",
+ "host": "kserver116-27",
+ "python": "/data/apps/miniforge3/envs/uma/bin/python",
+ "pymatgen": "2026.3.23",
+ "mp_api": "0.46.1",
+ "thermo_types": [
+  "GGA_GGA+U"
+ ],
+ "correction_names_sample_Li-Ni-O": [
+  "MP2020 GGA/GGA+U mixing correction (Ni)",
+  "MP2020 anion correction (oxide)",
+  "MP2020 anion correction (ozonide)",
+  "MP2020 anion correction (peroxide)",
+  "MP2020 anion correction (superoxide)"
+ ],
+ "n_entries_sample_Li-Ni-O": 241,
+ "tools_sha16": {
+  "tools/oxidation/interface_reactivity_v2.py": "c99a2511e94fd229",
+  "tools/oxidation/sei_product_gaps.py": "f92cc6e94686192c",
+  "tools/cascade/run_axis_ncm_gabia.sh": "87ba4484ca255826"
+ },
+ "repo_head": "5fd3126259675ef24f27d9157348ce32637e04bb",
+ "mp_db_version_before": "2026.09.28",
+ "invocations": [
+  {
+   "started_utc": "2026-11-04T10:40:27Z",
+   "host": "kserver116-27",
+   "resume": "0",
+   "repo_head": "5fd3126259675ef24f27d9157348ce32637e04bb",
+   "tools_sha16": {
+    "tools/oxidation/interface_reactivity_v2.py": "c99a2511e94fd229",
+    "tools/oxidation/sei_product_gaps.py": "f92cc6e94686192c",
+    "tools/cascade/run_axis_ncm_gabia.sh": "87ba4484ca255826"
+   },
+   "pymatgen": "2026.3.23",
+   "mp_api": "0.46.1",
+   "mp_db_version_before": "2026.09.28",
+   "finished_utc": "2026-11-04T10:48:30Z",
+   "mp_db_version_after": "2026.09.28"
+  }
+ ],
+ "lanes": {
+  "designs_hyd": {
+   "rc": 0,
+   "rows": 91,
+   "ok": 91,
+   "duplicate_pairs": 0
+  },
+  "host_hyd": {
+   "rc": 0,
+   "rows": 1,
+   "ok": 1,
+   "duplicate_pairs": 0
+  }
+ },
+ "finished_utc": "2026-11-04T10:48:30Z",
+ "mp_db_version_after": "2026.09.28",
+ "same_mp_version": true
+}

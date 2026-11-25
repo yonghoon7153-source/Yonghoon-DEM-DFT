@@ -1,0 +1,338 @@
+{
+ "schema": "cascade_v7_main_round/v1",
+ "created_utc": "2026-10-07T11:04:49Z",
+ "code_id": "d283ce52074a6769f66057dfb45c2e28737e916d",
+ "card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
+ "amendment": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json",
+ "decisions": [
+  "D-2026-10-01-cascade-v7-probe-card",
+  "D-2026-10-03-cascade-v7-amend-cp",
+  "D-2026-10-07-cascade-v7-main-round-cap"
+ ],
+ "execution_approval": "사용자 2026-10-07 '비준이야' (상한) · 'cascade 던지자' (실행)",
+ "frozen": {
+  "prod_ps": 400.0,
+  "dt_fs": 2.0,
+  "save_fs": 100.0,
+  "equilib_ps": 5.0,
+  "friction": 0.02,
+  "fit_window_ps": [
+   2.0,
+   50.0
+  ],
+  "uma": {
+   "model": "uma-s-1p1",
+   "task": "omat",
+   "mode": "default"
+  },
+  "ladder_K": [
+   800,
+   1000
+  ],
+  "plan": [
+   [
+    "H0_host",
+    1
+   ],
+   [
+    "H0_host",
+    2
+   ],
+   [
+    "P1_Al2O3_C",
+    3
+   ],
+   [
+    "P2_Al2S3_C",
+    3
+   ],
+   [
+    "P1_Al2O3_C",
+    4
+   ],
+   [
+    "P2_Al2S3_C",
+    4
+   ]
+  ],
+  "pair_parent": "C",
+  "V_common_A3": 4066.479695,
+  "cell_diag": [
+   20.110191271466373,
+   20.110191271466373,
+   10.055095635733187
+  ]
+ },
+ "cap_gpu_h": 461.4,
+ "est_gpu_h_per_run": 11.5341,
+ "max_runs": 40,
+ "prep_root": "/home/kgy/work/runs/cascade_v6_40run_0921",
+ "prep": {
+  "P1_Al2O3_A": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_A.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_A.prepared.xyz",
+   "sha256": "1a3bf799bf742f7cf25912557755fd8fac2d102eca13eae4cc8d6aa8e72ab7dd",
+   "input_sha256": "a2191fb738a1bbb75307da345dbb262c40d85a344901f2e4ab63559c4f2d82cb",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.01819424144923687,
+   "converged": true
+  },
+  "P2_Al2S3_A": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_A.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_A.prepared.xyz",
+   "sha256": "54e08f027c43724bfd9c0af7a6c2d7180521ba9a6c2b26f11ab897c673e49898",
+   "input_sha256": "76987138d77d9e630df05375786db16aa6048b023086eb422fdf3915fb00381c",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.01849440298974514,
+   "converged": true
+  },
+  "P1_Al2O3_B": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_B.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_B.prepared.xyz",
+   "sha256": "41686c1e153f6083bfaaa91e6787e23d3846c64e615394d7a4fe447163ad81be",
+   "input_sha256": "7a1cbb11d6199c95288d54a7b13fbda867c763b0dbe979cbc7aaaa1be7a100da",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.01942061074078083,
+   "converged": true
+  },
+  "P2_Al2S3_B": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_B.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_B.prepared.xyz",
+   "sha256": "0022cde4b4b9477990bf3ca246bbb08f97e0422a28f91f358ce14f390750a80d",
+   "input_sha256": "98c16677d8f0a1994f03c8a19ced42f0bfb84d6f9239644053a70b0a9817f6ed",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.019474050030112267,
+   "converged": true
+  },
+  "P1_Al2O3_C": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_C.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_C.prepared.xyz",
+   "sha256": "49ae8eb539264c08c13d476886f6944c3f71e3998f0cd8e406c5f9dfad0d0019",
+   "input_sha256": "ed8c8fc11d1adb75ca3e99227419f4fb97689e1c648d8033f8d1130d8193c700",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.013983418233692646,
+   "converged": true
+  },
+  "P2_Al2S3_C": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_C.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_C.prepared.xyz",
+   "sha256": "25729b035d928dfec2bac314dae0ea0447db5907549656f092fd780bb70fd809",
+   "input_sha256": "6d585560dce5d0d86a559d4070d217f4646fb7f7a36039a82567057511d4d91b",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.018446896225214005,
+   "converged": true
+  },
+  "P1_Al2O3_D": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_D.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_D.prepared.xyz",
+   "sha256": "4038edd0881e07e0eeb9cda2c719d720e5666dffe0d86970980e19e7e1b3a6d6",
+   "input_sha256": "73824c642e94403890f34407402a277dc044bf5200e6a6c8a8b680762c17b96b",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.019232362508773804,
+   "converged": true
+  },
+  "P2_Al2S3_D": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_D.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_D.prepared.xyz",
+   "sha256": "e673d44c89dfe29e6e5a3381407fa316d524d14641f3ba5ee5b9e565fcccc4c9",
+   "input_sha256": "35568058e7646ea64dd1a0f8800821d435f0cb85e3db939e80fa347765d81370",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.019701354205608368,
+   "converged": true
+  },
+  "P1_Al2O3_E": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_E.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_E.prepared.xyz",
+   "sha256": "3b9a80b1c7aa59a4e10506442ea6983528aeb46680dc99f3e7352217a6f61f39",
+   "input_sha256": "56a005852d856e3c8e74c1121607bd4fadd9c5a398b079cc56b7b809994d8bf7",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.019511757418513298,
+   "converged": true
+  },
+  "P2_Al2S3_E": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_E.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_E.prepared.xyz",
+   "sha256": "66f857aac62134583d83c0a95a61ee5518d37d2272edfcbda42eea2c58127558",
+   "input_sha256": "95b2bc42fdf2ac3c177a3c86415183aeeb025a18e3a65aea5a8f92dd4fc61423",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.017630934715270996,
+   "converged": true
+  },
+  "P1_Al2O3_F": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_F.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_F.prepared.xyz",
+   "sha256": "c309b7c3de5c28708fd7d9a28dd8d1a915483284befeb6ba380563cdcd4f9745",
+   "input_sha256": "2dd64e5266e7225d7ab8708f57025597fe98ab7b45ce2d7a76b5ba9015c27067",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.017433645203709602,
+   "converged": true
+  },
+  "P2_Al2S3_F": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_F.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_F.prepared.xyz",
+   "sha256": "8a9b6e0aeab306a03c5fe1b3888d659cf1b01c09d5a2f6232377102911b431ef",
+   "input_sha256": "a0ca60e8e34a5053e8ebf467d600cee3506717f16ac4211be8b12535233d78a4",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.017543084919452667,
+   "converged": true
+  },
+  "P1_Al2O3_G": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_G.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_G.prepared.xyz",
+   "sha256": "8cbb0b0231025f6274be5e6e4368ef1b677275dc0acb7e2fafd3e41f9b57e769",
+   "input_sha256": "fa0387cf37dc9b1346906bae2ad65a463539941272f05629cc61be541cc5cedf",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.018762847408652306,
+   "converged": true
+  },
+  "P2_Al2S3_G": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_G.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_G.prepared.xyz",
+   "sha256": "61bb0ac5af09a8526c3f0fa8c126446526e2c1eb851e2f21076662d2e97dc0f2",
+   "input_sha256": "b721332a8093ce99aa78f9feb76946a6b97335f90680e8af7b093e50d35058ec",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.018626544624567032,
+   "converged": true
+  },
+  "P1_Al2O3_H": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_H.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_H.prepared.xyz",
+   "sha256": "eacafb0f3ee45cc8414c604495d2cba25c4f9977a166837296515406838e78d1",
+   "input_sha256": "41eb889ac0828b018d7fdeaf834676e96f6a1efcee6e0813c8859cb40830a674",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.019099513068795204,
+   "converged": true
+  },
+  "P2_Al2S3_H": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_H.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_H.prepared.xyz",
+   "sha256": "060a07cee7ec7f9a13368e5bc56dba2e26d1498eda79e3054a8b85751e2b7588",
+   "input_sha256": "9780bacf05f2b25cc87731e4e381c313e6c3150229ad0b9859c888beb50c971e",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.019989803433418274,
+   "converged": true
+  },
+  "P1_Al2O3_I": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_I.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_I.prepared.xyz",
+   "sha256": "ae40d853045a73b5ef11202614105da96941ff3e3b1b197eba85c55d111131cd",
+   "input_sha256": "f71ad38343c705153cf233f1ed79fbdf8a9526a2294b3e919422c56e6f27e042",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.017270589247345924,
+   "converged": true
+  },
+  "P2_Al2S3_I": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_I.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_I.prepared.xyz",
+   "sha256": "35472e1623786dc02475ee68c704e8698030a1deded6e0712a8fe825b8f2de49",
+   "input_sha256": "72c5c7204bffff77a3feb1a4f8e21c44b864daec85d5212a2860bf2f2642102b",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.019835302606225014,
+   "converged": true
+  },
+  "P1_Al2O3_J": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_J.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_J.prepared.xyz",
+   "sha256": "eb8c95408a2a3984faacaae8dedd3ae1e7aea82b3d4c41ebf7a1eb83459d7388",
+   "input_sha256": "ffe62e66dba35a8cb392d018320d3d8c2b1f82eea7e9161acd4a5e3cc642b083",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.017076896503567696,
+   "converged": true
+  },
+  "P2_Al2S3_J": {
+   "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_J.prepared.json",
+   "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_J.prepared.xyz",
+   "sha256": "93d682707e73f243e841cb975a416bac780bc038945265a158d5c74d38e67020",
+   "input_sha256": "7cb4eb158b5f72f9bf76ff6e65ed7fc390208f13024e068c1c21ee375cc0943f",
+   "n_atoms": 204,
+   "V_A3": 4066.4796953466644,
+   "final_fmax_eV_A": 0.012302795425057411,
+   "converged": true
+  }
+ },
+ "driver": {
+  "path": "/home/kgy/wt_cv7main_1007/tools/modelc_v3/disorder_ensemble_diffusion.py",
+  "sha256": "c3e2d358ee53cefab7c0c4a05ff6eea7ec322d2a75993643c302ada725f155a9"
+ },
+ "judge": {
+  "path": "/home/kgy/wt_cv7main_1007/tools/doping/judge_eprime.py",
+  "sha256": "1068046cb2398ea23eceba1258cc0178ed564a534388024639eeaa0acb5df8fa",
+  "selftest_tail": "  ✓ ⛔음성: msd.json 시간축이 생산 길이보다 짧다 → 오류 (잘린 런)\nselftest PASS"
+ },
+ "python": "/home/kgy/apps/miniforge3/envs/uma/bin/python",
+ "device": "cuda",
+ "gpu_start_max_mib": 16000,
+ "⛔": [
+  "D 를 싣지 않는다 · 런 사이 판독기를 부르지 않는다 = 중간 집계 없음 (카드 §5 · 결정 enforcement ②)",
+  "명단 고정 40 런 — 대체·추가 런 없음 · 탐침 시드 3·4 없음 (개정 ④)",
+  "상한은 원장 cost_cap — 넘으면 다음 런을 띄우지 않고 보고한다",
+  "결과 문장 라벨: 공통부피 한 변 ≈ 1.6 nm < Phuthi 2026 bulk 하한 2 nm (결정 enforcement ④)"
+ ],
+ "T_star_K": 1000,
+ "probe_json": {
+  "path": "/home/kgy/wt_cv7main_1007/db/raw/cascade_v7_probe_2026_10_03/cascade_v7_probe.json",
+  "sha256": "1366bb31c7c1fbf94f36c50bf08828be52ea7c3e0a60842c3ee0e36c3332d94c",
+  "why": "1000 K: H0 두 시드 · 대표 쌍(부모 C · 시드 [3, 4]) 네 런 전부 자격 통과 · 골격 경보 없음 → T* = 1000 K"
+ },
+ "roster": [
+  "P1_Al2O3_A__T1000__s1",
+  "P2_Al2S3_A__T1000__s1",
+  "P1_Al2O3_B__T1000__s1",
+  "P2_Al2S3_B__T1000__s1",
+  "P1_Al2O3_C__T1000__s1",
+  "P2_Al2S3_C__T1000__s1",
+  "P1_Al2O3_D__T1000__s1",
+  "P2_Al2S3_D__T1000__s1",
+  "P1_Al2O3_E__T1000__s1",
+  "P2_Al2S3_E__T1000__s1",
+  "P1_Al2O3_F__T1000__s1",
+  "P2_Al2S3_F__T1000__s1",
+  "P1_Al2O3_G__T1000__s1",
+  "P2_Al2S3_G__T1000__s1",
+  "P1_Al2O3_H__T1000__s1",
+  "P2_Al2S3_H__T1000__s1",
+  "P1_Al2O3_I__T1000__s1",
+  "P2_Al2S3_I__T1000__s1",
+  "P1_Al2O3_J__T1000__s1",
+  "P2_Al2S3_J__T1000__s1",
+  "P1_Al2O3_A__T1000__s2",
+  "P2_Al2S3_A__T1000__s2",
+  "P1_Al2O3_B__T1000__s2",
+  "P2_Al2S3_B__T1000__s2",
+  "P1_Al2O3_C__T1000__s2",
+  "P2_Al2S3_C__T1000__s2",
+  "P1_Al2O3_D__T1000__s2",
+  "P2_Al2S3_D__T1000__s2",
+  "P1_Al2O3_E__T1000__s2",
+  "P2_Al2S3_E__T1000__s2",
+  "P1_Al2O3_F__T1000__s2",
+  "P2_Al2S3_F__T1000__s2",
+  "P1_Al2O3_G__T1000__s2",
+  "P2_Al2S3_G__T1000__s2",
+  "P1_Al2O3_H__T1000__s2",
+  "P2_Al2S3_H__T1000__s2",
+  "P1_Al2O3_I__T1000__s2",
+  "P2_Al2S3_I__T1000__s2",
+  "P1_Al2O3_J__T1000__s2",
+  "P2_Al2S3_J__T1000__s2"
+ ]
+}

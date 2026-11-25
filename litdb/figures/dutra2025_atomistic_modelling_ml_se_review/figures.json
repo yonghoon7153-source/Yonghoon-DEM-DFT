@@ -1,0 +1,136 @@
+{
+ "slug": "dutra2025_atomistic_modelling_ml_se_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Components, interfaces and challenges of solid-state batteries. Schematic of a solid-state battery highlighting its main components and some of the major challenges facing this technology. These challenges include dendrite growth resulting from the use of metal anodes, reduced stability, increased resistivity, cracking and porosity at the electrolyte–electrode interfaces, the maintenance of physical contact during electrochemical cycling between solid particles, and achieving sufficient ionic conductivity in the bulk materials and at the nanostructural and microstructural scales.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    452.9,
+    302.0,
+    664.7
+   ],
+   "w": 1119,
+   "h": 884,
+   "dpi": 300,
+   "src": "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf",
+   "blank": 0.566
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Crystal structures and ionic conductivities of topical solid electrolytes. a , Representative crystal structures of inorganic solid electrolyte materials for lithium and sodium solid-state batteries. b , Li-ion and Na-ion conductivities ( σ ) of inorganic crystalline solid electrolytes for solid-state batteries. Li-ion conductivities are taken from refs. 15 , 53 , 70 , 250 , 251 . Na-ion conductivities are taken from refs. 60 , 72 , 252 . Conductivities for commercial liquid electrolytes (LiPF 6 –ethylene carbonate (EC)/propylene carbonate (PC) and NaPF 6 –EC/dimethyl carbonate (DMC)) are also plotted for comparison. NASICON, Na superionic conductors.",
+   "rotated_deg": 0,
+   "bbox": [
+    24,
+    105,
+    390,
+    748
+   ],
+   "w": 1525,
+   "h": 2680,
+   "dpi": 300,
+   "src": "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf",
+   "blank": null,
+   "note": "caption-side-column layout: region re-derived from drawing union (extract_figures.py crop-above-caption heuristic rejected it)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Methods and properties in the study of solid electrolytes and solid-state batteries. a , Schematic overview of the atomistic modelling and experimental techniques used to study solid electrolytes in solid-state batteries, as well as the most important properties and outputs that can be investigated with these techniques. b , Representative reference supercells for density",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    385,
+    558,
+    698
+   ],
+   "w": 2175,
+   "h": 1305,
+   "dpi": 300,
+   "src": "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf",
+   "blank": null,
+   "note": "caption-side-column layout: region re-derived from drawing union (extract_figures.py crop-above-caption heuristic rejected it)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Modelling of ion migration mechanisms in solid electrolytes. a , Schematic representations of vacancy migration, direct interstitial migration, and concerted or interstitialcy migration, in which the migrating ion displaces a lattice ion into a neighbouring interstitial site. b , Probability density of Li + spatial occupancy in Li 7 La 3 Zr 2 O 12 (LLZO, left), Li 10 GeP 2 S 12 (LGPS, middle) and Li 1.3 Al 0.3 Ti 1.7 (PO 4 ) 3 (LATP, right) during ab initio molecular dynamics (AIMD) simulations. The zoom-in subsets show the elongation feature of probability density along the migration channel (Li, green; O/S, yellow). The isosurfaces are 6 ρ 0 , 6 ρ 0 and 2 ρ 0 for LGPS, LLZO and LATP, respectively, where ρ 0 is the mean probability density in each structure and the inner isosurfaces have twice the density of the outer isosurfaces. c , Effect of anion disorder on ion transport in argyrodites. d , Crystal structures (top) of Li 3 YCl 6 with hexagonal close-packed (hcp)-like anion lattice and Li 3 YBr 6 with face-centred cubic (fcc)-like anion lattice, superimposed with Li + probability density marked by yellow isosurfaces from AIMD simulations, and their corresponding Li-ion migration pathways (bottom). The red and blue polyhedra represent octahedral (Oct) and tetrahedral (Tet) interstitial sites, respectively. e , Oct–Tet–Oct pathway in fcc oxygen lattice without face-sharing Li in the initial state (top left) and its energy landscape (bottom left). Oct–Tet/Tet–Oct pathways in fcc oxygen lattice with face-sharing Li in the initial state (top right) and the energy landscape (bottom right). Orange, oxygen anions; dark blue, Li ions in the initial sites; light blue, Li ions in the migration paths. Panel b reprinted from ref. 130 , CC BY 4.0 . Panel c reprinted from ref. 162 , CC BY 4.0 . Panel d reprinted with permission from ref. 193 , Wiley. Panel e reprinted from ref. 198 , CC BY 4.0 .",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    107,
+    390,
+    648
+   ],
+   "w": 1459,
+   "h": 2255,
+   "dpi": 300,
+   "src": "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf",
+   "blank": null,
+   "note": "caption-side-column layout: region re-derived from drawing union (extract_figures.py crop-above-caption heuristic rejected it)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Modelling of phase formation, stability and decomposition in solid electrolytes. a , High-throughput computational workflow for identifying synthesizable Na superionic conductors (NASICONs) (left) and a distribution of 641 density functional theory (DFT)-calculated synthetically accessible NASICONs (right). The colour map indicates the number of stable compounds containing a specific metal pair. The squares outlined in orange indicate blocks including NASICONs with Na 3 stoichiometry and the squares outlined in grey mark blocks containing only sulfate-type NASICONs. b , Calculated electrochemical windows of solid electrolytes with the oxidation potential to fully delithiate the materials marked by the dashed line (left). Schematic showing",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    122,
+    562,
+    648
+   ],
+   "w": 2201,
+   "h": 2192,
+   "dpi": 300,
+   "src": "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf",
+   "blank": null,
+   "note": "caption-side-column layout: region re-derived from drawing union (extract_figures.py crop-above-caption heuristic rejected it)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Modelling of interfaces in solid- state batteries. a , Schematics of the three main types of interfaces (surfaces, grain boundaries (GBs) and electrolyte–electrode interfaces) in solid electrolytes and solid- state batteries simulated using atomistic modelling. b , Calculated surface energies for typical crystal faces of Li 3 InCl 6 and a high-entropy Li 2.8 In 0.2 Sc 0.2 Yb 0.2 Lu 0.2 Zr 0.2 Cl 6 solid electrolyte. Insets show Wulff shapes of the solid electrolytes. c , Projected density of states of selected grain boundaries in Li 3 OCl, Li 2 OHCl, Li 3 PS 4 and Li 3 InCl 6 and their corresponding bandgaps. d , Density functional theory calculations of the interfacial formation energies ( E f ) of Li|Ta- doped Li 7 La 3 Zr 2 O 12 (LLZTO), Li 3 N|LLZTO and LiSi 2 N 3 |LLZTO interfaces. Panel b reprinted from ref. 229 , CC BY 4.0 . Panel c reprinted from ref. 196 , CC BY 4.0 . Panel d reprinted with permission from ref. 239 , Wiley.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    150,
+    415,
+    757
+   ],
+   "w": 1580,
+   "h": 2530,
+   "dpi": 300,
+   "src": "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf",
+   "blank": null,
+   "note": "caption-side-column layout: region re-derived from drawing union (extract_figures.py crop-above-caption heuristic rejected it)"
+  }
+ ]
+}

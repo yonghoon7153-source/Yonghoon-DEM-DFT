@@ -1,0 +1,251 @@
+{
+ "slug": "makino2026_mlip_battery_materials_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "117. MLIP_MACHIN1_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1 Annual publication counts of academic papers related to batteries that mention quantum- mechanics (QM) based calculations (blue) and machine-learning interatomic potentials (MLIPs; orange). Publications from 1990 to 2025 were surveyed using the Scopus database. The quantum mechanics-based calculations search used (\"first-principles calculations\" OR \"ab initio calculations\") AND (\"battery\" OR \"batteries\"), whereas the MLIP-related search used the query (\"neural network potential\" OR \"machine learning interatomic potential\") AND (\"battery\" OR \"batteries\") (search performed in March 2026). The reported counts should be regarded as a qualitative indicator of publication trends, since they include papers that mention these keywords and are not necessarily original studies primarily focused on applying these methods to battery materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    111.7,
+    518.9,
+    357.8
+   ],
+   "w": 1833,
+   "h": 1026,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2 (a) Schematic illustration of representative bulk reaction modes in battery electrode materials. Upon insertion and extraction of guest ions, the host framework remain unchanged, as in intercalation reactions, or undergo substantial structural reorganization, as in conversion, alloying, and amorphization reactions. For such bulk processes, MLIPs are expected to serve as a powerful tool for understanding (i) ion diffusion in bulk and reaction phases, as well as (ii) phase stability in reaction and product phases, including defects, order/disorder ion arrangements, and so on. (b) Schematic illustration of electrode/electrolyte interfacial processes in battery materials. The top panel represents a solid-liquid interface in conventional liquid-electrolyte batteries, where (iii) SEI or CEI layers, often derived from electrolyte and/or electrode decomposition, are formed and can parti",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    277.5,
+    521.5,
+    514.7
+   ],
+   "w": 1844,
+   "h": 989,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "Figure 3 Classification of current MLIPs. Hand-crafted descriptor–based methods are categorized as Category A, and Learned descriptors–based methods as Category B. Furthermore, based on the type of machine learning approach used, Category A is subdivided into A1–A3 and Category B into B1– B2. Underlined terms indicate representative software.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    368.3,
+    518.9,
+    658.0
+   ],
+   "w": 1833,
+   "h": 1208,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.402
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "Figure 4 Conceptual diagrams related to hand-crafted descriptors. (a) A general MLIP scheme for evaluating energy using hand-crafted descriptors. The atomic position vectors 𝑅𝑖 are transformed into symmetry functions 𝐺𝑖 that are invariant with respect to translation, rotation, and permutation of identical atoms. These symmetry functions are defined for each atom as descriptors representing the local environment around that atom, and the atomic energy 𝐸𝑖 is evaluated through the corresponding subnetwork 𝑆𝑖 for each element type. The total energy of the system 𝐸 is given as the sum of the atomic energies. Reprinted from the paper12 with permission of APS. (b) In the BP-NNP framework, identical neural networks with the same architecture and shared weights are applied to atoms",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    387.3,
+    518.9,
+    608.7
+   ],
+   "w": 1834,
+   "h": 924,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.795
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 15,
+   "file": "fig_5.png",
+   "caption": "Figure 5 Examples of MLIP architectures based on learnable descriptors. (a) (upper) Conceptual illustration of crystal-structure representation in a graph neural network. Atoms are treated as nodes with atomic features, while neighboring atom pairs within a cutoff radius are connected as edges with interatomic information as edge features. (lower) Example of property prediction in a non-equivariant graph neural network (CGCNN). After graph construction, message passing updates atomic features, and pooling generates a whole-structure representation for predicting the target property115. Reprinted from the paper115 with permission of APS. (b) Specific example of message passing (MEGNet). First, each edge descriptor is updated using the connected node descriptors and its own features as input. Next, by aggregating the updated edge descriptors, each node descriptor is updated to reflect info",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    97.8,
+    521.5,
+    496.0
+   ],
+   "w": 1844,
+   "h": 1660,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.743
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 18,
+   "file": "fig_6.png",
+   "caption": "Figure 6 (a) (left) Comparison of the average binding energy of H₂O molecules in a Metal-Organic Framework (MOF) calculated using the universal machine-learning potentials (uMLIPs) PFP and PFP+D3 (implemented in the Matlantis software package) with that obtained from first-principles DFT calculations. (right) Comparison between PFP predictions and DFT reference values for the activation energy of syngas methanation on the Co (001) surface100. Reproduced from the paper100, licensed under CC BY-4.0. (b) (left) Time evolution of atomic configurations in a DFT-MD calculation (3000 K) for the interface between Li metal and the solid electrolyte Li₇La₃Zr₂O₁₂. (right) Results obtained by reevaluating the structural snapshots shown in the left panel using PFP and comparing them with DFT energy changes (RMSE = 5.4 meV atom⁻¹)126. Reproduced from the paper126, licensed under CC BY-4.0. (c) (left)C",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    100.8,
+    518.9,
+    547.5
+   ],
+   "w": 1834,
+   "h": 1863,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 26,
+   "file": "fig_7.png",
+   "caption": "Figure 7 Relationships among publication year, primary material category (Cathode/Anode/Electrolyte/Interface), and MLIP classification (A1/A2/A3/B1/B2) in reported studies on battery materials using MLIPs from 2020 to 2025. (a) Relationship between annual number of publications and material category. (b) Relationship between annual number of publications and MLIP classification. (c) Correlation between material category and MLIP classification. Note that, because the MLIP classification could not be identified for some references, slight differences are present in the annual totals shown in (a) and (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    296.3,
+    518.9,
+    478.7
+   ],
+   "w": 1834,
+   "h": 761,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 31,
+   "file": "fig_8.png",
+   "caption": "Figure 8 Examples of evaluation results for battery electrode materials using MLIPs. (a) Evaluation of structural changes accompanying delithiation and the formation process of O2 dimers",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    260.3,
+    518.9,
+    712.7
+   ],
+   "w": 1833,
+   "h": 1886,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 38,
+   "file": "fig_9.png",
+   "caption": "Figure 9 Examples of studies in which MLIPs were applied to electrolyte materials to evaluate their properties and structures. (a) Phonon band dispersion evaluated by eSNAP, an MLIP that explicitly accounts for long-range electrostatic interactions, and by DFT calculations171. Reproduced from the paper171, licensed under CC-BY 4.0. (b) Li-ion diffusion coefficients at room temperature in amorphous Li3PS4 evaluated using ultrafast MLIP calculations. The mean squared displacement (MSD) was evaluated up to 1000 ns.174 Reprinted from the paper174, licensed under CC-BY 3.0. (c) Results showing by MLIP that defects generated in garnet-type Li7La3Zr2O12 at concentrations below 1% can affect ionic conductivity and activation energy179. Reprinted from the paper179 with permission",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    119.5,
+    518.9,
+    600.7
+   ],
+   "w": 1834,
+   "h": 2006,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.711
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 44,
+   "file": "fig_10.png",
+   "caption": "Figure 10 Examples of studies applying MLIPs to interfaces in battery materials. (a) A study that evaluated dendrite formation in metallic lithium by all-atom simulation195. Reproduced from the paper195, licensed under CC-BY 4.0. (b) A study that evaluated interfacial reactions between an electrolyte and metallic lithium, including simulations of dendrite nucleation and SEI-film formation148. Reprinted from the paper148 with permission of authors. (c) An example of molecular dynamics calculations for a cathode/electrolyte interface. Li+ ions near the interface were tracked using the MSD and the interfacial normal-direction MSDz, and classified into four behaviors: Inactive, Across-interface active, In-plane hopping, and Electrolyte-like199. Reprinted from the paper199 with permission of RSC. (d) An example in which MD simulations were performed for Li3PS4 solid electrolytes containing cr",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    96.1,
+    518.9,
+    550.7
+   ],
+   "w": 1834,
+   "h": 1895,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.624
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 20,
+   "file": "tab_1.png",
+   "caption": "Table 1 Performance comparison of MLIPs based on hand-crafted descriptors. The comparison is a relative evaluation within the table and is based on a synthesis of information from the reference papers cited in the main text and related sources but note that it is ultimately based on the authors’ subjective judgment.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.1,
+    5.8,
+    591.4,
+    731.3
+   ],
+   "w": 2110,
+   "h": 2993,
+   "dpi": 297,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 21,
+   "file": "tab_2.png",
+   "caption": "Table 2 Performance comparison of MLIPs based on learnable descriptors. The comparison is a relative evaluation within the table and is based on a synthesis of information from the literature and related sources but note that it is ultimately based on the authors’ subjective judgment. The references indicate related papers. Category B1 B2 Local NN (e.g., DeepPot-SE) GNN Expressiveness Medium to high Very high (Accuracy) Speed High Practical range: 103–104 atoms Up to 106 (Scalability) Invariant GNNs tend to have lower atoms possible computational cost and higher speed than E (3)-equivariant GNNs Generality / Medium (Embedding by element High (many pretrained potentials are Applicability to type increases the learning cost) available)",
+   "rotated_deg": 0,
+   "bbox": [
+    80.1,
+    497.2,
+    517.9,
+    758.0
+   ],
+   "w": 1825,
+   "h": 1088,
+   "dpi": 300,
+   "src": "117. MLIP_MACHIN1_MAIN.pdf",
+   "blank": 0.916
+  }
+ ]
+}

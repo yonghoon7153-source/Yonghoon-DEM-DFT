@@ -1,0 +1,7 @@
+[kserver116-27:956675] tcp_peer_recv_connect_ack: invalid header type: 107
+[kserver116-27:956675] tcp_peer_recv_connect_ack: invalid header type: 188
+Warning: ieee_invalid is signaling
+Warning: ieee_divide_by_zero is signaling
+Warning: ieee_underflow is signaling
+Warning: ieee_inexact is signaling
+FORTRAN STOP

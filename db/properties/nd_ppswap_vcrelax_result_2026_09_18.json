@@ -1,0 +1,63 @@
+{
+  "_id": "nd_ppswap_vcrelax_result_2026_09_18",
+  "_kind": "result",
+  "_card": "db/properties/nd_icohp_pp_swap_card_2026_09_16.json",
+  "date": "2026-09-18",
+  "무엇": "Nd frozen-4f PP-swap 의 vc-relax 결과. 카드 §2 `V0_판정` 에 대한 답과, 카드가 안 물었지만 같이 나온 **셀 모양** 변화.",
+
+  "0_계보_먼저": {
+    "시작셀": "db/structures/modelc_nd_doped_DFTrelax.{cif,xyz} (Li48Nd2P10O3S41Cl16, 120원자, V=2399.0700 Å³)",
+    "그_셀이_6월_champion_이_맞다는_근거_둘": [
+      "① 부피: 빌더가 찍은 '입력 셀 대비 -0.15 %' 가 2395.4148/2399.0700 = -0.1524 % 와 일치한다.",
+      "② Nd 환경: 이 구조의 Nd 두 개가 NdS₅Cl(0-based Nd78) · NdO₂S₃Cl(0-based Nd1) 이고, 카드 §0 이 6월 LOBSTER 원자료에서 읽은 `Nd79`=NdS₅Cl · `Nd2`=NdO₂S₃Cl 와 (1-based 로) 정확히 같다."
+    ],
+    "🔴_기준선의_정체": "**6월 V0 는 DFT V0 가 아니다.** db/compositions/modelc_nd_doped.json `uma_eos_V0_2026_05_26` 이 원장이다 — UMA-s-1p1 등방 EOS(**셀 모양 고정**) + ion-relax + BM3 champion. 같은 항목의 caveats 가 *'vc-relax NOT used (distorts argyrodite)'*, next 가 *'DFT relax at V0'* 라고 적었다. 즉 6월 `DFTrelax` 는 **셀 고정 이온완화**다. eos.json 의 `modelc_nd_doped.v7_DFT` 는 여전히 `pending`.",
+    "⇒_비교의_성격": "우리 값은 *DFT V0 vs DFT V0* 가 **아니라** `PBE vc-relax(P≈0) vs UMA-s-1p1 BM3 V0` 다. 이 한정 없이 '-0.15 %' 를 인용하면 안 된다.",
+    "⚠_rank01_141_1A_는_다른_셀": "gabia 의 /data/work/nd_doped_modelc/3_dft_verify/phase3_inputs_top4/rank01_141_1A/relax.in 은 nat=120 이지만 a=b=7.0035, c/10=7.0035, 각 정확히 60.000°, V=2428.99 Å³ (champion 대비 +1.25 %) — **다른 후보**다. champion 은 a,b,c=6.9973/6.9134/6.9658 로 이미 비대칭이다. 이 둘을 섞지 말 것."
+  },
+
+  "1_V0_판정_사전등록된_문턱에_대한_답": {
+    "문턱": "|ΔV0/V0| ≤ 2 % → EOS 재개 불필요로 **제안**(승격은 1저자). 초과 → eos.json v7 재개 필요로 기록. ⛔ 어느 쪽이든 이 한 점으로 B0 를 말하지 않는다.",
+    "측정": {"V_입력_UMA_V0_A3": 2399.0700, "V_vcrelax_A3": 2395.41482, "dV_over_V_percent": -0.1524,
+              "density_g_cm3": 1.98329},
+    "판정": "통과 (문턱 대비 13배 여유).",
+    "제안": "eos.json `modelc_nd_doped.v7_DFT` 재개 **불필요**. 단 status 는 `pending` 그대로 두고 이 기록을 근거로 단다 — 1저자가 승격하면 그때 바꾼다.",
+    "⛔_이_기록이_말하지_않는_것": ["B0·B0′ 는 말하지 않는다 (한 점이다).", "UMA V0 의 basin-sensitivity(B0 16–27 GPa, 100 seed 중 ~7만 단일 basin)는 이 측정으로 해소되지 않는다.", "Li 배치가 UMA LOW-confidence annealing 산물이라는 한계도 그대로다."]
+  },
+
+  "2_카드가_안_물었지만_같이_나온_것_셀_모양": {
+    "왜_보나": "UMA V0 는 **모양을 고정**하고 등방으로만 잡은 값이다. vc-relax 는 모양도 풀었다 ⇒ 부피만 보면 '모양이 맞는지' 를 안 본 것이다.",
+    "입력": {"a": 6.9973, "b": 6.9134, "c": 69.6581, "alpha": 60.535, "beta": 60.058, "gamma": 60.319},
+    "출력": {"a": 6.9982, "b": 6.9188, "c": 69.4714, "alpha": 60.436, "beta": 60.105, "gamma": 60.404},
+    "변화": {"da_percent": 0.012, "db_percent": 0.078, "dc_percent": -0.268,
+              "dalpha_deg": -0.100, "dbeta_deg": 0.047, "dgamma_deg": 0.085},
+    "읽기": "길이는 0.27 % 안, 각은 0.10° 안에서 움직였다. 부피 감소(-0.15 %)는 거의 전부 **c 축 수축**(-0.268 %)이다. ⇒ **DFT 가 UMA 의 고정된 셀 모양을 지지한다** — 'vc-relax 는 argyrodite 를 일그러뜨린다' 던 5월 caveat 가 이 계에서는 과한 걱정이었다는 한 점 증거. ⛔ 한 점이므로 그 caveat 를 철회하지는 않는다.",
+    "입방_등가_a_fcc": {"입력": [9.8957, 9.7770, 9.8511], "출력": [9.8969, 9.7846, 9.8247]}
+  },
+
+  "3_구조_판정_argyrodite_인가": {
+    "질문": "1저자 2026-09-18: '너가 봤을 때 이걸 argyrodite라고 볼 수 있는지'",
+    "대상": "db/structures/modelc_nd_doped_DFTrelax.cif (vc-relax **입력** = 6월 champion). 이완 후 구조에는 아직 같은 시험을 안 돌렸다.",
+    "기준과_측정": {
+      "①_고립_ortho_음이온": "10/10 P 가 Z=4 · 다리 음이온 **0** · P–S 2.02–2.10 Å · X–P–X 평균 109.44° (이상 109.47°, RMS 편차 3.25°, 범위 101.9–117.5°) → 충족",
+      "②_ccp_골격": "10/10 P 가 CN=12 (≤7.6 Å) · 셀 각 60.06–60.54° = 원시 fcc · 입방 등가 a≈9.841 Å (실험 Li₆PS₅Cl ~9.86) → 충족",
+      "③_자유_음이온_수지": "자유 음이온 20 / PS₄ 10 = **정확히 2.00** (이상: 4a 1 + 4d 1 = 2) → 충족",
+      "④_Li_케이지": "자유 S 4개 **전부** 케이지(Z(Li)≥5) · Cl 은 4a 10 / 4d 6 → 충족"
+    },
+    "판정": "**argyrodite-type framework 이다.** 정확한 표기는 `Nd-, O-substituted Cl-rich argyrodite (argyrodite-type framework, P1 supercell)`.",
+    "⛔_이렇게_쓰면_틀린다": [
+      "`F-43m argyrodite` — 대칭은 **P1** 이다. Nd/O/Li-공공 배치가 대칭을 깬다.",
+      "`모든 PS₄ 가 온전하다` — 40 모서리 중 3개가 O 다. P24=PS₂O₂ (P–O 1.55/1.57), P25=PS₃O (1.60). **8/10 만 pristine**, 2/10 은 oxythiophosphate.",
+      "`무질서하니 argyrodite 가 아니다` — S/Cl 의 4a·4d 혼합은 argyrodite 의 **표지**지 결함이 아니다 (Cl-rich 조성의 정상 거동)."
+    ],
+    "왜_골격이_살아남았나": "Nd 가 **케이지 자리(Li 자리)** 에 있고 PS₄ 안으로 안 들어갔다 — Nd78=NdS₅Cl, Nd1=NdO₂S₃Cl (O 2.48/2.61 = P–O–Nd 다리). 골격 밖 치환이라 ①②③ 이 유지된다.",
+    "⚠_한계": "골격이 argyrodite 인 것은 확정이나, **그 Li 배열이 바닥상태인지**는 이 판정이 보증하지 않는다 (UMA LOW-confidence annealing 산물, 카드 §5).",
+    "재현": "python3 tools/comp1_v3/per_site_bond_analysis.py --cif db/structures/modelc_nd_doped_DFTrelax.cif (자리 분류) + 본 기록의 수치는 P 배위·다리·CN12·자유음이온 수지 직접 계산"
+  },
+
+  "4_열린_것": [
+    "🔴 k-메시: 카드 §4 는 '6월 ICOHP 는 k661' 이라 적었으나 **실물 미확인**이다. 별도 기록 nd_icohp_k_mesh_audit_2026_09_18.json 참조.",
+    "이완 **후** 구조의 argyrodite 시험 — 아직 안 했다 (§3 은 이완 전 구조다).",
+    "ICOHP 자체 — LOBSTER 미실행."
+  ]
+}

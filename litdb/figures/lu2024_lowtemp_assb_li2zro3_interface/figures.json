@@ -1,0 +1,372 @@
+{
+ "slug": "lu2024_lowtemp_assb_li2zro3_interface",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "113. Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.pdf",
+  "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Long-term cycle performance of Ni90 composite cathodes. (a−c) The charge−discharge profiles of (a) Ni90/LPSC/Li-In, (b) Ni90@LZO/LPSC/Li-In, and (c) Ni90/LIC/LPSC/Li-In ASSBs at 0.1C (1C = 200 mA g−1) and 30 °C. The insets show the magnified region of the first-cycle profile. (d−f) The long-term cycle stability of (d) Ni90/LPSC/Li-In, (e) Ni90@LZO/LPSC/Li-In, and (f) Ni90/ LIC/LPSC/Li-In ASSBs at 0.1C (1C = 200 mA g−1) and 30 °C. has a substantial influence on the interface stability and kinetics. Yu et al.15 discovered that the NCM composite cathode without a carbon additive even displayed higher discharge capacity and capacity retention at −20 °C than that with a carbon additive. In contrast, Deng et al.16 found that an enhanced electronic conductivity provided by carbon nano- tubes for a LiCoO2 composite cathode was beneficial to improve the charge transfer kinetics at −10 °",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    486.4
+   ],
+   "w": 2151,
+   "h": 1801,
+   "dpi": 300,
+   "src": "113. Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Low-temperature performance of Ni90 composite cathodes. (a−c) The charge−discharge curves of the second cycle for (a) Ni90/ LPSC/Li-In, (b) Ni90@LZO/LPSC/Li-In, and (c) Ni90/LIC/LPSC/Li-In ASSBs within the temperature range of −30 to 30 °C. (d−f) The evolution of specific capacity for (d) Ni90/LPSC/Li-In, (e) Ni90@LZO/LPSC/Li-In, and (f) Ni90/LIC/LPSC/Li-In ASSBs over the temperature range from 30 to 0, −10, −20, and −30 °C. (g−i) The capacity ratio of (g) Ni90/LPSC/Li-In, (h) Ni90@LZO/LPSC/Li-In, and (i) Ni90/LIC/LPSC/Li-In ASSBs at each temperature to that at 30 °C. with superior capacity output (57.3 mAh g−1) at −30 °C. In addition, theoretical evaluation also discloses that cathode/SE interfaces featuring high ionic conductivity and a low energy barrier are conducive to achieve fast ion transport across the bulk interphase and the interface between the cathode and interphas",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    438.6
+   ],
+   "w": 2151,
+   "h": 1602,
+   "dpi": 300,
+   "src": "113. Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Resistance evolution of Ni90 composite cathodes over SOC. (a−c) DRT results of Ni90/LPSC/Li-In ASSB at (a) 30 °C, (b) 0 °C, and (c) −20 °C and various SOC (i.e., 20%, 40%, 60%, or 80%). (d−f) DRT results of the Ni90@LZO/LPSC/Li-In ASSB at (d) 30 °C, (e) 0 °C, and (f) −20 °C and various SOC (i.e., 20%, 40%, 60%, 80%, or 100%). (g−i) DRT results of the Ni90/LIC/LPSC/Li-In ASSB at (g) 30 °C, (h) 0 °C, and (i) −20 °C and various SOC (i.e., 20%, 40%, 60%, 80%, 90%, or 100%). capacity at −30 °C (Figure 2d). As shown in Figure 2g, the capacity ratio, which is defined by the percentage ratio of capacity at a certain temperature to that at 30 °C, dramatically declines to 53.8% and maintains merely 2.1% when the temperature decreases to 0 and −30 °C. This poor low- temperature performance is attributed to the adverse interface reaction and resulting products of the Ni90 cathode and LPSC ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    464.3
+   ],
+   "w": 2151,
+   "h": 1709,
+   "dpi": 300,
+   "src": "113. Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Resistance evolution of Ni90 composite cathodes over various temperatures. (a−c) Nyquist plots of (a) Ni90/LPSC/Li-In, (b) Ni90@LZO/LPSC/Li-In, and (c) Ni90/LIC/LPSC/Li-In ASSBs at 20% SOC and various temperatures (i.e., 30, 0, −10, −20 °C). Note that the data here are normalized by the area (0.7854 cm2) and plotted in units of Ω cm2. DRT results converted from the Nyquist plots in (a)− (c) for (d) Ni90/LPSC/Li-In, (e) Ni90@LZO/LPSC/Li-In, and (f) Ni90/LIC/LPSC/Li-In ASSBs. Arrhenius relationships of ohmic resistance (Rohm), composite cathode resistance (Rcc), and interface resistance (Rint) to the operation temperatures for (g) Ni90/LPSC/Li-In, (h) Ni90@LZO/LPSC/Li-In, and (i) Ni90/LIC/LPSC/Li-In ASSBs. conductivity of the components of interphases.25 For instance, the dominant decomposition products at the Ni90/LPSC interface, Li2S26 and Li3PO4,27 have a poor ionic conductivi",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    486.6
+   ],
+   "w": 2151,
+   "h": 1802,
+   "dpi": 300,
+   "src": "113. Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Theoretical evaluation of interfacial energy barrier. (a, c, e, and g) The structure after 10 ps AIMD simulations at 400 K for (a) Ni90−Li2S, (c) Ni90−Li3PO4, (e) Ni90−Li2ZrO3, and (g) Ni90−Li3InCl6 interfaces. The gray, dark blue, dark purple, red, yellow, green, brown, orange, cyan, and light purple balls represent Ni, Co, Mn, O, S, Li, P, Zr, Cl, and In atoms, respectively. The vertical black dotted line indicates the boundary of the Ni90 cathode and the interphase. (b, d, f, and h) Li site energy distribution along the z-axis direction for (b) Ni90−Li2S, (d) Ni90−Li3PO4, (f) Ni90−Li2ZrO3, and (h) Ni90−Li3InCl6 interfaces. The vertical gray dotted line stands for the boundary of two interphases. The solid circle dots constitute the background of panels (b), (d), (f), and (h) and stand for the relative Li site energy. The mean and 95th Li site energy denotes the average and t",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    666.6
+   ],
+   "w": 2151,
+   "h": 2552,
+   "dpi": 300,
+   "src": "113. Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Charge-discharge curves at the first cycle for Ni90/LPSC/Li-In, Ni90@LZO/LPSC/Li-In and Ni90/LIC/LPSC/Li-In ASSBs cycling at 30oC and 0.1C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    309.9
+   ],
+   "w": 1793,
+   "h": 1017,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.895
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The resistance evolution of Li-In/LPSC/In-Li symmetric cell over temperatures and SOC. (a) Nyquist plot of Li-In/LPSC/In-Li symmetric cell at constant SOC (20% SOC) but different temperatures (i.e., 30, 0 or -10oC). (b) DRT results obtained from the EIS spectra in (a). (c) Nyquist plot of Li-In/LPSC/In-Li symmetric cell at constant temperature (0oC) but different temperatures (i.e., 20%, 40% or 60% SOC).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    369.6,
+    515.5,
+    504.5
+   ],
+   "w": 1798,
+   "h": 564,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.908
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The resistance evolution over SOC. Nyquist plots of Ni90/LPSC/Li-In ASSB at (a) 30oC, (b) 0oC and (c) -20oC and various SOC (i.e., 20%, 40%, 60% or 80%). Nyquist plots of Ni90@LZO/LPSC/Li-In ASSB at (d) 30oC, (e) 0oC and (f) - 20oC and various SOC (i.e., 20%, 40%, 60%, 80% or 100%). Nyquist plots of Ni90/LIC/LPSC/Li-In ASSB at (g) 30oC, (h) 0oC and (i) -20oC and various SOC (i.e., 20%, 40%, 60%, 80%, 90% or 100%).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.4,
+    514.3,
+    460.9
+   ],
+   "w": 1793,
+   "h": 1641,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.89
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The resistance evolution over SOC. Nyquist plots and corresponding fitting lines of Ni90/LPSC/Li-In ASSB at (a) 30oC, (b) 0oC and (c) -20oC and various SOC (i.e., 20%, 40%, 60% or 80%). Nyquist plots and corresponding fitting lines of Ni90@LZO/LPSC/Li-In ASSB at (d) 30oC, (e) 0oC and (f) -20oC and various SOC (i.e., 20%, 40%, 60%, 80% or 100%). Nyquist plots and corresponding fitting lines of Ni90/LIC/LPSC/Li-In ASSB at (g) 30oC, (h) 0oC and (i) -20oC and various SOC (i.e., 20%, 40%, 60%, 80%, 90% or 100%). It should be noted that the fitting lines are obtained by back transforming the DRT results.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.0,
+    514.3,
+    476.5
+   ],
+   "w": 1793,
+   "h": 1686,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.857
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. The resistance evolution over temperature. Nyquist plots and corresponding fitting lines of (a) Ni90/LPSC/Li-In, (b) Ni90@LZO/LPSC/Li-In and (c) Ni90/LIC/LPSC/Li-In ASSBs at 20% SOC but different temperatures. The magnification of Nyquist plots and corresponding fitting lines at 30oC for (d) Ni90/LPSC/Li-In, (e) Ni90@LZO/LPSC/Li-In and (f) Ni90/LIC/LPSC/Li-In ASSBs. It should be noted that the fitting lines are obtained by back transforming the DRT results.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.6,
+    514.3,
+    492.1
+   ],
+   "w": 1793,
+   "h": 1749,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.919
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Fitting results of the Nyquist plots of Ni90/LPSC/Li-In ASSB at (a) 20% SOC and (b) 80% SOC. It should be noted that the fitting lines are obtained by back transforming the DRT results. Notably, the fitting lines attained by back transforming the DRT data show a high degree of overlap with the original EIS data (Figures S4 and S5) except for the low- frequency region with a “diffusion tail” (Figure S6), proving the mathematic transformation almost has no influence on the information carried by the EIS data.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.7,
+    514.3,
+    243.0
+   ],
+   "w": 1793,
+   "h": 719,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.924
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Schematic of the kinetic processes in ASSB. The arrows with different colors represent the distinct kinetic processes in ASSB. Black：Li+ conduction in the bulk/grain of solid electrolyte. Grey：Li+ conduction across the grain boundary of solid electrolyte. Dark blue and light blue: Li+ transport across the CEI and SEI from the solid electrolyte. Red: the charge transfer occurring at the surface of active materials. Orange: Li+ diffusion in the bulk of active materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    378.0,
+    514.3,
+    556.4
+   ],
+   "w": 1793,
+   "h": 744,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.617
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Constant-voltage charge for more than 17h at 3.7 V (vs. Li-In) and -30oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    344.2,
+    505.8,
+    748.0
+   ],
+   "w": 1758,
+   "h": 1683,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.922
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 7,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Equivalent circuit fitting based on three different models for the Nyquist",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    344.2,
+    514.3,
+    748.0
+   ],
+   "w": 1793,
+   "h": 1683,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.923
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 8,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. The Nyquist plot of Li3InCl6 SE at 25℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.4,
+    228.8,
+    431.9,
+    430.3
+   ],
+   "w": 1120,
+   "h": 840,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.972
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of DRT Peaks and Their Possible Ascriptions in ASSBs time constant peak (s) kinetic process D1 10−7−10−6 grain boundary of SE D2 10−5−10−4 contacts among cathode particles and contacts between current collector and cathode D3 10−4−10−2 solid−electrolyte interphase at cathode surface D4 10−2−100 charge transfer at cathode surface D5 100−102 diffusion",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    452.2,
+    296.5,
+    580.2
+   ],
+   "w": 1043,
+   "h": 534,
+   "dpi": 300,
+   "src": "113. Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The selected surface indices and lattice mismatch of studied interfaces. Ni90-Li2S Ni90-Li3PO4 Ni90-Li2ZrO3 Ni90-LIC Surface indices (101)-(110) (101)-(001) (010)-(101) (101)-(110) Lattice mismatch 1.1% 4.8% 2.4% 3.9%",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    488.2,
+    510.3,
+    635.6
+   ],
+   "w": 1773,
+   "h": 615,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.923
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2.png",
+   "caption": "Table S2. R2 score of energy prediction of the interfaces by random initialized potential, pretrained potential and fine-tuned potential. The error is calculated on the same validation set (15% of the trajectory). Ni90-Li2S Ni90-Li3PO4 Ni90-Li2ZrO3 Ni90-LIC Pre-trained 0.02 0.11 0.01 0.18 Fine-tuned 0.98 0.95 0.97 0.98",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    611.8,
+    516.3,
+    712.9
+   ],
+   "w": 1798,
+   "h": 422,
+   "dpi": 300,
+   "src": "113. Sup) Lu2024_ACSNano_Superior_LowTemp_ASSB_HighIonicConductivity_LowEnergyBarrier_Interface.PDF",
+   "blank": 0.89
+  }
+ ]
+}

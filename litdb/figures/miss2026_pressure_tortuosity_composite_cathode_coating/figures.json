@@ -1,0 +1,358 @@
+{
+ "slug": "miss2026_pressure_tortuosity_composite_cathode_coating",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+  "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 | Pressure-dependent ionic conductivity σion",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    529.7,
+    292.1,
+    708.7
+   ],
+   "w": 1056,
+   "h": 746,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.958,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 | (a) Nyquist impedance plot of two composite cathodes composed of 50 vol% uncoated pc-NMC622 particles and 50 vol% 0.67 Li3PS4 + 0.33 LiI particles at a pressure of 486 MPa. The cathode thickness is 128 and 246 µm, respectively. The inset shows the equivalent circuit used for fitting the spectra. (b) Resistances R1, R1 + R2, and R1 + R2 + R3 plotted versus the cathode thickness (log–log plot).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    26.5,
+    558.2,
+    164.8
+   ],
+   "w": 2164,
+   "h": 577,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.941,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 | Nyquist impedance plots of (a) a composite cathode composed of 30 vol% uncoated pc-NMC622 particles and 70 vol% 0.67 Li3PS4 + 0.33 LiI particles at a pressure of 486 MPa and of (b) a composite cathode composed of 70 vol% uncoated pc-NMC622 particles and 30 vol% 0.67 Li3PS4 + 0.33 LiI particles at a pressure of 486 MPa. 3.4 | Physical Interpretation of the Conductivities SE and τion denote the ionic conductivity of the pure SE and the ion transport tortuosity in the composite, respectively. Here, σion Since the impedance measurements on the composites were carried out under ion-blocking conditions, the low-frequency conductivity σlf is identical to the electronic conductivity of the composite σeon In Figure 7 (a), we illustrate the influence of the CAM volume fraction εCAM on the electronic, ionic and parallel conductivity of the composite cathodes, σeon composite composite and",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    214.0,
+    558.4,
+    336.8
+   ],
+   "w": 2165,
+   "h": 513,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.938,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 | High-frequency conductivity σhf plotted vs. the volume fraction of the CAM particles εCAM for four different active materials and at two different pressures for each material.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    26.5,
+    558.2,
+    627.8
+   ],
+   "w": 2164,
+   "h": 2506,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.964,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 | Intermediate-frequency conductivity σif plotted vs. the volume fraction of the CAM particles εCAM for four different active materials and at two different pressures for each material.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    26.5,
+    558.2,
+    627.8
+   ],
+   "w": 2164,
+   "h": 2506,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.97,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 | Low-frequency conductivity σlf plotted vs. the volume fraction of the CAM particles εCAM for four different active materials and at two different pressures for each material. In two cases at low εCAM, σlf could not be determined, since the maximum of the low-frequency semicircle was located outside the frequency range of the impedance measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    26.5,
+    558.2,
+    627.8
+   ],
+   "w": 2164,
+   "h": 2506,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.967,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 | Sketch illustrating the influence of the CAM volume fraction, εCAM, on the low-frequency conductivity σlf = σeon composite, and high-frequency conductivity σhf of CAM/SE composites. 3.5 | Influence of Active Material Morphology and Coating on Composite Microstructure and Tortuosities tortuosity of the coated sc-NMC622-based composite is higher. In contrast, the SEM images of pure pc-NMC622 particles point to a low tendency for agglomeration, independent of a LiNbO3 coating. Figure 8a shows that the electronic tortuosity of the coated pc-NMC622-based composite is lower than that of the uncoated pc-NMC622-based composite. This seems to be a paradox observation at first sight, which can, however, be explained as follows. The electronic conductivity of pure coated pc-NMC622 particles is much lower than the electronic conduc‐ tivity of pure uncoated pc-NMC622 particles, most likely",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    26.5,
+    558.4,
+    173.3
+   ],
+   "w": 2165,
+   "h": 613,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.964,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 | (a) Electronic tortuosity τeon and (b) ionic tortuosity τion of composite cathodes with εCAM = 0.5. 8 of 11 ChemElectroChem, 2026",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    571.6,
+    556.3,
+    720.2
+   ],
+   "w": 2156,
+   "h": 620,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.95,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "FIGURE 9 | SEM images of pure uncoated and coated pc- and sc-NMC622 particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.6,
+    30.5,
+    463.6,
+    294.5
+   ],
+   "w": 1384,
+   "h": 1101,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.356,
+   "auto_bbox": [
+    39.0,
+    26.5,
+    467.6,
+    297.8
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox x0 39.0 pt 가 그림 왼쪽 빈 여백 95 pt 를 넣었다. clip = 래스터 4 장 합집합 (133.6, 40.5, 461.6, 292.5) + 패널 제목 벡터 (y 32.5) + 2 pt",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "FIGURE 10 | SEM images of CAM/SE powders after mixing the particles in a mortar (purple: S EDX intensity mapping; green: Ni EDX intensity mapping).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    324.0,
+    558.2,
+    590.3
+   ],
+   "w": 2164,
+   "h": 1110,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.47,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "FIGURE 11 | SEM images of cross sections of composite pellets after applying a pressure of 663 MPa (purple: S EDX intensity mapping; green: Ni EDX intensity mapping). that σhf can be identified with a parallel conductivity being governed by highly local movements of ions and electrons without tortuosity effects. Electronic and ionic tortuosities can be obtained from the values of σlf and σif, except in cases with σlf ≈ σif. We find that the morphology and coating of the CAM particles exert a strong influence on the microstructure of the CAM/SE composites and thus on the elec‐ tronic and ionic tortuosities. Sc-NMC622 particles form aggregates, which do not interact strongly with the solid electrolyte particles during the preparation of the composite in a mortar. Consequently, the composites contain aggregated sc-NMC622 particles and large SE particles in between. The aggregation of the sc",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    26.5,
+    558.4,
+    291.8
+   ],
+   "w": 2165,
+   "h": 1106,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.458,
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "FIGURE 12 | Schematic illustration of the influence of NMC622 particle morphology and coating on the microstructure of the compo‐ site powder prepared in a mortar.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    329.5,
+    297.0,
+    455.6
+   ],
+   "w": 1076,
+   "h": 527,
+   "dpi": 300,
+   "src": "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.787,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Powder XRD pattern of the amorphous solid electrolyte 0.67 Li3PS4 + 0.33 LiI (black) with the reference of Li4PS4I[1] (red).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    237.3
+   ],
+   "w": 1953,
+   "h": 719,
+   "dpi": 300,
+   "src": "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.957,
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Pressure protocol of impedance measurements in the electrochemical laboratory press CompreDrive. Impedance spectra were measured during the pressure plateaus.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.3,
+    322.0,
+    418.9,
+    462.5
+   ],
+   "w": 1012,
+   "h": 587,
+   "dpi": 300,
+   "src": "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "viewed": true,
+   "manual_crop": "2026-10-13 수동 크롭 — 자동 추출이 '거의 백지 (0.990)' 로 제외 — 회색 가는 계단선 그래프라 공백 판정에 걸렸다. clip = 래스터 (178.3, 324.0, 416.9, 460.5) + 2 pt",
+   "si": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Resistances 𝑅1, 𝑅1 + 𝑅2, and 𝑅1 + 𝑅2 + 𝑅3 plotted versus the cathode thickness of composite cathodes composed of 50 vol% uncoated sc-NMC622 particles and 50 vol% 0.67 Li3PS4 + 0.33 LiI particles at a pressure of 486 MPa..",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    547.2,
+    533.5,
+    718.9
+   ],
+   "w": 1953,
+   "h": 716,
+   "dpi": 300,
+   "src": "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.98,
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. SEM images of pure uncoated and coated pc- and sc-NMC622 particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    88.2,
+    520.7,
+    433.2
+   ],
+   "w": 1900,
+   "h": 1438,
+   "dpi": 300,
+   "src": "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
+   "blank": 0.17,
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 — fS2 는 자동 추출이 거의 백지 (0.990) 로 제외해 손 크롭 (manual_crop) · f9 왼쪽 빈 여백 재크롭 (recrop) · 판독 원자료 digitized.csv (Fig 1 · 4 · 5 · 6 · 8, 176 행) · 크롭 16 장 전부 Read 로 실독"
+}

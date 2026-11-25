@@ -1,0 +1,251 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "O"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {
+    "ortho_LiP3": {
+      "composition": "Li3PO4",
+      "label": "ortho_LiP3",
+      "open_element": "Li",
+      "n_Li_nominal": 3.0,
+      "mu_Li_ref_eV": -1.9089,
+      "meaning": {
+        "uptake": "환원 (cathodic) — Li 를 받아들인다",
+        "release": "산화 (anodic) — Li 를 내놓는다",
+        "axis": "V_vs_Li"
+      },
+      "uptake_onset_rxn": "Li3PO4 + 8 Li -> 4 Li2O + Li3P",
+      "release_onset_rxn": "Li3PO4 -> 0.5 Li4P2O7 + 0.25 O2 + Li",
+      "neutral_rxn": "Li3PO4 -> Li3PO4",
+      "profile": [
+        {
+          "mu_Li_eV": -1.9089,
+          "dmu_Li_eV": 0.0,
+          "evolution_Li": 8.0,
+          "reaction": "Li3PO4 + 8 Li -> 4 Li2O + Li3P",
+          "V_vs_Li": 0.0
+        },
+        {
+          "mu_Li_eV": -2.5961,
+          "dmu_Li_eV": -0.6872,
+          "evolution_Li": -0.0,
+          "reaction": "Li3PO4 -> Li3PO4",
+          "V_vs_Li": 0.687
+        },
+        {
+          "mu_Li_eV": -6.1018,
+          "dmu_Li_eV": -4.1929,
+          "evolution_Li": -1.0,
+          "reaction": "Li3PO4 -> 0.5 Li4P2O7 + 0.25 O2 + Li",
+          "V_vs_Li": 4.193
+        },
+        {
+          "mu_Li_eV": -6.2282,
+          "dmu_Li_eV": -4.3193,
+          "evolution_Li": -2.0,
+          "reaction": "Li3PO4 -> LiPO3 + 0.5 O2 + 2 Li",
+          "V_vs_Li": 4.319
+        },
+        {
+          "mu_Li_eV": -6.8887,
+          "dmu_Li_eV": -4.9798,
+          "evolution_Li": -3.0,
+          "reaction": "Li3PO4 -> 0.5 P2O5 + 0.75 O2 + 3 Li",
+          "V_vs_Li": 4.98
+        }
+      ],
+      "uptake_onset_mu_eV": -1.9089,
+      "release_onset_mu_eV": -6.1018,
+      "neutral_mu_eV": -2.5961,
+      "reduction_limit_V": -0.0,
+      "oxidation_limit_V": 4.193,
+      "ocv_self_decomposition_V": 0.687,
+      "ocv_self_decomposition_rxn": "Li3PO4 -> Li3PO4",
+      "oxidation_onset_rxn": "Li3PO4 -> 0.5 Li4P2O7 + 0.25 O2 + Li"
+    },
+    "pyro_LiP2": {
+      "composition": "Li4P2O7",
+      "label": "pyro_LiP2",
+      "open_element": "Li",
+      "n_Li_nominal": 4.0,
+      "mu_Li_ref_eV": -1.9089,
+      "meaning": {
+        "uptake": "환원 (cathodic) — Li 를 받아들인다",
+        "release": "산화 (anodic) — Li 를 내놓는다",
+        "axis": "V_vs_Li"
+      },
+      "uptake_onset_rxn": "Li4P2O7 + 1.25 Li -> 1.75 Li3PO4 + 0.25 P",
+      "release_onset_rxn": "Li4P2O7 -> 2 LiPO3 + 0.5 O2 + 2 Li",
+      "neutral_rxn": "Li4P2O7 -> Li4P2O7",
+      "profile": [
+        {
+          "mu_Li_eV": -1.9089,
+          "dmu_Li_eV": 0.0,
+          "evolution_Li": 16.0,
+          "reaction": "Li4P2O7 + 16 Li -> 7 Li2O + 2 Li3P",
+          "V_vs_Li": 0.0
+        },
+        {
+          "mu_Li_eV": -2.5961,
+          "dmu_Li_eV": -0.6872,
+          "evolution_Li": 2.0,
+          "reaction": "Li4P2O7 + 2 Li -> 0.25 Li3P + 1.75 Li3PO4",
+          "V_vs_Li": 0.687
+        },
+        {
+          "mu_Li_eV": -2.7788,
+          "dmu_Li_eV": -0.8699,
+          "evolution_Li": 1.5,
+          "reaction": "Li4P2O7 + 1.5 Li -> 0.25 LiP + 1.75 Li3PO4",
+          "V_vs_Li": 0.87
+        },
+        {
+          "mu_Li_eV": -2.8414,
+          "dmu_Li_eV": -0.9325,
+          "evolution_Li": 1.3571,
+          "reaction": "Li4P2O7 + 1.357 Li -> 0.03571 Li3P7 + 1.75 Li3PO4",
+          "V_vs_Li": 0.932
+        },
+        {
+          "mu_Li_eV": -3.0858,
+          "dmu_Li_eV": -1.1769,
+          "evolution_Li": 1.2857,
+          "reaction": "Li4P2O7 + 1.286 Li -> 0.03571 LiP7 + 1.75 Li3PO4",
+          "V_vs_Li": 1.177
+        },
+        {
+          "mu_Li_eV": -3.1508,
+          "dmu_Li_eV": -1.2419,
+          "evolution_Li": 1.25,
+          "reaction": "Li4P2O7 + 1.25 Li -> 1.75 Li3PO4 + 0.25 P",
+          "V_vs_Li": 1.242
+        },
+        {
+          "mu_Li_eV": -4.212,
+          "dmu_Li_eV": -2.3031,
+          "evolution_Li": 0.0,
+          "reaction": "Li4P2O7 -> Li4P2O7",
+          "V_vs_Li": 2.303
+        },
+        {
+          "mu_Li_eV": -6.2282,
+          "dmu_Li_eV": -4.3193,
+          "evolution_Li": -2.0,
+          "reaction": "Li4P2O7 -> 2 LiPO3 + 0.5 O2 + 2 Li",
+          "V_vs_Li": 4.319
+        },
+        {
+          "mu_Li_eV": -6.8887,
+          "dmu_Li_eV": -4.9798,
+          "evolution_Li": -4.0,
+          "reaction": "Li4P2O7 -> P2O5 + O2 + 4 Li",
+          "V_vs_Li": 4.98
+        }
+      ],
+      "uptake_onset_mu_eV": -3.1508,
+      "release_onset_mu_eV": -6.2282,
+      "neutral_mu_eV": -4.212,
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 4.319,
+      "ocv_self_decomposition_V": 2.303,
+      "ocv_self_decomposition_rxn": "Li4P2O7 -> Li4P2O7",
+      "oxidation_onset_rxn": "Li4P2O7 -> 2 LiPO3 + 0.5 O2 + 2 Li"
+    },
+    "meta_LiP1": {
+      "composition": "LiPO3",
+      "label": "meta_LiP1",
+      "open_element": "Li",
+      "n_Li_nominal": 1.0,
+      "mu_Li_ref_eV": -1.9089,
+      "meaning": {
+        "uptake": "환원 (cathodic) — Li 를 받아들인다",
+        "release": "산화 (anodic) — Li 를 내놓는다",
+        "axis": "V_vs_Li"
+      },
+      "uptake_onset_rxn": "LiPO3 + 0.7143 Li -> 0.4286 Li4P2O7 + 0.1429 P",
+      "release_onset_rxn": "LiPO3 -> 0.5 P2O5 + 0.25 O2 + Li",
+      "neutral_rxn": "LiPO3 -> LiPO3",
+      "profile": [
+        {
+          "mu_Li_eV": -1.9089,
+          "dmu_Li_eV": 0.0,
+          "evolution_Li": 8.0,
+          "reaction": "LiPO3 + 8 Li -> 3 Li2O + Li3P",
+          "V_vs_Li": 0.0
+        },
+        {
+          "mu_Li_eV": -2.5961,
+          "dmu_Li_eV": -0.6872,
+          "evolution_Li": 2.0,
+          "reaction": "LiPO3 + 2 Li -> 0.25 Li3P + 0.75 Li3PO4",
+          "V_vs_Li": 0.687
+        },
+        {
+          "mu_Li_eV": -2.7788,
+          "dmu_Li_eV": -0.8699,
+          "evolution_Li": 1.5,
+          "reaction": "LiPO3 + 1.5 Li -> 0.25 LiP + 0.75 Li3PO4",
+          "V_vs_Li": 0.87
+        },
+        {
+          "mu_Li_eV": -2.8414,
+          "dmu_Li_eV": -0.9325,
+          "evolution_Li": 1.3571,
+          "reaction": "LiPO3 + 1.357 Li -> 0.03571 Li3P7 + 0.75 Li3PO4",
+          "V_vs_Li": 0.932
+        },
+        {
+          "mu_Li_eV": -3.0858,
+          "dmu_Li_eV": -1.1769,
+          "evolution_Li": 1.2857,
+          "reaction": "LiPO3 + 1.286 Li -> 0.03571 LiP7 + 0.75 Li3PO4",
+          "V_vs_Li": 1.177
+        },
+        {
+          "mu_Li_eV": -3.1508,
+          "dmu_Li_eV": -1.2419,
+          "evolution_Li": 1.25,
+          "reaction": "LiPO3 + 1.25 Li -> 0.75 Li3PO4 + 0.25 P",
+          "V_vs_Li": 1.242
+        },
+        {
+          "mu_Li_eV": -4.212,
+          "dmu_Li_eV": -2.3031,
+          "evolution_Li": 0.7143,
+          "reaction": "LiPO3 + 0.7143 Li -> 0.4286 Li4P2O7 + 0.1429 P",
+          "V_vs_Li": 2.303
+        },
+        {
+          "mu_Li_eV": -4.3889,
+          "dmu_Li_eV": -2.48,
+          "evolution_Li": 0.0,
+          "reaction": "LiPO3 -> LiPO3",
+          "V_vs_Li": 2.48
+        },
+        {
+          "mu_Li_eV": -6.8887,
+          "dmu_Li_eV": -4.9798,
+          "evolution_Li": -1.0,
+          "reaction": "LiPO3 -> 0.5 P2O5 + 0.25 O2 + Li",
+          "V_vs_Li": 4.98
+        }
+      ],
+      "uptake_onset_mu_eV": -4.212,
+      "release_onset_mu_eV": -6.8887,
+      "neutral_mu_eV": -4.3889,
+      "reduction_limit_V": 2.303,
+      "oxidation_limit_V": 4.98,
+      "ocv_self_decomposition_V": 2.48,
+      "ocv_self_decomposition_rxn": "LiPO3 -> LiPO3",
+      "oxidation_onset_rxn": "LiPO3 -> 0.5 P2O5 + 0.25 O2 + Li"
+    }
+  }
+}

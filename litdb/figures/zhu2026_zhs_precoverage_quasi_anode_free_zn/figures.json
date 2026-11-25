@@ -1,0 +1,373 @@
+{
+ "slug": "zhu2026_zhs_precoverage_quasi_anode_free_zn",
+ "generated": "2026-09-03",
+ "sources": [
+  "Zhu et al., Adv. Funct. Mater. 2026, 36, e23442 — Supporting Information (스캔/이미지 PDF, 폰트 0개)"
+ ],
+ "note": "⚠ extract_figures.py 산출이 아니다. 원본 SI 가 **폰트 0개인 이미지 PDF** 라 캡션 앵커 크로핑이 불가능해, 내장 JPEG 을 페이지 이미지로 뽑아 PNG 로 변환했다. 그림번호(S1-S33)는 **위치 매핑**으로 부여했고 S1-S24 는 본문 콜아웃(S1/S2 흡착구조, S3 CuGr, S4 in-situ SEM, S5/S6 도금형상, S7/S8 LSCM+SEM, S9 MD, S10/S11 Raman+EDL, S12 탈용매화, S13 GC, S14 교환전류, S15-S17 예비순환 상세, S18/S19 전압곡선, S20 modified Aurbach, S21 in-situ XPS, S22/S23 깊이프로파일+형상, S24-S26 nano-ZMO)와 **전수 일치**한다. S25 이후는 위치 추정이며 개별 검증하지 않았다. ★ 본문(main text) 그림 Fig. 1-4 의 이미지는 확보하지 못했다 — 캡션은 본문 텍스트로만 안다.",
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "[열람 ✅ 본 그림] H 흡착 DFT 구조 4종: Zn4(OH)6SO4(ZHS) 구조, Zn-H (side view, Zn 슬랩 2층), Gr-H (side view, 그래핀 2층 위 H 1개), Gr(D)-H (top view, 단원자 공공 자리에 H). 에너지 값은 이 그림에 인쇄돼 있지 않다. 본문 콜아웃: 'adsorption structures are presented in Figures S1 and S2'.",
+   "w": 3076,
+   "h": 1676,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "[열람 ✅ 본 그림] 그래핀 슈퍼셀 + ΔG. Gr(5x5) top/side, Gr(5x5)-H → ΔG = 2.618 eV; Gr(5x5)(D) 공공 표시(빨간 원), Gr(5x5)(D)-H (top view) → ΔG = -0.216 eV. ★ 이 논문 DFT 의 유일한 인쇄 수치.",
+   "w": 3007,
+   "h": 1542,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "[열람 ✅ 본 그림] CuGr 기판 특성: (a) CuGr Raman D/G 피크, (b) GNP N2 등온선 BET 25.239 m2 g-1, (c) GNP 세공분포 dV/dlogD (봉우리 ~25 nm, ~90 nm 부근 figure-read), (d) EDS 맵(C-K/F-K/Cu-L) + SEM 5 um.",
+   "w": 3456,
+   "h": 2090,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "[열람 ✅ 본 그림] (quasi-)in situ SEM, 20 mA cm-2 · 1 mAh cm-2. 같은 위치 Region 1 을 10 cycle / 50 cycle 에 재촬영 (a-d), 배율 3단(x250/x500/x1000). ZHS 가 원래 자리에 고정돼 있음을 보이는 근거.",
+   "w": 1728,
+   "h": 1527,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] 미처리 CuGr 위 직접 Zn 도금 SEM (본문: 'plating directly on the untreated CuGr substrate (Figures S5 and S6)').",
+   "w": 3456,
+   "h": 1630,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": null,
+   "file": "fig_S6.png",
+   "caption": "[열람 ✅ 본 그림] Zn 도금 형상 SEM 비교. (a) CuGrStr 위 0.5 / 1 / 1 / 4 mAh cm-2 — 미세 판상, 균일. (b) CuGr 위 0.5 / 1 mAh cm-2 — 1 mAh cm-2 에서 수십 um 급 '꽃송이' 뭉치(불균일 핵생성).",
+   "w": 2885,
+   "h": 3092,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": null,
+   "file": "fig_S7.png",
+   "caption": "[열람 ✅ 본 그림] 예비순환 후 LSCM 높이맵 + 실물사진. 위: CuGrStr(4 mAh cm-2, z-스케일 최대 538.47) / CuStr(4 mAh cm-2, 1494.53, 큰 함몰) / CuGrStr 단면 SEM+EDS(C·Cu·Zn, 5 um). 아래: CuGr(1 mAh cm-2, 239.57) / CuStr(1, 1178.04) / Cu(1, 479.13). ⚠ 색바 단위가 [um] 로 인쇄돼 있으나 값이 도금 두께로는 비현실적 — 상대비교로만 읽을 것.",
+   "w": 3456,
+   "h": 1999,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": null,
+   "file": "fig_S8.png",
+   "caption": "[열람 ✅ 본 그림] ★ Cu vs CuGr 를 가르는 논리의 핵심 그림. (a) 도식: '약한 3D'(CuGr) 는 ZHS 가 생겨도 Zn 도금 활성자리가 남지만, 평판 Cu 는 ZHS 가 표면을 덮어 Zn 이온 flux 를 특정 영역에 몰아 불균일 도금·CE 저하·단락. (b1,b2) 평판 Cu 위 육각 ZHS 판상 SEM. (c1,c2) CuGr EDS(C/O/F/S/Zn, F 맵) + SEM.",
+   "w": 2261,
+   "h": 3235,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": null,
+   "file": "fig_S9.png",
+   "caption": "[열람 ✅ 본 그림] MD 시뮬레이션 상자. (a) 벌크 전해질(물+SO4+Zn) + 확대, (b) 그래핀 시트 위 전해질, (c) RDF: Bulk Electrolyte / Graphene surface / ZHS surface, x = d (nm) 0.2-0.6. ⚠ RDF 의 원자쌍이 라벨돼 있지 않다. figure-read: 벌크 첫봉 ~0.26 nm(높이 ~61), 그래핀 ~0.265 nm(~21), ZHS 는 0.26 봉우리가 거의 없고 ~0.30 nm 어깨 + ~0.335 nm 주봉.",
+   "w": 3456,
+   "h": 2304,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": null,
+   "file": "fig_S10.png",
+   "caption": "[열람 ✅ 본 그림] Raman. (a) 600-1200 cm-1: ZnSO4 0.125-3 M + ZHS + ZHS+1M ZnSO4, 'Crystal (SO4^2-)' ~970 과 'Hydrated (SO4^2-)' ~985 cm-1 두 점선 (figure-read). (b) 3000-3600 cm-1 O-H 신축, 'HOH-OH2' ~3250 / 'HOH-OSO3^2-' ~3410 점선.",
+   "w": 3456,
+   "h": 1338,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": null,
+   "file": "fig_S11.png",
+   "caption": "[열람 ✅ 본 그림] EDL 용량. (a) CuGrStr / (b) CuStr 의 비-패러데이 CV (0.10-0.20 V vs Zn, 4-12 mV s-1), (c) (ic-ia)/2 vs sweep rate 기울기 → C_dl = 1.446 uF cm-2 (CuStr) vs 0.276 uF cm-2 (CuGrStr) (figure-read).",
+   "w": 3456,
+   "h": 1095,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": null,
+   "file": "fig_S12.png",
+   "caption": "[열람 ✅ 본 그림] 온도가변 EIS(5-30 C) Nyquist + DRT + Arrhenius. 주석값 CuGrStr 14.05 / CuGr 20.65 / Cu 18.70 / CuStr 17.25 — 인쇄 단위는 'J mol-1 K-1' 이나 이는 엔트로피 차원이다. (e) log(R^-1) vs 1000/T 4개 직선의 기울기에서 우리가 되짚으면 ~16-19 kJ mol-1 규모라 **단위 오기(kJ mol-1)** 로 보인다.",
+   "w": 1660,
+   "h": 1631,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": null,
+   "file": "fig_S13.png",
+   "caption": "[열람 ✅ 본 그림] ★ GC 정량 (H2 부피%): CuGrStr 0.28 % / CuGr 4.29 % / CuStr 0.55 % / Cu 3.31 %. HER 억제의 유일한 정량 수치.",
+   "w": 1728,
+   "h": 1558,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": null,
+   "file": "fig_S14.png",
+   "caption": "[열람 ✅ 본 그림] log(j) vs Voltage (-0.3~0.2 V) Tafel 외삽 4종(CuGrStr/CuStr/Cu/CuGr). 교환전류밀도: 전처리 시료(CuGrStr·CuStr)가 미처리보다 높다 — 그림에 CuGrStr·CuGr 두 외삽선만 라벨.",
+   "w": 628,
+   "h": 516,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": null,
+   "file": "fig_S15.png",
+   "caption": "[열람 ✅ 본 그림] 예비순환 조건 최적화. (a) 20 mA cm-2 · 1 mAh cm-2 100 cycle 의 A.C.E: CuGrStr 99.48 % vs CuStr 99.62 % (figure-read). (b) CuGr 예비순환 5-1 vs 40-1 의 100 cycle CE. (c) 그 뒤 10 mA cm-2·1 mAh cm-2 CE ~1000 cycle (inset 99.6-99.9 % 확대). (d,e) 1st/400th/800th 전압곡선.",
+   "w": 3456,
+   "h": 1960,
+   "src": "SI 문서2(내장 JPEG 15장, S1-S15)"
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": null,
+   "file": "fig_S16.png",
+   "caption": "[열람 ✅ 본 그림] 예비순환 중 EIS/DRT. (a,c) Cu||Zn, (b,d) CuGr||Zn 을 10/30/50/70/80/90/100 cycle 에서. DRT 에 R_ct1·R_ct2 두 시상수 표시. 본문 '≈100 cycle 에서 표면이 안정' 의 근거.",
+   "w": 3456,
+   "h": 2625,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": null,
+   "file": "fig_S17.png",
+   "caption": "[열람 ✅ 본 그림] 예비순환 중 XPS(CuGr||Zn) 10/40/70/100/150 cycle. (a) Zn 2p, (b) S 2p, (c) 원자비 O·Zn·S vs cycle (figure-read: O 5.5→7.0→6.3→11.0→9.0 %, Zn 1.1→1.9→1.35→3.8→4.0 %, S 0.55→0.8→0.6→1.35→0.9 %), (d) C 원자비 (92.7→90.2→91.7→83.8→86.1 %). 100 cycle 에서 표면조성이 포화.",
+   "w": 3456,
+   "h": 2204,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": null,
+   "file": "fig_S18.png",
+   "caption": "[열람 ✅ 본 그림] 전압곡선 1st/500th/1000th/1500th. CuGrStr||Zn 은 네 곡선이 겹침(도금 플래토 ~-0.06 V), CuGr||Zn 은 1st(-0.10~-0.12 V)와 이후가 어긋나고 탈리 쪽에 혹이 생김 — 계면 불안정.",
+   "w": 3456,
+   "h": 1118,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": null,
+   "file": "fig_S19.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] 전압곡선 (본문: 'Voltage profiles for the different cells are presented in Figures S18 and S19').",
+   "w": 2655,
+   "h": 1972,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": null,
+   "file": "fig_S20.png",
+   "caption": "[열람 ✅ 본 그림] ★ modified Aurbach. 1 mA cm-2 · 0.1 mAh cm-2, >1750 cycle, '>99.90 % CE'. 과전압이 ~30 mV(0-1200 min) → ~45 mV 로 계단상승 후 ~10,700 min 부근에서 급증(figure-read). inset 10600-10660 min 확대.",
+   "w": 675,
+   "h": 535,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": null,
+   "file": "fig_S21.png",
+   "caption": "[열람 ✅ 본 그림] ★ Cu 쪽 in situ XPS. (a) Cu foil 의 Cu 2p: 10 cycle 에는 뚜렷한 피크, 100 cycle 에는 사라짐(표면이 덮임). ⚠ 화학상태 분해(Cu0/Cu(I)/Cu(II)/합금) 는 하지 않았다. (b) CuGr 의 O 1s 10/50/100 cycle + SO4^2- 기준선.",
+   "w": 1541,
+   "h": 1125,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": null,
+   "file": "fig_S22.png",
+   "caption": "[열람 ✅ 본 그림] ★ XPS 깊이프로파일. (a) Cu(10 pre-cycle) (b) CuGr(10 pre-cycle) (c) CuStr(예비순환 후) (d) CuGrStr(예비순환 후) 의 O 1s(538-528 eV)·Zn 2p(1030-1018 eV) vs etching depth. ⚠⚠ **Cu 2p 깊이프로파일이 없다** — Cu-Zn 상호확산/합금층의 깊이 증거가 이 논문 전체에 없다는 뜻.",
+   "w": 3261,
+   "h": 1913,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": null,
+   "file": "fig_S23.png",
+   "caption": "[열람 ✅ 본 그림] 예비순환/사이클 후 형상. (a) Cu 10 pre-cycle (매끈, 갈색) (b) Cu 100 pre-cycle (거친 ZHS 피복) (c) CuStr 2000 cycle (회백색) (d) CuGrStr 2000 cycle (청흑색, 깨끗). (f) CuStr 예비순환 후 SEM+EDS(O/S/Cu/Zn) — Zn 이 Cu 표면에 퍼져 있으나 **EDS 는 합금과 얇은 Zn 피막을 구분 못 한다**. (g) CuGrStr 예비순환 후 SEM+EDS(C/S/O/Zn).",
+   "w": 1728,
+   "h": 1793,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": null,
+   "file": "fig_S24.png",
+   "caption": "[열람 ✅ 본 그림] HT-Nano-ZMO||Zn 하프셀: 500 mA g-1, 2.2 mg cm-2, 400 cycle 비용량+CE (초기 ~100 → ~155 mAh g-1 로 상승 후 하강, CE ~100 %) 와 1st/100/200/300/400th 충방전 곡선(0.8-1.85 V). nano-ZMO 선정 근거.",
+   "w": 3456,
+   "h": 1377,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": null,
+   "file": "fig_S25.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] nano-ZMO 선정 근거 (본문 'Figures S24-S26'). ⚠ S25 이후 번호는 위치 매핑에 의한 추정이며 본문 콜아웃으로 개별 검증하지 않았다.",
+   "w": 1206,
+   "h": 1060,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": null,
+   "file": "fig_S26.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] nano-ZMO 선정 근거 (본문 'Figures S24-S26'). ⚠ 번호 미검증.",
+   "w": 1208,
+   "h": 1137,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": null,
+   "file": "fig_S27.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] 다공성 탄소의 용량 기여 ~15 mAh g-1 (본문 'Figures S27 and S28'). ⚠ 번호 미검증.",
+   "w": 3371,
+   "h": 2825,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": null,
+   "file": "fig_S28.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] 다공성 탄소의 용량 기여 (본문 'Figures S27 and S28'). ⚠ 번호 미검증.",
+   "w": 3456,
+   "h": 1517,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": null,
+   "file": "fig_S29.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] QAF-CuGrStr||ZMO 사이클 (본문 'Figure S29'). ⚠ 번호 미검증.",
+   "w": 2647,
+   "h": 2025,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": null,
+   "file": "fig_S30.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] 전해질 내 graphene-wrapped ZnMn2O4 의 가역 생성/분해 (본문 'Figures S30-S32'). ⚠ 번호 미검증.",
+   "w": 1996,
+   "h": 1805,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": null,
+   "file": "fig_S31.png",
+   "caption": "[열람 ✅ 본 그림] (번호는 위치 추정) ZMO 양극 XPS: (a) 1st charge 후, (b) 5th charge-discharge 후 의 Zn 2p / Mn 2p / S 2p + 원자비. figure-read: 1st charge Zn ~13 / Mn ~14 / S ~4 / O ~69 %, 5th 후 Zn ~22 / Mn ~5 / S ~7 / O ~65 % → Mn 용출·Zn(ZHS) 축적.",
+   "w": 3456,
+   "h": 1533,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": null,
+   "file": "fig_S32.png",
+   "caption": "[미열람 ❌ — 본문 콜아웃으로 추정한 내용] ZMO 양극 쪽 보조자료 (본문 'Figures S30-S32'). ⚠ 번호 미검증.",
+   "w": 3456,
+   "h": 2130,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": null,
+   "file": "fig_S33.png",
+   "caption": "[열람 ✅ 본 그림] (번호는 위치 추정 — 본문에 S33 콜아웃 없음) QAF 개념 도식: 충전 시 ZnMn2O4 → Zn + 2MnO2, Mn(III)→Mn(IV), '1 portion of Zn 224 mAh g-1'; 방전 시 Zn + 2MnO2 → ZnMn2O4, Mn(IV)→Mn(II) 부분 용해, '2 portion of Zn 2 x 224 mAh g-1'.",
+   "w": 3456,
+   "h": 1455,
+   "src": "SI 문서3(내장 JPEG 18장, S16-S33)"
+  }
+ ]
+}

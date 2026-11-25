@@ -1,0 +1,88 @@
+{
+ "schema": "gate_measurement/v1",
+ "date": "2026-09-11",
+ "citable": false,
+ "제목": "LPSOCl 3×3×1 400 ps 9런 — C2 MTO 4창 D_inc plateau 판정 (kgy msd_diffusive_check.py --mto 표 전사)",
+ "규약": "MTO · 창 2–50 ps · 자유절편 · DINC_WINDOWS (2,50)(10,50)(25,100)(50,100) · plateau 문턱 10 % · β 는 경보(판정 아님)",
+ "결과": {
+  "s2/1000": {
+   "D_cm2_s": 4.909e-05,
+   "beta_star": 0.92,
+   "MSD_hi_A2": 149.8,
+   "spread": 0.02,
+   "hops_msd_ub": 66.1,
+   "verdict": "plateau"
+  },
+  "s2/600": {
+   "D_cm2_s": 1.199e-05,
+   "beta_star": 0.82,
+   "MSD_hi_A2": 37.9,
+   "spread": 0.06,
+   "hops_msd_ub": 15.5,
+   "verdict": "plateau"
+  },
+  "s2/800": {
+   "D_cm2_s": 2.762e-05,
+   "beta_star": 0.87,
+   "MSD_hi_A2": 85.9,
+   "spread": 0.02,
+   "hops_msd_ub": 37.6,
+   "verdict": "plateau"
+  },
+  "s3/1000": {
+   "D_cm2_s": 4.967e-05,
+   "beta_star": 0.92,
+   "MSD_hi_A2": 151.4,
+   "spread": 0.02,
+   "hops_msd_ub": 67.5,
+   "verdict": "plateau"
+  },
+  "s3/600": {
+   "D_cm2_s": 1.214e-05,
+   "beta_star": 0.82,
+   "MSD_hi_A2": 38.3,
+   "spread": 0.09,
+   "hops_msd_ub": 15.6,
+   "verdict": "plateau"
+  },
+  "s3/800": {
+   "D_cm2_s": 2.703e-05,
+   "beta_star": 0.87,
+   "MSD_hi_A2": 83.6,
+   "spread": 0.06,
+   "hops_msd_ub": 36.9,
+   "verdict": "plateau"
+  },
+  "s4/1000": {
+   "D_cm2_s": 4.844e-05,
+   "beta_star": 0.91,
+   "MSD_hi_A2": 148.4,
+   "spread": 0.03,
+   "hops_msd_ub": 68.0,
+   "verdict": "plateau"
+  },
+  "s4/600": {
+   "D_cm2_s": 1.144e-05,
+   "beta_star": 0.8,
+   "MSD_hi_A2": 36.4,
+   "spread": 0.11,
+   "hops_msd_ub": null,
+   "verdict": "no_value — D_inc 창 따라 이동 (11 % > 10 %, 추세 −11 %)"
+  },
+  "s4/800": {
+   "D_cm2_s": 2.867e-05,
+   "beta_star": 0.89,
+   "MSD_hi_A2": 88.4,
+   "spread": 0.04,
+   "hops_msd_ub": 36.6,
+   "verdict": "plateau"
+  }
+ },
+ "온도_자격_R1": {
+  "600": "s2·s3 (s4 no_value)",
+  "800": "s2·s3·s4",
+  "1000": "s2·s3·s4"
+ },
+ "⚠_hops_msd_ub": "MSD/d² 유효 홉 수(2026-09-11 정정: 상한이 아니라 f·n). 실제 계수는 lpsocl_box331_c2b_hops_2026_09_11.json",
+ "출처": "kgy 2026-09-11 17:40 경 출력 (1저자 붙여넣기) · 원자료 ~/work/runs/lpsocl_box331_400ps/s*/d0.00_cfg0/T*/msd.json"
+}

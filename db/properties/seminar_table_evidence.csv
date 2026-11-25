@@ -1,0 +1,9 @@
+what,how many of 270,status
+candidate structures,270,computed
+fast relaxation,270,computed
+short anneal,270,computed
+static Li-path map,270,computed
+stiffness / EOS,270,computed
+oxidation window,270,computed
+conductivity from dynamics,0,not run
+cathode interface / adhesion,0,not run

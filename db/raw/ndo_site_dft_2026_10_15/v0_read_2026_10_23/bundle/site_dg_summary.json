@@ -1,0 +1,104 @@
+{
+ "refs_eV_per_fu": {
+  "Li2S": -725.7358107864108,
+  "Li3PS4": -2100.8386191037
+ },
+ "reservoir_4Li2S_minus_Li3PS4_eV": -802.1046240419432,
+ "error_records": [],
+ "dopants": {
+  "Nd": {
+   "models": {
+    "MP": {
+     "formula": "Cl8Li31Nd2O3P3S19",
+     "n": 1,
+     "n_converged": 1,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": null,
+     "top": [
+      "MP_07"
+     ],
+     "ranked": [
+      {
+       "name": "MP_07",
+       "E_eV": -31907.606262239875,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/MP_07/scf.in"
+      }
+     ]
+    },
+    "MLi": {
+     "formula": "Cl8Li21Nd2O3P5S19",
+     "n": 1,
+     "n_converged": 1,
+     "excluded_unconverged": [],
+     "gap_min_second_eV": null,
+     "top": [
+      "MLi_04"
+     ],
+     "ranked": [
+      {
+       "name": "MLi_04",
+       "E_eV": -30304.376903385728,
+       "dE_from_min_eV": 0.0,
+       "converged": true,
+       "n_relax_steps": null,
+       "post_relax_xyz": "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/MLi_04/scf.in"
+      }
+     ]
+    }
+   },
+   "refusals": [],
+   "closure": {
+    "a_Li2S": 8,
+    "b_Li3PS4": -2,
+    "n_dopant": 2
+   },
+   "dG_site_eV_per_dopant": 0.48994461486972796,
+   "polymorph_recheck": [
+    {
+     "threshold": 0.1,
+     "distance": 0.389944614869728,
+     "triggered": false
+    }
+   ],
+   "gates": {
+    "G3_margin": 0.3,
+    "G3_triggered": false,
+    "min_cells": {
+     "MP": "MP_07",
+     "MLi": "MLi_04"
+    },
+    "G2_uma_dG": 0.31852753300422165,
+    "G2_same_sign": true
+   }
+  }
+ },
+ "hosts": [],
+ "method": "DFT",
+ "skipped_dirs": [],
+ "inputs": {
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/Li2S/scf.in": "991583979641fc9b0912113525acfcf6b4066b1e280a109ec16f035097e02ca1",
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/Li2S/scf.out": "ae3d3d798a9eedc95aea78dc21762c16ac5e48d515756eb9dd1e86e4eb336631",
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/Li3PS4/scf.in": "7cde1de461874133268f0da65f2ea3a04df19cd1367d67cfb2dbf25483459f0e",
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/Li3PS4/scf.out": "2e01d103b6b87f987daa55c45e8653bfefcaefbe511779966f503d03b3aeda7c",
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/MLi_04/scf.in": "ca048e38a3e8fd4205027e8a0844a35646f0d27f0e338d21869744ed98c53695",
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/MLi_04/scf.out": "7e078332078ca15bc78c298ad987cfb07cdb521955b29c4a2cdf2f3487089806",
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/MP_07/scf.in": "47adf2eb8e2c461ee05b5f4b6611610fdf7128d672c22a51c8c8161ef4807409",
+  "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/MP_07/scf.out": "f7c7580152044b4b0852d01bc7134ab0dabcb2b44cd27a332827177d4611e62e",
+  "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json": "53249e6b6c804ab07b977072b0259b3b08e7422cf93db48e0d0229baa49ff690"
+ },
+ "args": {
+  "qe": "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23",
+  "expect": 1,
+  "allow_incomplete": false,
+  "top": 1,
+  "thresholds": [
+   "Nd=0.10"
+  ],
+  "g3": 0.3,
+  "kprobe": null,
+  "compare_uma": "db/raw/ndo_site_2026_10_14/uma_rietveld_2026_10_15/site_dg_rietveld.json"
+ }
+}

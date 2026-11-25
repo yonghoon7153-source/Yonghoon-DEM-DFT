@@ -1,0 +1,39 @@
+{
+  "symbol": "Rb",
+  "name": "Rubidium",
+  "Z": 37,
+  "role": "1족 무거운 알칼리 금속 — Rb⁺ 1가로만 존재하는 대형 hard 양이온. Li 대체 알칼리 관점: Rb⁺(VI 1.52 Å)는 K⁺(1.38)보다 크고 Cs⁺(1.67)보다 작은 중간 대형 1가. Li-금속 음극의 덴드라이트 억제 첨가제(자기치유 정전기 실드, Rb⁺/Cs⁺ 공동 제안)로 등장하나, 우리 황화물 SE 캠페인의 직접 앵커는 아님.",
+  "oxidation_states": ["+1"],
+  "electronegativity": 0.82,
+  "ionic_radius_A": {
+    "Rb+_VI": 1.52,
+    "Rb+_VIII": 1.61,
+    "Rb+_XII": 1.72,
+    "_note": "Shannon 1976: Rb+ VI(팔면체) 1.52 A, VIII 1.61, XII 1.72. Li+(0.76)의 2배 -> Li 자리 치환 시 큰 팽창; K+(1.38)<Rb+<Cs+(1.67) 크기 계열의 가운데."
+  },
+  "representative_compounds": [
+    {"formula": "RbCl", "context": "대표 할라이드", "battery_role": "Rb 자체는 SE 아님 — Rb 3d XPS 기준물", "note": "rock salt; Rb 3d5/2 ~110.2 eV. Rb+는 대형 hard 1가"},
+    {"formula": "Rb2O", "context": "염기성 산화물", "battery_role": "wide-gap 이온 산화물(참고상)", "note": "anti-fluorite; 매우 염기성. Rb는 O와 순이온 결합"},
+    {"formula": "Rb+ (전해질 첨가제)", "context": "Li 음극 덴드라이트 억제", "battery_role": "자기치유 정전기 실드(self-healing electrostatic shield) — Cs⁺와 함께 낮은 환원전위로 Li 돌기 주변을 정전기 차폐", "note": "Ding 2013(JACS) 제안 개념 — Rb+/Cs+가 표면에 환원되지 않고 흡착막을 형성"}
+  ],
+  "sei_relevance": "(일반적) Rb는 native Li-SE 이온이 아니라 Li 대체 알칼리. RbF·RbCl·Rb2O 등 Rb 무기상은 Li계 wide-gap 이온상과 성격이 유사하지만 우리 캠페인 SEI 앵커는 아님. Rb⁺의 배터리 관련성은 SEI 성분보다 Li 음극 덴드라이트 억제 첨가제(정전기 실드) 쪽이 잘 알려짐.",
+  "xps": [
+    {"core": "Rb 3d5/2", "BE_eV": 110.2, "assignment": "RbCl / Rb+ (3d 이중선: 3d3/2 ~111.7 eV, 스핀궤도 분리 ~1.5 eV)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [],
+  "dos_character": "Rb 4p는 semicore, 5s는 비어 전도대 상부에 기여 -> 순수 이온성 s-block 1가. 밴드엣지 redox 무관; 결합/밴드는 음이온(O 2p, Cl 3p) 지배, Rb는 정전기·자리크기만 바꿈.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 5s¹",
+    "electron_config": "[Kr] 5s¹",
+    "valence_orbitals": "5s¹ — Rb⁺면 빈 5s + 닫힌 [Kr] 코어(순수 이온성 1가)",
+    "band_character": "(일반 전자구조) Rb⁺ s-block 1가, 빈 5s가 전도대 상부 -> 밴드엣지 redox 무관; Rb2O·RbCl은 wide-gap clean 이온상, Rb는 자리/정전기만 바꿈",
+    "bonding": "Rb–O·Rb–Cl 순이온성, Rb 5s–음이온 p 전하이동; 대형 hard 1가라 산소·할라이드 선호"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Rb+ VI 1.52 A)",
+    "Ding et al., J. Am. Chem. Soc. 135, 4450 (2013) — 자기치유 정전기 실드(Cs+/Rb+ 첨가제, Li 덴드라이트 억제)",
+    "NIST XPS DB — Rb 3d5/2 (RbCl / Rb+ ~110.2 eV); WebElements — Pauling EN 0.82, [Kr]5s¹"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii); SSB 앵커 없음(비캠페인 원소)"
+}

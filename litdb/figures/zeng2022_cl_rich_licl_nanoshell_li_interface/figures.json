@@ -1,0 +1,601 @@
+{
+ "slug": "zeng2022_cl_rich_licl_nanoshell_li_interface",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-09",
+ "sources": [
+  "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+  "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Structure and ionic conductivity analyses for Li7−xPS6−xClx argyrodites. a X-ray diffraction patterns of annealed samples. b The color of the powders for selected samples. c Chlorinity dependence of the ionic conductivity and lattice parameters. d TEM images of Cl-06, Cl-13, Cl-16, and the corresponding SAED patterns. e Complex impedance plot of selected frequencies for measurements carried out in In|SE|In cell conﬁguration at 24 °C. of Cl-13 and Cl-16 increase slowly from 50 and 19 Ω, respec- tively, to 486 and 256 Ω at 6000 h. This indicates a suppressed chemical reactivity of argyrodite toward Li by increasing chlorinity. grain-boundary/bulk resistance. Because the grain-boundary/bulk resistance cannot be clearly detected, it is hard to ﬁt the Nyquist plots31. The total ionic conductivity is thus calculated from the local minimal resistance at the intersection between the imped",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    46.0,
+    557.7,
+    267.5
+   ],
+   "w": 2168,
+   "h": 924,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.621,
+   "manual_crop": "auto crop started at y=66.2 pt and cut the top of panels a/b (legend and x=1.6 trace header); figure drawings start at y~30 and panel labels at y=51.9; clip widened to y=46.0-267.5 on PDF p.3 (2026-11-09)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Time-resolved EIS tested intermittently on the Li|Li7−xPS6−xClx|Li symmetric cells for 600 h at 24 °C. Evolution of the impedance signal in Nyquist plots for the samples of Cl-06 (a), Cl-10 (b), Cl-13 (c), Cl-16 (d). e Representation of the impedance signal (Cl-13 at 300 h) in a Bode plot. The inset displays the equivalent circuit diagram adopted for ﬁtting the Bode plot and the impedance spectra (a–d). f Interfacial layer resistance of Li|SE as a function of storage time.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    71.5,
+    557.7,
+    332.1
+   ],
+   "w": 2168,
+   "h": 1086,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Li dendrite suppression capability and long-term interface stability of Li|SE|Li using Li7-xPS6-xClx (x = 0.6, 1.0, 1.3, and 1.6) SEs at 24 ± 4 °C. a Critical current density (CCD) for different argyrodite batches. Long-term Li plating/stripping cycling at 0.25 mA/cm2 for Cl-06 (b), Cl-10 (c), Cl-13 (d), and Cl-16 (e).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    386.8,
+    556.5,
+    639.9
+   ],
+   "w": 2163,
+   "h": 1056,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.885,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Interfacial evolution of the Li||Li cells subjected to Li plating/stripping (Fig. 3). The impedance spectra were acquired for every 100 cycles from the in situ EIS measurements on the cells using Cl-06 (a), Cl-10 (b), Cl-13 (c), and Cl-16 (d) SEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    42.3,
+    557.7,
+    417.4
+   ],
+   "w": 2168,
+   "h": 1563,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Symmetric Li||Li cells cycling performance for SEs with different chlorine content. Li plating/stripping cycling on Li|SE|Li symmetric cells at 0.5 mA/cm2 at 24 ± 4 °C using Cl-13 (a), Cl-06 (b), Cl-10 (c), and Cl-16 (d) SEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    66.6,
+    546.9,
+    268.7
+   ],
+   "w": 2123,
+   "h": 843,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Electrochemical cycling performance of Li|SE|LNO@NCM622 cells with Cl-06 and Cl-13 SEs. Capacity of Li||LNO@NCM622 cells for the ﬁrst 30 cycles run at 0.1 mA/cm2 at 24 ± 4 °C using Cl-06 (a) and Cl-13 (b) SEs, and the corresponding charge/discharge curves (c, d).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    301.5,
+    557.7,
+    607.0
+   ],
+   "w": 2168,
+   "h": 1274,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Electrochemical cycling performance of Li-In||LNO@NCM811 cells. a Capacity and Coulombic efﬁciency for 1000 cycles run at 0.5 mA/cm2 at 24 ± 4 °C using Cl-06 and Cl-13 SEs. Charge/discharge proﬁles for Cl-06 (b) and Cl-13 (c) SEs. specimens were prepared and transferred in Ar atmosphere to prevent oxidation. The XPS maps of the pristine Cl-06 (Supplementary Fig. 8) and Cl-13 (Fig. 8a) are comparable. The peak positions of S 2p at 161.4 and 162.5 eV and those of P 2p at 131.8 and 132.6 eV are attributed to PS43−. No impurity peak is observed in Cl-13. Comparably, Cl-06 shows impurity phases that increase after cycling. The S 2p spectrum of Cl-06 (Fig. 8b) represents S-S and Li2S impurity peaks. The S-S peaks are determined to be Li2Sn46,47. The P 2p spectrum shows that except for the PS43−peak, there also exist peaks of reduced phosphorus species and Li3P. In some studies8, the abs",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    66.7,
+    557.7,
+    349.6
+   ],
+   "w": 2168,
+   "h": 1180,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 XPS evaluation on Li|SE interface for Li||Li symmetric cells using Cl-06 and Cl-13 SEs after Li plating/stripping for 200 cycles. a Cl-13 before cycling. Cl-06 (b) and Cl-13 (c) after 200 cycles. d semi-quantitative analyses of the interphases.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    69.1,
+    557.7,
+    497.2
+   ],
+   "w": 2168,
+   "h": 1785,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.817
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 Inﬂuence of chlorinity on microstructure. a–c SEM and EDS analyses on the Li|SE interface for Li||Li symmetric cells after plating/stripping cycling using Cl-06 (200 cycles) and Cl-13 (400 cycles) SEs. a SEM and EDS images on fracture surface. Cross-sectional SEM and EDS images for Cl-06 (b) and Cl-13 (c). d Cryogenic STEM-HAADF and EDS images of as-prepared Cl-16 powder.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    48.0,
+    557.7,
+    510.4
+   ],
+   "w": 2168,
+   "h": 1927,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.214,
+   "manual_crop": "auto crop kept only panel d (y=338.3-510.4); the embedded figure image spans y=55.7-504.4 with panel labels a-c from y=52.4, so panels a-c (SEM/EDS fracture surface and cross sections) were missing; clip widened to y=48.0-510.4 on PDF p.9 (2026-11-09)",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 In situ Raman spectroscopy detection at the Li|SE interface region on Li|SE|LNO@NCM622 cells with Cl-06 and Cl-13 SEs. a Drawing of the in situ Raman mold. b Image of laser focusing area on the Li|SE interface. In situ Raman spectra of Cl-06 (c) and Cl-13 (d) in charging process run under 0.1 mA/cm2 at 24 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    46.0,
+    556.0,
+    241.0
+   ],
+   "w": 2151,
+   "h": 814,
+   "dpi": 300,
+   "src": "038bce09-116._Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "manual_crop": "extractor flagged f10 as missing (caption candidate on p.10 fell through the caption rule, 0 crops); clip = full figure area above the caption block (caption starts y=242.5 pt) on PDF p.10, rendered at 300 dpi with PyMuPDF (2026-11-09)",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. TEM image of Cl-10 and the corresponding SAED pattern.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.1,
+    66.1,
+    514.2,
+    202.2
+   ],
+   "w": 1793,
+   "h": 568,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.482
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. The full impedance plots of Li7-xPS6-xClx measured on In|SE|In cells at 24 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    96.7,
+    103.4,
+    501.6,
+    430.4
+   ],
+   "w": 1687,
+   "h": 1363,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. SEM surface images of the pristine Cl-06 and Cl-13",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    99.5,
+    511.4,
+    262.4
+   ],
+   "w": 1781,
+   "h": 680,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.122
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. CCD curves for Li7-xPS6-xClx (x = 0.6, 1.0, 1.3, 1.6) with",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    72.0,
+    505.0,
+    352.8
+   ],
+   "w": 1718,
+   "h": 1170,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. Representation of the impedance signal in a phase angle",
+   "rotated_deg": 0,
+   "bbox": [
+    87.1,
+    72.2,
+    511.3,
+    290.2
+   ],
+   "w": 1768,
+   "h": 908,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6. Charge/discharge profiles (a) and capacity and Coulombic",
+   "rotated_deg": 0,
+   "bbox": [
+    84.4,
+    101.6,
+    513.9,
+    276.2
+   ],
+   "w": 1791,
+   "h": 728,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7. Li plating/stripping cycled at 0.25 mA/cm2 at 24 ± 4 C for",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.7,
+    514.5,
+    244.9
+   ],
+   "w": 1794,
+   "h": 727,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure 8. XPS spectra of the as-prepared Cl-06.",
+   "rotated_deg": 0,
+   "bbox": [
+    132.7,
+    69.2,
+    465.7,
+    558.1
+   ],
+   "w": 1388,
+   "h": 2038,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Figure 9. EDS mapping images of S, P, Cl elements on the fracture",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.3,
+    515.0,
+    309.7
+   ],
+   "w": 1796,
+   "h": 1007,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.268
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Figure 10. STEM-HAADF and EDS mapping images of Cl-06 (a)",
+   "rotated_deg": 0,
+   "bbox": [
+    92.6,
+    66.6,
+    505.8,
+    342.0
+   ],
+   "w": 1722,
+   "h": 1148,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.174,
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Figure 11. SEM-EDS images of the pellet cold-pressed from the as-",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.5,
+    510.3,
+    601.7
+   ],
+   "w": 1773,
+   "h": 2205,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.45
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Figure 12. STEM-HAADF and EDS mapping images for a",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    68.2,
+    501.7,
+    278.6
+   ],
+   "w": 1704,
+   "h": 877,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.09
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Figure 13. STEM-HAADF and EDS images of Cl-16 prepared with",
+   "rotated_deg": 0,
+   "bbox": [
+    88.7,
+    69.5,
+    509.7,
+    370.3
+   ],
+   "w": 1755,
+   "h": 1254,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.263,
+   "viewed": true
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Figure 14. STEM-EDS of Cl-16 after Li plating/stripping for 400",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    70.1,
+    501.7,
+    214.3
+   ],
+   "w": 1704,
+   "h": 601,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.112
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Figure 15. The XRD profiles detected from the Li|SE interface on",
+   "rotated_deg": 0,
+   "bbox": [
+    84.6,
+    68.9,
+    510.0,
+    261.7
+   ],
+   "w": 1773,
+   "h": 804,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Figure 16. Schematic depicting the advantages of the Cl-rich (Cl-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.9,
+    511.3,
+    274.9
+   ],
+   "w": 1781,
+   "h": 847,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.456
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 18,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. The ionic conductivity, electronic conductivity, lattice parameters, and LiCl volume fraction of the as-prepared Li argyrodites with various chlorinities. Nominal composition Li6.4P45.4Cl0.6 Li6PS5Cl Li5.7PS4.7Cl1.3 Li5.55PS4.55Cl1.45 Li5.4PS4.4Cl1.6",
+   "rotated_deg": 0,
+   "bbox": [
+    71.1,
+    68.9,
+    541.5,
+    347.1
+   ],
+   "w": 1961,
+   "h": 1160,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 19,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2. Rint values and corresponding errors acquired by fitting the impedance spectra (Figure 2a-d) with the equivalent circuit displayed in Figure 2e. The time-resolved impedance spectra were collected for every 100 h. Cycle number Nominal pristine 100h 200h 300h 400h 500h 600h composition Rint () 209 591 2175 3671 5129 6247 9093 Li6.4PS5.4Cl0.6 Error (%) 7.9 8 2.7 1.9 5.71 9.6 4.4 Rint () 61 144 180 265 320 422 568 Li6PS5Cl Error (%) 3.3 6.6 5.7 6.4 5.8 5.1 7.2 Rint () 50 81 127 182 284 346 486 Li5.7PS4.7Cl1.3 Error (%) 8.2 1.6 4.1 8.61 8.1 5.9 8.6 Rint () 19 82 95 102 135 175 256 Li5.4PS4.4Cl1.6 Error (%) 13.1 8.32 10.3 6.3 5.6 5.4 7.8",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    68.9,
+    513.4,
+    305.7
+   ],
+   "w": 1786,
+   "h": 987,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 20,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3. Rint values and corresponding errors acquired by fitting the impedance spectra with the equivalent circuit displayed in Supplementary Figure 6. The impedance spectra (Figure 4) were in situ measured from the Li plating/stripping cycling on Li|SE|Li symmetric cells for every 100 cycles. Cycle number Nominal 0 (pristine) 100th 200th 300th 400th composition Rint () 258 506 623 - - Li6.4PS5.4Cl0.6 Error (%) 0.001 0.001 7.793 - - Rint () 63 137 246 403 465 Li6PS5Cl Error (%) 0.002 5.760 0.003 9.340 10.490 Rint () 40 50 72 92 178 Li5.7PS4.7Cl1.3 Error (%) 0.009 2.167 0.238 12.131 9.061 Rint () 17 28 40 32 49 Li5.4PS4.4Cl1.6 Error (%) 15.993 0.007 0.009 24.160 28.040",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    68.9,
+    513.4,
+    321.3
+   ],
+   "w": 1786,
+   "h": 1052,
+   "dpi": 300,
+   "src": "3856744e-116._Sup_Promoting_favorable_interfacial_properties_in_lithium-based_batteries_using_chlorine-rich_sulfide_inorganic_solid-state_electrolytes.pdf",
+   "blank": 0.712
+  }
+ ],
+ "missing_labels": []
+}

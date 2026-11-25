@@ -1,0 +1,82 @@
+{
+  "EF_eV_qe": 3.831,
+  "VBM_eV": 3.2559,
+  "CBM_eV": 5.4175,
+  "band_gap_eV": 2.1616000000000004,
+  "band_gap_source": "fixed-occ nscf",
+  "smoothing_sigma_eV": 0.15,
+  "total_dos_raw_max_states_per_eV": 496300.0,
+  "\u26d4": "DOS-threshold \uac2d\uc740 CLAUDE.md \uc0c1 \uc778\uc6a9 \ubd88\uac00\ub2e4 \u2014 \uc815\ubcf8\uc740 fixed-occ nscf \uc758 VBM/CBM \uace0\uc720\uac12\uc774\ub2e4. --vbm/--cbm \uc73c\ub85c \uc8fc\uba74 \uc774 \uac12\uc774 \uc815\ubcf8\uc73c\ub85c \ubc14\ub010\ub2e4.",
+  "VBM_peak_eV": 2.134,
+  "CBM_peak_eV": 7.074,
+  "VBM_character": "S p (87%) + Li p (6%) + Cl p (2%)",
+  "CBM_character": "S p (40%) + P s (25%) + Li p (16%)",
+  "VBM_character_breakdown_pct": [
+    {
+      "element": "S",
+      "orbital": "p",
+      "percent": 87.1
+    },
+    {
+      "element": "Li",
+      "orbital": "p",
+      "percent": 6.5
+    },
+    {
+      "element": "Cl",
+      "orbital": "p",
+      "percent": 2.2
+    },
+    {
+      "element": "Nd",
+      "orbital": "d",
+      "percent": 1.5
+    },
+    {
+      "element": "Li",
+      "orbital": "s",
+      "percent": 1.0
+    }
+  ],
+  "CBM_character_breakdown_pct": [
+    {
+      "element": "S",
+      "orbital": "p",
+      "percent": 40.1
+    },
+    {
+      "element": "P",
+      "orbital": "s",
+      "percent": 24.7
+    },
+    {
+      "element": "Li",
+      "orbital": "p",
+      "percent": 15.5
+    },
+    {
+      "element": "S",
+      "orbital": "s",
+      "percent": 7.8
+    },
+    {
+      "element": "P",
+      "orbital": "p",
+      "percent": 6.4
+    },
+    {
+      "element": "Li",
+      "orbital": "s",
+      "percent": 2.2
+    },
+    {
+      "element": "Cl",
+      "orbital": "s",
+      "percent": 1.5
+    }
+  ],
+  "character_window_eV": 0.5,
+  "dos_threshold_states_per_eV": 0.5,
+  "e_min_eV": -3.0,
+  "method": "VBM/CBM = edges of low-DOS run (DOS<0.5, E>-3.0 eV) straddling EF; peaks = nearest local maxima with height\u22651.0; character = PDOS percent within 0.5 eV of edge."
+}

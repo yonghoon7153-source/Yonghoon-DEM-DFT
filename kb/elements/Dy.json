@@ -1,0 +1,43 @@
+{
+  "symbol": "Dy",
+  "name": "Dysprosium",
+  "Z": 66,
+  "role": "란타나이드 aliovalent 도펀트(Dy2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. 실질 산화수 +3만(Dy⁴⁺/Dy²⁺는 이색적). Dy³⁺(4f⁹)는 란탄족 최대급 자기모멘트(⁶H₁₅/₂, ~10.6 μB)로 단분자자석(SMM)·Terfenol-D(Tb0.3Dy0.7Fe2 자기변형)의 핵심. Dy³⁺면 P 자리 치환+O 동반(P-O-Dy 가정); Gd 이후 무거운 RE³⁺라 반경 작아지고 inert(비-redox) 성격.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.22,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁰ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f¹⁰ 6s²",
+    "valence_orbitals": "4f¹⁰ 6s² — Dy³⁺면 4f⁹(개방껍질, S=5/2, ⁶H₁₅/₂; 매우 큰 J·모멘트); P 자리 치환+O 동반",
+    "band_character": "Dy³⁺=4f⁹ 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 큰 국소모멘트(~10.6 μB)라 스핀분극 특히 중요; 부분점유 4f⁹가 갭 내/근처 국재준위. O 2p→Dy 5d/4f 엣지. Gd 이후라 redox-비활성(단일 +3)이라 원자가 변동 없음",
+    "bonding": "Dy–O 이온성(Dy2O3, hard-산 친산소 앵커), Dy–Cl/Dy–S; 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f⁹ 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Dy3+_VI": 0.912,
+    "Dy3+_VIII": 1.027,
+    "Dy3+_IX": 1.083,
+    "_note": "Shannon 1976: Dy³⁺ VI 0.912 A, VIII 1.027, IX 1.083. 란탄족 수축상 Tb(0.923)>Dy(0.912)>Ho(0.901); Li⁺(0.76)보다 크나 초기 RE(La 1.032)보다 작아 왜곡 완화. Dy²⁺(이색적) VI ~1.07."
+  },
+  "representative_compounds": [
+    {"formula": "Dy2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Dy³⁺ + O 공급원", "note": "cubic bixbyite(C-type); Dy 4d5/2 ~153 eV, Dy 3d5/2 ~1296 eV(다중구조 broad)"},
+    {"formula": "Dy-O in doped argyrodite (P-O-Dy bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Dy와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Dy는 단일 +3로 inert"},
+    {"formula": "DyCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Dy³⁺ 염화물; 대체 Dy 원료·분해생성물", "note": "Dy³⁺ 안정 염화물 → Li 금속 환원서 보존, 전자차단 passivation SEI 기대(inert RE 계열 공통)"}
+  ],
+  "sei_relevance": "Dy는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Dy³⁺가 친산소 hard-산 앵커(P-O-Dy 가정). Ce/Pr/Eu/Tb과 달리 Dy는 단일 +3로 redox-비활성 -> Dy2O3/DyCl3는 wide-gap 절연이라 Li 금속 환원서 살아남는 부동태 SEI 기대(La/Nd/Gd과 같은 inert 계열). aliovalent Dy³⁺→Li 공공 주입 유비. 정직히: Dy-argyrodite 직접 문헌 부재 → Nd/La 계보 유비. Dy의 큰 4f 모멘트는 SEI보다 자성/SMM 응용에서 부각.",
+  "xps": [
+    {"core": "Dy 4d5/2", "BE_eV": 153.0, "assignment": "Dy³⁺ in Dy2O3 (4d 다중구조; 개방껍질 4f⁹로 broad, 근사 위치)", "ref": "Dy2O3 XPS 문헌 / xpsdatabase (근사)"},
+    {"core": "Dy 3d5/2", "BE_eV": 1296.0, "assignment": "Dy³⁺ 근사 위치(란탄족 3d5/2 계열 진행상 Tb 1241↔Ho 1351 사이; 단일피크형 보고)", "ref": "란탄족 3d XPS 진행 / xpsdatabase (근사)"}
+  ],
+  "raman": [
+    {"cm1": 375, "assignment": "Dy2O3 cubic bixbyite Fg 격자모드(주 라만선 대역, Gd2O3/Y2O3 계열과 유사)", "ref": "Dy2O3 Raman 문헌"}
+  ],
+  "dos_character": "Dy³⁺는 4f⁹(S=5/2, ⁶H₁₅/₂) 개방껍질 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일); 큰 국소모멘트라 스핀 처리 특히 중요. 부분점유 4f⁹가 갭 안팎에 국재상태 -> PBE 단독 오배치; O 2p->Dy 5d/4f 엣지. 단일 +3라 원자가 변동 없이 4f⁹ 고정. 4f는 5s5p에 가려 결합은 5d/6s -> 명시 4f 투영(projwfc 스핀분해).",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Dy³⁺ VI 0.912)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Dy 4f⁹ 스핀분극 프로토콜)",
+    "Dy³⁺ 단분자자석(SMM)·Terfenol-D(Tb0.3Dy0.7Fe2) 자기변형 — 4f 대모멘트 응용 맥락",
+    "Dy2O3 XPS — Dy 4d5/2 ~153 eV, Dy 3d5/2 ~1296 eV (xpsdatabase, 근사)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Dy2O3 XPS/Raman · DFT+U 4f 프로토콜); Dy는 단일 +3 inert RE라 La/Nd/Gd 유비가 직접 성립(XPS는 근사) — 우리 db 절대값과 분리."
+}

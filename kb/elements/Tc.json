@@ -1,0 +1,77 @@
+{
+  "symbol": "Tc",
+  "name": "Technetium",
+  "Z": 43,
+  "role": "43번 방사성 4d 전이금속(Group 7, Mn/Re 동족). 안정 동위원소 없음 — ⁹⁹Tc(β⁻)·⁹⁹ᵐTc가 대표. SSB 캠페인 앵커 없음이고 cascade 후보도 아님(방사성이라 실전 재료에서 배제). 화학적으론 +7(TcO₄⁻ 과테크네튬산)이 가장 안정, +4(TcO₂)도 흔함. 산업적 존재감은 사실상 전부 ⁹ᵐTc 핵의학 조영(SPECT) — 전지와 무관. 여기선 백과사전 기준값만 정리.",
+  "oxidation_states": [
+    "+7",
+    "+4",
+    "+6",
+    "+5",
+    "+2"
+  ],
+  "electronegativity": 1.9,
+  "ionic_radius_A": {
+    "Tc4+_VI": 0.645,
+    "Tc5+_VI": 0.6,
+    "Tc7+_IV": 0.37,
+    "_note": "Shannon 1976: Tc⁴⁺(d³) 팔면체 VI 0.645 Å, Tc⁵⁺ VI 0.60 Å; Tc⁷⁺는 TcO₄⁻처럼 사면체 IV ~0.37 Å(과망간산 MnO₄⁻·과레늄산 ReO₄⁻과 같은 tetraoxo 음이온). 방사성이라 결정학 데이터가 동족 Mn/Re보다 성김."
+  },
+  "representative_compounds": [
+    {
+      "formula": "NaTcO4 / NH4TcO4 (TcO4⁻)",
+      "context": "과테크네튬산염(가장 안정 상)",
+      "battery_role": "SSB 무관 — Tc⁷⁺ tetraoxo 음이온; ⁹ᵐTcO₄⁻는 핵의학 추적자",
+      "note": "Raman ν1(A1) ~912 cm⁻¹(MnO₄⁻ 839 < TcO₄⁻ 912 < ReO₄⁻ 971 계열의 중간). Tc 3d 산화상태 지문"
+    },
+    {
+      "formula": "TcO2",
+      "context": "이산화물(+4)",
+      "battery_role": "SSB 무관 — 환원상 Tc⁴⁺ 산화물(루타일 왜곡형)",
+      "note": "TcO₄⁻ 환원 생성물; 부분점유 4d로 금속성에 가까움"
+    },
+    {
+      "formula": "Tc2O7",
+      "context": "칠산화물(+7)",
+      "battery_role": "SSB 무관 — 휘발성 산성 산화물, 물에 녹아 HTcO₄",
+      "note": "노란 결정, 승화성"
+    },
+    {
+      "formula": "⁹ᵐTc radiopharmaceuticals",
+      "context": "핵의학 조영제",
+      "battery_role": "SSB 무관 — SPECT 감마 방출체(140 keV, t½ 6 h); Tc의 실사용 대부분",
+      "note": "Tc-99m sestamibi 등; 전지 화학과 완전 별개"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 방사성이라 전극·계면 재료로도 쓰지 않음. Group 7 동족 Mn/Re의 산화상태 화학(과산소음이온 +7 ↔ 산화물 +4) 유추 참고 정도. 실제 용도는 ⁹ᵐTc 핵의학 조영이 거의 전부.",
+  "xps": [
+    {
+      "core": "Tc 3d5/2",
+      "BE_eV": 253.0,
+      "assignment": "Tc metal / Tc⁰ (근사값 — 방사성이라 NIST 데이터 성김; 산화 시 +2~3 eV 상방 이동)",
+      "ref": "NIST XPS DB(희소)"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 912,
+      "assignment": "TcO4⁻ ν1(A1) 대칭 신축 — 과테크네튬산 지문(MnO4⁻ 839 / ReO4⁻ 971 계열의 중간)",
+      "ref": "tetraoxo anion Raman 계열"
+    }
+  ],
+  "dos_character": "4d⁵5s² 전이금속 — 금속 Tc는 넓은 4d 밴드가 E_F를 가로지르는 전형적 금속. TcO₄⁻는 Tc⁷⁺(d⁰) 닫힌 배위라 무색~옅은 색, TcO₂(d³)는 부분점유 4d로 금속성. 다가 redox(+7/+4/…)라 산화상태에 따라 밴드 성격이 크게 바뀜. SSB 밴드갭 논의와는 무관.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — Group 7(Mn/Tc/Re) 화학",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii",
+    "Schwochau, Technetium: Chemistry and Radiopharmaceutical Applications (Wiley-VCH 2000)"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d⁵ 5s²",
+    "electron_config": "[Kr] 4d⁵ 5s²",
+    "valence_orbitals": "4d⁵ 5s² — 규칙적 채움(같은 주기 Mo=4d⁵5s¹ 예외와 달리 Tc는 정상). Tc⁷⁺면 4d⁰, Tc⁴⁺면 4d³",
+    "band_character": "금속 Tc는 4d 밴드가 E_F 가로지르는 금속; TcO₄⁻=Tc⁷⁺(d⁰), TcO₂=Tc⁴⁺(d³) 부분점유 → 다가 redox로 산화상태 따라 밴드 성격 변동. SSB 밴드엣지 논의와 무관",
+    "bonding": "Tc–O 공유성(TcO₄⁻ 말단 Tc=O, Tc₂O₇), 금속상은 hcp 금속결합. Group 7 Mn/Re 동족 화학"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

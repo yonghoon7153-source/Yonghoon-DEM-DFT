@@ -1,0 +1,691 @@
+{
+ "slug": "uma2026_family_of_universal_models_for_atoms",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-25",
+ "sources": [
+  "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 Visualization of the different datasets used for training. The 2D plots (bottom) illustrate the number of pairwise interactions contained in each dataset for every combination of elements. Note their combination covers nearly the entire chemical space with the exception of the radioactive elements. Model accuracies have improved with training dataset size (upper right), and this paper explores the limits of this scaling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    57.8,
+    547.2,
+    201.3
+   ],
+   "w": 2010,
+   "h": 599,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.56
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2 (left) Overview of UMA model architecture. The SO2 convolution is made up of a set of linear operations and each one of these operations is replaced with MoLE. (middle) Illustration of MoE and MoLE. The embedding used for routing, which estimates the expert weights α, only depends on global information making it possible to merge before the model forward pass (middle, bottom), which has substantial benefits for applications that require long roll outs such as molecular dynamics. (right) Bar plot of UMA-S trained with MoLE for multi-task and without MoLE for single and multi-task. Note the MoLE model outperforms non-MoLE models. (right, bottom) Loss plots when varying the number of experts from 1 to 128 for UMA-S.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    57.8,
+    547.4,
+    290.9
+   ],
+   "w": 2011,
+   "h": 973,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.634
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3 Empirical scaling measurements of dense (blue) vs. MoLE (red) model architectures. FLOPs vs. validation loss for (a) dense and (b) MoLE (8-expert) models. Experiment sets are performed by holding FLOPs constant and varying model size and training data. Diamonds represent the compute optimal frontier. (c) Training compute vs. parameters. Vertical green dotted line represents our estimated training budget of O(1022) FLOPs, horizontal dotted lines are corresponding dense and MoLE model sizes. (d) Compute vs. dataset size (atoms) with the green dotted line representing the training FLOPs required for 1 epoch of UMA training data (50B atoms) (e) Overlay of dense vs. MoLE compute optimal frontiers from (a-b) and the fitted power law of validation loss as a function of parameters. A compute optimal MoLE model with ∆≈2.5× fewer active parameters can achieve an equivalent loss. Fitting d",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    57.8,
+    549.0,
+    259.2
+   ],
+   "w": 2019,
+   "h": 840,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4 Pre-training curves of UMA-L for both single-task and multi-task models. Errors are normalized based on single-task performance. Note single-task models can overfit (forces on right), and the multi-task model generally converges to lower errors.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    57.8,
+    547.5,
+    183.5
+   ],
+   "w": 2012,
+   "h": 525,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 31,
+   "file": "fig_5.png",
+   "caption": "Figure 5 Log mean expert coefficient across element-expert pairs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    121.2,
+    547.1,
+    644.3
+   ],
+   "w": 2010,
+   "h": 2180,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.629
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 32,
+   "file": "fig_6.png",
+   "caption": "Figure 6 Log mean expert coefficient across element-expert pairs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    261.4,
+    547.1,
+    504.1
+   ],
+   "w": 2010,
+   "h": 1012,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.601
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 33,
+   "file": "fig_7.png",
+   "caption": "Figure 7 Diatomic curves for UMA-S-1.1. Left is the OMat task, right is the OMol task.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    155.1,
+    547.1,
+    341.6
+   ],
+   "w": 2010,
+   "h": 778,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 33,
+   "file": "fig_8.png",
+   "caption": "Figure 8 Diatomic curves for UMA-S-1.2 (unreleased version trained without diatomic data added). Left is the OMat task, right is the OMol task.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    424.8,
+    547.4,
+    616.1
+   ],
+   "w": 2012,
+   "h": 799,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 34,
+   "file": "fig_9.png",
+   "caption": "Figure 9 Diatomic curves for UMA-S-1.2 (released version trained with OMat and OMol diatomic data added), left is OMat task, right is OMol task.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    93.6,
+    547.2,
+    287.4
+   ],
+   "w": 2010,
+   "h": 809,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of UMA models. Model Total Parameters Active Parameters Inferences per second for",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    289.1,
+    546.4,
+    718.6
+   ],
+   "w": 2005,
+   "h": 1791,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 Test MAE results on held out test splits for materials [59], catalysis [11], molecules [45], molecular crystals [19] and MOFs [68]. All energies are in meV, forces are in meV/Å and stresses are in meV/Å3. Results for UMA are compared against the SOTA literature results. Target accuracies for practical utility are provided as an approximate guide for reference. Materials Catalysis Molecules Molecular crystals MOFs",
+   "rotated_deg": 0,
+   "bbox": [
+    57.4,
+    366.7,
+    557.9,
+    610.9
+   ],
+   "w": 2086,
+   "h": 1018,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.724
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Single-GPU simulation speeds for energy-conservative models in steps per second: comparing conservative UMA models to the top two models (eSEN and OrbV3) on the Matbench Discovery leaderboard [59] and the MACE materials and molecules models. Benchmarks are run, excluding graph generation, on a single Nvidia H100 80GB GPU using FP32 (TF32-high precision) and torch compile when possible. Test systems are a standard periodic atomic system that have ≈50 neighbors per atom with a 6Å cutoff. OOM indicates the model ran out of memory. Refer to Sec.D for more details. Update from March 2026 - UMA-S-1.2 requires code from fairchem-2.16.0+ and includes significant inference time optimizations that are speeds up older model versions. However, we are not updating any previous numbers for good record keeping practices. Atoms UMA-S UMA-S-1.2 UMA-M eSEN-30M- OAM (30M) Orb-v3 conservative- inf-o",
+   "rotated_deg": 0,
+   "bbox": [
+    65.5,
+    60.4,
+    547.8,
+    714.7
+   ],
+   "w": 2011,
+   "h": 2727,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 10,
+   "file": "tab_4.png",
+   "caption": "Table 4 Evaluation results on Matbench-Discovery [59], MDR phonon [47], elastic tensor [16, 35], and AdsorbML benchmarks [43]. Results are also provided for a diverse set of molecule [45] and molecular crystal [19, 30] benchmarks. NVE MD [23] tests whether energy conservation is observed when running the model for molecular dynamics. SOTA results from literature are reported where available. Additionally, for the materials evaluations, UMA models were fine-tuned on MPtrj [17] and sAlex [5, 62] to be consistent with the benchmark’s DFT settings. Materials Catalysis Molecules Molecular Crystals Ligand-strain [meV] Elasticity [16, 35] CSP Targets [30] PDB-pocket [meV] AdsorbML [43] Matbench [59] NVE MD [23] NVE MD [23] MAE [eV/atom] Phonons [47] OMol25 [45] Dist-LR [meV] Dist-SR [meV] Lattice Energy Kendall Rank Kvrh [GPa] Gvrh [GPa] Success Rate Free Energy κsrme [56] ωmax [K] RMSD [Å] Con",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.0,
+    786.0
+   ],
+   "w": 2300,
+   "h": 2990,
+   "dpi": 276,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 19,
+   "file": "tab_5.png",
+   "caption": "Table 5 Summary of main training-related hyper-parameters for the pre-training and fine-tuning stages. These hyper-parameters are shared among model sizes. Hyper-parameter Pre-training Finetuning Precision BF16 FP32 Radius cutoff Å 6 6 Max neighbors 30 300 Force prediction Direct Autograd Stress prediction None Autograd Optimizer AdamW AdamW Learning rate scheduling Cosine Cosine Maximum learning rate 8 × 10−4 4 × 10−4 Warmup epochs 0.01 0.01 Warmup factor 0.2 0.2 Gradient clipping norm threshold 100 100 Model EMA decay 0.999 0.999 Weight decay 1 × 10−3 1 × 10−3 Energy loss coefficient 10 20 OMol energy loss coefficient 30 - Force loss coefficient 30 2 Stress loss coefficient - 1",
+   "rotated_deg": 0,
+   "bbox": [
+    65.5,
+    58.4,
+    546.2,
+    686.5
+   ],
+   "w": 2004,
+   "h": 2618,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 19,
+   "file": "tab_6.png",
+   "caption": "Table 6 Hyper-parameters for UMA models of different sizes. Hyper-parameters UMA-S UMA-M UMA-L Number of MoLE experts 32 32 Dense Number of layer blocks 4 10 16 Maximum degree Lmax 2 4 6 Maximum order Mmax 2 2 2 Number of channels Nchannel 128 128 256 Number of radial basis functions 64 128 256 Global batch size (atoms) 88k 44k 44k Number of pre-training steps 1.68M 2.08M 2.58M Number of fine-tuning steps 1M 545k 350k",
+   "rotated_deg": 0,
+   "bbox": [
+    65.5,
+    59.4,
+    546.2,
+    686.5
+   ],
+   "w": 2004,
+   "h": 2614,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "t7",
+   "kind": "table",
+   "label": "7",
+   "page": 20,
+   "file": "tab_7.png",
+   "caption": "Table 7 Hyper-parameters for UMA models of different sizes. Hyper-parameters UMA-S UMA-M UMA-L Number of MoLE experts 32 32 Dense Number of layer blocks 4 10 16 Maximum degree Lmax 2 4 6 Maximum order Mmax 2 2 2 Number of channels Nchannel 128 128 256 Number of radial basis functions 64 128 256 Global batch size (atoms) 88k 44k 44k Number of pre-training steps 1.68M 2.08M 2.58M Number of fine-tuning steps 1M 545k 350k",
+   "rotated_deg": 0,
+   "bbox": [
+    64.4,
+    58.4,
+    546.5,
+    758.0
+   ],
+   "w": 2010,
+   "h": 2916,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "t8",
+   "kind": "table",
+   "label": "8",
+   "page": 20,
+   "file": "tab_8.png",
+   "caption": "Table 8 Training Times for UMA models.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.4,
+    59.5,
+    546.5,
+    758.0
+   ],
+   "w": 2010,
+   "h": 2912,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "t9",
+   "kind": "table",
+   "label": "9",
+   "page": 21,
+   "file": "tab_9.png",
+   "caption": "Table 9 Summary of main training-related hyper-parameters for UMA-S-1.2 Hyper-parameter Stage 1 Stage 2 Precision FP32 FP32 Radius cutoff Å 6 6 Max neighbors 300 300 Force prediction Autograd Autograd Stress prediction Autograd Autograd Optimizer AdamW AdamW Learning rate scheduling Cosine Cosine Maximum learning rate 8 × 10−4 4 × 10−4 Warmup epochs 0.01 0.01 Warmup factor 0.2 0.2 Gradient clipping norm threshold 100 100 Model EMA decay 0.999 0.999 Weight decay 1 × 10−3 1 × 10−3 Number of MoLE experts 64 64 Number of layer blocks 4 4 Maximum degree Lmax 2 2 Maximum order Mmax 2 2 Number of channels Nchannel 128 128 Number of radial basis functions 32 32 Global batch size (atoms) 88k 88k Number of epochs 2 1",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    96.6,
+    437.2,
+    666.8
+   ],
+   "w": 1550,
+   "h": 2377,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "t10",
+   "kind": "table",
+   "label": "10",
+   "page": 21,
+   "file": "tab_10.png",
+   "caption": "Table 10 Overview of the datasets used to train UMA-S-1.2.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    96.6,
+    437.2,
+    666.8
+   ],
+   "w": 1550,
+   "h": 2377,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "t11",
+   "kind": "table",
+   "label": "11",
+   "page": 22,
+   "file": "tab_11.png",
+   "caption": "Table 11 Overview of the five datasets used to train UMA. For each dataset various statitiscs are provided alongside the sampling ratio used for training. Dataset Domain Training Size Labels # Elements Avg Size Force RMS Sampling ratio OMat24 Materials 100,824,585 E,F,S 89 19 2.83 4 OMol25 Molecules 75,889,983 E,F 83 52 0.985 4 OC20++ Catalysis 229,054,043 E,F 56 77 0.624 1 OMC25 Molecular Crystals 24,870,226 E,F,S 12 130 0.103 2 ODAC25 MOFs 28,517,826 E,F 70 178 0.046 1 Total 459,156,663",
+   "rotated_deg": 0,
+   "bbox": [
+    64.7,
+    61.3,
+    548.1,
+    724.0
+   ],
+   "w": 2015,
+   "h": 2762,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "t12",
+   "kind": "table",
+   "label": "12",
+   "page": 24,
+   "file": "tab_12.png",
+   "caption": "Table 12 Power Law Coefficients determined from fitting Equations 4 and 6. Error bounds are determined by bootstrap sampling 1000 times and taking the 10th and 90th percentile values, quoted in brackets. Parameter Dense MoLE α 0.61 (0.57,0.65) 0.56 (0.49,0.59) β 0.39 (0.35, 0.43) 0.44 (0.39, 0.43) A -4.5 (-3.8, -5.3) -3.8 (-2.56, -4.65) B 3.6 (2.9, 4.4) 2.9 (1.6, 3.7) ˆα -0.29 (-0.27, -0.31) -0.25 (-0.2, -0.3) γ 2.16 (2.02, 2.34) 1.82 (1.61, 2.12)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.7,
+    69.4,
+    548.1,
+    726.4
+   ],
+   "w": 2015,
+   "h": 2738,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "t13",
+   "kind": "table",
+   "label": "13",
+   "page": 25,
+   "file": "tab_13.png",
+   "caption": "Table 13 Test MAE results on held out test splits for materials [59], catalysis [11], molecules [45], molecular crystals [19] and ODAC [68]. All energies are in meV, forces are in meV/Å and stresses are in meV/Å3. Results for UMA are compared against the SOTA literature results when available and other strong baselines trained only on the domain- specific dataset. Target accuracies for practical utility are provided as an approximate guide for reference. Materials Catalysis Molecules Molecular crystals ODAC OOD-Comp OOD-Both Energy/Atom Energy/Atom Energy/Atom Energy/Atom Energy/Atom OMC-Test Ads. Energy Ads. Energy Ads. Energy OOD-L/T PDB-TM WBM Forces Forces Forces Forces Forces Forces Forces Forces HEA Stress Stress Stress ID Model UMA UMA-S 20.0 60.8 4.4 22.0 72.8 3.1 52.1 24.3 70.2 30.9 3.64 10.80 0.88 16.12 0.91 4.77 0.97 292.4 16.0 UMA-S-1 19.4 62.2 4.5 21.9 73.5 3.1 53.1 24.5 70.",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.0,
+    786.0
+   ],
+   "w": 2300,
+   "h": 2990,
+   "dpi": 276,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "t14",
+   "kind": "table",
+   "label": "14",
+   "page": 26,
+   "file": "tab_14.png",
+   "caption": "Table 14 Evaluation results on Matbench-Discovery [59], MDR phonon [47], elastic tensor [16, 35], and AdsorbML benchmarks [43]. Results are also provided for a diverse set of molecule [45] and molecular crystal [19, 30] benchmarks. NVE MD [23] tests whether energy conservation is observed when running the model for molecular dynamics. SOTA results from literature are reported where available. For the materials evaluations, UMA models were fine-tuned on MPtrj [17] and sAlex [5, 62] to be consistent with the benchmark’s DFT settings.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    58.4,
+    547.9,
+    325.4
+   ],
+   "w": 2010,
+   "h": 1113,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "t15",
+   "kind": "table",
+   "label": "15",
+   "page": 26,
+   "file": "tab_15.png",
+   "caption": "Table 15 Materials validation and test evaluations from OMat24 [5] and HEA. All energies are in meV, forces are in meV/Å and stresses are in meV/Å3.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    327.2,
+    546.1,
+    439.8
+   ],
+   "w": 2003,
+   "h": 470,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.564
+  },
+  {
+   "key": "t16",
+   "kind": "table",
+   "label": "16",
+   "page": 26,
+   "file": "tab_16.png",
+   "caption": "Table 16 Materials evals results. We note that UMA models are fine-tuned on the MPTrj [17] and sAlex [5, 62] datasets to be consistent with the DFT settings of the benchmarks.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    501.0,
+    548.3,
+    601.5
+   ],
+   "w": 2012,
+   "h": 420,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.499
+  },
+  {
+   "key": "t17",
+   "kind": "table",
+   "label": "17",
+   "page": 27,
+   "file": "tab_17.png",
+   "caption": "Table 17 Catalysis validation and test results on OC20 [11] metrics. All energies are in meV and forces are in meV/Å.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    349.6,
+    546.1,
+    495.5
+   ],
+   "w": 2003,
+   "h": 609,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "t18",
+   "kind": "table",
+   "label": "18",
+   "page": 27,
+   "file": "tab_18.png",
+   "caption": "Table 18 Open Molecule 2025 [45] validation evaluations across biomolecules, electrolytes, metal complexes, neutral organics and OOD-comp. All energies are in meV and forces are in meV/Å. All models are trained with preview OMol25.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    533.8,
+    546.5,
+    645.3
+   ],
+   "w": 2004,
+   "h": 465,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.72
+  },
+  {
+   "key": "t19",
+   "kind": "table",
+   "label": "19",
+   "page": 28,
+   "file": "tab_19.png",
+   "caption": "Table 19 Open Molecule 2025 [45] test evaluations across biomolecules, electrolytes, metal complexes, neutral organics and OOD-comp, metal ligand, PDB-TM, reactivity, COD and anions. All energies are in meV and forces are in meV/Å. All models are trained with preview OMol25.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.6,
+    58.4,
+    551.8,
+    169.8
+   ],
+   "w": 2036,
+   "h": 465,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.532
+  },
+  {
+   "key": "t20",
+   "kind": "table",
+   "label": "20",
+   "page": 28,
+   "file": "tab_20.png",
+   "caption": "Table 20 Open Molecule 2025 [45] single point evaluations for protein-ligand, IE/EA, spin gap and distance scaling. All energies are in meV and forces are in meV/Å. All models are trained with preview OMol25.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.5,
+    286.9,
+    547.9,
+    392.3
+   ],
+   "w": 2011,
+   "h": 440,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.646
+  },
+  {
+   "key": "t21",
+   "kind": "table",
+   "label": "21",
+   "page": 28,
+   "file": "tab_21.png",
+   "caption": "Table21 Open Molecule 2025 [45] optimization evaluations including ligand-strain, conformer prediction, and protonation states. Results are reported across a variety of energy and structure based metrics for each task. All energies are in meV. All models are trained with preview OMol25.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    452.5,
+    546.2,
+    573.3
+   ],
+   "w": 2003,
+   "h": 504,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.665
+  },
+  {
+   "key": "t22",
+   "kind": "table",
+   "label": "22",
+   "page": 29,
+   "file": "tab_22.png",
+   "caption": "Table 22 Open Molecular Crystals 2025 [19] validation and test table. All energies are in meV, forces are in meV/Å and stresses are in meV/Å3.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    112.9,
+    546.1,
+    217.8
+   ],
+   "w": 2003,
+   "h": 438,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "t23",
+   "kind": "table",
+   "label": "23",
+   "page": 29,
+   "file": "tab_23.png",
+   "caption": "Table 23 Open Molecular Crystals 2025 [19] evaluation for polymorphs from the Structure Ranking Phase of CCDC 7th CSP Blind Test [30]. All lattice energies are per molecule basis in kJ/mol.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    280.7,
+    546.2,
+    387.6
+   ],
+   "w": 2003,
+   "h": 447,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.705
+  },
+  {
+   "key": "t24",
+   "kind": "table",
+   "label": "24",
+   "page": 30,
+   "file": "tab_24.png",
+   "caption": "Table 24 OpenDAC [68] val and test table. All energies are in meV and forces are in meV/Å.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    58.4,
+    451.1,
+    154.0
+   ],
+   "w": 1607,
+   "h": 399,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.69
+  },
+  {
+   "key": "t26",
+   "kind": "table",
+   "label": "26",
+   "page": 34,
+   "file": "tab_26.png",
+   "caption": "Table 26 Diatomic energy (meV) and force (meV/Å) MAE for OMat and OMol tasks. Model OMat E MAE OMat F MAE OMol E MAE OMol F MAE UMA-S-1.2 without diatomic data 128.6 279.6 2429.5 1326.9 UMA-S-1.2 with diatomic data 37.8 52.5 60.5 103.4",
+   "rotated_deg": 0,
+   "bbox": [
+    65.5,
+    60.7,
+    546.2,
+    535.2
+   ],
+   "w": 2004,
+   "h": 1979,
+   "dpi": 300,
+   "src": "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf",
+   "blank": 0.909
+  }
+ ]
+}

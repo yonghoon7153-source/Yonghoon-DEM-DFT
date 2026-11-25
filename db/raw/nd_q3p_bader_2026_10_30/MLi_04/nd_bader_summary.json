@@ -1,0 +1,280 @@
+{
+  "method": "AE **valence** density plot_num=17, PAW kjpaw_psl. net = ZVAL - N_bader (NOT Z - N_bader).",
+  "zval_used": {
+    "Cl": 7,
+    "Li": 3,
+    "Nd": 11,
+    "O": 6,
+    "P": 5,
+    "S": 6
+  },
+  "per_species": {
+    "Cl": {
+      "n": 8,
+      "mean": -0.853,
+      "min": -0.873,
+      "max": -0.816
+    },
+    "Li": {
+      "n": 21,
+      "mean": 0.84,
+      "min": 0.825,
+      "max": 0.863
+    },
+    "Nd": {
+      "n": 2,
+      "mean": 1.927,
+      "min": 1.919,
+      "max": 1.936
+    },
+    "O": {
+      "n": 3,
+      "mean": -1.899,
+      "min": -1.925,
+      "max": -1.857
+    },
+    "P": {
+      "n": 5,
+      "mean": 4.181,
+      "min": 3.237,
+      "max": 4.847
+    },
+    "S": {
+      "n": 19,
+      "mean": -1.572,
+      "min": -1.821,
+      "max": -0.892
+    }
+  },
+  "sites": {
+    "csv": "nd_bader_sites.csv",
+    "ACF_volume_unit": "bohr3",
+    "cell_volume_A3": 1184.141,
+    "rules_A": {
+      "R_PS": 2.4,
+      "R_PO": 1.9,
+      "R_NdX": 3.3,
+      "R_NdO": 2.9,
+      "note": "2026-10-19 Nd Q3 결과 전에 박은 거리 · 거리 하나로 분류 (각도 안 봄)"
+    },
+    "per_category": {
+      "Cl": {
+        "n": 6,
+        "net_mean": -0.8647,
+        "net_min": -0.8728,
+        "net_max": -0.8529,
+        "V_mean_A3": 34.569,
+        "N_per_V_mean_e_A3": 0.2277
+      },
+      "Cl_nearNd": {
+        "n": 2,
+        "net_mean": -0.8171,
+        "net_min": -0.8183,
+        "net_max": -0.8159,
+        "V_mean_A3": 32.1975,
+        "N_per_V_mean_e_A3": 0.2428
+      },
+      "Li": {
+        "n": 21,
+        "net_mean": 0.8402,
+        "net_min": 0.8248,
+        "net_max": 0.8629,
+        "V_mean_A3": 6.8738,
+        "N_per_V_mean_e_A3": 0.3165
+      },
+      "Nd": {
+        "n": 2,
+        "net_mean": 1.9274,
+        "net_min": 1.9186,
+        "net_max": 1.9361,
+        "V_mean_A3": 21.3445,
+        "N_per_V_mean_e_A3": 0.4266
+      },
+      "O_P": {
+        "n": 2,
+        "net_mean": -1.9194,
+        "net_min": -1.9248,
+        "net_max": -1.9139,
+        "V_mean_A3": 20.9405,
+        "N_per_V_mean_e_A3": 0.3787
+      },
+      "O_P_nearNd": {
+        "n": 1,
+        "net_mean": -1.857,
+        "net_min": -1.857,
+        "net_max": -1.857,
+        "V_mean_A3": 20.588,
+        "N_per_V_mean_e_A3": 0.3816
+      },
+      "P_S4": {
+        "n": 2,
+        "net_mean": 3.5968,
+        "net_min": 3.2373,
+        "net_max": 3.9564,
+        "V_mean_A3": 4.166,
+        "N_per_V_mean_e_A3": 0.3382
+      },
+      "P_withO": {
+        "n": 3,
+        "net_mean": 4.5712,
+        "net_min": 4.0206,
+        "net_max": 4.847,
+        "V_mean_A3": 1.1457,
+        "N_per_V_mean_e_A3": 0.5233
+      },
+      "S_PS4": {
+        "n": 11,
+        "net_mean": -1.6593,
+        "net_min": -1.8213,
+        "net_max": -0.9454,
+        "V_mean_A3": 34.5611,
+        "N_per_V_mean_e_A3": 0.2217
+      },
+      "S_PS4_nearNd": {
+        "n": 6,
+        "net_mean": -1.4653,
+        "net_min": -1.756,
+        "net_max": -0.8922,
+        "V_mean_A3": 33.0628,
+        "N_per_V_mean_e_A3": 0.2258
+      },
+      "S_free_nearNd": {
+        "n": 2,
+        "net_mean": -1.412,
+        "net_min": -1.4195,
+        "net_max": -1.4045,
+        "V_mean_A3": 36.257,
+        "N_per_V_mean_e_A3": 0.2045
+      }
+    }
+  },
+  "roles": {
+    "manifest": "/home/kgy/wt_ndbader_1030/db/inputs/nd_q3p_2026_10_27/roles_manifest.json",
+    "model": "MLi_04",
+    "card": "db/properties/nd_q3p_same_cell_card_2026_10_27.json",
+    "decision": "D-2026-10-27-nd-q3p-same-cell",
+    "R_role_A": 2.4,
+    "rules": {
+      "R_NdX": 3.3,
+      "R_NdO": 2.9,
+      "NEAR_MARGIN_A": 0.15,
+      "note": "원래 역할 = manifest (이완 전 후보) · Nd 이웃 = 이완 끝 기하 거리 · 문턱 여유 < NEAR_MARGIN 이면 문턱 근처 — 그 원자를 뺀 평균도 같이 (2026-10-30 · Bader 결과 전)"
+    },
+    "per_role": {
+      "Cl": {
+        "n": 8,
+        "net_mean": -0.8528,
+        "net_min": -0.8728,
+        "net_max": -0.8159
+      },
+      "Li": {
+        "n": 21,
+        "net_mean": 0.8402,
+        "net_min": 0.8248,
+        "net_max": 0.8629
+      },
+      "Nd": {
+        "n": 2,
+        "net_mean": 1.9274,
+        "net_min": 1.9186,
+        "net_max": 1.9361
+      },
+      "O_PX4": {
+        "n": 3,
+        "net_mean": -1.8986,
+        "net_min": -1.9248,
+        "net_max": -1.857
+      },
+      "P": {
+        "n": 5,
+        "net_mean": 4.1815,
+        "net_min": 3.2373,
+        "net_max": 4.847
+      },
+      "S_PX4": {
+        "n": 17,
+        "net_mean": -1.5908,
+        "net_min": -1.8213,
+        "net_max": -0.8922
+      },
+      "S_free": {
+        "n": 2,
+        "net_mean": -1.412,
+        "net_min": -1.4195,
+        "net_max": -1.4045
+      }
+    },
+    "per_role_nd": {
+      "Cl|Nd아님": {
+        "n": 6,
+        "net_mean": -0.8647,
+        "net_min": -0.8728,
+        "net_max": -0.8529
+      },
+      "Cl|Nd이웃": {
+        "n": 2,
+        "net_mean": -0.8171,
+        "net_min": -0.8183,
+        "net_max": -0.8159
+      },
+      "Li": {
+        "n": 21,
+        "net_mean": 0.8402,
+        "net_min": 0.8248,
+        "net_max": 0.8629
+      },
+      "Nd": {
+        "n": 2,
+        "net_mean": 1.9274,
+        "net_min": 1.9186,
+        "net_max": 1.9361
+      },
+      "O_PX4|Nd아님": {
+        "n": 2,
+        "net_mean": -1.9194,
+        "net_min": -1.9248,
+        "net_max": -1.9139
+      },
+      "O_PX4|Nd이웃": {
+        "n": 1,
+        "net_mean": -1.857,
+        "net_min": -1.857,
+        "net_max": -1.857
+      },
+      "P": {
+        "n": 5,
+        "net_mean": 4.1815,
+        "net_min": 3.2373,
+        "net_max": 4.847
+      },
+      "S_PX4|Nd아님": {
+        "n": 11,
+        "net_mean": -1.6593,
+        "net_min": -1.8213,
+        "net_max": -0.9454
+      },
+      "S_PX4|Nd이웃": {
+        "n": 6,
+        "net_mean": -1.4653,
+        "net_min": -1.756,
+        "net_max": -0.8922
+      },
+      "S_free|Nd이웃": {
+        "n": 2,
+        "net_mean": -1.412,
+        "net_min": -1.4195,
+        "net_max": -1.4045
+      }
+    },
+    "near_threshold": [],
+    "per_role_nd_without_near": {}
+  },
+  "zval_from_upf": {
+    "Cl": "Cl.pbe-nl-kjpaw_psl.1.0.0.UPF → 7",
+    "Li": "Li.pbe-sl-kjpaw_psl.1.0.0.UPF → 3",
+    "Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF → 11",
+    "O": "O.pbe-n-kjpaw_psl.0.1.UPF → 6",
+    "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF → 5",
+    "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF → 6"
+  }
+}

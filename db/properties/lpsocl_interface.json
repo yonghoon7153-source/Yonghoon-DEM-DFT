@@ -1,0 +1,26 @@
+{
+  "property": "LPSOCl | Li-metal interface decomposition (UMA MLIP-MD)",
+  "system": "lpsocl (O-doped LPSCl1.6, 62at, POS3 unit) | Li bcc reservoir",
+  "date": "2026-07-19",
+  "method": "UMA-s-1p1 MLIP-MD, 3 seeds x 100 ps, 600 K Langevin NVT, dt 1 fs, bottom-6A frozen. Protocol byte-identical to b2o3 campaign (run_interface_campaign.sh). Analyzer O-fingerprint added 2026-07-18 (O-P=POS3 intact, O-Li=Li2O).",
+  "control": "modelc62 (SAME 62at 1x frame, one S->O reverted) from b2o3 campaign 2026-07-07 -> isolates the single O substitution. 1x slab absolute decomposition thin-slab inflated ~1.9x, but the lpsocl/modelc62 RATIO is clean (same frame).",
+  "lpsocl_3seed_mean": {
+    "PS_loss_pct": "40.9 +/- 6.5", "dP_Li": 2.27, "dS_Li": 1.35, "dLi_penetrated": 8.0,
+    "POS3_loss_pct": "0.0 +/- 0.0", "O_Li_rise": 0.33
+  },
+  "per_seed": {
+    "s2": {"PS_loss": 50, "Li_pen": 9, "O_P": "1.00->1.00", "O_Li": "2.00->2.00"},
+    "s3": {"PS_loss": 38, "Li_pen": 5, "O_P": "1.00->1.00", "O_Li": "1.00->2.00"},
+    "s4": {"PS_loss": 35, "Li_pen": 10, "O_P": "1.00->1.00", "O_Li": "2.00->2.00"}
+  },
+  "modelc62_anchor": {"PS_loss_pct": "48.1 +/- 7.8", "dP_Li": 3.27, "dS_Li": 1.97, "dLi_pen": 10.3},
+  "ratio_lpsocl_over_modelc62": {"PS_loss": 0.85, "note": "0.85 < 1 = O marginally PROTECTS host; but 40.9+/-6.5 vs 48.1+/-7.8 overlaps -> read as 'O does NOT worsen the interface, marginally protective' (like b2o3)."},
+  "headline": {
+    "POS3_robust": "P-O (POS3) unit stays 100% INTACT in ALL 3 seeds (O-P 1.00->1.00, POS3_loss 0%) through 100 ps at the reactive Li-metal interface -- while host P-S loses 41%. The strongest lattice bond (ICOHP P-O -8.41) holds even against Li metal.",
+    "no_Li2O": "O is NOT reduced to Li2O (O-Li rises only +0.33, stays P-anchored; Li2O would need O-P->0, O-Li->4-6). O stays bonded to P.",
+    "host_not_worsened": "PS4 decomposition RATIO 0.85 (within error of 1) -> O doping does not worsen the interface, marginally protective. Parallels b2o3 (BS3 intact, doping neutral-to-protective).",
+    "mechanism": "Consistent with today's ICOHP/Bader: P-O deepest covalent bond + O deepest charge -> POS3 is a robust, reduction-resistant anchor. Same electronic story across bulk (bond strength), transport (Li-trap raises Ea), and now anode interface (survives Li metal)."
+  },
+  "caveats": "MLIP-level (UMA, no DFT validation of the reactive phases). 100 ps not self-limited (both still reacting -- absolute % is a time lower-bound; RATIO/POS3-intact are the robust reads). 1x thin slab (few P) inflates absolute PS_loss vs a 2x cell; comparison to modelc62 (same 1x frame) is clean.",
+  "raw": "kgy db/properties/interface_decomp_lpsocl_s{2,3,4}.csv (to be pushed); traj kgy ~/work/runs/lpsocl_iface/"
+}

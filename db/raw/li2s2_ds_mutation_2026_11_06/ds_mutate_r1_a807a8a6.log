@@ -1,0 +1,21 @@
+변이 468 개 (DR 판 448 · 자리 옮김 7 · DS 20) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_ds_r1_w*
+DQ70_prior_nonsci_changed_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR62_after_anchor_ignored        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR19_derived_write_direct        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DR10_mismatch_as_error           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1 (진짜 판정 함수): 다른 md_init_raw.xyz = 입력 불일치 (판정 도중 오류 아님) · 보존 뒤 다시 만든 판정으로 자동 대체 불가 · 판정이 처음 만든 파생 파일은 derived_written (임시 파일 안 남김) · 
+DS1_exempt_ignores_mismatch      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS5_symlink_as_file              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DR P1-2: 경로 상태 — 없음 None · 정상 파일 sha256 · 디렉터리 nonfile:dir · 파일 링크 link:+내용 지문 · 깨진 링크 · 디렉터리 링크 nonfile:symlink · FIFO nonfile:other (진짜 부
+DS10_md_done_ignored             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS3_pre_anchor_rule_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS11_md_outputs_not_compared     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS12_late_files_lax              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS14_seed_gate_broken_link_read  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS16_plan_oserror_incomplete     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS15_tmp_follows_link            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS17_stage_guard_retryable       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS18_record_link_read            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS19_history_append_follows      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS20_md_done_shape_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DR P1-2: 경로 상태 — 없음 None · 정상 파일 sha256 · 디렉터리 nonfile:dir · 파일 링크 link:+내용 지문 · 깨진 링크 · 디렉터리 링크 nonfile:symlink · FIFO nonfile:other (진짜 부
+DS13_md_done_marker_none         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DS 전 1차 리뷰 P2: MD 끝 · FIRE 대기 중 들여다본 incomplete (md_done 있음) 뒤 thermo 를 고치고 끝 판정이 일시 오류면 — 확인 뒤 자동 대체하지 않는다 (발사 0) · 대조: 고침 없으면 회복 (C1 ('incom
+끝: 빨강 18 / 18

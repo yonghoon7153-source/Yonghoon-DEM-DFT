@@ -1,0 +1,414 @@
+{
+ "slug": "froboese2019_microstructure_ionic_conductivity_assb_electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of the microstructure of an all solid-state battery electrode. Pores represent free volume whereas interstices picture the areas ﬁlled with electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.9,
+    288.2,
+    147.3
+   ],
+   "w": 1080,
+   "h": 361,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.753
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. A typical EIS result for the investigated model electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    66.3,
+    549.4,
+    179.8
+   ],
+   "w": 1028,
+   "h": 474,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.918,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.4 = printed A320); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Equivalent circuit modeling the electrochemical system.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    694.5,
+    522.0,
+    741.1
+   ],
+   "w": 942,
+   "h": 196,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Ionic conductivity of the investigated electrodes as a function of volume fraction and particle size of model active material particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    66.3,
+    549.4,
+    267.8
+   ],
+   "w": 1028,
+   "h": 840,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.87,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.5 = printed A321); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Cross section of the investigated model electrodes with the following model active material particle sizes and volume fractions ϕAM,theo a) 0 −50 μm, ϕAM,theo = 10%, b) 0 −50 μm, ϕAM,theo = 47.5%, c) 40 −70 μm, ϕAM,theo = 47.5%, d) 0 −20 μm, ϕAM,theo = 47.5%.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    463.7,
+    556.0,
+    731.7
+   ],
+   "w": 2193,
+   "h": 1117,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.401
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Upcoming hindrances for the transported Li-ions with an increasing volume fraction ϕAM,theo of model active material and constant particle sizes (low volume fraction ϕAM,theo at the top and high volume fraction ϕAM,theo at the bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.9,
+    288.2,
+    407.1
+   ],
+   "w": 1080,
+   "h": 1444,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.293
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Density of the investigated electrodes as a function of volume frac- tion of model active material and particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    65.6,
+    549.4,
+    270.8
+   ],
+   "w": 1028,
+   "h": 856,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.857,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.6 = printed A322); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Porosity of the investigated electrodes as a function of volume fraction of model active material and particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    518.9,
+    548.7,
+    727.5
+   ],
+   "w": 1025,
+   "h": 870,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.893,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.6 = printed A322); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Pores and interstices inside the microstructure of an all solid-state electrode with large (left) and small active material particles (right).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.8,
+    289.0,
+    169.5
+   ],
+   "w": 1081,
+   "h": 454,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.648
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Speciﬁc ionic conductivity as a function of electrode porosity and particle size of model active material particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    62.0,
+    556.0,
+    265.4
+   ],
+   "w": 1080,
+   "h": 849,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 7,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Schematic view of a pore hindering the Li-ion transport.",
+   "rotated_deg": 0,
+   "bbox": [
+    348.9,
+    659.9,
+    503.5,
+    736.6
+   ],
+   "w": 645,
+   "h": 321,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.588,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.7 = printed A323); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Tortuosity of the investigated electrodes as a function of volume fraction and particle size of model active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.9,
+    67.0,
+    281.9,
+    278.5
+   ],
+   "w": 1026,
+   "h": 882,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.893,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, left column of PDF p.8 = printed A324); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 8,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Tortuos pathways for Li-ions inside an electrode with a high amount of small active material particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    61.4,
+    555.2,
+    204.1
+   ],
+   "w": 1081,
+   "h": 595,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.186
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 8,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Compared calculations for tortuosity.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.3,
+    592.7,
+    520.7,
+    735.8
+   ],
+   "w": 911,
+   "h": 597,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.896,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.8 = printed A324); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 9,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Speciﬁc ionic conductivity as a function of volume fraction of solid electrolyte and electrode tortuosity.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    67.0,
+    283.4,
+    263.5
+   ],
+   "w": 1029,
+   "h": 819,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.901,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, left column of PDF p.9 = printed A325); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 9,
+   "file": "fig_16.png",
+   "caption": "Figure 16. Compared calculations to determine speciﬁc ionic conductivity inside an electrode as a function of solid electrolyte volume fraction.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    66.3,
+    549.4,
+    261.5
+   ],
+   "w": 1028,
+   "h": 814,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.879,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.9 = printed A325); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 9,
+   "file": "fig_17.png",
+   "caption": "Figure 17. Speciﬁc interface resistance Ri f between Li-metal and electrode surface as a function of volume fraction of model active material ϕAM,theo and particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.8,
+    520.8,
+    549.4,
+    717.9
+   ],
+   "w": 1025,
+   "h": 823,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.878,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, right column of PDF p.9 = printed A325); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 10,
+   "file": "fig_18.png",
+   "caption": "Figure 18. Comparison of Li-ion transfer from Li-metal to the electrolyte inside the investigated electrodes with small (left) and large (right) active material particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.8,
+    288.2,
+    150.1
+   ],
+   "w": 1080,
+   "h": 373,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.451
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 10,
+   "file": "fig_19.png",
+   "caption": "Figure 19. Ratio between speciﬁc interface conductivity σi f and speciﬁc ionic conductivity σion as a function of volume fraction of model active material ϕAM,theo and particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.9,
+    510.9,
+    281.9,
+    718.0
+   ],
+   "w": 1026,
+   "h": 864,
+   "dpi": 300,
+   "src": "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf",
+   "blank": 0.9,
+   "manual_crop": "auto extractor reported no region (vector plot above its caption, left column of PDF p.10 = printed A326); clip = column strip between the last body-text block and the caption top, white margins trimmed (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

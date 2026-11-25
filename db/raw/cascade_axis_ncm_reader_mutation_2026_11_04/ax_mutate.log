@@ -1,0 +1,27 @@
+변이 25 개 · 자리 모두 한 번씩
+A1_tracked_keeps_cathode_tm    ⭕ 빨강 ·   ⛔ 양성: 막는 게이트 통과 · 등급 (Ag 1.5 % 금속 → ⓑ · LiAlO2 → ⓐ · LiAlS2 1.5 eV → ⓒ · CoS2 → ⓓ · Cu → ⓑ · Ge 원자 수 불일치 → 판독 오류 · Li2
+A5_tm_rule_off                 ⭕ 빨강 ·   ⛔ 양성: 막는 게이트 통과 · 등급 (Ag 1.5 % 금속 → ⓑ · LiAlO2 → ⓐ · LiAlS2 1.5 eV → ⓒ · CoS2 → ⓓ · Cu → ⓑ · Ge 원자 수 불일치 → 판독 오류 · Li2
+A6_elemental_metal_off         ⭕ 빨강 ·   ⛔ 양성: 막는 게이트 통과 · 등급 (Ag 1.5 % 금속 → ⓑ · LiAlO2 → ⓐ · LiAlS2 1.5 eV → ⓒ · CoS2 → ⓓ · Cu → ⓑ · Ge 원자 수 불일치 → 판독 오류 · Li2
+A7_4f_rule_off                 ⭕ 빨강 ·   ⛔ 양성: 막는 게이트 통과 · 등급 (Ag 1.5 % 금속 → ⓑ · LiAlO2 → ⓐ · LiAlS2 1.5 eV → ⓒ · CoS2 → ⓓ · Cu → ⓑ · Ge 원자 수 불일치 → 판독 오류 · Li2
+A8_g4_flip                     ⭕ 빨강 ·   ⛔ G6 비 1.03 · 1.05 → 'NCM 대리' · G4 IQR ≥ 10 → R1 사용 가능 · G1b 비율 = 호스트 / Xiao
+A9_g1b_order_off               ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A10_g1b_ratio_off              ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A11_dup_allowed                ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A12_mode_ignored               ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A13_g3_version_off             ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A14_g5_off                     ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A15_decision_off               ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A16_mass_balance_off           ⭕ 빨강 ·   ⛔ 양성: 막는 게이트 통과 · 등급 (Ag 1.5 % 금속 → ⓑ · LiAlO2 → ⓐ · LiAlS2 1.5 eV → ⓒ · CoS2 → ⓓ · Cu → ⓑ · Ge 원자 수 불일치 → 판독 오류 · Li2
+A17_r4_sign_off                ⭕ 빨강 ·   ⛔ R4: 등급이 다르거나 (Al2S3) 둘 다 |δ| ≥ 10 인데 부호가 반대 (Al2O3) 면 양극 의존 · 같으면 아님 · 한쪽이 ㉧ 이면 비교 안 함
+A18_r5_class_off               ⭕ 빨강 ·   ⛔ R5: Al 짝은 |δ_O − δ_S| 5 < 10 이어도 등급이 달라 '다르다' · Li 짝은 |δ_O − δ_S| 4 < 10 · 등급 같음 → '같다' · 없는 짝은 missing
+A19_endpoint_off               ⭕ 빨강 ·   ⛔ 양성: 막는 게이트 통과 · 등급 (Ag 1.5 % 금속 → ⓑ · LiAlO2 → ⓐ · LiAlS2 1.5 eV → ⓒ · CoS2 → ⓓ · Cu → ⓑ · Ge 원자 수 불일치 → 판독 오류 · Li2
+A20_g6_bounds_off              ⭕ 빨강 ·   ⛔ ⛔음성 G6: NCM / LNO 비 3 · NCM 행 없음 → 'LiNiO₂ 계면' 으로만 (막지는 않는다)
+A21_load_problems_off          ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A22_formula_check_off          ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A23_tool_drift_off             ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+A24_roster_conflict_off        ⭕ 빨강 ·   ⛔ 대상 = 카드 §1b · 개정 1 의 91 종 = 1 단계 계면 표의 조성 그대로 (As2S3 · LiCl = Cl5Li24P4S19 — 지금 CSV 를 다시 뽑으면 호스트와 같은 조성이 나오는 종) — 0 
+A25_wide_before_metal          ⭕ 빨강 ·   ⛔ 양성: 막는 게이트 통과 · 등급 (Ag 1.5 % 금속 → ⓑ · LiAlO2 → ⓐ · LiAlS2 1.5 eV → ⓒ · CoS2 → ⓓ · Cu → ⓑ · Ge 원자 수 불일치 → 판독 오류 · Li2
+A26_frac_wide_085              ⭕ 빨강 ·   ⛔ ⛔음성: 넓은 갭 88 % → ⓐ 아님 (ⓒ) · 갭을 못 찾은 산물 → 미판정 (wide · undetermined)
+A27_metal_eV_0                 ⭕ 빨강 ·   ⛔ ⛔음성 문턱 경계: TM 없는 산물 MP 갭 0.05 eV → 금속성 (ⓑ) · 0.1 eV → 좁은 갭 (ⓒ) (intermediate · intermediate)
+A28_extra_species_ok           ⭕ 빨강 ·   ⛔ ⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — manifest 필드 · 도구 sha · MP 판 이동 · 앵커 부호 · 비율 · 순서 · 행 빠짐 · 오류 행 · 중복 · 열린계 행 · 카드 밖 종 · 호스
+끝: 빨강 25 / 25

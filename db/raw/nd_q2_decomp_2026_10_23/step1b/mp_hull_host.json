@@ -1,0 +1,61 @@
+{
+  "cif": [
+    "db/structures/modelc_v3_62atom_V0.cif"
+  ],
+  "composition": "Li27 P5 S22 Cl8",
+  "reduced": "Li27P5(S11Cl4)2",
+  "elements": [
+    "Li",
+    "Nd",
+    "P",
+    "S",
+    "Cl",
+    "O"
+  ],
+  "mode": "mp",
+  "n_mp_entries": 321,
+  "hull_energy_eV": -274.9117507424999,
+  "hull_energy_per_atom": -4.434060495846773,
+  "decomposition_products": {
+    "Li3PS4": 0.6452,
+    "Li2S": 0.0968,
+    "LiCl": 0.2581
+  },
+  "decomposition_entries": [
+    {
+      "formula": "Li3PS4",
+      "entry_id": "mp-aaacebzb-GGA",
+      "mp_id": "mp-aaacebzb",
+      "amount": 0.645161
+    },
+    {
+      "formula": "LiCl",
+      "entry_id": "mp-aaacpllf-GGA",
+      "mp_id": "mp-aaacpllf",
+      "amount": 0.258065
+    },
+    {
+      "formula": "Li2S",
+      "entry_id": "mp-aaaaabsj-GGA",
+      "mp_id": "mp-aaaaabsj",
+      "amount": 0.096774
+    }
+  ],
+  "mp_database_version": "2026.09.28",
+  "query_utc": "2026-10-23T14:04:40+00:00",
+  "note": "MP-energy hull. Products + hull energy at our composition. Absolute E_above_hull of OUR structure needs an MP-compatible energy (use --mode uma for a self-consistent number).",
+  "thermo_type": "GGA_GGA+U",
+  "mp_api_version": "unknown",
+  "entries_by_suffix": {
+    "GGA": 321
+  },
+  "elemental_products": [],
+  "expect": {
+    "want": "Li3PS4,Li2S,LiCl",
+    "ok": true,
+    "missing": [],
+    "extra": []
+  },
+  "saved_product_structs": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_host",
+  "sanity_ok": true
+}

@@ -1,0 +1,7 @@
+변이 222 개 (DN 판 174 · 자리 옮김 10 · DO 48) · 자리 모두 한 번씩
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_fix4_w*
+D23_ledger_negative              ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1 (이유): 장부에서 빠진 행의 판정 → '판정의 run_id 가 장부에 없다' · 음수 비용 → '유한한 비음수가 아니다' (['보존 포함 실행 003eb935c9974495b521d9b7c0db25c5 (/tmp/li2s2_runner_s
+D22_ledger_missing_run           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DH P0-1 (이유): 장부에서 빠진 행의 판정 → '판정의 run_id 가 장부에 없다' · 음수 비용 → '유한한 비음수가 아니다' (['장부 판독 예외 (AttributeError)'] · ['A11 런 비용 -10.0 — 유한한 비음수가 아니다'
+DN8_container_type_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DN P1 (이유): 판정 기록의 gate_check · checks 가 객체가 아니면 '타입 오류' 로 보류한다 (판독 예외로 새지 않는다 · 깨기 DN8 이 드러낸 시험 구멍) ({'y6': '판독 예외 (AttributeError) — 보류',
+N5_fire_log_rule_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DL Q3: FIRE 로그만 있고 MD 완료 기록이 없으면 그 이유로 보류한다 (MD 중 파일 목록 검사와 구별 · 사람이 보는 보류 이유 · 깨기 N5 가 드러낸 시험 구멍) (완료 기록은 없는데 MD 중 기록 밖의 파일이 있다 (final_rel
+끝: 빨강 4 / 4

@@ -1,0 +1,284 @@
+{
+  "kind": "coop_hop_round",
+  "date": "2026-09-20",
+  "card": "db/properties/lpscl_smallcell_coophop_estimand_2026_09_19.json",
+  "events_dir": "/home/ubuntu/coop_full",
+  "n_events": 9,
+  "n_done": 8,
+  "armB_gb7_pass": 0,
+  "branches": {
+    "b_지지": 1,
+    "미결": 6,
+    "a_쪽_증거": 1
+  },
+  "⛔_갈래0": "`armB_gb7_pass` 를 라운드2 기록(kgy, 0/9)과 **사람이 대조**한다. 재현되지 않으면 팔C 를 라운드2 와 같은 표에 놓지 않는다 (카드 §4 갈래0).",
+  "⛔_인용": "장벽 아님 · (a) 증명 아님 · σ·D·Ea 로 번역 금지 (카드 §1c).",
+  "thresholds": {
+    "d_Li_A": 2.0,
+    "rmsd_frame_A": 0.15,
+    "fmax": 0.03
+  },
+  "rows": [
+    {
+      "tag": "ev01_atom88",
+      "atom_index": 88,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -508.1265193414047,
+        "steps": 284,
+        "n_escapes": 1,
+        "track_drift_A": 0.022579708378803253
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 1.8369,
+        "nonli_rmsd_A": 0.1173,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -507.87531866633964,
+        "steps": 178,
+        "d_Li_A": 2.7647,
+        "rmsd_frame_A": 0.2512,
+        "max_disp_A": 2.7647,
+        "branch": "b_지지",
+        "why": "d_Li 2.765 Å ≥ 2.0 — 별개 극소, 골격 재배열 동반 (골격 RMSD 0.2512)"
+      }
+    },
+    {
+      "tag": "ev02_atom91",
+      "atom_index": 91,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -508.15296002602906,
+        "steps": 137,
+        "n_escapes": 0,
+        "track_drift_A": 0.0
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 0.7971,
+        "nonli_rmsd_A": 0.0547,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -507.9628705480301,
+        "steps": 407,
+        "d_Li_A": 1.0523,
+        "rmsd_frame_A": 0.2635,
+        "max_disp_A": 1.7863,
+        "branch": "미결",
+        "why": "d_Li 1.052 Å < 2.0 인데 골격 RMSD 0.2635 > 0.15 — 골격이 옮겨갔다. 같은 계 비교가 아니다"
+      }
+    },
+    {
+      "tag": "ev03_atom95",
+      "atom_index": 95,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -507.9921888328627,
+        "steps": 145,
+        "n_escapes": 0,
+        "track_drift_A": 0.0
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 1.6418,
+        "nonli_rmsd_A": 0.085,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -508.1279026311657,
+        "steps": 153,
+        "d_Li_A": 1.9333,
+        "rmsd_frame_A": 0.1974,
+        "max_disp_A": 1.9333,
+        "branch": "미결",
+        "why": "d_Li 1.933 Å < 2.0 인데 골격 RMSD 0.1974 > 0.15 — 골격이 옮겨갔다. 같은 계 비교가 아니다"
+      }
+    },
+    {
+      "tag": "ev04_atom78",
+      "atom_index": 78,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -508.1039655205332,
+        "steps": 241,
+        "n_escapes": 1,
+        "track_drift_A": 0.010977669588126682
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 0.1257,
+        "nonli_rmsd_A": 0.0533,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -507.9110022564588,
+        "steps": 181,
+        "d_Li_A": 1.782,
+        "rmsd_frame_A": 0.2847,
+        "max_disp_A": 2.0215,
+        "branch": "미결",
+        "why": "d_Li 1.782 Å < 2.0 인데 골격 RMSD 0.2847 > 0.15 — 골격이 옮겨갔다. 같은 계 비교가 아니다"
+      }
+    },
+    {
+      "tag": "ev05_atom90",
+      "atom_index": 90,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -508.09125629985033,
+        "steps": 125,
+        "n_escapes": 0,
+        "track_drift_A": 0.0
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 1.2315,
+        "nonli_rmsd_A": 0.0707,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -507.9104854666411,
+        "steps": 137,
+        "d_Li_A": 1.8582,
+        "rmsd_frame_A": 0.2321,
+        "max_disp_A": 1.8582,
+        "branch": "미결",
+        "why": "d_Li 1.858 Å < 2.0 인데 골격 RMSD 0.2321 > 0.15 — 골격이 옮겨갔다. 같은 계 비교가 아니다"
+      }
+    },
+    {
+      "tag": "ev06_atom77",
+      "atom_index": 77,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -508.14865559292286,
+        "steps": 141,
+        "n_escapes": 0,
+        "track_drift_A": 0.0
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 0.088,
+        "nonli_rmsd_A": 0.0473,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -508.0393287951259,
+        "steps": 200,
+        "d_Li_A": 1.0855,
+        "rmsd_frame_A": 0.1789,
+        "max_disp_A": 1.3857,
+        "branch": "미결",
+        "why": "d_Li 1.085 Å < 2.0 인데 골격 RMSD 0.1789 > 0.15 — 골격이 옮겨갔다. 같은 계 비교가 아니다"
+      }
+    },
+    {
+      "tag": "ev07_atom114",
+      "status": "duplicate_raw_pair",
+      "same_as": "ev04_atom78"
+    },
+    {
+      "tag": "ev08_atom79",
+      "atom_index": 79,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -508.0806220018815,
+        "steps": 248,
+        "n_escapes": 0,
+        "track_drift_A": 0.0
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 0.1032,
+        "nonli_rmsd_A": 0.0275,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -508.0546949158198,
+        "steps": 282,
+        "d_Li_A": 0.2262,
+        "rmsd_frame_A": 0.2156,
+        "max_disp_A": 1.2346,
+        "branch": "미결",
+        "why": "d_Li 0.226 Å < 2.0 인데 골격 RMSD 0.2156 > 0.15 — 골격이 옮겨갔다. 같은 계 비교가 아니다"
+      }
+    },
+    {
+      "tag": "ev09_atom82",
+      "atom_index": 82,
+      "status": "ok",
+      "armA": {
+        "converged": true,
+        "E": -508.1389635713,
+        "steps": 157,
+        "n_escapes": 0,
+        "track_drift_A": 0.0
+      },
+      "armB": {
+        "gb7_ok": false,
+        "why": [
+          "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+        ],
+        "converged": true,
+        "li_disp_A": 1.0901,
+        "nonli_rmsd_A": 0.057,
+        "n_over_thresh": 0
+      },
+      "armC": {
+        "converged": true,
+        "E": -508.0375995563612,
+        "steps": 192,
+        "d_Li_A": 1.3503,
+        "rmsd_frame_A": 0.1427,
+        "max_disp_A": 1.5374,
+        "branch": "a_쪽_증거",
+        "why": "d_Li 1.350 Å < 2.0 이고 골격 RMSD 0.1427 ≤ 0.15 — ⛔ '극소 없음' 의 증명이 아니다"
+      }
+    }
+  ]
+}

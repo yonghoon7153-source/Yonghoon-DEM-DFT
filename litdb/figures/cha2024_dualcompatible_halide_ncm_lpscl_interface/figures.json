@@ -1,0 +1,125 @@
+{
+ "slug": "cha2024_dualcompatible_halide_ncm_lpscl_interface",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Schematic illustration of the interfacial reactions between the NCM and LPSCl. (b) Crystal structures of LIC, LYC, and LZC introduced as interfacial modifiers. (c) Halide coating process via the RAM process. (d) STEM-HAADF images and (e) EDS mapping results of NCM@LZC. (f) SEM images and EDS mappings of Ni, In, Y, Zr elements for NCM@halide particles. assembly of the symmetric cell, halide powder was pelletized under 433 MPa (diameter = 1 cm, mass loading = 127 mg cm−2, thickness = 600 μm) and SUS foils were used as ion-blocking electrodes. Subsequently, a pressure was maintained at 250 MPa during impedance measurements at 25 ◦C. The impedance data were recorded using an impedance analyzer (Bio-Logic, VSP-300) in the frequency range of 7 MHz–5 mHz at an amplitude of 5 mV. The rate-capability was tested at various C rates ranging from 0.05 to 2C (1C = 200 mAh g−1). Cycling tes",
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    418.4
+   ],
+   "w": 2218,
+   "h": 1538,
+   "dpi": 300,
+   "src": "05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf",
+   "blank": 0.45
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a–d) Charge–discharge curves at different C-rates for ASSBs with (a) bare NCM, (b) NCM@LIC, (c) NCM@LYC, and (d) NCM@LZC. (e) Dependence of the discharge capacity on the C-rate. NCM particles was confirmed using SEM–EDS (Fig. 1f) and XPS (Fig. S6). based equivalent circuit that describes multiple processes in a solid composite cathode [28,40]. The TLM is represented by a network of distributed resistance components that considers the charge-transport and reactions occurring at the NCM/SE interface, along with the diffu- sion process in the NCM. In the electrical circuit shown in Fig. 3a, rion indicates the resistance per unit length for the transport of Li+, whereas rint, cpeint, and zW denote the resistance, constant phase element, and Warburg (diffusion) impedance per unit volume, respectively. To compare the charge-transport and interfacial reaction kinetics of the NCM@halide",
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    440.9
+   ],
+   "w": 2218,
+   "h": 1632,
+   "dpi": 300,
+   "src": "05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) TLM-based equivalent circuit for impedance decoupling. (b–e) Nyquist plots of the AC-impedance spectra for (b) bare NCM, (c) NCM@LIC, (d) NCM@LYC, and (e) NCM@LZC. (f) Ionic and interfacial resistances of the composite cathodes determined by fitting the impedance data to the equivalent circuit in (a).",
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    314.2
+   ],
+   "w": 2218,
+   "h": 1103,
+   "dpi": 300,
+   "src": "05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf",
+   "blank": 0.82
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a–c) Evolution of the AC-impedance spectra of (a) LIC–LPSCl, (b) LYC–LPSCl, and (c) LZC–LPSCl composites for 7 days of testing. (d–f) XRD patterns and (g–i) XPS spectra measured on (d, g) LIC–LPSCl, (e, h) LYC–LPSCl, and (f, i) LZC–LPSCl composites after 7 days of testing. whereas the extremely thin interfacial modifiers had no significant in- fluence on the Li+ conduction behavior. It should be noted that the interfacial resistance of the NCM@halide depends strongly on the composition of the halide nanolayer, which cannot be explained in terms of ionic conductivity. Recently, it was suggested that LIC becomes susceptible to reductive",
+   "bbox": [
+    31.6,
+    361.3,
+    563.7,
+    670.7
+   ],
+   "w": 2218,
+   "h": 1290,
+   "dpi": 300,
+   "src": "05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Voltage profiles and (b) cycling performances of ASSBs with NCM and NCM@LZC at 0.33C. (c, d) Cross-sectional SEM images and (e, f) XPS results of (c, e) bare NCM and (d, f) NCM@LZC before and after 100 cycles. decomposition reactions when in contact with NCM even at low states of charge, triggering the intermixing of Li and In and consequently forming resistive components at the interface [37]. In contrast, LYC and LZC exhibited higher reduction stability (compatibility) with NCM than LIC, as explained by the trend of the standard reduction potential of metal ions in the halides. Moreover, LYC and LZC were found to exhibit higher oxidative stability compared with LIC, as shown in Fig. S8. In addition to the chemical stability of the halide and NCM, the compatibility of the halides with LPSCl was investigated to understand the composition-dependent interfacial kinetics of the ",
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    319.7
+   ],
+   "w": 2218,
+   "h": 1127,
+   "dpi": 300,
+   "src": "05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Compatibility of halide-based interfacial modifiers with NCM and LPSCl.",
+   "bbox": [
+    31.6,
+    49.4,
+    294.6,
+    373.2
+   ],
+   "w": 1097,
+   "h": 1351,
+   "dpi": 300,
+   "src": "05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf",
+   "blank": 0.348
+  }
+ ]
+}

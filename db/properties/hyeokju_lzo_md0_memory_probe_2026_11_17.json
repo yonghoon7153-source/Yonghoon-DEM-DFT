@@ -1,0 +1,61 @@
+{
+ "제목": "[혁주] MD-0 — QE 메모리 견적 프로브 (검사용 · run 아님) · 벌크 2 · 계면 3 후보",
+ "written_on": "2026-11-17",
+ "실행": "gabia CPU pw.x (/data/apps/qe-7.4.1-cpu/PW/src/pw.x) 1 프로세스 · OMP 1 · worktree /data/work/wt_hj_md0 (8cd000ed) · 입력 = tools/doping/generate_dft_inputs.py --from_xyz (60/480 · Γ · gaussian 0.01 · nosym · tprnfor · tstress) · PP md5 = CEI 세트 + Zr GBRV 5db81b1e… · 폴더 /data/work/runs/hj_md0_probe_1117",
+ "구조": "db/inputs/hyeokju_lzo_md0_probe_2026_11_17 (프로브 전용 — 원자 수 · 셀 부피 · 원소만 후보와 같다 · README.json)",
+ "결과_Estimated_max_dynamical_RAM_per_process": {
+  "B96": {
+   "원자": 96,
+   "전자": 576,
+   "밴드": 346,
+   "GB": 3.78,
+   "회차": "1 회차"
+  },
+  "B144": {
+   "원자": 144,
+   "전자": 864,
+   "밴드": 518,
+   "GB": 6.93,
+   "회차": "2 회차"
+  },
+  "I148": {
+   "원자": 148,
+   "전자": 816,
+   "밴드": 490,
+   "GB": 10.68,
+   "회차": "2 회차"
+  },
+  "I200": {
+   "원자": 200,
+   "전자": 1056,
+   "밴드": 634,
+   "GB": 18.2,
+   "회차": "2 회차"
+  },
+  "I248": {
+   "원자": 248,
+   "밴드": 806,
+   "GB": 23.56,
+   "회차": "2 회차"
+  }
+ },
+ "⚠_1_회차_빈칸": {
+  "무엇": "1 회차 (12:3x) 는 B96 만 견적이 나왔고 B144 · I148 · I200 은 머리말 (원자 · 전자 · 밴드) 까지만 · I248 은 SSH 끊김 (Broken pipe) 으로 못 끝남",
+  "원인": "gfortran 이 파일로 가는 stdout 을 버퍼에 모은다 — 견적 줄이 버퍼에 남은 채 240 초 만에 끊었다. 2 회차는 GFORTRAN_UNBUFFERED_PRECONNECTED=y · GFORTRAN_UNBUFFERED_ALL=y 로 후보마다 2–3 초 만에 나왔다 (tmux hjprobe · 12:57:13 끝)"
+ },
+ "⚠_견적의_뜻": "CPU 1 프로세스 견적이다 — GPU 판은 CUDA 문맥 · FFT 작업 공간만큼 더 쓴다 (실측 아님). kgy RTX 3090 24,576 MiB 에는 남이 쓰는 ~4 GB 가 늘 있다 (11-17 10:45 실측 3,997 MiB) · gabia A6000 49 GB 는 b2o3 이완이 독점 중",
+ "크기_결정": "사용자 (카드 §9 · 이 기록 뒤 AskUserQuestion)",
+ "by": "claude · 2026-11-17",
+ "k_탐침_3_회차_2026_11_17": {
+  "왜": "1 · 2 회차는 전부 Γ 입력이었다 — 비준된 k 탐침 (벌크 2×2×2 · 계면 2×2×1) 은 Γ 전용 절약 (실수 파동함수) 이 없고 k 점마다 파동함수를 메모리에 들고 있어 따로 쟀다",
+  "실행": "gabia CPU pw.x 1 프로세스 · 버퍼 끔 · tmux hjprobe3 · 13:37:45 끝 · 입력 = 프로브 셀 B144 · I148 의 scf.in 에서 K_POINTS 만 바꿈 (+ disk_io='high' 판)",
+  "결과_GB": {
+   "B144_k222_8k": 18.34,
+   "B144_k222_disk_io_high": 13.19,
+   "I148_k221_4k": 24.73,
+   "I148_k221_disk_io_high": 20.26
+  },
+  "읽기": "kgy (24,576 MiB · 남이 쓰는 ~4 GB) 에는 벌크 k 탐침 disk_io high (13.2 GB) 가 넉넉히 든다 · 계면 k 탐침은 disk_io high 로도 20.3 GB 라 GPU 여분까지 치면 안 든다 → 계면 k 탐침 자리 = 사용자 결정",
+  "disk_io_의_뜻": "파동함수를 k 점마다 디스크로 내리는 실행 설정이다 — 물리 · 결과는 같다 (카드 DFT 설정 목록의 값이 아니다 · 쓰면 실행 기록에 적는다)"
+ }
+}

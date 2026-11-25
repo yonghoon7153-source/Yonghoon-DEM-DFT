@@ -1,0 +1,240 @@
+{
+ "slug": "wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+  "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Characterization of the LiCoO2 cathode before (Bare LCO) and after coating (LCO@LNO): (a) The structural models. (b-c) The corresponding XRD refinement. (d) The TEM images. Characterization of the Li5.5PS4.5Cl1.5 solid electrolyte: (e) XRD patterns of Li5.5PS4.5Cl1.5. (f) Li-ion/electronic conductivity of Li5.5PS4.5Cl1.5 at room temperature. were also evaluated, as presented in Fig. S6. At low charge/discharge rates, those two kinds of electrodes show comparable discharge capac­ ities. When the rate rises to high C-rates, such as 1C, 2C, and 4C, the LiNbO3 coated electrode delivers much higher discharge capacities. Those experimental results agree well with our previous results in high nickel layered cathode materials [33]. efficiency of 94% at the same condition. The coated electrode shows a smaller charge/discharge voltage plateau difference, suggesting a smaller voltage polari",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    549.8
+   ],
+   "w": 2228,
+   "h": 2086,
+   "dpi": 300,
+   "src": "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Charge/discharge curves and cycling performances of LCO/Li-In and LCO@LNO/Li-In solid-state batteries at 0.2C under different voltage windows. (a-b) 1.9- 3.6 V, (c-d) 1.9- 3.9 V, (e-f) 1.9- 4.2 V (vs. Li-In) at room temperatures. The corresponding differential capacities profiles of the bare LiCoO2 and LCO@LNO electrodes during the 1st cycle under different voltage windows, (g) 1.9- 3.6 V, (h) 1.9- 3.9 V, and (i) 1.9- 4.2 V (vs. Li-In). mAh/g) and coulombic efficiencies (91% vs. 88%) than the bare elec­ trode. However, both electrodes show rapid discharge capacity declines during the cycling durations (Fig. 2f). Our previous research [33] and the above section results shows that the LiNbO3 coating layer can obvious enhance the capacity and cyclability only at higher C-rates (such as 0.5C) in the typical charging/discharging voltage windows (1.9 ~ 3.6 V and 1.9 ~ 3.7 V vs. Li-In).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    600.0
+   ],
+   "w": 2228,
+   "h": 2295,
+   "dpi": 300,
+   "src": "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) EIS spectra and the corresponding equivalent circuit applied here for the assembled solid-state batteries. (b-d) Nyquist plots and the (e) fitting results of those batteries cycled between different voltages (3.6 V, 3.9 V, and 4.2 V) at room temperature before and after 100 cycles. electrodes exhibit greatly increased resistance than that at lower volt­ ages. The LiNbO3 coating layer can isolate the direct contact and impede the side reactions between the active materials and solid electrolytes in the cathode mixture at various cut-off voltages (3.6, 3.9 V, and 4.2 V), lowering the interfacial resistances. However, the major contribution of resistances at high cut-off voltage is associated with the degradation of solid electrolyte. Therefore, introducing the LiNbO3 coating layer cannot lower the resistance increase.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.4,
+    566.0,
+    359.7
+   ],
+   "w": 1107,
+   "h": 1294,
+   "dpi": 300,
+   "src": "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Impedance spectra of bare electrodes in the 1st cycle for different (a) state of charge (SOC) and (b) state of discharge (SOD). (c-d) The corresponding results of coating electrodes. (e, g) DRT calculated from EIS measurements of bare electrodes at different states of 1st cycle. (f, h) 2D intensity color map of the DRT curves in (e,g). (i-l) The corresponding results of coating electrodes. to cut-off voltages (3.6 V, 3.9 V), the discharge process did not show great impedance, which may be related to the increase in interfacial by- products due to a significant decrease in the stability of the electrodes and electrolyte at high voltages (4.2 V). constant can be visualized by the intensity distribution plot that its time constant is closer to 10−3 s, indicating that the coated electrode has better Li-ion kinetics at CEI. In the same way we compared the discharge process of both ele",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    481.5
+   ],
+   "w": 2228,
+   "h": 1802,
+   "dpi": 300,
+   "src": "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+   "blank": 0.689
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a, b) XRD patterns of the cycled cathode mixture of the Bare LCO and the LCO@LNO. (c, d) TEM images and the corresponding EDX mapping of the bare LCO electrode and the LCO@LNO electrode after 100 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.7,
+    683.9
+   ],
+   "w": 2227,
+   "h": 2645,
+   "dpi": 300,
+   "src": "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+   "blank": 0.338
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Ex-situ XPS characterizations on the cycled (a) bare LCO electrode and (b) LCO@LNO electrode under different cut-off voltages at room temperature. The cycling number was set at 100 cycles. LiCoO2 and Li5.5PS4.5Cl1.5. While under high cut-off voltages (such as 4.2 V vs. Li-In), the intrinsic stability of active material plays a key role in the electrochemical performances. This work provides a new perspective on the surface designing strategy for all-solid-state lithium batteries with superior battery performances when using lithium- containing layer-structure cathode combined with sulfide solid electrolytes. Data availability Data will be made available on request. Acknowledgments This work was supported by the National Key Research and Devel­ opment Program (2021YFB2400200, 2021YFB2500300) and the Na­ tional Natural Science Foundation of China (Nos. 52177214). We gratefully ackn",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    432.4
+   ],
+   "w": 2228,
+   "h": 1597,
+   "dpi": 300,
+   "src": "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+   "blank": 0.669
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 0,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. XRD of the LiCoO2 cathode before (Bare LCO) and after coating (LCO@LNO)",
+   "width": 1126,
+   "height": 469,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 0,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM images and EDX mapping of the LCO@LNO",
+   "width": 669,
+   "height": 972,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 0,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Characterization of the Li5.5PS4.5Cl1.5 solid electrolyte. (a) Arrhenius plots of ionic conductivities at different temperatures of Li5.5PS4.5Cl1.5. (b) Equilibrium current of Li5.5PS4.5Cl1.5 at different voltages.",
+   "width": 1270,
+   "height": 482,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 0,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The SEM/EDS information of the (a) LCO and (b) LCO@LNO cathode composite.",
+   "width": 1269,
+   "height": 1067,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 0,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (a) Charge/discharge curves and (b) cycling performances of those two batteries at 0.5C.",
+   "width": 1269,
+   "height": 384,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 0,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Rate performance of Bare LCO/Li5.5PS4.5Cl1.5/Li-In and LCO@LNO/Li5.5PS4.5Cl1.5/Li-In batteries.",
+   "width": 692,
+   "height": 503,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 0,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Differential capacities of Bare LCO/Li-In and LCO@LNO/Li-In ASSLIB at the 20th, 50th, 100th cycles under the range of 1.9 V-3.6 V (a-b), 1.9 V-3.9 V (c-d) and 1.9 V-4.2 V (e-f).",
+   "width": 2200,
+   "height": 2541,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 0,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. XRD patterns of the cycled cathode mixture of (a) the Bare LCO and (b) the LCO@LNO",
+   "width": 1267,
+   "height": 1112,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 0,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. S 2p and P 2p XPS spectra of the pristine Li5.5PS4.5Cl1.5 powder.",
+   "width": 866,
+   "height": 479,
+   "source": "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx",
+   "note": "SI .docx word/media 임베디드 원본 (문서 내 등장 순서 = S1–S9). 캡션 앵커 크롭 아님."
+  }
+ ]
+}

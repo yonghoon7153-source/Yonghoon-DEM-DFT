@@ -1,0 +1,13 @@
+[2026-11-02 09:18:08] ════ Nd Q3′ Bader 후처리 · HEAD 72edeff4 · R /home/kgy/work/runs/nd_q3p_rerun_1030 · 모델 MP_07 ════
+[2026-11-02 09:18:08]   ✓ MP_07 — 입력 = 저장소 · SCF ! total energy = -3657.40531641 Ry · save ✓
+[2026-11-02 09:18:08]   ✓ pp.x /home/kgy/apps/qe-7.4.1-gpu/bin/pp.x · bader /home/kgy/bin/bader (md5 4af18566) · mpirun /home/kgy/apps/openmpi-4.1.6/bin/mpirun · 요약 selftest
+[2026-11-02 09:18:08] DRY_RUN — 여기서 끝 (계산 0)
+[2026-11-02 09:18:34] ════ Nd Q3′ Bader 후처리 · HEAD 72edeff4 · R /home/kgy/work/runs/nd_q3p_rerun_1030 · 모델 MP_07 ════
+[2026-11-02 09:18:34]   ✓ MP_07 — 입력 = 저장소 · SCF ! total energy = -3657.40531641 Ry · save ✓
+[2026-11-02 09:18:34]   ✓ pp.x /home/kgy/apps/qe-7.4.1-gpu/bin/pp.x · bader /home/kgy/bin/bader (md5 4af18566) · mpirun /home/kgy/apps/openmpi-4.1.6/bin/mpirun · 요약 selftest
+[2026-11-02 09:18:34] ▶ MP_07 pp.x plot_num=17 (AE 가전자 · save 읽기만 · VRAM 여유 17972 MiB)
+[2026-11-02 10:05:52]   ✓ MP_07 cube 75M
+[2026-11-02 10:05:52] ▶ MP_07 bader (ACF.dat · -p all_atom 안 씀)
+[2026-11-02 10:06:14]   ✓ MP_07 bader  NUMBER OF ELECTRONS: 317.9950 · 판  GRID BASED BADER ANALYSIS (Version 1.05 08/19/23)
+[2026-11-02 10:06:15]   ✓ MP_07 요약 → nd_bader_summary.json · SHA256SUMS 13 줄
+[2026-11-02 10:06:15] ■ 끝 · 끝 코드 0 (회수: bader_pp/<모델>/ 의 ACF.dat · nd_bader_summary.json · nd_bader_sites.csv · pp_ae.* · bader_run.out · summary.txt · run.log — cube 는 kgy 에 둔다)

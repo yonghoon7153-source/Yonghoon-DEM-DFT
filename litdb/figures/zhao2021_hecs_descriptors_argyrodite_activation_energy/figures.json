@@ -1,0 +1,232 @@
+{
+ "slug": "zhao2021_hecs_descriptors_argyrodite_activation_energy",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+  "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (Color online) The framework of ML prediction for Ea in SSEs with HECS-descriptors derived from unit cell information.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.9,
+    563.6,
+    270.6
+   ],
+   "w": 2218,
+   "h": 871,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.759
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (Color online) (a) Sampling scheme for the cubic Li-argyrodite Liþ 4 ÞYð2Þ2\u0002 2\u0002xX\u0002 x compounds. (b) Conceptual scheme of the descriptors construction by hierarchically encoding crystal structure as composition, structure, conduction pathway, ion distribution and special ions. 7\u0002xþyðM5þ 1\u0002yN4þ y Yð1Þ2\u0002",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    311.5,
+    563.6,
+    682.8
+   ],
+   "w": 2218,
+   "h": 1549,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (Color online) The scatter plot of BVSE calculated Ea versus PLS predicted Ea for training dataset and test dataset, respectively. The dash line is the ideal straight line where the calculated and predicted data are equal.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    549.0,
+    563.7,
+    729.5
+   ],
+   "w": 1097,
+   "h": 753,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (Color online) VIP scores of descriptors (explanatory variables) in the PLS model. Five different color areas correspond to ﬁve categories. The dotted line at 0.8 represents the default cut-off line of the JMP software used in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.9,
+    294.7,
+    281.9
+   ],
+   "w": 1097,
+   "h": 918,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.577
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (Color online) Contour plots showing the variation of Ea as a function of representative descriptors belonging to different categories. 1405",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    328.4,
+    563.6,
+    746.6
+   ],
+   "w": 2218,
+   "h": 1743,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (Color online) The mechanism of interactions between the HECS-descriptors and their combined effects on Ea.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.9,
+    563.6,
+    258.8
+   ],
+   "w": 2218,
+   "h": 822,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (Color online) Summary of the design strategies, implementation paths and examples of promising compositions.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    286.0,
+    563.6,
+    544.2
+   ],
+   "w": 2218,
+   "h": 1077,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.697
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Examples of ML predicting ion conduction property of selected SSEs with various descriptors.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.8,
+    562.7,
+    760.4
+   ],
+   "w": 2210,
+   "h": 2991,
+   "dpi": 300,
+   "src": "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. A schematic outline of the PLS method. The overall goal is to use the factors to predict the responses in the population. This is achieved indirectly by extracting latent variables T and U from sampled factors and responses, respectively [1].",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 477,
+   "h": 573,
+   "dpi": null,
+   "src": "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx",
+   "extracted_by": "docx word/media (embedded raster, not caption-crop)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Pearson correlation coefficient heatmap of descriptors.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 800,
+   "h": 741,
+   "dpi": null,
+   "src": "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx",
+   "extracted_by": "docx word/media (embedded raster, not caption-crop)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Plot of PRESS and Q2 against the number of components in the PLS regression model. The minimum PRESS value (0.58415) and the maximum Q2 value (0.65877) occur at four components.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1107,
+   "h": 807,
+   "dpi": null,
+   "src": "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx",
+   "extracted_by": "docx word/media (embedded raster, not caption-crop)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Contour plots showing the variation of Ea as a function of ranion and other important descriptors.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 573,
+   "h": 689,
+   "dpi": null,
+   "src": "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx",
+   "extracted_by": "docx word/media (embedded raster, not caption-crop)"
+  }
+ ]
+}

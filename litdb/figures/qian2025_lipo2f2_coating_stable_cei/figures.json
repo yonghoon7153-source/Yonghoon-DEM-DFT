@@ -1,0 +1,312 @@
+{
+ "slug": "qian2025_lipo2f2_coating_stable_cei",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-08",
+ "sources": [
+  "99737a54-73._engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+  "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Theoretical investigation of LiPOF as a solid-state coating using DFT calculations. a) Electrochemical stability range of LiPOF. b) Thermodynamic evaluation of interfacial reactivity between Li6PS5Cl and LiPOF without applied potential and at c) 2.8 V and d) 4.3 V vs Li+/Li. e) Thermodynamic evaluation of interfacial reactivity between NCM and LiPOF at e) 2.8 and f) 4.3 V vs Li+/Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    53.8,
+    540.3,
+    506.7
+   ],
+   "w": 2059,
+   "h": 1888,
+   "dpi": 300,
+   "src": "99737a54-73._engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Visualization of coating on NCM. a) SEM image of LiPOF-coated NCM particles. HRTEM images of LiPOF-coated NCM85 at b), c) low magnification and e), f) high magnification. g) EDX mapping of the coated NCM85.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    53.8,
+    544.5,
+    381.6
+   ],
+   "w": 2076,
+   "h": 1367,
+   "dpi": 300,
+   "src": "99737a54-73._engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.132
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Electrochemical performance of the bare and LiPOF-coated SSB. a) Rate performance of bare NCM85 and LiPOF-coated NCM85 cells. b) Initial charge/discharge profiles of bare NCM85 and LiPOF-coated NCM85 at 0.2 C within the voltage range of 2.8–4.3 V vs Li+/Li. c) Corresponding dQ/dV curves. d) Comparison of cycling performance of bare NCM85 and LiPOF-coated NCM85 cells at moderate loading. e) Cycling performance of LiPOF-coated NCM cell at high loading (25.6 mg.cm\u0000 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    53.8,
+    545.1,
+    323.3
+   ],
+   "w": 2079,
+   "h": 1123,
+   "dpi": 300,
+   "src": "99737a54-73._engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Origin of enhanced performance of LiPOF-coated SSB. a) Nyquist plots of the bare and LiPOF-coated NCM85 before and after cycling. Cycled cells are fitted with a transmission line model. b) S 2p XPS spectra and c) F 1s spectra of the bare and LiPOF-coated NCM85 cells after 200 cycles. EIS was recorded each cycle at OCV (~3.7 V vs Li\u0000 In) after discharging the cycled cells at 2.8 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    53.8,
+    545.1,
+    543.6
+   ],
+   "w": 2079,
+   "h": 2042,
+   "dpi": 300,
+   "src": "99737a54-73._engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Comparison of ToF-SIMS secondary images of negatively charged SOx",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    26.0,
+    484.9,
+    474.2
+   ],
+   "w": 1828,
+   "h": 1868,
+   "dpi": 300,
+   "src": "99737a54-73._engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.561
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. FTIR spectra of bare NCM85, LiPO2F2, and LiPO2F2-coated NCM85.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.5,
+    455.8,
+    332.4
+   ],
+   "w": 1700,
+   "h": 1109,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. F 1s XPS spectra of LiPO2F2-coated NCM85 and LiPO2F2.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    468.5,
+    351.6
+   ],
+   "w": 1752,
+   "h": 1190,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. XANES Ni L-edge of the coated and uncoated CAM before cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    75.2,
+    443.2,
+    307.2
+   ],
+   "w": 1647,
+   "h": 967,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. XRD patterns of bare NCM85 and LiPOF-coated NCM85.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    467.0,
+    331.0
+   ],
+   "w": 1596,
+   "h": 1105,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. SEM image of the uncoated NCM85 particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    111.0,
+    417.0,
+    318.0
+   ],
+   "w": 1538,
+   "h": 864,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.271
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Additional HR-TEM images and STEM-EDX of LiPOF-coated NCM85 particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    88.5,
+    551.8,
+    266.2
+   ],
+   "w": 2100,
+   "h": 742,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.107
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Electrochemical performance of 2 wt% LiPOF-coated NCM cell cycled at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    88.5,
+    571.4,
+    339.4
+   ],
+   "w": 2181,
+   "h": 1047,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. P 2p XPS of uncycled LiPOF-coated NCM particles, cycled composite cathode for both uncoated and coated cells (after 200 cycles at 0.2 C). These data show that P 2p XPS spectra cannot definitively identify the formation of LiPO₃ species, because the coating and any partially oxidized argyrodite that might be formed (if the coating wasn’t ideal) both contain P-Ox species. The P 2p3/2 signal from LiPO3 would appear at a binding energy of 133 eV (the same as reported for Li3PO4; NIST database). These are usually deemed “POx” in the literature and are also where P-Ox signals from oxidized Li6PS5Cl would appear. However, the almost complete lack of oxidized sulfide in the S 2p spectrum (Fig 4b, main text), indicates that the argyrodite is not oxidized, and hence the P-Ox species in the cycled coated cell likely arises from LiPO3.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    88.5,
+    563.3,
+    366.9
+   ],
+   "w": 2147,
+   "h": 1161,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. FIB cross-section images of bare and LiPOF-coated cells after 200 cycles at 0.2C. (a, b) Low and high-resolution SEM images of the LiPOF-coated NCM cathode; (c, d) Low and high-resolution SEM images of the bare NCM cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    66.8,
+    580.6,
+    365.5
+   ],
+   "w": 2195,
+   "h": 1245,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.349
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 5,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of voltage window and bandgaps of the interfacial species obtained from DFT. Composition Voltage Window (vs Li+/Li) Band Gap (eV) LiF 0-6.3 V (1) 8.7 LiCl 0-4.3 V (1) 6.3 LiPO3 2.5-4.9 V (2) 2.5 Li3PO4 0-5.0 V (3) 5.8 Li4P2O7 2.3-4.3 V 5.6 Li2NiF4 2.8-5.6 V 4.7 P2S5 2.3 V- 2.6 P2O3F4 3.1 V- 5.8 SOCl2 3.3 V- 3.6 P2S7 2.3 V- 2.1 CoO 1.9 V- 0.6 CoO2 4.1 V- 0.6 MnO2 3.7 V- 0.5 Ni3(PO4)2 2.8 V- 3.4 *Note that P2S5 and subsequent entries do not contain Li and thus have no upper voltage limit",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    67.0,
+    562.9,
+    425.6
+   ],
+   "w": 2142,
+   "h": 1495,
+   "dpi": 300,
+   "src": "08022c09-73._Sup_engineering_Stable_Decomposition_Products_on_Cathode_Surfaces_to_Enable_High_Voltage.pdf",
+   "blank": 0.932
+  }
+ ]
+}

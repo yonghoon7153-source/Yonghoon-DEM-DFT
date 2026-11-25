@@ -1,0 +1,1152 @@
+{
+ "slug": "doux2020_pressure_effects_sulfide_se_jmca",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+  "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) Design of the solid-state battery holder with a load cell to monitor the stack pressure applied to the battery during cycling and conductivity measurements. (b) For conductivity measurements and battery cycling, pellets are first prepared by applying uniaxial pressure as the fabrication pressure using a hydraulic press and are then cycled in the battery holder at the predetermined stack pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.7,
+    45.3,
+    516.6,
+    288.7
+   ],
+   "w": 1825,
+   "h": 1015,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.673,
+   "auto_bbox": [
+    36.5,
+    44.6,
+    558.8,
+    288.7
+   ],
+   "src_native": [
+    1775,
+    968
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 14, 1775×968 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "측정 장치 (적층압 셀 홀더 · 1 톤 load cell · PEEK 몰드 · Ti 플런저 = 집전체 겸용) 와 '성형압 → 적층압' 두 단계 개념도.  성형압은 유압 프레스로 따로 준다 (이 홀더가 아니다) — 이 논문의 모든 밀도 · σ 는 성형압을 뺀 뒤의 펠릿 값이다."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) Conductivity of Li6PS5Cl as a function of the stack pressure using titanium plungers or pressed carbon powder as electrodes. The stack pressure was increased to 70 MPa and subsequently decreased to 5 MPa (as indicated by the arrows). Error bars represent the standard deviation of 4 samples. (b) Effect of stack pressure on the cycling stability (at room temperature) of LiIn|LPSCl|NCA solid-state batteries. Each pellet of the electrolyte and batteries was prepared using a fabrication pressure of 370 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    515.6,
+    502.3,
+    686.5
+   ],
+   "w": 1705,
+   "h": 713,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.885,
+   "auto_bbox": [
+    36.5,
+    515.4,
+    558.8,
+    686.8
+   ],
+   "src_native": [
+    1657,
+    665
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 15, 1657×665 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(a) 적층압 2 → 70 → 2 MPa 의 σ 이력 (370 MPa 펠릿, Ti ↔ 탄소 전극) · (b) 적층압을 5 사이클마다 5 → 125 MPa 로 바꾼 반쪽셀 (370 MPa 제작).  판독 = digitized.csv fig2a."
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 3,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — conductivity of Li6PS5Cl vs operating stack pressure, Ti plungers or pressed carbon powder as electrodes; pressure increased to 70 MPa and decreased again (arrows); error bars = SD of 4 samples (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    515.6,
+    294.2,
+    686.5
+   ],
+   "w": 838,
+   "h": 713,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.898,
+   "src_native": [
+    1657,
+    665
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (a) of Fig. 2 — cut from the embedded native raster (xref 15, 1657×665 px = 300 dpi, no resampling): panel box [0, 0, 800, 665] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f2",
+   "viewed": true,
+   "mpm_note_ko": "★ 같은 펠릿 · 같은 적층압에서 전극만 바꾸면 σ 가 2 MPa 에서 ×7.8 (Ti 0.22 ↔ 탄소 1.72 mS/cm, 가압 가지 [판독]) · 25 MPa ×1.8 · 70 MPa ×1.3 — 우리 망 · 복셀 σ 의 Dirichlet 전극 (면 전체 이상 접촉) 은 탄소 전극 쪽과 짝.  탄소도 2 → 70 MPa 에서 1.72 → 3.01 (×1.75) — 본문 'almost independent' 는 과장."
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 3,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — effect of stack pressure on the cycling stability of LiIn|LPSCl|NCA cells (25 MPa control vs 5 → 125 → 5 MPa), room temperature; pellets made at 370 MPa (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    288.7,
+    515.9,
+    502.3,
+    685.8
+   ],
+   "w": 890,
+   "h": 709,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.877,
+   "src_native": [
+    1657,
+    665
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (b) of Fig. 2 — cut from the embedded native raster (xref 15, 1657×665 px = 300 dpi, no resampling): panel box [800, 0, 1657, 665] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f2",
+   "viewed": true,
+   "mpm_note_ko": "반쪽셀 Li–In | LPSCl | LNO-NCA (370 MPa 제작) — 적층압 25 MPa 고정 (검정) ↔ 5 → 125 → 5 MPa 단계 (색) 의 방전 용량이 겹친다.  첫 방전 139.3 ↔ 136.1 mAh/g (Fig. S6 판독).  우리 계산과 직접 닿는 값 없음."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Conductivity and relative density of the Li6PS5Cl electrolyte as a function of the fabrication pressure and (b) Nyquist diagrams of the electrochemical impedance spectra at the same fabrication pressures. All measurements were performed with a stack pressure of 25 MPa. Error bars represent the standard deviation of 4 samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    44.6,
+    502.3,
+    217.6
+   ],
+   "w": 1706,
+   "h": 722,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.885,
+   "auto_bbox": [
+    36.5,
+    44.6,
+    558.8,
+    217.9
+   ],
+   "src_native": [
+    1657,
+    673
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 28, 1657×673 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(a) 성형압 50 · 150 · 250 · 370 MPa 의 σ (로그 축) 와 상대밀도 (선형 축) · (b) 같은 압력의 Nyquist.  판독 = digitized.csv fig3a · fig3b."
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 4,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — conductivity (left, log axis) and relative density (right) of Li6PS5Cl vs fabrication pressure; stack pressure 25 MPa; error bars = SD of 4 samples (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    92.9,
+    44.6,
+    327.6,
+    217.4
+   ],
+   "w": 978,
+   "h": 721,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.902,
+   "src_native": [
+    1657,
+    673
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (a) of Fig. 3 — cut from the embedded native raster (xref 28, 1657×673 px = 300 dpi, no resampling): panel box [0, 0, 940, 673] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "★ 순수 LPSCl (NEI) 펠릿의 성형압 ↔ 상대밀도 68.3 / 70.3 [판독] / 75.4 / 77.2 [판독] % · σ 0.99 / 1.43 [판독] / 2.06 / 2.28 mS/cm — 뺀 뒤 (펠릿 상태) · 적층압 25 MPa 에서 EIS · 진밀도 분모 미인쇄.  왼쪽 축은 로그 (눈금 다섯이 983 px/decade 로 일정)."
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 4,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — Nyquist diagrams of the EIS spectra at fabrication pressures 50, 150, 250 and 370 MPa (stack 25 MPa) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    323.3,
+    46.5,
+    502.3,
+    217.6
+   ],
+   "w": 746,
+   "h": 714,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.863,
+   "src_native": [
+    1657,
+    673
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (b) of Fig. 3 — cut from the embedded native raster (xref 28, 1657×673 px = 300 dpi, no resampling): panel box [940, 0, 1657, 673] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "50 MPa 만 고주파 작은 호 (86.5 → ≈94.5 Ω) = 저자 해석 '입계' · 250 MPa 위로는 안 보인다.  Z''≈0 저항 판독 34.5 / 37 / 59.5 / 94.5 Ω (370 / 250 / 150 / 50 MPa · 한 스펙트럼씩) → 카드의 진밀도 분모 역산 (§3-3) 에 쓴다."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 SEM images of FIB cross-sections of Li6PS5Cl electrolyte pellets prepared with a fabrication pressure of (a) 50 MPa and (b) 370 MPa, with their corresponding relative densities estimated by physical measurements. The resulting FIB reconstructions show the porosity in blue for the (c) 50 MPa pellet and (d) 370 MPa pellet.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.6,
+    365.8,
+    535.9,
+    694.3
+   ],
+   "w": 1993,
+   "h": 1369,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.431,
+   "auto_bbox": [
+    36.5,
+    354.4,
+    558.8,
+    696.7
+   ],
+   "src_native": [
+    1953,
+    1329
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven and the grey float separator rule above the figure was included), re-cut from the embedded native raster (xref 29, 1953×1329 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "FIB 단면 SEM (50 · 370 MPa) 과 FIB 3D 재구성 (기공 = 파랑).  상대밀도 68 % · 77 % 는 그림 안 인쇄 글자.  재구성 부피 10 × 8 × 4 µm (SI) — 기공 부피 분율 숫자는 없다."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 4,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — FIB cross-section SEM of a Li6PS5Cl pellet made at 50 MPa, '68% relative density' (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.6,
+    365.8,
+    303.6,
+    538.8
+   ],
+   "w": 1021,
+   "h": 721,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.292,
+   "src_native": [
+    1953,
+    1329
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (a) of Fig. 4 — cut from the embedded native raster (xref 29, 1953×1329 px = 300 dpi, no resampling): panel box [0, 0, 979, 671] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "50 MPa 단면: 작은 알갱이 + 큰 기공 (저자: 치밀화 미완).  ⚠ 단면 한 장 · 크기 축척 20 µm."
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 4,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — FIB cross-section SEM of a Li6PS5Cl pellet made at 370 MPa, '77% relative density' (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    293.5,
+    366.8,
+    535.9,
+    538.8
+   ],
+   "w": 1010,
+   "h": 717,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.281,
+   "src_native": [
+    1953,
+    1329
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (b) of Fig. 4 — cut from the embedded native raster (xref 29, 1953×1329 px = 300 dpi, no resampling): panel box [979, 0, 1953, 671] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "370 MPa 단면: 더 치밀하고 '더 큰 알갱이' (저자 표현) — 냉간 압착의 입자 합체로 보이는 것을 저자는 입자 크기로 적었다 [카드 추론].  남은 기공은 알갱이 사이 띠로 모인다."
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 4,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — FIB 3D reconstruction of the porosity (blue), 50 MPa pellet (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    57.6,
+    527.1,
+    269.5,
+    694.3
+   ],
+   "w": 883,
+   "h": 697,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.503,
+   "src_native": [
+    1953,
+    1329
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (c) of Fig. 4 — cut from the embedded native raster (xref 29, 1953×1329 px = 300 dpi, no resampling): panel box [0, 671, 979, 1329] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "50 MPa 3D 재구성 — 기공이 서로 이어져 부피 전체에 퍼진다 (저자: 'a large number of interconnected voids').  숫자 없음."
+  },
+  {
+   "key": "f4d",
+   "kind": "figure",
+   "label": "4d",
+   "page": 4,
+   "file": "fig_4d.png",
+   "caption": "Fig. 4(d) — FIB 3D reconstruction of the porosity (blue), 370 MPa pellet (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    293.0,
+    526.8,
+    515.0,
+    694.3
+   ],
+   "w": 925,
+   "h": 698,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.686,
+   "src_native": [
+    1953,
+    1329
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (d) of Fig. 4 — cut from the embedded native raster (xref 29, 1953×1329 px = 300 dpi, no resampling): panel box [979, 671, 1953, 1329] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "370 MPa 3D 재구성 — 기공이 줄고 띠 · 조각으로 남는다.  숫자 없음.  ★ 저자 문장 'As a cross-sectional view is not representative of the volume distribution of the porosity' = 2D 단면 ↔ 3D 부피 경고 (질문 g)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Cycling stability at C/10 and (b) rate performance as a function of the fabrication pressure of LiIn|LPSCl|NCA solid-state batteries. All these cells were cycled at room temperature at a stack pressure of 25 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    44.8,
+    502.0,
+    215.3
+   ],
+   "w": 1704,
+   "h": 711,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.897,
+   "auto_bbox": [
+    36.5,
+    44.6,
+    558.8,
+    215.8
+   ],
+   "src_native": [
+    1657,
+    664
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 37, 1657×664 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "성형압별 반쪽셀 (a) C/10 40 사이클 (b) 율속.  판독 = digitized.csv fig5a · fig5b."
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 5,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) — cycling stability at C/10 of LiIn|LPSCl|NCA cells vs fabrication pressure (50 · 150 · 250 · 370 MPa), stack pressure 25 MPa, room temperature (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    44.8,
+    312.7,
+    213.9
+   ],
+   "w": 915,
+   "h": 705,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.875,
+   "src_native": [
+    1657,
+    664
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (a) of Fig. 5 — cut from the embedded native raster (xref 37, 1657×664 px = 300 dpi, no resampling): panel box [0, 0, 875, 664] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f5",
+   "viewed": true,
+   "mpm_note_ko": "40 사이클 방전 50 MPa 103.3 ↔ 150 · 250 · 370 MPa 113.3–120.3 mAh/g [판독] (본문 '103' ↔ 'around 115').  ⚠ 50 MPa 셀은 음극도 50 MPa 로 눌렀다 (나머지는 150 MPa · SI) — 성형압 효과에 음극 압착이 섞인다."
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 5,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — rate performance (C/5 · C/2 · 1C · 2C · C/5) vs fabrication pressure (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    44.8,
+    502.0,
+    215.3
+   ],
+   "w": 821,
+   "h": 711,
+   "dpi": 300,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.926,
+   "src_native": [
+    1657,
+    664
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (b) of Fig. 5 — cut from the embedded native raster (xref 37, 1657×664 px = 300 dpi, no resampling): panel box [875, 0, 1657, 664] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "f5",
+   "viewed": true,
+   "mpm_note_ko": "2C 에서 50 MPa ≈ 3.7 ↔ 370 MPa ≈ 10.5 · 250 MPa ≈ 13.7 mAh/g [판독, 5 사이클 평균] — 본문 'almost no capacity' ↔ 'around 10 and 15'.  1C 34.2 ↔ 49.3–53.3."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Conductivity of the argyrodite Li6PS5Cl solid-state electrolyte as reported in the literature. The fabrication pressure, stack pressure and electrode material are given where reported",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    537.0,
+    559.0,
+    740.0
+   ],
+   "w": 2902,
+   "h": 1093,
+   "dpi": 400,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.956,
+   "auto_bbox": [
+    37.5,
+    535.1,
+    557.8,
+    732.2
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: its top edge 535.1 pt touched the grey float separator rule at 533.8–535.2 pt and the top margin was 0), re-rendered by hand at 400 dpi (tool default 300 dpi; 6.5–8 pt type) from the band 537–740 pt (below the separator, above the running foot) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; caption included (table convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "문헌 Li₆PS₅Cl σ 표 — 0.06–4.96 mS/cm (성형압 140–1000 MPa · 적층압은 이 논문 말고 전부 '—').  이 논문 행 = σ 0.22–3.02 · 성형압 50–370 · 적층압 5–70 MPa (⚠ Fig. 2a 의 최저 적층압은 2 MPa) · 전극 탄소–티타늄."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Ionic conductivity of Li7P3S11 with increasing and subsequent decreasing of stack pressure, using titanium plungers or pressed carbon powder as electrodes. Error bars represent the standard deviation on 4 samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    174.4,
+    442.6,
+    429.5,
+    652.3
+   ],
+   "w": 1079,
+   "h": 887,
+   "dpi": 305,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.882,
+   "auto_bbox": [
+    48.0,
+    436.2,
+    567.0,
+    660.8
+   ],
+   "src_native": [
+    1101,
+    900
+   ],
+   "native_dpi": 305,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 2, 1101×900 px = 305 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Li₇P₃S₁₁ 의 적층압 이력 (Fig. 2a 와 같은 꼴) — Ti 0.117 → 0.982 · 탄소 0.871 → 1.355 mS/cm [판독].  성형압 미기재."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Continuous FIB milling of Li6PS5Cl with 50 MPa fabrication pressure. 40 slices were milled with a step size of 100 nm. The ion beam image is on the left and the electron beam image is on the right. The reconstruction area is labeled by the red dashed box.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.3,
+    69.0,
+    432.9,
+    417.4
+   ],
+   "w": 614,
+   "h": 834,
+   "dpi": 173,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.14,
+   "auto_bbox": [
+    48.0,
+    54.0,
+    567.0,
+    424.9
+   ],
+   "src_native": [
+    632,
+    860
+   ],
+   "native_dpi": 173,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 6, 632×860 px = 173 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (14 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "FIB 연속 절삭 (50 MPa 펠릿, 40 장 × 100 nm) — 왼쪽 이온빔 위에서 · 오른쪽 전자빔 옆에서 · 빨간 점선 = 재구성 영역."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. FIB cross-section of a Li6PS5Cl electrolyte pellet made at a fabrication pressure of 370 MPa. The FIB milling process was performed at a) Room temperature and b) under cryogenic conditions. The",
+   "rotated_deg": 0,
+   "bbox": [
+    53.7,
+    499.4,
+    562.9,
+    673.3
+   ],
+   "w": 1554,
+   "h": 530,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.11,
+   "auto_bbox": [
+    48.0,
+    496.8,
+    567.0,
+    673.3
+   ],
+   "src_native": [
+    1532,
+    502
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 7, 1532×502 px = 220 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (18 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "370 MPa 펠릿 FIB 단면 — 상온 ↔ 극저온 절삭 모양이 같다 = 상온 이온빔 손상 없음 (저자)."
+  },
+  {
+   "key": "fS3a",
+   "kind": "figure",
+   "label": "S3a",
+   "page": 3,
+   "file": "fig_S3a.png",
+   "caption": "Figure S3(a) — FIB cross-section of a Li6PS5Cl pellet made at 370 MPa, milled at room temperature (panel of Fig. S3).",
+   "rotated_deg": 0,
+   "bbox": [
+    53.7,
+    499.4,
+    313.6,
+    673.3
+   ],
+   "w": 793,
+   "h": 530,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.128,
+   "src_native": [
+    1532,
+    502
+   ],
+   "native_dpi": 220,
+   "manual_crop": "panel (a) of Fig. S3 — cut from the embedded native raster (xref 7, 1532×502 px = 220 dpi, no resampling): panel box [0, 0, 773, 502] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (18 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "fS3",
+   "viewed": true,
+   "mpm_note_ko": "상온 절삭 (370 MPa)."
+  },
+  {
+   "key": "fS3b",
+   "kind": "figure",
+   "label": "S3b",
+   "page": 3,
+   "file": "fig_S3b.png",
+   "caption": "Figure S3(b) — the same pellet milled under cryogenic conditions (panel of Fig. S3).",
+   "rotated_deg": 0,
+   "bbox": [
+    303.3,
+    499.4,
+    562.9,
+    673.3
+   ],
+   "w": 792,
+   "h": 530,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.126,
+   "src_native": [
+    1532,
+    502
+   ],
+   "native_dpi": 220,
+   "manual_crop": "panel (b) of Fig. S3 — cut from the embedded native raster (xref 7, 1532×502 px = 220 dpi, no resampling): panel box [773, 0, 1532, 502] px (split lines placed in white gaps measured on the raster) → ink bounding box inside the box → white canvas with a uniform 6 pt (18 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "panel_of": "fS3",
+   "viewed": true,
+   "mpm_note_ko": "극저온 절삭 (370 MPa)."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. First voltage profile of the cells shown on Figure 2b, cycled at stack pressure of 5 and 25 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    182.5,
+    113.1,
+    415.9,
+    307.5
+   ],
+   "w": 712,
+   "h": 593,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.912,
+   "auto_bbox": [
+    46.7,
+    103.6,
+    565.3,
+    313.8
+   ],
+   "src_native": [
+    736,
+    602
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 13, 736×602 px = 220 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (18 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Fig. 2b 셀의 첫 충방전 (적층압 5 ↔ 25 MPa) — 첫 방전 ≈136 ↔ ≈139 mAh/g (Fig. S6 판독과 같음)."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. First voltage profiles of ASSBs made at fabrication pressure of 50, 150, 250 and 350 MPa at a rate of a) C/10 and b) C/5.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    360.3,
+    520.8,
+    538.6
+   ],
+   "w": 1332,
+   "h": 544,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.847,
+   "auto_bbox": [
+    46.7,
+    356.1,
+    567.0,
+    541.7
+   ],
+   "src_native": [
+    1317,
+    527
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 12, 1317×527 px = 220 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (18 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "성형압별 첫 충방전 (a) C/10 (b) C/5.  ⚠ 캡션은 '50, 150, 250 and 350 MPa' — 범례는 370 MPa (캡션 오기)."
+  },
+  {
+   "key": "fS5a",
+   "kind": "figure",
+   "label": "S5a",
+   "page": 4,
+   "file": "fig_S5a.png",
+   "caption": "Figure S5(a) — first voltage profiles at C/10 vs fabrication pressure (panel of Fig. S5).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    360.3,
+    309.5,
+    538.6
+   ],
+   "w": 687,
+   "h": 544,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.854,
+   "src_native": [
+    1317,
+    527
+   ],
+   "native_dpi": 220,
+   "manual_crop": "panel (a) of Fig. S5 — cut from the embedded native raster (SI xref 12, 1317×527 px = 220 dpi, no resampling).  The two panels cannot be split by one straight line: the last digit of panel (a)'s x-tick label '225' (x 639–650 px, y 463–480) and panel (b)'s 'b)' label / rotated y-axis title (x 645–675 px, y 13–354) overlap in x on different rows.  A first straight cut at x = 711 put (b)'s label, axis title and tick numbers into fig_S5a and left fig_S5b without them — found on viewing and re-cut: ink connected components (8-neighbour, min RGB < 240) assigned to panel (a)/(b); the crop box is the ink bounding box of the panel's own components and the other panel's pixels inside that box (192 px) are set to the raster background value 254 → white canvas with a uniform 6 pt (18 px) margin (2026-11-12, litdb-curator)",
+   "panel_of": "fS5",
+   "viewed": true,
+   "mpm_note_ko": "C/10 첫 충방전 (성형압 4 종)."
+  },
+  {
+   "key": "fS5b",
+   "kind": "figure",
+   "label": "S5b",
+   "page": 4,
+   "file": "fig_S5b.png",
+   "caption": "Figure S5(b) — first voltage profiles at C/5 vs fabrication pressure (panel of Fig. S5).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.6,
+    360.3,
+    520.8,
+    538.6
+   ],
+   "w": 687,
+   "h": 544,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.849,
+   "src_native": [
+    1317,
+    527
+   ],
+   "native_dpi": 220,
+   "manual_crop": "panel (b) of Fig. S5 — cut from the embedded native raster (SI xref 12, 1317×527 px = 220 dpi, no resampling).  The two panels cannot be split by one straight line: the last digit of panel (a)'s x-tick label '225' (x 639–650 px, y 463–480) and panel (b)'s 'b)' label / rotated y-axis title (x 645–675 px, y 13–354) overlap in x on different rows.  A first straight cut at x = 711 put (b)'s label, axis title and tick numbers into fig_S5a and left fig_S5b without them — found on viewing and re-cut: ink connected components (8-neighbour, min RGB < 240) assigned to panel (a)/(b); the crop box is the ink bounding box of the panel's own components and the other panel's pixels inside that box (63 px) are set to the raster background value 254 → white canvas with a uniform 6 pt (18 px) margin (2026-11-12, litdb-curator)",
+   "panel_of": "fS5",
+   "viewed": true,
+   "mpm_note_ko": "C/5 첫 충방전 — 50 · 150 MPa 가 250 · 370 MPa 보다 ≈10 mAh/g 낮다 [판독]."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Effect of stack pressure on the cycling stability (at room temperature) of LiIn | LPSCl | NCA solid-state batteries. Axis scales have been increased to allow to see small differences. First cycle Coulombic efficiencies were 66.5% (25 MPa, control) and 67.2% (5 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    181.5,
+    75.5,
+    432.2,
+    266.6
+   ],
+   "w": 765,
+   "h": 583,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.884,
+   "auto_bbox": [
+    48.0,
+    66.0,
+    567.0,
+    275.1
+   ],
+   "src_native": [
+    736,
+    602
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 17, 736×602 px = 220 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (18 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Fig. 2b 의 확대 (100–160 mAh/g) — 첫 사이클 CE 66.5 % (25 MPa) · 67.2 % (5 MPa) 는 캡션 인쇄값."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Room temperature cycling stability at C/10 as a function of the fabrication pressure of LiIn | LPSCl | NCA solid-state batteries. Axis scales have been increased to allow to see small differences. First cycle Coulombic efficiencies were respectively 67.0%, 67.0%, 68.1% and 66.5% at fabrication pressures of 50, 150, 250 and 370 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    181.5,
+    355.6,
+    430.3,
+    544.4
+   ],
+   "w": 759,
+   "h": 576,
+   "dpi": 220,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.811,
+   "auto_bbox": [
+    48.0,
+    346.1,
+    567.0,
+    555.2
+   ],
+   "src_native": [
+    736,
+    602
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: cut to the caption width, so the left/right margins were uneven), re-cut from the embedded native raster (xref 18, 736×602 px = 220 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (18 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Fig. 5a 의 확대 — 첫 사이클 CE 67.0 / 67.0 / 68.1 / 66.5 % (50 / 150 / 250 / 370 MPa) 는 캡션 인쇄값."
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-discussion-fabrication-pressure",
+   "page": 2,
+   "file": "txt_p2_discussion_fabrication_pressure_literature_spread.png",
+   "caption": "PDF p.2 left column (§Discussion, first paragraph): literature Li6PS5Cl conductivities differ 'by as much as two orders of magnitude'; 'the solid-state sulfide electrolyte is densified by cold pressing at widely different fabrication pressures'; 'larger contributions from the grain boundaries are expected at a lower fabrication pressure and, therefore, a lower ionic conductivity'; impurities, crystallinity/amorphization and 'particle size (influencing the densification process)' also listed; 'there is no mention of the operating stack pressure used during the conductivity measurement so far'.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.5,
+    164.0,
+    296.0,
+    454.6
+   ],
+   "w": 1454,
+   "h": 1642,
+   "dpi": 400,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.857,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 저자 진술: 문헌 σ 의 두 자릿수 차이는 성형압 차이 (기공 → 입계 몫) + 불순물 · 결정성 · 입경 ('influencing the densification process') 때문이고, 적층압은 보고된 적이 없다."
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-stack-pressure-contact-impedance",
+   "page": 2,
+   "file": "txt_p2_stack_pressure_contact_impedance_carbon_electrodes.png",
+   "caption": "PDF p.2 right column (Fig. 2a paragraph): with titanium current collectors 'at 2 MPa, the conductivity is only 0.2 mS cm−1 whereas it exceeds 2.0 mS cm−1 at 70 MPa'; hysteresis after releasing from 70 MPa; 'the contact interface between the soft sulfide electrolyte and the hard titanium plunger depends strongly on the stack pressure'; carbon powder 'will conform to the surface'; Li7P3S11 conductivity 'varies between 10−4 and 10−3 S cm−1' (Fig. S1); recommendation to use carbon powder electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.3,
+    167.5,
+    556.8,
+    490.4
+   ],
+   "w": 1453,
+   "h": 1842,
+   "dpi": 400,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.856,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 적층압 문단 원문 — 2 MPa 0.2 · 70 MPa >2.0 mS/cm · 감압 이력 · 'soft sulfide electrolyte and the hard titanium plunger' · 탄소 전극 권고 · Li₇P₃S₁₁ 도 같다."
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-p5-relative-density-conductivity",
+   "page": 3,
+   "file": "txt_p3_p5_relative_density_conductivity_grain_boundary.png",
+   "caption": "One paragraph spanning PDF p.3 (right column) → p.4 (left and right columns) → p.5 (left column), stacked top to bottom: relative density 'increases from 68.3 to 75.4%' (50 → 250 MPa); conductivity 'from 0.99 mS cm−1 to 2.06 mS cm−1'; '2.28 mS cm−1 is obtained at 370 MPa'; a high-frequency semicircle at low fabrication pressure attributed to grain boundaries, 'cannot be identified anymore when the fabrication pressure exceeds 250 MPa'; 'even with a porosity of more than 30%, LPSCl still exhibits an ionic conductivity higher than 1 mS cm−1'.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.3,
+    418.0,
+    556.8,
+    499.0
+   ],
+   "w": 1454,
+   "h": 2224,
+   "dpi": 400,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.863,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded; 4 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap: p.3 [299.3, 418.0, 556.8, 499.0] pt → p.4 [38.5, 270.0, 296.0, 340.0] pt → p.4 [299.3, 270.0, 556.8, 340.0] pt → p.5 [38.5, 252.0, 296.0, 439.9] pt (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 성형압 문단 원문 (p.5051 → 5052 → 5053 세 쪽에 걸친 한 문단을 위에서 아래로 이어 붙임) — 상대밀도 68.3 → 75.4 % (50 → 250 MPa) · σ 0.99 → 2.06 → 2.28 mS/cm · 고주파 호 = 입계 · 250 MPa 위에서 사라짐 · '기공 30 % 넘어도 > 1 mS/cm' (산화물과 대비).",
+   "parts": [
+    {
+     "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 3,
+     "clip": [
+      299.3,
+      418.0,
+      556.8,
+      499.0
+     ]
+    },
+    {
+     "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 4,
+     "clip": [
+      38.5,
+      270.0,
+      296.0,
+      340.0
+     ]
+    },
+    {
+     "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 4,
+     "clip": [
+      299.3,
+      270.0,
+      556.8,
+      340.0
+     ]
+    },
+    {
+     "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 5,
+     "clip": [
+      38.5,
+      252.0,
+      296.0,
+      439.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-fib-sem-porosity",
+   "page": 5,
+   "file": "txt_p5_fib_sem_porosity_50_vs_370_mpa.png",
+   "caption": "PDF p.5 left column (Fig. 4 paragraph): 'a higher quantity of small grains at 50 MPa, indicating that the densification is not complete'; 'the pellet densified at 370 MPa appears denser and made of larger grains'; 'As a cross-sectional view is not representative of the volume distribution of the porosity, FIB 3D reconstruction was performed'; interconnected voids at 50 MPa; cryo-FIB comparison (Fig. S3) shows no beam damage.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.5,
+    439.9,
+    296.0,
+    667.0
+   ],
+   "w": 1457,
+   "h": 1310,
+   "dpi": 400,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ FIB 단면 · 3D 재구성 문단 — 50 MPa 작은 알갱이 + 큰 기공 · 370 MPa 치밀 + 큰 알갱이 · 'a cross-sectional view is not representative of the volume distribution of the porosity' · 극저온 대조."
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-cell-performance-recommendation",
+   "page": 5,
+   "file": "txt_p5_cell_performance_and_pressure_recommendation.png",
+   "caption": "PDF p.5, left column (last lines) + right column, stacked: cells made at 150, 250 and 370 MPa similar; 50 MPa cell 'only 103 mA h g−1 compared to around 115 mA h g−1' after 40 cycles and 'almost no capacity' at 2C (others 'around 10 and 15 mA h g−1'); 'necessary to focus on reducing the porosity of the electrolyte layer … hot pressing or spark plasma sintering'; large formats: 'high pressures are only necessary during cell fabrication' (hot roll-to-roll), then 'relatively low stack pressures'.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.5,
+    667.0,
+    296.0,
+    735.0
+   ],
+   "w": 1456,
+   "h": 2611,
+   "dpi": 400,
+   "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.859,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded; 2 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap: p.5 [38.5, 667.0, 296.0, 735.0] pt → p.5 [299.3, 252.0, 556.8, 662.0] pt (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 셀 성능과 권고 (p.5053 두 단을 이어 붙임) — 40 사이클 103 ↔ ≈115 mAh/g · 2C · '기공을 줄여야 — 입도 분포 개선 · 열간 가압 · SPS' · 대면적 셀은 '높은 압력은 제조 때만' (열간 롤 가압) · 낮은 적층압 운전.",
+   "parts": [
+    {
+     "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 5,
+     "clip": [
+      38.5,
+      667.0,
+      296.0,
+      735.0
+     ]
+    },
+    {
+     "src": "08c6f8f0-1._Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 5,
+     "clip": [
+      299.3,
+      252.0,
+      556.8,
+      662.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "xS1a",
+   "kind": "text",
+   "label": "si-p1-materials",
+   "page": 1,
+   "file": "txt_si_p1_materials_glovebox_nei_lpscl.png",
+   "caption": "SI p.1 'Material & Methods' + 'Synthesis': Ar glovebox, O2 and H2O below 0.5 ppm; 'Argyrodite Li6PS5Cl was bought from NEI Corporation (USA) and used as-is'; Li–In alloy from stabilized Li nanopowder (FMC) and In; NCA (Toda) coated with amorphous LiNbO3 (2 wt.%) by a wet method, 450 °C 1 h in air.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    275.5,
+    564.5,
+    476.5
+   ],
+   "w": 2864,
+   "h": 1105,
+   "dpi": 400,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.909,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "재료 원문 — Li₆PS₅Cl = NEI Corporation 상용 그대로 (입경 · 로트 미기재) · NCA (Toda) + LNO 2 wt% 습식 코팅 450 °C 1 h · Li–In (FMC 리튬 나노분말 + In) · 글러브박스 O₂ · H₂O < 0.5 ppm."
+  },
+  {
+   "key": "xS1b",
+   "kind": "text",
+   "label": "si-p1-pressure-monitoring",
+   "page": 1,
+   "file": "txt_si_p1_pressure_monitoring_load_cell.png",
+   "caption": "SI p.1 'Pressure monitoring and control': 1-ton load cell at the bottom of the holder; calibrated with a 100 kN Instron 5982 at 100 % of capacity; accuracy and linearity checked 'between 0 and 125 MPa'.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    476.5,
+    564.5,
+    600.6
+   ],
+   "w": 2864,
+   "h": 678,
+   "dpi": 400,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.892,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "적층압 측정 원문 — 1 톤 load cell (홀더 바닥) · 100 kN Instron 5982 로 정격 100 % 하중 보정 · 0–125 MPa 전 구간 선형 확인 (⌀10 mm 에서 1 톤 ≈ 125 MPa — 카드 산술)."
+  },
+  {
+   "key": "xS1c",
+   "kind": "text",
+   "label": "si-p1-p2-pellet-eis-cells",
+   "page": 1,
+   "file": "txt_si_p1_p2_pellet_fabrication_eis_cell_assembly.png",
+   "caption": "SI 'Electrochemical measurements', p.1 bottom → p.2 top (stacked): 10 mm custom PEEK die mold + titanium plungers; '70 mg of the electrolyte powder was pressed at the fabrication pressure (50, 150, 250 or 370 MPa …) for 3 minutes with a hydraulic press'; ~3 mg acetylene black on both sides pressed at the fabrication pressure for the carbon electrodes; EIS Solartron 1260, 10 mV, 1 MHz–1 Hz, 4 samples, SD error bars; cells: 12 mg LNO-NCA/Li6PS5Cl/acetylene black (11:16:1), 40 mg Li–In under Cu foil pressed at 150 MPa (50 MPa for the 50 MPa cells); C/10 and C/5–2C, 2.5–4.25 V vs Li/Li+, Neware CT-4008.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    600.6,
+    564.5,
+    724.7
+   ],
+   "w": 2865,
+   "h": 1605,
+   "dpi": 400,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.88,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded; 2 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap: p.1 [50.0, 600.6, 564.5, 724.7] pt → p.2 [50.0, 66.0, 564.5, 237.4] pt (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 펠릿 · EIS · 셀 원문 (SI p.1 → p.2 이어 붙임) — ⌀10 mm PEEK 몰드 + Ti 플런저 · 분말 70 mg · 성형압 50/150/250/370 MPa · 3 분 · 유압 프레스 · 탄소 전극 = 아세틸렌 블랙 ≈3 mg 양면 · Solartron 1260 · 10 mV · 1 MHz–1 Hz · 시료 4 개 평균 ± 표준편차 · 양극 12 mg (11:16:1) · Li–In 40 mg · 음극 압착 150 (또는 50) MPa · 2.5–4.25 V.",
+   "parts": [
+    {
+     "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 1,
+     "clip": [
+      50.0,
+      600.6,
+      564.5,
+      724.7
+     ]
+    },
+    {
+     "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+     "page": 2,
+     "clip": [
+      50.0,
+      66.0,
+      564.5,
+      237.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "xS2a",
+   "kind": "text",
+   "label": "si-p2-fib-3d",
+   "page": 2,
+   "file": "txt_si_p2_fib_3d_reconstruction.png",
+   "caption": "SI p.2 'Focused Ion Beam (FIB) and 3D reconstruction': FEI Scios DualBeam; rough mill ~50 µm × 50 µm (30 kV, 5 nA), cleaning cut (30 kV, 0.5 nA); Pt protective layer 10 µm × 4 µm × 500 nm; 'continuously milling through the defined area (10 µm*8 µm*4 µm). 40 slices (100 nm thickness for each slice)'; 0.5 nA / 30 kV milling, SEM 0.1 nA / 5 kV; segmentation in Amira-Avizo.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    237.4,
+    564.5,
+    420.0
+   ],
+   "w": 2866,
+   "h": 975,
+   "dpi": 400,
+   "src": "04fe4aee-1._Sup_Pressure_effects_on_sulfide_electrolytes_for_all_solid-state_batteries.pdf",
+   "blank": 0.867,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8–9.5 pt type), band between the neighbouring lines / rules (edges in the white gaps of the text-layer line boxes) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "FIB 3D 원문 — FEI Scios · 거친 절삭 50 × 50 µm · Pt 보호층 10 × 4 µm × 500 nm · 재구성 10 × 8 × 4 µm · 40 장 × 100 nm · 0.5 nA / 30 kV · SEM 0.1 nA / 5 kV · Amira-Avizo 분할."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12 KST) found every printed item: Fig. 1–5 and Table 1 (main, 7 pp) and Figure S1–S7 (ESI, 5 pp) — 13 crops, all opened.  All 13 were re-cut: the 12 figures from their embedded native rasters (the tool cut to the caption width, so side margins were uneven; Fig. 4 also carried the grey float separator rule above the raster) and Table 1 re-rendered at 400 dpi below its separator rule.  Added by hand: 14 panel crops (Fig. 2a–b · 3a–b · 4a–d · 5a–b · S3a–b · S5a–b) and 9 evidence-paragraph crops (kind 'text').  The paper has no numbered (or unnumbered display) equations — it is a Communication whose methods are in the ESI — so the key method / value sentences are given as text crops instead of equation crops.  Every one of the 36 crops was opened and checked after cutting; fig_S5a / fig_S5b were cut twice (first straight split mixed panel (b)'s label and axis title into (a) — re-cut with a component mask, see their manual_crop).  Read-outs: digitized.csv (129 rows: Fig. 2a · 3a · 3b · 5a · 5b · S1) from the native rasters (2026-11-12, litdb-curator)",
+ "note_manual": "Printed inconsistencies visible in the crops: Fig. 2 caption says the stack pressure was 'subsequently decreased to 5 MPa' but both branches have a marker at 2 MPa (Fig. 2a, Fig. S1); Table 1 'This work' row gives stack pressure 5–70 MPa (lowest plotted 2 MPa); Fig. S5 caption lists '350 MPa' while its legend (and the rest of the paper) uses 370 MPa; the text calls the carbon-electrode conductivity 'almost independent of the applied stack pressure' while Fig. 2a reads 1.72 → 3.01 mS/cm (2 → 70 MPa, increasing branch).  The true-density denominator of the 'relative density' is not printed anywhere (main or ESI); 68 % and 77 % in Fig. 4 are printed labels, 70.3 % (150 MPa) and 77.2 % (370 MPa) are read from Fig. 3a.",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of); x<page><letter> = evidence paragraph of the main text (kind 'text'; x3a and x5b stack several column/page parts of one paragraph, listed in 'parts'); xS<page><letter> = evidence paragraph of the ESI"
+}

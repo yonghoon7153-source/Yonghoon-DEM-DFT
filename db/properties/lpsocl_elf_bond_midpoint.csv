@@ -1,0 +1,6 @@
+system,bond,n_bonds,mean_dist_A,ELF_midpoint,ELF_mid_std,ELF_central_min
+lpsocl,Cl-Li,39,2.523,0.884,0.029,0.399
+lpsocl,Li-O,2,1.964,0.784,0.004,0.163
+lpsocl,Li-S,69,2.486,0.935,0.020,0.576
+lpsocl,O-P,1,1.559,0.921,0.000,0.878
+lpsocl,P-S,19,2.063,0.945,0.001,0.924

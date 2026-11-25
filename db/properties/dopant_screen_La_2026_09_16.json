@@ -1,0 +1,62 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "O",
+    "La"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {},
+  "reactions": {
+    "Li3PO4,La2O3 > LaPO4,Li2O": {
+      "ok": true,
+      "reaction": "Li3PO4 + 0.5 La2O3 -> LaPO4 + 1.5 Li2O",
+      "E_eV_as_written": 1.41481,
+      "E_eV_per_reactant_atom": 0.13474,
+      "E_eV_per_P": 1.41481,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "La2O3": "mp-aaaaadke-GGA",
+        "LaPO4": "mp-aaaaamav-GGA",
+        "Li2O": "mp-aaaaacxk-GGA"
+      }
+    },
+    "LaCl3,Li3PO4 > LaPO4,LiCl": {
+      "ok": true,
+      "reaction": "LaCl3 + Li3PO4 -> LaPO4 + 3 LiCl",
+      "E_eV_as_written": -0.34597,
+      "E_eV_per_reactant_atom": -0.02883,
+      "E_eV_per_P": -0.34597,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "LaCl3": "mp-aaaabhwq-GGA",
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "LaPO4": "mp-aaaaamav-GGA",
+        "LiCl": "mp-aaacpllf-GGA"
+      }
+    },
+    "La2S3,Li3PO4 > LaPO4,Li2S": {
+      "ok": true,
+      "reaction": "0.5 La2S3 + Li3PO4 -> LaPO4 + 1.5 Li2S",
+      "E_eV_as_written": 0.47559,
+      "E_eV_per_reactant_atom": 0.04529,
+      "E_eV_per_P": 0.47559,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "La2S3": "mp-aaaaalbn-GGA",
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "LaPO4": "mp-aaaaamav-GGA",
+        "Li2S": "mp-aaaaabsj-GGA"
+      }
+    }
+  },
+  "⛔_reaction_caveat": "반응물·생성물 집합은 **사람이 고른 것**이다 — hull 이 고른 게 아니다. hull 이 고르는 판정은 interface_reactivity_v2.py 쪽이다. 반응이 **일어나는지**(운동학·경로)는 말하지 않는다."
+}

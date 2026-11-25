@@ -1,0 +1,101 @@
+{
+ "slug": "vanlew2015_modifying_youngs_modulus_distribution",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-25",
+ "sources": [
+  "90f2f374-Modifying_Young_s_modulus_in_DEM_simulations_based_on_distributions_of_experimental_measurements.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "w": 2202,
+   "h": 997,
+   "dpi": 300,
+   "bbox": [
+    30.4,
+    34.3,
+    554.4,
+    271.5
+   ],
+   "rotated_deg": 0,
+   "cropped": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "w": 2202,
+   "h": 1089,
+   "dpi": 300,
+   "bbox": [
+    41.3,
+    33.5,
+    565.3,
+    292.5
+   ],
+   "rotated_deg": 0,
+   "cropped": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "w": 1630,
+   "h": 1170,
+   "dpi": 300,
+   "bbox": [
+    98.4,
+    42.3,
+    486.4,
+    320.5
+   ],
+   "rotated_deg": 0,
+   "cropped": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "w": 1262,
+   "h": 1041,
+   "dpi": 300,
+   "bbox": [
+    277.2,
+    318.2,
+    577.4,
+    565.9
+   ],
+   "rotated_deg": 0,
+   "cropped": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "w": 1306,
+   "h": 1120,
+   "dpi": 300,
+   "bbox": [
+    13.0,
+    26.0,
+    323.8,
+    292.5
+   ],
+   "rotated_deg": 0,
+   "cropped": true
+  }
+ ]
+}

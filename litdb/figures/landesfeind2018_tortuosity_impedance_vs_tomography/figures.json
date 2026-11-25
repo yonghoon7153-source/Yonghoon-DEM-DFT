@@ -1,0 +1,154 @@
+{
+ "slug": "landesfeind2018_tortuosity_impedance_vs_tomography",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Simulated Nyquist plots (10 MHz to 1 Hz) of the general transmis- sion line model (Eq. 1) for ratios of electronic to ionic resistances (REl./RIon) of 1/100 to 100/1 (indicated by the labels in the ﬁgure), whereby the axes are normalized to the ionic resistance of the porous electrode (RIon). Here, the absence of charge transfer reactions is assumed (RCT = ∞), so that ZS in Eq. 1 is described by Eq. 6, using an ideal capacitive behavior (γ = 1) and QS = 1 mF. Magenta crosses mark the frequencies 100 kHz, 1 kHz, and 100 Hz; dashed lines represent the extrapolation of the low-frequency capaci- tive behavior to the real axis (x-axis). The difference in x-axis intercepts of the solid lines (modeled impedance response) and the dashed black lines for each resistance ratio corresponds to 1/3 of the apparent ionic resistance (Rapp",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    62.3,
+    555.2,
+    271.1
+   ],
+   "w": 1081,
+   "h": 871,
+   "dpi": 300,
+   "src": "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Apparent high frequency resistance (blue line) and apparent ionic resistance (red line) of the simulated Nyquist plots resulting from a general transmission line model (Eq. 1) for various ratios of electronic to ionic resis- tances (REl./RIon), normalized to the ionic resistance of the electrolyte in the pores of the electrode. The y-axis values of Rapp x /RIon represent Rapp HFR/RIon in case of the high frequency resistance (blue line) and Rapp",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    59.9,
+    289.0,
+    258.1
+   ],
+   "w": 1081,
+   "h": 827,
+   "dpi": 300,
+   "src": "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Tortuosity values obtained from simple transmission line model ﬁts of the impedance response of symmetric T-cells using electrolytes with differ- ent conductivity. For graphite electrodes (blue symbols; same as in Figure 14 of Ref. 5, with ε = 43%, t = 58 μm, and an areal capacity of 2.1 mAh/cm2 (corresponding to 6 mg/cm2), see Ref. 5 for details on electrode preparation and composition), EC:DMC (1:1 w:w) with 10–700 mM TBAClO4 (conduc- tivities from 0.46 – 9.56 mS/cm) was used. For NMC electrodes (red symbols; from Custom Cells with ε = 42%, t = 72 μm, 86% active material frac- tion and an areal capacity of 2 mAh/cm2 (corresponding to 13.8 mg/cm2)), EC:DEC (1:1 w:w) with ∼4 mM - 1 M TBAClO4 (conductivities from 0.156–6.97 mS/cm). The mean tortuosity values for each electrode are in- dicated by dashed lines. Error bars indicate a 5% uncertainty from ﬁtting of the spectra and th",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    59.7,
+    288.2,
+    269.1
+   ],
+   "w": 1080,
+   "h": 874,
+   "dpi": 300,
+   "src": "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Photograph of the macroscopic symmetric cell setup composed of densely packed spherical steel ball bearings that serves as an idealized porous electrode with known tortuosity. The cell is compressed using a mechanical clamp to ensure a negligible electronic resistance compared to the electrolyte resistance. Experimental parameters of the macroscopic cell setup are given in Table I.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.0,
+    289.0,
+    231.1
+   ],
+   "w": 1081,
+   "h": 710,
+   "dpi": 300,
+   "src": "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf",
+   "blank": 0.655
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Measured (red crosses) and ﬁtted (black circles) impedance spec- trum of the macroscopic model electrodes composed of densely packed spheres shown in Figure 4, using an excitation amplitude of 10 mV in the frequency range from 200 kHz to 20 mHz (the ﬁt and plot range are taken from 1 kHz to 30 mHz). The dashed line serves as guide to the eye connecting the measured data points. The ﬁtted values are: RHFR = 37 \u0002, RIon = 790 \u0002, RCT = 10200 \u0002, QS = 2.8 mF · s(α-1)\u0002, and α = 0.88, yielding a tortuosity of 1.56 based on the measured electrode thickness (s. Table I) and an average porosity of ε = 38.5%.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    59.0,
+    556.0,
+    436.1
+   ],
+   "w": 1080,
+   "h": 1573,
+   "dpi": 300,
+   "src": "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Nyquist plots of nominally identical symmetric T-cells (0.95 cm2 area) with uncompressed graphite (T311, SGL Carbon, 3.0 m2/g BET, D50 diameter of 19 μm) electrodes with 1.5% (blue) and 10% (red) PVDF binder (Kureha KF 1100). Measurements were conducted with 10 mM TBAClO4 in EC:DEC (κ = 0.423 mS/cm), using an excitation amplitude of 20 mV in the frequency range from 200 kHz to 100 mHz. The spectra were shifted along the x-axis to the origin for easier comparability.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    59.0,
+    289.0,
+    449.1
+   ],
+   "w": 1081,
+   "h": 1627,
+   "dpi": 300,
+   "src": "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "II",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table II. Comparison of tortuosity values (τ) obtained for the same type of electrodes (Custom Cells) using 3D reconstruction with X-ray tomography (325 nm voxel size) vs. EIS measurements in a symmetric cell conﬁguration. The uncertainty from the 3D reconstruction is a result of the threshold greyscale value for binarization. Values in brackets indicate the number of repeat measurements for calculation of the EIS-based mean tortuosity value and its standard deviation.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    66.0,
+    553.0,
+    180.0
+   ],
+   "w": 2139,
+   "h": 475,
+   "dpi": 300,
+   "src": "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf",
+   "blank": 0.888,
+   "manual_crop": "auto extractor returned no table for Table II (full-width table at the top of PDF p.7 = printed A474, not detected by find_tables); clip = caption top to the last table row, above the resumed two-column body text (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

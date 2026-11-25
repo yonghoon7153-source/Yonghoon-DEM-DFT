@@ -1,0 +1,14 @@
+panel,label,quantity,value,unit,branch,note
+a,PTFE dimer Li-top,E_ads,-0.3663,eV,pm1,MLIP-geom single point
+a,PTFE dimer Ni-top,E_ads,-0.3302,eV,pm1,MLIP-geom single point
+a,PTFE C10 Ni-top,E_ads,-0.3626,eV,pm1,MLIP-geom single point
+a,SDCP Li-top,E_ads,-0.7675,eV,pm1,MLIP-geom single point
+a,SDCP Ni-top,E_ads,-0.7582,eV,pm1,MLIP-geom single point
+a,SDCP cross A,E_ads,-0.7728,eV,pm1,MLIP-geom single point
+a,SDCP cross B,E_ads,-0.7633,eV,pm1,MLIP-geom single point
+a,PTFE dimer Li-top,E_ads,-0.3661,eV,net4,cross-check (basin-B pair)
+a,PTFE C10 Ni-top,E_ads,-0.3617,eV,net4,cross-check (basin-B pair)
+b,PTFE dimer,dE_site,36.07,meV,pm1,positive = Li-top preferred
+b,PTFE C10,dE_site,49.77,meV,pm1,positive = Li-top preferred
+b,SDCP,dE_site,9.27,meV,pm1,positive = Li-top preferred
+b,PTFE dimer,dE_site,36.16,meV,net4,branch interaction 0.09 meV

@@ -1,0 +1,452 @@
+{
+ "schema": "continuation/v1",
+ "at_utc": "2026-09-21T06:12:29Z",
+ "stage": "1",
+ "from": {
+  "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/prev/sdcp_c12_v42",
+  "bundle_label": "sdcp_c12_v42",
+  "manifest_sha256": "3ab7ffd596a28618fba6ac270ffe5203cdaae764028b637aac22337b05098aa4",
+  "zip_sha256_txt": "170c2e86795921c053a5acf26ce09279f31945b2f9d89c52b03571ec2d423352",
+  "seal_sha256": "11a74ccb27f1c2e55148dd139996c3d8455aca83270ad1a63f6036744fb73c5b",
+  "seal_sealed_at_utc": "2026-09-21T06:12:26Z"
+ },
+ "this": {
+  "bundle_label": "sdcp_c12_v42",
+  "manifest_sha256": "3ab7ffd596a28618fba6ac270ffe5203cdaae764028b637aac22337b05098aa4",
+  "zip_sha256_txt": "170c2e86795921c053a5acf26ce09279f31945b2f9d89c52b03571ec2d423352",
+  "seal_sealed_at_utc": "2026-09-21T06:12:29Z"
+ },
+ "seal_fields_equal": [
+  "source_sha256",
+  "vasp_executable_sha256",
+  "launcher_kind",
+  "launcher_sha256"
+ ],
+ "imported": [
+  {
+   "job": "prospective/ptfe_c10__b00__afm2424_pm1",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "prospective/ptfe_c10__b00__afm2424_pm1/POSCAR",
+    "prospective/ptfe_c10__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh",
+    "prospective/ptfe_c10__b00__afm2424_pm1/job.json",
+    "prospective/ptfe_c10__b00__afm2424_pm1/run_job.sh",
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/INCAR",
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "cf58160b741625d1782f4046014c535d5a75d64c39434bf5be53f1d98fbf2d77",
+   "files": {
+    "prospective/ptfe_c10__b00__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "8e91773303acb31780df0e6976eb83051603ad77c52593097973b3bcc707b082",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/_placement.tsv": {
+     "sha256": "9777c7c0a9e93757885f75880dd6da7859e5b306c83aef93278717edef0d4925",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/CONTCAR": {
+     "sha256": "fa9e0ebad28cda4a2106045c6ba9da7599d71b5703950823399731aad5f42798",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/INCAR": {
+     "sha256": "f9fc63a2b1407156544e90bda2546f2153509670ce54418ba288876938749a14",
+     "action": "already_identical"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/KPOINTS": {
+     "sha256": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+     "action": "already_identical"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/OSZICAR": {
+     "sha256": "5f4285d9f969da440fc74dc7099db62ff56a62a4d67422d2257f3b9057114131",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/OUTCAR": {
+     "sha256": "0205e2243d94e0f8524d399ed4d33d6b40d9508d3e297a9f4b28d003b9dfa5dc",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/POSCAR": {
+     "sha256": "4daf62fd8cf1e3c9aeee1293ca8ce36885aa8783de5951df645177b815fe594a",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/POTCAR": {
+     "sha256": "cf58160b741625d1782f4046014c535d5a75d64c39434bf5be53f1d98fbf2d77",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/vasp.out": {
+     "sha256": "84016a48caee69fa9d53b5f385086cf3b0e6e1fe9fad1c5d068826dd37d4379f",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "prospective/sdcp_neutral__b00__afm2424_pm1",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "prospective/sdcp_neutral__b00__afm2424_pm1/POSCAR",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/job.json",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/run_job.sh",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "b394993d64bb7c9a6f22dbc84b67352700dec5ec2b0bfa7de8e63ade3d78127a",
+   "files": {
+    "prospective/sdcp_neutral__b00__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "df9ba7a49662ea6acff16f509bfee53bf1e747c5b382a1036ddaf14f1aebecd2",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/_placement.tsv": {
+     "sha256": "c262f82d4be816c6158cf4a94877cf40ef0e2d9397bc6b775d3f3e3ccc96ec62",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/CONTCAR": {
+     "sha256": "69b60c44c84d4fabb0c3ed7be8beff5f0fd63e5e0e520d8f802688d217dd9db8",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR": {
+     "sha256": "a83650c276dce85e5caa570537a439cab1e557254fad3ee8f37174e29f005a7a",
+     "action": "already_identical"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/KPOINTS": {
+     "sha256": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+     "action": "already_identical"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/OSZICAR": {
+     "sha256": "9efe4d999cd3142c4a0497c12d59f3189098d6ddc0b449e628a4a57a62fa230a",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/OUTCAR": {
+     "sha256": "c0d87977cf9a3f28d66ad82da07c522fdc793b2db3425355a9013ac3101ca4a6",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/POSCAR": {
+     "sha256": "4780e416a2d803dc81c681fd71d82d2f53783c5197a85715061f721c3dd42676",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/POTCAR": {
+     "sha256": "b394993d64bb7c9a6f22dbc84b67352700dec5ec2b0bfa7de8e63ade3d78127a",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/vasp.out": {
+     "sha256": "3dca24ae5b6c2ac99dea71eeec55f150a270849c8d594113b9447d38d92ddbf7",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/clean_slab__afm2424_pm1",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/clean_slab__afm2424_pm1/POSCAR",
+    "refs/clean_slab__afm2424_pm1/POTCAR_ASSEMBLE.sh",
+    "refs/clean_slab__afm2424_pm1/job.json",
+    "refs/clean_slab__afm2424_pm1/run_job.sh",
+    "refs/clean_slab__afm2424_pm1/static/INCAR",
+    "refs/clean_slab__afm2424_pm1/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "7a558edc0816d84fe9c4b625c7ebaf621fc436d56e06d2018727001120b19288",
+   "files": {
+    "refs/clean_slab__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "de14babfef225330cea8fc14e9899a0fb85be42ca6d3b5d525ca58b8dba7329b",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/_placement.tsv": {
+     "sha256": "16ab186b31c552924ffbb0a48e3f52327bd08c72721d47cad9319a670f4e9893",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/CONTCAR": {
+     "sha256": "34fa5160f9b56243fe0ac20b010d4ca632fd1162d2e5415a93e8cbd07e3fe11a",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/INCAR": {
+     "sha256": "86909daeeaa42f19bb21f886aedac1f0dee02c7d3697a6a1219dabeed6d7ad6f",
+     "action": "already_identical"
+    },
+    "refs/clean_slab__afm2424_pm1/static/KPOINTS": {
+     "sha256": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+     "action": "already_identical"
+    },
+    "refs/clean_slab__afm2424_pm1/static/OSZICAR": {
+     "sha256": "292441a61c037fc551aa2101e917dd9dab3a9c4b40be3c585664cbb02e081c5f",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/OUTCAR": {
+     "sha256": "147c496a76136202f0cfd7678a88e3e4ccfe22d9bb9fe31de303507573732668",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/POSCAR": {
+     "sha256": "a57ab2f03a2f50073308039cc337c6d0652ae41483d47f1eccaaadceb9aa3220",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/POTCAR": {
+     "sha256": "7a558edc0816d84fe9c4b625c7ebaf621fc436d56e06d2018727001120b19288",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/vasp.out": {
+     "sha256": "3ef5a52d3e449b3e2aec42d879a32101e18e27e518253e3d2f357e03c2dc9f4b",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__ptfe_c10__box20",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__ptfe_c10__box20/POSCAR",
+    "refs/mol__ptfe_c10__box20/POTCAR_ASSEMBLE.sh",
+    "refs/mol__ptfe_c10__box20/job.json",
+    "refs/mol__ptfe_c10__box20/run_job.sh",
+    "refs/mol__ptfe_c10__box20/static/INCAR",
+    "refs/mol__ptfe_c10__box20/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "5467eec3cb085c480db0f2c9673ffb9ec82ed1b91e851cc7dce0d17375d1485a",
+   "files": {
+    "refs/mol__ptfe_c10__box20/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "69e9d83582cc9778f961d88d835e8db2b1ebeb068ce99f22b152c9eed23efc9b",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/_placement.tsv": {
+     "sha256": "ac76548ea6cce3f6e420fa428c3578e8f82a6da3c06e76dab2cceee51647d415",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/CONTCAR": {
+     "sha256": "6a3af11c105fdf68bbf3141890b61dc8b79bf77667908c7363532f95cce63094",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/INCAR": {
+     "sha256": "bff127233eebcc787f08826034976a73fbd9dccfff9efae10a47e739dd9a7be0",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box20/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box20/static/OSZICAR": {
+     "sha256": "35960caca731ebf0417d064d31dbe2a12381ffdb3e1a960ca80c04c3fb0c10db",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/OUTCAR": {
+     "sha256": "8da6728e27fe4a08e58cdbed02dc57eef1570ed50c430a78b392e8c98550ac50",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/POSCAR": {
+     "sha256": "35f44354ab9da8f713f672879e73b59bf00920c23edbdb47868038fd67907800",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/POTCAR": {
+     "sha256": "5467eec3cb085c480db0f2c9673ffb9ec82ed1b91e851cc7dce0d17375d1485a",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/vasp.out": {
+     "sha256": "93fe0a6309be9f94520c26a5230c741aa67fdfe48e961311d0f8c5c27e2954d9",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__ptfe_c10__box24",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__ptfe_c10__box24/POSCAR",
+    "refs/mol__ptfe_c10__box24/POTCAR_ASSEMBLE.sh",
+    "refs/mol__ptfe_c10__box24/job.json",
+    "refs/mol__ptfe_c10__box24/run_job.sh",
+    "refs/mol__ptfe_c10__box24/static/INCAR",
+    "refs/mol__ptfe_c10__box24/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "5467eec3cb085c480db0f2c9673ffb9ec82ed1b91e851cc7dce0d17375d1485a",
+   "files": {
+    "refs/mol__ptfe_c10__box24/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "d8f439c8504a5799043372a96305a119ac3b9133f70a0f625ea3ed3208f71cd2",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/_placement.tsv": {
+     "sha256": "53cf2da9029e7aff8c2c16b77e561703fd036181f0de26758e469483399cee39",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/CONTCAR": {
+     "sha256": "5732d92d8ae31c9e1976fa53d3973a6cf56315923b376410041526e4fbffa704",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/INCAR": {
+     "sha256": "e8f41ba857884530abbd961cf39235656e9dc4a0ced6cf43616cbece958be785",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box24/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box24/static/OSZICAR": {
+     "sha256": "a0a3d8b20c2acbce712b36eeafc8d26546b746244f38c0879d9e5502e7447cfa",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/OUTCAR": {
+     "sha256": "33f1e85484cb51cd3329b319ef487ad20b088a21f1648b57a0c8e27bde52419a",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/POSCAR": {
+     "sha256": "12b8a3dab446569f5bbf1ea874c60875f694e7054808eb5c7bea216a64f3ad4d",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/POTCAR": {
+     "sha256": "5467eec3cb085c480db0f2c9673ffb9ec82ed1b91e851cc7dce0d17375d1485a",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/vasp.out": {
+     "sha256": "9f359c9204ef402ce3ab9da4f5720b336d4c34bdc41ffbfe5bce5b30640f5f67",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__sdcp_neutral__box20",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__sdcp_neutral__box20/POSCAR",
+    "refs/mol__sdcp_neutral__box20/POTCAR_ASSEMBLE.sh",
+    "refs/mol__sdcp_neutral__box20/job.json",
+    "refs/mol__sdcp_neutral__box20/run_job.sh",
+    "refs/mol__sdcp_neutral__box20/static/INCAR",
+    "refs/mol__sdcp_neutral__box20/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "8adbdd78af5336ce7539e88af5209b80da4e62481b17b8ef863e3bf55d4f72a2",
+   "files": {
+    "refs/mol__sdcp_neutral__box20/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "71545381af530b11023ab04da84eb47064c647a7467da7b78de111d300413f4f",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/_placement.tsv": {
+     "sha256": "c2fef7b2aaa323e76f9625d81fb2181327f9f35e77806a18d2b09946f123816a",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/CONTCAR": {
+     "sha256": "950b975121c732d9ba600296defef55d6b4777f4bf53ba98f6629890367ec11d",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/INCAR": {
+     "sha256": "44ae72d3355c7a0215ac8cc1eac9387e5b447b3885ea2f3c8423ad9dc51fd6f5",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box20/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box20/static/OSZICAR": {
+     "sha256": "76c022edfb2bc98d647e2fa8c9e14f4168aba2a423469891f9f46118600a7dc4",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/OUTCAR": {
+     "sha256": "3776e821e34104ff7a9d1130cedb5fb30d0b3c3255c348529f192b0636caaecf",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/POSCAR": {
+     "sha256": "a46ece2e77bb37661825c234bc9057f84765df683afae1244d3550c1e06d293b",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/POTCAR": {
+     "sha256": "8adbdd78af5336ce7539e88af5209b80da4e62481b17b8ef863e3bf55d4f72a2",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/vasp.out": {
+     "sha256": "4d561e90ce92a33d2c08bb536485bb2dc9e42b5d6130ea88280a141c0242f08a",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__sdcp_neutral__box24",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__sdcp_neutral__box24/POSCAR",
+    "refs/mol__sdcp_neutral__box24/POTCAR_ASSEMBLE.sh",
+    "refs/mol__sdcp_neutral__box24/job.json",
+    "refs/mol__sdcp_neutral__box24/run_job.sh",
+    "refs/mol__sdcp_neutral__box24/static/INCAR",
+    "refs/mol__sdcp_neutral__box24/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "8adbdd78af5336ce7539e88af5209b80da4e62481b17b8ef863e3bf55d4f72a2",
+   "files": {
+    "refs/mol__sdcp_neutral__box24/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "60282e8cc4e9484660a83b135d59d3072afbe69ed827e5e6f0a222f0338bb4b3",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/_placement.tsv": {
+     "sha256": "6d851a7a149ba90554bbc71da2140528f058553463489a049da7c3cd54668279",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/CONTCAR": {
+     "sha256": "b9feb14159407558385b8425c023a9793049ae0c95bee69f56d2d6d0cec601c8",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/INCAR": {
+     "sha256": "00c52dc7ead75189a4fce4ab96ce6f6fefe36f348b57b458979f316cc8694db1",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box24/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box24/static/OSZICAR": {
+     "sha256": "7c7f88e732070c3a54a896a7c1baf8dc0c187be6b5a864d285ca03d5e7b5c3fb",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/OUTCAR": {
+     "sha256": "eb61f0283f4903e3bf40fa5d3518da087395e3ccda914deaa3cac670778bc75e",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/POSCAR": {
+     "sha256": "2ac2034757f4dc3e32ce7b842fc0f5441a099ca5fc04ef02c736981dc1f51d2f",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/POTCAR": {
+     "sha256": "8adbdd78af5336ce7539e88af5209b80da4e62481b17b8ef863e3bf55d4f72a2",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/vasp.out": {
+     "sha256": "7fe41c4ce22c875af1fba89eea9cd233d59a44377b4d7eb0f83ce42e126ca844",
+     "action": "hardlink"
+    }
+   }
+  }
+ ],
+ "not_imported": [
+  {
+   "job": "refs/mol__ptfe_c10__box24__nzmag",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "refs/mol__sdcp_neutral__box24__nzmag",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "vacconv/clean_slab__afm2424_pm1__c2",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "vacconv/ptfe_c10__b00__afm2424_pm1__c2",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "vacconv/sdcp_neutral__b00__afm2424_pm1__c2",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  }
+ ],
+ "⛔_이_기록이_보증하지_않는_것": [
+  "이전 extraction 의 정직성 (옮겨 온 receipt·OUTCAR 는 남의 기계가 쓴 파일 — 분석기가 반송 뒤 봉인과 대조한다)",
+  "옮겨 온 결과의 물리적 타당성 (SCF 수렴·자기상태는 분석기 게이트의 몫)"
+ ]
+}

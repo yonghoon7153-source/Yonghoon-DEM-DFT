@@ -1,0 +1,35 @@
+변이 222 개 (DN 판 174 · 자리 옮김 10 · DO 48) · 자리 모두 한 번씩
+DO1_fin_accepts_str              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 P1-3: 수 판정은 수 타입만 — '12.5' · True · 10**400 은 수가 아니다 · numpy 수는 수 · '100.0' 은 100 과 같지 않다
+DO3_thermo_all_nul_ok            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO2_plan_num_coerce              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO5_mid_allowlist_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO6_final_lexists_off            ⛔ 초록 (못 잡음) ·   _MB(hot, temperature_K=300)
+DO4_traj_all_nul_ok              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO7_stage_exception_crash        ⭕ 빨강 [melt_quench_uma] · RecursionError: maximum recursion depth exceeded while decoding a JSON array from a unicode string
+DO9_hist_line_consistency_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO8_prerun_keys_loose            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO10_gate_error_ok               ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO12_plan_frames_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO11_final_traces_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO13_history_summary_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO15_xyz_frames_strict           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P1 · P0 t9): 프레임 수는 NUL 꼬리 · 덜 써진 마지막 프레임을 빼고 온전한 것만 센다 (끊긴 런이 invalid 로 새지 않게) · 중간이 깨지면 None · thermo 의 NUL 꼬리는 건너뛴다 ({'full_nu
+DO14_history_status_type_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DO16_read_thermo_junk_kept       ⭕ 빨강 [melt_quench_uma] · ValueError: could not convert string to float: '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+DO17_identity_preserved_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P0 a): 보존 폴더 seed<N>.<붙임> 은 실행 전 기록의 계 · 시드 · run_id 가 plan 과 같을 때만 같은 실행으로 식별 (판정이 이름 때문에 invalid 로 새지 않게) · 기록이 없거나 다르면 아니다 ({'
+DO18_rule_m_off                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DO 전 리뷰 (규칙 M): 둘째 시드도 녹음 창이 다 찼고 fail 이면 일정 미완 · 최종 파일 없음이어도 fail (결과가 정해졌다 — 끊긴 뒤 재시도로 지우지 않는다) · 녹음 pass 면 미완 그대로 (incomplete · incomplete)
+DO21_kind_melt_check_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO20_kind_invalid_any_status     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO23_kind_records_scientific_off ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO24_kind_melt_check_type_off    ⛔ 초록 (못 잡음) ·   _MB(hot, temperature_K=300)
+DO19_gate_error_as_false         ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 99 · ⛔ 0
+DO25_kind_closes_type_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO26_kind_orphan_status_off      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DK P0-2 · DO 전 리뷰: 실행 상태 한 곳 (run_kind) — 끝난 런의 invalid 판정은 장부 · 폴더 어디든 invalid · 끊긴 런 폴더의 invalid 판정은 끊긴 런 · 고아 마감 전 상태로 · 녹음 invalid 로 멈춤 = 
+DO22_kind_folder_melt_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 S1d · t12: 녹음 창이 다 찼고 fail 인 채 (판정 전) 정전으로 끊긴 런은 정전 선언으로 다시 돌리지 않는다 — 첫 시드든 둘째 시드든 실행 종류 과학적 (결과가 정해졌다) · 발사 0 ({'S1d_first_seed': (Tr
+DO27_ledger_closing_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 P0-1 (S1b): 첫 시드 녹음 fail 로 멈춘 뒤 판정 도중 러너가 끊겨도 닫힘은 이미 장부에 있다 → 확인해도 재시작이 melt 로 멈추고 발사 0 · 소비자 stop_track (26 · 21 · melt · pending)
+DO28_ledger_row_types_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO29_ledger_end_type_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO30_ledger_bounds_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO31_ledger_bound_types_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO32_ledger_closes_type_off      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO33_ledger_melt_check_type_off  ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 
+DO34_dup_keys_ok                 ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DO 전 리뷰 (소비자 P2 · P1-3 · P2-17): 장부 값 꼴 — 숫자 글자 · end False · 시드 12.0 · closes 'true' · melt_check 글자 · 같은 열쇠 둘 · 10^400 · heartbeat 보다 작은 측정 

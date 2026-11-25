@@ -1,0 +1,5675 @@
+{
+ "card": "db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json",
+ "decision": "D-2026-11-04-cascade-axis-ncm-interface",
+ "run_dir": "db/raw/cascade_axis_ncm_v2_2026_11_04",
+ "constants": {
+  "wide_eV": 2.0,
+  "metal_eV": 0.1,
+  "frac_metal": 0.01,
+  "frac_wide": 0.9,
+  "frac_und": 0.1,
+  "delta_meV": 10.0,
+  "iqr_meV": 10.0,
+  "anchor_lo": 0.5,
+  "anchor_hi": 2.0,
+  "proxy_lo": 0.5,
+  "proxy_hi": 2.0
+ },
+ "gates": {
+  "decision": {
+   "ok": true,
+   "state": "active",
+   "card": "db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json"
+  },
+  "G1": {
+   "ok": true,
+   "missing": [],
+   "load_problems": [],
+   "n_invocations": 1
+  },
+  "G3": {
+   "ok": true,
+   "before": "2026.09.28",
+   "after": "2026.09.28"
+  },
+  "G2": {
+   "ok": true,
+   "n_problems": 0,
+   "problems": [],
+   "n_expected": 91
+  },
+  "G1b": {
+   "ok": true,
+   "host_LCO_meV": {
+    "full": -322.71,
+    "half": -454.91
+   },
+   "ratio_to_Xiao": {
+    "full": 0.952,
+    "half": 0.923
+   },
+   "half_more_exothermic": true,
+   "diff_vs_M6_meV_기록만": {
+    "full": -0.01,
+    "half": -0.01
+   }
+  },
+  "G5": {
+   "ok": true,
+   "missing_in_card": [],
+   "card_sha256": "32d41e65f0aa4dbf8cf05318380603228ae44d60e01985e0f620ac96466c5d60"
+  },
+  "G6": {
+   "ok": true,
+   "ratio_NCM_over_LNO": {
+    "full": 0.8883,
+    "half": 0.8993
+   },
+   "label": "NCM 대리 (LiNiO₂)"
+  },
+  "G4": {
+   "q1_meV": -7.9,
+   "q3_meV": 18.34,
+   "iqr_meV": 26.24,
+   "discriminates": true,
+   "n": 91,
+   "method": "statistics.quantiles(n=4, method='inclusive')",
+   "use": "R1 을 합치는 규칙에 넣을 수 있다"
+  }
+ },
+ "blocking": [],
+ "label": "NCM 대리 (LiNiO₂)",
+ "⛔": "상대값 · 등급만 — 순위 · 거르기는 합치는 규칙 비준 뒤 (카드 §8) · MP 갭은 외부 PBE 값 (순서용)",
+ "rows": [
+  {
+   "species": "Ag2O",
+   "formula": "Ag2Cl4Li22O1P4S19",
+   "tracked_LNO": [
+    "Ag"
+   ],
+   "delta_LNO_full_meV": 8.5,
+   "delta_LNO_half_meV": 12.32,
+   "differs_from_host": true,
+   "class_LNO_half": "metallic",
+   "letter_LNO_half": "ⓑ",
+   "fate_LNO_half": {
+    "Ag": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 1.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Ag",
+       "share": 1.0,
+       "class": "metallic",
+       "basis": "원소 금속"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9643 Li0.5Ni1O2 + 0.03571 Li22Ag2P4S19Cl4O -> 0.1429 Li3PO4 + 0.1652 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.07143 Ag + 0.4688 Ni",
+   "delta_LCO_half_meV": 8.23,
+   "class_LCO_half": "metallic",
+   "fate_LCO_half": {
+    "Ag": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 1.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Ag",
+       "share": 1.0,
+       "class": "metallic",
+       "basis": "원소 금속"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Al2O3",
+   "formula": "Cl5Li17O3P4S16Al2",
+   "tracked_LNO": [
+    "Al"
+   ],
+   "delta_LNO_full_meV": -32.15,
+   "delta_LNO_half_meV": 2.08,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiAl5O8",
+       "share": 0.8264,
+       "class": "wide",
+       "basis": "MP 갭 5.249"
+      },
+      {
+       "product": "AlPO4",
+       "share": 0.1736,
+       "class": "wide",
+       "basis": "MP 갭 5.618"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.05535 Li17Al2P4S16Cl5O3 + 0.9446 Li0.5Ni1O2 -> 0.2022 Li3PO4 + 0.3149 Ni3S2 + 0.2768 LiCl + 0.2558 Li2SO4 + 0.0183 LiAl5O8 + 0.01922 AlPO4",
+   "delta_LCO_half_meV": -30.67,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiAl5O8",
+       "share": 0.6211,
+       "class": "wide",
+       "basis": "MP 갭 5.249"
+      },
+      {
+       "product": "LiAlO2",
+       "share": 0.3789,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Al2S3",
+   "formula": "Cl1Li18P4S23Al2",
+   "tracked_LNO": [
+    "Al"
+   ],
+   "delta_LNO_full_meV": -69.52,
+   "delta_LNO_half_meV": -71.88,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiAlO2",
+       "share": 0.8444,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      },
+      {
+       "product": "Li5AlO4",
+       "share": 0.1556,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03979 Li18Al2P4S23Cl + 0.9602 Li0.5Ni1O2 -> 0.01238 Li5AlO4 + 0.0672 LiAlO2 + 0.1592 Li3PO4 + 0.3201 Ni3S2 + 0.03979 LiCl + 0.275 Li2SO4",
+   "delta_LCO_half_meV": -79.44,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiAlO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "AlBr3",
+   "formula": "Cl4Li21P4S17Al1Br3",
+   "tracked_LNO": [
+    "Al",
+    "Br"
+   ],
+   "delta_LNO_full_meV": -32.05,
+   "delta_LNO_half_meV": -14.9,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiAlO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    },
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04762 Li21AlP4S17Br3Cl4 + 0.9524 Li0.5Ni1O2 -> 0.2619 Li2SO4 + 0.2738 Ni3S2 + 0.1905 Li3PO4 + 0.04762 LiAlO2 + 0.1429 LiBr + 0.1905 LiCl + 0.131 Ni",
+   "delta_LCO_half_meV": -35.05,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 0.7107,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      },
+      {
+       "product": "LiAlO2",
+       "share": 0.2893,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    },
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "AlCl3",
+   "formula": "Cl4Li21P4S20Al1",
+   "tracked_LNO": [
+    "Al"
+   ],
+   "delta_LNO_full_meV": -31.65,
+   "delta_LNO_half_meV": -24.45,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 0.7778,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      },
+      {
+       "product": "LiAlO2",
+       "share": 0.2222,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04478 Li21AlP4(S5Cl)4 + 0.9552 Li0.5Ni1O2 -> 0.03483 Li5AlO4 + 0.00995 LiAlO2 + 0.1791 Li3PO4 + 0.3184 Ni3S2 + 0.1791 LiCl + 0.2587 Li2SO4",
+   "delta_LCO_half_meV": -36.11,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "AlF3",
+   "formula": "Cl1Li21P4S20Al1F3",
+   "tracked_LNO": [
+    "Al",
+    "F"
+   ],
+   "delta_LNO_full_meV": -31.65,
+   "delta_LNO_half_meV": -24.45,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 0.7778,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      },
+      {
+       "product": "LiAlO2",
+       "share": 0.2222,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    },
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04478 Li21AlP4S20ClF3 + 0.9552 Li0.5Ni1O2 -> 0.3184 Ni3S2 + 0.2587 Li2SO4 + 0.03483 Li5AlO4 + 0.00995 LiAlO2 + 0.1343 LiF + 0.04478 LiCl + 0.1791 Li3PO4",
+   "delta_LCO_half_meV": -36.11,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      }
+     ]
+    },
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "AlI3",
+   "formula": "Cl1Li21P4S20Al1I3",
+   "tracked_LNO": [
+    "Al",
+    "I"
+   ],
+   "delta_LNO_full_meV": -31.65,
+   "delta_LNO_half_meV": -24.45,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 0.7778,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      },
+      {
+       "product": "LiAlO2",
+       "share": 0.2222,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    },
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.382"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04478 Li21AlP4S20I3Cl + 0.9552 Li0.5Ni1O2 -> 0.1791 Li3PO4 + 0.2587 Li2SO4 + 0.3184 Ni3S2 + 0.03483 Li5AlO4 + 0.00995 LiAlO2 + 0.1343 LiI + 0.04478 LiCl",
+   "delta_LCO_half_meV": -36.11,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      }
+     ]
+    },
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.382"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "AlN",
+   "formula": "Cl4Li21P4S19Al1N1",
+   "tracked_LNO": [
+    "Al",
+    "N"
+   ],
+   "delta_LNO_full_meV": -25.0,
+   "delta_LNO_half_meV": -17.95,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiAlO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 6.118"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Ni3N",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.963 Li0.5Ni1O2 + 0.03704 Li21AlP4S19NCl4 -> 0.3148 Li2SO4 + 0.1481 Li3PO4 + 0.03704 Ni3N + 0.1944 Ni3S2 + 0.03704 LiAlO2 + 0.1481 LiCl + 0.2685 Ni",
+   "delta_LCO_half_meV": -28.62,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Al": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5AlO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.662"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "N2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 7.377"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "As2S3",
+   "formula": "As2Cl4Li28P2S20",
+   "tracked_LNO": [
+    "As"
+   ],
+   "delta_LNO_full_meV": 66.72,
+   "delta_LNO_half_meV": 44.5,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "As": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li3AsO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.127"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04878 Li14AsP(S5Cl)2 + 0.9756 Li0.5Ni1O2 -> 0.04878 Li3PO4 + 0.04878 Ni3S2 + 0.09756 LiCl + 0.04878 Li3AsO4 + 0.3902 Li2SO4 + 0.8293 Ni",
+   "delta_LCO_half_meV": 75.41,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "As": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li3AsO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.127"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "B2O3",
+   "formula": "Cl5Li17O3P4S16B2",
+   "tracked_LNO": [
+    "B"
+   ],
+   "delta_LNO_full_meV": -44.49,
+   "delta_LNO_half_meV": 1.56,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "B": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li3B7O12",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.605"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9464 Li0.5Ni1O2 + 0.05361 Li17B2P4S16Cl5O3 -> 0.01532 Li3B7O12 + 0.253 Li2SO4 + 0.3023 Ni3S2 + 0.03941 NiCl2 + 0.1892 LiCl + 0.2144 Li3PO4",
+   "delta_LCO_half_meV": -39.56,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "B": {
+     "shares": {
+      "wide": 0.2123,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.7877
+     },
+     "products": [
+      {
+       "product": "Co3(BO3)2",
+       "share": 0.7877,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "Li3BO3",
+       "share": 0.2123,
+       "class": "wide",
+       "basis": "MP 갭 5.147"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "BaCl2",
+   "formula": "Cl4Li22P4S20Ba1",
+   "tracked_LNO": [
+    "Ba"
+   ],
+   "delta_LNO_full_meV": -2.77,
+   "delta_LNO_half_meV": -2.99,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ba": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "BaCl2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.0303 BaLi22P4(S5Cl)4 + 0.9697 Li0.5Ni1O2 -> 0.3636 Li2SO4 + 0.0303 BaCl2 + 0.1212 Ni3S2 + 0.06061 LiCl + 0.1212 Li3PO4 + 0.6061 Ni",
+   "delta_LCO_half_meV": -2.87,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ba": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "BaCl2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "BaO",
+   "formula": "Cl4Li22O1P4S19Ba1",
+   "tracked_LNO": [
+    "Ba"
+   ],
+   "delta_LNO_full_meV": 10.63,
+   "delta_LNO_half_meV": 8.44,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ba": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "BaCl2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9687 Li0.5Ni1O2 + 0.03125 BaLi22P4S19Cl4O -> 0.3672 Li2SO4 + 0.03125 BaCl2 + 0.1133 Ni3S2 + 0.0625 LiCl + 0.125 Li3PO4 + 0.6289 Ni",
+   "delta_LCO_half_meV": 10.37,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ba": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "BaCl2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Ca3N2",
+   "formula": "Cl4Li18P4S18N2Ca3",
+   "tracked_LNO": [
+    "Ca",
+    "N"
+   ],
+   "delta_LNO_full_meV": 2.09,
+   "delta_LNO_half_meV": 3.91,
+   "differs_from_host": false,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Ni3N",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04167 Li18Ca3P4S18(NCl2)2 + 0.9583 Li0.5Ni1O2 -> 0.2812 Li2SO4 + 0.2344 Ni3S2 + 0.08333 Ni3N + 0.1667 LiCl + 0.125 CaO + 0.1667 Li3PO4 + 0.005208 Ni",
+   "delta_LCO_half_meV": 0.56,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "N2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 7.377"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "CaBr2",
+   "formula": "Cl2Li22P4S20Br2Ca1",
+   "tracked_LNO": [
+    "Br",
+    "Ca"
+   ],
+   "delta_LNO_full_meV": -4.37,
+   "delta_LNO_half_meV": -2.66,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    },
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03333 Li22CaP4S20(BrCl)2 + 0.9667 Li0.5Ni1O2 -> 0.06667 LiBr + 0.3417 Li2SO4 + 0.1625 Ni3S2 + 0.06667 LiCl + 0.03333 CaO + 0.1333 Li3PO4 + 0.4792 Ni",
+   "delta_LCO_half_meV": -5.48,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    },
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "CaCl2",
+   "formula": "Cl4Li22P4S20Ca1",
+   "tracked_LNO": [
+    "Ca"
+   ],
+   "delta_LNO_full_meV": -4.37,
+   "delta_LNO_half_meV": -2.66,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03333 Li22CaP4(S5Cl)4 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.1333 Li3PO4 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 CaO + 0.4792 Ni",
+   "delta_LCO_half_meV": -5.48,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "CaF2",
+   "formula": "Cl2Li22P4S20F2Ca1",
+   "tracked_LNO": [
+    "Ca",
+    "F"
+   ],
+   "delta_LNO_full_meV": -4.37,
+   "delta_LNO_half_meV": -2.66,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    },
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03333 Li22CaP4S20(ClF)2 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.06667 LiCl + 0.1333 Li3PO4 + 0.3417 Li2SO4 + 0.03333 CaO + 0.06667 LiF + 0.4792 Ni",
+   "delta_LCO_half_meV": -5.48,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    },
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "CaO",
+   "formula": "Cl4Li22O1P4S19Ca1",
+   "tracked_LNO": [
+    "Ca"
+   ],
+   "delta_LNO_full_meV": 8.55,
+   "delta_LNO_half_meV": 9.58,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9655 Li0.5Ni1O2 + 0.03448 Li22CaP4S19Cl4O -> 0.1552 Ni3S2 + 0.1379 Li3PO4 + 0.1379 LiCl + 0.3448 Li2SO4 + 0.03448 CaO + 0.5 Ni",
+   "delta_LCO_half_meV": 7.94,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "CaS",
+   "formula": "Cl4Li22P4S20Ca1",
+   "tracked_LNO": [
+    "Ca"
+   ],
+   "delta_LNO_full_meV": -4.37,
+   "delta_LNO_half_meV": -2.66,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03333 Li22CaP4(S5Cl)4 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.1333 Li3PO4 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 CaO + 0.4792 Ni",
+   "delta_LCO_half_meV": -5.48,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ca": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "CaO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.636"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "CoO",
+   "formula": "Cl4Li22O1P4S19Co1",
+   "tracked_LNO": [
+    "Co"
+   ],
+   "delta_LNO_full_meV": 8.89,
+   "delta_LNO_half_meV": 12.77,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Co": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Co9S8",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03571 Li22CoP4S19Cl4O + 0.9643 Li0.5Ni1O2 -> 0.003968 Co9S8 + 0.1429 Li3PO4 + 0.1493 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.5164 Ni",
+   "delta_LCO_half_meV": 9.01,
+   "class_LCO_half": "na",
+   "fate_LCO_half": {},
+   "R4_cathode_dependent": null
+  },
+  {
+   "species": "Cr2O3",
+   "formula": "Cl4Li18O3P4S17Cr2",
+   "tracked_LNO": [
+    "Cr"
+   ],
+   "delta_LNO_full_meV": 2.27,
+   "delta_LNO_half_meV": 19.94,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Cr": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiCrO2",
+       "share": 0.6223,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "Cr2O3",
+       "share": 0.3777,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9477 Li0.5Ni1O2 + 0.05226 Li18Cr2P4S17Cl4O3 -> 0.06504 LiCrO2 + 0.2567 Li2SO4 + 0.3159 Ni3S2 + 0.2091 Li3PO4 + 0.01974 Cr2O3 + 0.2091 LiCl",
+   "delta_LCO_half_meV": 0.59,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Cr": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiCrO2",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "CrCl3",
+   "formula": "Cl7Li21P4S17Cr1",
+   "tracked_LNO": [
+    "Cr"
+   ],
+   "delta_LNO_full_meV": -16.87,
+   "delta_LNO_half_meV": -1.42,
+   "differs_from_host": false,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Cr": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiCrO2",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04762 Li21CrP4S17Cl7 + 0.9524 Li0.5Ni1O2 -> 0.04762 LiCrO2 + 0.2619 Li2SO4 + 0.2738 Ni3S2 + 0.1905 Li3PO4 + 0.3333 LiCl + 0.131 Ni",
+   "delta_LCO_half_meV": -18.55,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Cr": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiCrO2",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "CrO3",
+   "formula": "Cl4Li18O3P4S17Cr1",
+   "tracked_LNO": [
+    "Cr"
+   ],
+   "delta_LNO_full_meV": -4.55,
+   "delta_LNO_half_meV": 12.21,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Cr": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiCrO2",
+       "share": 0.5111,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "Cr2O3",
+       "share": 0.4889,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9466 Li0.5Ni1O2 + 0.05338 Li18CrP4S17Cl4O3 -> 0.02728 LiCrO2 + 0.2764 Li2SO4 + 0.3155 Ni3S2 + 0.2135 Li3PO4 + 0.01305 Cr2O3 + 0.2135 LiCl",
+   "delta_LCO_half_meV": -6.45,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Cr": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiCrO2",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Cu2O",
+   "formula": "Cl4Li22O1P4S19Cu2",
+   "tracked_LNO": [
+    "Cu"
+   ],
+   "delta_LNO_full_meV": 11.45,
+   "delta_LNO_half_meV": 14.47,
+   "differs_from_host": true,
+   "class_LNO_half": "metallic",
+   "letter_LNO_half": "ⓑ",
+   "fate_LNO_half": {
+    "Cu": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 1.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Cu",
+       "share": 1.0,
+       "class": "metallic",
+       "basis": "원소 금속"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9643 Li0.5Ni1O2 + 0.03571 Li22Cu2P4S19Cl4O -> 0.1429 Li3PO4 + 0.1652 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.4688 Ni + 0.07143 Cu",
+   "delta_LCO_half_meV": 11.06,
+   "class_LCO_half": "metallic",
+   "fate_LCO_half": {
+    "Cu": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 1.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Cu",
+       "share": 1.0,
+       "class": "metallic",
+       "basis": "원소 금속"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Fe2O3",
+   "formula": "Cl4Li18O3P4S17Fe2",
+   "tracked_LNO": [
+    "Fe"
+   ],
+   "delta_LNO_full_meV": -16.73,
+   "delta_LNO_half_meV": 11.66,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Fe": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiFeO2",
+       "share": 0.6185,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "FeNi35S32",
+       "share": 0.2141,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "Li5FeO4",
+       "share": 0.1674,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9375 Li0.5Ni1O2 + 0.06253 Li18Fe2P4S17Cl4O3 -> 0.07735 LiFeO2 + 0.02093 Li5FeO4 + 0.2059 Li2SO4 + 0.2501 Li3PO4 + 0.02678 FeNi35S32 + 0.2501 LiCl",
+   "delta_LCO_half_meV": 23.32,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Fe": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiFeO2",
+       "share": 0.8664,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "Li5FeO4",
+       "share": 0.1336,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "FeCl3",
+   "formula": "Cl4Li21P4S20Fe1",
+   "tracked_LNO": [
+    "Fe"
+   ],
+   "delta_LNO_full_meV": -45.18,
+   "delta_LNO_half_meV": -32.08,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Fe": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "FeNi35S32",
+       "share": 0.5039,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "Li5FeO4",
+       "share": 0.4961,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.05365 Li21FeP4(S5Cl)4 + 0.9463 Li0.5Ni1O2 -> 0.02662 Li5FeO4 + 0.2079 Li2SO4 + 0.2146 Li3PO4 + 0.02704 FeNi35S32 + 0.09632 Li2O + 0.2146 LiCl",
+   "delta_LCO_half_meV": -11.27,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Fe": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Li5FeO4",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Ga2O3",
+   "formula": "Cl4Li18O3P4S17Ga2",
+   "tracked_LNO": [
+    "Ga"
+   ],
+   "delta_LNO_full_meV": 3.83,
+   "delta_LNO_half_meV": 24.23,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 0.6458,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.3542
+     },
+     "products": [
+      {
+       "product": "LiGaO2",
+       "share": 0.6458,
+       "class": "wide",
+       "basis": "MP 갭 3.198"
+      },
+      {
+       "product": "Ga2NiO4",
+       "share": 0.3542,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9485 Li0.5Ni1O2 + 0.0515 Li18Ga2P4S17Cl4O3 -> 0.206 Li3PO4 + 0.3101 Ni3S2 + 0.206 LiCl + 0.2554 Li2SO4 + 0.01824 Ga2NiO4 + 0.06652 LiGaO2",
+   "delta_LCO_half_meV": 4.09,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiGaO2",
+       "share": 0.8664,
+       "class": "wide",
+       "basis": "MP 갭 3.198"
+      },
+      {
+       "product": "Li5GaO4",
+       "share": 0.1336,
+       "class": "wide",
+       "basis": "MP 갭 3.763"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "Ga2S3",
+   "formula": "Cl4Li18P4S20Ga2",
+   "tracked_LNO": [
+    "Ga"
+   ],
+   "delta_LNO_full_meV": -29.79,
+   "delta_LNO_half_meV": -22.14,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiGa5O8",
+       "share": 0.5556,
+       "class": "wide",
+       "basis": "MP 갭 2.522"
+      },
+      {
+       "product": "LiGaO2",
+       "share": 0.4444,
+       "class": "wide",
+       "basis": "MP 갭 3.198"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.08955 Li9GaP2(S5Cl)2 + 0.9552 Li0.5Ni1O2 -> 0.1791 Li3PO4 + 0.00995 LiGa5O8 + 0.3184 Ni3S2 + 0.1791 LiCl + 0.2587 Li2SO4 + 0.0398 LiGaO2",
+   "delta_LCO_half_meV": -36.14,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiGaO2",
+       "share": 0.8428,
+       "class": "wide",
+       "basis": "MP 갭 3.198"
+      },
+      {
+       "product": "Li5GaO4",
+       "share": 0.1572,
+       "class": "wide",
+       "basis": "MP 갭 3.763"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "GaCl3",
+   "formula": "Cl7Li21P4S17Ga1",
+   "tracked_LNO": [
+    "Ga"
+   ],
+   "delta_LNO_full_meV": -15.19,
+   "delta_LNO_half_meV": 0.09,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiGaO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.198"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04762 Li21GaP4S17Cl7 + 0.9524 Li0.5Ni1O2 -> 0.1905 Li3PO4 + 0.2738 Ni3S2 + 0.3333 LiCl + 0.2619 Li2SO4 + 0.04762 LiGaO2 + 0.131 Ni",
+   "delta_LCO_half_meV": -18.06,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5GaO4",
+       "share": 0.7107,
+       "class": "wide",
+       "basis": "MP 갭 3.763"
+      },
+      {
+       "product": "LiGaO2",
+       "share": 0.2893,
+       "class": "wide",
+       "basis": "MP 갭 3.198"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "GaN",
+   "formula": "Cl4Li21P4S19N1Ga1",
+   "tracked_LNO": [
+    "Ga",
+    "N"
+   ],
+   "delta_LNO_full_meV": -8.81,
+   "delta_LNO_half_meV": -5.19,
+   "differs_from_host": false,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiGaO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.198"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Ni3N",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03704 Li21GaP4S19NCl4 + 0.963 Li0.5Ni1O2 -> 0.03704 Ni3N + 0.3148 Li2SO4 + 0.1944 Ni3S2 + 0.03704 LiGaO2 + 0.1481 LiCl + 0.1481 Li3PO4 + 0.2685 Ni",
+   "delta_LCO_half_meV": -12.19,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ga": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5GaO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.763"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "N2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 7.377"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "Gd2O3",
+   "formula": "Cl4Li18O3P4S17Gd2",
+   "tracked_LNO": [
+    "Gd"
+   ],
+   "delta_LNO_full_meV": 3.93,
+   "delta_LNO_half_meV": 15.08,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Gd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Gd2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 2.941 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9524 Li0.5Ni1O2 + 0.04762 Li18Gd2P4S17Cl4O3 -> 0.2619 Ni3S2 + 0.04762 Gd2O3 + 0.1905 Li3PO4 + 0.2857 Li2SO4 + 0.1905 LiCl + 0.1667 Ni",
+   "delta_LCO_half_meV": 2.56,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Gd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiGdO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 3.28 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "GeO2",
+   "formula": "Cl4Li25O2P3S18Ge1",
+   "tracked_LNO": [
+    "Ge"
+   ],
+   "delta_LNO_full_meV": 55.44,
+   "delta_LNO_half_meV": 47.15,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ge": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2GeO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.568"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9706 Li0.5Ni1O2 + 0.02941 Li25GeP3S18(Cl2O)2 -> 0.06985 Ni3S2 + 0.08824 Li3PO4 + 0.1176 LiCl + 0.3897 Li2SO4 + 0.02941 Li2GeO3 + 0.761 Ni",
+   "delta_LCO_half_meV": 62.27,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ge": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li4GeO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.096"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "GeS2",
+   "formula": "Cl4Li25P3S20Ge1",
+   "tracked_LNO": [
+    "Ge"
+   ],
+   "delta_LNO_full_meV": 33.19,
+   "delta_LNO_half_meV": 24.37,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ge": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2GeO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.568"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02778 Li25GeP3(S5Cl)4 + 0.9722 Li0.5Ni1O2 -> 0.08681 Ni3S2 + 0.08333 Li3PO4 + 0.1111 LiCl + 0.3819 Li2SO4 + 0.02778 Li2GeO3 + 0.7118 Ni",
+   "delta_LCO_half_meV": 33.51,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ge": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li4GeO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.096"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "HfCl4",
+   "formula": "Cl4Li20P4S20Hf1",
+   "tracked_LNO": [
+    "Hf"
+   ],
+   "delta_LNO_full_meV": -42.05,
+   "delta_LNO_half_meV": -36.43,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Hf": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6Hf2O7",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.413"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9552 Li0.5Ni1O2 + 0.04478 Li20HfP4(S5Cl)4 -> 0.002488 Li2O + 0.1791 Li3PO4 + 0.02239 Li6Hf2O7 + 0.2587 Li2SO4 + 0.3184 Ni3S2 + 0.1791 LiCl",
+   "delta_LCO_half_meV": -48.24,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Hf": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6Hf2O7",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.413"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "HfO2",
+   "formula": "Cl4Li20O2P4S18Hf1",
+   "tracked_LNO": [
+    "Hf"
+   ],
+   "delta_LNO_full_meV": -18.98,
+   "delta_LNO_half_meV": -6.98,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Hf": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6Hf2O7",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.413"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04878 Li20HfP4S18(Cl2O)2 + 0.9512 Li0.5Ni1O2 -> 0.1951 Li3PO4 + 0.02439 Li6Hf2O7 + 0.2622 Li2SO4 + 0.3079 Ni3S2 + 0.1951 LiCl + 0.02744 Ni",
+   "delta_LCO_half_meV": -22.02,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Hf": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6Hf2O7",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.413"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "In2O3",
+   "formula": "Cl4Li18O3P4S17In2",
+   "tracked_LNO": [
+    "In"
+   ],
+   "delta_LNO_full_meV": 23.13,
+   "delta_LNO_half_meV": 34.6,
+   "differs_from_host": true,
+   "class_LNO_half": "intermediate",
+   "letter_LNO_half": "ⓒ",
+   "fate_LNO_half": {
+    "In": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 1.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "In2O3",
+       "share": 1.0,
+       "class": "narrow",
+       "basis": "MP 갭 0.929"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9524 Li0.5Ni1O2 + 0.04762 Li18In2P4S17Cl4O3 -> 0.1905 LiCl + 0.1905 Li3PO4 + 0.2619 Ni3S2 + 0.04762 In2O3 + 0.2857 Li2SO4 + 0.1667 Ni",
+   "delta_LCO_half_meV": 22.35,
+   "class_LCO_half": "intermediate",
+   "fate_LCO_half": {
+    "In": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 1.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiInO2",
+       "share": 1.0,
+       "class": "narrow",
+       "basis": "MP 갭 1.814"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "La2O3",
+   "formula": "Cl4Li18O3P4S17La2",
+   "tracked_LNO": [
+    "La"
+   ],
+   "delta_LNO_full_meV": 6.48,
+   "delta_LNO_half_meV": 18.66,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "La": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "La2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.828"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9524 Li0.5Ni1O2 + 0.04762 Li18La2P4S17Cl4O3 -> 0.2857 Li2SO4 + 0.1905 Li3PO4 + 0.2619 Ni3S2 + 0.1905 LiCl + 0.04762 La2O3 + 0.1667 Ni",
+   "delta_LCO_half_meV": 6.52,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "La": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "La2SO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.064"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "LaCl3",
+   "formula": "Cl7Li21P4S17La1",
+   "tracked_LNO": [
+    "La"
+   ],
+   "delta_LNO_full_meV": -15.81,
+   "delta_LNO_half_meV": -0.36,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "La": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "La2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.828"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04444 Li21LaP4S17Cl7 + 0.9556 Li0.5Ni1O2 -> 0.2833 Li2SO4 + 0.1778 Li3PO4 + 0.2361 Ni3S2 + 0.3111 LiCl + 0.02222 La2O3 + 0.2472 Ni",
+   "delta_LCO_half_meV": -16.46,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "La": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "La2SO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.064"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "LaF3",
+   "formula": "Cl1Li21P4S20F3La1",
+   "tracked_LNO": [
+    "F",
+    "La"
+   ],
+   "delta_LNO_full_meV": -16.17,
+   "delta_LNO_half_meV": -11.28,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "La": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "La2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.828"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03509 Li21LaP4S20ClF3 + 0.9649 Li0.5Ni1O2 -> 0.1053 LiF + 0.03509 LiCl + 0.1864 Ni3S2 + 0.3289 Li2SO4 + 0.1404 Li3PO4 + 0.01754 La2O3 + 0.4057 Ni",
+   "delta_LCO_half_meV": -18.28,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "La": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "La2SO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.064"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Li2O",
+   "formula": "Cl4Li24O1P4S19",
+   "tracked_LNO": [],
+   "delta_LNO_full_meV": 13.37,
+   "delta_LNO_half_meV": 11.43,
+   "differs_from_host": true,
+   "class_LNO_half": "na",
+   "letter_LNO_half": "㉧",
+   "fate_LNO_half": {},
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03125 Li24P4S19Cl4O + 0.9688 Li0.5Ni1O2 -> 0.125 Li3PO4 + 0.1133 Ni3S2 + 0.125 LiCl + 0.3672 Li2SO4 + 0.6289 Ni",
+   "delta_LCO_half_meV": 13.16,
+   "class_LCO_half": "na",
+   "fate_LCO_half": {},
+   "R4_cathode_dependent": null
+  },
+  {
+   "species": "Li2S",
+   "formula": "Cl4Li24P4S20",
+   "tracked_LNO": [],
+   "delta_LNO_full_meV": 0.0,
+   "delta_LNO_half_meV": 0.0,
+   "differs_from_host": false,
+   "class_LNO_half": "na",
+   "letter_LNO_half": "㉧",
+   "fate_LNO_half": {},
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9697 Li0.5Ni1O2 + 0.1212 Li6PS5Cl -> 0.1212 Li3PO4 + 0.1212 Ni3S2 + 0.1212 LiCl + 0.3636 Li2SO4 + 0.6061 Ni",
+   "delta_LCO_half_meV": 0.0,
+   "class_LCO_half": "na",
+   "fate_LCO_half": {},
+   "R4_cathode_dependent": null
+  },
+  {
+   "species": "Li3N",
+   "formula": "Cl4Li24P4S19N1",
+   "tracked_LNO": [
+    "N"
+   ],
+   "delta_LNO_full_meV": 8.01,
+   "delta_LNO_half_meV": 5.26,
+   "differs_from_host": false,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "N": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Ni3N",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.0303 Li24P4S19NCl4 + 0.9697 Li0.5Ni1O2 -> 0.1212 Li3PO4 + 0.3636 Li2SO4 + 0.0303 Ni3N + 0.1061 Ni3S2 + 0.1212 LiCl + 0.5606 Ni",
+   "delta_LCO_half_meV": 8.15,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "N": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "N2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 7.377"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "LiBr",
+   "formula": "Cl3Li24P4S20Br1",
+   "tracked_LNO": [
+    "Br"
+   ],
+   "delta_LNO_full_meV": 0.0,
+   "delta_LNO_half_meV": 0.0,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.0303 Li24P4S20BrCl3 + 0.9697 Li0.5Ni1O2 -> 0.1212 Li3PO4 + 0.0303 LiBr + 0.1212 Ni3S2 + 0.09091 LiCl + 0.3636 Li2SO4 + 0.6061 Ni",
+   "delta_LCO_half_meV": 0.0,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "LiCl",
+   "formula": "Cl5Li24P4S19",
+   "tracked_LNO": [],
+   "delta_LNO_full_meV": 0.38,
+   "delta_LNO_half_meV": 3.41,
+   "differs_from_host": false,
+   "class_LNO_half": "na",
+   "letter_LNO_half": "㉧",
+   "fate_LNO_half": {},
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9677 Li0.5Ni1O2 + 0.03226 Li24P4S19Cl5 -> 0.129 Li3PO4 + 0.129 Ni3S2 + 0.1613 LiCl + 0.3548 Li2SO4 + 0.5806 Ni",
+   "delta_LCO_half_meV": 0.8,
+   "class_LCO_half": "na",
+   "fate_LCO_half": {},
+   "R4_cathode_dependent": null
+  },
+  {
+   "species": "LiF",
+   "formula": "Cl3Li24P4S20F1",
+   "tracked_LNO": [
+    "F"
+   ],
+   "delta_LNO_full_meV": 0.0,
+   "delta_LNO_half_meV": 0.0,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9697 Li0.5Ni1O2 + 0.0303 Li24P4S20Cl3F -> 0.1212 Ni3S2 + 0.3636 Li2SO4 + 0.1212 Li3PO4 + 0.09091 LiCl + 0.0303 LiF + 0.6061 Ni",
+   "delta_LCO_half_meV": 0.0,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "LiI",
+   "formula": "Cl3Li24P4S20I1",
+   "tracked_LNO": [
+    "I"
+   ],
+   "delta_LNO_full_meV": 0.0,
+   "delta_LNO_half_meV": 0.0,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.382"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.0303 Li24P4S20ICl3 + 0.9697 Li0.5Ni1O2 -> 0.1212 Ni3S2 + 0.1212 Li3PO4 + 0.0303 LiI + 0.09091 LiCl + 0.3636 Li2SO4 + 0.6061 Ni",
+   "delta_LCO_half_meV": 0.0,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.382"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Mg3N2",
+   "formula": "Cl4Li18P4S18N2Mg3",
+   "tracked_LNO": [
+    "Mg",
+    "N"
+   ],
+   "delta_LNO_full_meV": -23.55,
+   "delta_LNO_half_meV": -17.33,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Ni3N",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04167 Li18Mg3P4S18(NCl2)2 + 0.9583 Li0.5Ni1O2 -> 0.1667 Li3PO4 + 0.08333 Ni3N + 0.2812 Li2SO4 + 0.2344 Ni3S2 + 0.1667 LiCl + 0.125 MgO + 0.005208 Ni",
+   "delta_LCO_half_meV": -26.41,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    },
+    "N": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "N2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 7.377"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "MgBr2",
+   "formula": "Cl4Li22P4S18Br2Mg1",
+   "tracked_LNO": [
+    "Br",
+    "Mg"
+   ],
+   "delta_LNO_full_meV": -12.63,
+   "delta_LNO_half_meV": -1.99,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    },
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9615 Li0.5Ni1O2 + 0.03846 Li22MgP4S18(BrCl2)2 -> 0.1538 Li3PO4 + 0.1875 Ni3S2 + 0.03846 MgO + 0.1538 LiCl + 0.07692 LiBr + 0.3173 Li2SO4 + 0.399 Ni",
+   "delta_LCO_half_meV": -13.29,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    },
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "MgCl2",
+   "formula": "Cl4Li22P4S20Mg1",
+   "tracked_LNO": [
+    "Mg"
+   ],
+   "delta_LNO_full_meV": -12.96,
+   "delta_LNO_half_meV": -8.82,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9667 Li0.5Ni1O2 + 0.03333 Li22MgP4(S5Cl)4 -> 0.1333 Li3PO4 + 0.1625 Ni3S2 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 MgO + 0.4792 Ni",
+   "delta_LCO_half_meV": -14.58,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "MgF2",
+   "formula": "Cl2Li22P4S20F2Mg1",
+   "tracked_LNO": [
+    "F",
+    "Mg"
+   ],
+   "delta_LNO_full_meV": -12.96,
+   "delta_LNO_half_meV": -8.82,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9667 Li0.5Ni1O2 + 0.03333 Li22MgP4S20(ClF)2 -> 0.1625 Ni3S2 + 0.3417 Li2SO4 + 0.06667 LiF + 0.1333 Li3PO4 + 0.06667 LiCl + 0.03333 MgO + 0.4792 Ni",
+   "delta_LCO_half_meV": -14.58,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "MgI2",
+   "formula": "Cl2Li22P4S20I2Mg1",
+   "tracked_LNO": [
+    "I",
+    "Mg"
+   ],
+   "delta_LNO_full_meV": -12.96,
+   "delta_LNO_half_meV": -8.82,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.382"
+      }
+     ]
+    },
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03333 Li22MgP4S20(ICl)2 + 0.9667 Li0.5Ni1O2 -> 0.1625 Ni3S2 + 0.3417 Li2SO4 + 0.1333 Li3PO4 + 0.06667 LiCl + 0.03333 MgO + 0.06667 LiI + 0.4792 Ni",
+   "delta_LCO_half_meV": -14.58,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.382"
+      }
+     ]
+    },
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "MgO",
+   "formula": "Cl5Li21O1P4S18Mg1",
+   "tracked_LNO": [
+    "Mg"
+   ],
+   "delta_LNO_full_meV": -4.39,
+   "delta_LNO_half_meV": 4.38,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04 Li21MgP4S18Cl5O + 0.96 Li0.5Ni1O2 -> 0.16 Li3PO4 + 0.2 Ni3S2 + 0.2 LiCl + 0.32 Li2SO4 + 0.04 MgO + 0.36 Ni",
+   "delta_LCO_half_meV": -4.88,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "MgS",
+   "formula": "Cl4Li22P4S20Mg1",
+   "tracked_LNO": [
+    "Mg"
+   ],
+   "delta_LNO_full_meV": -12.96,
+   "delta_LNO_half_meV": -8.82,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9667 Li0.5Ni1O2 + 0.03333 Li22MgP4(S5Cl)4 -> 0.1333 Li3PO4 + 0.1625 Ni3S2 + 0.1333 LiCl + 0.3417 Li2SO4 + 0.03333 MgO + 0.4792 Ni",
+   "delta_LCO_half_meV": -14.58,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Mg": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "MgO",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.429"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "MnO",
+   "formula": "Cl4Li22O1P4S19Mn1",
+   "tracked_LNO": [
+    "Mn"
+   ],
+   "delta_LNO_full_meV": 4.11,
+   "delta_LNO_half_meV": 6.93,
+   "differs_from_host": false,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Mn": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiMnO2",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03571 Li22MnP4S19Cl4O + 0.9643 Li0.5Ni1O2 -> 0.3304 Li2SO4 + 0.1741 Ni3S2 + 0.03571 LiMnO2 + 0.1429 Li3PO4 + 0.1429 LiCl + 0.442 Ni",
+   "delta_LCO_half_meV": 3.37,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Mn": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "LiMnO2",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "MoO3",
+   "formula": "Cl4Li23O3P3S17Mo1",
+   "tracked_LNO": [
+    "Mo"
+   ],
+   "delta_LNO_full_meV": 70.21,
+   "delta_LNO_half_meV": 64.82,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Mo": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Li2MoO4",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03333 Li23MoP3S17Cl4O3 + 0.9667 Li0.5Ni1O2 -> 0.09583 Ni3S2 + 0.03333 Li2MoO4 + 0.375 Li2SO4 + 0.1 Li3PO4 + 0.1333 LiCl + 0.6792 Ni",
+   "delta_LCO_half_meV": 80.61,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Mo": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Li4MoO5",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Na2O",
+   "formula": "Cl4Li22O1P4S19Na2",
+   "tracked_LNO": [
+    "Na"
+   ],
+   "delta_LNO_full_meV": 13.37,
+   "delta_LNO_half_meV": 11.43,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Na": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaCl",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.004"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9687 Li0.5Ni1O2 + 0.03125 Na2Li22P4S19Cl4O -> 0.125 Li3PO4 + 0.1133 Ni3S2 + 0.0625 NaCl + 0.0625 LiCl + 0.3672 Li2SO4 + 0.6289 Ni",
+   "delta_LCO_half_meV": 13.16,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Na": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaCl",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.004"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Na2S",
+   "formula": "Cl4Li22P4S20Na2",
+   "tracked_LNO": [
+    "Na"
+   ],
+   "delta_LNO_full_meV": 0.0,
+   "delta_LNO_half_meV": 0.0,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Na": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaCl",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.004"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.06061 NaLi11P2(S5Cl)2 + 0.9697 Li0.5Ni1O2 -> 0.1212 Li3PO4 + 0.1212 Ni3S2 + 0.06061 NaCl + 0.06061 LiCl + 0.3636 Li2SO4 + 0.6061 Ni",
+   "delta_LCO_half_meV": 0.0,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Na": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaCl",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.004"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "NaI",
+   "formula": "Cl3Li23P4S20I1Na1",
+   "tracked_LNO": [
+    "I",
+    "Na"
+   ],
+   "delta_LNO_full_meV": 0.0,
+   "delta_LNO_half_meV": 0.0,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.569"
+      }
+     ]
+    },
+    "Na": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.569"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9697 Li0.5Ni1O2 + 0.0303 NaLi23P4S20ICl3 -> 0.3636 Li2SO4 + 0.1212 Ni3S2 + 0.0303 NaI + 0.09091 LiCl + 0.1212 Li3PO4 + 0.6061 Ni",
+   "delta_LCO_half_meV": 0.0,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "I": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.569"
+      }
+     ]
+    },
+    "Na": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "NaI",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.569"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Nb2O5",
+   "formula": "Cl4Li24O5P2S15Nb2",
+   "tracked_LNO": [
+    "Nb"
+   ],
+   "delta_LNO_full_meV": 88.53,
+   "delta_LNO_half_meV": 87.44,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Nb": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiNbO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.336"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02703 Li24Nb2P2S15Cl4O5 + 0.973 Li0.5Ni1O2 -> 0.4054 Li2SO4 + 0.05405 LiNbO3 + 0.05405 Li3PO4 + 0.08108 NiO + 0.1081 LiCl + 0.8919 Ni",
+   "delta_LCO_half_meV": 112.5,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Nb": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li8Nb2O9",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.209"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "NbCl5",
+   "formula": "Cl9Li24P3S15Nb1",
+   "tracked_LNO": [
+    "Nb"
+   ],
+   "delta_LNO_full_meV": 27.05,
+   "delta_LNO_half_meV": 41.19,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Nb": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li3NbO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.776"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9565 Li0.5Ni1O2 + 0.04348 Li24NbP3(S5Cl3)3 -> 0.3043 Li2SO4 + 0.1739 Ni3S2 + 0.04348 Li3NbO4 + 0.1304 Li3PO4 + 0.3913 LiCl + 0.4348 Ni",
+   "delta_LCO_half_meV": 29.11,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Nb": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li8Nb2O9",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.209"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Nd2O3",
+   "formula": "Cl5Li17O3P4S16Nd2",
+   "tracked_LNO": [
+    "Nd"
+   ],
+   "delta_LNO_full_meV": 0.87,
+   "delta_LNO_half_meV": 21.09,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Nd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Nd2O3",
+       "share": 0.6444,
+       "class": "wide",
+       "basis": "4f 하한 3.708 ≥ 2.0"
+      },
+      {
+       "product": "Nd3PO7",
+       "share": 0.3556,
+       "class": "wide",
+       "basis": "4f 하한 4.284 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.05535 Li17Nd2P4S16Cl5O3 + 0.9446 Li0.5Ni1O2 -> 0.3149 Ni3S2 + 0.01312 Nd3PO7 + 0.2558 Li2SO4 + 0.2083 Li3PO4 + 0.2768 LiCl + 0.03567 Nd2O3",
+   "delta_LCO_half_meV": 0.67,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Nd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Nd2SO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 2.867 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "NdCl3",
+   "formula": "Cl4Li21P4S20Nd1",
+   "tracked_LNO": [
+    "Nd"
+   ],
+   "delta_LNO_full_meV": -16.78,
+   "delta_LNO_half_meV": -11.97,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Nd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Nd2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 3.708 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03509 Li21NdP4(S5Cl)4 + 0.9649 Li0.5Ni1O2 -> 0.1864 Ni3S2 + 0.3289 Li2SO4 + 0.1404 Li3PO4 + 0.1404 LiCl + 0.01754 Nd2O3 + 0.4057 Ni",
+   "delta_LCO_half_meV": -18.93,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Nd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Nd2SO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 2.867 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "NdF3",
+   "formula": "Cl1Li21P4S20F3Nd1",
+   "tracked_LNO": [
+    "F",
+    "Nd"
+   ],
+   "delta_LNO_full_meV": -16.78,
+   "delta_LNO_half_meV": -11.97,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Nd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Nd2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 3.708 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03509 Li21NdP4S20ClF3 + 0.9649 Li0.5Ni1O2 -> 0.3289 Li2SO4 + 0.1864 Ni3S2 + 0.1053 LiF + 0.03509 LiCl + 0.1404 Li3PO4 + 0.01754 Nd2O3 + 0.4057 Ni",
+   "delta_LCO_half_meV": -18.93,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Nd": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Nd2SO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 2.867 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "NiO",
+   "formula": "Cl4Li22O1P4S19Ni1",
+   "tracked_LNO": [],
+   "delta_LNO_full_meV": 8.47,
+   "delta_LNO_half_meV": 12.11,
+   "differs_from_host": true,
+   "class_LNO_half": "na",
+   "letter_LNO_half": "㉧",
+   "fate_LNO_half": {},
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9643 Li0.5Ni1O2 + 0.03571 Li22NiP4S19Cl4O -> 0.1429 Li3PO4 + 0.1652 Ni3S2 + 0.1429 LiCl + 0.3482 Li2SO4 + 0.5045 Ni",
+   "delta_LCO_half_meV": 8.45,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "Ni": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Ni3S2",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": null
+  },
+  {
+   "species": "Sb2O5",
+   "formula": "Cl4Li24O5P2S15Sb2",
+   "tracked_LNO": [
+    "Sb"
+   ],
+   "delta_LNO_full_meV": 102.35,
+   "delta_LNO_half_meV": 101.13,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Sb": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Li3Ni2SbO6",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9778 Li0.5Ni1O2 + 0.02222 Li24Sb2P2S15Cl4O5 -> 0.04444 Li3Ni2SbO6 + 0.04444 Li3PO4 + 0.08889 LiCl + 0.2889 NiO + 0.3333 Li2SO4 + 0.6 Ni",
+   "delta_LCO_half_meV": 136.28,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sb": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5SbO5",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 2.914"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "Sb2S3",
+   "formula": "Cl1Li28P2S23Sb2",
+   "tracked_LNO": [
+    "Sb"
+   ],
+   "delta_LNO_full_meV": 62.16,
+   "delta_LNO_half_meV": 35.18,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "Sb": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Li3Ni2SbO6",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.01961 Li28Sb2P2S23Cl + 0.9804 Li0.5Ni1O2 -> 0.02941 Ni3S2 + 0.03922 Li3Ni2SbO6 + 0.03922 Li3PO4 + 0.01961 LiCl + 0.3922 Li2SO4 + 0.8137 Ni",
+   "delta_LCO_half_meV": 68.55,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sb": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5SbO5",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 2.914"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "Sc2O3",
+   "formula": "Cl4Li18O3P4S17Sc2",
+   "tracked_LNO": [
+    "Sc"
+   ],
+   "delta_LNO_full_meV": -10.37,
+   "delta_LNO_half_meV": 6.11,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Sc": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiScO2",
+       "share": 0.6223,
+       "class": "wide",
+       "basis": "MP 갭 3.904"
+      },
+      {
+       "product": "Sc2O3",
+       "share": 0.3777,
+       "class": "wide",
+       "basis": "MP 갭 3.814"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9477 Li0.5Ni1O2 + 0.05226 Li18Sc2P4S17Cl4O3 -> 0.3159 Ni3S2 + 0.2567 Li2SO4 + 0.06504 LiScO2 + 0.2091 Li3PO4 + 0.2091 LiCl + 0.01974 Sc2O3",
+   "delta_LCO_half_meV": -12.76,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sc": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiScO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.904"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "ScCl3",
+   "formula": "Cl4Li21P4S20Sc1",
+   "tracked_LNO": [
+    "Sc"
+   ],
+   "delta_LNO_full_meV": -23.49,
+   "delta_LNO_half_meV": -17.6,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Sc": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiScO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.904"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03704 Li21ScP4(S5Cl)4 + 0.963 Li0.5Ni1O2 -> 0.213 Ni3S2 + 0.3148 Li2SO4 + 0.03704 LiScO2 + 0.1481 Li3PO4 + 0.1481 LiCl + 0.3241 Ni",
+   "delta_LCO_half_meV": -26.93,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sc": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiScO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.904"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "ScF3",
+   "formula": "Cl1Li21P4S20F3Sc1",
+   "tracked_LNO": [
+    "F",
+    "Sc"
+   ],
+   "delta_LNO_full_meV": -23.49,
+   "delta_LNO_half_meV": -17.6,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Sc": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiScO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.904"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03704 Li21ScP4S20ClF3 + 0.963 Li0.5Ni1O2 -> 0.3148 Li2SO4 + 0.03704 LiScO2 + 0.213 Ni3S2 + 0.1111 LiF + 0.03704 LiCl + 0.1481 Li3PO4 + 0.3241 Ni",
+   "delta_LCO_half_meV": -26.93,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Sc": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiScO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.904"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "SiO2",
+   "formula": "Cl4Li25O2P3S18Si1",
+   "tracked_LNO": [
+    "Si"
+   ],
+   "delta_LNO_full_meV": 37.01,
+   "delta_LNO_half_meV": 33.0,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Si": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2SiO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.077"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02941 Li25SiP3S18(Cl2O)2 + 0.9706 Li0.5Ni1O2 -> 0.3897 Li2SO4 + 0.06985 Ni3S2 + 0.02941 Li2SiO3 + 0.1176 LiCl + 0.08824 Li3PO4 + 0.761 Ni",
+   "delta_LCO_half_meV": 39.62,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Si": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li8SiO6",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.45"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "SiS2",
+   "formula": "Cl2Li25P3S22Si1",
+   "tracked_LNO": [
+    "Si"
+   ],
+   "delta_LNO_full_meV": 3.12,
+   "delta_LNO_half_meV": -2.5,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Si": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li4SiO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.784"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.973 Li0.5Ni1O2 + 0.02703 Li25SiP3(S11Cl)2 -> 0.02703 Li4SiO4 + 0.3784 Li2SO4 + 0.1081 Ni3S2 + 0.05405 LiCl + 0.08108 Li3PO4 + 0.6486 Ni",
+   "delta_LCO_half_meV": 1.59,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Si": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li8SiO6",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.45"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Sm2O3",
+   "formula": "Cl5Li17O3P4S16Sm2",
+   "tracked_LNO": [
+    "Sm"
+   ],
+   "delta_LNO_full_meV": -1.7,
+   "delta_LNO_half_meV": 18.02,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Sm": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Sm2O3",
+       "share": 0.6444,
+       "class": "wide",
+       "basis": "4f 하한 3.782 ≥ 2.0"
+      },
+      {
+       "product": "Sm3PO7",
+       "share": 0.3556,
+       "class": "wide",
+       "basis": "4f 하한 4.755 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.05535 Li17Sm2P4S16Cl5O3 + 0.9446 Li0.5Ni1O2 -> 0.01312 Sm3PO7 + 0.2558 Li2SO4 + 0.3149 Ni3S2 + 0.2083 Li3PO4 + 0.2768 LiCl + 0.03567 Sm2O3",
+   "delta_LCO_half_meV": -2.97,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sm": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Sm2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 3.782 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "SmCl3",
+   "formula": "Cl4Li21P4S20Sm1",
+   "tracked_LNO": [
+    "Sm"
+   ],
+   "delta_LNO_full_meV": -17.44,
+   "delta_LNO_half_meV": -12.96,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Sm": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Sm2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 3.782 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03509 Li21SmP4(S5Cl)4 + 0.9649 Li0.5Ni1O2 -> 0.3289 Li2SO4 + 0.1864 Ni3S2 + 0.1404 Li3PO4 + 0.1404 LiCl + 0.01754 Sm2O3 + 0.4057 Ni",
+   "delta_LCO_half_meV": -19.95,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sm": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Sm2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "4f 하한 3.782 ≥ 2.0"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "SnO2",
+   "formula": "Cl4Li25O2P3S18Sn1",
+   "tracked_LNO": [
+    "Sn"
+   ],
+   "delta_LNO_full_meV": 61.49,
+   "delta_LNO_half_meV": 49.89,
+   "differs_from_host": true,
+   "class_LNO_half": "intermediate",
+   "letter_LNO_half": "ⓒ",
+   "fate_LNO_half": {
+    "Sn": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 1.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "SnO2",
+       "share": 1.0,
+       "class": "narrow",
+       "basis": "MP 갭 0.661"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02703 Li25SnP3S18(Cl2O)2 + 0.973 Li0.5Ni1O2 -> 0.04054 Ni3S2 + 0.08108 Li3PO4 + 0.1081 LiCl + 0.02703 SnO2 + 0.4054 Li2SO4 + 0.8514 Ni",
+   "delta_LCO_half_meV": 69.71,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sn": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li8SnO6",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.813"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "SnS2",
+   "formula": "Cl4Li25P3S20Sn1",
+   "tracked_LNO": [
+    "Sn"
+   ],
+   "delta_LNO_full_meV": 38.85,
+   "delta_LNO_half_meV": 27.2,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Sn": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2SnO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.127"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02778 Li25SnP3(S5Cl)4 + 0.9722 Li0.5Ni1O2 -> 0.08681 Ni3S2 + 0.02778 Li2SnO3 + 0.08333 Li3PO4 + 0.1111 LiCl + 0.3819 Li2SO4 + 0.7118 Ni",
+   "delta_LCO_half_meV": 40.54,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sn": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li8SnO6",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.813"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "SrCl2",
+   "formula": "Cl6Li22P4S18Sr1",
+   "tracked_LNO": [
+    "Sr"
+   ],
+   "delta_LNO_full_meV": -1.42,
+   "delta_LNO_half_meV": 5.32,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Sr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "SrCl2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.227"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03448 SrLi22P4(S3Cl)6 + 0.9655 Li0.5Ni1O2 -> 0.3448 Li2SO4 + 0.1379 LiCl + 0.03448 SrCl2 + 0.1379 Ni3S2 + 0.1379 Li3PO4 + 0.5517 Ni",
+   "delta_LCO_half_meV": -0.63,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "SrS",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 2.497"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "SrO",
+   "formula": "Cl4Li22O1P4S19Sr1",
+   "tracked_LNO": [
+    "Sr"
+   ],
+   "delta_LNO_full_meV": 9.34,
+   "delta_LNO_half_meV": 8.51,
+   "differs_from_host": false,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Sr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "SrCl2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 5.227"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9688 Li0.5Ni1O2 + 0.03125 SrLi22P4S19Cl4O -> 0.3672 Li2SO4 + 0.0625 LiCl + 0.03125 SrCl2 + 0.1133 Ni3S2 + 0.125 Li3PO4 + 0.6289 Ni",
+   "delta_LCO_half_meV": 9.53,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Sr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "SrS",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 2.497"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Ta2O5",
+   "formula": "Cl4Li24O5P2S15Ta2",
+   "tracked_LNO": [
+    "Ta"
+   ],
+   "delta_LNO_full_meV": 77.05,
+   "delta_LNO_half_meV": 74.32,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ta": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiTaO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.7"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02941 Li24Ta2P2S15Cl4O5 + 0.9706 Li0.5Ni1O2 -> 0.01103 Ni3S2 + 0.4191 Li2SO4 + 0.05882 LiTaO3 + 0.05882 Li3PO4 + 0.1176 LiCl + 0.9375 Ni",
+   "delta_LCO_half_meV": 90.25,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ta": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5TaO5",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.714"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "TaCl5",
+   "formula": "Cl9Li24P3S15Ta1",
+   "tracked_LNO": [
+    "Ta"
+   ],
+   "delta_LNO_full_meV": 15.77,
+   "delta_LNO_half_meV": 32.52,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ta": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li3TaO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.567"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9565 Li0.5Ni1O2 + 0.04348 Li24TaP3(S5Cl3)3 -> 0.1739 Ni3S2 + 0.3043 Li2SO4 + 0.04348 Li3TaO4 + 0.1304 Li3PO4 + 0.3913 LiCl + 0.4348 Ni",
+   "delta_LCO_half_meV": 17.42,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ta": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li5TaO5",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.714"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "TiCl4",
+   "formula": "Cl8Li25P3S16Ti1",
+   "tracked_LNO": [
+    "Ti"
+   ],
+   "delta_LNO_full_meV": 27.39,
+   "delta_LNO_half_meV": 33.49,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ti": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2TiO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.034"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03571 Li25TiP3(S2Cl)8 + 0.9643 Li0.5Ni1O2 -> 0.3482 Li2SO4 + 0.1116 Ni3S2 + 0.03571 Li2TiO3 + 0.2857 LiCl + 0.1071 Li3PO4 + 0.6295 Ni",
+   "delta_LCO_half_meV": 29.03,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ti": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li4TiO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.557"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "TiF4",
+   "formula": "Li25P3S20F4Ti1",
+   "tracked_LNO": [
+    "F",
+    "Ti"
+   ],
+   "delta_LNO_full_meV": 23.68,
+   "delta_LNO_half_meV": 15.31,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Ti": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2TiO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.034"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9722 Li0.5Ni1O2 + 0.02778 Li25TiP3(S5F)4 -> 0.02778 Li2TiO3 + 0.08681 Ni3S2 + 0.08333 Li3PO4 + 0.1111 LiF + 0.3819 Li2SO4 + 0.7118 Ni",
+   "delta_LCO_half_meV": 22.2,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Ti": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li4TiO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.557"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "TiO2",
+   "formula": "Cl4Li25O2P3S18Ti1",
+   "tracked_LNO": [
+    "Ti"
+   ],
+   "delta_LNO_full_meV": 45.7,
+   "delta_LNO_half_meV": 37.71,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Ti": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2TiO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.034"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9706 Li0.5Ni1O2 + 0.02941 Li25TiP3S18(Cl2O)2 -> 0.3897 Li2SO4 + 0.06985 Ni3S2 + 0.02941 Li2TiO3 + 0.1176 LiCl + 0.08824 Li3PO4 + 0.761 Ni",
+   "delta_LCO_half_meV": 50.31,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Ti": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li4TiO4",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.557"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "V2O5",
+   "formula": "Cl4Li24O5P2S15V2",
+   "tracked_LNO": [
+    "V"
+   ],
+   "delta_LNO_full_meV": 102.9,
+   "delta_LNO_half_meV": 102.71,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "V": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Li3VO4",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02222 Li24V2P2S15Cl4O5 + 0.9778 Li0.5Ni1O2 -> 0.04444 Li3VO4 + 0.3333 Li2SO4 + 0.3778 NiO + 0.08889 LiCl + 0.04444 Li3PO4 + 0.6 Ni",
+   "delta_LCO_half_meV": 133.98,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "V": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "Li3VO4",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "WO3",
+   "formula": "Cl5Li17O3P4S16W1",
+   "tracked_LNO": [
+    "W"
+   ],
+   "delta_LNO_full_meV": -6.04,
+   "delta_LNO_half_meV": 36.59,
+   "differs_from_host": true,
+   "class_LNO_half": "undetermined",
+   "letter_LNO_half": "ⓓ",
+   "fate_LNO_half": {
+    "W": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "NiWO4",
+       "share": 1.0,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.0524 Li17P4WS16Cl5O3 + 0.9476 Li0.5Ni1O2 -> 0.2511 Li2SO4 + 0.0524 NiWO4 + 0.2096 Li3PO4 + 0.2937 Ni3S2 + 0.01419 NiCl2 + 0.2336 LiCl",
+   "delta_LCO_half_meV": 5.34,
+   "class_LCO_half": "undetermined",
+   "fate_LCO_half": {
+    "W": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 1.0
+     },
+     "products": [
+      {
+       "product": "WS2",
+       "share": 0.8914,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      },
+      {
+       "product": "Li4WO5",
+       "share": 0.1086,
+       "class": "undetermined",
+       "basis": "+U 전이금속 · Cu 포함 (자성 · +U 의존 · 금속 선언 아님)"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "Y2O3",
+   "formula": "Cl4Li18O3P4S17Y2",
+   "tracked_LNO": [
+    "Y"
+   ],
+   "delta_LNO_full_meV": 1.5,
+   "delta_LNO_half_meV": 12.97,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Y": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Y2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.097"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04762 Li18Y2P4S17Cl4O3 + 0.9524 Li0.5Ni1O2 -> 0.2619 Ni3S2 + 0.2857 Li2SO4 + 0.1905 Li3PO4 + 0.1905 LiCl + 0.04762 Y2O3 + 0.1667 Ni",
+   "delta_LCO_half_meV": 0.34,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Y": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiYO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.108"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "YCl3",
+   "formula": "Cl4Li21P4S20Y1",
+   "tracked_LNO": [
+    "Y"
+   ],
+   "delta_LNO_full_meV": -18.14,
+   "delta_LNO_half_meV": -13.58,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Y": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Y2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.097"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03509 Li21YP4(S5Cl)4 + 0.9649 Li0.5Ni1O2 -> 0.1864 Ni3S2 + 0.3289 Li2SO4 + 0.1404 Li3PO4 + 0.1404 LiCl + 0.01754 Y2O3 + 0.4057 Ni",
+   "delta_LCO_half_meV": -20.82,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Y": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Y2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.097"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "YF3",
+   "formula": "Cl1Li21P4S20F3Y1",
+   "tracked_LNO": [
+    "F",
+    "Y"
+   ],
+   "delta_LNO_full_meV": -18.14,
+   "delta_LNO_half_meV": -13.58,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Y": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Y2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.097"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.03509 Li21YP4S20ClF3 + 0.9649 Li0.5Ni1O2 -> 0.3289 Li2SO4 + 0.1864 Ni3S2 + 0.1053 LiF + 0.03509 LiCl + 0.1404 Li3PO4 + 0.01754 Y2O3 + 0.4057 Ni",
+   "delta_LCO_half_meV": -20.82,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Y": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Y2O3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.097"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "ZnO",
+   "formula": "Cl5Li21O1P4S18Zn1",
+   "tracked_LNO": [
+    "Zn"
+   ],
+   "delta_LNO_full_meV": 5.24,
+   "delta_LNO_half_meV": 14.05,
+   "differs_from_host": true,
+   "class_LNO_half": "intermediate",
+   "letter_LNO_half": "ⓒ",
+   "fate_LNO_half": {
+    "Zn": {
+     "shares": {
+      "wide": 0.0,
+      "narrow": 1.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "ZnO",
+       "share": 1.0,
+       "class": "narrow",
+       "basis": "MP 갭 0.732"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.04 Li21ZnP4S18Cl5O + 0.96 Li0.5Ni1O2 -> 0.2 Ni3S2 + 0.16 Li3PO4 + 0.04 ZnO + 0.2 LiCl + 0.32 Li2SO4 + 0.36 Ni",
+   "delta_LCO_half_meV": 5.03,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Zn": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6ZnO4",
+       "share": 0.8538,
+       "class": "wide",
+       "basis": "MP 갭 3.512"
+      },
+      {
+       "product": "ZnS",
+       "share": 0.1462,
+       "class": "wide",
+       "basis": "MP 갭 2.021"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": true
+  },
+  {
+   "species": "ZrBr4",
+   "formula": "Li25P3S20Br4Zr1",
+   "tracked_LNO": [
+    "Br",
+    "Zr"
+   ],
+   "delta_LNO_full_meV": 27.02,
+   "delta_LNO_half_meV": 16.97,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    },
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2ZrO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.734"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.02778 Li25ZrP3(S5Br)4 + 0.9722 Li0.5Ni1O2 -> 0.02778 Li2ZrO3 + 0.08681 Ni3S2 + 0.3819 Li2SO4 + 0.1111 LiBr + 0.08333 Li3PO4 + 0.7118 Ni",
+   "delta_LCO_half_meV": 25.85,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Br": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiBr",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 4.935"
+      }
+     ]
+    },
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6Zr2O7",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.944"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "ZrCl4",
+   "formula": "Cl8Li20P4S16Zr1",
+   "tracked_LNO": [
+    "Zr"
+   ],
+   "delta_LNO_full_meV": -37.91,
+   "delta_LNO_half_meV": -14.44,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "ZrO2",
+       "share": 0.8667,
+       "class": "wide",
+       "basis": "MP 갭 3.532"
+      },
+      {
+       "product": "Li2ZrO3",
+       "share": 0.1333,
+       "class": "wide",
+       "basis": "MP 갭 3.734"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.05376 Li20ZrP4(S2Cl)8 + 0.9462 Li0.5Ni1O2 -> 0.2294 Li2SO4 + 0.007168 Li2ZrO3 + 0.3154 Ni3S2 + 0.2151 Li3PO4 + 0.4301 LiCl + 0.04659 ZrO2",
+   "delta_LCO_half_meV": -41.19,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2ZrO3",
+       "share": 0.9623,
+       "class": "wide",
+       "basis": "MP 갭 3.734"
+      },
+      {
+       "product": "Li6Zr2O7",
+       "share": 0.0377,
+       "class": "wide",
+       "basis": "MP 갭 3.944"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "ZrF4",
+   "formula": "Li25P3S20F4Zr1",
+   "tracked_LNO": [
+    "F",
+    "Zr"
+   ],
+   "delta_LNO_full_meV": 27.02,
+   "delta_LNO_half_meV": 16.97,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li2ZrO3",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.734"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.9722 Li0.5Ni1O2 + 0.02778 Li25ZrP3(S5F)4 -> 0.02778 Li2ZrO3 + 0.08681 Ni3S2 + 0.3819 Li2SO4 + 0.1111 LiF + 0.08333 Li3PO4 + 0.7118 Ni",
+   "delta_LCO_half_meV": 25.85,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "F": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "LiF",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 8.716"
+      }
+     ]
+    },
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6Zr2O7",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.944"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  },
+  {
+   "species": "ZrO2",
+   "formula": "Cl4Li25O2P3S18Zr1",
+   "tracked_LNO": [
+    "Zr"
+   ],
+   "delta_LNO_full_meV": 48.85,
+   "delta_LNO_half_meV": 38.6,
+   "differs_from_host": true,
+   "class_LNO_half": "wide",
+   "letter_LNO_half": "ⓐ",
+   "fate_LNO_half": {
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "ZrO2",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.532"
+      }
+     ]
+    }
+   },
+   "endpoint_LNO_half": false,
+   "reaction_LNO_half": "0.973 Li0.5Ni1O2 + 0.02703 Li25ZrP3S18(Cl2O)2 -> 0.4054 Li2SO4 + 0.04054 Ni3S2 + 0.08108 Li3PO4 + 0.1081 LiCl + 0.02703 ZrO2 + 0.8514 Ni",
+   "delta_LCO_half_meV": 54.17,
+   "class_LCO_half": "wide",
+   "fate_LCO_half": {
+    "Zr": {
+     "shares": {
+      "wide": 1.0,
+      "narrow": 0.0,
+      "metallic": 0.0,
+      "undetermined": 0.0
+     },
+     "products": [
+      {
+       "product": "Li6Zr2O7",
+       "share": 1.0,
+       "class": "wide",
+       "basis": "MP 갭 3.944"
+      }
+     ]
+    }
+   },
+   "R4_cathode_dependent": false
+  }
+ ],
+ "pairs_R5": [
+  {
+   "oxide": "Al2O3",
+   "sulfide": "Al2S3",
+   "delta_O_minus_S_meV": 73.96,
+   "class_O": "wide",
+   "class_S": "wide",
+   "differs": true
+  },
+  {
+   "oxide": "CaO",
+   "sulfide": "CaS",
+   "delta_O_minus_S_meV": 12.24,
+   "class_O": "wide",
+   "class_S": "wide",
+   "differs": true
+  },
+  {
+   "oxide": "Ga2O3",
+   "sulfide": "Ga2S3",
+   "delta_O_minus_S_meV": 46.37,
+   "class_O": "undetermined",
+   "class_S": "wide",
+   "differs": true
+  },
+  {
+   "oxide": "GeO2",
+   "sulfide": "GeS2",
+   "delta_O_minus_S_meV": 22.78,
+   "class_O": "wide",
+   "class_S": "wide",
+   "differs": true
+  },
+  {
+   "oxide": "Li2O",
+   "sulfide": "Li2S",
+   "delta_O_minus_S_meV": 11.43,
+   "class_O": "na",
+   "class_S": "na",
+   "differs": true
+  },
+  {
+   "oxide": "MgO",
+   "sulfide": "MgS",
+   "delta_O_minus_S_meV": 13.2,
+   "class_O": "wide",
+   "class_S": "wide",
+   "differs": true
+  },
+  {
+   "oxide": "Na2O",
+   "sulfide": "Na2S",
+   "delta_O_minus_S_meV": 11.43,
+   "class_O": "wide",
+   "class_S": "wide",
+   "differs": true
+  },
+  {
+   "oxide": "Sb2O5",
+   "sulfide": "Sb2S3",
+   "delta_O_minus_S_meV": 65.95,
+   "class_O": "undetermined",
+   "class_S": "undetermined",
+   "differs": true
+  },
+  {
+   "oxide": "SiO2",
+   "sulfide": "SiS2",
+   "delta_O_minus_S_meV": 35.5,
+   "class_O": "wide",
+   "class_S": "wide",
+   "differs": true
+  },
+  {
+   "oxide": "SnO2",
+   "sulfide": "SnS2",
+   "delta_O_minus_S_meV": 22.69,
+   "class_O": "intermediate",
+   "class_S": "wide",
+   "differs": true
+  }
+ ],
+ "summary": {
+  "n_designs": 91,
+  "class_LNO_half": {
+   "metallic": 2,
+   "wide": 64,
+   "undetermined": 18,
+   "intermediate": 3,
+   "na": 4
+  },
+  "n_differs_from_host": 57,
+  "n_R4_flag": 11,
+  "n_pairs_differ": 10
+ }
+}

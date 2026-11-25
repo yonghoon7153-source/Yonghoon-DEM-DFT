@@ -1,0 +1,48 @@
+{
+ "schema": "prereg_amendment/1",
+ "record_kind": "prospective",
+ "date": "2026-09-25",
+ "amends": "db/properties/b2o3_framework_event_rate_prereg_2026_09_23.json",
+ "amends_decision": "D-2026-09-23-b2o3-framework-event-rate",
+ "follows": "db/properties/b2o3_framework_event_rate_amendment_2026_09_24.json (개정 1 · 봉인 — 고치지 않고 덧붙인다)",
+ "results_seen": false,
+ "결과_열람_상태": "census 0 회 — 끝난 런은 gabia s2·s3 와 kgy s6 (완료 표지 msd.json · ensemble_results.json 과 옮김 검증용 sha 만 봤다 · 사건 수는 열람하지 않았다)",
+ "제목": "b2o3 사건빈도 — 기계 개정 2: 시드 5 도 kgy RTX 3090 에서 돈다 (gabia 는 s4 뒤 멈춘다 · 카드 원문 보존)",
+ "무엇이_바뀌나": {
+  "개정_1_까지": "시드 2–5 = gabia A6000 · 시드 6 = kgy",
+  "개정_2": "시드 2–4 = gabia A6000 (지금 s4 · 루프 그대로) · **시드 5·6 = kgy RTX 3090**"
+ },
+ "무엇이_안_바뀌나": [
+  "총 15런 · **16번째 런 없음**",
+  "512원자 2×2×1 · 600/650/700 K · 400 ps · turbo · uma-s-1p1 omat · save_traj",
+  "보고량 · 도구·문턱 · 판정 문구 · 무효 조건 — 카드 원문 그대로",
+  "옮김 규약 — ensemble_results.json 이 있을 때만 시드 통째로 (개정 1 과 같다)"
+ ],
+ "왜": "kgy 가 s6 을 끝내 비었다 (런당 9.9 h 실측). s5 를 kgy 에 주면 gabia 는 s4 까지만 돌면 되고, 끝나는 시각이 반나절~하루 당겨진다 (추정). 1저자 09-25 '바로 돌리자'.",
+ "개정_1_의_경합_우려에_대한_답": "개정 1 은 *'s5 까지 옮기면 gabia 루프가 s5 에 닿는 시각과 경합한다'* 고 적었다. 그 경합을 **막는 파일**로 없앤다 — gabia OUTROOT 에 `s5` 라는 **파일**을 먼저 놓으면, gabia 루프가 s5 에 닿을 때 드라이버의 `out_root.mkdir` 이 UMA 로드 전에 실패하고 러너(`set -euo pipefail`)가 끝난다. s6 은 이미 제자리에 있으므로 잃는 런이 없다.",
+ "중복_방지_규약": {
+  "정본": "s5 의 정본은 **kgy 런**이다 (s6 과 같다).",
+  "막는_파일": "gabia `/root/work/runs/b2o3_221_eventrate_400ps/s5` — kgy s5 발사 **전에** 놓는다. gabia 가 이미 s5 를 시작했으면 개정 2 는 무효 — 되돌려 gabia 가 s5 를 돌게 두고 kgy s5 는 띄우지 않는다.",
+  "옮김": "kgy s5 의 세 온도가 다 끝나 `ensemble_results.json` 이 생기면 gabia `s5.incoming/` 으로 rsync → gabia 에서 막는 파일을 치우고 mv (s6 과 같은 절차 · sha 대조).",
+  "금지": "s5 의 온도를 두 기계에 나눠 섞지 않는다."
+ },
+ "교란_방지": "시드 **통째로** 나눈다 — 온도마다 두 기계가 섞여 온도 ↔ 기계 교란이 없다. 두 기계 모두 Ampere · 같은 turbo 모드. 이제 기계별 시드 수는 gabia 3 (s2–s4) · kgy 2 (s5·s6).",
+ "분석에_붙는_것": "런마다 기계를 기록한다. 기계 층화 표는 **점검용**이지 게이트가 아니다 — 판정은 카드 원문 문구 그대로.",
+ "이_개정문이_못_하는_것": [
+  "kgy 런이 gabia 런과 수치적으로 같음을 보증하지 않는다",
+  "gabia 러너가 막는 파일에서 '깨끗하게' 멈추는 것을 보여 주지 않는다 — 드라이버 오류로 끝난다 (그게 의도다). 멈춘 뒤 gabia GPU 가 비는지는 사람이 확인한다",
+  "옮김을 자동으로 하지 않는다"
+ ],
+ "status": "ratified",
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-25",
+  "by": "1저자",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-25T06:45:00Z",
+  "commit": "25e9f2544e154a0c0e64017f363ea6e1b86e7a6a",
+  "content_digest": "186edb6970e208e0544a0d0139dd58390165eafd68c1de1c2fc2595a55483437",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다 (원 카드와 같은 규칙)."
+ }
+}

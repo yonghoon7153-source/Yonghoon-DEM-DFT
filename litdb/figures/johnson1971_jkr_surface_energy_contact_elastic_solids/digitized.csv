@@ -1,0 +1,20 @@
+# johnson1971_jkr_surface_energy_contact_elastic_solids — hand-read points from the 600 dpi crops (fig_2..fig_5.png).
+# Method: axis calibration from detected tick centres (pixels) in each crop; curve/line pixel runs located by column probes; symbols vs lines identified by eye.
+# Precision: linear axes ±1-2 %, log axes ±3-5 % (scan distortion); TREND/consistency checks only — never quote at more digits than shown.
+# Units: Fig 2 y = 19 x contact radius (cm); Fig 3 y = 15 x contact diameter (cm); Fig 4 y = contact diameter (cm); Fig 5 = printed non-dimensional axes (y label printed without the 1/3 exponent).
+figure,series,x_quantity,x_value,y_quantity,y_value,pixel_x,pixel_y,note
+2,dry contact modified-theory line,load_g,0.113,19x_contact_radius_cm,1.23,790,832,"crop fig_2.png; log axes: x 0.1 g at 746 px, decade 843 px; y 0.1 at 1764 px, decade 854.5 px"
+2,water contact modified-theory line,load_g,0.113,19x_contact_radius_cm,0.68,790,1054,
+2,Hertz line (SDS points lie on it),load_g,0.104,19x_contact_radius_cm,0.46,760,1194,
+2,dry contact modified-theory line,load_g,9.17,19x_contact_radius_cm,2.29,2400,602,
+2,Hertz line,load_g,9.17,19x_contact_radius_cm,2.00,2400,653,"implies K = RP/a^3 ~ 8.5e5 Pa (with 0.10 g point: 7.4e5 Pa)"
+3,modified-theory line,load_g,0.06,15x_contact_diameter_cm,2.50,875,590,"linear axes: x -1 g at 365 px, 479.2 px/g (0 g at 846); y 0 at 1784 px, 477.7 px/unit"
+3,modified-theory line left end (near pull-off),load_g,-0.68,15x_contact_diameter_cm,1.60,520,1020,"JKR pull-off for W=68 mJ/m2, R=2.2 cm: -0.72 g"
+3,Hertz line,load_g,4.0,15x_contact_diameter_cm,2.78,2747,458,"implies K ~ 1.09e6 Pa (vs Fig 2 7.4-8.5e5 Pa)"
+4,2.45 cm radius plateau,load_g,0.1,contact_diameter_cm,0.555,720,825,"log axes: y 0.1 at 1276 px, 1.0 at 670 px, 10 at 54 px"
+4,7.9 cm radius plateau,load_g,0.1,contact_diameter_cm,1.39,720,581,
+4,25.5 cm radius plateau,load_g,0.1,contact_diameter_cm,2.75,720,399,
+4,Hertz line for 2.45 cm,load_g,0.1,contact_diameter_cm,0.174,720,1131,
+5,modified-theory line,P/3γπR,-0.052,a(K/3γπR²)^(1/3),1.229,1200,526,"linear axes: x 0 at 1262 px, 1183 px/unit; y 0 at 1706 px, 960 px/unit; JKR theory 1.237"
+5,modified-theory line,P/3γπR,-0.031,a(K/3γπR²)^(1/3),1.239,1225,517,"JKR theory 1.246"
+5,dashed pull-off line,P/3γπR,-0.496,a(K/3γπR²)^(1/3),,675,,"JKR theory -0.5"

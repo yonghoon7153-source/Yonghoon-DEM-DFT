@@ -1,0 +1,312 @@
+{
+ "slug": "tjaden2018_tortuosity_review_calculation_approaches",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Illustration of a tortuous path of length Δl through a porous microstructure of thickness Δx, where the shortest tor- tuous path is used to calculate the tortuosity of the sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    547.3,
+    294.6,
+    753.8
+   ],
+   "w": 1004,
+   "h": 861,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.562
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparison of Bruggeman exponents and scaling parameters for different battery layers referenced in Table 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    47.3,
+    532.3,
+    392.6
+   ],
+   "w": 1994,
+   "h": 1440,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Mass balance over a Wicke Kallenbach diffusion cell to extract the diffusion flow rate across a porous sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    47.3,
+    509.9,
+    216.5
+   ],
+   "w": 1901,
+   "h": 706,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.786
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Comparison of experimental- and image-based tor- tuosity values at different temperatures and for varying H2 con- centrations in N2 reproduced with permission from Elsevier [72].",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    47.3,
+    294.6,
+    239.9
+   ],
+   "w": 1004,
+   "h": 803,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Illustration demonstrating that high-resolution tomography is necessary to extract microstructural features which affect diffusive mass transport.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    475.0,
+    541.3,
+    764.8
+   ],
+   "w": 2032,
+   "h": 1208,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.706
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Geometric tortuosity distribution of the pore phase of the LiCoO2 battery cathode of yz (A), xz (B) and xy (C) planes repro- duced with permission from Elsevier [114].",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    642.2,
+    541.2,
+    764.8
+   ],
+   "w": 2032,
+   "h": 512,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.491
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Illustration of the pore centroid method calculation approach which measures the distance d(n) of the centres of mass between two 2D image slices.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    584.2,
+    541.2,
+    764.8
+   ],
+   "w": 2031,
+   "h": 753,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Results of the TauFactor solver by Cooper [118] running across the pore phase of a porous sample showing the binary image map, the initial, linear concentration distribution and the concentration distribution at steady state.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    641.7,
+    541.2,
+    764.8
+   ],
+   "w": 2032,
+   "h": 514,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.519
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Figure 9. RVE analysis of the tortuosity factor for the pore and LSCF phase of an SOFC cathode as function of electrode thick- ness reproduced with permission from Elsevier [147].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.7,
+    576.1,
+    541.3,
+    753.8
+   ],
+   "w": 1004,
+   "h": 741,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Temperature distribution across the porous phase of an YSZ porous support membrane of an oxygen transport membrane.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    472.1,
+    294.6,
+    753.8
+   ],
+   "w": 1004,
+   "h": 1174,
+   "dpi": 300,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Comparison of Bruggeman exponent and scaling parameter for battery layers fitted to experimental results. Material γ α Reference Battery electrode LiMn2O4 1 3.3 Doyle et al. [48] Battery separator PVdF 1 4.5 Doyle et al. [48] Battery separator PVdF 1 2.4 Arora et al. [32] Battery electrode MCMB 2528 and 1 5.2 Arora et al. [32] LiMn2O4 1.8 1.53 Thorat et al. [47] Battery electrode LiFePO4 and LiCoO2 Battery graphite electrode 0.115 3.2111 Kehrwald et al. [51] Battery graphite electrode 0.1146 3.159 Kehrwald et al. [51] Battery electrode LiCoO2 2.5 1.27 Zacharias et al.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    22.2,
+    540.4,
+    795.9
+   ],
+   "w": 1883,
+   "h": 2999,
+   "dpi": 279,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 13,
+   "file": "tab_2.png",
+   "caption": "Table 2. Tortuosity values for pore, Ni and YSZ phase of an SOFC anode calculated using the random walk method and LBM [103]. Random walk method Lattice Boltzmann method Pore phase x 1.43 1.42 y 1.41 1.44 z 1.33 1.35 Nickel phase x 4.70 4.66 y 5.43 5.43 z 2.63 2.63 YSZ phase x 5.28 5.26 y 3.87 3.85 z 3.14 3.14",
+   "rotated_deg": 0,
+   "bbox": [
+    54.9,
+    22.2,
+    540.3,
+    795.5
+   ],
+   "w": 1882,
+   "h": 2997,
+   "dpi": 279,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 13,
+   "file": "tab_3.png",
+   "caption": "Table 3. Tortuosity values for graphite and pore phase using the random walk method and finite volume method [137]. Random walk method Finite volume method Graphite phase x 1.57 1.56 y 1.92 1.89 z 2.59 2.57 Pore phase x 1.42 1.42 y 1.19 1.18 z 2.39 2.37",
+   "rotated_deg": 0,
+   "bbox": [
+    54.9,
+    22.2,
+    540.3,
+    795.5
+   ],
+   "w": 1882,
+   "h": 2997,
+   "dpi": 279,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 15,
+   "file": "tab_4.png",
+   "caption": "Table 4. Comparison of tortuosity values along each dimension for pore phases of porous membranes calculated using flux-based algorithms. Pixel Sample volume Porosity τ2 τ Calculation method Sample Tomography size Reference [μm] [μm3] [-] [-] [-] technique Dimension FIB-SEM 0.0417 105.2 0.195 x 2.10 1.45 Wilson et al. Laplace Ni-YSZ based SOFC [102] y 2.20 1.48 z 1.90 1.38 Laplace equation anode X-ray 0.0427 250.0 0.300 x 2.94 1.71 Izzo et al. [81] y 3.28 1.81 z 3.15 1.77 Laplace Ni-YSZ based SOFC equation anode X-ray 0.008 13.8 0.180 x 1.77 1.33 Grew et al. Ni-YSZ based SOFC [120] y 1.51 1.23 z Not presented Finite volume equation anode X-ray 0.016 1,100.0 0.451 x 2.01 1.42 Tariq et al. Mesocarbon microbead [137] y 1.39 1.18 z 5.61 2.37 Lattice method based battery electrode FIB-SEM 0.062 972.4 0.496 x 2.03 1.42 Iwai et al. Ni-YSZ based SOFC [103] y 2.06 1.44 z 1.83 1.35 Random walk Bol",
+   "rotated_deg": 0,
+   "bbox": [
+    54.9,
+    22.2,
+    540.3,
+    790.3
+   ],
+   "w": 1895,
+   "h": 2999,
+   "dpi": 281,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 16,
+   "file": "tab_5.png",
+   "caption": "Table 5. Comparison of tortuosity values along each dimension for pore phases of porous membranes calculated using geometric- based algorithms. Pixel Sample volume Porosity τ2 τ size Calculation method Sample Tomography Reference [μm] [μm3] [-] [-] [-] Dimension technique X-ray 0.65 17,487,363 0.431 x 1.16 1.08 Taiwo et al. [2] y 1.12 1.06 z 1.02 1.01 FMM Graphite based battery FMM LiCoO2 based battery electrode X-ray 0.65 28,080,838 0.484 x 1.10 1.05 Taiwo et al. [2] Y 1.11 1.05 z 1.03 1.01 FMM LiMn2O4 based battery electrode X-ray 0.65 27,529,606 0.453 x 1.14 1.07 Taiwo et al. [2] y 1.11 1.05 z 1.02 1.01 FMM YSZ based porous electrode FIB-SEM 0.030 421.9 0.350 x 1.42 1.19 Tjaden et al. [85] y 1.25 1.12 z 1.23 1.11 FMM YSZ based porous support layer X-ray 0.0325 314.4 0.410 x 1.44 1.20 Tjaden et al. [85] y 1.25 1.12 z 1.19 1.09 Pore centroid support layer X-ray 0.020 3,000 0.410 x 1.46 ",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    22.2,
+    540.4,
+    796.1
+   ],
+   "w": 1882,
+   "h": 2999,
+   "dpi": 279,
+   "src": "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf",
+   "blank": 0.884
+  }
+ ],
+ "missing_labels": []
+}

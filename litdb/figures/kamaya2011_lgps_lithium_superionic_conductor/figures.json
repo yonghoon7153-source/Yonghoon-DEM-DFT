@@ -1,0 +1,143 @@
+{
+ "slug": "kamaya2011_lgps_lithium_superionic_conductor",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "125._A_lithium_superionic_conductor.pdf",
+  "125._Sup_A_lithium_superionic_conductor.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 | Lithium-ion conductivity of Li10GeP2S12. a, Impedance plots of the conductivity data from low to high temperatures and Arrhenius conductivity plots of Li10GeP2S12. The plotted conductivity represents the sum of the grain boundary and bulk conductivities. Li10GeP2S12 exhibits an extremely high ionic conductivity even at room temperature. b, Current–voltage curve of Li/Li10GeP2S12/Au cell. The decomposition potential of the new Li10GeP2S12 phase exceeds 5 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    45.0,
+    549.6,
+    266.9
+   ],
+   "w": 2150,
+   "h": 926,
+   "dpi": 300,
+   "src": "125._A_lithium_superionic_conductor.pdf",
+   "blank": 0.963,
+   "viewed": true,
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 64.8-266.9) cut the panel letters 'a' / 'b' and the top axis title 'T (°C)' (y ~50-60); clip top moved to y 45, below the running header (y 39)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2 | Crystal structure of Li10GeP2S12. a, The framework structure and lithium ions that participate in ionic conduction. b, Framework structure of Li10GeP2S12. One-dimensional (1D) chains formed by LiS6 octahedra and (Ge0.5P0.5)S4 tetrahedra, which are connected by a common edge. These chains are connected by a common corner with PS4 tetrahedra. c, Conduction pathways of lithium ions. Zigzag conduction pathways along the c axis are indicated. Lithium ions in the LiS4 tetrahedra (16h site) and LiS4 tetrahedra (8f site) participate in ionic conduction. Thermal ellipsoids are drawn with a 30% probability. The anisotropic character of the thermal vibration of lithium ions in three tetrahedral sites gives rise to 1D conduction pathways. 2b sites. The 4d tetrahedral site is occupied by Ge and P ions with occupancy parameters of 0.515(5) and 0.485(5), respectively. The 2b tetrahedral site",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    318.3,
+    554.0,
+    612.9
+   ],
+   "w": 2169,
+   "h": 1228,
+   "dpi": 300,
+   "src": "125._A_lithium_superionic_conductor.pdf",
+   "blank": 0.758,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3 | Thermal evolution of ionic conductivity of the new Li10GeP2S12 phase, together with those of other lithium solid electrolytes, organic liquid electrolytes, polymer electrolytes, ionic liquids and gel electrolytes3–8,13–16,20,22. The new Li10GeP2S12 exhibits the highest lithium ionic conductivity (12 m S cm−1 at 27 ◦C) of the solid lithium conducting membranes of inorganic, polymer or composite systems. Because organic electrolytes usually have transport numbers below 0.5, inorganic lithium electrolytes have extremely high conductivities. Figure 1 shows the conductivity measurement results for the Li10GeP2S12 produced in the present study. The conductivity was calculated from the impedance plots shown in Fig. 1a, which are characteristic of pure ionic conductors; they consist of a semicircle and a spike, which respectively correspond to contributions from the bulk/grain boundar",
+   "rotated_deg": 0,
+   "bbox": [
+    41.3,
+    48.0,
+    562.8,
+    317.0
+   ],
+   "w": 2173,
+   "h": 1121,
+   "dpi": 300,
+   "src": "125._A_lithium_superionic_conductor.pdf",
+   "blank": 0.962,
+   "recrop": "2026-11-10 litdb-curator: auto crop kept only the lower half (bbox y 188.3-319.6) - the in-figure label 'Glass electrolyte Li2S-P2S5' (y 186) was taken as the upper crop boundary; clip = top T axis label (y 52.5) to the x-axis title (y 313.6), x = vector drawing extent (42.3-562.6), above the caption (y 323.6)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4 | Charge–discharge curves of an all-solid-state battery consisting of a LiCoO2 cathode, a Li10GeP2S12 electrolyte and an In metal anode. The current density is 14 mA g−1. The battery has a discharge capacity of over 120 mA h g−1 and an excellent discharge efﬁciency of about 100% after the second cycle, demonstrating that Li10GeP2S12 is suitable as an electrolyte for all-solid-state batteries. solid electrolytes over organic electrolytes. Many materials have been proposed for overcoming the safety problems associated with high-energy-density batteries. Figure 3 also shows the ionic conduc- tivities of an inorganic solid electrolyte (Li2S–P2S5), an ionic liquid (1 M LiBF4/1-ethyl-3-methylimidazolium tetrafluoroborate21) and a polymer electrolyte, LiN (CF3SO2)2/(CH2CH2O)n (n=8; ref. 14). These electrolytes have conductivities that are several orders of mag- nitude lower than those ",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    46.5,
+    554.0,
+    298.7
+   ],
+   "w": 2169,
+   "h": 1052,
+   "dpi": 300,
+   "src": "125._A_lithium_superionic_conductor.pdf",
+   "blank": 0.966,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "FIG. 1: (Supplementary Figure) Neutron Rietveld refinement of Li10GeP2S12. Diffraction data were obtained using neutron radiation at room temperature. Red: observed intensities; black: calculated intensities; blue: difference plot; green makers indicate the position of the diffraction lines. The excluded regions are due to the vanadium cell used for diffraction measurement.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    139.2,
+    522.0,
+    333.0
+   ],
+   "w": 1830,
+   "h": 809,
+   "dpi": 300,
+   "blank": 0.942,
+   "src": "125._Sup_A_lithium_superionic_conductor.pdf",
+   "manual_crop": "2026-11-10 litdb-curator: auto extractor skipped fS1 as 'no graphics (img0/draw0)' although SI p.2 carries the Rietveld plot as ~6.5k vector paths; clip = union of vector drawings between the section heading (y 95.7) and the caption (y 338.7) incl. the y-axis label and the d-spacing axis title",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table 1 (Supplementary Table) Rietveld refinement result for neutron diffraction pattern of Li10GeP2S12 at 27 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.4,
+    127.6,
+    506.1,
+    696.0
+   ],
+   "w": 1758,
+   "h": 2369,
+   "dpi": 300,
+   "src": "125._Sup_A_lithium_superionic_conductor.pdf",
+   "blank": 0.952,
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 127.6-655.3) cut the two footer lines 'Unit cell: tetragonal P42/nmc ... V = 952.349(6) A3' (y 658.9-672.3) and 'Rwp = 4.25 ... chi2 = 9.08' (y 678.9-692.4); clip extended to y 696",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

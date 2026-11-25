@@ -1,0 +1,51 @@
+[2026-10-09 22:32:29] ■ start · HEAD 1b7a9091 · GPU 3096 MiB
+[2026-10-09 22:32:29] ■ 0 build endpoint inputs
+[2026-10-09 22:32:30] ■ 1 endpoints relax
+[22:32:30] ⚠ GPU 가 이미 3096 MiB 쓰인다 (UMA?) — 같이 돌립니다. OOM 이면 멈추세요.
+[22:32:30]   ▶ li2s/ep_initial relax
+[23:50:33]   ✅ li2s/ep_initial 수렴
+[23:50:33]   ▶ li2s/ep_final relax
+[01:10:39]   ✅ li2s/ep_final 수렴
+[01:10:39] 끝점 이완 끝 — build_neb_inputs.py 를 **다시 돌려** 이완 좌표를 승계시킬 것
+[2026-10-10 01:10:39] ■ G1 ok
+[2026-10-10 01:10:39] ■ 2 build no-CI
+[2026-10-10 01:10:40] ■ 3 NEB no-CI
+[01:10:40] ⚠ GPU 가 이미 3097 MiB 쓰인다 (UMA?) — 같이 돌립니다. OOM 이면 멈추세요.
+[01:10:40] ═══ li2s ═══
+[01:10:40]   ▶ neb.x (원자 23)  — 진행은 neb.out 의 'activation energy' 줄로 본다
+[11:23:34]   ✅ 수렴
+     activation energy (->) =   0.347185 eV
+     activation energy (<-) =   0.347185 eV
+[11:23:34] ═══ 결산 ═══
+⚠ 루트 없음: /data/work/runs/sei_neb_v2
+⚠ 루트 없음: /data/work/runs/sei_neb_v2_ccpath
+⚠ 루트 없음: /data/work/runs/sei_neb_v2_cc333
+⚠ 루트 없음: /data/work/runs/sei_neb_v3
+⛔ /data/work/runs/sei_neb_v2:/data/work/runs/sei_neb_v2_ccpath:/data/work/runs/sei_neb_v2_cc333:/data/work/runs/sei_neb_v3 에 존재하는 루트가 없다 — build_neb_inputs.py 부터
+[2026-10-10 11:23:34] ■ G2a ok
+     activation energy (->) =   0.347185 eV
+     activation energy (<-) =   0.347185 eV
+[2026-10-10 11:23:34] ■ 4 CI stage
+[11:23:34] ⚠ GPU 가 이미 3094 MiB 쓰인다 (UMA?) — 같이 돌립니다. OOM 이면 멈추세요.
+[11:23:34]   ▶ li2s: no-CI 수렴본을 백업하고 CI 단계 입력을 만든다
+[11:23:34]      이제 생성기를 CI 로 다시 돌릴 것 (같은 WORK):
+[11:23:34]        python3 tools/sei/build_neb_inputs.py --only li2s --ci_scheme auto --restart
+[11:23:34]      그 뒤:  bash tools/sei/run_sei_neb.sh li2s
+[2026-10-10 11:23:35] ■ 5 NEB CI
+[11:23:35] ⚠ GPU 가 이미 3094 MiB 쓰인다 (UMA?) — 같이 돌립니다. OOM 이면 멈추세요.
+[11:23:35] ═══ li2s ═══
+[11:23:35]   ⭐ neb.out 에 이력이 없지만 neb.out.noCI 에 18스텝 있다 — 체크포인트를 살린다
+[11:23:35]   ✓ restart_mode 이미 'restart'
+[11:23:35]   ▶ neb.x (원자 23)  — 진행은 neb.out 의 'activation energy' 줄로 본다
+[12:00:50]   ✅ 수렴
+     activation energy (->) =   0.347185 eV
+     activation energy (<-) =   0.347185 eV
+[12:00:50] ═══ 결산 ═══
+⚠ 루트 없음: /data/work/runs/sei_neb_v2
+⚠ 루트 없음: /data/work/runs/sei_neb_v2_ccpath
+⚠ 루트 없음: /data/work/runs/sei_neb_v2_cc333
+⚠ 루트 없음: /data/work/runs/sei_neb_v3
+⛔ /data/work/runs/sei_neb_v2:/data/work/runs/sei_neb_v2_ccpath:/data/work/runs/sei_neb_v2_cc333:/data/work/runs/sei_neb_v3 에 존재하는 루트가 없다 — build_neb_inputs.py 부터
+[2026-10-10 12:00:50] ■ DONE G2b ok
+     activation energy (->) =   0.347185 eV
+     activation energy (<-) =   0.347185 eV

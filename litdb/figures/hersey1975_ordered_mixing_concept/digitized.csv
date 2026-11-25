@@ -1,0 +1,36 @@
+# hersey1975_ordered_mixing_concept — 손 판독 (2026-10-13). 크롭 = 같은 폴더 fig_1.png (원 스캔 240 dpi 그대로).
+# Fig 1 (a) 정렬 · (b) 무작위 — 각 9 x 9 칸. 판독 = 칸 중앙 40 % 창의 평균 밝기 < 128 이면 B (검정) · 아니면 W (흰), 격자를 겹친 확대 그림으로 81 칸 전수 눈 대조 (어긋남 0).
+# 정밀도: 칸 색은 이진 판독 (불확실 칸 없음). row_1 = 그림 맨 위 · 각 문자열 = 왼쪽 -> 오른쪽.
+# 이웃 = 상하좌우 (9 x 8 x 2 = 144 쌍). random_exp_2p(1-p) = 복원 (무한 모집단) · random_exp_fixed_count = 2 n_B n_W / (81 x 80) (칸 수 고정).
+# 무작위 순열 표본 = 같은 칸 수 (B 40 · W 41) 를 9 x 9 에 무작위 배치 200,000 번 (numpy default_rng seed 12345). printed=no 행은 전부 우리 판독 · 우리 산술 (원문에 수치 없음).
+figure,panel,item,value,unit,printed,note
+1,a,row_1,BWBWBWBWB,cells L->R,no,
+1,a,row_2,WBWBWBWBW,cells L->R,no,
+1,a,row_3,BWBWBWBWB,cells L->R,no,
+1,a,row_4,WBWBWBWBW,cells L->R,no,
+1,a,row_5,BWBWBWBWB,cells L->R,no,
+1,a,row_6,WBWBWBWBW,cells L->R,no,
+1,a,row_7,BWBWBWBWB,cells L->R,no,
+1,a,row_8,WBWBWBWBW,cells L->R,no,
+1,a,row_9,BWBWBWBWB,cells L->R,no,
+1,b,row_1,BBBBWBWWW,cells L->R,no,
+1,b,row_2,WWWWBWBWB,cells L->R,no,
+1,b,row_3,WBBBWBWWW,cells L->R,no,
+1,b,row_4,BWWBBWWBW,cells L->R,no,
+1,b,row_5,WBWBBWWBB,cells L->R,no,
+1,b,row_6,BWWBBWWWW,cells L->R,no,
+1,b,row_7,BBBWWBBBW,cells L->R,no,
+1,b,row_8,BWBBBWWBW,cells L->R,no,
+1,b,row_9,BWBWBWBWB,cells L->R,no,
+1,a,n_black,41,cells of 81,no,p = 0.506
+1,a,unlike_neighbour_pairs,144,pairs of 144,no,fraction 1.000 (완전 바둑판)
+1,a,random_exp_2p(1-p),0.500,fraction,no,
+1,a,random_exp_fixed_count,0.506,fraction,no,2*41*40/(81*80)
+1,a,ratio_to_random,2.00 (fixed-count 1.98),-,no,
+1,b,n_black,40,cells of 81,no,p = 0.494
+1,b,unlike_neighbour_pairs,85,pairs of 144,no,fraction 0.590
+1,b,random_exp_2p(1-p),0.500,fraction,no,
+1,b,random_exp_fixed_count,0.506,fraction,no,2*40*41/(81*80)
+1,b,ratio_to_random,1.18 (fixed-count 1.17),-,no,
+1,b,random_permutation_mean_sd,0.506 / 0.041,fraction,no,200000 표본
+1,b,random_permutation_P(>=0.590),0.026,probability,no,손 그림이 전형적 무작위보다 약간 더 엇갈림 — 의미 두지 않음

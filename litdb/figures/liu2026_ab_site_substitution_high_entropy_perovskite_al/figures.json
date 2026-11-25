@@ -1,0 +1,78 @@
+{
+ "slug": "liu2026_ab_site_substitution_high_entropy_perovskite_al",
+ "dpi": null,
+ "generated": "2026-09-09",
+ "sources": [
+  "SI docx (본문 PDF 미확보)",
+  "github.com/IMPDGroup/HEP-Explorer @e1003f2"
+ ],
+ "note": "본문 PDF 미확보. 여기 있는 그림은 전부 SI 그림(S1–S5) + 코드 저장소 workflow 도해(R1)다. 본문 Fig.1–N 은 없다.",
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Figure S 1 Configurational entropy as a function of the atomic fraction of one element in 5-component systems.",
+   "w": 1072,
+   "h": 825,
+   "src": "SI docx (f43a106b-96._Sup_...docx) word/media/image1.jpg"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Figure S 2 Benchmark test of computational cost for atomic simulations using Matlantis and VASP.",
+   "w": 1077,
+   "h": 829,
+   "src": "SI docx (f43a106b-96._Sup_...docx) word/media/image2.jpg"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Figure S 3 Benchmark test comparing predicted energies of various perovskite oxides calculated using Matlantis and reference energies from OQMD.",
+   "w": 1077,
+   "h": 1077,
+   "src": "SI docx (f43a106b-96._Sup_...docx) word/media/image3.jpg"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "Figure S 4 Bayesian Neural Network (BNN) hyperparameters optimization results for the A-site doped HEPs. (a) A 5-fold cross-validation for each trial; (b) Optimization history of the hyperparameters; (c) Optimization results of the hyperparameters; (d) Importance of the hyperparameters.",
+   "w": 2145,
+   "h": 2383,
+   "src": "SI docx (f43a106b-96._Sup_...docx) word/media/image4.jpg"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5.png",
+   "caption": "Figure S 5 Bayesian Neural Network (BNN) hyperparameters optimization results for the B-site doped HEPs. (a) A 5-fold cross-validation for each trial; (b) Optimization history of the hyperparameters; (c) Optimization results of the hyperparameters; (d) Importance of the hyperparameters.",
+   "w": 2145,
+   "h": 2383,
+   "src": "SI docx (f43a106b-96._Sup_...docx) word/media/image5.jpg"
+  },
+  {
+   "key": "fR1",
+   "kind": "figure",
+   "label": "R1",
+   "page": null,
+   "file": "fig_R1.png",
+   "caption": "[코드 저장소 자산 — 논문 캡션 아님] HEP-Explorer README 의 workflow 도해 (res/workflow.jpg). 본문 PDF 미확보 상태에서 워크플로를 확인할 수 있는 유일한 도해다.",
+   "w": 2154,
+   "h": 1760,
+   "src": "github.com/IMPDGroup/HEP-Explorer @e1003f2 res/workflow.jpg"
+  }
+ ]
+}

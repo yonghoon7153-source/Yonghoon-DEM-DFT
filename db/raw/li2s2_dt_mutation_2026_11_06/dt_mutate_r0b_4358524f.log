@@ -1,0 +1,15 @@
+변이 489 개 (DS 판 472 · 자리 옮김 2 · DT 17) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 3 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_dt_r0b_w*
+DS18_record_link_read            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS15_tmp_follows_link            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS14_seed_gate_broken_link_read  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS19_history_append_follows      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS24_first_write_verdict_link_ok ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT8_after_trace_tmp_dropped      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT7_after_trace_result_dropped   ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT14_p2_guard_off                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT15_p2_guard_verdict_only       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT16_p2_guard_history_only       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT17_p2_guard_links_ok           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS23_first_write_history_link_ok ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DS 전 2차 리뷰 P3: 현재 폴더의 판정 이력이 밖의 파일을 가리키는 링크면 시작 점검이 이유를 남기고 멈춘다 (발사 0 · 밖의 파일 그대로 · 요약 invalid) (27 · 발사 0 · A12 판정을 다시 쓰지 못했다 — 판정 기록 자리 (sta
+끝: 빨강 12 / 12

@@ -1,0 +1,171 @@
+# Derived summary of Cronk et al. Nat. Commun. 2026 17:3298 Source Data (xlsx: litdb/inbox/104. Sup1) Bai2026_source_data.xlsx; full transcription: litdb/inbox/104_source_data/*.csv, outside git).
+# !! literature values (and digest derivations from them) — NOT Yonghoon-DEM-DFT calculations. Derived 2026-09-11 by litdb-curator for digest cronk2026_lis_cathode_interphase_chemistry.md.
+quantity,panel,series,value,unit,method_note
+Raman peak max: S-S bending E2,Fig. 2c - Ra,Elemental Sulfur,152.4,cm-1,max in 140-162; rel. height 0.608
+Raman peak max: PS4 stretch,Fig. 2c - Ra,Elemental Sulfur,438.6,cm-1,max in 410-440; rel. height 0.039
+Raman peak max: S-S bending E2,Fig. 2c - Ra,Mixed LPSCl/S,152.4,cm-1,max in 140-162; rel. height 0.609
+Raman peak max: PS4 stretch,Fig. 2c - Ra,Mixed LPSCl/S,425.8,cm-1,max in 410-440; rel. height 0.307
+Raman peak max: S-S bending E2,Fig. 2c - Ra,Milled LPSCl/S,152.4,cm-1,max in 140-162; rel. height 0.486
+Raman peak max: PS4 stretch,Fig. 2c - Ra,Milled LPSCl/S,420.4,cm-1,max in 410-440; rel. height 0.070
+Raman peak max: S-S bending E2,Fig. 2c - Ra,1 step milled electrode,149.1,cm-1,max in 140-162; rel. height 0.633
+Raman peak max: PS4 stretch,Fig. 2c - Ra,1 step milled electrode,439.6,cm-1,max in 410-440; rel. height 0.091
+Raman peak max: S-S bending E2,Fig. S4b - R,BM-10 hour,152.4,cm-1,max in 140-162; rel. height 0.488
+Raman peak max: PS4 stretch,Fig. S4b - R,BM-10 hour,421.5,cm-1,max in 410-440; rel. height 0.068
+Raman peak max: S-S bending E2,Fig. S4b - R,BM-1 hour,152.4,cm-1,max in 140-162; rel. height 0.486
+Raman peak max: PS4 stretch,Fig. S4b - R,BM-1 hour,420.4,cm-1,max in 410-440; rel. height 0.070
+Raman peak max: S-S bending E2,Fig. S4b - R,mixed S/LPSCl,152.4,cm-1,max in 140-162; rel. height 0.609
+Raman peak max: PS4 stretch,Fig. S4b - R,mixed S/LPSCl,425.8,cm-1,max in 410-440; rel. height 0.307
+Raman peak max: S-S bending E2,Fig. S4b - R,Sulfur,152.4,cm-1,max in 140-162; rel. height 0.608
+Raman peak max: PS4 stretch,Fig. S4b - R,Sulfur,438.6,cm-1,max in 410-440; rel. height 0.039
+Raman peak max: S-S bending E2,Fig. S4b - R,LPSCl,161.3,cm-1,max in 140-162; rel. height 0.015
+Raman peak max: PS4 stretch,Fig. S4b - R,LPSCl,425.8,cm-1,max in 410-440; rel. height 0.778
+Raman peak max: PS4 stretch,Fig. S4e - S,LPSCl BM-10 hour,422.1,cm-1,max in 410-440; rel. height 0.052
+Raman peak max: PS4 stretch,Fig. S4e - S,LPSCl BM-1 hour,426.3,cm-1,max in 410-440; rel. height 0.517
+Raman peak max: PS4 stretch,Fig. S4e - S,LPSCl,425.8,cm-1,max in 410-440; rel. height 0.778
+Raman peak max: PS4 stretch,Fig. S10b - ,Pristine LPSCl,425.8,cm-1,max in 400-440; rel. height 0.816
+Raman peak max: Li2S mode,Fig. S10b - ,Pristine LPSCl,373.5,cm-1,max in 355-385; rel. height 0.009
+Raman peak max: PS4 stretch,Fig. S10b - ,Pristine Li2S,415.0,cm-1,max in 400-440; rel. height 0.037
+Raman peak max: Li2S mode,Fig. S10b - ,Pristine Li2S,370.1,cm-1,max in 355-385; rel. height 0.265
+Raman peak max: PS4 stretch,Fig. S10b - ,Mixed Li2S/LPSCl,425.7,cm-1,max in 400-440; rel. height 0.783
+Raman peak max: Li2S mode,Fig. S10b - ,Mixed Li2S/LPSCl,371.2,cm-1,max in 355-385; rel. height 0.021
+Raman peak max: PS4 stretch,Fig. S10b - ,Milled Li2S/LPSCl,420.4,cm-1,max in 400-440; rel. height 0.098
+Raman peak max: Li2S mode,Fig. S10b - ,Milled Li2S/LPSCl,384.1,cm-1,max in 355-385; rel. height 0.052
+Raman peak max: S-S bending E2,Fig. S14 - R,After 100 cycles,150.2,cm-1,max in 140-162; rel. height 0.671
+Raman peak max: S-S bending E2,Fig. S14 - R,After 5 cycles,150.2,cm-1,max in 140-162; rel. height 0.639
+Raman peak max: S-S bending E2,Fig. S14 - R,After synthesis,149.1,cm-1,max in 140-162; rel. height 0.633
+Raman peak max: S-S bending E2,Fig. S14 - R,Elemental Sulfur,152.4,cm-1,max in 140-162; rel. height 0.608
+Raman peak max: PS4 stretch (xlsx S15 = published Fig. S16),Fig. S15a - ,Pristine LPSCl,425.8,cm-1,max in 400-440; rel. height 0.816
+Raman peak max: PS4 stretch (xlsx S15 = published Fig. S16),Fig. S15a - ,Sulfur positive electrode after 5 cycles,424.7,cm-1,max in 400-440; rel. height 0.914
+Raman peak max: PS4 stretch (xlsx S15 = published Fig. S16),Fig. S15b - ,Measured Spectra,424.7,cm-1,max in 400-440; rel. height 0.914
+Raman peak max: PS4 stretch (xlsx S15 = published Fig. S16),Fig. S15b - ,Curve fit 1 - LPSCl,425.8,cm-1,max in 400-440; rel. height 0.851
+Raman peak max: PS4 stretch (xlsx S15 = published Fig. S16),Fig. S15b - ,Curve fit 2 - LPS,417.3,cm-1,max in 400-440; rel. height 0.268
+XANES normalized I>=0.1 onset,2d,Normalized spectra | Elemental Sulfur ref.,2465.9,eV,first energy with I>=0.1
+XANES normalized I>=0.1 onset,2d,Normalized spectra | LPSCl,2469.2,eV,first energy with I>=0.1
+XANES normalized I>=0.1 onset,2d,Normalized spectra | 1 step milled electrode,2468.8,eV,first energy with I>=0.1
+XANES 1st-derivative main maximum,2d,1st derivatives | Elemental Sulfur ref.,2472,eV,local maxima 2469-2476: 2471.8(0.038); 2472.0(0.039); 2474.1(-0.004); 2474.6(-0.006); 2475.0(-0.007); 2475.7(-0.008)
+XANES 1st-derivative main maximum,2d,1st derivatives | LPSCl,2471.8,eV,local maxima 2469-2476: 2471.8(0.168); 2473.6(0.021); 2475.4(0.004)
+XANES 1st-derivative main maximum,2d,1st derivatives | 1 step milled electrode,2471.0,eV,local maxima 2469-2476: 2471.0(0.140); 2473.2(0.010)
+EIS resistance used for sigma (R),S4c,Milled S/LPSCl - 0.5 hr,10849.2,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S4c,Milled S/LPSCl - 0.5 hr,307.9,ohm,
+pellet thickness back-calculated L = sigma*R*A,S4c,Milled S/LPSCl - 0.5 hr,0.51,mm,"paper sigma 6.0e-06 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+EIS resistance used for sigma (R),S4c,Milled S/LPSCl - 1 hr,3144.8,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S4c,Milled S/LPSCl - 1 hr,240.3,ohm,
+pellet thickness back-calculated L = sigma*R*A,S4c,Milled S/LPSCl - 1 hr,0.52,mm,"paper sigma 2.1e-05 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+EIS resistance used for sigma (R),S4c,Milled S/LPSCl - 10 hour,3522.9,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S4c,Milled S/LPSCl - 10 hour,163.5,ohm,
+pellet thickness back-calculated L = sigma*R*A,S4c,Milled S/LPSCl - 10 hour,0.55,mm,"paper sigma 2.0e-05 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+EIS resistance used for sigma (R),S4f,LPSCl,31.5,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S4f,LPSCl,31.5,ohm,
+pellet thickness back-calculated L = sigma*R*A,S4f,LPSCl,0.44,mm,"paper sigma 1.8e-03 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+EIS resistance used for sigma (R),S4f,LPSCl BM-1 hour,38.0,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S4f,LPSCl BM-1 hour,38.0,ohm,
+pellet thickness back-calculated L = sigma*R*A,S4f,LPSCl BM-1 hour,0.39,mm,"paper sigma 1.3e-03 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+EIS resistance used for sigma (R),S4f,LPSCl BM-10 hour,1604.7,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S4f,LPSCl BM-10 hour,387.2,ohm,
+pellet thickness back-calculated L = sigma*R*A,S4f,LPSCl BM-10 hour,0.5,mm,"paper sigma 4.0e-05 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+EIS resistance used for sigma (R),S10,Li2S/LPSCl  BM 1hr,1144.7,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S10,Li2S/LPSCl  BM 1hr,318.7,ohm,
+pellet thickness back-calculated L,S10,Li2S/LPSCl  BM 1hr,n/a,mm,paper gives no sigma for this composite
+EIS resistance used for sigma (R),S10,Li2S/LPSCl  BM 10hr,2675.4,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S10,Li2S/LPSCl  BM 10hr,270.9,ohm,
+pellet thickness back-calculated L,S10,Li2S/LPSCl  BM 10hr,n/a,mm,paper gives no sigma for this composite
+EIS resistance used for sigma (R),S8a,LPSCl,31.5,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S8a,LPSCl,31.5,ohm,
+pellet thickness back-calculated L = sigma*R*A,S8a,LPSCl,0.49,mm,"paper sigma 2.0e-03 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+EIS resistance used for sigma (R),S8a,LPS,1392.7,ohm,arc low-frequency end (|Z_im| local min after arc top); for LPSCl pristine/1h (no arc) = high-f intercept
+"EIS high-frequency intercept Z_re,min",S8a,LPS,136.1,ohm,
+pellet thickness back-calculated L = sigma*R*A,S8a,LPS,0.44,mm,"paper sigma 4.0e-05 S/cm (figure legend), A=0.785 cm2 — digest derivation"
+TGA residual mass at end,S5,1-step S electrode,76.58,%,T_end 449.5 C
+TGA slope over last 20 C,S5,1-step S electrode,-0.055,%/C,curve not plateaued
+TGA residual mass at 300 C,S5,1-step S electrode,97.65,%,
+TGA residual mass at 350 C,S5,1-step S electrode,91.31,%,
+TGA residual mass at 400 C,S5,1-step S electrode,80.61,%,
+EDS line-scan length,S6c,,775,nm,
+EDS line-scan mean composition 50-100 nm,S6c,C/P/S/Cl at%,0.0/4.2/68.1/24.1,at%,S/(P+S+Cl)=70.7%; S:P=16.0 (LPSCl 5.0); Cl:P=5.67 (LPSCl 1.0)
+EDS line-scan mean composition 100-200 nm,S6c,C/P/S/Cl at%,11.5/7.1/67.4/13.7,at%,S/(P+S+Cl)=76.4%; S:P=9.5 (LPSCl 5.0); Cl:P=1.93 (LPSCl 1.0)
+EDS line-scan mean composition 200-775 nm,S6c,C/P/S/Cl at%,9.4/10.2/69.5/10.9,at%,S/(P+S+Cl)=76.7%; S:P=6.8 (LPSCl 5.0); Cl:P=1.06 (LPSCl 1.0)
+EDS line-scan length,S7c,,593,nm,
+EDS line-scan mean composition 50-100 nm,S7c,C/P/S/Cl at%,0.0/0.9/71.4/1.4,at%,S/(P+S+Cl)=96.9%; S:P=82.1 (LPSCl 5.0); Cl:P=1.62 (LPSCl 1.0)
+EDS line-scan mean composition 100-200 nm,S7c,C/P/S/Cl at%,2.6/10.8/73.8/13.9,at%,S/(P+S+Cl)=74.9%; S:P=6.8 (LPSCl 5.0); Cl:P=1.29 (LPSCl 1.0)
+EDS line-scan mean composition 200-593 nm,S7c,C/P/S/Cl at%,4.7/8.9/71.6/14.7,at%,S/(P+S+Cl)=75.2%; S:P=8.1 (LPSCl 5.0); Cl:P=1.66 (LPSCl 1.0)
+max specific capacity (discharge),S3a,Baseline (500 rpm),1615,Specific Capacity (mAh g-1),V 1.58->1.54
+max specific capacity (charge),S3a,Baseline (500 rpm),1923,Specific Capacity (mAh g-1),V 1.54->2.38
+max specific capacity (discharge),S3a,400 rpm,953,Specific Capacity (mAh g-1),V 1.52->0.37
+max specific capacity (charge),S3a,400 rpm,1347,Specific Capacity (mAh g-1),V 0.39->2.38
+max specific capacity (discharge),S3a,300 rpm,565,Specific Capacity (mAh g-1),V 1.51->0.37
+max specific capacity (charge),S3a,300 rpm,765,Specific Capacity (mAh g-1),V 0.38->2.38
+max specific capacity (charge),Fig. S9,1-step milling,724,Specific Capacity (mAh g-1),V 1.48->3.50
+max specific capacity (discharge),Fig. S9,1-step milling,720,Specific Capacity (mAh g-1),V 3.43->1.00
+max specific capacity (charge),Fig. S9,Li2S/C milling + SSE,378,Specific Capacity (mAh g-1),V 2.00->3.50
+max specific capacity (discharge),Fig. S9,Li2S/C milling + SSE,252,Specific Capacity (mAh g-1),V 3.09->0.70
+max specific capacity (charge),Fig. S9,Hand-mixed,6,Specific Capacity (mAh g-1),V 1.23->3.50
+max specific capacity (discharge),Fig. S9,Hand-mixed,9,Specific Capacity (mAh g-1),V 3.39->1.00
+max specific capacity (charge),Fig. S9,Hand-mixed,9,Specific Capacity (mAh g-1),V 1.00->3.50
+max specific capacity (charge),Fig. S11,1st cycle,724,Specific Capacity (mAh g-1),V 1.48->3.50
+max specific capacity (discharge),Fig. S11,1st cycle,720,Specific Capacity (mAh g-1),V 3.43->1.00
+max specific capacity (charge),Fig. S11,2nd cycle,751,Specific Capacity (mAh g-1),V 1.00->3.50
+max specific capacity (discharge),Fig. S11,2nd cycle,728,Specific Capacity (mAh g-1),V 3.43->1.00
+max specific capacity (charge),Fig. S11,Subsequent Cycles (3-4),764,Specific Capacity (mAh g-1),V 1.01->3.50
+max specific capacity (discharge),Fig. S11,Subsequent Cycles (3-4),739,Specific Capacity (mAh g-1),V 3.42->1.00
+max specific capacity (charge),Fig. S11,Subsequent Cycles (3-4),770,Specific Capacity (mAh g-1),V 1.00->3.50
+max specific capacity (discharge),Fig. S11,Subsequent Cycles (3-4),744,Specific Capacity (mAh g-1),V 3.42->1.00
+max specific capacity (charge),Fig. S11,Subsequent Cycles (3-4),775,Specific Capacity (mAh g-1),V 1.00->3.50
+max specific capacity (discharge),Fig. S12,LPSCl/C,115,Specific Capacity (mAh g-1),V 2.11->1.00
+max specific capacity (charge),Fig. S12,LPSCl/C,355,Specific Capacity (mAh g-1),V 1.01->3.00
+max specific capacity (discharge),Fig. S12,LPS/C,171,Specific Capacity (mAh g-1),V 1.55->1.00
+max specific capacity (charge),Fig. S12,LPS/C,312,Specific Capacity (mAh g-1),V 1.01->3.00
+max specific capacity (discharge),S8b,Sulfur positive electrode w/ LPSCl,1615,Specific Capacity (mAh g-1),V 2.17->1.00
+max specific capacity (charge),S8b,Sulfur positive electrode w/ LPSCl,2176,Specific Capacity (mAh g-1),V 1.01->3.00
+max specific capacity (discharge),S8b,Sulfur positive electrode w/ LPS,1147,Specific Capacity (mAh g-1),V 2.34->1.00
+max specific capacity (charge),S8b,Sulfur positive electrode w/ LPS,1312,Specific Capacity (mAh g-1),V 1.01->3.00
+max specific capacity (discharge),2a,1- step milling,1451,Specific Capacity (mAh/g),V 2.20->1.00
+max specific capacity (charge),2a,1- step milling,1943,Specific Capacity (mAh/g),V 1.01->3.00
+max specific capacity (discharge),2a,S/C milling + SSE,599,Specific Capacity (mAh/g),V 2.06->1.00
+max specific capacity (charge),2a,S/C milling + SSE,102,Specific Capacity (mAh/g),V 1.02->3.00
+max specific capacity (discharge),2a,Hand-mixed,183,Specific Capacity (mAh/g),V 2.05->1.00
+max specific capacity (charge),2a,Hand-mixed,124,Specific Capacity (mAh/g),V 1.00->3.00
+XRD peak LPSCl(220) (Mo Ka),S4a,BM-10 hour,11.76,deg 2theta,rel. height 0.152; FWHM 0.29 deg
+XRD peak S(222) (Mo Ka),S4a,BM-10 hour,10.58,deg 2theta,rel. height 0.125; FWHM 0.38 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4a,BM-10 hour,0.42,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),S4a,BM-1 hour,11.78,deg 2theta,rel. height 0.279; FWHM 0.34 deg
+XRD peak S(222) (Mo Ka),S4a,BM-1 hour,10.59,deg 2theta,rel. height 0.152; FWHM 0.29 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4a,BM-1 hour,0.33,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),S4a,mixed S/LPSCl,11.77,deg 2theta,rel. height 0.504; FWHM 0.29 deg
+XRD peak S(222) (Mo Ka),S4a,mixed S/LPSCl,10.59,deg 2theta,rel. height 0.722; FWHM 0.24 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4a,mixed S/LPSCl,0.15,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),S4a,Sulfur,11.84,deg 2theta,rel. height 0.353; FWHM 0.23 deg
+XRD peak S(222) (Mo Ka),S4a,Sulfur,10.57,deg 2theta,rel. height 0.932; FWHM 0.24 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4a,Sulfur,0.08,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),S4a,LPSCl,11.71,deg 2theta,rel. height 0.710; FWHM 0.25 deg
+XRD peak S(222) (Mo Ka),S4a,LPSCl,10.54,deg 2theta,rel. height 0.006; FWHM 0.10 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4a,LPSCl,0.07,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),S4d,LPSCl BM-10 hour,11.70,deg 2theta,rel. height 0.359; FWHM 0.38 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4d,LPSCl BM-10 hour,0.16,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),S4d,LPSCl BM-1 hour,11.72,deg 2theta,rel. height 0.727; FWHM 0.20 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4d,LPSCl BM-1 hour,0.09,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),S4d,LPSCl,11.71,deg 2theta,rel. height 0.710; FWHM 0.25 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S4d,LPSCl,0.07,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak Li2S(111) (Mo Ka),S10a,Pristine LPSCl,11.90,deg 2theta,rel. height 0.174; FWHM 0.05 deg
+XRD peak LPSCl(311) (Mo Ka),S10a,Pristine LPSCl,13.74,deg 2theta,rel. height 0.864; FWHM 0.25 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S10a,Pristine LPSCl,0.07,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak Li2S(111) (Mo Ka),S10a,Pristine Li2S,12.37,deg 2theta,rel. height 0.952; FWHM 0.25 deg
+XRD peak LPSCl(311) (Mo Ka),S10a,Pristine Li2S,13.40,deg 2theta,rel. height 0.014; FWHM 0.13 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S10a,Pristine Li2S,0.02,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak Li2S(111) (Mo Ka),S10a,Beta-phase LPS,12.69,deg 2theta,rel. height 0.089; FWHM 0.16 deg
+XRD peak LPSCl(311) (Mo Ka),S10a,Beta-phase LPS,13.70,deg 2theta,rel. height 0.134; FWHM 0.31 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S10a,Beta-phase LPS,0.39,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak Li2S(111) (Mo Ka),S10a,Mixed Li2S/LPSCl,12.34,deg 2theta,rel. height 0.816; FWHM 0.29 deg
+XRD peak LPSCl(311) (Mo Ka),S10a,Mixed Li2S/LPSCl,13.71,deg 2theta,rel. height 0.834; FWHM 0.25 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S10a,Mixed Li2S/LPSCl,0.07,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak Li2S(111) (Mo Ka),S10a,Milled Li2S/LPSCl,12.40,deg 2theta,rel. height 0.825; FWHM 0.32 deg
+XRD peak LPSCl(311) (Mo Ka),S10a,Milled Li2S/LPSCl,13.68,deg 2theta,rel. height 0.024; FWHM 0.48 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S10a,Milled Li2S/LPSCl,0.08,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak Li2S(111) (Mo Ka),S10a,Milled Li2S/LPSCl/C - Li2S positive electrode,12.38,deg 2theta,rel. height 0.684; FWHM 0.28 deg
+XRD peak LPSCl(311) (Mo Ka),S10a,Milled Li2S/LPSCl/C - Li2S positive electrode,13.40,deg 2theta,rel. height 0.024; FWHM 0.21 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),S10a,Milled Li2S/LPSCl/C - Li2S positive electrode,0.13,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),2b,1-step milled,11.77,deg 2theta,rel. height 0.152; FWHM 0.36 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),2b,1-step milled,0.4,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),2b,S/C milling + SSE,11.70,deg 2theta,rel. height 0.761; FWHM 0.27 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),2b,S/C milling + SSE,0.09,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels
+XRD peak LPSCl(220) (Mo Ka),2b,Hand-mixed,11.71,deg 2theta,rel. height 0.703; FWHM 0.28 deg
+XRD amorphous hump/peak ratio (15.5-19.5 deg mean / max 5-25),2b,Hand-mixed,0.14,-,normalization to strongest peak (Li2S in S10a) — not comparable across panels

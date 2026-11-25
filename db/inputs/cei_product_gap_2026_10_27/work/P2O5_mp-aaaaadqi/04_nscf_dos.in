@@ -1,0 +1,55 @@
+&CONTROL
+    calculation     = 'nscf'
+    prefix          = 'P2O5_mp-aaaaadqi'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/cei_gap_1027/pseudo'
+    tprnfor         = .true.
+    disk_io         = 'medium'
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 14
+    ntyp            = 2
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    nbnd            = 76
+    nosym           = .true.
+    noinv           = .true.
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-6
+    diago_david_ndim = 4
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+
+ATOMIC_SPECIES
+  O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
+  P     30.974  P.pbe-n-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+      4.8350167700     0.0000000000     0.0000000000
+     -1.9972558798     4.4032195367     0.0000000000
+     -1.4188780110    -2.2016070815     8.1513983103
+
+ATOMIC_POSITIONS angstrom
+  P       2.2728908474     0.9996390384     2.8552656051
+  P      -1.4473973983     0.2812240612     5.2961245538
+  P      -2.4460316823     2.4828387717     6.9309729116
+  P      -0.1446276958     0.9996384995     1.2204335501
+  O       2.3652615061     2.4053265379     3.1765978837
+  O      -0.2054098418     0.9460196853     4.9748004266
+  O       0.7932207755    -1.2555937356     7.2522970388
+  O      -0.0522427239     2.4053257871     0.8991012715
+  O       0.0004817950     0.0007475786     0.0000000000
+  O       2.4179913971     0.0007489220     4.0756991551
+  O       3.3665648984     0.4535148284     1.8471564176
+  O       2.4384760635     1.0516397322     6.3042418927
+  O       3.4371135112    -1.1499701619     5.9228555728
+  O       0.9490606018     0.4535061917     2.2285427375
+
+K_POINTS automatic
+  6 6 3 0 0 0

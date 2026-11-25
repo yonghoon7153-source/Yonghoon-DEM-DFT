@@ -1,0 +1,10 @@
+[2026-10-01 02:55:37] ▶ W 단계 · 코드 d84299f3c
+W P1 s_outer A · 수렴 True · 깃발 0 · 10 Å W2 0.8889 ATM -0.0900 · 12 Å W2 0.8972 ATM -0.0933 · G3 |ΔW| 0.0083 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P1_s_outer_A.json
+W P1 s_outer B · 수렴 True · 깃발 0 · 10 Å W2 0.8924 ATM -0.0908 · 12 Å W2 0.9007 ATM -0.0941 · G3 |ΔW| 0.0083 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P1_s_outer_B.json
+W P1 li_outer A · 수렴 True · 깃발 0 · 10 Å W2 0.7487 ATM -0.1023 · 12 Å W2 0.7575 ATM -0.1059 · G3 |ΔW| 0.0088 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P1_li_outer_A.json
+W P1 li_outer B · 수렴 True · 깃발 0 · 10 Å W2 0.7722 ATM -0.1060 · 12 Å W2 0.7810 ATM -0.1095 · G3 |ΔW| 0.0088 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P1_li_outer_B.json
+W P2 s_outer A · 수렴 True · 깃발 0 · 10 Å W2 0.2128 ATM -0.0385 · 12 Å W2 0.2176 ATM -0.0411 · G3 |ΔW| 0.0048 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P2_s_outer_A.json
+W P2 s_outer B · 수렴 True · 깃발 0 · 10 Å W2 0.2130 ATM -0.0385 · 12 Å W2 0.2178 ATM -0.0412 · G3 |ΔW| 0.0048 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P2_s_outer_B.json
+W P2 li_outer A · 수렴 True · 깃발 0 · 10 Å W2 0.1420 ATM -0.0370 · 12 Å W2 0.1470 ATM -0.0398 · G3 |ΔW| 0.0050 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P2_li_outer_A.json
+W P2 li_outer B · 수렴 True · 깃발 0 · 10 Å W2 0.1420 ATM -0.0370 · 12 Å W2 0.1470 ATM -0.0398 · G3 |ΔW| 0.0050 PASS → /data/work/runs/wad_se_pairs_uma_2026_10_01/w/P2_li_outer_B.json
+[2026-10-01 03:16:22] ■ W 끝

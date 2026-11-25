@@ -1,0 +1,87 @@
+{
+  "symbol": "Se",
+  "name": "Selenium",
+  "Z": 34,
+  "role": "S의 바로 아래 동족 칼코겐(group 16) — 더 무겁고 분극성이 크며 결합이 연함. 우리 argyrodite는 S 기반이지만 티오→셀레노 치환(thio→seleno) 문헌이 존재: Li₆PSe₅X(셀레노 argyrodite)·Na₃PSe₄ 처럼 S를 Se로 바꾸면 격자 분극성↑·연화로 σ가 올라가는 대신 밴드갭↓·산화안정성↓ 트레이드. 즉 Se는 '더 큰 분극성 칼코겐 축'을 여는 치환 레버(우리 S 계열의 셀레노 대응물).",
+  "oxidation_states": [
+    "-2",
+    "+4",
+    "+6"
+  ],
+  "electronegativity": 2.55,
+  "ionic_radius_A": {
+    "Se2-_VI": 1.98,
+    "Se4+_VI": 0.5,
+    "Se6+_IV": 0.28,
+    "Se6+_VI": 0.42,
+    "_note": "Shannon 1976: Se²⁻ VI 1.98 A(S²⁻ VI 1.84보다 큼 → 격자 팽창·연화), Se⁴⁺ VI 0.50(lone pair), Se⁶⁺ IV 0.28/VI 0.42. 칼코겐 크기 순 O²⁻ 1.40 < S²⁻ 1.84 < Se²⁻ 1.98 < Te²⁻ 2.21."
+  },
+  "representative_compounds": [
+    {
+      "formula": "Li2Se",
+      "context": "셀레나이드 SEI 유추상(Li2S 대응)",
+      "battery_role": "Li₂S의 셀레노 대응 — 환원생성 무기상 유추",
+      "note": "Li₂S(band gap↑)보다 Se가 분극성 커 더 좁은 gap; Se 3d5/2 ~54 eV대(selenide)"
+    },
+    {
+      "formula": "Li6PSe5X (셀레노 argyrodite, X=Cl/Br/I)",
+      "context": "티오→셀레노 치환(대표)",
+      "battery_role": "S→Se 전면 치환 argyrodite — 분극성↑·연화로 σ↑ 경향",
+      "note": "PSe₄³⁻ 골격; Li₆PS₅X의 셀레노 동형(Zeier 그룹 등 보고). σ↑ 대가로 gap↓·산화안정↓ 트레이드"
+    },
+    {
+      "formula": "Na3PSe4 / PSe4 3-",
+      "context": "셀레노포스페이트 초이온전도체",
+      "battery_role": "PSe₄³⁻ 골격 Na⁺ 전도체(PS₄ 셀레노 대응)",
+      "note": "S→Se로 격자 연화·분극↑ → 빠른 이온전도의 셀레노 원형 사례"
+    }
+  ],
+  "sei_relevance": "Se는 우리 argyrodite의 native 원소는 아니지만 S의 동족이라 셀레노 치환의 참조종. Li₂Se 같은 셀레나이드가 Li 금속 계면 환원생성물로 유추되나, Se는 S보다 분극성이 커 SEI/벌크 모두 밴드갭이 좁아지고 산화안정 창이 줄어드는 게 핵심 트레이드(σ↑ ↔ 전자안정성↓). 즉 '더 빠르지만 더 무른/좁은 gap' 축 — 셀레노 argyrodite가 σ는 티오보다 높게 보고되나 전자적 여유는 줄어듦. 특이적 SEI 부동태 이점은 미보고.",
+  "xps": [
+    {
+      "core": "Se 3d5/2",
+      "BE_eV": 55.3,
+      "assignment": "elemental Se / Se⁰ (trigonal gray Se; 보고 ~55.0-55.6 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Se 3d5/2",
+      "BE_eV": 54.0,
+      "assignment": "selenide (Li2Se/metal selenide) / Se²⁻ (보고 ~53.5-54.5 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Se 3d5/2",
+      "BE_eV": 58.9,
+      "assignment": "selenite/selenate / Se⁴⁺·Se⁶⁺ (산화종, 보고 ~58.5-59.5 eV)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 237,
+      "assignment": "trigonal(gray) Se A1 chain-stretch — Se 원소 결정 지문(비정질 Se는 ~250 broad)",
+      "ref": "trigonal Se Raman 표준 참조"
+    },
+    {
+      "cm1": 250,
+      "assignment": "PSe4 3- ν1 대칭신축(셀레노포스페이트; PS₄ 420보다 낮음 — 무거운 Se로 적색이동)",
+      "ref": "셀레노 argyrodite/Na3PSe4 Raman 문헌"
+    }
+  ],
+  "dos_character": "Se 4p는 S 3p보다 얕게(에너지↑) 위치 → 셀레노 치환 시 VBM이 올라와 밴드갭 축소·산화 onset 하락, 분극성↑로 격자 연화·σ↑. 즉 S와 같은 칼코겐 밴드엣지 화학이되 '더 얕은 p·더 좁은 gap' — 이온전도엔 유리, 전자적 안정 창엔 불리한 방향(Te로 갈수록 심화). closed-shell로 스핀분극 불필요.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁴",
+    "electron_config": "[Ar] 3d¹⁰ 4s² 4p⁴",
+    "valence_orbitals": "4s² 4p⁴ — 4p가 원자가/lone pair, Se²⁻(4p⁶). S 3p⁴의 무거운 동족",
+    "band_character": "(일반) VBM은 Se 4p 지배(S 3p보다 얕아 밴드엣지↑·gap↓), CBM은 PSe₄ σ*(P/Se). 셀레노 치환은 분극성↑로 격자 연화·σ↑ 대신 gap·산화안정↓ — S 동족 중 '중간 분극성' 위치(S < Se < Te)",
+    "bonding": "P–Se: P 3s3p–Se 4p σ 공유(PSe₄ 사면체) + 잔여 Se 4p lone pair; Li–Se 이온성(S보다 분극성·연함↑)"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Se²⁻ VI 1.98 A)",
+    "셀레노 argyrodite Li₆PSe₅X / Na₃PSe₄ 문헌 (Zeier 그룹 등) — S→Se 분극성↑·연화로 σ↑·gap↓ 트레이드",
+    "NIST XPS DB — Se 3d5/2: Se⁰ 55.3 / selenide 54.0 / selenate 58.9 eV"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii · handbook). SSB 앵커 없음(비캠페인) — 백과사전 기본+orbital. 우리 db 절대값과 분리."
+}

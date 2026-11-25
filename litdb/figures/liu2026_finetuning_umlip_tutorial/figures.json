@@ -1,0 +1,191 @@
+{
+ "slug": "liu2026_finetuning_umlip_tutorial",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Overview of the fine-tuning workflow.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.0,
+    96.0,
+    563.0,
+    446.0
+   ],
+   "w": 1051,
+   "h": 1460,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.678
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 9,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Training and validation performance of fine-tuning. (a) Training and validation loss curves for stage 1 and stage 2, where the energy weighting relative to forces is increased. (b) Validation RMSE for energies and forces across epochs in both stages. (c)–(f) Parity plots comparing predicted and reference energies (c) and (e) and forces (d) and (f) for stage 1 and stage 2, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    96.0,
+    564.0,
+    418.4
+   ],
+   "w": 2151,
+   "h": 1345,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.689
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. Atomic structure of Li10GeP2S12, a solid-state electrolyte with high lithium-ion conductivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    496.6,
+    565.0,
+    673.0
+   ],
+   "w": 1068,
+   "h": 736,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.691
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Comparison between fine-tuning and training-from-scratch in terms of data efficiency: (a) RMSE in energy (meV/atom) and (b) RMSE in forces (meV/Å). Error bars represent one standard deviation, computed from three independent runs, with markers showing the corresponding mean values.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    485.4,
+    565.0,
+    673.0
+   ],
+   "w": 2160,
+   "h": 783,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Comparison between the foundation model (MACE-MPA-0) and its fine-tuned variants on the silicon out-of-distribution test set. (a) Atomic structure. (b) Energy RMSE per atom (meV/atom). (c) Force RMSE (meV/Å). MACE-FT achieves substantially lower errors than MACE-MPA-0. MACE-FT also outperforms models trained on uncertainty-filtered data (AL) and randomly selected data (Rand) and is slightly better than the single-head fine-tuning variant (FT-SH).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    96.0,
+    564.0,
+    219.8
+   ],
+   "w": 2151,
+   "h": 517,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Atomic structure of BCC Mo containing a dislocation and the associated local lattice distortion. The defect core is highlighted in red.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    461.4,
+    565.0,
+    673.0
+   ],
+   "w": 1068,
+   "h": 883,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.367
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. GSFE profiles of Mo along the h110i (a) and h112i (b) directions. Two fine-tuned models are compared: FT-Default, which uses the default loss weights, and FT, which employs a force loss weight of 100.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    474.0,
+    565.0,
+    673.0
+   ],
+   "w": 2160,
+   "h": 830,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 15,
+   "file": "fig_9.png",
+   "caption": "FIG. 9. Comparison of graphene–water interface simulations using MACE-FT-MD, MACE-MPA-0-MD, and AIMD. (a) Temperature evolution over time. (b) Oxygen number- density profile along the z axis. The first peak corresponds to the graphene–water distance, dgw ¼ 0:35 nm, which is in good agreement with the experimental value of 0.36 nm.126 The inset illustrates the definition of dgw. To make a comparison, we also plot the MD trajectory for the MACE-MPA-0 model without fine-tuning.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.0,
+    96.0,
+    559.0,
+    303.7
+   ],
+   "w": 2110,
+   "h": 867,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 17,
+   "file": "fig_11.png",
+   "caption": "FIG. 11. Atomic structures used in this study: (a) LiCl(001)/GaF3(001) interface and (b) diamond/cubic boron nitride (C/cBN) interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    96.0,
+    303.0,
+    462.8
+   ],
+   "w": 1068,
+   "h": 1530,
+   "dpi": 300,
+   "src": "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf",
+   "blank": 0.787
+  }
+ ]
+}

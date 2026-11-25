@@ -1,0 +1,7 @@
+[
+ ["① glass small cell (Li transport) — track closed 10-30", "^(lpscl_glass|lpscl_smallcell|glass_|li2s_k222)"],
+ ["② Nd cathode interface (CEI) — site · decomposition · Bader/ELF · S-vacancy", "^(cei_|nd_|icohp|ndo_)"],
+ ["③ SEI barrier cell convergence (Li3Nd · Li2S)", "^(sei_|li2s_neb|li2s444)"],
+ ["④ elastic constants (relaxed-ion · 12 strains)", "^elastic_"],
+ ["⑤ W_ad (DEM input) · thermo queries", "^(wad_|cascade_|esw_)"]
+]

@@ -1,0 +1,130 @@
+
+═══ Li2SO4 (Li2SO4) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 47798.34it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaaaagtg      P2_1/c        0.0000   28   6.023 NM    ✅
+  mp-aaabfuag      Cmcm          0.0549   14   5.990 NM    ✅
+  mp-aaabmnbv      P1            0.1076   14   5.550 NM    ⚠ 예측
+  mp-aaacroqa      F-43m         0.2676    7   3.920 NM    ⚠ 예측
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12409.18it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15827.56it/s]
+  갭 출처: aaadseub = GGA NSCF Uniform → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 10922.67it/s]
+  자성 NM · Σ 0.0 μB · |m|>0.1 자리 0 · structure.site_properties['magmom']
+  ✓ Li2SO4_mp-aaaaagtg · P2_1/c · 28 원자 · E_hull 0.0 · MP 갭 6.0232
+
+═══ SCl (SCl) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaaabpoq      Fdd2          0.0000   16   2.880 Unkno ✅
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14463.12it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16777.22it/s]
+  갭 출처: aaafbokz = GGA NSCF Line → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 17331.83it/s]
+  자성 Unknown · Σ 0.0 μB · |m|>0.1 자리 0 · materials.magnetism.magmoms (길이 일치)
+  ✓ SCl_mp-aaaabpoq · Fdd2 · 16 원자 · E_hull 0.0 · MP 갭 2.8804
+
+═══ SO2 (SO2) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaaabpak      Aea2          0.0000    6   3.154 Unkno ✅
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 19239.93it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 25575.02it/s]
+  갭 출처: aaafbyhm = GGA NSCF Line → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22671.91it/s]
+  자성 Unknown · Σ 0.0 μB · |m|>0.1 자리 0 · materials.magnetism.magmoms (길이 일치)
+  ✓ SO2_mp-aaaabpak · Aea2 · 6 원자 · E_hull 0.0 · MP 갭 3.1539
+
+═══ CoS2 (CoS2) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 75166.74it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaaaadbq      Pa-3          0.0000   12   0.000 Unkno ✅
+  mp-aaabwjmf      Pbca          0.0019   12   0.000 FM    ⚠ 예측
+  mp-aaadbdgn      Fd-3m         0.0985   12   0.000 NM    ⚠ 예측
+  mp-aaadazay      R-3m          0.1185    3   0.000 FM    ⚠ 예측
+  mp-aaachhpa      I-42d         0.3174    6   0.000 NM    ⚠ 예측
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 17697.49it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 18808.54it/s]
+  갭 출처: aaafcbbr = GGA NSCF Line → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16070.13it/s]
+  자성 Unknown · Σ 0.0 μB · |m|>0.1 자리 0 · materials.magnetism.magmoms (길이 일치)
+  ✓ CoS2_mp-aaaaadbq · Pa-3 · 12 원자 · E_hull 0.0 · MP 갭 0.0
+
+═══ NiS2 (NiS2) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 211223.94it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaacpdqk      P2_1/c        0.0000    6   0.240 Unkno ⚠ 예측
+  mp-aaaaadju      Pa-3          0.0152   12   0.000 Unkno ✅
+  mp-aaabwiad      Pnnm          0.0213    6   0.000 Unkno ⚠ 예측
+  mp-aaabwjpj      P2_1/c        0.0217    6   0.000 NM    ⚠ 예측
+  mp-aaadcicf      R-3m          0.0350    3   0.509 Unkno ⚠ 예측
+  mp-aaadefhr      Fd-3m         0.0438   12   0.000 Unkno ⚠ 예측
+  mp-aaackupv      Pnma          0.0602   12   0.000 NM    ⚠ 예측
+  mp-aaabwjmy      Pbcn          0.0969   12   0.000 NM    ⚠ 예측
+  mp-aaabwiax      P6_3/mmc      0.1919    6   0.000 NM    ⚠ 예측
+  mp-aaabwibk      P4/nmm        0.3056    6   0.000 NM    ⚠ 예측
+  mp-aaachhpj      I-42d         0.3804    6   0.000 NM    ⚠ 예측
+  mp-aaabwhzx      Fm-3m         0.4673    3   0.000 FM    ⚠ 예측
+  mp-aaackgmj      I4/mmm        0.5760    3   0.000 NM    ⚠ 예측
+  mp-aaabwiat      P6/mmm        1.1040    3   0.000 NM    ⚠ 예측
+  E_hull 최저(반응 원장 hull 상)는 mp-aaacpdqk P2_1/c (theoretical=True) — 고른 관측 다형과 **다르다**
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 18724.57it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14614.30it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 26379.27it/s]
+  갭 출처: aaafwxve = GGA NSCF Line → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16131.94it/s]
+  자성 Unknown · Σ 0.0 μB · |m|>0.1 자리 0 · materials.magnetism.magmoms (길이 일치)
+  ✓ NiS2_mp-aaaaadju · Pa-3 · 12 원자 · E_hull 0.0152 · MP 갭 0.0
+
+═══ NiP2O6 (NiP2O6) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13842.59it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaaabchz      C2/c          0.0000   36   1.486 FM    ✅
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 19972.88it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13066.37it/s]
+  갭 출처: aaafbhma = GGA+U NSCF Line → GGA+U
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  자성 FM · Σ 7.876 μB · |m|>0.1 자리 4 · structure.site_properties['magmom']
+  ✓ NiP2O6_mp-aaaabchz · C2/c · 36 원자 · E_hull 0.0 · MP 갭 1.4863
+
+═══ MnP2O6 (MnP2O6) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16008.79it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaabevzn      C2/c          0.0000   36   2.163 Unkno ✅
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14768.68it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 25575.02it/s]
+  갭 출처: aaabvxoc = GGA NSCF Line → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15534.46it/s]
+  자성 Unknown · Σ 0.0 μB · |m|>0.1 자리 0 · materials.magnetism.magmoms (길이 일치)
+  ✓ MnP2O6_mp-aaabevzn · C2/c · 36 원자 · E_hull 0.0 · MP 갭 2.1631
+
+═══ MnS2 (MnS2) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 92521.41it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaadcxpl      R-3m          0.0000    3   0.000 Unkno ⚠ 예측
+  mp-aaadawjk      Fd-3m         0.0016   12   0.000 Unkno ⚠ 예측
+  mp-aaacfzcu      Pnnm          0.0331    6   0.000 FM    ✅
+  mp-aaaaacdz      Pa-3          0.1106   12   0.000 FM    ✅
+  mp-aaackiih      P2_1/c        0.3017   12   0.000 FM    ✅
+  mp-aaadbmzr      I-42d         0.3085    6   0.000 FM    ⚠ 예측
+  E_hull 최저(반응 원장 hull 상)는 mp-aaadcxpl R-3m (theoretical=True) — 고른 관측 다형과 **다르다**
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 25890.77it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 19878.22it/s]
+  갭 출처: aaafwwvc = GGA NSCF Line → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 24105.20it/s]
+  자성 FM · Σ 1.979 μB · |m|>0.1 자리 2 · structure.site_properties['magmom']
+  ✓ MnS2_mp-aaacfzcu · Pnnm · 6 원자 · E_hull 0.0331 · MP 갭 0.0
+
+═══ Ni3S4 (Ni3S4) ═══
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 18558.87it/s]
+  mp-id            공간군           E_hull   원자       갭 자성    관측
+  mp-aaaaabok      Fd-3m         0.0000   14   0.000 Unkno ✅
+Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 18558.87it/s]
+Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16320.25it/s]
+  갭 출처: aaafimzz = GGA NSCF Line → GGA
+Retrieving MagnetismDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MagnetismDoc documents: 100%|██████████| 1/1 [00:00<00:00, 20971.52it/s]
+  자성 Unknown · Σ 0.0 μB · |m|>0.1 자리 0 · materials.magnetism.magmoms (길이 일치)
+  ✓ Ni3S4_mp-aaaaabok · Fd-3m · 14 원자 · E_hull 0.0 · MP 갭 0.0
+
+출처 기록 → db/properties/cei_gap_tm_structures_2026_10_27.json  (문제 0 건)

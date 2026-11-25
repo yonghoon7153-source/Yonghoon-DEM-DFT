@@ -1,0 +1,258 @@
+{
+ "slug": "bazzoun2026_dem_fem_rnm_ionic",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Schematic of the DEM microstructure generation process, from initial random packing to final compacted electrode structure, demonstrating the CAM particles (black) and SE particles (yellow). After reaching the prescribed pressure, the achieved microstructural data is used for our evaluations, considering the target SE particles (red) which are contact with the SE separator layer (yellow sheet). (b) Workflow comparison between the FEM and RNM modeling approaches. The FEM pipeline (top) involves SE phase extraction, meshing, and electrostatic simulation to compute the potential field and effective ionic conductivity. In contrast, the RNM pipeline (bottom) bypasses geometric meshing and directly solves the resistor network formed by SE particle contacts. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this articl",
+   "bbox": [
+    31.6,
+    49.5,
+    567.0,
+    180.5
+   ],
+   "w": 2232,
+   "h": 546,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.641
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Resistor network used for the calculation of the effective conductivity of the SE phase using the Resistor Network (RN) method. The SE phase is modeled as a percolating network of resistors 𝑅𝐼,𝐽 between contacting particles and 𝑅𝐽,0 between particles and the top/bottom virtual electrodes. Each resistance is determined by its corresponding contact radius 𝑟𝐼,𝐽",
+   "bbox": [
+    31.6,
+    49.5,
+    298.0,
+    197.7
+   ],
+   "w": 1111,
+   "h": 618,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Characterization of the solid electrolyte (SE) and cathode active material (CAM): (a) SEM image of SE particles showing morphology and size uniformity; (b) SEM image of CAM particles, (c) particle size distribution of SE and CAM powders; (d) EIS measurement of SE showing bulk ionic conductivity.",
+   "bbox": [
+    31.6,
+    49.5,
+    298.0,
+    537.8
+   ],
+   "w": 1111,
+   "h": 2035,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Electrochemical impedance spectra (hollow dots) and corresponding transmission line model (TLM) fits (dashed lines) for full-blocking cells assem- bled with composite cathodes containing 𝑓CAM = 70, 75, and 80 wt.%. The spectra reflect the ionic transport behavior through the SE network within the cathode microstructure. An equivalent TLM circuit was used to extract the effective ionic conductivity 𝜎eff,ion for each composition.",
+   "bbox": [
+    300.6,
+    49.5,
+    567.0,
+    216.9
+   ],
+   "w": 1111,
+   "h": 698,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Convergence behavior of 𝜎eff,ion as a function of box factor for (a–c) Finite Element Modeling and (d–f) Resistor Network Modeling at 70, 75, and 80 wt.% 𝑓CAM, respectively. Each distribution represents 10 independently extracted RVEs. Beyond raw simulation time, RNM holds additional computational advantages. Unlike FEM, which requires preprocessing steps such as SE phase preparation and mesh generation (not included in the timing analysis), RNM operates directly on particle-level data. This distinc- tion is also illustrated in the workflow schematic (Fig. 1) (b), where the more streamlined RNM path bypasses time-intensive volumetric meshing steps required for FEM. This drastically reduces total work- flow time and simplifies automation for high-throughput simulations. Given its efficiency, RNM provides a scalable framework for assessing microstructure-transport relationships acr",
+   "bbox": [
+    31.6,
+    49.5,
+    567.0,
+    309.0
+   ],
+   "w": 2232,
+   "h": 1082,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Average number of SE particles within the RVE as a function of box factor, showing a monotonic increase due to volumetric scaling. (b) Average simulation time required for FEM and RNM solvers as a function of box factor for different CAM contents. RNM exhibits significantly shorter simulation times than FEM across all cases. (c) Comparison of effective ionic conductivity 𝜎eff,ion extracted from experimental full-blocking EIS measurements, Finite Element Modeling (FEM), and Resistor Network Modeling (RNM) for composite cath- odes with 𝑓CAM = 70, 75, and 80 wt.%.",
+   "bbox": [
+    31.6,
+    51.5,
+    298.0,
+    621.0
+   ],
+   "w": 1111,
+   "h": 2374,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.977
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Effective ionic conductivity 𝜎eff,ion as a function of mean SE particle size 𝐷SE and 𝑓CAM computed using (a) FEM and (b) RNM. SE network descriptors as a function of 𝐷SE and 𝑓CAM: (c) SE utilization 𝜃SE, (d) SE–SE coordination number 𝑍SE−SE, and (e) average SE–SE contact resistance ̄𝑅SE−SE. Fig. 8 summarizes the results from the RNM calculations. As shown in Fig. 8(a), 𝜎eff,ion increases monotonically with pressure across all compositions. This trend is attributed to enhanced particle packing and improved SE–SE contact formation, leading to more effective percola- tion. From 100 to 400 MPa, the absolute and relative improvements are +0.067 mS/cm (98%) for 70 wt.%, +0.044 mS/cm (126%) for 75 wt.%, and +0.023 mS/cm (291%) for 80 wt.%. Although the relative gain is largest at 80 wt.% due to a poorly connected initial network, the highest absolute values are still reached at 70 wt.%,",
+   "bbox": [
+    31.6,
+    50.7,
+    567.0,
+    361.2
+   ],
+   "w": 2232,
+   "h": 1295,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.647
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Pressure-dependent properties of the SE phase evaluated using resistor network modeling (RNM): (a) effective ionic conductivity 𝜎eff,ion, (b) SE-utilization 𝜃SE, (c) average SE–SE contact resistance ̄𝑅SE−SE, and (d) SE–SE coordination number 𝑍SE−SE as a function of compaction pressure for cathodes with 𝑓CAM = 70, 75, and 80 wt.%. While FEM offers high-fidelity spatial resolution, RNM provided similar accuracy at drastically reduced computational cost — up to two orders of magnitude faster — without requiring mesh generation or SE phase preparation. This makes RNM especially suitable for large-scale parametric studies and high-throughput screening. pathways alongside ionic conduction for a more comprehensive rep- resentation of the composite cathode. Although electronic percolation is typically ensured experimentally through the addition of a small fraction of conductive additives",
+   "bbox": [
+    31.6,
+    50.7,
+    567.0,
+    427.2
+   ],
+   "w": 2232,
+   "h": 1570,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Material densities used in this work. Description Parameter Unit Value Source Density (CAM) 𝜌CAM g cm−3 4.77 [43] Density (SE) 𝜌SE g cm−3 1.64 [44] Density (CNF) 𝜌CNF g cm−3 1.90 Supplier Density (PTFE) 𝜌PTFE g cm−3 2.15 [45]",
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    746.9
+   ],
+   "w": 2213,
+   "h": 2983,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Weight and volume ratios of cathode compositions with varying CAM:SE ratios and fixed additive content (CNF, PTFE). 𝑓CAM (wt.%) CAM:SE:CNF:PTFE wt.% vol.% 70 70:27.7:2:0.3 45.3:52.7:1.5:0.5 75 75:22.7:2:0.3 52.2:45.5:1.6:0.6 80 80:17.7:2:0.3 59.5:38.3:1.7:0.6",
+   "bbox": [
+    32.6,
+    31.0,
+    566.0,
+    746.9
+   ],
+   "w": 2224,
+   "h": 2983,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3 DEM input parameters used in this study. Parameter Value Source SE–SE friction coefficient (𝜇SE−SE) 0.4 [33] CAM–CAM friction coefficient (𝜇CAM−CAM) 0.4 [33] CAM–SE friction coefficient (𝜇CAM−SE) 0.4 [33] SE Young’s modulus (𝐸SE) [GPa] 22.1 [55] CAM Young’s modulus (𝐸CAM) [GPa] 161.5 [33] SE Poisson’s ratio (𝜈SE) 0.37 [55] CAM Poisson’s ratio (𝜈CAM) 0.30 [43] Coefficient of restitution (RC) 0.4 [33]",
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    748.5
+   ],
+   "w": 2213,
+   "h": 2990,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 6,
+   "file": "tab_4.png",
+   "caption": "Table 4 Summary of particle size distribution parameters for SE and CAM powders. Material 𝐷10 [μm] 𝐷50 [μm] 𝐷 [μm] 𝐷90 [μm] SE 0.71 1.49 2.00 3.80 CAM 3.90 5.50 6.00 7.62",
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    747.6
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 7,
+   "file": "tab_5.png",
+   "caption": "Table 5 Average simulation times at box factor 35 for FEM and RNM methods across different cathode compositions. Method 𝑓CAM [wt.%] 70 75 80 FEM Simulation Time [s] 3352 3131 2551 RNM Simulation Time [s] 105 58 26 FEM/RNM Factor 32 54 98",
+   "bbox": [
+    32.6,
+    31.0,
+    566.0,
+    746.9
+   ],
+   "w": 2224,
+   "h": 2983,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.868
+  }
+ ]
+}

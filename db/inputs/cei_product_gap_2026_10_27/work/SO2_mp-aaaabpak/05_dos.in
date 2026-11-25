@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'SO2_mp-aaaabpak'
+  outdir = './tmp'
+  fildos = 'SO2_mp-aaaabpak.dos'
+  degauss = 0.007
+/

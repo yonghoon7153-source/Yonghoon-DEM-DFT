@@ -1,0 +1,278 @@
+{
+ "schema": "qe_input_set/v1",
+ "what": "WAD-CC 1단계 — 흑연 C|C 제약 이완 9",
+ "prereg": "db/properties/wad_cc_graphite_prereg_2026_09_28.json",
+ "settings": {
+  "pp": {
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다"
+ },
+ "jobs": [
+  {
+   "dir": "CC_S33_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "40049c8eb190d996b2dd3b18f3eb81fdfdbe1dcea9eb7826e84651b2dbf9469a",
+   "structure": "CC_S33_AB_init_bound",
+   "tags": {
+    "structure": "CC_S33_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_SP_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S33_SP",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "d42df70716fa2e9d2b4748fc954ee84dd8eeecddd39936ca8286fc2743634490",
+   "structure": "CC_S33_SP_init_bound",
+   "tags": {
+    "structure": "CC_S33_SP_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AA_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S33_AA",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "8f342f7031b23fbeac0ac7487de0c1eef3f79789f8a665a947cf1d055ad74543",
+   "structure": "CC_S33_AA_init_bound",
+   "tags": {
+    "structure": "CC_S33_AA_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "1763a86f722f8b257a93e0a0815234f02c1e668dc85ca876278ce46bac861b88",
+   "structure": "CC_M41_AB_init_bound",
+   "tags": {
+    "structure": "CC_M41_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_SP_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_SP",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "a6b8f550e2c0258100b80c8565b80dbea0974d750e4dc2605ddcac484f0d6635",
+   "structure": "CC_M41_SP_init_bound",
+   "tags": {
+    "structure": "CC_M41_SP_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AA_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_AA",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "0e0a63e9ef12b06f6a95137caa0ab3f60de47ab161617af7ba0f2a1eb95af3c8",
+   "structure": "CC_M41_AA_init_bound",
+   "tags": {
+    "structure": "CC_M41_AA_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S44_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S44_AB",
+   "nat": 16,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.86618,
+    "eopreg": 0.02433
+   },
+   "pw_in_sha256": "184a5413be03cd5a0d3d2da28d16310d0a096b6cf3a8185c51d762cfd5ac65d0",
+   "structure": "CC_S44_AB_init_bound",
+   "tags": {
+    "structure": "CC_S44_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M61_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M61_AB",
+   "nat": 14,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.8543,
+    "eopreg": 0.02649
+   },
+   "pw_in_sha256": "42d70dff96c0228dd52d1d9893c83dcc463bedda56e322ca43c7f469f6682016",
+   "structure": "CC_M61_AB_init_bound",
+   "tags": {
+    "structure": "CC_M61_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_V2a_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_AB_V2a",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "b52166b46d26338b2b6f5f6eb76aeb787c93d5bd16776c9accdcd33c9355a763",
+   "structure": "CC_M41_AB_V2a_init_bound",
+   "tags": {
+    "structure": "CC_M41_AB_V2a_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  }
+ ],
+ "stage1_manifest_sha256": "1cabb6394046983c00a06e7e9684a0f16cf3d261a20cb1ec661d5fa904efec45"
+}

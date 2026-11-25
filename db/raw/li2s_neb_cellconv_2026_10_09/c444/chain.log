@@ -1,0 +1,13 @@
+[2026-10-30 06:50:55] ▶ 시작 · W=/data/work/wt_li2s444_1027 · HEAD 09c7f83b5 · POINT=strain_12_p · R=/data/work/runs/li2s_neb_cellconv_444_1027
+[2026-10-30 06:51:57] ✓ 점검 — PW /data/apps/qe-7.4.1-gpu/bin/pw.x · NEB /data/apps/qe-7.4.1-gpu/bin/neb.x · MPIRUN /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[2026-10-30 06:51:57] ✓ strain_12_p pw.x 가 돈다 — 붙듦을 건다 (이 점은 끝까지 돌고, 끝나면 러너를 언 채 둔다)
+[2026-10-30 13:10:15] ✓ strain_12_p 끝 · 탄성 러너 붙듦 (/data/work/runs/li2s_neb_cellconv_444_1027/elastic_hold_12_p.txt) — 여기서부터는 어떻게 끝나든 러너를 푼다
+[2026-10-30 13:10:15]   GPU 표본 1: 1 MiB · 계산 프로세스 0
+[2026-10-30 13:10:45]   GPU 표본 2: 1 MiB · 계산 프로세스 0
+[2026-10-30 13:10:45] ▶ P1 david — 입력 만들기
+[2026-10-30 13:27:50]   ✓ P1 david 통과 — 최고 39138 MiB ≤ 46000 · 1023 s
+[2026-10-30 13:27:50] ✓ P1 — 손잡이 david · 최고 39138 MiB · 반복당 286.5 s · 어림 10.86 일
+[2026-10-30 13:27:50] ▶ 사슬 — run_chain_kgy.sh · MIN_L 14 · --diagonalization david · WORK /data/work/runs/li2s_neb_cellconv_444_1027/neb
+[2026-11-03 08:01:03] ✅ Li₂S 4×4×4 사슬 끝 —  activation energy (->) = 0.292130 eV| activation energy (<-) = 0.292130 eV
+[2026-11-03 08:01:04] ✅ 러너 971786 풀림 (S+) — 끝난 점을 판정하고 다음 점을 띄운다
+[2026-11-03 08:01:04] ✅ 탄성 러너 풀림 — 다음 탄성 점으로 잇는다 (이 스크립트 rc 0)

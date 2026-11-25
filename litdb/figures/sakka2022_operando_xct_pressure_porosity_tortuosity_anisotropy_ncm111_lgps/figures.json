@@ -1,0 +1,1571 @@
+{
+ "slug": "sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+  "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Illustration of the X-ray CT measurement and an all-solid-state battery cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    312.6,
+    605.4,
+    543.7,
+    703.7
+   ],
+   "w": 964,
+   "h": 411,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.55,
+   "recrop": "2026-11-12 다시 자름 — tool crop carried the journal's grey figure rule above the image and a wide uneven margin — re-cut to the embedded raster (xref 8) + 3 pt · clip 312.6–543.7 × 605.4–703.7 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) Charge/discharge cycle curves of an In–Li|LGPS|NCM all-solid-state battery using a laboratory-built measurement cell at a rate of 0.01C and stack pressure of 6 MPa. (b) Initial charge/discharge curves at a rate of 0.01C under various pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    327.3
+   ],
+   "w": 1090,
+   "h": 1179,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.921,
+   "caption_fix": "text layer read the '|' glyphs as 'j' ('In–LijLGPSjNCM') and kept a line-break hyphen ('all- solid-state') — fixed to the printed caption",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Pressure dependence on the porosity of the composite electrode and SE layer. (b) Volume fraction of NCM, LGPS, and voids in the composite electrode layer for various pressures. (c) Change in the NCM/LGPS contact area fraction as a function of pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    257.0,
+    558.8,
+    686.8
+   ],
+   "w": 1091,
+   "h": 1792,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.84,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) XY, YZ, and XZ slices highlighting only the contact surfaces of the NCM particles at various pressures. Green and blue lines indicate the NMC/LGPS contacted interface and the NCM/void interface, respectively. (b) XYZ axis and pressure direction. (c) Reconstructed three-dimensional image of the composite electrodes at stack pressures of 6 MPa and 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.2,
+    340.0,
+    545.0,
+    663.8
+   ],
+   "w": 975,
+   "h": 1350,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.383,
+   "caption_fix": "line-break hyphen 'stack pres- sures' joined; 'NMC/LGPS' is the printed typo for NCM/LGPS and is kept",
+   "recrop": "2026-11-12 다시 자름 — tool crop carried the journal's grey figure rule above the image — re-cut to the embedded raster (xref 28) + 3 pt · clip 311.2–545.0 × 340.0–663.8 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Cropped part of the obtained three-dimensional composite electrode images used to calculate the tortuosity. (b) Two-dimensional schematic view used to calculate the tortuosity. (c) Histogram of tortuosity for various pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    281.0,
+    298.0,
+    686.8
+   ],
+   "w": 1090,
+   "h": 1692,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.632,
+   "caption_fix": "line-break hyphen 'Two-dimen- sional' joined",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 (a) Apparent conductivity and (b) charge transfer resistance estimated by AC impedance as a function of pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    405.5,
+    558.8,
+    706.7
+   ],
+   "w": 1091,
+   "h": 1256,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.955,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Schematic illustration of morphological structural changes in a composite electrode by pressure application.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.9,
+    47.6,
+    499.5,
+    192.5
+   ],
+   "w": 1683,
+   "h": 605,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.395,
+   "recrop": "2026-11-12 다시 자름 — tool crop had a 62 pt left margin vs 6 pt right (uneven) — re-cut to the embedded raster (xref 45) + 3 pt · clip 95.9–499.5 × 47.6–192.5 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. SEM image of NCM particles. The observation was operated with a Hitachi SU6600 at 15 kV.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    144.3,
+    513.2,
+    449.6
+   ],
+   "w": 1797,
+   "h": 1273,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.051,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the image bottom (scale-bar label '10 µm' half missing) and carried the section header line 'Li10GeP2S12 (LGPS).' — re-cut to the raster (xref 37) + 3 pt · clip 82.1–513.2 × 144.3–449.6 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM image of LGPS particles. The observation was operated with a Hitachi S-4800 at 1.5 kV without air exposure.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    70.9,
+    513.2,
+    379.0
+   ],
+   "w": 1797,
+   "h": 1285,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.052,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the image bottom (scale-bar label cut) — re-cut to the raster (xref 41) + 3 pt · clip 82.1–513.2 × 70.9–379.0 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) Charge/discharge cycle curves of an In-Li | LGPS | NCM all-solid-state battery using the laboratory-built measurement cell at a rate of 0.01C under various pressures. (b) Capacity improvement versus the applied pressure compared with 6 MPa as a baseline. Two cycles of charge/discharge measurements at 6 MPa are first performed, and then two cycles are performed at a pressure of 12 MPa. The discharge capacity of the latter measurements is divided by that of the former at the same cycle, which gives the increased capacity deriving from the change in pressures. A rate of 100% means that there is no change in the capacity at the same number of cycles for the constant pressure condition, and 200% indicates that the capacity is twice the baseline rate (6 MPa) at the increased pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    130.1,
+    126.9,
+    465.2,
+    557.1
+   ],
+   "w": 1397,
+   "h": 1794,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.947,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the image bottom (x-axis title 'Pressure / MPa' of panel b missing) — re-cut to the raster (xref 45) + 3 pt · clip 130.1–465.2 × 126.9–557.1 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Reconstructed X-ray CT images of cathode layers in In-Li | LGPS | NCM cell at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    109.1,
+    550.3,
+    448.8
+   ],
+   "w": 2094,
+   "h": 1417,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.425,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Reconstructed X-ray CT images of electrolyte layers in In-Li | LGPS | NCM cell at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.7,
+    73.5,
+    517.7,
+    411.8
+   ],
+   "w": 1835,
+   "h": 1410,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.307,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the bottom row of panels (d) 50 and (e) 100 MPa — re-cut to the raster (xref 53) + 3 pt · clip 77.7–517.7 × 73.5–411.8 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Reconstructed cross-sectional image from X-ray CT in In-Li | LGPS | NCM cell at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    71.0,
+    550.3,
+    414.9
+   ],
+   "w": 2093,
+   "h": 1433,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.427,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 0 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    88.9,
+    543.4,
+    433.1
+   ],
+   "w": 2050,
+   "h": 1435,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.038,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the bottom of panel (d) — re-cut to the raster (xref 63) + 3 pt · clip 51.7–543.4 × 88.9–433.1 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 6 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.9,
+    550.3,
+    412.1
+   ],
+   "w": 2094,
+   "h": 1411,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.079,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 12 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    71.0,
+    550.3,
+    414.9
+   ],
+   "w": 2094,
+   "h": 1434,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.071,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 50 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    73.5,
+    538.8,
+    412.5
+   ],
+   "w": 2033,
+   "h": 1413,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.038,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the bottom of panel (d) — re-cut to the raster (xref 74) + 3 pt · clip 51.0–538.8 × 73.5–412.5 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 100 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    71.7,
+    539.4,
+    414.3
+   ],
+   "w": 2036,
+   "h": 1429,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.04,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the bottom of panel (d) — re-cut to the raster (xref 78) + 3 pt · clip 51.0–539.4 × 71.7–414.3 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Void ratio using small particle active materials. (a) SEM image of LiFePO4 particles. The observation was operated with a Hitachi SU6600 at 15 kV. (b) Reconstructed X-ray CT image of LiFePO4 cathode layer at 50 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    103.2,
+    69.7,
+    492.1,
+    290.2
+   ],
+   "w": 1621,
+   "h": 920,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.234,
+   "recrop": "2026-11-12 다시 자름 — tool crop cut the image bottom (scale bars of a and b) — re-cut to the raster (xref 82) + 3 pt · clip 103.2–492.1 × 69.7–290.2 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. XZ slices highlighting NCM particles and the contact surfaces of the NCM particles at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa. (green lines : the NMC/LGPS contacted interface; blue lines : the NCM/void interface; purple : NCM particles.)",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.3,
+    549.9,
+    340.7
+   ],
+   "w": 2092,
+   "h": 1115,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.22,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Reconstructed X-ray CT image of cathode layers in In-Li | LGPS | NCM cell (a) at pressures of 50 MPa and (b) after releasing the pressure to 0 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    74.2,
+    550.2,
+    303.7
+   ],
+   "w": 2093,
+   "h": 957,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.393,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (auto crop opened — complete; caption kept in figures.json; kept as produced by the tool)"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Nyquist plot of electrochemical impedance measurements at pressure of (a) 6 and 12 MPa and (b) 50 and 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    92.0,
+    546.0,
+    331.0
+   ],
+   "w": 2034,
+   "h": 997,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.959,
+   "recrop": "2026-11-12 다시 자름 — tool crop carried the SI section header 'S. 5: Electrochemical impedance analysis.' — re-cut to the vector plot region (clip 58–546 × 92–331 pt) · clip 58.0–546.0 × 92.0–331.0 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 16,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Equivalent circuit for the fitting of the Nyquist plot.",
+   "rotated_deg": 0,
+   "bbox": [
+    151.9,
+    401.2,
+    443.5,
+    516.2
+   ],
+   "w": 1216,
+   "h": 480,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.936,
+   "recrop": "2026-11-12 다시 자름 — tool crop had a 107 pt white left margin — re-cut to the raster (xref 103) + 3 pt · clip 151.9–443.5 × 401.2–516.2 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text) — re-cut after viewing the tool crop"
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 3,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — 10 charge/discharge cycles at 6 MPa, 0.01C (In–Li|LGPS|NCM, laboratory-built CT cell)",
+   "rotated_deg": 0,
+   "bbox": [
+    70.7,
+    50.6,
+    263.8,
+    186.3
+   ],
+   "w": 806,
+   "h": 567,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.889,
+   "panel_of": "f2",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 0, 805, 566) of f2 → clip 70.7–263.8 × 50.6–186.3 pt · 300 dpi · white mask over native px (0, 556, 230, 566) (neighbouring panel's label / axis title in the same row band)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 3,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — initial charge/discharge at 0.01C for cells held at 6, 50 and 100 MPa",
+   "rotated_deg": 0,
+   "bbox": [
+    70.7,
+    184.9,
+    263.8,
+    321.3
+   ],
+   "w": 806,
+   "h": 569,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.883,
+   "panel_of": "f2",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 560, 805, 1129) of f2 → clip 70.7–263.8 × 184.9–321.3 pt · 300 dpi · white mask over native px (240, 560, 805, 566) (neighbouring panel's label / axis title in the same row band)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 3,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — porosity vs pressure: composite electrode layer (squares) and electrolyte (SE) layer (circles)",
+   "rotated_deg": 0,
+   "bbox": [
+    328.5,
+    263.0,
+    527.7,
+    405.1
+   ],
+   "w": 831,
+   "h": 593,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.891,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 0, 830, 592) of f3 → clip 328.5–527.7 × 263.0–405.1 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 3,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — volume fractions of NCM / LGPS / voids in the composite electrode layer at 0, 6, 12, 50, 100 MPa (printed %)",
+   "rotated_deg": 0,
+   "bbox": [
+    328.5,
+    403.1,
+    527.7,
+    536.1
+   ],
+   "w": 831,
+   "h": 555,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.506,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 584, 830, 1138) of f3 → clip 328.5–527.7 × 403.1–536.1 pt · 300 dpi · white mask over native px (250, 584, 830, 592) (neighbouring panel's label / axis title in the same row band)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 3,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3(c) — NCM/LGPS contact area fraction (fraction of NCM surface in contact with LGPS) vs pressure",
+   "rotated_deg": 0,
+   "bbox": [
+    328.5,
+    536.1,
+    527.7,
+    680.8
+   ],
+   "w": 831,
+   "h": 604,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.931,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 1138, 830, 1741) of f3 → clip 328.5–527.7 × 536.1–680.8 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 4,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — XY, YZ, XZ slices showing only NCM boundaries: green = NCM/LGPS, blue = NCM/void, 0–100 MPa (10 µm bar)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.2,
+    343.0,
+    542.0,
+    489.1
+   ],
+   "w": 950,
+   "h": 609,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.213,
+   "panel_of": "f4",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 0, 949, 609) of f4 → clip 314.2–542.0 × 343.0–489.1 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 4,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — XYZ axes and pressure direction (Z = press direction)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.2,
+    489.8,
+    542.0,
+    581.4
+   ],
+   "w": 950,
+   "h": 383,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.737,
+   "panel_of": "f4",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 612, 949, 994) of f4 → clip 314.2–542.0 × 489.8–581.4 pt · 300 dpi · white mask over native px (0, 946, 200, 994) (neighbouring panel's label / axis title in the same row band)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 4,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — reconstructed 3D composite electrode at 6 and 100 MPa (NCM magenta, LGPS green, void blue; yellow ellipses = horizontally elongated voids)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.2,
+    570.4,
+    542.0,
+    660.8
+   ],
+   "w": 950,
+   "h": 378,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.274,
+   "panel_of": "f4",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 948, 949, 1325) of f4 → clip 314.2–542.0 × 570.4–660.8 pt · 300 dpi · white mask over native px (300, 948, 949, 995) (neighbouring panel's label / axis title in the same row band)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 5,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) — 36 × 36 × 50 µm³ crop used for tortuosity (NCM, voids, SE pathways)",
+   "rotated_deg": 0,
+   "bbox": [
+    59.4,
+    287.0,
+    170.2,
+    431.7
+   ],
+   "w": 463,
+   "h": 604,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.157,
+   "panel_of": "f5",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 0, 462, 603) of f5 → clip 59.4–170.2 × 287.0–431.7 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 5,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — 2D schematic of the tortuosity calculation (path through LGPS from 'in' to 'out')",
+   "rotated_deg": 0,
+   "bbox": [
+    170.2,
+    287.0,
+    275.1,
+    431.7
+   ],
+   "w": 438,
+   "h": 604,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.127,
+   "panel_of": "f5",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (462, 0, 899, 603) of f5 → clip 170.2–275.1 × 287.0–431.7 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f5c",
+   "kind": "figure",
+   "label": "5c",
+   "page": 5,
+   "file": "fig_5c.png",
+   "caption": "Fig. 5(c) — tortuosity histograms (N = 100 paths each) at 0, 6, 12, 50, 100 MPa; red circle = mode, blue circle = minimum",
+   "rotated_deg": 0,
+   "bbox": [
+    59.4,
+    431.9,
+    275.1,
+    680.8
+   ],
+   "w": 900,
+   "h": 1038,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.777,
+   "panel_of": "f5",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 604, 899, 1641) of f5 → clip 59.4–275.1 × 431.9–680.8 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 5,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — apparent conductivity (S cm⁻¹) vs pressure from AC impedance",
+   "rotated_deg": 0,
+   "bbox": [
+    324.7,
+    411.5,
+    531.5,
+    557.8
+   ],
+   "w": 863,
+   "h": 611,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.94,
+   "panel_of": "f6",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 0, 862, 610) of f6 → clip 324.7–531.5 × 411.5–557.8 pt · 300 dpi · white mask over native px (0, 594, 230, 610) (neighbouring panel's label / axis title in the same row band)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 5,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6(b) — charge-transfer resistance R_ct (Ω) vs pressure",
+   "rotated_deg": 0,
+   "bbox": [
+    324.7,
+    553.9,
+    531.5,
+    700.7
+   ],
+   "w": 863,
+   "h": 612,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.945,
+   "panel_of": "f6",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 594, 862, 1206) of f6 → clip 324.7–531.5 × 553.9–700.7 pt · 300 dpi · white mask over native px (240, 594, 862, 610) (neighbouring panel's label / axis title in the same row band)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fS3a",
+   "kind": "figure",
+   "label": "S3a",
+   "page": 4,
+   "file": "fig_S3a.png",
+   "caption": "SI Fig. S3(a) — one cell, pressure raised every two cycles 6→12→25→50→100 MPa (10 cycles, 0.01C)",
+   "rotated_deg": 0,
+   "bbox": [
+    133.1,
+    145.4,
+    462.2,
+    341.7
+   ],
+   "w": 1372,
+   "h": 819,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.918,
+   "panel_of": "fS3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 30, 637, 410) of fS3 → clip 133.1–462.2 × 145.4–341.7 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fS3b",
+   "kind": "figure",
+   "label": "S3b",
+   "page": 4,
+   "file": "fig_S3b.png",
+   "caption": "SI Fig. S3(b) — capacity improvement (%) vs pressure, 6 MPa = 100 % baseline",
+   "rotated_deg": 0,
+   "bbox": [
+    133.1,
+    341.7,
+    462.2,
+    554.1
+   ],
+   "w": 1372,
+   "h": 886,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.966,
+   "panel_of": "fS3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — native raster px (0, 410, 637, 821) of fS3 → clip 133.1–462.2 × 341.7–554.1 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fS15a",
+   "kind": "figure",
+   "label": "S15a",
+   "page": 16,
+   "file": "fig_S15a.png",
+   "caption": "SI Fig. S15(a) — Nyquist plots at 6 and 12 MPa (kΩ; vector data)",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    92.0,
+    305.5,
+    331.0
+   ],
+   "w": 1032,
+   "h": 997,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.958,
+   "panel_of": "fS15",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — vector plot clip 58.0–305.5 × 92.0–331.0 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fS15b",
+   "kind": "figure",
+   "label": "S15b",
+   "page": 16,
+   "file": "fig_S15b.png",
+   "caption": "SI Fig. S15(b) — Nyquist plots at 50 and 100 MPa (kΩ; vector data)",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    92.0,
+    546.0,
+    331.0
+   ],
+   "w": 1003,
+   "h": 997,
+   "dpi": 300,
+   "src": "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.959,
+   "panel_of": "fS15",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — vector plot clip 305.5–546.0 × 92.0–331.0 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1_abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "PDF p.1 abstract: lab-built cell for electrochemistry + X-ray CT while monitoring pressure; porosity · contact area · tortuosity vs pressure; insufficient AM–SE contact in the plane perpendicular to the pressure direction",
+   "rotated_deg": 0,
+   "bbox": [
+    169.9,
+    232.5,
+    555.8,
+    373.1
+   ],
+   "parts": [
+    [
+     1,
+     169.9,
+     232.5,
+     555.8,
+     373.1
+    ]
+   ],
+   "w": 1609,
+   "h": 587,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.859,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1_p2_fabrication_vs_stack_pressure",
+   "page": 1,
+   "file": "txt_p1_p2_fabrication_vs_stack_pressure.png",
+   "caption": "PDF p.1–2: fabrication vs stack pressure; fabrication 'involves plastic deformation within composite electrodes'; stack pressure upper limit ≈1 MPa practically; strain from pressure reduces AM–SE contact (refs 18, 24)",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    597.0,
+    555.8,
+    726.8
+   ],
+   "parts": [
+    [
+     1,
+     300.3,
+     597.0,
+     555.8,
+     726.8
+    ],
+    [
+     2,
+     39.5,
+     45.6,
+     295.0,
+     202.5
+    ]
+   ],
+   "w": 1066,
+   "h": 1212,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.847,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2_ct_anisotropy_gap",
+   "page": 2,
+   "file": "txt_p2_ct_anisotropy_gap.png",
+   "caption": "PDF p.2: FIB-SEM / X-ray CT background; quantitative pressure-controlled 3D analysis and direct observation of contact anisotropy 'not yet … fully explored'",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    204.3,
+    295.0,
+    465.5
+   ],
+   "parts": [
+    [
+     2,
+     39.5,
+     204.3,
+     295.0,
+     465.5
+    ]
+   ],
+   "w": 1066,
+   "h": 1089,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.839,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2_materials_cell",
+   "page": 2,
+   "file": "txt_p2_materials_cell.png",
+   "caption": "PDF p.2: LiNbO₃-coated NCM111 / LGPS (550 °C) / acetylene black 1 : 1 : 0.1 wt (mortar, Ar); 1.0 mg composite + 1.0 mg LGPS + In–Li in a 1 mm cylinder, O-ring, screws; 298 K cycling (HJ1001SDE)",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    503.2,
+    295.0,
+    728.6
+   ],
+   "parts": [
+    [
+     2,
+     39.5,
+     503.2,
+     295.0,
+     728.6
+    ],
+    [
+     2,
+     300.3,
+     48.4,
+     555.8,
+     83.0
+    ]
+   ],
+   "w": 1066,
+   "h": 1101,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.847,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2_ct_conditions",
+   "page": 2,
+   "file": "txt_p2_ct_conditions.png",
+   "caption": "PDF p.2: SPring-8 BL20XU, 20 keV, Si(111) DCM, CMOS C13440-20CU, pixel ≈0.5 µm, FOV ≈1.0 × 1.0 mm, 1800 projections / 180°, 0.05 s; Dragonfly 4.1 segmentation",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    84.8,
+    555.8,
+    226.5
+   ],
+   "parts": [
+    [
+     2,
+     300.3,
+     84.8,
+     555.8,
+     226.5
+    ]
+   ],
+   "w": 1065,
+   "h": 591,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.842,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2_cell_6mpa_loading",
+   "page": 2,
+   "file": "txt_p2_cell_6mpa_loading.png",
+   "caption": "PDF p.2: operando cell (rods = current collectors, bottom rod on a load-sensing transducer); 6 MPa cycling; NCM loading 60 mg cm⁻² (1 mm diameter + balance readability)",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    271.1,
+    555.8,
+    388.9
+   ],
+   "parts": [
+    [
+     2,
+     300.3,
+     271.1,
+     555.8,
+     388.9
+    ],
+    [
+     2,
+     300.3,
+     390.7,
+     555.8,
+     580.2
+    ]
+   ],
+   "w": 1065,
+   "h": 1299,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.844,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3_initial_capacity_step_cell",
+   "page": 3,
+   "file": "txt_p3_initial_capacity_step_cell.png",
+   "caption": "PDF p.3: thick electrode → inhomogeneous reaction; LGPS oxidative decomposition (irreversible first charge); discharge capacity rises 6 → 100 MPa; one cell stepped every two cycles (Fig. S3)",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    390.1,
+    295.0,
+    603.5
+   ],
+   "parts": [
+    [
+     3,
+     39.5,
+     390.1,
+     295.0,
+     603.5
+    ]
+   ],
+   "w": 1066,
+   "h": 890,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.847,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3_no_fabrication_pressure",
+   "page": 3,
+   "file": "txt_p3_no_fabrication_pressure.png",
+   "caption": "PDF p.3: previous study capacity lower at 50 than 150 MPa (ref 15); no fabrication pressure here → the stated pressure corresponds to a fabrication pressure",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    604.7,
+    295.0,
+    711.1
+   ],
+   "parts": [
+    [
+     3,
+     39.5,
+     604.7,
+     295.0,
+     711.1
+    ]
+   ],
+   "w": 1066,
+   "h": 444,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.848,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3_ct_region_segmentation",
+   "page": 3,
+   "file": "txt_p3_ct_region_segmentation.png",
+   "caption": "PDF p.3: analysed area 512 × 512 × 50 µm³; NCM / LGPS / voids identified from transmission intensity (Figs. S7–S11); porosity and contact area fraction as parameters",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    48.9,
+    555.8,
+    226.5
+   ],
+   "parts": [
+    [
+     3,
+     300.3,
+     48.9,
+     555.8,
+     226.5
+    ]
+   ],
+   "w": 1065,
+   "h": 741,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.85,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4_porosity_two_stage",
+   "page": 4,
+   "file": "txt_p4_porosity_two_stage.png",
+   "caption": "PDF p.4: porosity 23 % (electrode) and 5 % (electrolyte) at 100 MPa; hard large NCM → voids; NCM fraction rises to 12 MPa then LGPS fills voids → two-stage densification",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    48.9,
+    295.0,
+    453.6
+   ],
+   "parts": [
+    [
+     4,
+     39.5,
+     48.9,
+     295.0,
+     453.6
+    ]
+   ],
+   "w": 1066,
+   "h": 1687,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.842,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4_lfp_nanovoids",
+   "page": 4,
+   "file": "txt_p4_lfp_nanovoids.png",
+   "caption": "PDF p.4: LiFePO₄ (hundreds of nm) electrode void ratio ≈5 % at 50 MPa; nanoscale voids hard to quantify at the CT resolution",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    455.4,
+    295.0,
+    573.1
+   ],
+   "parts": [
+    [
+     4,
+     39.5,
+     455.4,
+     295.0,
+     573.1
+    ]
+   ],
+   "w": 1066,
+   "h": 491,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.849,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4_contact_fraction_release",
+   "page": 4,
+   "file": "txt_p4_contact_fraction_release.png",
+   "caption": "PDF p.4: contact area fraction = NCM/LGPS contact area ÷ NCM surface area; +≈10 % above 50 MPa vs ≤12 MPa; stops at 50 MPa; 50 MPa vs released 0 MPa: no clear void change (Fig. S14)",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    574.9,
+    295.0,
+    728.6
+   ],
+   "parts": [
+    [
+     4,
+     39.5,
+     574.9,
+     295.0,
+     728.6
+    ],
+    [
+     4,
+     300.3,
+     48.9,
+     555.8,
+     142.8
+    ]
+   ],
+   "w": 1066,
+   "h": 1049,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.841,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x4d",
+   "kind": "text",
+   "label": "p4_p5_anisotropy",
+   "page": 4,
+   "file": "txt_p4_p5_anisotropy.png",
+   "caption": "PDF p.4–5: anisotropy — good NCM/LGPS contact along Z (pressure direction), preferential void contact horizontally; also at high pressure 'though less frequently'; void shape follows the pressure direction",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    144.6,
+    555.8,
+    310.1
+   ],
+   "parts": [
+    [
+     4,
+     300.3,
+     144.6,
+     555.8,
+     310.1
+    ],
+    [
+     5,
+     39.5,
+     48.9,
+     295.0,
+     154.7
+    ]
+   ],
+   "w": 1066,
+   "h": 1149,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.848,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5_tortuosity",
+   "page": 5,
+   "file": "txt_p5_tortuosity.png",
+   "caption": "PDF p.5: tortuosity = SE-connected 3D pathway length ÷ thickness in a 36 × 36 × 50 µm³ crop; reported range 1–10 → relative comparison; mode and minimum fall with pressure, 100 MPa: tortuosity and variation increase",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    156.5,
+    295.0,
+    250.4
+   ],
+   "parts": [
+    [
+     5,
+     39.5,
+     156.5,
+     295.0,
+     250.4
+    ],
+    [
+     5,
+     300.3,
+     48.9,
+     555.7,
+     166.7
+    ]
+   ],
+   "w": 1066,
+   "h": 900,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.847,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5_impedance",
+   "page": 5,
+   "file": "txt_p5_impedance.png",
+   "caption": "PDF p.5: AC impedance with the CT; apparent conductivity ≈ linear in pressure (↔ porosity); R_ct inversely proportional to pressure (↔ contact area fraction); capacity gain mainly from the improved NCM/LGPS interface",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    168.4,
+    555.8,
+    381.9
+   ],
+   "parts": [
+    [
+     5,
+     300.3,
+     168.4,
+     555.8,
+     381.9
+    ]
+   ],
+   "w": 1065,
+   "h": 891,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.841,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6_low_pressure_spots",
+   "page": 6,
+   "file": "txt_p6_low_pressure_spots.png",
+   "caption": "PDF p.6: uniaxial pressing pushes the stiff NCM; low-pressure spots in AM gaps, no horizontal force → gaps not filled; voids remain where AM overlap",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    233.5,
+    295.0,
+    483.3
+   ],
+   "parts": [
+    [
+     6,
+     39.5,
+     233.5,
+     295.0,
+     483.3
+    ]
+   ],
+   "w": 1066,
+   "h": 1042,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.838,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6_tortuosity_tradeoff",
+   "page": 6,
+   "file": "txt_p6_tortuosity_tradeoff.png",
+   "caption": "PDF p.6: tortuosity rises at 100 MPa — void reduction vs AM obstacles; trade-off AM/SE connectivity ↔ SE tortuosity; minor impact expected (no significant capacity change above 50 MPa)",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    484.5,
+    295.0,
+    722.4
+   ],
+   "parts": [
+    [
+     6,
+     39.5,
+     484.5,
+     295.0,
+     722.4
+    ],
+    [
+     6,
+     300.3,
+     233.5,
+     555.8,
+     315.9
+    ]
+   ],
+   "w": 1066,
+   "h": 1353,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.849,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x6c",
+   "kind": "text",
+   "label": "p6_conclusions",
+   "page": 6,
+   "file": "txt_p6_conclusions.png",
+   "caption": "PDF p.6: conclusions — porosity ↓, contact fraction ↑, R_ct order-of-magnitude ↓, logarithmic capacity rise, contact interface 'marginally perpendicular' to the pressure",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    356.7,
+    555.8,
+    605.9
+   ],
+   "parts": [
+    [
+     6,
+     300.3,
+     356.7,
+     555.8,
+     605.9
+    ]
+   ],
+   "w": 1065,
+   "h": 1039,
+   "dpi": 300,
+   "src": "e433fb54-44._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.846,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-block bbox ±3 pt (horizontal) / ±0.6 pt (vertical, so the neighbouring paragraph's line is not caught) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) extracted main Figs. 1–7 and SI Figs. S1–S16 (23, all labels found; SI images carry soft masks). The paper prints no tables and no numbered or inline equations (main 8 pp + SI 16 pp checked page by page) — definitions (porosity, contact area fraction, tortuosity) are sentences → evidence-paragraph crops instead of equation crops.",
+ "note_manual": "2026-11-12 — published version (J. Mater. Chem. A 10, 16602–16609, 2022; 8 PDF pages; CC BY 4.0) + ESI (16 PDF pages: cover + Figs. S1–S16). Tool crops 23: 13 re-cut (f1 · f4 grey figure rule; f7 · fS16 uneven margin; fS1 · fS2 · fS3 · fS5 · fS7 · fS10 · fS11 · fS12 bottom of the image cut because the soft-masked raster extends to the caption's first line; fS1 · fS15 section header inside), 10 kept; captions of f2 · f4 · f5 fixed. Hand crops 35: panels 17 (2a 2b · 3a 3b 3c · 4a 4b 4c · 5a 5b 5c · 6a 6b · S3a S3b · S15a S15b) · evidence paragraphs 18 · equations 0. Re-rendered after viewing: f2a · f2b · f6a · f6b (mask reached the image edge), f3b (top margin), f4b · f4c ('Z = press direction' moved to b). All 58 crops opened with Read. Main-text figures are single RGB/gray rasters at 300 dpi (renders at 300 dpi are native); SI figures are 111–230 dpi rasters with soft masks except Fig. S15 (vector markers). digitized.csv (538 rows): Fig. 3a/3c markers · Fig. 3b printed % · Fig. 5c bin counts (visual, 0.1 bins) + statistics · Fig. 6a/6b markers · Fig. 2a/2b curve ends · SI Fig. S3b markers · SI Fig. S15 vector markers (204) · card read-outs (not paper quantities): SI Fig. S13 boundary-colour shares by facet orientation, SI Fig. S6 layer thicknesses.",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of) · fS3a/fS3b · fS15a/fS15b = SI panels · x<PDF page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1]); page = PDF page (main p.n = printed page 16601+n; SI page 1 = cover, Fig. S1 = SI p.2 … S15/S16 = SI p.16)"
+}

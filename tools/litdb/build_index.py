@@ -1,0 +1,619 @@
+#!/usr/bin/env python3
+"""build_index.py — litdb 인덱스를 **생성**한다 (손으로 유지하지 않는다).
+
+왜 (open_items #7, 2026-08-06 해결):
+  `INDEX.md` 는 argyrodite/SE 축 전용이라 DEM·기계·건식전극 digest 가 안 들어간다.
+  그래서 digest 159편 중 **64편이 어느 인덱스에도 없었다**. 사이트(`list_papers()`)는
+  디렉터리를 직접 읽어 멀쩡했지만, 마크다운 인덱스만 계속 뒤처졌다.
+  손으로 맞추면 또 밀린다 — **DEM 축 인덱스를 생성**하고, 어디에도 없는 digest를
+  `--check` 로 잡는다.
+
+  · `INDEX.md`            = SE 축 (사람이 큐레이션, 논평이 붙는다) — 건드리지 않는다
+  · `INDEX_DEM.md`        = DEM·MPM 축 (이 도구가 생성)
+  · `--check`             = 두 인덱스 어디에도 없는 digest 보고 (CI/점검용, 0=깨끗)
+
+표 셀수 검사 (2026-09-22 추가)
+  ⛔⛔ **마크다운 표는 헤더보다 칸이 많으면 넘치는 칸을 *조용히 버린다*.** 파일엔 글자가
+  있는데 렌더된 화면에는 안 나온다 — 웹앱이 `litdb/` 를 라이브로 읽으므로 실제로 사라진다.
+  칸이 **모자라면** 반대로 셀이 밀려 엉뚱한 열에 붙는다. 둘 다 오류를 안 낸다.
+  2026-09-22 실측: `comparison_vs_ours.md` 에 **30행**이 이 상태였고 원인은 둘뿐이었다 —
+  ① 절댓값 `|x|` 표기의 파이프 미이스케이프(`\\|` 로 써야 한다) ② 칸을 하나 더/덜 쓴 행.
+  ⇒ `--check` 가 **항상** 같이 돈다. 침묵하지 않는다.
+
+usage
+  python3 tools/litdb/build_index.py            # INDEX_DEM.md 생성 + 정합 점검 + 표 검사
+  python3 tools/litdb/build_index.py --check    # 점검만 (파일 안 씀)
+  python3 tools/litdb/build_index.py --selftest # 자체 점검 (양성 + 음성 경로)
+
+⛔ 이 도구가 **못 하는 것**
+  · digest 내용이 맞는지 — 인덱스에 *있나 없나*만 본다.
+  · 표 안의 값이 옳은지 · 열 순서가 의미상 맞는지 — **셀 개수**만 센다.
+    (2026-09-22 실측: `[Jain26Rev]` 행은 논문/digest 칸이 **뒤바뀐 채** 칸 수만 맞을 수도 있었다.)
+  · 여러 줄에 걸친 표 셀(마크다운이 지원 안 함)과 HTML `<table>` — 인식하지 않는다.
+  · 편입률의 **질** — 한 줄 언급도 '편입'으로 센다.
+"""
+import argparse
+import re
+import sys
+import time
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+LITDB = ROOT / "litdb"
+sys.path.insert(0, str(ROOT / "webapp"))
+import data as D                                                   # noqa: E402
+
+DEM_INDEX = LITDB / "INDEX_DEM.md"
+SE_INDEX = LITDB / "INDEX.md"
+
+# ★ SE 입도 효과 · size effect (2026-10-30 신설) — **낱말이 아니라 명시 slug 집합**으로 묶는다.
+#   왜 낱말로 안 묶나: 'psd' · 'size' · 'particle_size' 는 SE 입도와 무관한 카드도 끌고 온다 (실측:
+#   `eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell` = 액체 LIB **LFP 활물질** PSD ·
+#   `jun2022_argyrodite_ion_cage_size_descriptor` = 'size' 가 이온 **케이지** 크기).  묶음의 경계는 사람이
+#   정한다 — 카드를 더하면 여기에 slug 를 더한다 (자동 추측하면 축이 섞인다).
+#   맨 앞에 둔다: 이 카드들은 아래 낱말 묶음 (미세구조 · 접촉역학 · 기타 …) 에도 걸려 뒤에 두면 흩어진다.
+#   ⚠ 생성 표는 DEM 축 (track == "dem") 만 싣는다 — 이 집합의 **SE 축** 카드는 여기 안 나오고
+#     `INDEX.md` § "SE 입도 효과 (size effect)" 에 사람이 싣는다 (그 절에 있는지는 main() 이 따로 본다 —
+#     INDEX_DEM 에 SE 축 slug 를 적으면 `check()` 가 INDEX.md 누락을 못 본다).
+SIZE_EFFECT_GROUP = "SE 입도 효과 · size effect"
+SIZE_EFFECT_SLUGS = frozenset({
+    # 2026-10-30 반입 8 편 (50 kg 4차년도 SE 입도 문헌 지도)
+    "yano2026_se_psd_width_ionic_tortuosity_dem",
+    "yadav2021_lpscl_sieved_psd_impedance_tortuosity",
+    "lin2025_submicron_lpscl_cathode_li_kinetics",
+    "calpa2019_small_li7p3s11_liquid_phase_composite_cathode",
+    "tron2023_rational_cathode_composite_optimization_lpscl",
+    "lei2026_se_particle_size_effects_review",
+    "kawaguchi2026_se_size_soc_dependent_cathode_resistance",
+    "stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity",
+    # 이미 정본에 있던 입도 · 크기 효과 카드
+    "schlautmann2023_se_particle_size_composite_transport",
+    "minnmann2024_microstructure_porosity_visualization",
+    "shi2019_high_am_loading_particle_size_assb",
+    "bazzoun2025_dem_parameter_sensitivity_assb_cathode",
+    "tailored_cathode_microstructure_low_pressure_assb",
+    "minnmann2021_jes_charge_transport_bottlenecks",
+    "bazzoun2026_dem_fem_rnm_ionic",
+    "cronau2022_wet_milling_particle_size_ionic_conductivity",
+    "frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure",
+    "otani2025_dem_se_dispersion_aggregation_compression",
+    "park2020_dimension_controlled_se_percolation_contact_area",
+    "kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage",
+    "faka2026_particle_size_consolidation_strain_lpscl",
+    "lee2025_heckel_argyrodite_powder_densification_nanoindentation",
+    "schneider2023_particle_size_pressure_transport",
+    "ou2026_microstructural_multiscale_fast_ion_transport",
+    # 2026-11-10 — LPSCl 입경별 (10 µm · 1 µm · < 1 µm) 입자 압입 + ~10 µm 펠릿 압력별 밀도 (lee2025_heckel 의 이웃)
+    "var2026_sulfide_se_mechanical_properties_local_indentation_pellet",
+    # 2026-11-12 — NCM811 복합 양극 SE ≈1 vs 3–5 µm: 무하중 XCT 기공 11 vs 16 % · 재압축 '임계압' · operando EDXRD (stavola2023 의 입도 쪽 짝)
+    "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
+    # 2026-11-12 — 같은 그룹 (Marburg) LWM 습식 분쇄 SE (D50 1.01 → 0.79 µm) · 복합 양극 τ_eff (= tau2 · 자기 펠릿 σ₀) 35.4 → 8.0 · 392 MPa 펠릿 공극 (80:20) 22.7 → 13.5 % — 펠릿 σ₂₅ 4.43 → 1.09 (정규화 함정)
+    "koenig2023_wet_milling_se_ion_tortuosity_composite_cathode",
+    # 2026-11-16 — 황화물 유리 (75Li₂S·25P₂S₅) SE d50 16 vs 3.8 µm × NCM111 9.4 vs 5.3 µm (75 : 25 wt · 무탄소 · 330 MPa): 단면 분포 균질 · NCM–NCM 맞닿은 곳 균열 · 'D_SE < D_NCM' 규칙 (정성) · 고율 용량 (Sakuda 2016 SSI)
+    "sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking",
+    # 2026-11-22 — Li₃PS₄ 액상 진탕 합성에서 원료 Li₂S 를 먼저 작게 (볼밀 중앙값 8 → 1.5 µm · 용해–석출 0.34 µm) → LPS SEM 등가원 1382 (인용) → 227 → 93 nm · 판상 → 구형 · σ 1.1 · 1.5 × 10⁻⁴ S/cm (360 MPa 펠릿) — yano2026 [25] · kawaguchi2023 [29] 의 원전 (SE 입도 설계 · 합성 쪽)
+    "ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s",
+    # 2026-11-23 — 상용 argyrodite 분말 셋의 PSD 폭 (넓은 BD D50 ≈9.9 ↔ 좁은 ND ≈1.6 µm [판독]): 순수 SE 펠릿 기공 110–440 MPa (440 MPa 1.73 ↔ 6.19 % · 진밀도 1.64 · 다이 안) ↔ FIB-SEM 국소 기공 · 나노압입 지도 이질성 · Sn 전셀 분리막 균열 (ChemRxiv 원고 · 심사 전)
+    "cho2026_pore_network_homogeneity_powder_compacted_se_separator",
+})
+
+# 주제 묶음 — slug/제목에 이 낱말이 있으면 그 절로. 위에서부터 먼저 맞는 것.
+#   (첫 항목만 예외 — 낱말 튜플이 아니라 **slug frozenset** 이고 slug 가 정확히 같을 때만 맞는다.)
+GROUPS = [
+    (SIZE_EFFECT_GROUP, SIZE_EFFECT_SLUGS),
+    # ⚠ (낱말 묶음 중에서는) MPM 을 먼저 — 'snow elastoplastic'·'Drucker-Prager' 는 접촉역학 낱말도
+    #   갖고 있어 뒤에 두면 그쪽으로 샌다 (실측: stomakhin2013·klar2016).
+    ("MPM · 연속체", ("mpm", "material point", "snow", "sand", "drucker")),
+    ("접촉역학 · 소성 (DEM 이론)",
+     ("contact", "adhesion", "elastoplastic", "indentation", "hertz", "densification",
+      "packing", "similarity", "cohesive", "eepa", "dmt", "kogut", "storakers",
+      "thornton", "pasha", "luding", "bouvard", "mcgeary", "jacksongreen", "mesarovic")),
+    ("복합양극 미세구조 · percolation",
+     ("microstructure", "microstructural", "percolation", "porosity", "tortuosity",
+      "taufactor", "conductive_path", "conductive_paths", "effective", "volumetric")),
+    ("공정 — 캘린더링 · 압축 · 건식전극",
+     ("calender", "compaction", "mold_pressure", "coldpress", "dry", "rolling",
+      "mixer", "sintering", "drying", "wet_process", "manufacturing", "binder", "ptfe",
+      # Franco 그룹 CGMD = 슬러리 → 건조 → 캘린더링 제조 사슬.  2026-09-27 qin2026 이 제목이 한국어라
+      # 영어 낱말이 slug 에만 남아 '기타' 로 샜다 — 이 한 낱말로 옮겨지는 카드는 그 한 편뿐 (실측).
+      "cgmd")),
+    ("화학-기계 열화 · 계면", ("chemomech", "failure", "cracking", "degradation",
+                              "delamination", "stress", "interfac", "impedance")),
+    ("Digital twin · ML 최적화", ("digital_twin", "digitaltwin", "ml_", "duquesnoy",
+                                  "multiobjective", "optimization")),
+]
+
+
+def group_of(pid, title):
+    t = (pid + " " + title).lower()
+    for name, keys in GROUPS:
+        if isinstance(keys, frozenset):
+            # 명시 slug 집합 — **정확히 같은 slug** 만 (부분 문자열 · 제목 낱말로는 안 들어온다)
+            if pid in keys:
+                return name
+            continue
+        if any(k in t for k in keys):
+            return name
+    return "기타"
+
+
+def cell(s):
+    """생성 표의 한 칸으로 안전하게 만든다.
+
+    ⛔⛔ **digest 본문에서 온 글자에 `|` 가 있으면 표가 조용히 깨진다** (2026-09-22 실측).
+      `⏳ 문서 대기 (exp|DFT|AIMD|MLIP|DEM|MPM|FEM|mixed)` 한 칸이 **8 칸으로 쪼개져**
+      `INDEX_DEM.md` 70 행이 12 칸이 됐고, 렌더에서는 넘친 칸이 **버려져** 안 보였다.
+      오류도 안 났다 — 조용히 틀린 경로다. ⇒ 생성하는 모든 칸은 여기를 통과한다.
+    """
+    return re.sub(r"\s*[\r\n]+\s*", " ", str(s)).replace("|", r"\|")
+
+
+def rows(papers, track):
+    out = []
+    for p in papers:
+        if p["track"] != track:
+            continue
+        title = re.sub(r"\s+", " ", p["title"]).strip()
+        title = re.sub(r"^[⭐★🔴🟡✅⬜📄]+\s*", "", title)
+        out.append({"id": p["id"], "title": title[:180], "type": p["type"][:60],
+                    "digested": p["digested"], "group": group_of(p["id"], title)})
+    return out
+
+
+def build(dry=False):
+    papers = D.list_papers()
+    dem = rows(papers, "dem")
+    figs = D.papers_with_figures()
+    by = {}
+    for r in dem:
+        by.setdefault(r["group"], []).append(r)
+    order = [g for g, _k in GROUPS] + ["기타"]
+
+    L = ["# 🧱 LITDB — DEM · MPM 축 인덱스",
+         "",
+         "> **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**",
+         "> 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).",
+         f"> digest {len(dem)}편 · 생성 {time.strftime('%Y-%m-%d')}",
+         "",
+         "왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극",
+         "digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**",
+         "(open_items #7). 축을 나누고 생성으로 바꿔 그 구멍을 닫는다.",
+         ""]
+    for g in order:
+        rs = by.get(g)
+        if not rs:
+            continue
+        L += [f"## {g} ({len(rs)}편)", ""]
+        if g == SIZE_EFFECT_GROUP:
+            # ⚠ SE 축 slug 는 **여기 적지 않는다** — 적으면 `check()` (부분 문자열 대조) 가
+            #   INDEX.md 의 누락을 못 본다. 편수만 생성값으로 적는다.
+            n_se = sum(1 for p in papers if p["id"] in SIZE_EFFECT_SLUGS and p["track"] != "dem")
+            L += ["> 묶음 경계 = `tools/litdb/build_index.py` 의 `SIZE_EFFECT_SLUGS` "
+                  "(명시 slug 집합 — 낱말로 묶지 않는다). 이 표는 DEM 축만 싣는다.",
+                  f"> 같은 집합의 **SE 축** 카드 {n_se}편은 `INDEX.md` § \"SE 입도 효과 (size effect)\" 에 있다.",
+                  ""]
+        L += ["| slug | 논문 | 유형 | digest | 그림 |", "|---|---|---|---|---|"]
+        for r in sorted(rs, key=lambda x: x["id"]):
+            n = figs.get(r["id"], 0)
+            L.append(f"| `{cell(r['id'])}` | {cell(r['title'])} | {cell(r['type'])} | "
+                     f"{cell(r['digested'] or '—')} | {('🖼 ' + str(n)) if n else '—'} |")
+        L.append("")
+
+    # ── 발표 덱 (litdb/talks) ────────────────────────────────────────────
+    # ⚠ 덱은 peer-review 를 안 거쳐 **papers/ 와 인용 등급이 다르다**(talks/README.md).
+    #   그래서 위 표에 섞지 않고 **별도 절 + 편수도 따로** 낸다. 그래도 인덱스에 실어야
+    #   하는 이유: DEM 축 덱이 어느 인덱스에도 안 나와 검색으로만 찾이는 상태였다.
+    talks = [t for t in D.list_talks()
+             if "dem" in _talk_axis(t["id"]) or "microstructure" in _talk_axis(t["id"])]
+    if talks:
+        L += [f"## 🎤 발표 덱 ({len(talks)}편) — ⚠ 인용 등급이 papers/ 보다 한 단계 낮다", "",
+              "> `litdb/talks/README.md` 의 인용 규율. **덱 수치는 우리 db 절대값과 같은 표에 넣지 않는다.**",
+              "", "| slug | 발표자 | 주제 | 발표 | 그림 |", "|---|---|---|---|---|"]
+        for t in sorted(talks, key=lambda x: x["id"]):
+            n = figs.get(t["id"], 0)
+            L.append(f"| `{cell(t['id'])}` | {cell(t.get('speaker') or '—')} | "
+                     f"{cell(t['title'][:150])} | "
+                     f"{cell(t.get('session') or t.get('digested') or '—')} | "
+                     f"{('🖼 ' + str(n)) if n else '—'} |")
+        L.append("")
+
+    txt = "\n".join(L)
+    if not dry:
+        DEM_INDEX.write_text(txt, encoding="utf-8")
+    return dem, txt
+
+
+_AXIS_RE = re.compile(r"^>.*?\baxis:\s*[`*]*([a-z0-9_\-]+)", re.I)
+#: axis 태그를 읽는 **메타 블록 창**. 정책이지 우연이 아니다 (위 _talk_axis 주석).
+_AXIS_WINDOW = 20
+#: 창 **밖**에서 발견된 axis 태그 — 조용히 버리지 않고 여기 모아 보고한다.
+LATE_AXIS_TAGS: list = []
+
+
+def _talk_axis(slug):
+    """덱 digest **메타 블록**의 `axis:` 값 (없으면 ''). DEM 축 덱만 인덱스에 싣기 위한 판정.
+
+    ⚠ 왜 `^>` 를 요구하나 (2026-08-25 실측 사고): 처음엔 아무 줄에서나 `axis:` 를 찾았더니,
+      **"저쪽 파일에는 `axis: dem-microstructure` 태그가 있다"고 *설명하는 산문*** 이 걸려
+      통합 stub 이 인덱스에 같이 실렸다. 태그는 항상 머리말 인용블록(`> slug … · axis: … ·`)에
+      있으므로 **줄이 `>` 로 시작할 때만** 태그로 인정한다.
+
+    이 함수가 못 하는 것: `axis:` 태그가 없는 옛 덱은 항상 ''를 돌려주므로 실리지 않는다
+    (소급 태깅은 사람이 한다 — 자동 추측하면 축이 섞인다).
+    """
+    f = LITDB / "talks" / f"{slug}.md"
+    try:
+        # ⚠ 2026-09-13 검토 — 이 20줄은 `list_papers` 의 18줄과 **겉만 같고 다르다.**
+        #   저기는 우연이었지만(넓혀서 고침) 여기는 **정책**이다: axis 는 *덱 머리의
+        #   메타 블록* 에서만 읽는다. 산문 오탐 방어는 `^>` 가 하지만(음성①), `^>` 만으로는
+        #   본문 깊은 곳의 인용줄과 메타 블록을 못 가른다 — 창이 그 역할을 한다.
+        #   ⇒ 넓히지 않는다. 대신 **창 밖 태그를 조용히 버리지 않고 보고**한다 (아래).
+        _lines = f.read_text(encoding="utf-8", errors="ignore").splitlines()
+        for line in _lines[:_AXIS_WINDOW]:
+            m = _AXIS_RE.match(line)
+            if m:
+                return m.group(1).lower()
+        # 창 밖에 태그가 있으면 **그 사실을 남긴다.** "태그 없음" 과 구분되어야
+        #   사람이 "메타 블록으로 옮겨라" 를 판단할 수 있다 (조용히 버리면 못 한다).
+        for i, line in enumerate(_lines[_AXIS_WINDOW:], start=_AXIS_WINDOW + 1):
+            if _AXIS_RE.match(line):
+                LATE_AXIS_TAGS.append((slug, i, _AXIS_RE.match(line).group(1).lower()))
+                break
+    except Exception:
+        pass
+    return ""
+
+
+def selftest():
+    """_talk_axis 자체 점검 — **음성 경로 포함** (산문 오탐이 실제로 났던 자리)."""
+    import tempfile
+    global LITDB
+    ok = fail = 0
+
+    def chk(name, cond):
+        nonlocal ok, fail
+        print(("  ⭕ " if cond else "  ⛔ ") + name)
+        ok, fail = ok + bool(cond), fail + (not cond)
+
+    with tempfile.TemporaryDirectory() as td:
+        keep, LITDB = LITDB, Path(td)
+        (LITDB / "talks").mkdir(parents=True)
+        w = lambda n, s: (LITDB / "talks" / f"{n}.md").write_text(s, encoding="utf-8")
+        w("pos_plain", "# T\n\n> slug `x` · type `talk` ·\n> **axis: `dem-microstructure`** ·\n")
+        w("pos_nostar", "# T\n\n> axis: dem-microstructure\n")
+        w("neg_prose", "# T\n\n4. **`axis: dem-microstructure` 태그**가 있어 인덱스가\n")
+        w("neg_none", "# T\n\n> slug `x` · type `talk` ·\n")
+        w("neg_late", "# T\n" + "\n" * 25 + "> axis: dem-microstructure\n")
+        try:
+            chk("양성: 메타 블록의 `> **axis: `…`**`", _talk_axis("pos_plain") == "dem-microstructure")
+            chk("양성: 백틱/별표 없어도", _talk_axis("pos_nostar") == "dem-microstructure")
+            chk("음성①: **산문 속 axis: 는 태그가 아니다** (통합 stub 오탐 재발 방지)",
+                _talk_axis("neg_prose") == "")
+            chk("음성②: 태그가 없으면 ''", _talk_axis("neg_none") == "")
+            LATE_AXIS_TAGS.clear()
+            chk("음성③: 메타 블록 창(20줄) 밖은 태그로 안 읽는다 — **정책**이다",
+                _talk_axis("neg_late") == "")
+            chk("음성③-b: 그러나 **조용히 버리지 않는다** — 창 밖 태그를 기록한다",
+                len(LATE_AXIS_TAGS) == 1 and LATE_AXIS_TAGS[0][0] == "neg_late")
+            LATE_AXIS_TAGS.clear()
+            _talk_axis("neg_none")
+            chk("음성③-c: 진짜로 태그가 없으면 기록도 없다 (없음 ≠ 창 밖)",
+                LATE_AXIS_TAGS == [])
+            chk("음성④: 파일이 없으면 '' (예외 안 터짐)", _talk_axis("no_such_slug") == "")
+        finally:
+            LITDB = keep
+
+    # ── check_tables — **음성 경로가 본체다** (양성만 있으면 아무것도 보증 못 한다) ──
+    H = "| 주장 | 출처 | 우리 |\n|---|---|---|\n"
+    chk("표 양성: 헤더와 행이 같으면 0건",
+        check_tables(H + "| a | b | c |\n| d | e | f |\n") == [])
+    chk("표 음성①: 칸이 **남으면** 잡는다 (렌더에서 조용히 버려지는 쪽)",
+        [b[1:3] for b in check_tables(H + "| a | b | c | d |\n")] == [(4, 3)])
+    chk("표 음성②: 칸이 **모자라면** 잡는다 (셀이 밀려 엉뚱한 열에 붙는 쪽)",
+        [b[1:3] for b in check_tables(H + "| a | b |\n")] == [(2, 3)])
+    chk("표 음성③: **이스케이프된 `\\|` 는 경계가 아니다** — 절댓값 표기는 통과해야 한다",
+        check_tables(H + r"| \|E_d\| < 0.05 | b | c |" + "\n") == [])
+    chk("표 음성④: **이스케이프 안 한 `|x|` 는 잡는다** (2026-09-22 실제 버그 30건의 원인)",
+        [b[1:3] for b in check_tables(H + "| |E_d| < 0.05 | b | c |\n")] == [(5, 3)])
+    # ⚠ 아래 둘은 **한 번 헛것을 쟀다** (2026-09-22). 구분자 요구를 빼도 `j = i+2` 가 그 줄을
+    #   어차피 건너뛰어서 옛 음성⑤는 깨진 판에서도 초록이었고, 구분자 줄은 칸 수가 헤더와
+    #   **항상 같아서** 옛 음성⑥은 세어도 안 걸렸다. ⇒ **판별하는 입력으로 바꿨다.**
+    chk("표 음성⑤: 구분자 줄이 없으면 **표가 아니다** — 산문의 `|` 를 표로 오인하지 않는다",
+        check_tables("| a | b |\n| c |\n| d | e | f |\n") == [])
+    chk("표 음성⑥: 행번호는 **1-기준 실제 행**을 가리킨다 (사람이 그 줄을 열어야 한다)",
+        [b[0] for b in check_tables("머리말\n\n| x | y |\n|---|---|\n| 1 | 2 |\n| 3 |\n")] == [6])
+    chk("표 음성⑦: 표가 끝나면 다음 표의 헤더를 새로 잡는다 (분모를 섞지 않는다)",
+        [b[1:3] for b in check_tables(H + "| a | b | c |\n\n| p | q |\n|---|---|\n| 1 |\n")] == [(1, 2)])
+    chk("표 음성⑧: 실물 정본이 지금 깨끗하다 (회귀 탐지)",
+        (not CMP_DFT.exists()) or check_tables(CMP_DFT.read_text(encoding="utf-8")) == [])
+    # ── check_orphan_rows — **`check_tables` 의 ✅ 0건이 지표가 아님을 드러내는 검사** ──
+    #   2026-09-22: INDEX.md 가 check_tables 로 ✅ 0건인데 3행이 7·7·8칸이었다.
+    #   빈 줄로 표가 조각나면 그 조각은 **검사 대상에서 통째로 빠진다**.
+    ORPH = H + "| a | b | c |\n\n| x | y | z | w |\n"
+    chk("떠있는행 양성: 정상 표 하나면 떠 있는 행 0건",
+        check_orphan_rows(H + "| a | b | c |\n| d | e | f |\n") == [])
+    chk("떠있는행 음성①: **빈 줄 뒤 머리 없는 행을 잡는다** (실측 버그 그 모양)",
+        [o[:2] for o in check_orphan_rows(ORPH)] == [(5, 4)])
+    chk("떠있는행 음성②: ⛔ **같은 입력을 `check_tables` 는 통과시킨다** — 이 검사가 없으면 못 본다",
+        check_tables(ORPH) == [])
+    chk("떠있는행 음성③: 코드블록 안의 `|` 줄은 떠 있다고 하지 않는다 (산문 오탐 방지)",
+        check_orphan_rows("```\n| a | b |\n```\n") == [])
+    chk("떠있는행 음성④: 구분자만 있고 헤더가 없으면 그 줄도 떠 있다 (반쪽 표를 놓치지 않는다)",
+        [o[0] for o in check_orphan_rows("머리말\n\n|---|---|\n| 1 | 2 |\n")] == [3, 4])
+    chk("떠있는행 음성⑤: 실물 INDEX 가 **지금은 떠 있는 행을 가진다** — 고치면 이 줄을 뒤집는다",
+        (not SE_INDEX.exists()) or len(check_orphan_rows(SE_INDEX.read_text(encoding="utf-8"))) > 0)
+    # ── cell() — 생성 경로의 이스케이프. **이게 없어서 INDEX_DEM 70행이 12칸이었다** ──
+    chk("cell 음성①: `|` 를 이스케이프한다 (안 하면 한 칸이 8칸으로 쪼개진다)",
+        cell("⏳ 문서 대기 (exp|DFT|AIMD|MLIP|DEM|MPM|FEM|mixed)")
+        == r"⏳ 문서 대기 (exp\|DFT\|AIMD\|MLIP\|DEM\|MPM\|FEM\|mixed)")
+    chk("cell 음성②: 줄바꿈을 접는다 (표 셀은 여러 줄을 못 담는다)",
+        cell("가\n  나\r\n다") == "가 나 다")
+    chk("cell 음성③: 이스케이프한 칸은 검사를 **통과**한다 (양·음성이 맞물린다)",
+        check_tables("| a | b |\n|---|---|\n| " + cell("x|y|z") + " | c |\n") == [])
+    chk("cell 음성④: 이스케이프를 안 하면 **잡힌다** (위 ③이 헛것이 아님을 보인다)",
+        [b[1:3] for b in check_tables("| a | b |\n|---|---|\n| x|y|z | c |\n")] == [(4, 2)])
+    # ── SE 입도 효과 묶음 — **명시 slug 집합**이다 (2026-10-30). 음성 경로가 본체다 ──
+    chk("입도 묶음 양성: 집합 slug 는 제목에 다른 묶음 낱말 (MPM · microstructure) 이 있어도 첫 묶음",
+        group_of("yano2026_se_psd_width_ionic_tortuosity_dem", "MPM microstructure tortuosity")
+        == SIZE_EFFECT_GROUP)
+    chk("입도 묶음 음성①: 'psd' 낱말만으로는 안 들어온다 (LFP 활물질 PSD 카드 — 낱말로 안 묶는 이유)",
+        group_of("eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell", "LFP PSD half-cell")
+        != SIZE_EFFECT_GROUP)
+    chk("입도 묶음 음성②: slug 는 **정확히 같아야** 한다 (부분 문자열 · 앞뒤 덧붙임은 안 맞는다)",
+        group_of("yano2026_se_psd", "") != SIZE_EFFECT_GROUP
+        and group_of("x" + "yano2026_se_psd_width_ionic_tortuosity_dem", "") != SIZE_EFFECT_GROUP)
+    chk("입도 묶음 음성③: 제목에 'size effect' 가 있어도 집합 밖이면 안 들어온다",
+        group_of("foo2026_bar", "SE 입도 효과 · size effect") != SIZE_EFFECT_GROUP)
+    chk("입도 묶음 회귀: 집합 slug 가 전부 정본 papers/ 에 있다 (이름이 바뀌면 여기서 걸린다)",
+        all((ROOT / "litdb" / "papers" / f"{s}.md").exists() for s in SIZE_EFFECT_SLUGS))
+    SEC = ("## A\n| `x` |\n### 📏 SE 입도 효과 (size effect) — 묶음\n| `y` |\n#### 아래\n| `w` |\n"
+           "### 다음 절\n| `z` |\n")
+    sec = se_index_section(SEC) or ""
+    chk("입도 절 파서: 절 안 (하위 제목 포함) 만 센다 — 절 앞 · 뒤 언급은 절 안이 아니다",
+        "`y`" in sec and "`w`" in sec and "`x`" not in sec and "`z`" not in sec)
+    chk("입도 절 파서 음성: 절이 없으면 None — '없음' 을 '빈 절' 로 바꾸지 않는다",
+        se_index_section("## A\n| `x` |\n") is None)
+    if SE_INDEX.exists():
+        _d, _s, _g, _m = size_effect_status(D.list_papers(), SE_INDEX.read_text(encoding="utf-8"))
+        chk("입도 절 회귀: 실물 INDEX.md 절이 집합의 SE 축 카드를 전부 싣는다",
+            _s and not _m and not _g)
+
+    print(f"\nselftest: {ok} 통과 / {fail} 실패")
+    return 1 if fail else 0
+
+
+_SE_SECTION_RE = re.compile(r"^(#{2,4})\s.*SE 입도 효과 \(size effect\)")
+
+
+def se_index_section(md_text):
+    """`INDEX.md` 의 "SE 입도 효과 (size effect)" 절 본문 (다음 같은·상위 제목 전까지). 없으면 None.
+
+    왜 따로 보나: `check()` 는 slug 가 파일 **어디에든** 있으면 통과한다 — cronau2022 · ou2026 처럼
+    다른 절에 이미 있는 카드는 이 절에서 빠져도 초록이다. 절 안에 있는지는 이 함수로만 본다.
+    """
+    lines = md_text.split("\n")
+    for i, ln in enumerate(lines):
+        m = _SE_SECTION_RE.match(ln)
+        if not m:
+            continue
+        lvl, out = len(m.group(1)), []
+        for ln2 in lines[i + 1:]:
+            h = re.match(r"^(#{1,6})\s", ln2)
+            if h and len(h.group(1)) <= lvl:
+                break
+            out.append(ln2)
+        return "\n".join(out)
+    return None
+
+
+def size_effect_status(papers, se_md):
+    """명시 집합 점검 → (DEM 축 slug, SE 축 slug, 정본에 없는 slug, INDEX.md 절에 없는 SE 축 slug)."""
+    by = {p["id"]: p for p in papers}
+    dem = sorted(s for s in SIZE_EFFECT_SLUGS if s in by and by[s]["track"] == "dem")
+    se = sorted(s for s in SIZE_EFFECT_SLUGS if s in by and by[s]["track"] != "dem")
+    gone = sorted(s for s in SIZE_EFFECT_SLUGS if s not in by)
+    sec = se_index_section(se_md)
+    se_missing = [s for s in se if sec is None or f"`{s}`" not in sec]
+    return dem, se, gone, se_missing
+
+
+def check():
+    """두 인덱스 어디에도 없는 digest → 목록. 0 이면 깨끗."""
+    papers = D.list_papers()
+    se = SE_INDEX.read_text(encoding="utf-8") if SE_INDEX.exists() else ""
+    dem = DEM_INDEX.read_text(encoding="utf-8") if DEM_INDEX.exists() else ""
+    missing = [p for p in papers if p["id"] not in se and p["id"] not in dem]
+    return papers, missing
+
+
+CMP_DFT = LITDB / "comparison_vs_ours.md"
+CMP_DEM = LITDB / "comparison_vs_ours_DEM.md"
+
+
+def check_comparison(papers):
+    """비교문서 편입률 — **트랙별로** 센다.
+
+    ⚠ 통째로 세면 "159편 중 98편 미언급" 같은 오해가 나온다(2026-08-06 실측).
+      comparison_vs_ours.md 는 **DFT 물성축** 문서라 DEM 논문이 들어갈 자리가 없고,
+      DEM 논문은 comparison_vs_ours_DEM.md 가 받는다. 축이 다른 걸 한 분모로 세면
+      '안 한 일'이 부풀어 보인다.
+    """
+    dft_md = CMP_DFT.read_text(encoding="utf-8") if CMP_DFT.exists() else ""
+    dem_md = CMP_DEM.read_text(encoding="utf-8") if CMP_DEM.exists() else ""
+    out = {}
+    for track, doc, name in (("dft", dft_md, CMP_DFT.name), ("dem", dem_md, CMP_DEM.name)):
+        want = [p for p in papers if p["track"] == track]
+        # 자기 축 문서에 없고 **다른 축 문서에도** 없으면 진짜 미편입
+        other = dem_md if track == "dft" else dft_md
+        miss = [p for p in want if p["id"] not in doc and p["id"] not in other]
+        out[track] = {"doc": name, "n": len(want), "miss": miss}
+    return out
+
+
+def _row_cells(line):
+    """표 행을 셀로 쪼갠다. ⛔ **이스케이프된 `\\|` 는 셀 경계가 아니다** — 절댓값 `|x|`
+    표기가 여기서 갈린다. 표 행이 아니면 None."""
+    s = line.strip()
+    if not s.startswith("|"):
+        return None
+    return re.split(r"(?<!\\)\|", s)[1:-1]
+
+
+def check_tables(md_text):
+    """헤더와 칸 수가 다른 행을 찾는다. 반환 = [(행번호, 얻은칸, 헤더칸, 행앞머리)].
+
+    표의 시작은 **구분자 줄**(`|---|---|`)로 판정한다 — 그게 마크다운이 표를 표로 보는
+    조건이고, 본문에 우연히 섞인 `|` 줄을 표로 오인하지 않는 유일한 기준이다.
+    ⚠ 다수결로 헤더를 고치지 않는다. 헤더가 정본이고 행이 따라간다 — 어느 쪽이 맞는지는
+      사람이 정할 일이지 개수가 정할 일이 아니다.
+    """
+    lines = md_text.split("\n")
+    bad, i = [], 0
+    while i < len(lines):
+        hdr = _row_cells(lines[i])
+        if hdr is not None and i + 1 < len(lines) and re.match(r"^\|[\s:\-|]+\|\s*$", lines[i + 1]):
+            n_hdr, j = len(hdr), i + 2
+            while j < len(lines) and _row_cells(lines[j]) is not None:
+                cs = _row_cells(lines[j])
+                if len(cs) != n_hdr:
+                    bad.append((j + 1, len(cs), n_hdr, cs[0].strip()[:60] if cs else ""))
+                j += 1
+            i = j
+        else:
+            i += 1
+    return bad
+
+
+def check_orphan_rows(md_text):
+    """표로 **인식되지 않는** 떠 있는 `|` 행을 찾는다. 반환 = [(행번호, 칸수, 행앞머리)].
+
+    ⛔⛔ **`check_tables()` 의 `✅ 0건` 은 이 검사 없이는 지표가 아니다.**
+      그 함수는 `헤더 + 구분자` 쌍으로 시작하는 조각만 본다. 표 중간에 **빈 줄**이 들어가
+      표가 조각나면, 그 뒤 행들은 **검사 대상에서 통째로 빠지고** 칸이 몇 개든 조용히 통과한다.
+      2026-09-22 실측: `litdb/INDEX.md` 가 `check_tables` 로는 **✅ 0건**인데
+      119·125·132 행이 헤더 3칸에 대해 **7·7·8칸**이었다 — `## ✅ Digest 완료` 표가
+      빈 줄 8개로 조각나 있었다. 렌더에서 칸이 버려지거나 표로 안 잡힌다.
+
+    ⛔ **이 도구가 못 하는 것**: 떠 있는 행이 **어느 헤더에 속해야 하는지는 모른다.**
+      '떠 있다' 는 사실만 보고한다 — 가까운 헤더를 추측해 붙이면 **틀린 분모로 검사해서
+      더 나쁜 초록불**이 된다. 붙일 자리는 사람이 정한다(대개 빈 줄을 지우면 된다).
+    """
+    lines = md_text.split("\n")
+    in_table = [False] * len(lines)
+    i, fence = 0, False
+    while i < len(lines):
+        if lines[i].lstrip().startswith("```"):
+            fence = not fence
+            i += 1
+            continue
+        if fence:
+            in_table[i] = True          # 코드블록 안은 표가 아니다 — 떠 있다고 하지 않는다
+            i += 1
+            continue
+        hdr = _row_cells(lines[i])
+        if hdr is not None and i + 1 < len(lines) and re.match(r"^\|[\s:\-|]+\|\s*$", lines[i + 1]):
+            in_table[i] = in_table[i + 1] = True
+            j = i + 2
+            while j < len(lines) and _row_cells(lines[j]) is not None:
+                in_table[j] = True
+                j += 1
+            i = j
+        else:
+            i += 1
+    out, fence = [], False
+    for n, ln in enumerate(lines):
+        if ln.lstrip().startswith("```"):
+            fence = not fence
+            continue
+        if fence or in_table[n]:
+            continue
+        cs = _row_cells(ln)
+        if cs is not None:
+            out.append((n + 1, len(cs), (cs[0].strip()[:60] if cs else "")))
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--check", action="store_true", help="점검만 (파일 안 씀)")
+    ap.add_argument("--selftest", action="store_true", help="자체 점검 (양성 + 음성 경로)")
+    a = ap.parse_args()
+
+    if a.selftest:
+        return selftest()
+
+    if not a.check:
+        dem, _ = build()
+        print(f"→ litdb/INDEX_DEM.md  (DEM 축 {len(dem)}편)")
+
+    papers, missing = check()
+    print(f"=== 정합 점검: digest {len(papers)}편 · 어느 인덱스에도 없는 것 {len(missing)}편")
+    for p in missing[:30]:
+        print(f"   [{p['track']}] {p['id']}")
+    if len(missing) > 30:
+        print(f"   … 외 {len(missing)-30}편")
+
+    # ── SE 입도 효과 묶음 (명시 집합) — 낡은 slug · INDEX.md 절 누락을 조용히 넘기지 않는다 ──
+    se_md = SE_INDEX.read_text(encoding="utf-8") if SE_INDEX.exists() else ""
+    s_dem, s_se, s_gone, s_miss = size_effect_status(papers, se_md)
+    print(f"\n=== {SIZE_EFFECT_GROUP} 묶음 (명시 집합 {len(SIZE_EFFECT_SLUGS)}편): "
+          f"DEM 축 {len(s_dem)} → INDEX_DEM.md · SE 축 {len(s_se)} → INDEX.md 절")
+    if s_gone:
+        print(f"   ⚠ 정본 papers/ 에 없는 slug {len(s_gone)}편 (집합이 낡았다 — 이름이 바뀌었나): "
+              + " · ".join(s_gone))
+    if s_miss:
+        print(f"   ⚠ INDEX.md § \"SE 입도 효과 (size effect)\" 에 없는 SE 축 카드 {len(s_miss)}편: "
+              + " · ".join(s_miss))
+    if not (s_gone or s_miss):
+        print("   ✅ 집합 slug 전부 정본에 있음 · SE 축 카드 전부 INDEX.md 절에 있음")
+
+    cmp_ = check_comparison(papers)
+    print("\n=== 비교문서 편입 (트랙별 — 축이 다르므로 분모를 섞지 않는다)")
+    for track, r in cmp_.items():
+        done = r["n"] - len(r["miss"])
+        print(f"   {track.upper():3} {done:3}/{r['n']:<3} → {r['doc']}"
+              + (f"   미편입 {len(r['miss'])}편" if r["miss"] else "   ✅ 전부 편입"))
+        for p in r["miss"][:12]:
+            print(f"        {p['id']}")
+        if len(r["miss"]) > 12:
+            print(f"        … 외 {len(r['miss'])-12}편")
+
+    # ── 표 셀수 (넘치는 칸은 렌더에서 **조용히 사라진다**) ──────────────────
+    print("\n=== 표 셀수 점검 (헤더 ≠ 행 → 렌더에서 칸이 버려지거나 밀린다)")
+    n_tbl_bad = 0
+    for doc in (CMP_DFT, CMP_DEM, SE_INDEX, DEM_INDEX):
+        if not doc.exists():
+            continue
+        bad = check_tables(doc.read_text(encoding="utf-8"))
+        n_tbl_bad += len(bad)
+        print(f"   {doc.name:28} {'✅ 0건' if not bad else f'⛔ {len(bad)}건'}")
+        for ln, got, want, head in bad[:12]:
+            print(f"        {ln}행  {got}칸 → 헤더 {want}칸   {head}")
+        if len(bad) > 12:
+            print(f"        … 외 {len(bad)-12}행")
+
+    # ── 떠 있는 표 행 — **위 ✅ 0건이 지표가 아님을 드러낸다** (2026-09-22 신설) ──
+    #   위 검사는 `헤더+구분자` 로 시작하는 조각만 본다. 빈 줄로 표가 끊기면 그 뒤 행은
+    #   칸이 몇 개든 조용히 통과한다. 실측: INDEX.md 가 ✅ 0건인데 3행이 7·7·8칸이었다.
+    print("\n=== 떠 있는 표 행 점검 (어느 헤더에도 안 속한 `|` 행 — 위 검사가 못 보는 자리)")
+    n_orph = 0
+    for doc in (CMP_DFT, CMP_DEM, SE_INDEX, DEM_INDEX):
+        if not doc.exists():
+            continue
+        orph = check_orphan_rows(doc.read_text(encoding="utf-8"))
+        n_orph += len(orph)
+        print(f"   {doc.name:28} {'✅ 0건' if not orph else f'⚠ {len(orph)}건'}")
+        for ln, got, head in orph[:12]:
+            print(f"        {ln}행  {got}칸  {head}")
+        if len(orph) > 12:
+            print(f"        … 외 {len(orph)-12}행")
+    if n_orph:
+        print("   ↳ 대개 **표 중간의 빈 줄** 때문이다. 빈 줄을 지우면 조각이 합쳐지며")
+        print("      위 셀수 검사가 비로소 그 행들을 본다. ⛔ 어느 헤더에 붙일지는 사람이 정한다.")
+    # ⚠ 떠 있는 행은 **경고**로 둔다 — 종료코드에 안 넣는다. 지금 실물에 기존 건이 있어서
+    #   실패로 바꾸면 무관한 작업이 전부 빨간불이 된다. 고친 뒤 실패로 승격한다.
+    return 1 if (missing or n_tbl_bad) else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

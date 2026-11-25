@@ -1,0 +1,699 @@
+{
+  "product_census": {
+    "n_unique": 6,
+    "counts": {
+      "LiCl": 5,
+      "Ag2S": 4,
+      "Ag3PS4": 3,
+      "Li2S": 1,
+      "Ag3P11": 1,
+      "Li3PS4": 1
+    },
+    "first_seen": {
+      "Li2S": "Ag@1.72V/LPSCl",
+      "Ag3P11": "Ag@1.72V/LPSCl",
+      "LiCl": "Ag@1.72V/LPSCl",
+      "Li3PS4": "Ag@2.00V/LPSCl",
+      "Ag2S": "Ag@2.00V/LPSCl",
+      "Ag3PS4": "Ag@2.10V/LPSCl"
+    },
+    "reservoir_excluded": {
+      "Li": 4
+    },
+    "endpoint_degenerate_excluded": [
+      "Ag2S@0.00V/LPSCl",
+      "Ag2S@0.30V/LPSCl",
+      "Ag2S@0.62V/LPSCl",
+      "Ag2S@1.00V/LPSCl",
+      "Ag2S@1.50V/LPSCl",
+      "Ag2S@1.72V/LPSCl",
+      "Ag2S@1.80V/LPSCl",
+      "Ag2S@1.90V/LPSCl",
+      "Ag2S@2.00V/LPSCl",
+      "Ag2S@2.10V/LPSCl",
+      "Ag2S@2.20V/LPSCl",
+      "Ag2S@2.50V/LPSCl",
+      "Ag@0.00V/LPSCl",
+      "Ag@0.30V/LPSCl",
+      "Ag@0.62V/LPSCl",
+      "Ag@1.00V/LPSCl",
+      "Ag@1.50V/LPSCl",
+      "Ag@1.80V/LPSCl",
+      "Ag@1.90V/LPSCl"
+    ],
+    "\u26d4": "\uc5f4\ub9b0 \uc6d0\uc18c\uc758 \ud651\uc6d0\uc18c\ub294 \uc800\uc7a5\uc18c \ud68c\uacc4\ub77c \ub300\uc0c1\uc5d0\uc11c \ube90\ub2e4 (reservoir_excluded). \ub05d\uc810 \ud1f4\ud654 \uce78(\uc0c1\ub300\uac00 \uacc4\uc0b0\uc5d0 \uc548 \ub4e4\uc5b4\uac04 \uc790\uccb4\ubd84\ud574)\ub3c4 \ube90\ub2e4 (endpoint_degenerate_excluded). \uae30\uccb4\u00b7\ud651\uc6d0\uc18c(S\u00b7SO\u2082 \ub4f1)\ub294 **\uc548 \uac78\ub800\ub2e4** \u2014 \ud654\ud559 \ud310\ub2e8\uc740 \uce74\ub4dc\u00b7\uc0ac\ub78c \ubaab\uc774\ub2e4."
+  },
+  "reproduce_check": null,
+  "method": "GrandPotentialInterfacialReactivity (Richards/Ong 2016), open to Li reservoir; mu_Li = mu_Li(metal) - V; use_hull_energy=True; MP GGA_GGA+U. More negative = more reactive interface at that voltage.",
+  "mu_Li_metal_eV": -1.9089,
+  "voltages_V": [
+    0.0,
+    0.3,
+    0.62,
+    1.0,
+    1.5,
+    1.72,
+    1.8,
+    1.9,
+    2.0,
+    2.1,
+    2.2,
+    2.5
+  ],
+  "results": {
+    "Ag": {
+      "composition": "Ag",
+      "by_voltage": {
+        "0.00": {
+          "LPSCl": -1.62448
+        },
+        "0.30": {
+          "LPSCl": -1.28163
+        },
+        "0.62": {
+          "LPSCl": -0.91591
+        },
+        "1.00": {
+          "LPSCl": -0.52431
+        },
+        "1.50": {
+          "LPSCl": -0.15501
+        },
+        "1.72": {
+          "LPSCl": -0.00236
+        },
+        "1.80": {
+          "LPSCl": -0.0
+        },
+        "1.90": {
+          "LPSCl": -0.0
+        },
+        "2.00": {
+          "LPSCl": -0.01903
+        },
+        "2.10": {
+          "LPSCl": -0.05499
+        },
+        "2.20": {
+          "LPSCl": -0.09666
+        },
+        "2.50": {
+          "LPSCl": -0.22166
+        }
+      },
+      "reactions": {
+        "0.00": {
+          "LPSCl": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+        },
+        "0.30": {
+          "LPSCl": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+        },
+        "0.62": {
+          "LPSCl": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+        },
+        "1.00": {
+          "LPSCl": "Li6PS5Cl + 5.429 Li -> 0.1429 Li3P7 + LiCl + 5 Li2S"
+        },
+        "1.50": {
+          "LPSCl": "Li6PS5Cl + 5 Li -> P + 5 Li2S + LiCl"
+        },
+        "1.72": {
+          "LPSCl": "0.2143 Ag + 0.7857 Li6PS5Cl + 3.929 Li -> 3.929 Li2S + 0.07143 Ag3P11 + 0.7857 LiCl"
+        },
+        "1.80": {
+          "LPSCl": "Li6PS5Cl -> Li2S + LiCl + Li3PS4"
+        },
+        "1.90": {
+          "LPSCl": "Li6PS5Cl -> Li2S + Li3PS4 + LiCl"
+        },
+        "2.00": {
+          "LPSCl": "0.6667 Ag + 0.3333 Li6PS5Cl -> 0.6667 Li + 0.3333 Li3PS4 + 0.3333 Ag2S + 0.3333 LiCl"
+        },
+        "2.10": {
+          "LPSCl": "0.8333 Ag + 0.1667 Li6PS5Cl -> 0.8333 Li + 0.1667 Ag3PS4 + 0.1667 Ag2S + 0.1667 LiCl"
+        },
+        "2.20": {
+          "LPSCl": "0.8333 Ag + 0.1667 Li6PS5Cl -> 0.8333 Li + 0.1667 Ag3PS4 + 0.1667 Ag2S + 0.1667 LiCl"
+        },
+        "2.50": {
+          "LPSCl": "0.8333 Ag + 0.1667 Li6PS5Cl -> 0.8333 Li + 0.1667 Ag3PS4 + 0.1667 Ag2S + 0.1667 LiCl"
+        }
+      },
+      "kinks": {
+        "0.00": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.628087,
+              "reaction": "Ag + 3 Li -> Li3Ag"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -1.624483,
+              "reaction": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "0.30": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.143538,
+              "reaction": "Ag + Li -> LiAg"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -1.281625,
+              "reaction": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "0.62": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.915911,
+              "reaction": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "1.00": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.524313,
+              "reaction": "Li6PS5Cl + 5.429 Li -> 0.1429 Li3P7 + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "1.50": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 0.979452,
+              "reaction_energy_eV_per_atom": -0.153612,
+              "reaction": "0.2143 Ag + 0.7857 Li6PS5Cl + 3.929 Li -> 0.07143 Ag3P11 + 3.929 Li2S + 0.7857 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.155012,
+              "reaction": "Li6PS5Cl + 5 Li -> P + 5 Li2S + LiCl"
+            }
+          ]
+        },
+        "1.72": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 0.979452,
+              "reaction_energy_eV_per_atom": -0.002362,
+              "reaction": "0.2143 Ag + 0.7857 Li6PS5Cl + 3.929 Li -> 3.929 Li2S + 0.07143 Ag3P11 + 0.7857 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li2S + LiCl + Li3PS4"
+            }
+          ]
+        },
+        "1.80": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li2S + LiCl + Li3PS4"
+            }
+          ]
+        },
+        "1.90": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li2S + Li3PS4 + LiCl"
+            }
+          ]
+        },
+        "2.00": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 0.866667,
+              "reaction_energy_eV_per_atom": -0.019032,
+              "reaction": "0.6667 Ag + 0.3333 Li6PS5Cl -> 0.6667 Li + 0.3333 Li3PS4 + 0.3333 Ag2S + 0.3333 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+            }
+          ]
+        },
+        "2.10": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 0.722222,
+              "reaction_energy_eV_per_atom": -0.054991,
+              "reaction": "0.8333 Ag + 0.1667 Li6PS5Cl -> 0.8333 Li + 0.1667 Ag3PS4 + 0.1667 Ag2S + 0.1667 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.866667,
+              "reaction_energy_eV_per_atom": -0.041254,
+              "reaction": "0.6667 Ag + 0.3333 Li6PS5Cl -> 0.6667 Li + 0.3333 Li3PS4 + 0.3333 Ag2S + 0.3333 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+            }
+          ]
+        },
+        "2.20": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 0.722222,
+              "reaction_energy_eV_per_atom": -0.096657,
+              "reaction": "0.8333 Ag + 0.1667 Li6PS5Cl -> 0.8333 Li + 0.1667 Ag3PS4 + 0.1667 Ag2S + 0.1667 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.866667,
+              "reaction_energy_eV_per_atom": -0.063477,
+              "reaction": "0.6667 Ag + 0.3333 Li6PS5Cl -> 0.6667 Li + 0.3333 Li3PS4 + 0.3333 Ag2S + 0.3333 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.014982,
+              "reaction": "Li6PS5Cl -> 1.75 Li + Li3PS4 + 0.25 LiS4 + LiCl"
+            }
+          ]
+        },
+        "2.50": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag -> Ag"
+            },
+            {
+              "x_atomic_frac": 0.722222,
+              "reaction_energy_eV_per_atom": -0.221657,
+              "reaction": "0.8333 Ag + 0.1667 Li6PS5Cl -> 0.8333 Li + 0.1667 Ag3PS4 + 0.1667 Ag2S + 0.1667 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.8125,
+              "reaction_energy_eV_per_atom": -0.211847,
+              "reaction": "0.75 Ag + 0.25 Li6PS5Cl -> 1.188 Li + 0.25 Ag3PS4 + 0.0625 LiS4 + 0.25 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.149197,
+              "reaction": "Li6PS5Cl -> 4.625 Li + 0.5 P2S7 + 0.375 LiS4 + LiCl"
+            }
+          ]
+        }
+      },
+      "endpoint_degenerate": {
+        "0.00": {
+          "LPSCl": true
+        },
+        "0.30": {
+          "LPSCl": true
+        },
+        "0.62": {
+          "LPSCl": true
+        },
+        "1.00": {
+          "LPSCl": true
+        },
+        "1.50": {
+          "LPSCl": true
+        },
+        "1.72": {
+          "LPSCl": false
+        },
+        "1.80": {
+          "LPSCl": true
+        },
+        "1.90": {
+          "LPSCl": true
+        },
+        "2.00": {
+          "LPSCl": false
+        },
+        "2.10": {
+          "LPSCl": false
+        },
+        "2.20": {
+          "LPSCl": false
+        },
+        "2.50": {
+          "LPSCl": false
+        }
+      }
+    },
+    "Ag2S": {
+      "composition": "Ag2S",
+      "by_voltage": {
+        "0.00": {
+          "LPSCl": -1.69496
+        },
+        "0.30": {
+          "LPSCl": -1.28163
+        },
+        "0.62": {
+          "LPSCl": -0.91591
+        },
+        "1.00": {
+          "LPSCl": -0.60957
+        },
+        "1.50": {
+          "LPSCl": -0.27624
+        },
+        "1.72": {
+          "LPSCl": -0.12957
+        },
+        "1.80": {
+          "LPSCl": -0.07624
+        },
+        "1.90": {
+          "LPSCl": -0.00957
+        },
+        "2.00": {
+          "LPSCl": -0.0
+        },
+        "2.10": {
+          "LPSCl": -0.0
+        },
+        "2.20": {
+          "LPSCl": -0.01498
+        },
+        "2.50": {
+          "LPSCl": -0.1492
+        }
+      },
+      "reactions": {
+        "0.00": {
+          "LPSCl": "Ag2S + 8 Li -> 2 Li3Ag + Li2S"
+        },
+        "0.30": {
+          "LPSCl": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+        },
+        "0.62": {
+          "LPSCl": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+        },
+        "1.00": {
+          "LPSCl": "Ag2S + 2 Li -> 2 Ag + Li2S"
+        },
+        "1.50": {
+          "LPSCl": "Ag2S + 2 Li -> Li2S + 2 Ag"
+        },
+        "1.72": {
+          "LPSCl": "Ag2S + 2 Li -> Li2S + 2 Ag"
+        },
+        "1.80": {
+          "LPSCl": "Ag2S + 2 Li -> Li2S + 2 Ag"
+        },
+        "1.90": {
+          "LPSCl": "Ag2S + 2 Li -> Li2S + 2 Ag"
+        },
+        "2.00": {
+          "LPSCl": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+        },
+        "2.10": {
+          "LPSCl": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+        },
+        "2.20": {
+          "LPSCl": "Li6PS5Cl -> 1.75 Li + Li3PS4 + 0.25 LiS4 + LiCl"
+        },
+        "2.50": {
+          "LPSCl": "Li6PS5Cl -> 4.625 Li + 0.5 P2S7 + 0.375 LiS4 + LiCl"
+        }
+      },
+      "kinks": {
+        "0.00": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -1.694962,
+              "reaction": "Ag2S + 8 Li -> 2 Li3Ag + Li2S"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -1.624483,
+              "reaction": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "0.30": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -1.171929,
+              "reaction": "Ag2S + 4 Li -> 2 LiAg + Li2S"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -1.281625,
+              "reaction": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "0.62": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.862904,
+              "reaction": "Ag2S + 2 Li -> 2 Ag + Li2S"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.915911,
+              "reaction": "Li6PS5Cl + 8 Li -> Li3P + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "1.00": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.60957,
+              "reaction": "Ag2S + 2 Li -> 2 Ag + Li2S"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.524313,
+              "reaction": "Li6PS5Cl + 5.429 Li -> 0.1429 Li3P7 + LiCl + 5 Li2S"
+            }
+          ]
+        },
+        "1.50": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.276237,
+              "reaction": "Ag2S + 2 Li -> Li2S + 2 Ag"
+            },
+            {
+              "x_atomic_frac": 0.969492,
+              "reaction_energy_eV_per_atom": -0.166037,
+              "reaction": "0.12 Ag2S + 0.88 Li6PS5Cl + 4.64 Li -> 0.08 Ag3P11 + 4.52 Li2S + 0.88 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.155012,
+              "reaction": "Li6PS5Cl + 5 Li -> P + 5 Li2S + LiCl"
+            }
+          ]
+        },
+        "1.72": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.12957,
+              "reaction": "Ag2S + 2 Li -> Li2S + 2 Ag"
+            },
+            {
+              "x_atomic_frac": 0.969492,
+              "reaction_energy_eV_per_atom": -0.009473,
+              "reaction": "0.12 Ag2S + 0.88 Li6PS5Cl + 4.64 Li -> 4.52 Li2S + 0.08 Ag3P11 + 0.88 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li2S + LiCl + Li3PS4"
+            }
+          ]
+        },
+        "1.80": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.076237,
+              "reaction": "Ag2S + 2 Li -> Li2S + 2 Ag"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li2S + LiCl + Li3PS4"
+            }
+          ]
+        },
+        "1.90": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.00957,
+              "reaction": "Ag2S + 2 Li -> Li2S + 2 Ag"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li2S + Li3PS4 + LiCl"
+            }
+          ]
+        },
+        "2.00": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag2S -> Ag2S"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+            }
+          ]
+        },
+        "2.10": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag2S -> Ag2S"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.0,
+              "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+            }
+          ]
+        },
+        "2.20": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag2S -> Ag2S"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.014982,
+              "reaction": "Li6PS5Cl -> 1.75 Li + Li3PS4 + 0.25 LiS4 + LiCl"
+            }
+          ]
+        },
+        "2.50": {
+          "LPSCl": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "Ag2S -> Ag2S"
+            },
+            {
+              "x_atomic_frac": 0.742857,
+              "reaction_energy_eV_per_atom": -0.113595,
+              "reaction": "0.6 Ag2S + 0.4 Li6PS5Cl -> 1.75 Li + 0.4 Ag3PS4 + 0.25 LiS4 + 0.4 LiCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.149197,
+              "reaction": "Li6PS5Cl -> 4.625 Li + 0.5 P2S7 + 0.375 LiS4 + LiCl"
+            }
+          ]
+        }
+      },
+      "endpoint_degenerate": {
+        "0.00": {
+          "LPSCl": true
+        },
+        "0.30": {
+          "LPSCl": true
+        },
+        "0.62": {
+          "LPSCl": true
+        },
+        "1.00": {
+          "LPSCl": true
+        },
+        "1.50": {
+          "LPSCl": true
+        },
+        "1.72": {
+          "LPSCl": true
+        },
+        "1.80": {
+          "LPSCl": true
+        },
+        "1.90": {
+          "LPSCl": true
+        },
+        "2.00": {
+          "LPSCl": true
+        },
+        "2.10": {
+          "LPSCl": true
+        },
+        "2.20": {
+          "LPSCl": true
+        },
+        "2.50": {
+          "LPSCl": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+&inputpp  prefix='comp1_at', outdir='./out_at', plot_num=0 /
+&plot iflag=3, output_format=6, fileout='comp1_rho_atomic.cube' /

@@ -1,0 +1,101 @@
+{
+ "rule": "변위 내림차순 · 이온당 사건 1개 · **문턱을 넘긴 전부**(--hop_events_all, NEB 카드 §0b-②-1)",
+ "truncated": false,
+ "lag_ps": 2.0,
+ "min_dist_A": 2.0,
+ "n_total_events": 9,
+ "taken": 9,
+ "⛔_끝이_최소인지는_모른다": "이완은 다음 단계다. 되돌아오는 나들이면 끝이 시작으로 무너질 수 있다.",
+ "events": [
+  {
+   "li_rank": 19,
+   "t_start_ps": 18.0,
+   "t_end_ps": 20.0,
+   "disp_A": 2.385274501642585,
+   "atom_index": 91,
+   "tag": "ev01_atom91",
+   "disp_minimum_image_A": 2.385274501642585,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 18,
+   "t_start_ps": 36.0,
+   "t_end_ps": 38.0,
+   "disp_A": 2.2349619692907026,
+   "atom_index": 90,
+   "tag": "ev02_atom90",
+   "disp_minimum_image_A": 2.234961969290703,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 10,
+   "t_start_ps": 47.0,
+   "t_end_ps": 49.0,
+   "disp_A": 2.202014291319436,
+   "atom_index": 82,
+   "tag": "ev03_atom82",
+   "disp_minimum_image_A": 2.202014291319436,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 29,
+   "t_start_ps": 34.0,
+   "t_end_ps": 36.0,
+   "disp_A": 2.1899096610081856,
+   "atom_index": 101,
+   "tag": "ev04_atom101",
+   "disp_minimum_image_A": 2.189909661008185,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 16,
+   "t_start_ps": 17.0,
+   "t_end_ps": 19.0,
+   "disp_A": 2.1511164581169973,
+   "atom_index": 88,
+   "tag": "ev05_atom88",
+   "disp_minimum_image_A": 2.1511164581169973,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 5,
+   "t_start_ps": 15.0,
+   "t_end_ps": 17.0,
+   "disp_A": 2.0940321267378907,
+   "atom_index": 77,
+   "tag": "ev06_atom77",
+   "disp_minimum_image_A": 2.0940321267378907,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 34,
+   "t_start_ps": 47.0,
+   "t_end_ps": 49.0,
+   "disp_A": 2.082918468355659,
+   "atom_index": 106,
+   "tag": "ev07_atom106",
+   "disp_minimum_image_A": 2.082918468355659,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 44,
+   "t_start_ps": 15.0,
+   "t_end_ps": 17.0,
+   "disp_A": 2.034912210657562,
+   "atom_index": 116,
+   "tag": "ev08_atom116",
+   "disp_minimum_image_A": 2.034912210657562,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 6,
+   "t_start_ps": 19.0,
+   "t_end_ps": 21.0,
+   "disp_A": 2.0139696181565303,
+   "atom_index": 78,
+   "tag": "ev09_atom78",
+   "disp_minimum_image_A": 2.013969618156534,
+   "⚠_이미지보정": false
+  }
+ ]
+}

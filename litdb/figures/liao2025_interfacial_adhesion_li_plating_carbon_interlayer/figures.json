@@ -1,0 +1,352 @@
+{
+ "slug": "liao2025_interfacial_adhesion_li_plating_carbon_interlayer",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "13a03ed5-1._Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+  "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Schematic of the lamination procedure used to adhere the carbon interlayer onto the SE. b,c) Cross-sectional plasma-focused ion beam- scanning electron microscopy images of the interface between the carbon interlayer and the SE using lamination pressures of (b) 100 and (c) 400 MPa. d,e) Schematic of the resulting interfacial morphology of the carbon interlayer after (d) low and (e) high lamination pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    263.7
+   ],
+   "w": 2118,
+   "h": 804,
+   "dpi": 300,
+   "src": "13a03ed5-1._Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.573
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Schematic of the peel-test geometry, where Kapton tape was used to delaminate the carbon interlayer from an LPSCl solid electrolyte pellet. Top-down optical microscopy images of the b) LPSCl pellet and c) Kapton tape after a peel test, when the amorphous carbon interlayer was laminated onto the SE at 300 MPa. d) Measured interfacial toughness val- ues at various lamination pressures for amorphous carbon interlayers. The error bars represent independent measurements from n = 3 samples. The horizontal dashed arrow represents the measured interfacial toughness of the carbon interlayer and stainless-steel current collector after the initial casting and drying processes.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    294.9,
+    445.7
+   ],
+   "w": 1055,
+   "h": 1564,
+   "dpi": 300,
+   "src": "13a03ed5-1._Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Cross-sectional PFIB-SEM images after Li plating with a capac- ity of 2.0 mAh cm−2 at a current density of 0.1 mA cm−2 for amorphous carbon interlayers that were laminated onto the SE at a) 400 MPa, b) 100 MPa, and c) 5 MPa. The corresponding interfacial toughness values be- tween the carbon and SE are also indicated at each lamination condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.5,
+    297.8,
+    480.7
+   ],
+   "w": 1055,
+   "h": 1711,
+   "dpi": 300,
+   "src": "13a03ed5-1._Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.229
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic of the negative electrode region during charging to low and high capacities. a) Initial plating behavior for an interface with high toughness between the carbon and SE. Various elements in the energy balance are depicted, including the Li (𝜌Li+) and electronic (𝜌e-) resistivities of the carbon interlayer, interfacial toughness between the CC and carbon (ΓCC-carbon), overpotentials at the interfaces between the carbon interlayer and the CC and SE (𝜂CC-carbon and 𝜂carbon-SE), and stresses in the CC, carbon, and Li (𝜎CC, 𝜎carbon, and 𝜎Li). b) As more capacity is passed, Li continues to deposit at the CC interface with the associated interfacial energies (𝛾CC-Li, 𝛾carbon-Li, and 𝛾carbon-SE). c) Initial plating behavior for an interface with low toughness between the carbon and SE, including additional elements that must be considered in the energy balance such as interfac",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    396.7
+   ],
+   "w": 2118,
+   "h": 1361,
+   "dpi": 300,
+   "src": "13a03ed5-1._Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.488
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Measured interfacial toughness at various lamination pressures for both amorphous and hard carbon interlayers. The error bars represent independent measurements from n = 3 samples. The solid data points are samples where delamination occurred between the carbon and SE, and the unﬁlled data points are samples where delamination occurred between the Kapton tape and carbon. b,c) Cross-sectional PFIB-SEM images after Li plating to a capacity of 2.0 mAh cm−2 at a current density of 0.1 mA cm−2 for hard carbon interlayers at a lamination pressure of (b) 200 and (c) 600 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    388.7
+   ],
+   "w": 2118,
+   "h": 1324,
+   "dpi": 300,
+   "src": "13a03ed5-1._Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.515
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: (a) The 180º peel test schematic indicating the location of plastic bending due to the moment at the crack tip. (b) The resulting interfacial toughness values accounting for plastic bending of Kapton® tape with a thickness of 25 or 100 µm and the dash line representing if the tape was taken to be purely within the linear-elastic regime.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    452.7
+   ],
+   "w": 2000,
+   "h": 1612,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 8,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Cross-sectional plasma focused ion beam – scanning electron microscopy (PFIB- SEM) images at two (a-b) different locations for an amorphous carbon interlayer laminated at 400 MPa after plating a capacity of 2.0 mAh cm-2 at a current density of 0.1 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    191.3
+   ],
+   "w": 2000,
+   "h": 523,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.267
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Cross-sectional PFIB-SEM image of an amorphous carbon interlayer laminated at 600 MPa after plating a capacity of 2.0 mAh cm-2 at a current density of 0.1 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    265.4,
+    546.0,
+    492.7
+   ],
+   "w": 2000,
+   "h": 949,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.462
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Cross-sectional PFIB-SEM images at two (a-b) different locations of an amorphous carbon interlayer laminated at 100 MPa after plating a capacity of 2.0 mAh cm-2 at a current density of 0.1 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    252.7
+   ],
+   "w": 2000,
+   "h": 779,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.18
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Cross-sectional PFIB-SEM image of an amorphous carbon interlayer laminated at 100 MPa after lithiation to 0 V at 0.01 mA cm-2, and then passing an additional capacity of 0.15 mAh cm-2 at a current density of 0.1 mA cm-2. The initial slow charge step was performed to allow for the carbon interlayer to fully lithiate to prevent any solid-state Li insertion of the plated Li into the carbon.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    315.0,
+    546.0,
+    537.1
+   ],
+   "w": 2000,
+   "h": 927,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.458
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Plan-view optical microscopy images of (a) Li6PS5Cl (LPSCl) pellet and (b) as- cast carbon interlayer on stainless-steel CC after applying 5 MPa stack pressure. The carbon interlayer does not transfer onto the solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    263.3
+   ],
+   "w": 2000,
+   "h": 823,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.503
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Plan-view optical microscopy image of carbon interlayer surface after plating a capacity of 2 mAh cm-2 at 0.1 mA cm-2 in a coin cell with a liquid electrolyte. Li plating can be observed on top of the carbon surface that was in contact with the Celgard separator.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    330.7,
+    546.0,
+    599.1
+   ],
+   "w": 2000,
+   "h": 1120,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.629
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Cross-sectional PFIB-SEM image of a hard carbon interlayer laminated onto an LPSCl pellet at 400 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    243.9
+   ],
+   "w": 2000,
+   "h": 742,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.471
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: (a) Peel test schematic of Kapton® tape delaminating from the carbon interlayer surface when the interfacial adhesion between carbon and the SE is sufficiently high. Top- down optical microscopy image of the (b) LPSCl pellet with intact carbon interlayer and (c) Kapton® tape after a peel test with amorphous carbon interlayer laminated onto the SE at 600 MPa. (d) The resulting measured interfacial toughness values of the interface between the Kapton® tape and carbon interlayer at a 600 MPa lamination pressure for both amorphous and hard carbon interlayers. Error bars are independent measurements from n = 3 samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    486.3
+   ],
+   "w": 2000,
+   "h": 1752,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.797
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Cross-sectional PFIB-SEM images at on the hard carbon laminated at 400 MPa after plating a capacity of 2.0 mAh cm-2 at a current density of 0.1 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    254.2
+   ],
+   "w": 2000,
+   "h": 785,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.522
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 13,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Cross-sectional PFIB-SEM images at two (a-b) different locations for the hard carbon laminated at 200 MPa and (c-d) 600 MPa after plating a capacity of 2.0 mAh cm-2 at a current density of 0.1 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    339.0,
+    546.0,
+    636.0
+   ],
+   "w": 2000,
+   "h": 1239,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.227
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Measured peel force and calculated interfacial toughness for amorphous carbon and hard carbon laminated onto an LPSCl solid electrolyte Lamination Pressure 2𝐹/𝑏 [N m-1] 𝛤 [J m-2] Interlayer [MPa]",
+   "rotated_deg": 0,
+   "bbox": [
+    66.7,
+    67.6,
+    546.2,
+    563.3
+   ],
+   "w": 1999,
+   "h": 2067,
+   "dpi": 300,
+   "src": "1057dbe5-1._Sup_Effects_of_Interfacial_Adhesion_on_Lithium_Plating_Location_in_Solid_State_Batteries_with_Carbon_Interlayers.pdf",
+   "blank": 0.972
+  }
+ ]
+}

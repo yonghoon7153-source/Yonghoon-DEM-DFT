@@ -1,0 +1,470 @@
+{
+ "slug": "kim2026_operando_void_detection_single_frequency_impedance",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "kim2026_void_impedance_main.pdf",
+  "kim2026_void_impedance_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) The cell polarization curve during stripping for the Cu|Li|LPSCl|Li cell. (b) Nyquist plots for the impedance measured at selected capacities during the stripping process for the Cu|Li|LPSCl|Li cell. (c,d) Frequency responses of the real and imaginary components of the impedances measured for the Cu|Li|LPSCl|Li cell, respectively. (e) The cell polarization curve during stripping for the Cu|Li|LLZO|Li cell. (f) Nyquist plots for the impedance measured at selected capacities during the stripping process for the Cu|Li|LLZO|Li cell. (g,h) Frequency responses of real and imaginary components of the impedances measured for the Cu|Li|LLZO|Li cell, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    268.5
+   ],
+   "w": 2151,
+   "h": 893,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.869,
+   "caption_original_auto": "Figure 1. (a) The cell polarization curve during stripping for the Cu|Li|LPSCl|Li cell. (b) Nyquist plots for the impedance measured at selected capacities during the stripping process for the Cu|Li|LPSCl|Li cell. (c,d) Frequency responses of the real and imaginary components of the impedances measured for the Cu|Li|LPSCl|Li cell, respectively. (e) The cell polarization curve during stripping for the Cu|Li|LLZO|Li cell. (f) Nyquist plots for the impedance measured at selected capacities during the stripping process for the Cu|Li|LLZO|Li cell. (g,h) Frequency responses of real and imaginary components of the impedances measured for the Cu|Li|LLZO|Li cell, respectively. l A R i Q 1 1 ( ) R CPE * = · = + i k jjj y { zzz (2) l A Z appreciably increase until near the end of the discharge process (Figure 1d,h). This indicates that −Im(Z) provides improved insight into the dynamic stripping beh",
+   "caption_fix": "2026-11-24: auto caption had absorbed eq. (2) glyphs and the right-column body text that follows the caption on p.4; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop) + 500-700 dpi zoom renders of panels a-h (scratch)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) A schematic of the computational model system, illustrating the different material domains and corresponding equivalent circuits. (b) The simulated distribution of the magnitude of current density in the 3-D computational domain of the model system at a low frequency in the presence of a void. The top edge of the cylindrical void is marked with a dashed line.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    58.9,
+    293.0,
+    180.5
+   ],
+   "w": 1013,
+   "h": 507,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.637,
+   "caption_original_auto": "Figure 2. (a) A schematic of the computational model system, illustrating the different material domains and corresponding equivalent circuits. (b) The simulated distribution of the magnitude of current density in the 3-D computational domain of the model system at a low frequency in the presence of a void. The top edge of the cylindrical void is marked with a dashed line. Figure 3. Top view or cross-sectional view of the void geometries at void fractions of (a) 0.09, (b) 0.58, and (c) 0.74. The dotted rectangle corresponds to the computational domain. The void area fraction was changed by changing the void radius while fixing the spacing between voids to 5 μm. The computed values of the (d) imaginary components and (e) real components of the impedance simulated with selected void area fractions. The characteristic frequency, fint, is also indicated with red dashed lines in (d) and (e).",
+   "caption_fix": "2026-11-24: auto caption block merged the side-by-side Fig. 2 (left column) and Fig. 3 (right column) captions on p.5; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "recrop": "re-cropped 2026-11-24 to the embedded raster (xref 237, bbox [51.5, 60.4, 291.5, 179.0] pt) +/-1.5 pt @300 dpi. Reason: auto crop was the full page-width band above the merged caption block, so fig_2.png also held the upper half of Fig. 3 (right column) cut at y=187 pt; now left column only.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (re-crop)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Top view or cross-sectional view of the void geometries at void fractions of (a) 0.09, (b) 0.58, and (c) 0.74. The dotted rectangle corresponds to the computational domain. The void area fraction was changed by changing the void radius while fixing the spacing between voids to 5 μm. The computed values of the (d) imaginary components and (e) real components of the impedance simulated with selected void area fractions. The characteristic frequency, fint, is also indicated with red dashed lines in (d) and (e).",
+   "rotated_deg": 0,
+   "bbox": [
+    341.7,
+    58.9,
+    529.2,
+    225.3
+   ],
+   "w": 782,
+   "h": 694,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.803,
+   "manual_crop": "2026-11-24 litdb-curator: tool reported f3 as a number gap - its caption (p.5 right column, y 234-313 pt) was merged into the Fig. 2 caption block (51,189,555,313), so no crop was made; clip = embedded raster xref 238 bbox [343.2, 60.4, 527.7, 223.8] pt +/-1.5 pt @300 dpi (no text spans in that region; panels a-e all inside the raster)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a−f) The raw impedance values (−Im(Z), Re(Z)) plotted with the cell polarization curve during the stripping of the Li|LPSCl|Li|Cu cell. The upper limit of the y-axis for each plot corresponds to 400% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero. (g) The capacity at which the impedance value exceeds the threshold (+20% of the initial value), plotted as a function of frequency.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    329.7
+   ],
+   "w": 2151,
+   "h": 1148,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.917,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a−f) The raw impedance values (−Im(Z), Re(Z)) plotted with the cell polarization curve during the stripping of the Li|LLZO|Li|Cu cell. The upper limit of the y-axis for each plot corresponds to 400% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero. (g) The capacity at which the value exceeds the threshold (+20% of the initial value), plotted with frequency as the x-axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    368.5,
+    561.5,
+    649.0
+   ],
+   "w": 2151,
+   "h": 1170,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.925,
+   "caption_original_auto": "Figure 5. (a−f) The raw impedance values (−Im(Z), Re(Z)) plotted with the cell polarization curve during the stripping of the Li|LLZO|Li|Cu cell. The upper limit of the y-axis for each plot corresponds to 400% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero. (g) The capacity at which the value exceeds the threshold (+20% of the initial value), plotted with frequency as the x-axis. similar to that of the cell polarization for all frequencies (Figure 4d−f). To provide a direct comparison of the relative increases in signal intensity for −Im(Z) and Re(Z) across this range of frequencies, we also plot the stripping capacity at which the relative increase exceeded a +20% threshold (Figure 4g). The relative increase of cell polarization is also included in the plot, which serves as a baseline. By comparing the magnitude of these changes on a relative ba",
+   "caption_fix": "2026-11-24: auto caption had absorbed the body text that follows the caption on p.6; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a,b) The cell polarization curve for the stripping of the Li|LPSCl|Li|Cu cell with single-frequency galvanostatic electrochemical impedance measurements at 10² Hz. −Im(Z) and Re(Z) are plotted with the cell polarization curve. The upper limit of the y-axis for each plot corresponds to 300% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero. (c) The capacity at different threshold values. (d,e) The cell polarization curve for the stripping of the Li|LLZO|Li|Cu cell with single-frequency galvanostatic electrochemical impedance measurements at 10² Hz. Re(Z) and −Im(Z) are plotted with the cell polarization curve. (f) The capacity at different threshold values.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    242.6
+   ],
+   "w": 2151,
+   "h": 785,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.901,
+   "caption_original_auto": "Figure 6. (a,b) The cell polarization curve for the stripping of the Li|LPSCl|Li|Cu cell with single-frequency galvanostatic electrochemical impedance measurements at 102 Hz. −Im(Z) and Re(Z) are plotted with the cell polarization curve. The upper limit of the y-axis for each plot corresponds to 300% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero. (c) The capacity at different threshold values. (d,e) The cell polarization curve for the stripping of the Li|LLZO|Li|Cu cell with single-frequency galvanostatic electrochemical impedance measurements at 102 Hz. Re(Z) and −Im(Z) are plotted with the cell polarization curve. (f) The capacity at different threshold values. Therefore, while −Im(Z) offers early detection for both electrolytes, it was able to detect contact loss earlier for the LLZO system than for the Li|LPSCl|Li|Cu cell. The differences in",
+   "caption_fix": "2026-11-24: auto caption had absorbed the body text that follows the caption on p.7 ('10²' restored from the PDF superscript); trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop) + 450 dpi zoom renders of a,d and c,f (scratch)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) The unit cell used to model the impedance with voids at the Li|SE interface. (b) Re(Z) and −Im(Z) as a function of the void area fraction at the interface for f = 10² Hz. (c) −Im(Z) as a function of the void area fraction at several frequencies.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    154.7
+   ],
+   "w": 2151,
+   "h": 419,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.823,
+   "caption_original_auto": "Figure 7. (a) The unit cell used to model the impedance with voids at the Li|SE interface. (b) Re(Z) and −Im(Z) as a function of the void area fraction at the interface for f = 102 Hz. (c) −Im(Z) as a function of the void area fraction at several frequencies. ■CONCLUSIONS In this study, an early-detection strategy for the interfacial degradation at Li|SE interfaces during stripping is developed based on GEIS measurements and tested for LPSCl SE and LLZO SE. We demonstrate that using the raw impedance signal at a single frequency is sufficient to detect interfacial degradation. The imaginary component of impedance increases more rapidly compared to the cell polarization in the low- frequency range, which is strongly correlated with charge transfer at the Li|SE interface, making it a promising descriptor for cell degradation. Computational modeling is also performed, which shows a steep in",
+   "caption_fix": "2026-11-24: auto caption had absorbed the Conclusions text that follows the caption on p.8 ('10²' restored from the PDF superscript); trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop) + 600 dpi zoom render of b,c (scratch)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 (a) Schematics for the preparation of Li|SE|Li|Cu cells by plating, as well as the subsequent stripping to investigate the impact of void formation. (b) A portion of the stripping protocol, where GEIS is done before chronopotentiometry (constant current).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    462.3,
+    547.8,
+    575.5
+   ],
+   "w": 2013,
+   "h": 473,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.642,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: SI page render only (Read pdf pages S4)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 Average stripping voltages and standard deviations of Cu|Li(2 mAh/cm2)|LPSCl|Li cell stripped with and without GEIS. The polarization curve for the cell stripped with GEIS has been linearly interpolated between the datapoints where GEIS scans were performed.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    86.7,
+    531.6,
+    332.2
+   ],
+   "w": 1946,
+   "h": 1024,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.95,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: SI page render only (Read pdf page S5)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 Stripped capacities at which cell polarization (V) increased above +20% of the initial value and at which cell polarization was 0.2 V).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    420.9,
+    510.1,
+    635.3
+   ],
+   "w": 1856,
+   "h": 895,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.789,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: SI page render only (Read pdf page S5)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 Kramers-Kronig analysis for GEIS data performed during the stripping of the Li|LPSCl|Li|Cu cell ((a) the initial state, (b) 1.42 mAh/cm2, (c) 1.49 mAh/cm2, and (d) 1.56 mAh/cm2) and the Li|LLZO|Li|Cu cell ((e) the initial state, (f) 1.05 mAh/cm2, (g) 1.21 mAh/cm2, and (h) 1.37 mAh/cm2).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    86.7,
+    518.3,
+    322.0
+   ],
+   "w": 1890,
+   "h": 981,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.886,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: SI page render only (Read pdf page S6)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 Cross-sectional SEM images (10,000 x magnification) of Cu|Li|LPSCl interfaces after stripping, showing (a) interface with Li voids, (b) interface with Li depletion.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    470.1,
+    530.4,
+    627.1
+   ],
+   "w": 1941,
+   "h": 656,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.152,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 (a) Nyquist plots and frequency responses of the imaginary part of impedances for the Cu|Li|LPSCl|Li cell stripped under 5 MPa at room temperature with different current amplitudes for GEIS.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    91.5,
+    527.7,
+    312.8
+   ],
+   "w": 1929,
+   "h": 923,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.87,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: SI page render only (Read pdf page S7)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 (a) Real and (b) imaginary part of impedance from raw experimental data (purple circles), equivalent-circuit fit of experimental data using R-CPE circuits (red x markers), equivalent circuit fit of experimental data using RC circuits (blue curve), and simulations using the complex-conductivity model with parameters taken from equivalent-circuit fit in the absence of void (green dashed curve). The fit with R-CPE circuits, the simulation result, and the experimental data are in excellent agreement, while the fit with RC circuits deviates from the rest.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    324.3,
+    531.3,
+    608.1
+   ],
+   "w": 1944,
+   "h": 1183,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.937,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8 Capacities at which the value exceeds different threshold values ((a) +30%, (b) +40%, (c) +50%, (d) +60%)), plotted against frequency.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    114.2,
+    544.8,
+    708.9
+   ],
+   "w": 2001,
+   "h": 2478,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.888,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9 The imaginary part of raw impedance values (blue circles) at different frequencies plotted with the cell polarization curve (solid black curve) during the stripping of Li|LPSCl|Li|Cu cells under different stack pressure and temperature conditions. The upper limit of the y-axis for each plot corresponds to 400% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    112.2,
+    527.3,
+    437.1
+   ],
+   "w": 1927,
+   "h": 1355,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.876,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10 The real part of raw impedance values (red diamonds) at different frequencies plotted with the cell polarization curve (solid black curve) during the stripping of Li|LPSCl|Li|Cu cells under different stack pressure and temperature conditions. The upper limit of the y-axis for each plot corresponds to 400% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    521.0,
+    400.6
+   ],
+   "w": 1901,
+   "h": 1400,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.882,
+   "caption_original_auto": "Figure S10 The real part of raw impedance values (red diamonds) at different frequencies plotted with the cell polarization curve (solid black curve) during the stripping of Li|LPSCl|Li|Cu cells under different stack pressure and temperature conditions. The upper limit of the y-axis for each plot corresponds to 400% of the initial value, and the lower limit of the y-axis of each plot corresponds to zero. REFERENCES",
+   "caption_fix": "2026-11-24: auto caption had absorbed the 'REFERENCES' heading that follows the caption on SI p.11; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 3,
+   "file": "sch_1.png",
+   "caption": "Scheme 1. Experimental Protocol for Stripping Experiment with Impedance Measurements",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    499.2,
+    297.5,
+    757.9
+   ],
+   "w": 1051,
+   "h": 1078,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_main.pdf",
+   "blank": 0.77,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Parameters for the parallel resistor-CPE equivalent circuits fitted from experimental measurements of LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    611.7,
+    529.7,
+    758.8
+   ],
+   "w": 1933,
+   "h": 614,
+   "dpi": 300,
+   "src": "kim2026_void_impedance_SI.pdf",
+   "blank": 0.933,
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: table values taken from the SI PDF text (not read as image)"
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [],
+   "refs": [
+    "p5"
+   ],
+   "resolved": "manual_crop fig_3.png (2026-11-24, litdb-curator) - see figures[f3].manual_crop"
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "kim2026_void_impedance_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "kim2026_void_impedance_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% block title %}Files · 그림·데이터 갤러리{% endblock %}
+{% block content %}
+{# 전체 파일 갤러리 (2026-08-05) — 개념 첨부는 '본문이 언급한 것'만 보여주므로
+   나머지를 볼 길이 없었다. 여기서 repo 산출물 전체를 훑고 바로 받는다. #}
+<div class="page-header">
+  <div>
+    <h1>Files</h1>
+    {# ⚠ 날짜 출처를 화면이 말해야 한다. 종전엔 체크아웃일(mtime)을 `오늘/어제` 로
+       찍어서 82% 가 가짜 날짜였다 (조사 mtime-is-checkout-date). #}
+    <div class="sub">그림 · 데이터 · 구조 전체 — 클릭하면 미리보기, ⬇ 로 저장 ·
+      날짜는 <b>git 커밋일</b>(파일 수정일이 아니다)</div>
+  </div>
+  <div class="page-actions"><a class="btn" href="/governance">⚖ 인용위험 원장</a></div>
+</div>
+
+<style>
+  /* 인용위험 배지 — 레벨은 원장 어휘 그대로. 색은 심각도 순. */
+  .hzb{display:inline-block;font-size:.64rem;font-weight:800;padding:1px 6px;
+       border-radius:99px;margin-right:4px;white-space:nowrap}
+  .hz-BLOCKED{background:#be123c;color:#fff}
+  .hz-HOLD,.hz-PREVIEW{background:#c05621;color:#fff}
+  .hz-CONDITIONAL,.hz-STALE{background:#fef9c3;color:#854d0e}
+  .hz-SUPERSEDED,.hz-RESOLVED{background:#e5e7eb;color:#4b5563}
+  .polb{display:inline-block;font-size:.64rem;font-weight:700;padding:1px 6px;
+        border-radius:99px;background:#e5e7eb;color:#4b5563;margin-right:4px}
+  .att-card.is-blocked{border-color:#be123c}
+</style>
+
+{# 질의문자열은 **한 곳에서** 만든다. 세 줄이 각자 규칙이 달라서 탭을 누를 때마다
+   조건이 하나씩 조용히 떨어졌다 (kind 탭은 used·folder 를, 검색 버튼은 kind·folder 를). #}
+{% macro qs(k=None, u=None, fo=None, cm=None, ol=None) -%}
+/files?q={{ q|urlencode }}&kind={{ (kind if k is none else k)|urlencode }}&used={{ (used if u is none else u)|urlencode }}&folder={{ (folder if fo is none else fo)|urlencode }}&cmt={{ (cmt if cm is none else cm)|urlencode }}&old={{ (old if ol is none else ol)|urlencode }}
+{%- endmacro %}
+
+<form class="att-tabs" method="get" action="/files" style="flex-wrap:wrap">
+  {# 검색은 경로 + **내가 달아 둔 코멘트**까지 (1저자 요청 2026-08-06) #}
+  <input class="inp" type="search" name="q" value="{{ q }}" placeholder="이름·경로·💬코멘트로 검색 (예: msd, lpsocl, log 스케일)"
+         style="min-width:280px;flex:1;padding:7px 12px;border:1px solid var(--line,#e5e7eb);border-radius:8px;font-size:.82rem">
+  {# ⚠ 나머지 facet 은 hidden 으로 같이 실어야 검색 버튼이 조건을 안 지운다 #}
+  <input type="hidden" name="kind" value="{{ kind }}"><input type="hidden" name="used" value="{{ used }}">
+  <input type="hidden" name="folder" value="{{ folder }}"><input type="hidden" name="cmt" value="{{ cmt }}">
+  <input type="hidden" name="old" value="{{ old }}">
+  <a class="att-tab {% if not kind %}active{% endif %}" href="{{ qs(k='') }}">전체</a>
+  <a class="att-tab {% if kind=='image' %}active{% endif %}" href="{{ qs(k='image') }}">🖼 이미지</a>
+  <a class="att-tab {% if kind=='csv' %}active{% endif %}" href="{{ qs(k='csv') }}">📊 CSV</a>
+  {# PDF 33개가 어느 탭에도 안 들어가서 전체에서만 만날 수 있었다 (조사 pdf-no-facet) #}
+  <a class="att-tab {% if kind=='pdf' %}active{% endif %}" href="{{ qs(k='pdf') }}">📕 PDF</a>
+  <a class="att-tab {% if kind=='file' %}active{% endif %}" href="{{ qs(k='file') }}">📦 기타</a>
+  <button class="btn sm" type="submit">검색</button>
+</form>
+
+<div class="att-tabs" style="flex-wrap:wrap;margin-bottom:4px">
+  <span class="muted" style="font-size:.74rem;align-self:center">개념 연결</span>
+  <a class="att-tab {% if not used %}active{% endif %}" href="{{ qs(u='') }}">전체</a>
+  <a class="att-tab {% if used=='yes' %}active{% endif %}" href="{{ qs(u='yes') }}">📎 개념에 첨부됨</a>
+  <a class="att-tab {% if used=='no' %}active{% endif %}" href="{{ qs(u='no') }}">미연결</a>
+  {# 내가 코멘트를 단 파일만 — 적어 둔 판단을 되찾는 통로 #}
+  <a class="att-tab {% if cmt=='yes' %}active{% endif %}" style="{% if cmt=='yes' %}background:var(--accent-soft);color:var(--accent){% endif %}"
+     href="{{ qs(cm='' if cmt=='yes' else 'yes') }}">💬 코멘트 단 것</a>
+  {# 옛 판 — 파일명이 스스로 SUPERSEDED/RETRACTED 라고 말하는 것. 기본 목록에서
+     접되 **지우지 않는다**. `md_conductivity_SUPERSEDED_single_seed_…csv` 처럼
+     헤더가 "DO NOT QUOTE" 인 파일이 보통 카드로 섞여 있었다. #}
+  <a class="att-tab {% if old=='yes' %}active{% endif %}"
+     href="{{ qs(ol='' if old=='yes' else 'yes') }}"
+     title="파일명에 SUPERSEDED·RETRACTED 가 든 것">🗄 옛 판 {{ n_old }}</a>
+  <span class="muted" style="font-size:.74rem;align-self:center;margin-left:10px">폴더</span>
+  <a class="att-tab {% if not folder %}active{% endif %}" href="{{ qs(fo='') }}">전체</a>
+  {% for d in folders %}
+  <a class="att-tab {% if folder==d %}active{% endif %}" href="{{ qs(fo=d) }}">{{ d }}</a>
+  {% endfor %}
+</div>
+
+{% if old=='yes' %}
+<div class="card" style="border-left:4px solid #be123c;margin-bottom:10px">
+  <strong>🗄 옛 판 — 인용하지 않는다.</strong>
+  <p class="sub" style="margin:4px 0 0">파일명이 스스로 SUPERSEDED·RETRACTED 라고 말하는 것들이다.
+    지우지 않고 남겨 둔다(무엇이 언제 바뀌었나가 근거의 일부다). 어느 판이 정본인지는
+    <a href="/explorer">Property Explorer</a> 와 <a href="/governance">판정 원장</a>이 정한다.</p>
+</div>
+{% endif %}
+
+<div class="muted" style="font-size:.78rem;margin:4px 0 10px">{{ files|length }}개 · git 커밋일 (최근순)
+  {% if old!='yes' %} · 옛 판 {{ n_old }}개는 🗄 탭에 접었다{% endif %}</div>
+
+{% for grp in days %}
+<div class="day-head">
+  <span class="day-date">{{ grp.day }}</span>
+  <span class="day-rel">{{ grp.label }}</span>
+  <span class="muted" style="font-size:.72rem">{{ grp.n }}개</span>
+</div>
+<div class="grid grid-3">
+{% for f in grp.files %}
+  <div class="card att-card{% if f.hazard and f.hazard.level=='BLOCKED' %} is-blocked{% endif %}"
+       data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="{{ f.kind }}"
+       {%- if f.hazard and f.hazard.id %} data-claim="{{ f.hazard.id }}"{% endif %}
+       {%- if f.policy %} data-blocked="1"{% endif %}
+       data-con="{% for c in f.concepts %}{{ c.cid }}|{{ c.term }}{% if not loop.last %};{% endif %}{% endfor %}">
+    {# 정책상 못 내보내는 파일은 썸네일을 부르지 않는다 — 종전엔 403 이 와서 깨진
+       이미지 63개가 아무 설명 없이 놓여 있었다 (조사 files-403-cards). #}
+    {% if f.kind=='image' and not f.policy %}
+    <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
+    {% elif f.policy %}
+    <div class="att-icon" title="{{ f.policy.reason|plain }}">🔒</div>
+    {% else %}
+    <div class="att-icon">{{ '📊' if f.kind=='csv' else ('📕' if f.kind=='pdf' else '📦') }}</div>
+    {% endif %}
+    <div class="att-meta">
+      {# 인용위험 배지 — 정본은 db/properties/citation_hazards.json. 25건 중 23건이
+         이 갤러리에 아무 표시 없이 있었다 (조사 files-hazard-unmarked). #}
+      {% if f.hazard %}
+      <div style="margin-bottom:3px">
+        <span class="hzb hz-{{ f.hazard.level }}" title="{{ f.hazard.why|plain }}">{{
+          '⛔' if f.hazard.level=='BLOCKED' else ('⏸' if f.hazard.level in ('HOLD','PREVIEW') else '⚠') }} {{ f.hazard.level }}</span>
+        <span class="muted" style="font-size:.64rem">{{ f.hazard.what }}</span>
+      </div>
+      {% endif %}
+      {% if f.policy %}
+      <div style="margin-bottom:3px"><span class="polb" title="{{ f.policy.reason|plain }}">🔒 {{
+        f.policy.scope or '원장 미등재' }}</span>
+        {% if f.policy.needs %}<span class="muted" style="font-size:.64rem">?{{ f.policy.needs }} 필요</span>{% endif %}</div>
+      {% endif %}
+      {% if f.old %}<div style="margin-bottom:3px"><span class="hzb hz-SUPERSEDED">🗄 옛 판</span></div>{% endif %}
+      <div class="mono" style="font-size:.7rem;font-weight:600;word-break:break-all">{{ f.name }}</div>
+      <div class="muted" style="font-size:.66rem">{{ f.dir }} · {{ f.size_kb }} KB</div>
+      {% if f.concepts %}
+      <div class="con-row">
+        {% for c in f.concepts %}
+        <a class="con-badge" href="/concept/{{ c.cid }}" title="{{ (c.term)|plain }} 개념 문서로">📎 {{ c.term }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {# 💬N — 코멘트가 하나라도 있으면 카드에서 바로 보인다 (comments.js 가 숫자만 갱신) #}
+    <span class="cmt-badge{% if f.cmt_hit %} cmt-badge-hit{% endif %}" data-cbadge="{{ f.rel }}"
+          {% if f.cmt_hit %}title="이름이 아니라 코멘트에서 찾았어요"{% endif %}
+          {% if not ccounts.get(f.rel) %}style="display:none"{% endif %}>💬 {{ ccounts.get(f.rel, 0) }}{% if f.cmt_hit %} 🔍{% endif %}</span>
+    <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
+    {# 이름 바꾸기는 업로드 파일만 — repo 산출물은 도구가 같은 이름으로 다시 만든다 #}
+    {% if f.rel.startswith('docs/uploads/') %}<button type="button" class="btn sm att-rn"
+      title="이름 바꾸기 (문서에 적힌 경로도 같이 고침)">✏</button>{% endif %}
+  </div>
+{% endfor %}
+</div>
+{% else %}
+<div class="muted">검색 결과가 없어요.</div>
+{% endfor %}
+
+<div class="att-modal" id="att-modal">
+  <div class="att-box">
+    <div class="att-bar">
+      <span class="mono" id="att-title" style="font-size:.8rem;font-weight:700"></span>
+      <span id="att-links" style="display:flex;gap:6px;margin-left:10px"></span>
+      <span style="margin-left:auto;display:flex;gap:8px">
+        <a class="btn sm" id="att-save" href="#" download>⬇ 저장</a>
+        <button type="button" class="btn sm" onclick="attClose()">✕ 닫기</button>
+      </span>
+    </div>
+    <div class="att-body" id="att-body"></div>
+    {# 코멘트는 본문 바깥에 둔다 — att-body 는 비동기로 innerHTML 이 갈아끼워진다 #}
+    <div id="att-cmt"></div>
+  </div>
+</div>
+
+<script src="/static/js/rename.js?v={{ asset_version }}"></script>
+<script>
+(function(){
+  var modal = document.getElementById('att-modal');
+  document.querySelectorAll('.att-card').forEach(function(c){
+    c.addEventListener('click', function(e){
+      if (e.target.closest('.att-dl') || e.target.closest('.att-rn')) return;
+      attOpen(c.dataset.rel, c.dataset.name, c.dataset.kind, c.dataset.con || '');
+    });
+  });
+  modal.addEventListener('click', function(e){ if (e.target === modal) attClose(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') attClose(); });
+  window.attClose = function(){ modal.style.display = 'none'; };
+  window.attOpen = function(rel, name, kind, con){
+    var body = document.getElementById('att-body');
+    document.getElementById('att-title').textContent = rel;
+    var lk = document.getElementById('att-links');
+    lk.innerHTML = '';
+    if (con) con.split(';').forEach(function(pair){
+      var p = pair.split('|');
+      if (p.length < 2) return;
+      var a = document.createElement('a');
+      a.className = 'con-badge'; a.href = '/concept/' + p[0];
+      a.textContent = '📎 ' + p[1] + ' 문서로 →';
+      lk.appendChild(a);
+    });
+    var sv = document.getElementById('att-save');
+    sv.href = '/api/file/' + rel + '?dl=1'; sv.setAttribute('download', name);
+    body.innerHTML = '<div class="muted" style="padding:20px">불러오는 중…</div>';
+    if (window.mountComments) mountComments(document.getElementById('att-cmt'), rel);
+    modal.style.display = 'flex';
+    /* 정책상 막힌 카드는 서버를 두드리지 않는다 — 403 JSON 을 CSV 표로 그리던 자리다. */
+    var card = document.querySelector('.att-card[data-rel="' + rel.replace(/"/g,'\\"') + '"]');
+    if (card && card.dataset.blocked){
+      var pb = card.querySelector('.polb');
+      body.innerHTML = '<div class="card" style="border-left:4px solid #be123c">'
+        + '<strong>🔒 이 파일은 지금 조건에서 안 나간다.</strong><p class="sub">'
+        + ((pb && pb.title) || '원장 판정') + '</p></div>';
+      return;
+    }
+    /* ⚠ r.ok 를 본다. 안 보면 403 본문이 그대로 표가 된다. */
+    function getText(url){
+      return fetch(url).then(function(r){
+        return r.text().then(function(t){
+          if (!r.ok) throw new Error(t.slice(0,300));
+          return t; }); });
+    }
+    if (kind === 'csv'){
+      getText('/api/file/' + rel).then(function(t){
+        var lines = t.replace(/^\uFEFF/, '').split(/\r?\n/).filter(function(x){return x.length;});
+        var notes = lines.filter(function(x){return x.trim().charAt(0)==='#';});
+        var rows  = lines.filter(function(x){return x.trim().charAt(0)!=='#';}).slice(0,40);
+        /* ⛔ 규율 문구는 접지 않는다. 실물: 헤더 첫 줄이 "SUPERSEDED … DO NOT QUOTE."
+           인 파일이 경고를 details 안에 넣고 철회된 숫자만 활짝 펼쳐 놓고 있었다
+           (조사 csv-caveat-folded). 나머지 서지성 주석만 접는다. */
+        var RULE = /(DO NOT QUOTE|NOT reportable|NOT ASSESSED|SUPERSEDED|RETRACT|FORBIDDEN|인용 금지|인용하지)/i;
+        var warn = notes.filter(function(x){return RULE.test(x);});
+        var rest = notes.filter(function(x){return !RULE.test(x);});
+        var h='';
+        if (warn.length) h += '<div class="card" style="border-left:4px solid #be123c;margin-bottom:10px">'
+          + '<strong>⛔ 이 원자료가 스스로 건 제약</strong><pre class="mono" style="white-space:pre-wrap;'
+          + 'font-size:.7rem;margin:6px 0 0">' + warn.join('\n').replace(/</g,'&lt;') + '</pre></div>';
+        if (rest.length) h += '<details style="margin-bottom:10px"><summary class="muted" style="cursor:pointer;font-size:.78rem">헤더 주석 '
+          + rest.length + '줄 (출처·서지)</summary><pre class="mono" style="white-space:pre-wrap;font-size:.68rem;margin:6px 0 0">'
+          + rest.join('\n').replace(/</g,'&lt;') + '</pre></details>';
+        h += '<div style="overflow:auto;max-height:56vh"><table class="att-table"><tbody>';
+        rows.forEach(function(ln,i){ h += '<tr>' + ln.split(',').map(function(c){
+          return (i?'<td>':'<th>') + c.replace(/</g,'&lt;') + (i?'</td>':'</th>'); }).join('') + '</tr>'; });
+        h += '</tbody></table></div>';
+        if (rows.length>=40) h += '<div class="muted" style="font-size:.72rem;margin-top:6px">앞 40행만 표시 — 전체는 ⬇ 저장</div>';
+        body.innerHTML = h;
+      }).catch(function(e){ body.innerHTML = '<div class="card" style="border-left:4px solid #c05621">'
+        + '<strong>⚠ 이 파일을 못 읽었다.</strong><pre class="mono" style="white-space:pre-wrap;font-size:.7rem">'
+        + String(e.message||e).replace(/</g,'&lt;') + '</pre></div>'; });
+    } else if (kind === 'pdf'){
+      body.innerHTML = '<embed src="/api/file/' + rel + '" type="application/pdf" style="width:82vw;max-width:1100px;height:75vh">';
+    } else if (kind !== 'image'){
+      getText('/api/file/' + rel).then(function(t){
+        body.innerHTML = '<pre class="mono" style="white-space:pre-wrap;font-size:.7rem;max-height:60vh;overflow:auto">'
+          + t.slice(0,20000).replace(/</g,'&lt;') + '</pre>'; })
+       .catch(function(e){ body.innerHTML = '<div class="muted">파일을 못 읽었다 — '
+          + String(e.message||e).replace(/</g,'&lt;') + '</div>'; });
+    } else {
+      body.innerHTML = '<img src="/api/file/' + rel + '" alt="' + name + '">';
+    }
+  };
+})();
+</script>
+{% endblock %}

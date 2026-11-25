@@ -1,0 +1,27 @@
+nohup: ignoring input
+/home/ubuntu/runyourai/1/opt/miniforge3/envs/uma/lib/python3.11/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+WARNING:root:Model is being compiled this might take a while for the first time
+W0921 15:18:16.656000 424540 site-packages/torch/_logging/_internal.py:1394] [0/0] Profiler record function <class 'torch.autograd.profiler.record_function'> will be ignored
+  ev01_atom82    Li 변위 1.13 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0625 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev02_atom77    Li 변위 1.07 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0471 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev03_atom90    Li 변위 1.41 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0435 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev04_atom116   Li 변위 0.33 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0379 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev05_atom113   Li 변위 0.73 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0409 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev06_atom91    Li 변위 0.76 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.054 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev07_atom90    Li 변위 1.86 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.1892 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev08_atom101   Li 변위 0.81 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0415 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev09_atom88    Li 변위 1.42 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0883 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev10_atom78    Li 변위 0.08 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0347 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev11_atom82    Li 변위 1.25 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0639 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev12_atom88    Li 변위 1.82 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0982 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev13_atom88    Li 변위 1.37 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.1017 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev14_atom90    Li 변위 1.53 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0603 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev15_atom95    Li 변위 0.12 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0539 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev16_atom78    Li 변위 0.11 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0565 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev17_atom117   Li 변위 1.08 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0673 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ev18_atom91    Li 변위 0.54 Å · ≥2.0 Å 원자 0 개 · 골격 RMSD 0.0383 Å · G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []
+  ⇒ G-B7 통과 0/18 · → /home/ubuntu/local_runs/shortlag/union_v2/events/endpoint_coupled_gate.json
+  ⚠ 탈락 18 건은 **세서 보고한다** (카드 v2 §4)

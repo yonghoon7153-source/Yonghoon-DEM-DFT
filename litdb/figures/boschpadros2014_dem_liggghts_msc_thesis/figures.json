@@ -1,0 +1,87 @@
+{
+ "slug": "boschpadros2014_dem_liggghts_msc_thesis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/21. Discrete element simulations with Liggghts.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 22,
+   "file": "fig_1.png",
+   "caption": "Figure 1.1: Sand pile",
+   "bbox": [
+    132.2,
+    75.1,
+    427.7,
+    299.7
+   ],
+   "w": 1232,
+   "h": 936,
+   "dpi": 300,
+   "src": "21. Discrete element simulations with Liggghts.pdf",
+   "blank": 0.133
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 44,
+   "file": "fig_2.png",
+   "caption": "Figure 2.30: Contact representation in the Hertz model",
+   "bbox": [
+    136.4,
+    132.4,
+    493.9,
+    617.0
+   ],
+   "w": 1491,
+   "h": 2020,
+   "dpi": 300,
+   "src": "21. Discrete element simulations with Liggghts.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 75,
+   "file": "fig_4.png",
+   "caption": "Figure 4.4: Distribution of Velocities at timestep 120. From top to bottom, left to right: e=0.1, e=0.3, e=0.6 and e=0.9",
+   "bbox": [
+    121.9,
+    79.7,
+    510.0,
+    723.6
+   ],
+   "w": 1618,
+   "h": 2684,
+   "dpi": 300,
+   "src": "21. Discrete element simulations with Liggghts.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 84,
+   "file": "fig_5.png",
+   "caption": "Figure 5.1: Motion of the granular material at diﬀerent time steps. From top to bottom, left to right: ts=230, ts=400, ts=550 and ts=700",
+   "bbox": [
+    66.0,
+    75.1,
+    505.9,
+    319.7
+   ],
+   "w": 1833,
+   "h": 1020,
+   "dpi": 300,
+   "src": "21. Discrete element simulations with Liggghts.pdf",
+   "blank": 0.9
+  }
+ ]
+}

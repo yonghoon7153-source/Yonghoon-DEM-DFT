@@ -1,0 +1,197 @@
+{
+ "schema": "qe_input_set/v1",
+ "what": "WAD-AgC 1단계 — 기계 대조 2 (V2 입력 그대로) · Ag(111)|흑연 제약 이완 5",
+ "prereg": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+ "settings": {
+  "pp": {
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다 (실행 폴더 복사본에서만)"
+ },
+ "jobs": [
+  {
+   "dir": "CTRL_V2_top_fcc_dft_bound",
+   "kind": "ctrl",
+   "calc": "scf",
+   "model": "CTRL_V2",
+   "source_pw_in": "db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_fcc/qe/V2_top_fcc_dft_bound/pw.in",
+   "source_sha256": "7eb4fc802de4a5058692bb9342919cba89be77b1c9e8597d5d4dc5578d990260",
+   "tags": {
+    "G1": "기계 대조 — V100 의 같은 입력과 W 비교",
+    "ref": "db/raw/wad_aprime_s4_v2s2_2026_09_26/collect_aprime_s4_2026_09_26.json · V2_top_fcc"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "7eb4fc802de4a5058692bb9342919cba89be77b1c9e8597d5d4dc5578d990260"
+  },
+  {
+   "dir": "CTRL_V2_top_fcc_dft_far",
+   "kind": "ctrl",
+   "calc": "scf",
+   "model": "CTRL_V2",
+   "source_pw_in": "db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_fcc/qe/V2_top_fcc_dft_far/pw.in",
+   "source_sha256": "3f50a3c0d18ee173432c2420841fc69302db06d8795b01bc557b1274fdb55911",
+   "tags": {
+    "G1": "기계 대조 — V100 의 같은 입력과 W 비교",
+    "ref": "db/raw/wad_aprime_s4_v2s2_2026_09_26/collect_aprime_s4_2026_09_26.json · V2_top_fcc"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "3f50a3c0d18ee173432c2420841fc69302db06d8795b01bc557b1274fdb55911"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.3,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84173,
+    "eopreg": 0.02878
+   },
+   "structure": "AGC_N3_top_fcc_init_bound",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_init_bound",
+    "stage": "1 · 제약 이완 (Ag 아래 2층 고정 · 위 2층 자유 · C 는 z 만)"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "6084ec08c5fb078b5e5a18e6d516f1bd715cb77f026fb431fe0d4ba1664bb528"
+  },
+  {
+   "dir": "AGC_N3_top_hcp_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "AGC_N3_top_hcp",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.3,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84173,
+    "eopreg": 0.02878
+   },
+   "structure": "AGC_N3_top_hcp_init_bound",
+   "tags": {
+    "structure": "AGC_N3_top_hcp_init_bound",
+    "stage": "1 · 제약 이완 (Ag 아래 2층 고정 · 위 2층 자유 · C 는 z 만)"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "c91cd828d5fd67fe954f4226c91f0cd08794164eddaa135071517052c8c7f428"
+  },
+  {
+   "dir": "AGC_N3_hollow_fcc_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "AGC_N3_hollow_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.3,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84173,
+    "eopreg": 0.02878
+   },
+   "structure": "AGC_N3_hollow_fcc_init_bound",
+   "tags": {
+    "structure": "AGC_N3_hollow_fcc_init_bound",
+    "stage": "1 · 제약 이완 (Ag 아래 2층 고정 · 위 2층 자유 · C 는 z 만)"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "4ee34848dd50e9c35e73528015690d4db671c25ecb27e026a1dbe553f3a87fea"
+  },
+  {
+   "dir": "AGC_N3_s01_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "AGC_N3_s01",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.3,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84173,
+    "eopreg": 0.02878
+   },
+   "structure": "AGC_N3_s01_init_bound",
+   "tags": {
+    "structure": "AGC_N3_s01_init_bound",
+    "stage": "1 · 제약 이완 (Ag 아래 2층 고정 · 위 2층 자유 · C 는 z 만)"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "927fb5de718accc6a15d20ef0bc610ff610328100455476137890996ad8d09b3"
+  },
+  {
+   "dir": "AGC_N4_top_fcc_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "AGC_N4_top_fcc",
+   "nat": 44,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.3,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.85564,
+    "eopreg": 0.02625
+   },
+   "structure": "AGC_N4_top_fcc_init_bound",
+   "tags": {
+    "structure": "AGC_N4_top_fcc_init_bound",
+    "stage": "1 · 제약 이완 (Ag 아래 2층 고정 · 위 2층 자유 · C 는 z 만)"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "ac0b7da71884b101ad61f1a8488b67449de3f309d63ecfd7e80d02fa50d52961"
+  }
+ ],
+ "stage1_manifest_sha256": "ceb9172cddd76f19bed3aa378deadefe946ae317aa0f40191dafa6bee38d3ad8"
+}

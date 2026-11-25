@@ -1,0 +1,278 @@
+figure,series,x_name,x,y_name,y,note
+fig3I,AM_L - floor projection (blue),compression_pct,0.04,porosity,0.3298,"Fig. 3I = perspective 3D scatter drawn only as projections on the three box faces (red = left wall, green = right wall, blue = floor); solid symbols = AM_L, hollow = AM_S. Read from the embedded native raster (main PDF p.8, xref 206, 1325x1278 px = 300 dpi): black box edges fitted (rms 0.2-0.4 px) -> 7 corners; one homography per face from its 4 corners; axis limits from the tick feet (all major + minor ticks) by a linear fit in the face's unit coordinate: compression -2.47 .. 27.49 % (fit rms 0.016 %), porosity 0.1701 .. 0.3698 (rms 0.00014), tortuosity_factor 1.997 .. 9.990 (rms 0.0016); marker centre = circle fitted to the outer edge of the marker (overlapping / partly hidden markers: visible arc only). Predicted grid overlaid on the drawn grid lines and checked by eye. Each quantity is read twice (two faces) - the two readings are listed as separate rows."
+fig3I,AM_L - floor projection (blue),compression_pct,7.03,porosity,0.2999,
+fig3I,AM_L - floor projection (blue),compression_pct,15.03,porosity,0.25,
+fig3I,AM_L - floor projection (blue),compression_pct,22.49,porosity,0.1901,
+fig3I,AM_L - right-wall projection (green),compression_pct,0.02,tortuosity_factor,2.573,
+fig3I,AM_L - right-wall projection (green),compression_pct,7.01,tortuosity_factor,2.945,
+fig3I,AM_L - right-wall projection (green),compression_pct,15.0,tortuosity_factor,4.644,
+fig3I,AM_L - right-wall projection (green),compression_pct,22.5,tortuosity_factor,8.793,
+fig3I,AM_L - left-wall projection (red),porosity,0.3298,tortuosity_factor,2.578,
+fig3I,AM_L - left-wall projection (red),porosity,0.2999,tortuosity_factor,2.937,
+fig3I,AM_L - left-wall projection (red),porosity,0.2501,tortuosity_factor,4.646,
+fig3I,AM_L - left-wall projection (red),porosity,0.1901,tortuosity_factor,8.792,
+fig3I,AM_S - floor projection (blue),compression_pct,-0.0,porosity,0.3501,
+fig3I,AM_S - floor projection (blue),compression_pct,8.53,porosity,0.2998,
+fig3I,AM_S - floor projection (blue),compression_pct,13.5,porosity,0.27,
+fig3I,AM_S - floor projection (blue),compression_pct,23.99,porosity,0.195,
+fig3I,AM_S - right-wall projection (green),compression_pct,0.03,tortuosity_factor,2.32,
+fig3I,AM_S - right-wall projection (green),compression_pct,8.52,tortuosity_factor,2.727,
+fig3I,AM_S - right-wall projection (green),compression_pct,13.49,tortuosity_factor,3.55,
+fig3I,AM_S - right-wall projection (green),compression_pct,24.0,tortuosity_factor,7.565,
+fig3I,AM_S - left-wall projection (red),porosity,0.3499,tortuosity_factor,2.326,
+fig3I,AM_S - left-wall projection (red),porosity,0.2998,tortuosity_factor,2.741,
+fig3I,AM_S - left-wall projection (red),porosity,0.27,tortuosity_factor,3.556,
+fig3I,AM_S - left-wall projection (red),porosity,0.1951,tortuosity_factor,7.563,
+fig3J,AM_L - floor projection (blue),compression_pct,0.01,pore_size_um,0.4209,"Fig. 3J = perspective 3D scatter drawn only as projections on the three box faces (red = left wall, green = right wall, blue = floor); solid symbols = AM_L, hollow = AM_S. Read from the embedded native raster (main PDF p.8, xref 206, 1325x1278 px = 300 dpi): black box edges fitted (rms 0.2-0.4 px) -> 7 corners; one homography per face from its 4 corners; axis limits from the tick feet (all major + minor ticks) by a linear fit in the face's unit coordinate: compression -2.45 .. 27.49 % (fit rms 0.022 %), pore_size_um 0.2500 .. 0.4399 (rms 0.00011), specific_reaction_area_1e5_per_m 1.999 .. 10.989 (rms 0.0021); marker centre = circle fitted to the outer edge of the marker (overlapping / partly hidden markers: visible arc only). Predicted grid overlaid on the drawn grid lines and checked by eye. Each quantity is read twice (two faces) - the two readings are listed as separate rows."
+fig3J,AM_L - floor projection (blue),compression_pct,7.03,pore_size_um,0.3789,
+fig3J,AM_L - floor projection (blue),compression_pct,14.99,pore_size_um,0.3432,
+fig3J,AM_L - floor projection (blue),compression_pct,22.5,pore_size_um,0.3089,
+fig3J,AM_L - right-wall projection (green),compression_pct,0.04,specific_reaction_area_1e5_per_m,3.601,
+fig3J,AM_L - right-wall projection (green),compression_pct,7.02,specific_reaction_area_1e5_per_m,3.29,
+fig3J,AM_L - right-wall projection (green),compression_pct,15.01,specific_reaction_area_1e5_per_m,2.766,
+fig3J,AM_L - right-wall projection (green),compression_pct,22.51,specific_reaction_area_1e5_per_m,2.217,
+fig3J,AM_L - left-wall projection (red),pore_size_um,0.4207,specific_reaction_area_1e5_per_m,3.594,
+fig3J,AM_L - left-wall projection (red),pore_size_um,0.3789,specific_reaction_area_1e5_per_m,3.283,
+fig3J,AM_L - left-wall projection (red),pore_size_um,0.3429,specific_reaction_area_1e5_per_m,2.771,
+fig3J,AM_L - left-wall projection (red),pore_size_um,0.309,specific_reaction_area_1e5_per_m,2.215,
+fig3J,AM_S - floor projection (blue),compression_pct,0.04,pore_size_um,0.4059,
+fig3J,AM_S - floor projection (blue),compression_pct,8.53,pore_size_um,0.3599,
+fig3J,AM_S - floor projection (blue),compression_pct,13.5,pore_size_um,0.3348,
+fig3J,AM_S - floor projection (blue),compression_pct,24.0,pore_size_um,0.2835,
+fig3J,AM_S - right-wall projection (green),compression_pct,0.04,specific_reaction_area_1e5_per_m,6.275,
+fig3J,AM_S - right-wall projection (green),compression_pct,8.53,specific_reaction_area_1e5_per_m,5.425,
+fig3J,AM_S - right-wall projection (green),compression_pct,13.51,specific_reaction_area_1e5_per_m,4.12,
+fig3J,AM_S - right-wall projection (green),compression_pct,24.02,specific_reaction_area_1e5_per_m,2.427,
+fig3J,AM_S - left-wall projection (red),pore_size_um,0.4057,specific_reaction_area_1e5_per_m,6.271,
+fig3J,AM_S - left-wall projection (red),pore_size_um,0.3599,specific_reaction_area_1e5_per_m,5.422,
+fig3J,AM_S - left-wall projection (red),pore_size_um,0.3347,specific_reaction_area_1e5_per_m,4.113,
+fig3J,AM_S - left-wall projection (red),pore_size_um,0.2836,specific_reaction_area_1e5_per_m,2.424,
+fig7A,AM_L (Uncal),C_rate_per_h,2,specific_capacity_mAh_per_g,143.1,"Fig. 7A (simulated rated specific capacity vs C-rate), embedded native raster (main PDF p.16, xref 385, 300 dpi): frame x 66..491 px = C-rate 0.1..10 (log), y from the 5 major ticks 180/150/120/90/60 mAh/g at [70.0, 150.0, 230.0, 310.0, 391.0] px (linear fit residual <= 0.15 mAh/g); pixels classified by the 8 legend colours, connected components, value = centre of the marker bounding box (for the triangles the bounding-box centre and the area centroid differ by up to 0.7 mAh/g - 'cap_centroid' in the note). Markers hidden behind later series are not listed; partly hidden ones are flagged. PARTLY HIDDEN (visible box 8x10 px) - low confidence; cap_centroid=143.1; marker=square"
+fig7A,AM_L (Uncal),C_rate_per_h,3,specific_capacity_mAh_per_g,129.8,cap_centroid=129.8; marker=square
+fig7A,AM_L (Uncal),C_rate_per_h,5,specific_capacity_mAh_per_g,101.4,cap_centroid=101.4; marker=square
+fig7A,AM_L (22.5% Cal),C_rate_per_h,0.2,specific_capacity_mAh_per_g,168.0,cap_centroid=167.8; marker=circle
+fig7A,AM_L (22.5% Cal),C_rate_per_h,0.5,specific_capacity_mAh_per_g,161.6,cap_centroid=161.6; marker=circle
+fig7A,AM_L (22.5% Cal),C_rate_per_h,1,specific_capacity_mAh_per_g,151.5,cap_centroid=151.6; marker=circle
+fig7A,AM_L (22.5% Cal),C_rate_per_h,2,specific_capacity_mAh_per_g,133.5,cap_centroid=133.5; marker=circle
+fig7A,AM_L (22.5% Cal),C_rate_per_h,3,specific_capacity_mAh_per_g,117.8,cap_centroid=117.7; marker=circle
+fig7A,AM_L (22.5% Cal),C_rate_per_h,5,specific_capacity_mAh_per_g,87.3,cap_centroid=87.3; marker=circle
+fig7A,AM_L1.5 (22.5% Cal),C_rate_per_h,0.2,specific_capacity_mAh_per_g,165.5,cap_centroid=165.1; marker=triangle up
+fig7A,AM_L1.5 (22.5% Cal),C_rate_per_h,0.5,specific_capacity_mAh_per_g,157.1,cap_centroid=156.5; marker=triangle up
+fig7A,AM_L1.5 (22.5% Cal),C_rate_per_h,1,specific_capacity_mAh_per_g,142.1,cap_centroid=141.5; marker=triangle up
+fig7A,AM_L1.5 (22.5% Cal),C_rate_per_h,2,specific_capacity_mAh_per_g,124.6,cap_centroid=124.0; marker=triangle up
+fig7A,AM_L1.5 (22.5% Cal),C_rate_per_h,3,specific_capacity_mAh_per_g,110.0,cap_centroid=109.6; marker=triangle up
+fig7A,AM_L1.5 (22.5% Cal),C_rate_per_h,5,specific_capacity_mAh_per_g,75.9,cap_centroid=75.3; marker=triangle up
+fig7A,AM_L2 (22.5% Cal),C_rate_per_h,0.2,specific_capacity_mAh_per_g,161.8,cap_centroid=162.2; marker=triangle down
+fig7A,AM_L2 (22.5% Cal),C_rate_per_h,0.5,specific_capacity_mAh_per_g,150.2,cap_centroid=150.9; marker=triangle down
+fig7A,AM_L2 (22.5% Cal),C_rate_per_h,1,specific_capacity_mAh_per_g,133.9,PARTLY HIDDEN (visible box 12x3 px) - low confidence; cap_centroid=133.9; marker=triangle down
+fig7A,AM_L2 (22.5% Cal),C_rate_per_h,2,specific_capacity_mAh_per_g,111.3,cap_centroid=112.0; marker=triangle down
+fig7A,AM_L2 (22.5% Cal),C_rate_per_h,3,specific_capacity_mAh_per_g,95.0,cap_centroid=95.6; marker=triangle down
+fig7A,AM_L2 (22.5% Cal),C_rate_per_h,5,specific_capacity_mAh_per_g,55.2,cap_centroid=55.9; marker=triangle down
+fig7A,AM_S (Uncal),C_rate_per_h,0.2,specific_capacity_mAh_per_g,179.9,PARTLY HIDDEN (visible box 8x5 px) - low confidence; cap_centroid=180.2; marker=square
+fig7A,AM_S (Uncal),C_rate_per_h,1,specific_capacity_mAh_per_g,170.4,PARTLY HIDDEN (visible box 8x6 px) - low confidence; cap_centroid=170.6; marker=square
+fig7A,AM_S (Uncal),C_rate_per_h,2,specific_capacity_mAh_per_g,165.3,PARTLY HIDDEN (visible box 8x9 px) - low confidence; cap_centroid=165.3; marker=square
+fig7A,AM_S (Uncal),C_rate_per_h,3,specific_capacity_mAh_per_g,159.4,PARTLY HIDDEN (visible box 9x7 px) - low confidence; cap_centroid=159.5; marker=square
+fig7A,AM_S (Uncal),C_rate_per_h,5,specific_capacity_mAh_per_g,148.5,cap_centroid=148.5; marker=square
+fig7A,AM_S (24% Cal),C_rate_per_h,0.2,specific_capacity_mAh_per_g,177.7,cap_centroid=177.9; marker=circle
+fig7A,AM_S (24% Cal),C_rate_per_h,0.5,specific_capacity_mAh_per_g,174.5,cap_centroid=174.6; marker=circle
+fig7A,AM_S (24% Cal),C_rate_per_h,1,specific_capacity_mAh_per_g,168.0,cap_centroid=168.0; marker=circle
+fig7A,AM_S (24% Cal),C_rate_per_h,2,specific_capacity_mAh_per_g,161.6,cap_centroid=161.6; marker=circle
+fig7A,AM_S (24% Cal),C_rate_per_h,3,specific_capacity_mAh_per_g,156.5,cap_centroid=156.5; marker=circle
+fig7A,AM_S (24% Cal),C_rate_per_h,5,specific_capacity_mAh_per_g,142.0,cap_centroid=141.9; marker=circle
+fig7A,AM_S1.5 (24% Cal),C_rate_per_h,0.2,specific_capacity_mAh_per_g,175.4,cap_centroid=174.9; marker=triangle up
+fig7A,AM_S1.5 (24% Cal),C_rate_per_h,0.5,specific_capacity_mAh_per_g,171.7,cap_centroid=171.3; marker=triangle up
+fig7A,AM_S1.5 (24% Cal),C_rate_per_h,1,specific_capacity_mAh_per_g,165.5,cap_centroid=165.1; marker=triangle up
+fig7A,AM_S1.5 (24% Cal),C_rate_per_h,2,specific_capacity_mAh_per_g,158.2,cap_centroid=157.6; marker=triangle up
+fig7A,AM_S1.5 (24% Cal),C_rate_per_h,3,specific_capacity_mAh_per_g,148.7,cap_centroid=148.2; marker=triangle up
+fig7A,AM_S1.5 (24% Cal),C_rate_per_h,5,specific_capacity_mAh_per_g,128.7,cap_centroid=128.2; marker=triangle up
+fig7A,AM_S2 (24% Cal),C_rate_per_h,0.2,specific_capacity_mAh_per_g,170.6,cap_centroid=171.2; marker=triangle down
+fig7A,AM_S2 (24% Cal),C_rate_per_h,0.5,specific_capacity_mAh_per_g,165.9,cap_centroid=166.6; marker=triangle down
+fig7A,AM_S2 (24% Cal),C_rate_per_h,1,specific_capacity_mAh_per_g,159.5,cap_centroid=160.1; marker=triangle down
+fig7A,AM_S2 (24% Cal),C_rate_per_h,2,specific_capacity_mAh_per_g,150.2,cap_centroid=150.9; marker=triangle down
+fig7A,AM_S2 (24% Cal),C_rate_per_h,3,specific_capacity_mAh_per_g,140.5,cap_centroid=141.2; marker=triangle down
+fig7A,AM_S2 (24% Cal),C_rate_per_h,5,specific_capacity_mAh_per_g,110.7,cap_centroid=111.3; marker=triangle down
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),2,percentage_of_particles,2.87,"Fig. S13 left (= Fig. 1L), SI p.11 vector bars: x ticks 2 um -> 110.84 pt ... 18 um -> 237.48 pt; y ticks 0 % -> 309.05 pt, 40 % -> 184.70 pt. Bars are drawn as pairs centred on the tick labels (AM_S left of the tick, AM_L right) -> x = tick label of the pair (bin centre); bar_centre_um = centre as drawn. Check: sums 99.97 / 99.98 %; binned mean 7.35 um (AM_L; printed 7.3 / 7.32) and 5.26 um (AM_S; printed 5.2); binned SD 3.2 (printed 3.1) and 2.4 (printed 1.8)."
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),4,percentage_of_particles,21.58,bar_centre_um=4.67
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),6,percentage_of_particles,29.49,bar_centre_um=6.67
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),8,percentage_of_particles,20.86,bar_centre_um=8.67
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),10,percentage_of_particles,12.23,bar_centre_um=10.67
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),12,percentage_of_particles,5.76,bar_centre_um=12.67
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),14,percentage_of_particles,5.03,bar_centre_um=14.67
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),16,percentage_of_particles,0.72,bar_centre_um=16.67
+figS13_left(=fig1L),AM_L (nano-CT sample 1),particle_size_bin_um (tick label),18,percentage_of_particles,1.44,bar_centre_um=18.67
+figS13_left(=fig1L),AM_S (nano-CT),particle_size_bin_um (tick label),2,percentage_of_particles,21.66,bar_centre_um=1.34
+figS13_left(=fig1L),AM_S (nano-CT),particle_size_bin_um (tick label),4,percentage_of_particles,22.58,bar_centre_um=3.33
+figS13_left(=fig1L),AM_S (nano-CT),particle_size_bin_um (tick label),6,percentage_of_particles,35.02,bar_centre_um=5.33
+figS13_left(=fig1L),AM_S (nano-CT),particle_size_bin_um (tick label),8,percentage_of_particles,14.05,bar_centre_um=7.33
+figS13_left(=fig1L),AM_S (nano-CT),particle_size_bin_um (tick label),10,percentage_of_particles,5.53,bar_centre_um=9.33
+figS13_left(=fig1L),AM_S (nano-CT),particle_size_bin_um (tick label),12,percentage_of_particles,0.92,bar_centre_um=11.33
+figS13_left(=fig1L),AM_S (nano-CT),particle_size_bin_um (tick label),14,percentage_of_particles,0.22,bar_centre_um=13.33
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),2.5,percentage_of_particles,5.03,"SI p.11 vector bars: x ticks 2 um -> 298.66 pt, 20 um -> 452.50 pt; y 0 % -> 307.91 pt, 25 % -> 177.35 pt; bin width as drawn 1.67 um; printed in the figure: Vol_AM = 45 %, D_AM = 7.67 um"
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),4.16,percentage_of_particles,11.8,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),5.83,percentage_of_particles,19.4,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),7.5,percentage_of_particles,22.56,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),9.16,percentage_of_particles,19.13,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),10.83,percentage_of_particles,11.11,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),12.5,percentage_of_particles,5.75,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),14.16,percentage_of_particles,2.73,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),15.83,percentage_of_particles,1.53,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),17.4,percentage_of_particles,0.68,
+figS13_right,"AM_L (micro-CT, large sample)",particle_size_um (bar centre as drawn),19.0,percentage_of_particles,0.34,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.1,tortuosity_factor,2.46,"SI p.11 vector markers (centre of the marker box): x ticks 0.0 -> 172.42 pt, 1.0 -> 398.02 pt; left axis 2.0 -> 625.69 pt, 3.0 -> 426.35 pt; right axis 0.20 -> 625.69 pt, 0.40 -> 426.35 pt. Uncalendered AM_L (sample 1); marker size grows with the analysed volume (as printed)."
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.2,tortuosity_factor,2.52,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.3,tortuosity_factor,2.51,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.4,tortuosity_factor,2.53,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.5,tortuosity_factor,2.54,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.6,tortuosity_factor,2.59,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.7,tortuosity_factor,2.61,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.8,tortuosity_factor,2.59,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,0.9,tortuosity_factor,2.58,
+figS14,"tortuosity (orange squares, left axis)",incremental_volume_fraction,1.0,tortuosity_factor,2.6,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.1,porosity,0.303,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.2,porosity,0.329,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.3,porosity,0.335,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.4,porosity,0.334,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.5,porosity,0.331,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.6,porosity,0.33,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.7,porosity,0.33,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.8,porosity,0.333,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,0.9,porosity,0.332,
+figS14,"porosity (blue circles, right axis)",incremental_volume_fraction,1.0,porosity,0.33,
+figS3,AM_S (Uncal),node_coordination_number,1,number_of_nodes,1474.2,SI p.5 vector bars: per chart the y scale from the 0 and 300 ticks; bar height -> node count. Check against the counts printed in the charts (Nodes 3488 / 2773 / 1416 / 1242): bar sums 3488 / 2773 / 1417 / 1243. Printed in the charts: pore segments 4028 / 3125 / 1564 / 1349 and the drop per coordination number (AM_S 15.6 / 23.5 / 25.2 / 41.9 / 0 %; AM_L 1.8 / 18.3 / 31.4 / 66.8 / 100 %).
+figS3,AM_S (Uncal),node_coordination_number,3,number_of_nodes,1736.4,
+figS3,AM_S (Uncal),node_coordination_number,4,number_of_nodes,230.9,
+figS3,AM_S (Uncal),node_coordination_number,5,number_of_nodes,43.0,
+figS3,AM_S (Uncal),node_coordination_number,6,number_of_nodes,6.2,
+figS3,AM_S (Uncal),printed_in_chart,nodes,count,3488,bar sum = 3491
+figS3,AM_S (Uncal),printed_in_chart,pore_segments,count,4028,
+figS3,AM_S (24% Cal),node_coordination_number,1,number_of_nodes,1242.9,
+figS3,AM_S (24% Cal),node_coordination_number,3,number_of_nodes,1326.6,
+figS3,AM_S (24% Cal),node_coordination_number,4,number_of_nodes,173.2,
+figS3,AM_S (24% Cal),node_coordination_number,5,number_of_nodes,24.9,
+figS3,AM_S (24% Cal),node_coordination_number,6,number_of_nodes,6.8,
+figS3,AM_S (24% Cal),printed_in_chart,nodes,count,2773,bar sum = 2774
+figS3,AM_S (24% Cal),printed_in_chart,pore_segments,count,3125,
+figS3,AM_L (Uncal),node_coordination_number,1,number_of_nodes,634.4,
+figS3,AM_L (Uncal),node_coordination_number,3,number_of_nodes,683.6,
+figS3,AM_L (Uncal),node_coordination_number,4,number_of_nodes,83.2,
+figS3,AM_L (Uncal),node_coordination_number,5,number_of_nodes,11.9,
+figS3,AM_L (Uncal),node_coordination_number,6,number_of_nodes,4.0,
+figS3,AM_L (Uncal),printed_in_chart,nodes,count,1416,bar sum = 1417
+figS3,AM_L (Uncal),printed_in_chart,pore_segments,count,1564,
+figS3,AM_L (22.5% Cal),node_coordination_number,1,number_of_nodes,623.2,
+figS3,AM_L (22.5% Cal),node_coordination_number,3,number_of_nodes,558.6,
+figS3,AM_L (22.5% Cal),node_coordination_number,4,number_of_nodes,57.1,
+figS3,AM_L (22.5% Cal),node_coordination_number,5,number_of_nodes,3.9,
+figS3,AM_L (22.5% Cal),printed_in_chart,nodes,count,1242,bar sum = 1243
+figS3,AM_L (22.5% Cal),printed_in_chart,pore_segments,count,1349,
+figS8,AM_L uncal,C_rate_per_h,0.2,average_voltage_V,3.8007,"SI p.8 vector markers (simulated discharge; marker box centre): log x axis 1 -> 295.76 pt, 10 -> 420.93 pt; y 3.64 V -> 246.01 pt, 3.80 V -> 94.13 pt. Printed in the main text (p.2757): AM_L 3.706 V (uncal) and 3.656 V (cal) at 5C; 'AM_S ... above 3.75 V at 5C'."
+figS8,AM_L uncal,C_rate_per_h,0.5,average_voltage_V,3.7952,
+figS8,AM_L uncal,C_rate_per_h,1.0,average_voltage_V,3.787,
+figS8,AM_L uncal,C_rate_per_h,2.0,average_voltage_V,3.7655,
+figS8,AM_L uncal,C_rate_per_h,3.0,average_voltage_V,3.7443,
+figS8,AM_L uncal,C_rate_per_h,5.0,average_voltage_V,3.7065,
+figS8,AM_L 22.5% Cal,C_rate_per_h,0.2,average_voltage_V,3.8007,
+figS8,AM_L 22.5% Cal,C_rate_per_h,0.5,average_voltage_V,3.7904,
+figS8,AM_L 22.5% Cal,C_rate_per_h,1.0,average_voltage_V,3.7752,
+figS8,AM_L 22.5% Cal,C_rate_per_h,2.0,average_voltage_V,3.7387,
+figS8,AM_L 22.5% Cal,C_rate_per_h,3.0,average_voltage_V,3.7189,
+figS8,AM_L 22.5% Cal,C_rate_per_h,5.0,average_voltage_V,3.6567,
+figS8,AM_S uncal,C_rate_per_h,0.2,average_voltage_V,3.7982,
+figS8,AM_S uncal,C_rate_per_h,0.5,average_voltage_V,3.7931,
+figS8,AM_S uncal,C_rate_per_h,1.0,average_voltage_V,3.7892,
+figS8,AM_S uncal,C_rate_per_h,2.0,average_voltage_V,3.7834,
+figS8,AM_S uncal,C_rate_per_h,3.0,average_voltage_V,3.7733,
+figS8,AM_S uncal,C_rate_per_h,5.0,average_voltage_V,3.7511,
+figS8,AM_S 24% Cal,C_rate_per_h,0.2,average_voltage_V,3.7967,
+figS8,AM_S 24% Cal,C_rate_per_h,0.5,average_voltage_V,3.7932,
+figS8,AM_S 24% Cal,C_rate_per_h,1.0,average_voltage_V,3.786,
+figS8,AM_S 24% Cal,C_rate_per_h,2.0,average_voltage_V,3.7791,
+figS8,AM_S 24% Cal,C_rate_per_h,3.0,average_voltage_V,3.7638,
+figS8,AM_S 24% Cal,C_rate_per_h,5.0,average_voltage_V,3.7437,
+figS7,Ds uncalendered (GITT),DoD,-0.0,Ds_cm2_per_s,2.357e-10,"SI p.7 vector markers: x 0.0 -> 219.55 pt, 1.0 -> 421.14 pt; log y 1E-12 -> 584.69 pt, 1E-11 -> 512.66 pt, 1E-10 -> 440.64 pt."
+figS7,Ds uncalendered (GITT),DoD,0.073,Ds_cm2_per_s,2.267e-10,
+figS7,Ds uncalendered (GITT),DoD,0.154,Ds_cm2_per_s,2.036e-10,
+figS7,Ds uncalendered (GITT),DoD,0.236,Ds_cm2_per_s,1.898e-10,
+figS7,Ds uncalendered (GITT),DoD,0.317,Ds_cm2_per_s,1.714e-10,
+figS7,Ds uncalendered (GITT),DoD,0.398,Ds_cm2_per_s,1.335e-10,
+figS7,Ds uncalendered (GITT),DoD,0.479,Ds_cm2_per_s,9.66e-11,
+figS7,Ds uncalendered (GITT),DoD,0.561,Ds_cm2_per_s,7.355e-11,
+figS7,Ds uncalendered (GITT),DoD,0.642,Ds_cm2_per_s,6.468e-11,
+figS7,Ds uncalendered (GITT),DoD,0.723,Ds_cm2_per_s,5.709e-11,
+figS7,Ds uncalendered (GITT),DoD,0.805,Ds_cm2_per_s,3.229e-11,
+figS7,Ds uncalendered (GITT),DoD,0.916,Ds_cm2_per_s,6.515e-12,
+figS7,Ds 18% calendered (GITT),DoD,-0.0,Ds_cm2_per_s,2.051e-10,
+figS7,Ds 18% calendered (GITT),DoD,0.075,Ds_cm2_per_s,1.928e-10,
+figS7,Ds 18% calendered (GITT),DoD,0.16,Ds_cm2_per_s,1.626e-10,
+figS7,Ds 18% calendered (GITT),DoD,0.243,Ds_cm2_per_s,1.458e-10,
+figS7,Ds 18% calendered (GITT),DoD,0.327,Ds_cm2_per_s,1.255e-10,
+figS7,Ds 18% calendered (GITT),DoD,0.412,Ds_cm2_per_s,9.228e-11,
+figS7,Ds 18% calendered (GITT),DoD,0.496,Ds_cm2_per_s,6.572e-11,
+figS7,Ds 18% calendered (GITT),DoD,0.58,Ds_cm2_per_s,5.048e-11,
+figS7,Ds 18% calendered (GITT),DoD,0.664,Ds_cm2_per_s,4.566e-11,
+figS7,Ds 18% calendered (GITT),DoD,0.748,Ds_cm2_per_s,3.646e-11,
+figS7,Ds 18% calendered (GITT),DoD,0.832,Ds_cm2_per_s,1.296e-11,
+figS7,Ds 18% calendered (GITT),DoD,0.946,Ds_cm2_per_s,1.57e-12,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,-0.0,Ds_cm2_per_s,2.202e-10,polyline vertices of the solid blue line
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.075,Ds_cm2_per_s,2.096e-10,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.16,Ds_cm2_per_s,1.831e-10,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.244,Ds_cm2_per_s,1.677e-10,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.328,Ds_cm2_per_s,1.483e-10,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.412,Ds_cm2_per_s,1.129e-10,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.496,Ds_cm2_per_s,8.109e-11,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.58,Ds_cm2_per_s,6.196e-11,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.664,Ds_cm2_per_s,5.507e-11,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.748,Ds_cm2_per_s,4.676e-11,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.832,Ds_cm2_per_s,2.261e-11,
+figS7,Ds_0 (solid blue line used in the model; vertices),DoD,0.946,Ds_cm2_per_s,4.041e-12,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.014,Ds_cm2_per_s,2.183e-10,midpoints of the dashes of the dashed blue line (coincides with Ds_0 below DoD ~0.5)
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.08,Ds_cm2_per_s,2.073e-10,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.144,Ds_cm2_per_s,1.878e-10,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.21,Ds_cm2_per_s,1.738e-10,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.275,Ds_cm2_per_s,1.603e-10,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.338,Ds_cm2_per_s,1.43e-10,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.398,Ds_cm2_per_s,1.182e-10,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.455,Ds_cm2_per_s,9.517e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.519,Ds_cm2_per_s,8.138e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.586,Ds_cm2_per_s,8.102e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.651,Ds_cm2_per_s,7.605e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.716,Ds_cm2_per_s,6.97e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.77,Ds_cm2_per_s,5.924e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.822,Ds_cm2_per_s,4.451e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.856,Ds_cm2_per_s,3.063e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.885,Ds_cm2_per_s,2.08e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.913,Ds_cm2_per_s,1.413e-11,
+figS7,Ds_f (dashed blue line; dash midpoints),DoD,0.941,Ds_cm2_per_s,9.721e-12,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),2.5,percentage_of_particles,4.64,"SI p.9 vector bars: x ticks 2 -> 20 um, y ticks 0 -> 30 % (per panel); bars are drawn 0.5 um to the right of the even tick labels"
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),4.5,percentage_of_particles,19.45,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),6.5,percentage_of_particles,27.78,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),8.5,percentage_of_particles,21.3,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),10.5,percentage_of_particles,12.97,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),12.5,percentage_of_particles,7.41,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),14.5,percentage_of_particles,3.71,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),16.5,percentage_of_particles,0.93,
+figS10,AM_L 22.5% Cal - microtester (panel G),particle_size_um (bar centre as drawn),18.5,percentage_of_particles,1.86,
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),2.5,percentage_of_particles,6.61,"SI p.9 vector bars: x ticks 2 -> 20 um, y ticks 0 -> 30 % (per panel); bars are drawn 0.5 um to the right of the even tick labels"
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),4.5,percentage_of_particles,24.88,
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),6.5,percentage_of_particles,26.91,
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),8.5,percentage_of_particles,20.31,
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),10.5,percentage_of_particles,11.68,
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),12.5,percentage_of_particles,5.59,
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),14.5,percentage_of_particles,3.05,
+figS10,AM_L 20% Cal - roller (panel H),particle_size_um (bar centre as drawn),18.5,percentage_of_particles,1.02,
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),3.0,percentage_of_particles,10.62,"SI p.12 vector bars: x ticks 2 -> 20 um, y ticks 0 -> 30 % (per panel); bars centred on odd values (bins 2-4, 4-6, ...)"
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),5.0,percentage_of_particles,21.23,
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),7.0,percentage_of_particles,29.05,
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),9.0,percentage_of_particles,21.79,
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),11.0,percentage_of_particles,9.5,
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),13.0,percentage_of_particles,2.8,
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),15.0,percentage_of_particles,3.36,
+figS15,AM_L sample 2,particle_size_um (bar centre as drawn),17.0,percentage_of_particles,1.13,
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),3.0,percentage_of_particles,11.58,"SI p.12 vector bars: x ticks 2 -> 20 um, y ticks 0 -> 30 % (per panel); bars centred on odd values (bins 2-4, 4-6, ...)"
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),5.0,percentage_of_particles,21.76,
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),7.0,percentage_of_particles,25.46,
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),9.0,percentage_of_particles,24.08,
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),11.0,percentage_of_particles,9.73,
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),13.0,percentage_of_particles,4.64,
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),15.0,percentage_of_particles,1.86,
+figS15,AM_L sample 3,particle_size_um (bar centre as drawn),17.0,percentage_of_particles,0.47,

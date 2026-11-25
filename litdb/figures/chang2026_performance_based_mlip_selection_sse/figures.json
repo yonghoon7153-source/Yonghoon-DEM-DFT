@@ -1,0 +1,332 @@
+{
+ "slug": "chang2026_performance_based_mlip_selection_sse",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+  "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Accuracy and error characteristics of MLIPs in predicting the energetic properties of Li-argyrodite compounds, benchmarked against DFT calculations. (a) Parity plot comparing compound formation energies predicted by different MLIP models with respect to DFT results for 209 chemically diverse argyrodite configurations. Linear regression lines are shown for each model, with corresponding statistical metrics provided in Table 1. (b) Box plots of deviations in energy above the convex hull relative to DFT values, highlighting each models’ ability to capture relative phase stability. (c) Box plots of absolute deviations in compound formation energies with respect to DFT reference values. For each model, the box represents the interquartile range (25th to 75th percentiles), the central line denotes the median, and the whiskers indicate the full data range excluding outliers. yet repre",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    238.3
+   ],
+   "w": 2151,
+   "h": 767,
+   "dpi": 300,
+   "src": "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparison of predicted phase stability across the Cl/Br compositional space for the argyrodite SSEs. The compositional space is defined by the number of Cl (x-axis) and Br (y-axis) substitutions in a supercell containing 8 anion sites. Contour plots of formation energies are shown for (a) DFT, (b) ORB v2MLIP, and (c) SevenNet MLIP. Corresponding contour plots of energy above the convex hull (Ehull) are represented in (d-f). Color bars indicate energy in eV/atom. In the convex hull plots, compositions with Ehull = 0 are considered thermodynamically stable. Given the low and relatively comparable compound formation energy prediction errors across the five considered MLIP models, additional metrics are assessed for differ- entiation. To gain deeper insight into their reliability and potential biases, we examine the error distributions using box plots of compound formation energy ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    370.7
+   ],
+   "w": 2151,
+   "h": 1319,
+   "dpi": 300,
+   "src": "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.625
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Validation of MLIP thermal transferability and prediction of Li-ion diffusivity and migration pathways in Li6PS5Cl based on MD simulations using the SevenNet MLIP. (a) Average total energy as a function of temperature from 10 ps NVT simulations of Li6PS5Cl using ORB v2, EqV2, DeePMD, and SevenNet MLIP models, compared against benchmark ab initio molecular dynamics (AIMD/DFT) results. (b) Arrhenius plot of temperature-dependent Li-ion diffusivity, DLi from SevenNet MD simulations. The solid line represents a linear fit to the data, from which activation energies, Ea, are derived. The extrapolated room temperature (300 K) diffusivity is marked with a star. (c) Visualization of Li-ion migration pathways observed during a 300 ps NVT MD simulation at 700 K, illustrating the connectivity and spatial extent of diffusion across the disordered argyrodite framework. energy conservation i",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    349.6
+   ],
+   "w": 2151,
+   "h": 1231,
+   "dpi": 300,
+   "src": "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Impact of S/Cl anion site disorder on Li-ion diffusivity and intercage hopping dynamics in Li6PS5Cl, predicted by SevenNet MD simulations. (a) Arrhenius plots of calculated Li-ion diffusivity as a function of inverse temperature (1000/T). (b) Intercage Li-ion jump frequencies (jump/ps) at 700 K, resolved by S2−and Cl−local anion environments to illustrate their respective contributions to diffusion. Data points represent individual anions, grouped first by anion type (S2−and Cl−) and then ordered by Wyckoff site (4c followed by 4a).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    204.4
+   ],
+   "w": 2151,
+   "h": 626,
+   "dpi": 300,
+   "src": "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.714
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Validation of transport convergence in SevenNet MD simulations. MSD of Li ions for the 100%-0% mixing Li6PS5Cl configuration plotted against lag time (t) at temperatures from 700K to 1300K. (a) Linear scale plot showing the magnitude of displacement. (b) log-log scale plot used to verify the diffusion mechanism. The shaded regions represent the standard error of the mean calculated from the directional components (x, y, z) of the trajectory.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    240.3
+   ],
+   "w": 2013,
+   "h": 727,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 8,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Accuracy and error characteristics of various MLIPs in predicting energetic properties of argyrodite materials, benchmarked against VASP (DFT) calculations. (a) Scatter plot with linear regression lines comparing formation energies relative to elemental phases, predicted by different MLIP models (distinguished by color, see legend) and VASP, for a dataset of 206 diverse compositions: 126 argyrodite structures and 80 non-argyrodite structures (stable in the Li-P-S-Cl- Br-O chemical space) (b) Box plots showing deviations in formation energies relative to VASP values. For each MLIP, the central line indicates the median error; the box boundaries represent the interquartile range (25th to 75th percentiles), and the whiskers extend to the maximum and minimum data points, excluding outliers.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    367.3
+   ],
+   "w": 2013,
+   "h": 1256,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Time evolution of total energy per atom during NVT molecular dynamics simulations at (a) 500K, (b) 700K and (c) 1100K",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    209.8
+   ],
+   "w": 2013,
+   "h": 600,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Construction and screening of the argyrodite structure benchmark dataset. (a) Crystal structure of the Li7PS6 parent argyrodite, illustrating the anion sites S1(16e), S2(4a), S3(4c), and the Li+ sublattice (48h). These Wyckoff sites serve as substitute sites for halides and oxides in Li6PS5X-type compositions. (b) Summary of the configurational space used for the benchmark dataset across substitution types and anion sites. A total of 129 symmetrically unique structures were selected from the ORB v2 and MACE prescreening calculations. (c) Examples of showing prescreening results for S-Cl, S-Br, and Cl-Br mixed-anion systems obtained using the MACE and ORB v2 MLIPs. The suffixes “_B” and “__F” denote the ionic optimizers used in the ASE package: _B refers to BGFS and _F to Fire. In total, 102 symmetrically unique S2- /X- ordering configurations and 74 Cl-/Br- ordering configurat",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    555.1,
+    329.4
+   ],
+   "w": 2038,
+   "h": 1098,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Regression Statistics and Prediction Errors for Compound Formation Energy Predictions by Various MLIPs Models, Benchmarked against DFT Calculations Across 129 Argyrodite and 29 Non-Argyrodite Configurations (Stable Phases within Li2S, LiCl, LiBr, P2S5, and Li2O Phase) model ORB metric EqV2 DeePMD v2 SevenNet MACE MAE [meV/atom] 6.487 6.842 4.686 4.916 9.610 RMSE [meV/atom] 7.888 7.930 5.547 9.245 12.22 R2 0.986 0.985 0.993 0.980 0.965 Spearman rank 0.975 0.976 0.978 0.945 0.969 Pearson 0.995 0.995 0.998 0.993 0.993 slope 0.964 0.962 0.992 0.927 0.950 R2 for slope 0.990 0.990 0.995 0.986 0.986",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    560.0,
+    296.5,
+    756.5
+   ],
+   "w": 1043,
+   "h": 820,
+   "dpi": 300,
+   "src": "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2. Summary of MLIP Models Evaluated in This Studya",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    53.5,
+    560.5,
+    110.4
+   ],
+   "w": 2143,
+   "h": 238,
+   "dpi": 300,
+   "src": "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.476
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3. Summary of DFT-Calculated Relative Energies for Different S/Cl Site Disordered Li6P5Cl Configurations and Corresponding Li-ion Transport Parameters Predicted by SevenNet MLIP-MD Cl/S ordering 0 1 2 3 4 5 Wyckoff site 4a 0 25% 50% 50% 75% 100% 4c 100% 75% 50% 50% 25% 0% ΔE[meV/atoms] 39.72 22.48 24.73 27.52 3.28 0 Ea [meV] 26.8 20.7 20.1 19.7 23.9 40.6 D300 K [cm2/s] 2.4 × 10−8 1.9 × 10−7 1.7 × 10−7 2.7 × 10−7 7.1 × 10−8 3.6 × 10−10 σ300 K [mS/cm] 3.75 30.06 27.10 41.02 10.86 0.05 ORB v2 (0.96), its Pearson correlation remains comparably high (0.99), indicating strong linear agreement with DFT but a smaller monotonic bias. In contrast, OBR v2 exhibits an MAE of 5.3 meV/atom and an RMSE of 5.9 meV/atom, along with a tendency to underestimate compound formation energies. Thus, SevenNet more accurately captures relative stability trends, including the correct identification of low-E",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    55.7,
+    560.5,
+    639.2
+   ],
+   "w": 2143,
+   "h": 2432,
+   "dpi": 300,
+   "src": "6a57d51c-105._PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 11,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Prediction errors for compound formation energy predictions obtained using various MLIPs models, benchmarked against DFT calculations. The results correspond to the same dataset used in Table 1 but are grouped and separately evaluated according to configuration types. The dataset includes 29 non-argyrodite structures obtained from the Materials Project database, which are the stable phases within Li2S, LiCl, LiBr, P2S5, and Li2O. In addition, 129 Li6PS5X-type- argyrode structures are generated by substituting and rearranging atoms within the Li7PS6 parent structure, followed by full structural relaxation using each MLIPs model.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    89.2,
+    548.0,
+    597.5
+   ],
+   "w": 2005,
+   "h": 2119,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 12,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Performance comparing of MLIP models for 10 ps NVT simulations of Li6PS5Cl (52 atoms) at 1100K under identical computational settings. All runs were executed on the UCSD Expanse cluster. Model Name Atom-steps/s (ATS) ns/day s/ps s/step MaxRSS EqV2 S DeNS 51 0.168 514.8 1.0296 3.922 GB",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    89.2,
+    556.5,
+    315.3
+   ],
+   "w": 2040,
+   "h": 943,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 13,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Updated summary of the configurations included in the benchmark dataset, incorporating additional argyrodite structures. No. of enumerated Stoichiometries Types of substitution Substitution sites structures",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    89.2,
+    548.0,
+    399.9
+   ],
+   "w": 2005,
+   "h": 1296,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 14,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Prediction errors for compositional formation energy predictions obtained using various MLIPs models, benchmarked against DFT calculations. The dataset includes 29 non-argyrodite structures obtained from the Materials Project database, which are the stable phases within Li2S, LiCl, LiBr, P2S5, and Li2O. In addition, 253 Li6PS5X-type-argyrode structures are generated by substituting and rearranging atoms within the Li7PS6 parent structure, followed by full structural relaxation using each MLIPs model. Model EqV2 DeePMD ORB v2 SevenNet MACE Metric",
+   "rotated_deg": 0,
+   "bbox": [
+    65.0,
+    65.5,
+    548.0,
+    398.3
+   ],
+   "w": 2014,
+   "h": 1388,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.751
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 15,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Prediction errors for compositional formation energy obtained using various MLIP models, benchmarked against DFT calculations, grouped by structural type. This table expands upon Table A2, providing a more detailed breakdown of model performance across different structure classes within the benchmark dataset. The dataset includes 29 non-argyrodite reference structures obtained from the Materials Project database and 253 Li₆PS₅X-type argyrodite-derived configurations generated by atomic substitution and full structural relaxation on each MLIP potential energy surface. RMSE Group Model MAE [meV/atom] Structure Spearman Pearson [meV/atom]",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    564.1,
+    559.9
+   ],
+   "w": 2072,
+   "h": 2062,
+   "dpi": 300,
+   "src": "e4ff4110-105._Sup_PerformanceBased_Selection_of_Machine_Learning_Interatomic_Potentials_for_Studying_SolidState_Electrolytes.pdf",
+   "blank": 0.907
+  }
+ ]
+}

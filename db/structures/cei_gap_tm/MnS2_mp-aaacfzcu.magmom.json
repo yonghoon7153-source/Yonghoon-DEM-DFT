@@ -1,0 +1,22 @@
+{
+ "material_id": "mp-aaacfzcu",
+ "ordering": "FM",
+ "magmoms": [
+  1.031,
+  1.078,
+  -0.037,
+  -0.037,
+  -0.028,
+  -0.028
+ ],
+ "symbols": [
+  "Mn",
+  "Mn",
+  "S",
+  "S",
+  "S",
+  "S"
+ ],
+ "aligned_from": "structure.site_properties['magmom']",
+ "sum_muB": 1.979
+}

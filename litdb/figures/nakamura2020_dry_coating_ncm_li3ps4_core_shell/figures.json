@@ -1,0 +1,294 @@
+{
+ "slug": "nakamura2020_dry_coating_ncm_li3ps4_core_shell",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+  "5f74c477-24._Sup_Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. The proposed dry coating process employed in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.6,
+    555.2,
+    556.4,
+    726.2
+   ],
+   "w": 1034,
+   "h": 713,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.74,
+   "auto_bbox": [
+    302.6,
+    549.2,
+    562.4,
+    730.8
+   ],
+   "native_dpi": 299.8,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 300 dpi. 자동 bbox 는 단 폭 · 쪽 폭 여백을 넣었다.",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Materials and equipment used in this study. SEM images of the (a) original LiNi1/3Co1/3Mn1/3O2 (NCM) and (b) Li3PS4 (LPS) particles. A schematic of the dry impact-blending device is shown in (c). 3",
+   "rotated_deg": 0,
+   "bbox": [
+    122.7,
+    347.4,
+    472.5,
+    716.7
+   ],
+   "w": 1458,
+   "h": 1540,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.608,
+   "auto_bbox": [
+    31.6,
+    341.4,
+    565.8,
+    721.3
+   ],
+   "native_dpi": 299.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 300 dpi. 자동 bbox 는 단 폭 · 쪽 폭 여백을 넣었다.",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Analysis procedure for quantifying the three-dimensional structural properties of the composite cathode. NCM, LPS, inter-NCM void, and intra-NCM void, as shown in Fig. 3. Following image segmentation, the two-dimensional processed images were assembled to reconstruct the three-dimensional image of the composite cathode. The total volume of the reconstructed three-dimensional image was 8000 μm3 (20 μm \u0002 20 μm \u0002 20 μm). The reconstructed three-dimensional image consisted of 1,000,000 voxels (100 \u0002 100 \u0002 100), with the size of a single voxel equal to 0.2 μm \u0002 0.2 μm \u0002 0.2 μm, which provided sufficient spatial resolution to analyze the microstructure of the composite cathode prepared in this study. Finally, the following structural properties were quantified from the three-dimensional reconstructed image: (i) the volume fraction of each component; (ii) the total surface area of NCM a",
+   "rotated_deg": 0,
+   "bbox": [
+    308.6,
+    55.4,
+    556.4,
+    427.4
+   ],
+   "w": 1034,
+   "h": 1550,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.637,
+   "auto_bbox": [
+    300.6,
+    49.4,
+    566.0,
+    432.0
+   ],
+   "native_dpi": 299.8,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 300 dpi. 자동 bbox 는 단 폭 · 쪽 폭 여백을 넣었다.",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. SEM and EDX images of the (a) simple mixture prepared by mortar and pestle mixing and (b) composite particle prepared by dry coating. (c) Cross-section of the single composite particle. The light gray and dark gray regions correspond to NCM and Li3PS4, respectively. (d) Number based particle size distribution of each particle. D50 represents the number based median diameter. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    122.7,
+    354.0,
+    472.5,
+    707.1
+   ],
+   "w": 1458,
+   "h": 1472,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.317,
+   "auto_bbox": [
+    31.6,
+    348.0,
+    565.8,
+    711.7
+   ],
+   "native_dpi": 299.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 300 dpi. 자동 bbox 는 단 폭 · 쪽 폭 여백을 넣었다.",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Composite particles at various processing times. (b) A schematic of the dry coating mechanism employed in this study. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    122.7,
+    560.4,
+    472.5,
+    726.2
+   ],
+   "w": 1458,
+   "h": 692,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.541,
+   "auto_bbox": [
+    82.0,
+    554.4,
+    517.5,
+    730.8
+   ],
+   "native_dpi": 299.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 300 dpi. 자동 bbox 는 단 폭 · 쪽 폭 여백을 넣었다.",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Performance of the all-solid-state half-cells prepared with the NCM@LPS core-shell composite particles and simple mixture obtained via mortar and pestle mixing. (a) Charge-discharge curves of the all-solid-state and liquid electrolyte half-cells. (b) Rate capability and cycle performance at different discharge current densities (C rates). (c) Capacity ratio as a function of cycle number at different current densities. (d) Coulombic efficiency of each cell as a function of cycle number at different current densities. (e) Discharge curve of each cell at different current densities (C rates). NCM@LPS particles was also close to a typical maximum capacity of NCM (\u0019160 mAh g\u0000 1) commonly reported previously in experimental studies [36]. Moreover, the charge-discharge curves of the NCM@LPS particles approximately matched the charge-discharge profile of the liquid electrolyte half-cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    55.4,
+    510.8,
+    319.0
+   ],
+   "w": 1778,
+   "h": 1098,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.891,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    323.5
+   ],
+   "native_dpi": 299.9,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 300 dpi. 자동 bbox 는 단 폭 · 쪽 폭 여백을 넣었다.",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. SEM and EDX images of the cross-sections of the composite cathodes prepared with the (a) simple mixture and (b) NCM@LPS core-shell particles. The light gray, dark gray, and black regions in the SEM images correspond to NCM, LPS, and voids, respectively. The white arrows indicate the interfacial microvoid (IMV) on the NCM surface.",
+   "rotated_deg": 0,
+   "bbox": [
+    98.6,
+    56.2,
+    496.6,
+    274.7
+   ],
+   "w": 1659,
+   "h": 911,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.164,
+   "auto_bbox": [
+    31.6,
+    50.2,
+    565.8,
+    279.2
+   ],
+   "native_dpi": 300.0,
+   "recrop": "2026-10-13 손 재크롭 — 래스터 경계 그대로 · 원본 해상도 300 dpi. 자동 bbox 는 단 폭 · 쪽 폭 여백을 넣었다.",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1 Three-dimensional structural properties of the composite cathodes prepared with the NCM@LPS core-shell particles and simple mixture. (a) Volume fraction of each component. (b) Total surface area of NCM, and contact area of NCM with another component. (c) Effective ion and electron conductivities normalized by the bulk conductivity and tortuosities of the ion/electron transport pathways in the composite cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    50.0,
+    292.0,
+    475.0
+   ],
+   "w": 1067,
+   "h": 1772,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.916,
+   "auto_bbox": [
+    32.6,
+    31.6,
+    563.3,
+    747.9
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 쪽 전체 (31.6–747.9 pt) 를 잡았다 → 왼쪽 단의 표 + 캡션만 (벡터 300 dpi).",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 9,
+   "file": "tab_2.png",
+   "caption": "Table 2 Ionic and electronic conductivities of the composite cathodes prepared with the NCM@LPS core-shell particles and simple mixture. The ionic and electronic conductivities were measured by a DC polarization technique with ion-blocking and electron-blocking cells [37]. The cathode composite without charging (0% of the state-of-charge) was measured at room temperature. Prepared with NCM@LPS particles Prepared with simple mixture Ionic conductivity [S cm- 1] 5.2 \u0002 10-6 3.3 \u0002 10-6 3.6 \u0002 10-7 5.9 \u0002 10-6 Electronic conductivity [S cm-1]",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    333.0,
+    292.0,
+    458.0
+   ],
+   "w": 1067,
+   "h": 522,
+   "dpi": 300,
+   "src": "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.886,
+   "auto_bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "recrop": "2026-10-13 손 재크롭 — 자동 bbox 가 쪽 전체를 잡았다 → 표 + 캡션만 (첫 재크롭은 마지막 행 둘째 줄 'cm-1]' 이 잘려 아래로 늘림).",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Operating conditions of charge-discharge cycling test Charge Discharge",
+   "rotated_deg": 0,
+   "bbox": [
+    66.2,
+    476.5,
+    545.7,
+    709.7
+   ],
+   "w": 1999,
+   "h": 973,
+   "dpi": 300,
+   "src": "5f74c477-24._Sup_Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
+   "blank": 0.932,
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 큐레이터 검수 — 10 장 전부 Read 로 열람 (viewed). 본문 그림 7 + 본문 표 2 + SI 표 1 = 캡션 목록 10 과 같다 (SI 그림 없음 · 1 쪽 그래픽 초록은 번호 없는 그림이라 뺐다). 손 재크롭 9 (그림 7 = 래스터 경계 · 원본 300 dpi / 표 2 = 자동 bbox 가 쪽 전체) · tab_S1 = 자동 크롭 그대로. PNG 는 PIL optimize 로 무손실 재압축. ⚠ litdb/figures/_sources.json 은 건드리지 않았다 (공유 파일 — 메인 세션이 반영)."
+}

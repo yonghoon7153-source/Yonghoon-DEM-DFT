@@ -1,0 +1,82 @@
+label,roll_c,termination,exposed_species_depth_A,seed,PS_init,PS_final,PS_loss_pct,dS_Li,dP_Li,dLi_pen,BS_init,BS_final,BLi_init,BLi_final
+b2o3_Bexp,0.51,B-exposed,B@1.5/7.6,2,3.62,3.38,6.6,0.39,0.24,-2,3.00,1.50,2.00,5.50
+b2o3_Bexp,0.51,B-exposed,B@1.5/7.6,3,3.62,3.25,10.2,0.66,0.00,1,3.00,1.50,2.50,5.00
+mc2x_r051,0.51,P-exposed CONTROL,P@~0 (SURFACE-EXPOSED),2,3.60,2.80,22.2,0.77,1.50,5,,,,
+mc2x_r051,0.51,P-exposed CONTROL,P@~0 (SURFACE-EXPOSED),3,3.60,2.80,22.2,0.75,1.20,3,,,,
+b2o3_Oexp,0.16,O+P co-exposed,O@1.5 + P@0.0 (both SURFACE-EXPOSED),2,3.25,2.12,34.8,1.30,1.87,12,3.00,3.00,0.50,1.50
+b2o3_Oexp,0.16,O+P co-exposed,O@1.5 + P@0.0 (both SURFACE-EXPOSED),3,3.12,2.25,27.9,1.25,2.00,12,3.00,3.00,1.00,1.50
+mc2x_r016,0.16,none-exposed CONTROL,P min depth 4.9 (buried),2,3.60,3.00,16.7,0.82,1.10,7,,,,
+mc2x_r016,0.16,none-exposed CONTROL,P min depth 4.9 (buried),3,3.90,2.90,25.6,1.13,1.50,11,,,,
+"# Termination roll-scan, SE|Li-metal 600K NVT 100ps x 2 seeds (kgy, 2026-07-09). build_li_interface.py --roll_c; logs ~/work/iface_roll.log + iface_roll_O.log; per-frame decomp_*.csv on kgy ~/work/runs/iface_roll/"
+"# PAIR MEANS (mean +/- half-range, n=2):"
+"#   roll 0.51: b2o3_Bexp PS_loss 8.4+/-1.8 %, dP_Li +0.12+/-0.12, dLi_pen -0.5+/-1.5  |  mc2x_r051 PS_loss 22.2+/-0.0 %, dP_Li +1.35+/-0.15, dLi_pen +4+/-1"
+"#   roll 0.16: b2o3_Oexp PS_loss 31.4+/-3.5 %, dP_Li +1.94+/-0.07, dLi_pen +12+/-0    |  mc2x_r016 PS_loss 21.2+/-4.5 %, dP_Li +1.30+/-0.20, dLi_pen +9+/-2"
+"# VERDICT roll 0.51 (CLEAN front-line pair: doped puts B where the control has surface P):"
+"#   B lithiates (B-S 3.00->1.50, B-Li ->5.0-5.5 = the thermodynamic worst-case DOES fire at direct metallic contact),"
+"#   BUT the host is PROTECTED: PS4 loss 8.4 vs 22.2 % (2.6x, seeds non-overlapping 10.2max vs 22.2min), Li3P growth ~0 (+0.12 vs +1.35), Li penetration HALTED (-0.5 vs +4)."
+"#   => SACRIFICIAL SHIELD (literature mechanism-1, LiF/Li3BO3-type): B reacts first, its Li-B-S product layer passivates. NOT a degradation."
+"# VERDICT roll 0.16 (CONFOUNDED pair -- do NOT quote doped-vs-control delta):"
+"#   the 0.16 cleave exposes P@0.0 AND O@1.5 in the doped frame (PS_init already 3.25/3.12 = cleave-cut PS4), while the control exposes nothing (P>=4.9)."
+"#   clean info: buried B (21.6/27.6 A) stays 3.00->3.00, B-Li<=1.5 (3rd independent burial-protection confirmation)."
+"# PER-ATOM harvest 2026-07-09 (production frame0 vs last; frame0 is AFTER relax+3ps equilib; 2/2 seeds reproduce):"
+"#   exposed O: O-P 0->0, O-Li 4->6 / 6->6, displaced to z~59; exposed P: extracted into Li slab (z~62.5), P-Li 8->8 / 9->7"
+"#   sub-surface P shells: 2nd (~55A z) P-S 4->0 / 3->0; 3rd (~49A z) 4->0 / 4->1; buried O (z~25): O-P 1->1 in all 4"
+"# !! O-EXPOSED FRONT-LINE RESULT = BUILD ARTIFACT (audit_cleave_bonds.py, 2026-07-09): at roll 0.16 the exposed P had 3 of its 4 bonds"
+"#   ALREADY SEVERED BY THE CLEAVE at build time (bulk cage S3+O1 -> slab O1 only = dangling 1-coordinate P-O fragment)."
+"#   Its instant extraction and the O's Li2O-like fate test a mutilated fragment, NOT an intact P-O unit -> front-line verdict RETRACTED."
+"#   The ~8A propagation may also have been seeded by this artificial entry wound -> do not quote roll-0.16 front-line numbers."
+"#   STILL VALID from roll 0.16: buried-O protection O-P 1->1 (now 3/3 orig + 4/4 here) and buried-B 3.00->3.00 (3rd confirmation)."
+"# BUILD-INTEGRITY CROSS-CHECK (same audit): roll 0.51 pair was CLEAN -- b2o3 BS3 3/3 intact (both B), mc2x PS4 4/4 intact (P@1.7/8.7 A)"
+"#   -> the B-exposed sacrificial-shield verdict is unaffected (intact units on both sides of that comparison)."
+"# GATES MEASURED AT DIRECT CONTACT so far: P-S +0.10 (r051, intact) and B-S +0.75 (Bexp, intact) both fall; P-O +1.61 = STILL UNTESTED."
+"# CLEAN RETEST roll 0.71 (build audited 4/4 both sides) -- COMPLETED 2026-07-09 evening, per-seed rows:"
+b2o3_O71,0.71,PS2O2-exposed (2 O up),O@1.6+1.8 P@2.1 intact,2,3.50,2.25,35.7,1.22,2.63,10,3.00,3.00,1.00,1.00
+b2o3_O71,0.71,PS2O2-exposed (2 O up),O@1.6+1.8 P@2.1 intact,3,3.50,2.38,32.0,1.12,2.00,10,3.00,3.00,1.00,2.00
+mc2x_r071,0.71,PS4-exposed CONTROL,P@2.1 intact cage 4/4,2,3.60,2.70,25.0,0.75,1.40,9,,,,
+mc2x_r071,0.71,PS4-exposed CONTROL,P@2.1 intact cage 4/4,3,3.60,2.90,19.4,0.68,1.00,6,,,,
+"# ROLL-0.71 VERDICT (clean front-line tetrahedron pair, seeds non-overlapping: doped min 32.0 > control max 25.0):"
+"#   PS2O2 loses 33.9+/-1.9 % vs PS4 22.2+/-2.8 % at the same depth -> the O corners do NOT protect the front-line"
+"#   tetrahedron at direct Li contact; if anything they accelerate its collapse. Mechanism is seed-split (see per-atom"
+"#   below): in s2 the P-O bonds themselves cleave; in s3 only P-S goes while P-O survives -- either way the 2-O unit"
+"#   collapses faster than plain PS4 (hypothesis: O corners weaken the P-S cage / the 2-S remnant has a lower threshold)."
+"#   Per-atom, BOTH seeds now stamped (audited-clean build) -- and they DISAGREE on the front-line P-O fate:"
+"#     s2: intact P-O bonds BROKE (P-O 2->0), exposed O -> Li2O-like (O-Li 5-6)          -> +1.61 gate FALLS;"
+"#     s3: front-line P (z=57.7) KEPT both P-O (2->2), lost only P-S (1->0 last S); surface O-P 1->1, O-Li 3->4"
+"#         (NOT Li2O-like) -> +1.61 gate HOLDS. (sub-surface P z=51.4 collapses P-S 4->0 in both seeds.)"
+"#   => the highest gate (+1.61 P-O) is SEED-DEPENDENT at direct contact (1 of 2 seeds cleaves it); in the seed where"
+"#      it holds, the tetrahedron still collapses via P-S loss -- so PS2O2 degrades > PS4 in BOTH seeds (aggregate P-S"
+"#      loss 35.7/32.0) yet the O corners themselves survive half the time = consistent with sigma* ordering (P-O most"
+"#      robust) even at the contact plane. Buried B 3.00->3.00 and buried O 1->1 perfect in both seeds."
+"# FRONT-LINE HIERARCHY at direct Li contact (100 ps, PS4-bond loss): B-fronted 8.4+/-1.8 %  <<  PS4-fronted ~22 %"
+"#   (r051 22.2/22.2 and r071 25.0/19.4 -- consistent across two different cleaves)  <~  PS2O2-fronted 33.9+/-1.9 %."
+"#   => the two LOW gates (P-S +0.10, B-S +0.75) fail ROBUSTLY at the contact plane (multi-seed / two cleaves); the HIGH"
+"#      gate (P-O +1.61) is SEED-SPLIT (s2 breaks 2->0 / s3 holds 2->2) = ambiguous at contact, consistent with it being"
+"#      the highest gate. Protection comes only from burial, or from a sacrificial product that stays anchored (B only)."
+"# LESSON: run tools/oxidation/audit_cleave_bonds.py before EVERY roll_c MD launch (roll+cleave severs c-boundary-crossing bonds)."
+"# Combined with the buried-geometry campaign (interface_campaign_summary.csv: 22+/-9 vs 26+/-0 % = equal):"
+"#   TERMINATION DECIDES THE MODE -- buried dopants = inert survivors (kinetics equal); B-exposed termination = sacrificial shield (host protected)."
+"#   In NO tested geometry does doping worsen the interface. Caveats: n=2 seeds/termination, one cleave height per termination, 100 ps, UMA MLIP, coordination-count metrics."
+"# ROLL-0.13 PS3O FRONT-LINE RETEST (P-up, lone O BURIED 2.5 A beneath; build audited 4/4 both sides) -- 2026-07-11 per-seed rows:"
+b2o3_P013,0.13,PS3O-exposed (P up; O buried),P@0.9 cage 4/4 + O@2.5 beneath,2,3.25,2.00,38.5,1.17,2.24,9,,,,
+b2o3_P013,0.13,PS3O-exposed (P up; O buried),P@0.9 cage 4/4 + O@2.5 beneath,3,3.25,2.50,23.1,0.64,1.25,5,,,,
+mc2x_r013,0.13,PS4-exposed CONTROL,P intact cage 4/4,2,3.60,2.80,22.2,0.89,1.90,4,,,,
+mc2x_r013,0.13,PS4-exposed CONTROL,P intact cage 4/4,3,3.60,2.70,25.0,0.84,1.80,9,,,,
+"# ROLL-0.13 VERDICT: PS3O-fronted 30.8+/-7.7 % (38.5/23.1 -- WIDE seed split) vs PS4 control 23.6+/-1.4 % (22.2/25.0)."
+"#   Ranges OVERLAP (doped s3 23.1 sits inside the control band) -> MILD/UNCERTAIN acceleration; NOT the clean"
+"#   non-overlapping separation PS2O2 showed. (PS_init 3.25 = expected for intact PS3O: 3 S + 1 O corner.)"
+"# O-CORNER DOSE TREND at direct Li contact (mean front-line PS4-bond loss, n=2 each):"
+"#   0 O (PS4, two cleaves) 22-24 %  <  1 O (PS3O, buried O) ~31 % (noisy)  <  2 O (PS2O2, exposed O) ~34 % (clean)."
+"#   Monotonic in O count -> supports the O-corner cage-weakening hypothesis (caveat below: production-window numbers)."
+"# PS3O PER-ATOM STAMP (2026-07-11, both seeds IDENTICAL = deterministic): front P shows P-S 0 ALREADY AT PRODUCTION"
+"#   FRAME 0 (P-Li already 6) although the BUILD audit was 4/4 clean -> the PS3O front cage collapsed ULTRAFAST during"
+"#   relax + 3 ps equilibration. During production its last P-O also cleaved (1->0 in 2/2) and the initially sub-surface"
+"#   O (2.5 A beneath) ended Li2O-like (O-Li 6->8 region). Deep O (z~23) stays O-P 1->1. Two consequences:"
+"#   (a) SHALLOW burial (2.5 A) does NOT protect at direct contact; aggregates (30.8%) UNDERSTATE front-line damage"
+"#       since production starts from an already-stripped front. (b) UNIFIED SIGMA* READING -- the ladder is realized"
+"#       at the contact plane as BREAKING ORDER: P-S always first (here pre-production), P-O always LAST, cleaving only"
+"#       after total S loss (PS3O 2/2, PS2O2 s2) and surviving 100 ps only if collapse is incomplete (PS2O2 s3)."
+"#       'Seed-split' for PS2O2 = whether collapse completed within the window, not bond-level randomness."
+"# O SURFACE-SEGREGATION (2026-07-09 night, UMA, kgy): swap the 2 surface O of the roll-0.71 slab with 2 deep PS4 sulfurs,"
+"#   relax both -> dE_seg = E(O@surface) - E(O@bulk) = +0.671 eV (+336 meV per O). O strongly AVOIDS surface corners"
+"#   (>> synthesis kT ~60-70 meV) -> the accelerated PS2O2-exposed termination is thermodynamically self-avoiding at"
+"#   equilibrium = NATURAL DEFENSE. Caveats: UMA level, single swap pair, ball-milled synthesis may freeze non-equilibrium terminations."

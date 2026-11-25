@@ -1,0 +1,186 @@
+{
+ "slug": "mccluskey2025_accurate_diffusion_coefficients_uncertainties",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
+  "2219d416-84._Sup_Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Example distributions of estimated self-diffusion coef- ficients, D̂*, calculated using (a) ordinary least-squares (OLS), (b) weighted least-squares (WLS), and (c) generalized least-squares (GLS), from MSD data from 4096 individual simulations of 128 particles undergoing a 128 step 3D lattice random walk with a step size chosen so that the true diffusion coefficient (D*) is equal to 1. In each panel, the gray curve shows the best-fit normal distribution for the simulation data, the upper horizontal bar shows the standard deviation of this distribution, and the lower horizontal bar shows the average estimated standard deviation given by the analytical expression for σ[p(D̂*)] for each regression method.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    356.5,
+    561.5,
+    633.6
+   ],
+   "w": 1051,
+   "h": 1155,
+   "dpi": 300,
+   "src": "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparison of the numerical variance in the observed MSD from multiple replica simulations and the estimated variance in the observed MSD given by rescaling the variance in observed squared displacements (eq 7). (a) Mean observed MSD from 4096 simulations of 128 particles undergoing a 3D lattice random walk of 128 steps per particle, with error bars of ±2σ[xi]. (b) MSD from just one simulation, with error bars of ±2σ̂[xi], obtained via eq 7. (c) Plot of the numerical variance against the estimated variance from a single simulation as a function of time step t.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    55.1,
+    297.5,
+    140.9
+   ],
+   "w": 1051,
+   "h": 358,
+   "dpi": 300,
+   "src": "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Numerical MSD covariance matrix Σ calculated using MSD data from 4096 simulations of 128 particles undergoing a 3D lattice random walk of 128 steps per particle. (b) Analytical MSD covariance matrix Σ′ (eq 6), parametrized using analytical long-time- limit random-walk variances σ2[xi]. (c) MSD covariance matrix obtained by applying the numerical scheme described in the main text to each individual random walk simulation, averaged over all 4096 such simulations. Color bars in (a−c) show the covariance, Σ[xi, xj]. The off-diagonal panels show difference plots computed as per- element ratios between pairs of covariance matrices (a−c).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    54.7,
+    561.5,
+    280.2
+   ],
+   "w": 1051,
+   "h": 940,
+   "dpi": 300,
+   "src": "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Observed MSD from a single simulation of 128 particles undergoing a 3D lattice random walk of 128 steps per particle (dark line). The green shading shows the corresponding posterior distribution p(m|x) of linear models compatible with the observed MSD data x, calculated by using the scheme described in the main text. The variegated shading indicates compatibility intervals of (1, 2, and 3) σ[p(m|x)]. (b) Marginal posterior distribution p(D̂*|x) obtained from the posterior distribution of linear models in (a). The mean of this distribution gives the point estimate D̂* for these simulation input data. The blue horizontal bar shows an interval of 1 standard deviation in p(D̂*|x). (c) Probability distribution of point estimates p(D̂*) obtained from 4096 random walk simulations. Each simulation was analyzed as in (a) and (b) to yield a single corresponding point estimate D̂*. Th",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    55.0,
+    561.5,
+    164.1
+   ],
+   "w": 2151,
+   "h": 455,
+   "dpi": 300,
+   "src": "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Probability distribution of point estimates p(D̂*) for 192 effective simulations of LLZO (orange histogram). The gray line shows the distribution p(D̂̂num * ) obtained using Bayesian regression with the complete LLZO dataset as input. The pink bar shows an interval of 1 standard deviation σ[p(D̂*)]. (b) Probability distribution of estimated variances, σ̂2[D̂*], for individual LLZO effective simulations compared to the true sample variance σ2[D̂*] (pink vertical line).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    275.2,
+    561.5,
+    383.5
+   ],
+   "w": 1051,
+   "h": 452,
+   "dpi": 300,
+   "src": "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Scaling of σ2[D̂*] with the simulation size for the OLS (pink), WLS (blue), our approximate Bayesian regression method (green), and GLS (orange). (a) Scaling versus number of mobile particles, Natoms. (b) Scaling versus total simulation time, tmax. Solid lines show fitted power law relationships for each dataset. The WLS and GLS data are obtained using numerically determined variances and covariance, respectively, from a set of 512 repeat simulations for each combination of Natoms and tmax.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.7,
+    297.5,
+    250.6
+   ],
+   "w": 1051,
+   "h": 818,
+   "dpi": 300,
+   "src": "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "FIG. S-1. Schematic showing the construction of three statistically-equivalent sub-trajectories of length ∆t = 8 from a full simulation trajectory. (a) The full trajectory consists of a series of displacements, hi, from each simulation timestep. (b) Three exemplar sub-trajectories of length ∆t = 8. Even in the case of a random walk (i.e., h = ±κ), ∆r1 and ∆r5 are necessarily correlated, because both summations include [h5 + h6 + h7 + h8]. ∆r5 and ∆r9 are also obtained from mutually overlapping time windows and are therefore also correlated. For a random walk, ∆r1 and ∆r9 are uncorre- lated. For a non-random (correlated) walk, non-overlapping time windows are uncorrelated in the limit that the window length, ∆t, is much greater than the correlation time in h, which is the case if we are in the long-time linear region of the MSD where Eqn. 1 is valid.a",
+   "source_si": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "FIG. S-2. Schematic illustrating the application of repeated blocking operations with block-length 2 to generate a series of representations of the input data, A, A1, . . ., An, as used in the block renormalisation scheme of Flyvbjerg and Peter- son [1].",
+   "source_si": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "FIG. S-3. Comparison of the numerical variance in observed MSD from multiple replica simulations (panel a), the estimated � variance obtained by rescaling the variance in observed squared displacements from a single simulation (panels b and c) (Eqn. 7),",
+   "source_si": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "FIG. S-4. (Panels (a) and (c)) Probability distributions of point-estimates p(D∗) obtained from 4096 individual random-walk � simulations. Panel (a) shows data obtained using variance rescaling to estimated the variances,σ2[x], used to parametrise",
+   "source_si": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "FIG. S-5. (a) Probability distribution of point-estimates, p( �D∗), obtained from 4096 individual random-walk simula- tions, using the numerical covariance matrix Σnum. Each simulation has been analysed as in Fig. 4(a) and (b) to yield a single corresponding point estimate �D∗. The grey line shows the distribution of point estimates, p( �D∗ num), obtained using Bayesian regression with a mean vector and numerical covari-",
+   "source_si": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "FIG. S-6. Example distributions of estimated self-diffusion coefficients, �D∗, calculated using (a) ordinary least squares (OLS), (b) weighted least squares (WLS), and (c) generalised least squares (GLS), from MSD data from 512 effective sim- ulations of LLZO of ∼25 ps with 56 lithium ions. In each panel, the grey curve shows the best-fit normal distribution for the simulation data, the upper horizontal bar shows the standard deviation of this distribution, and the lower hori- zontal bar shows the average estimated standard distribution given by the analytical expression for σ2[ �D∗] for each regres- sion method. � �",
+   "source_si": true
+  }
+ ]
+}

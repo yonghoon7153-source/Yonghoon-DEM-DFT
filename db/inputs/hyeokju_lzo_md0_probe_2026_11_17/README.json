@@ -1,0 +1,42 @@
+{
+ "⚠_프로브_전용": "이 구조들은 pw.x 메모리 견적 (Estimated max dynamical RAM) 만 보려고 만든 것이다 — 원자 수 · 셀 부피 · 원소 수만 실제 후보와 같다. 기하는 무의미하다 (LZO 블록 = 무작위 배치 · 최소 거리 1.55 Å · 시드 20261117). MD · DFT 결과에 쓰지 않는다.",
+ "밀도_가정": "비정질 LZO 4.0 g/cm³ (결정 4.21 의 약 95 %) · LPSCl = comp1_V0_k444 의 conventional 셀 (52 원자 · a 10.055 Å) 을 z 로 쌓음 · 계면 틈 2 Å × 2 (주기 샌드위치 · 진공 없음)",
+ "후보": {
+  "B96": {
+   "n_atoms": 96,
+   "formula": "Li32O48Zr16",
+   "volume_A3": 966.0,
+   "source": "db/structures/hyeokju_Li2ZrO3_sc96_mp-aaaaagdw.xyz"
+  },
+  "B144": {
+   "n_atoms": 144,
+   "formula": "Li48O72Zr24",
+   "volume_A3": 1449.1,
+   "source": "db/structures/hyeokju_Li2ZrO3_sc144_mp-aaaaagdw.xyz"
+  },
+  "I148": {
+   "n_atoms": 148,
+   "formula": "Cl4Li56O48P4S20Zr16",
+   "volume_A3": 2438.0,
+   "c_A": 24.11,
+   "LPSCl": "comp1 conventional × 1 (z) = 52 원자 · 10.06 Å",
+   "LZO": "16 f.u. = 96 원자 · 두께 10.06 Å (4.0 g/cm³)"
+  },
+  "I200": {
+   "n_atoms": 200,
+   "formula": "Cl8Li80O48P8S40Zr16",
+   "volume_A3": 3454.6,
+   "c_A": 34.17,
+   "LPSCl": "comp1 conventional × 2 (z) = 104 원자 · 20.11 Å",
+   "LZO": "16 f.u. = 96 원자 · 두께 10.06 Å (4.0 g/cm³)"
+  },
+  "I248": {
+   "n_atoms": 248,
+   "formula": "Cl8Li96O72P8S40Zr24",
+   "volume_A3": 3963.1,
+   "c_A": 39.2,
+   "LPSCl": "comp1 conventional × 2 (z) = 104 원자 · 20.11 Å",
+   "LZO": "24 f.u. = 144 원자 · 두께 15.09 Å (4.0 g/cm³)"
+  }
+ }
+}

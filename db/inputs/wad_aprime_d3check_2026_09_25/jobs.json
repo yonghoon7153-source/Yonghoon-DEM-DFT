@@ -1,0 +1,67 @@
+{
+ "schema": "qe_input_set/v1",
+ "date": "2026-09-25",
+ "what": "S3 전 예외 ② — D3 결박 검사: V2 top_fcc **초기** bound (sha 19207c1f707a8a14…) 의 QE grimme-d3(BJ · 2체) 단일점. 읽는 것 = `DFT-D3 Dispersion` 줄 하나 · 외부 simple-dftd3 1.6.0 (3축 pbc) 값과 |Δ| ≤ 1e-5 Ry 이면 결박 통과.",
+ "external_dftd3": {
+  "E_D3_Ry": -0.5037973822472642,
+  "impl": {
+   "impl": "simple-dftd3 (python)",
+   "version": "1.6.0",
+   "method": "PBE",
+   "damping": "d3bj (2체)",
+   "params_expected": {
+    "functional": "PBE",
+    "damping": "BJ",
+    "s6": 1.0,
+    "s8": 0.7875,
+    "a1": 0.4289,
+    "a2": 4.4407,
+    "three_body": false
+   }
+  },
+  "pbc": [
+   true,
+   true,
+   true
+  ],
+  "record": "db/raw/wad_aprime_s2_relax_2026_09_25/d3_energy_V2_top_fcc_bound_dftd3_3dpbc.json"
+ },
+ "⛔": "총 에너지·W 로 쓰지 않는다 (카드 v5 S3 전 예외 ②) · 원출력 보존",
+ "machine": "V100 (20 원자 · 수 분)",
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "H": "H.pbe-rrkjus_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7",
+   "H.pbe-rrkjus_psl.1.0.0.UPF": "27f8a7e87851d59a2698237d6ab4578d62950640f4f175781b015a0ce731f962"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다"
+ },
+ "jobs": [
+  {
+   "dir": "d3check_V2_top_fcc_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "pw_in_sha256": "a46ef6c407ceeb062e5594bd10c97c71737f2649a7a88625082e57ddfede3538",
+   "structure_sha256": "19207c1f707a8a14691c129eb485df7348ee1c285bcec02a6d07990e911eb44b"
+  }
+ ]
+}

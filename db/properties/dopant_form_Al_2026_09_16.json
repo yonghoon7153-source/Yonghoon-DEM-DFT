@@ -1,0 +1,103 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "O",
+    "Al"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {},
+  "formation": {
+    "AlPO4": {
+      "reduced_formula": "AlPO4",
+      "n_atoms": 6.0,
+      "n_P": 1.0,
+      "E_f_eV_per_atom": -3.1208,
+      "E_f_eV_per_P": -18.7248,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaalpw-GGA",
+      "found": true
+    },
+    "Al(PO3)3": {
+      "reduced_formula": "Al(PO3)3",
+      "n_atoms": 52.0,
+      "n_P": 12.0,
+      "E_f_eV_per_atom": -2.84165,
+      "E_f_eV_per_P": -12.31383,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacfzyv-GGA",
+      "found": true
+    },
+    "AlP5O14": {
+      "found": false,
+      "reduced_formula": "AlP5O14",
+      "why": "이 chemsys hull 에 없다 (--elements 를 넓히거나, MP 에 없는 상이다)"
+    },
+    "Al2O3": {
+      "reduced_formula": "Al2O3",
+      "n_atoms": 10.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -3.42655,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaabrz-GGA",
+      "found": true
+    },
+    "AlCl3": {
+      "reduced_formula": "AlCl3",
+      "n_atoms": 8.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -1.96581,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaablrp-GGA",
+      "found": true
+    },
+    "Al2S3": {
+      "reduced_formula": "Al2S3",
+      "n_atoms": 30.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -1.35834,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaadyc-GGA",
+      "found": true
+    },
+    "Li3PO4": {
+      "reduced_formula": "Li3PO4",
+      "n_atoms": 16.0,
+      "n_P": 2.0,
+      "E_f_eV_per_atom": -2.7535,
+      "E_f_eV_per_P": -22.02798,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaauhx-GGA",
+      "found": true
+    },
+    "P2S7": {
+      "reduced_formula": "P2S7",
+      "n_atoms": 36.0,
+      "n_P": 8.0,
+      "E_f_eV_per_atom": -0.51201,
+      "E_f_eV_per_P": -2.30406,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacqhbm-GGA",
+      "found": true
+    }
+  },
+  "formation_per_element": "P",
+  "⛔_formation_caveat": "이 표는 **반응에너지가 아니다.** `E_f_per_P` 는 O:P 비가 다른 상들을 한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — **순위 힌트**다. 판정은 균형반응(`reactions`)이 한다. 0 K · MP2020 보정 에너지이고 온도·엔트로피·pO₂ 를 안 본다. 여기 상들이 실제로 합성/석출된다는 뜻도 아니다."
+}

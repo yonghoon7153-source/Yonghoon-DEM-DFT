@@ -1,0 +1,354 @@
+# MD (MLIP) / MSD / Arrhenius — 분자동역학 이온수송
+
+> 기계학습 퍼텐셜(MLIP)로 DFT 힘을 대체해 큰 셀을 긴 시간 돌리고, Li 이온의 평균제곱변위(MSD)에서 확산계수 $D$를, 온도별 $D$의 Arrhenius 기울기에서 활성화에너지 $E_a$를, Nernst–Einstein으로 전도도 $\sigma$를 뽑는 방법.
+
+## 목차
+1. Langevin NVT 동역학
+2. MLIP가 DFT 힘을 대체
+3. MSD와 Einstein 관계
+4. 시간창 피팅
+5. Arrhenius — 활성화에너지
+6. Nernst–Einstein 전도도
+7. **PMF** — 궤적에서 자유에너지 지형 뽑기
+
+---
+## 1. Langevin NVT 동역학
+일정 온도(NVT) 앙상블을 만들려고 Langevin thermostat을 쓴다. 뉴턴 운동방정식에 마찰항과 랜덤힘을 더해 원자가 열욕과 에너지를 주고받게 한다.
+
+$$m_i \ddot{\mathbf{r}}_i = \mathbf{F}_i - m_i \gamma \dot{\mathbf{r}}_i + \sqrt{2 m_i \gamma k_B T}\,\boldsymbol{\xi}_i(t)$$
+
+- $\mathbf{F}_i$: 퍼텐셜에서 온 힘 (MLIP가 제공)
+- $\gamma$: 마찰계수 (friction) — 우리는 **0.02**
+- $\boldsymbol{\xi}_i$: 백색잡음, $\langle\xi(t)\xi(t')\rangle = \delta(t-t')$
+- 시간 간격 $dt$ = **2 fs**
+
+> [!note] 왜 Langevin인가
+> 마찰+잡음이 fluctuation–dissipation 정리를 만족해 정확한 온도 $T$의 정준 분포를 샘플링한다. friction이 크면 열평형은 빠르나 동역학이 흐려지고, 작으면 반대 — 0.02는 그 절충값.
+
+---
+## 2. MLIP가 DFT 힘을 대체
+매 step DFT를 부르면 200 ps(10만 step)는 불가능하다. **MLIP**가 DFT 데이터로 학습된 퍼텐셜 에너지면 $E(\{\mathbf{r}_i\})$을 주고, 그 그래디언트로 힘을 즉석에서 준다.
+
+$$\mathbf{F}_i = -\nabla_{\mathbf{r}_i} E_{\text{MLIP}}(\{\mathbf{r}_j\}) \;\approx\; \mathbf{F}_i^{\text{DFT}}$$
+
+우리는 **UMA-s-1p1 (omat)** 파운데이션 모델을 쓴다. DFT급 정확도를 유지하며 수천 배 빠르다 → 통계적으로 의미 있는 확산 통계를 얻는다.
+
+> [!warning] UMA는 Li₃N에 사용 금지
+> UMA는 LPSCl 계열 MD에서 검증된 표준이지만, **Li₃N에는 결정론적 편향**이 확인돼(2026-06 판정) 사용 금지. 모델의 적용 범위를 벗어나면 힘이 계통적으로 틀린다.
+
+---
+## 3. MSD와 Einstein 관계
+확산은 평균제곱변위(MSD)로 측정한다. 시간 $t$ 동안 각 Li가 얼마나 멀어졌나의 앙상블 평균이다.
+
+$$\text{MSD}(t) = \big\langle |\mathbf{r}_i(t) - \mathbf{r}_i(0)|^2 \big\rangle$$
+
+3차원 확산에서 MSD는 시간에 선형이고, 기울기가 확산계수 $D$를 준다 (Einstein 관계):
+
+$$\text{MSD}(t) = 6 D t \;\Longrightarrow\; D = \frac{1}{6}\frac{d\,\text{MSD}(t)}{dt}$$
+
+계수 6은 3차원(각 축 $2Dt$ × 3). 2D 확산이면 4, 1D면 2로 바뀐다.
+
+---
+## 4. 시간창 피팅
+MSD 곡선 전체를 다 쓰면 안 된다. 구간마다 성격이 다르다.
+
+- **초기(ballistic, < ~1 ps)**: $\text{MSD}\propto t^2$ — 아직 확산 아님, 진동
+- **중간(diffusive)**: $\text{MSD}\propto t$ — 여기 기울기가 진짜 $D$
+- **후기(long-time)**: 통계 부족으로 노이즈 급증
+
+그래서 **MSD 피팅 창을 2–50 ps로 고정**한다. 이 창을 조성마다 똑같이 써야 비교가 공정하다.
+
+$$D = \frac{1}{6}\cdot\frac{\text{MSD}(50\,\text{ps}) - \text{MSD}(2\,\text{ps})}{50 - 2\,[\text{ps}]}$$
+
+| 구간 | 거동 | 사용 |
+|------|------|------|
+| 0–1 ps | ballistic $t^2$ | 제외 |
+| **2–50 ps** | diffusive $t^1$ | **피팅** |
+| > 50 ps | noisy | 제외 |
+
+Setup: equilibration **5 ps** 버린 뒤 production **200 ps** 생성.
+
+### 피팅 품질 체크
+- **선형성**: 2–50 ps 창에서 MSD가 직선인지($R^2$) 확인 — 굽으면 아직 diffusive 아님.
+- **평형 확인**: equilibration 뒤 온도·에너지가 평탄한지 본다 (앞 5 ps는 버림).
+- **등방성**: $x, y, z$ 성분 MSD가 비슷한지 — 한 축만 크면 통계 부족 또는 1D 채널.
+- **시드 평균**: 서로 다른 초기속도 시드로 반복해 블록 평균 — 단일시드는 못 믿는다.
+
+### 4b. 확산영역 게이트 — β (R²로는 못 잡는다)
+
+로그-로그 눈금에서 MSD의 **국소 기울기**가 β다:
+
+$$\text{MSD} \propto t^{\beta}, \qquad \beta = \frac{d(\log \text{MSD})}{d(\log t)}$$
+
+| β | 뜻 | 물리 그림 |
+|---|---|---|
+| ≈ 2 | 탄도 | 첫 충돌 전 직선 비행 (< ~1 ps) |
+| **0.8–1.2** | **확산 (게이트 통과)** | 홉이 충분히 많아 랜덤워크 — MSD = 6Dt 가 성립하는 유일한 구간 |
+| < 0.8 | 케이지 | 자리 안 진동 + 드문 홉. 평균이 희귀 점프에 지배됨 |
+| → 0 | 갇힘 | MSD 평탄 |
+
+> [!warning] R² 0.97이어도 확산이 아닐 수 있다 (2026-08-04 실측)
+> MSD = a + b·t^0.6 같은 곡선도 직선 적합하면 R²가 높게 나온다. **LPSOCl 600 K:
+> R² 0.975인데 β 0.61** — "직선처럼 보임"과 "확산임"은 다른 판정이다. 기울기/6을
+> D라고 부르려면 그 기울기가 *랜덤워크의* 기울기여야 한다. 판정 도구:
+> `tools/ionic/msd_diffusive_check.py` (+ MSD 창끝 ≥ 3 Å² 병행).
+
+### 4c. 적합 규율 3건 (2026-08-04 확립 — 3계 200 ps 재적합에서)
+
+1. **절편 자유**: MSD = 6Dt + c 로 맞춘다. 원점 강제는 케이지 진동 오프셋을 기울기에
+   밀어넣어 D 를 부풀린다 (실측: 절편 최대 9.1 Å²).
+2. **시드 앙상블 평균이 기본**: 같은 계·같은 T에서 시드에 따라 β 0.98 ↔ 0.52 로
+   갈렸다 (LPSOCl 600 K). "대표 시드 1개"는 그 갈림을 숨긴다. 독립 시드는 같은 계의
+   다른 초기속도라 MSD 평균이 정당하다.
+3. **같은 시드의 재실행은 평균 금지**: licube(밀도 cube용 50 ps 재실행)를 섞으면
+   이중계상 + 격자 절단. 독립성이 없는 궤적은 시드가 아니다.
+
+### 4b-2. β 는 시간이 아니라 **홉 수**를 잰다 — 그래서 예측된다
+
+이온당 홉 수로 환산하면 게이트 결과가 **미리 계산된다**:
+
+$$n_{\text{hop}} = \frac{\text{MSD}}{d_{\text{hop}}^2} = \frac{6 D t}{d_{\text{hop}}^2}
+\qquad (d_{\text{hop}} \approx 3\,\text{Å} = \text{이웃 Li 자리 간격})$$
+
+| n_hop | 뜻 |
+|---|---|
+| ≥ 10 | 확산 통계 충분 (β ≈ 1 기대) |
+| 3–10 | 경계 — 시드마다 β 가 흔들린다 |
+| < 3 | 홉 부족 — **β 가 낮게 나오는 게 정상** (측정 실패이지 물리가 아니다) |
+
+**600 K · 200 ps 예측 vs 실측 (2026-08-04)**
+
+| 계 | 예측 n_hop | 실측 β | |
+|---|---|---|---|
+| LPSCl1.6 | 13.9 | 0.87 | ✓ |
+| **LPSOCl1.6** | **8.4** (경계) | **0.61** | **⛔** |
+| B₂O₃@LPSCl1.6 | 13.9 | 0.81 | ✓ |
+
+LPSOCl 만 탈락한 이유가 여기서 닫힌다 — Ea 가 90 meV 높아 같은 온도·시간에서 D 가
+0.60배이고 **홉이 40% 적다**. 도구 `tools/ionic/hops_per_ion.py` · 표
+`db/properties/hops_per_ion.csv` (전 온도 200 ps 기준).
+
+⚠ n_hop 은 **상한**이다. 되돌아오는 홉(back-correlated)을 안 세는데 실제 SE 는
+Haven 비 H_R 0.3–0.7 < 1 = 상관 운동이라(litdb `dyre2004`) 같은 MSD 에 더 많은 홉이 든다.
+
+### 4b-3. 저온 β 저하는 "현실적"인가 — 둘을 갈라야 한다
+
+| | **표집 인공물** (우리 경우) | **진짜 아확산** |
+|---|---|---|
+| 원인 | 궤적이 짧아 홉이 몇 번 없음 → 희귀 사건이 평균을 지배 | 케이지 진동·되돌아오는 홉·상관 운동이 만드는 **실재하는** 중간시간 거동 |
+| 물리인가 | 아니다 (측정 실패) | 그렇다 |
+| 시간↑ | 홉이 쌓이며 β → 1 **수렴** | 상관 시간을 넘기면 β → 1 **crossover** |
+
+**핵심: 진짜 아확산도 점근적으로는 β = 1 이다** (아니면 D 자체가 정의되지 않는다).
+그러니 저온에서 β 가 낮게 나오는 것 자체는 현실적이지만, **그 β 의 기울기를 D 라고
+쓰면 안 된다** — 두 원인이 같은 숫자로 보이기 때문이다.
+
+**판별 실험**: 궤적을 늘렸을 때 β 가 오르는가. comp1 600 K 200 → **1600 ps** 연장이
+정확히 이 검사다 (진행 중). 오르면 표집 문제, 안 오르면 그 온도·그 셀에서 확산이
+실재하지 않는다는 결론(= D 인용 불가가 답).
+
+### 4d. 게이트 판정 현황 (2026-08-04, 200 ps · 창 2–50 ps)
+
+| 계 | 600 K | 800 K | 1000 K | 시드 근거 |
+|---|---|---|---|---|
+| LPSCl (comp1) | ⛔ 0.17–0.79 | ⛔ | (0.52) | s2·s3 — **전 판 탈락**, 1600 ps 연장 중 |
+| LPSCl1.6 | 0.87 ✓ | 0.93 ✓ | 0.92 ✓ | **3시드 평균** (600 K 200 ps · hiT 100 ps) |
+| **LPSOCl1.6** | **0.61 ⛔** | 0.86 ✓ | 1.02 ✓ | **4시드 평균** (최초 게이트 검사) |
+| B₂O₃@LPSCl1.6 | 0.81 ✓ | 0.83 ✓ | 0.97 ✓ | **3시드 평균** (600 K 200 ps · hiT 100 ps) |
+
+- **v2 (전 계 멀티시드 평균)에서 유일한 탈락 = LPSOCl 600 K.** modelc·b2o3 의
+  단일시드 '아슬' 판정은 3시드 평균으로 해소됐다 (0.82→0.87 / 0.81 유지-통과).
+  b2o3 600 K 3시드 D 1.039e-5 = 등록 아레니우스 D_600_mean 1.041e-5 재현 ✓.
+- LPSOCl 600 K: MSD 는 97 Å²@200 ps 로 충분 — 크기가 아니라 **홉 통계** 문제
+  (시드산포 36%). O 트랩의 홉 희소화와 정합. → **Ea 0.287±0.024 는 이 점을 포함한
+  적합이라 재검토 대상**. 처방 = 6점 아레니우스 30런(신규 27 + lpsocl 600 재실행 3, 2026-08-04 결정)과 기존 게이트-통과 점으로 재적합.
+- 그림·데이터: `docs/figures/msd_3sys_200ps.png` · `db/properties/msd_3sys_200ps_origin.csv`
+  (PROVENANCE/GATE NOTE 블록 포함) · 상세: `kb/reports/paper_first_author_requests_2026_08.md` §4
+
+---
+## 5. Arrhenius — 활성화에너지
+확산은 열활성 과정이라 온도에 Arrhenius 의존한다.
+
+$$D(T) = D_0 \exp\!\left(-\frac{E_a}{k_B T}\right) \;\Longrightarrow\; \ln D = \ln D_0 - \frac{E_a}{k_B}\cdot\frac{1}{T}$$
+
+$\ln D$ vs $1/T$가 직선이고, **기울기 $= -E_a/k_B$**. 우리는 **600 / 800 / 1000 K 3점**으로 피팅한다.
+
+$$E_a = -k_B \cdot \frac{d(\ln D)}{d(1/T)}$$
+
+> [!important] 400/500 K를 제외하는 이유
+> 저온에선 200 ps 안에 hop이 몇 번 안 일어나 MSD 통계가 diffusive 영역에 못 든다 → $D$가 과소·노이즈. 그래서 **400/500 K는 판정에서 제외**하고 600/800/1000 K 3점만 쓴다. $E_a$ 오차막대는 600 K 3-시드로 낸다.
+>
+> ⛔ **적용 범위 = 결정계** (modelc·lpsocl box331, 558원자). 2026-09-22 회신 BS 정정 —
+> 범위를 안 적어 둬서 이 문장이 **비정질 캠페인 서술로 옮겨 갔다.** 소셀 유리
+> (`lpscl_smallcell_glass_md_estimand_2026_09_21.json`)는 **600 K 를 배제**한다:
+> 5 ps lag p90 MSD 가 650 K 66.3 · **600 K 48.9 = 무상관 한계 48.88 ⛔** · **550 K 43.8 ✅**
+> 이라 상한이 550 K 다. 저온 제외 사유도 방향이 반대다 — 그 유리는 $T_g \approx 400$–450 K 라
+> 저온이 오히려 측정 가능한 구간이다. **오차막대도 다른 양이다**: 결정계는 한 구조의
+> 속도 시드 3(열잡음), 유리는 **독립 담금질 구조 시드 5 의 IQR**(무질서 배치 산포)이고
+> **시드 풀링 금지**(풀링하면 보고량 자체가 사라진다).
+
+---
+## 6. Nernst–Einstein 전도도
+확산계수에서 이온 전도도 $\sigma$를 추정한다 (Haven ratio = 1 가정).
+
+$$\sigma = \frac{N q^2}{V k_B T}\, D \qquad (H_R = 1)$$
+
+- $N/V$: Li 수밀도, $q$: Li 전하
+- $H_R=1$은 이온 운동 상관을 무시한 근사
+
+> [!warning] ⛔ 2026-09-07 정정 — **"$H_R=1$ 이라서 상한" 은 부호가 틀렸다**
+> 정의: $H_R \equiv D^{*}/D_\sigma$ ($D^{*}$ = tracer, $D_\sigma$ = charge). 우리 MD 는
+> MSD 에서 **$D^{*}$** 를 얻으므로
+> $$\sigma_{\rm NE}=\frac{nq^2D^{*}}{k_BT}=H_R\times\sigma_{\rm true}$$
+> 즉 $H_R<1$ (상관·협동 이동) 이면 NE 는 **과소**다.
+> **"상한" 의 근거로 Haven 을 대면 안 된다.**
+>
+> ### ⭐ 그런데 크기는 작다 — 2026-09-07 우리 궤적에서 직접 쟀다
+> | | $H_R$ | $\sigma_{\rm true}/\sigma_{\rm NE}$ |
+> |---|---|---|
+> | **우리 gen1 궤적** (6 계·온도점, 200 ps) | **0.84 ± 0.06** | **1.19×** |
+> | Adeli 2019 (300 K · 다결정 펠릿 · PFG+EIS) | 0.23 | 4.3× |
+>
+> ⇒ **Haven 보정은 19 % 다.** 300 K 외삽 밴드(6–14배)나 펠릿 GB(1.3–3배) 앞에서
+> 설명이 못 된다. **방향은 여전히 과소 쪽이지만 크기가 작다.**
+>
+> ⛔ **Adeli 의 0.23 을 우리 MD 에 곱하지 않는다** — 12.7σ 떨어져 있고, 조건이 다르다
+> (300 K 다결정 vs 600–1200 K 완전결정). 모순이 아니라 **다른 영역**이다.
+> ⚠ 같은 계·온도에서 시드만 달라도 $H_R$ 이 최대 4.8배 벌어진다 — 이 측정은
+> **방향 판별용**이지 값이 아니다. 전문: `db/properties/haven_ratio_measured_2026_09_07.json` 같은 취지가
+> `tools/modelc_v3/nernst_einstein_300K.py` L234 에 이미 적혀 있었다
+> (*"real H_R<1 ⇒ true intrinsic sigma is even HIGHER (opposite sign), so H_R does NOT
+> cause the overshoot"*) — 그런데 같은 파일 L13 과 이 카드가 반대로 적고 있었다.
+>
+> **그럼 절대 σ 는 왜 못 쓰나** — 서로 **반대 방향**인 보정이 둘 걸려 있어서 순 방향이
+> 정해지지 않기 때문이다:
+> | 축 | 방향 | 크기 |
+> |---|---|---|
+> | Haven ($H_R<1$) | NE 가 **과소** | ×3–4 |
+> | 펠릿 GB·기공 (실험 쪽) | 실험이 bulk 보다 **낮음** | ×1.3–3 |
+> | MLIP 편향 | 불명 — 아래 참조 | ? |
+>
+> ⚠ *"UMA 가 D 를 3–5× 과대"* 라는 종전 서술(`md_conductivity_protocol.md` L65)은
+> **σ_NE 를 펠릿 total EIS 와 비교한 값**으로 보이고, 그 비교 안에 위 두 오염이 섞여 있다.
+> **같은 양끼리** 대면 잘 맞는다 — 우리 $D^{*}(300\rm\,K)$ 외삽 1.02e-7 cm²/s vs
+> Adeli ⁷Li PFG 실측 $D^{*}$ 1.01e-7 cm²/s (단일시드 1.01배 · 3시드 2.29배).
+> ⇒ **$D^{*}$ 는 실측과 맞는 축이고, 흔들리는 것은 $D^{*}\to\sigma$ 변환이다.**
+>
+> **✅ 2026-09-07 실행됨**: `tools/ionic/msd_diffusive_check.py --haven` 으로 gen1 궤적
+> 20런에서 직접 쟀다 (MD 재계산 0). 결과는 위 표. 규약 `H_R ≡ D^{*}/D_\sigma` 를 코드에 박았다 —
+> **부호 논쟁의 절반이 규약 때문**이었기 때문이다.
+> ⛔ 아직 **값이 아니다**: estimand 카드·문턱 선등록이 없고 200 ps 는 집단좌표에 부족하다.
+> σ 절대값 인용 금지는 **그대로 유지**한다 — 다만 사유가 "상한이라서" 가 아니라
+> **"서로 반대인 보정 둘이 걸려 순 방향이 미정이라서"** 다.
+
+> [!warning] 절대값 인용 금지 · 멀티시드 판정만
+> UMA-MD의 **$D$·$\sigma$ 절대값은 citeable truth가 아니다.** 조성 간 **비율조차 멀티시드로 판정**해야 하며 단일시드 값은 못 믿는다 — 실제로 단일시드 1.33× 우세 주장이 멀티시드에서 철회된 사례(SEMIFINAL 2026-07-09)가 있다. 인용 가능한 건 다중시드로 재현된 순위/비율과 $E_a$(오차막대 포함)뿐.
+
+```mermaid
+graph TD
+    A[UMA-s-1p1 MLIP forces] --> B[Langevin NVT dt 2 fs friction 0.02]
+    B --> C[Equilibrate 5 ps]
+    C --> D[Production 200 ps]
+    D --> E[MSD window 2-50 ps]
+    E --> F[D = slope / 6]
+    F --> G[Repeat at 600 800 1000 K]
+    G --> H[Arrhenius ln D vs 1/T]
+    H --> I[Ea from slope]
+    F --> J[Nernst-Einstein sigma HR=1]
+    J -.absolute forbidden multiseed only.-> K[Ratios by multiseed]
+    style A fill:#e0ebff,stroke:#2563eb
+    style E fill:#fef9c3,stroke:#2563eb
+    style I fill:#e2f6ec,stroke:#059669
+    style J fill:#fde2e2,stroke:#dc2626
+```
+**한 문장 요약**: UMA MLIP로 긴 NVT 궤적을 만들어 2–50 ps MSD 기울기에서 $D$를, 600/800/1000 K Arrhenius에서 $E_a$를 뽑되, $D$·$\sigma$ 절대값은 멀티시드로만 판정한다.
+
+---
+## 7. PMF — 궤적에서 자유에너지 지형 뽑기 (2026-08-05)
+
+MSD 가 **얼마나 멀리 갔나**를 잰다면, PMF 는 **어디에 얼마나 오래 있었나**를 지도로 만든다.
+같은 궤적에서 나오지만 다른 질문에 답한다.
+
+### 7-1. 정의
+
+$$\Delta F(\mathbf r) = -k_B T \ln\!\left[\frac{\rho(\mathbf r)}{\rho_{\max}}\right]$$
+
+$\rho$ = 궤적 시간평균 Li 밀도(가우시안 0.4 Å 스무딩, 격자 0.2 Å).
+밀도 최대점이 0 이고, 덜 방문된 곳일수록 $\Delta F$ 가 크다.
+
+**용어 (문헌 표준)** — 방법 이름은 **potential of mean force (PMF)**(Kirkwood),
+침투 문턱은 **percolation free energy $\Delta F_{\text{perc}}$** (BV 쪽 $\Delta E_{\text{perc}}$ 와 짝),
+구간값은 **free-energy barrier $\Delta F$**.
+⚠ MD 문헌에서 홑 $F$ 는 보통 **힘**이고 $F^*$ 는 임계점 표기라, 둘 다 쓰지 않는다.
+
+### 7-2. BV 프록시와 뭐가 다른가
+
+PMF 는 궤적에서 나오므로 **BV 에 없는 네 가지가 이미 들어 있다** — Li 27개 전부의 점유,
+공공, 상관·협동 운동, 유한 온도 격자 진동. 그래서 §dft §12 의 "BV 결손 물리"가 해소된다.
+
+| | BV 프록시 | PMF (600 K) |
+|---|---|---|
+| 문턱 | $\Delta E_{\text{perc}}$ 0.228 eV | $\Delta F_{\text{perc}}$ **0.173 eV** |
+| 경로 | 20.2 Å · 11구간 · 최대 0.197 | 8.4 Å · 4구간 · 최대 **0.152** |
+| 문턱에서 채널 부피 | 0.5 vol% | **42.9 vol%** |
+
+> [!important] 같은 부피로 자르면 모양이 다르다
+> BV 채널(0.5 vol%)은 **이어진 그물**인데, 같은 부피의 실제 Li 밀도는 **고립된 자리 덩어리**다.
+> 정적 지도가 낮은 에너지에서 연결돼 보이는 건 매끄러운 퍼텐셜의 성질이고, 실제 이온은
+> 자리에 국재해 있다가 뛴다. BV 가 센 병목 11개 중 실제로 율속인 것은 1개뿐이다.
+
+### 7-3. 두 정의 — 첫-관통 vs 전이점
+
+문턱을 올리며 **최대 연결 성분**을 보면 두 지점이 나온다:
+
+| 정의 | modelc 값 | 채택 |
+|---|---|---|
+| 첫-관통 (처음 셀을 감는 순간) | 0.078 eV | ❌ — 1.4% **가는 실가닥**(유한크기 우연 연결) |
+| **전이점** (최대 성분 급상승) | **0.173 eV** | ✅ MASTER 채택 |
+
+**수치로 정당화됨(블록 검사)**: 궤적을 잘라 재보면 전이점은 0.1725(100 ps)/0.1875(앞 50)/
+0.1675(뒤 50)/0.1825(앞 25) = **±10 meV** 로 안정한데, 첫-관통은 25 ps 에서 0.078→0.105
+(**+35%**) 로 요동친다. → **전이점은 1시드 100 ps 로 이미 수렴**, 첫-관통은 아니다.
+
+### 7-4. 인용 규율
+
+- $\Delta F_{\text{perc}}$ 는 **그 온도의 자유에너지**지 $E_a$ 가 아니다.
+  실측 오프셋 $\Delta F_{\text{perc}} - E_a \approx -50$ meV (comp1·modelc 둘 다, **계통적**).
+  BV 의 오차가 부호까지 뒤섞이는 것과 대조 — 그래서 PMF 는 **순위·변화량은 살아남는다**.
+- **온도와 시드 수를 반드시 병기** (예: "600 K, single seed").
+- ⚠ **게이트 통과 계에만.** 케이지 상태면 병목 voxel 이 안 채워져 $\Delta F_{\text{perc}}$ 가
+  상한이 된다 — comp1 600 K 가 그 경우(open_items #9).
+- PMF 는 BVSE 와는 독립이지만 **MD 와는 같은 궤적**이라 상호검증에 쓰면 순환논증이다.
+
+도구 `tools/ionic/pmf_path_profile.py` (BV 판과 같은 침투 관례) ·
+그림 `docs/figures/bv_vs_pmf_modelc.png` · `bv_vs_pmf_3d_modelc.png` ·
+데이터 `db/properties/modelc_pmf_{profile,cluster,segments}_T600_origin.csv`
+
+
+---
+## 우리 캠페인 적용
+UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02, equilib 5 ps / prod 200 ps, MSD 창 2–50 ps 고정, Arrhenius 600/800/1000 K 3점 (tools/modelc_v3/, tools/ionic/).
+
+| 조성 | 약칭 | $E_a$ (eV) | 비고 |
+|------|------|-----------|------|
+| Li₆PS₅Cl | comp1 | **0.253** | 기준 |
+| Li₅.₄PS₄.₄Cl₁.₆ | modelc | **0.224** | 가장 낮은 장벽 |
+| LPSOCl (+O) | lpsocl | **0.271** | O 도핑, 장벽 상승 |
+
+- $E_a$ 순서: **modelc(0.224) < comp1(0.253) < +O(0.271)**. Cl-rich가 Li 이동에 유리, O 도핑은 장벽을 올린다.
+- $E_a$ 오차막대는 **600 K 3-시드**로 산출. Arrhenius는 600/800/1000 K 3점(400/500 K 제외).
+  ⛔ **결정계 한정**(회신 BS 2026-09-22) — 비정질/유리 계는 카드가 온도·시드를 따로 선언한다.
+  소셀 유리: 400/465/550 K · **구조 시드 5 의 IQR** · 600 K 는 감김으로 배제. 위 §MSD 창 참조.
+- **$D$·$\sigma$ 절대값 인용 금지.** 비율·순위도 **멀티시드 판정만** (단일시드 1.33× 철회 사례).
+- **UMA는 Li₃N 금지** — LPSCl 계열에는 검증된 표준.
+
+
+> [!note] 방법 간 비교
+> "BV·NEB·MD 가 주는 $E_a$ 는 서로 다른 양"의 정리는 **[DFT](/concept/dft) §12** 에 있다
+> (정의 차이 · BV 결손 물리 4가지 · 부호 뒤섞임 실측 · 신뢰도 순서).
+
+*tags: MLIP-MD · PMF · potential of mean force · 자유에너지 지형 · percolation free energy · UMA · Langevin NVT · MSD · Einstein relation · Arrhenius · activation energy · Nernst-Einstein · Li diffusion · multiseed*
+
+---
+## 첨부 (업로드)
+- `docs/uploads/md/pmf 관련 설명.pdf`

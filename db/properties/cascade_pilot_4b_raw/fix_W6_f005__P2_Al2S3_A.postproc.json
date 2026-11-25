@@ -1,0 +1,200 @@
+{
+  "name": "P2_Al2S3_A",
+  "xyz_input": "db/structures/cascade_pilot/P2_Al2S3_A.xyz",
+  "n_atoms": 204,
+  "composition": {
+    "Al": 2,
+    "Cl": 16,
+    "Li": 90,
+    "P": 16,
+    "S": 80
+  },
+  "E_pre_anneal_per_atom": -4.188080147783019,
+  "E_post_anneal_per_atom": -4.188080147783019,
+  "eos": {
+    "V_points": [
+      3823.9281514543068,
+      3905.2883248895077,
+      3986.648498324701,
+      4068.0086717599065,
+      4149.368845195105,
+      4230.7290186303,
+      4312.089192065494
+    ],
+    "E_points": [
+      -854.7592624339783,
+      -855.1740694486547,
+      -855.344070943979,
+      -855.3583775282601,
+      -855.1439225189481,
+      -854.7840041464,
+      -854.3132569392718
+    ],
+    "fractions": [
+      0.94,
+      0.96,
+      0.98,
+      1.0,
+      1.02,
+      1.04,
+      1.06
+    ],
+    "continuation": true,
+    "hysteresis": {
+      "E_up": [
+        -854.7592624339783,
+        -855.1740694486547,
+        -855.344070943979,
+        -855.3583775282601,
+        -855.1439225189481,
+        -854.7840041464,
+        -854.3132569392718
+      ],
+      "E_down": [
+        -854.7701525969117,
+        -855.2537069358183,
+        -854.9724694664513,
+        -855.036291560411,
+        -854.9334728898137,
+        -854.6735543687689,
+        -854.2885351297851
+      ],
+      "reported_branch": "up",
+      "max_abs_dE_eV": 0.3716014775276335,
+      "level_offset_eV": -0.135540144504554,
+      "shape_max_abs_dE_eV": 0.2360613330230795,
+      "E_span_eV": 1.0451205889883113,
+      "tol_V0_rel": 0.01,
+      "\u26a0_dE_over_span_\ub294_\ucc3d\uc5d0_\uc758\uc874\ud55c\ub2e4": "\ubd84\ubaa8(E_span)\uac00 \ubd80\ud53c\ucc3d\uc5d0 \ub538\ub824 \uc904\uc5b4\ub4e0\ub2e4. \ucc3d\uc774 \ub2e4\ub978 \uc870\uac74\ub07c\ub9ac \uac19\uc740 \ubb38\ud131\uc73c\ub85c \ube44\uad50\ud558\uc9c0 \ub9c8\ub77c \u2014 \ud68c\uc2e0 BQ Q2. \ucc3d \ube44\uad50\ub294 \uc808\ub300\uac12(shape_max_abs_dE_eV)\uc73c\ub85c \ud55c\ub2e4",
+      "convergence_up": [
+        {
+          "fraction": 0.94,
+          "n_steps": 2144,
+          "final_fmax_eV_A": 0.004989634733647108,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.96,
+          "n_steps": 138,
+          "final_fmax_eV_A": 0.004778011702001095,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.98,
+          "n_steps": 80,
+          "final_fmax_eV_A": 0.0035210184287279844,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.0,
+          "n_steps": 460,
+          "final_fmax_eV_A": 0.004426737315952778,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.02,
+          "n_steps": 113,
+          "final_fmax_eV_A": 0.00470953993499279,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.04,
+          "n_steps": 153,
+          "final_fmax_eV_A": 0.0044790166430175304,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.06,
+          "n_steps": 147,
+          "final_fmax_eV_A": 0.004123913124203682,
+          "converged": true,
+          "hit_step_limit": false
+        }
+      ],
+      "convergence_down": [
+        {
+          "fraction": 1.06,
+          "n_steps": 610,
+          "final_fmax_eV_A": 0.004104374907910824,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.04,
+          "n_steps": 114,
+          "final_fmax_eV_A": 0.004898021463304758,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.02,
+          "n_steps": 173,
+          "final_fmax_eV_A": 0.004996094852685928,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.0,
+          "n_steps": 176,
+          "final_fmax_eV_A": 0.004934933036565781,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.98,
+          "n_steps": 97,
+          "final_fmax_eV_A": 0.004956049378961325,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.96,
+          "n_steps": 743,
+          "final_fmax_eV_A": 0.004997847136110067,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.94,
+          "n_steps": 61,
+          "final_fmax_eV_A": 0.0042755152098834515,
+          "converged": true,
+          "hit_step_limit": false
+        }
+      ],
+      "V0_up": 4019.30578458748,
+      "V0_down": 3982.1867390279517,
+      "V0_rel_diff": 0.00927803042994191,
+      "dE_over_span": 0.35555846994397844,
+      "tol_span": 0.1,
+      "ok": false
+    },
+    "convergence": null,
+    "V0": null,
+    "V0_per_atom": null,
+    "E0": null,
+    "B0_eV_per_A3": null,
+    "B0_GPa": null,
+    "Bp": null,
+    "r2": 0.9992377066757183,
+    "fit_quality_ok": false,
+    "fit_quality_reason": "\uc774\ub825\ud604\uc0c1 \u2014 **\uace1\uc120 \uc790\uccb4\uac00 \uac08\ub9b0\ub2e4** \u2014 \ub450 \uac08\ub798 \ucd5c\ub300\ucc28 0.372 eV \uac00 \uace1\uc120 \ud3ed 1.045 eV \uc758 36 % (> \ud5c8\uc6a9 10 %). V\u2080 \uac00 \uacb9\uccd0\ub3c4 \uac19\uc740 \uace1\uc120\uc774 \uc544\ub2c8\ub2e4. \uc774 \uad6c\uc870\uc5d0\uc120 EOS \uac00 \ud55c \uace8\uc9dc\uae30\ub85c \uc815\uc758\ub418\uc9c0 \uc54a\ub294\ub2e4",
+    "t_s": 528.0000417232513
+  },
+  "cell_policy": {
+    "step0_relax": "CellFilter(atoms) \u2014 \ud615\uc0c1 \ubb34\uc81c\ud55c",
+    "eos_v0_applied": false,
+    "\ud45c\ud604": "\uc140 \uac01\ub3c4\uc640 \uae38\uc774\ube44\ub97c \uace0\uc815\ud558\uace0 \ub4f1\ubc29 E(V) \uacbd\ub85c\uc5d0\uc11c \ubd80\ud53c\ub97c \ucd5c\uc801\ud654\ud55c\ub2e4. \ubaa9\ud45c \ud3c9\uade0\uc555\uc740 0 GPa \uc774\uba70, \uc2e4\uc81c \uc794\ub958 \ud3c9\uade0\uc555\uacfc \ud3b8\ucc28\uc751\ub825\uc744 \ubcc4\ub3c4\ub85c \ubcf4\uace0\ud55c\ub2e4"
+  },
+  "structures_written": {
+    "stage1_before_eos.xyz": "\u26a0 EOS\u00b7V\u2080 \uc801\uc6a9 **\uc804** \uad6c\uc870. \ud558\ub958\uac00 \uc9d1\uc5b4\uac00\uba74 \uc548 \ub41c\ub2e4",
+    "final_v0_applied.xyz": "\u2705 \uc140 \uc815\ucc45\uc774 \uc801\uc6a9\ub41c \ucd5c\uc885 \uad6c\uc870 \u2014 MD\u00b7\ud0c4\uc131\uc774 \uc2e4\uc81c\ub85c \uc4f4 \uac83",
+    "eos_v0_applied": false
+  }
+}

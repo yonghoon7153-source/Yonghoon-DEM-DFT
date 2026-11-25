@@ -1,0 +1,22 @@
+변이 489 개 (DS 판 472 · 자리 옮김 2 · DT 17) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 3 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_dt_new_w*
+DS21_md_seen_ignored             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT1_progress_no_after_traces     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DS10_md_done_ignored             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT2_progress_gate_unchecked      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT4_progress_frames_unchecked    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT3_progress_schedule_unchecked  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT5_progress_record_inprog       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT6_progress_record_unknown      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT9_after_trace_fire_log_dropped ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT10_shortcut_late_ignored       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT11_shortcut_old_rule           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DT12_prerun_keys_no_progress     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DT13_progress_vocab_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT14_p2_guard_off                ⭕ 빨강 [melt_quench_uma] · IsADirectoryError: [Errno 21] Is a directory: '/tmp/tmpi0haxqo0/dt_vd/stage1_verdict.json.tmp' -> '/tmp/tmpi0haxqo0/dt_vd/stage1_verdict.jso
+DT7_after_trace_result_dropped   ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 158 · ⛔ 0
+DT16_p2_guard_history_only       ⭕ 빨강 [melt_quench_uma] · IsADirectoryError: [Errno 21] Is a directory: '/tmp/tmpt3k_kreo/dt_vd/stage1_verdict.json.tmp' -> '/tmp/tmpt3k_kreo/dt_vd/stage1_verdict.jso
+DT8_after_trace_tmp_dropped      ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 158 · ⛔ 0
+DT17_p2_guard_links_ok           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DS 전 1차 리뷰: raw 자리의 깨진 링크 · FIFO → 입력 상태 (덮지 않음 · 멈추지 않음) · 남은 임시 경로 링크를 따라 쓰지 않음 · 이력 경로 링크 → 판정 기록 해석 안 함 · 덧붙이기 거부 · plan.json 디렉터리 → inval
+DT15_p2_guard_verdict_only       ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 158 · ⛔ 0
+끝: 빨강 16 / 19

@@ -1,0 +1,500 @@
+{
+ "slug": "li2024_inf3_argyrodite_ultrathin_film",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+  "7b92edde-55._Sup_A_eries.docx (SI, docx — embedded images)"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) X-ray diﬀraction patterns of the as-prepared Li5.7+2xP1−xInxS4.7Cl1.3−3xF3x samples. b) XRD patterns and the corresponding Rietveld reﬁne- ment results of Li5.7+2xP1−xInxS4.7Cl1.3−3xF3x (x = 0.06). c) Crystal-structural diagram of argyrodite Li5.7+2xP1−xInxS4.7Cl1.3−3xF3x (x = 0.06). d) S 2p and e) F 1s spectra of Li5.7+2xP1−xInxS4.7Cl1.3−3xF3x (x = 0.06). f) SEM images and corresponding EDS mapping of the prepared Li5.7+2xP1−xInxS4.7Cl1.3−3xF3x (x = 0.06).",
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    362.7
+   ],
+   "w": 2118,
+   "h": 1220,
+   "dpi": 300,
+   "src": "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+   "blank": 0.658
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Arrhenius plots as a function of temperature for diﬀerent dopant levels. b) Ionic conductivity and activation energy as a function of In and F concentration x at 25 °C. c) Direct-current polarization curves of Li5.7+2xP1−xInxS4.7Cl1.3−3xF3x. d) Cyclic voltammetry plot of Li/SE/SE+C semi-blocking cell structure using LPSC and LPSCInF at 0.1 mV s−1. Calculated projected density of states (PDOS) of e) LPSC and f) LPSCInF electrolytes.",
+   "bbox": [
+    42.0,
+    70.4,
+    550.0,
+    351.7
+   ],
+   "w": 2118,
+   "h": 1173,
+   "dpi": 300,
+   "src": "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. CCD tests for Li5.7+2xP1−xInxS4.7Cl1.3−3xF3x of a) x = 0 and b) x = 0.06. c) Comparison of the CCD value with other reported sulﬁde SEs. d) Galvanostatic Li plating/stripping on a Li symmetric cell using Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.06) SEs at 0.5 mA cm−2 and 25 °C. The XPS spectra of e) F 1s and f) In 3d at the surface of LPSCInF were collected after 50 h of cycling with Li metal. Li diﬀusion barrier on g) Li (100) and h) Li–In alloy (110) surfaces.",
+   "bbox": [
+    42.0,
+    70.7,
+    550.0,
+    522.7
+   ],
+   "w": 2118,
+   "h": 1884,
+   "dpi": 300,
+   "src": "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Ionic conductivities of LPSC and LPSCInF before/after being soaked in various solvents. Simulation models of the b) LPSC and c) LPSCInF SE surface adsorbed toluene molecules. d) Raman patterns of LPSCInF and pristine LPSC before and after being soaked in toluene for 1 h. e) XRD patterns of LPSCInF and pristine LPSC before and after being soaked in toluene for 1 h. f) Schematic representation of the process of LPSC and LPSCInF electrolytes against nucleophilic attack by toluene solvent molecules.",
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    400.7
+   ],
+   "w": 2118,
+   "h": 1374,
+   "dpi": 300,
+   "src": "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical characterization of the LCO/LPSCInF ﬁlm/Li ASSLBs at 25 °C. a) Schematic of the LPSCInF ﬁlm fabrication process. b) Galvanostatic charge/discharge curves at 0.1 C with diﬀerent cycles. c) Charge–discharge curves and d) corresponding rate capabilities with cur- rents ranging from 0.1 to 1 C. e) Charge–discharge voltage proﬁles for LCO/Li cells employing the LPSCInF ﬁlm at 0.1 C before and after exposure to 80 °C for 1 h. f) Long-term cyclic performance at 0.1 C. g) Electrochemical impedance spectroscopy at the 100th and 500th cycles.",
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    452.7
+   ],
+   "w": 2118,
+   "h": 1592,
+   "dpi": 300,
+   "src": "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Electrochemical characterization of the FeS2/LPSCInF ﬁlm/Li ASSLBs. a) Galvanostatic charge/discharge curves with diﬀerent cycles at 0.1 C and 60 °C with a mass loading of 5.0 mg cm−2. b) Rate capabilities and c) corresponding charge–discharge curves of the cell at current rates from 0.1 to 0.5 C under 60 °C with a mass loading of 1.27 mg cm−2. d) Long-term cycling performance at 0.1 C and 60 °C with a mass loading of 5.0 mg cm−2. e) Comparison of areal capacity and total energy density for FeS2/Li ASSLBs employing LPSCInF ﬁlm in this work with other previously reported results.",
+   "bbox": [
+    42.0,
+    71.0,
+    550.1,
+    342.7
+   ],
+   "w": 2118,
+   "h": 1134,
+   "dpi": 300,
+   "src": "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Lattice parameters as a function of the InF3 concentration x for Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.02, 0.04, 0.06, 0.08, 0.1).",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. XRD patterns of as-prepared Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.15).",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. DFT models of the possibility of doping In and F on different sites. a) The atomic structure for the LPSC (100) surface model is constructed. b) All the possible doping sites for In (P-4b, Li-24g, and Li-48h site) and F (Cl-4a, Cl-4d, S sites in PS4 and InS4 group).",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The calculated 𝐸𝑓 values for the a) In dopants located at different sites in the bulk LPSC and b) F dopants located at different sites in the optimized In doped LPSC.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. a-b) Raman spectra of Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.02, 0.04, 0.06, 0.08, 0.1). c) Raman In-S band at 310 cm−1 for Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.06) doping level.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": null,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. XPS spectra of a) Li 1s, b) In 3d, c) P 2p, and d) Cl 2p for the Li5.82P0.94In0.06S4.7Cl1.12F0.18 SEs.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": null,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. The Nyquist plots of Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.02, 0.04, 0.06, 0.08, 0.1, 0.15) at 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": null,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. The Nyquist plots of a) Li5.7PS4.7Cl1.24F0.06 and b) Li5.74P0.98In0.02S4.7Cl1.3 at 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": null,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. a) The hopping pathways of 48h to 48h site for Li atom on LPSC SE (010) surface. b) Diffusion energy barriers of Li atom on LPSC SE (010) surface.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": null,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Critical current density (CCD) tests for Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.02, 0.04, 0.08, 0.1, 0.15). The Li/Li symmetric cell started at 0.1 mA cm−2 with a step-increased current density of 0.1 mA cm−2 every 2 hours.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": null,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The relation of critical current density (CCD) and electronic conductivity as a function of various InF3 co-substitution concentrations.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": null,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Galvanostatic Li plating/stripping on a Li symmetric cell using Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0) SEs at 0.5 mA cm-2 and 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": null,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Galvanostatic Li plating/stripping on a Li symmetric cell using Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.02) SEs at 0.5 mA cm−2 and 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": null,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Galvanostatic Li plating/stripping on a Li symmetric cell using Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0.06) SEs at 1 mA cm−2 and 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": null,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. The impedance spectra of the a) Li/LPSC/Li and b) Li/LPSCInF/Li symmetric cell were measured at 25 ℃ with different times.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": null,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. a) SEM images of pristine Li metal. b) SEM images of Li metal surface after 50 h of cycling at 0.5 mA cm−2 in the Li/LPSCInF/Li and c) Li/LPSC/Li symmetric cell.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": null,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. The XPS spectra of a) Li 1s, b) P 2p, c) S 2p, and d) Cl 2p at the surface of Li5.82P0.94In0.06S4.7Cl1.12F0.18 were collected after 50 h of cycling with Li metal.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": null,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. The PDOS plots for a) Li2S, b) Li3P, c) LiCl, and d) LiF. The Fermi levels are set to be 0 eV (dark dash lines).",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": null,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. a) The surface energies of Li-In alloy (100), (110) and (111) directions. b) Diffusion barriers on Li-In alloy (100) surface.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": null,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. The quantity of H2S gas generated from Li5.7+2xP1-xInxS4.7Cl1.3-3xF3x (x = 0, 0.02, 0.06, 0.10, 0.15) SEs after exposure to moisture air (30% relative humidity).",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": null,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. The Arrhenius curves of LPSC and LPSCInF electrolytes before and after exposure to moisture air (30% relative humidity) for 10 min.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": null,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Adsorption free energies () of H2O on two Li sites (Li1-24g site, Li2-48h site) of pristine LPSC, In-doped, F-doped, and In-F co-doped LPSC (001) surfaces.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": null,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Nyquist plots of a) LPSCInF and b) LPSC before/after being soaked in various solvents at 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": null,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. a) Ead for various sites in the LPSC electrolyte with the representative O atom in ethyl acetate. b) The Ead values for representative P site in LPSC and LPSCInF with dichloromethane and ethyl acetate.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": null,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. a) XRD patterns and b) FT-IR spectra of LPSCInF powders and LPSCInF film.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": null,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Optical photograph of LPSCInF film.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": null,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. a) Cross-sectional SEM image of LPSCInF film. b) Magnified cross-sectional SEM image of LPSCInF film, and the corresponding EDS element mappings of c) In and d) F.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": null,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. a) Nyquist plots of LPSCInF film at 25 ℃. b) Arrhenius plots of LPSCInF film.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": null,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. Galvanostatic Li plating/stripping on a Li symmetric cell using LPSCInF film at 0.5 mA cm−2 and 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": null,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. a) Direct-current polarization curves and b) current response at different voltages for LPSCInF-PIB film.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": null,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. a) SEM images of the surface morphology of LiCoO2 particles, and b) the corresponding EDS element mappings of Co. c) Magnified SEM image of the surface morphology of LiCoO2 particles.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": null,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. Long-term cycling performance at a rate of 0.5C and 25 ℃ for the ASSLBs with silicon anode (LCO loading: 1.8 mg·cm−2, N/P ratio = 1.2)",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": null,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. a) SEM images of the surface morphology of FeS2 particles. The corresponding EDS element mappings of b) Fe and c) S elements.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": null,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. Electrochemical impedance spectroscopy of FeS2/LPSCInF film/Li cell at 2nd and 100th cycles at 25 ℃.",
+   "src": "7b92edde SI (docx)",
+   "w": null,
+   "h": null
+  }
+ ]
+}

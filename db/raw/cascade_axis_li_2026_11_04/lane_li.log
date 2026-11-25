@@ -1,0 +1,276 @@
+종 91개 x 상대 1개 = 91 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/352 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 352/352 [00:00<00:00, 6741529.72it/s]
+[mp_api] 352 entries in Ag-Cl-Li-O-P-S
+[1/91] Ag2O       vs Li       -0.5566 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/479 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 479/479 [00:00<00:00, 9049872.14it/s]
+[mp_api] 479 entries in Al-Cl-Li-O-P-S
+[2/91] Al2O3      vs Li       -0.5831 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/157 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 157/157 [00:00<00:00, 4141545.46it/s]
+[mp_api] 157 entries in Al-Cl-Li-P-S
+[3/91] Al2S3      vs Li       -0.6574 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/184 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 184/184 [00:00<00:00, 4513169.22it/s]
+[mp_api] 184 entries in Al-Br-Cl-Li-P-S
+[4/91] AlBr3      vs Li       -0.5274 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/157 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 157/157 [00:00<00:00, 4332274.53it/s]
+[mp_api] 157 entries in Al-Cl-Li-P-S
+[5/91] AlCl3      vs Li       -0.5709 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/198 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 198/198 [00:00<00:00, 4745555.38it/s]
+[mp_api] 198 entries in Al-Cl-F-Li-P-S
+[6/91] AlF3       vs Li       -0.5709 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/184 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 184/184 [00:00<00:00, 5011376.21it/s]
+[mp_api] 184 entries in Al-Cl-I-Li-P-S
+[7/91] AlI3       vs Li       -0.5709 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/254 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 254/254 [00:00<00:00, 6193914.05it/s]
+[mp_api] 254 entries in Al-Cl-Li-N-P-S
+[8/91] AlN        vs Li       -0.5707 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/148 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 148/148 [00:00<00:00, 4498239.07it/s]
+[mp_api] 148 entries in As-Cl-Li-P-S
+[9/91] As2S3      vs Li       -0.4702 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/346 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 346/346 [00:00<00:00, 8848958.44it/s]
+[mp_api] 346 entries in B-Cl-Li-O-P-S
+[10/91] B2O3       vs Li       -0.6031 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/149 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 149/149 [00:00<00:00, 4310008.94it/s]
+[mp_api] 149 entries in Ba-Cl-Li-P-S
+[11/91] BaCl2      vs Li       -0.5464 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/369 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 369/369 [00:00<00:00, 9733950.79it/s]
+[mp_api] 369 entries in Ba-Cl-Li-O-P-S
+[12/91] BaO        vs Li       -0.5287 (0 V)  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/248 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 248/248 [00:00<00:00, 5778818.84it/s]
+[mp_api] 248 entries in Ca-Cl-Li-N-P-S
+[13/91] Ca3N2      vs Li       -0.5166 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/167 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 167/167 [00:00<00:00, 4120286.87it/s]
+[mp_api] 167 entries in Br-Ca-Cl-Li-P-S
+[14/91] CaBr2      vs Li       -0.5483 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/139 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 139/139 [00:00<00:00, 4318579.67it/s]
+[mp_api] 139 entries in Ca-Cl-Li-P-S
+[15/91] CaCl2      vs Li       -0.5483 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/174 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 174/174 [00:00<00:00, 4769992.78it/s]
+[mp_api] 174 entries in Ca-Cl-F-Li-P-S
+[16/91] CaF2       vs Li       -0.5483 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/345 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 345/345 [00:00<00:00, 7420691.69it/s]
+[mp_api] 345 entries in Ca-Cl-Li-O-P-S
+[17/91] CaO        vs Li       -0.5320 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/139 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 139/139 [00:00<00:00, 4590616.19it/s]
+[mp_api] 139 entries in Ca-Cl-Li-P-S
+[18/91] CaS        vs Li       -0.5483 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 1020.51it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 1020.32it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[19/91] CoO        vs Li       -0.5585 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/926 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 926/926 [00:00<00:00, 14279137.88it/s]
+[mp_api] 926 entries in Cl-Cr-Li-O-P-S
+[20/91] Cr2O3      vs Li       -0.5732 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/182 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 182/182 [00:00<00:00, 4654654.44it/s]
+[mp_api] 182 entries in Cl-Cr-Li-P-S
+[21/91] CrCl3      vs Li       -0.5412 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/926 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 926/926 [00:00<00:00, 15535702.02it/s]
+[mp_api] 926 entries in Cl-Cr-Li-O-P-S
+[22/91] CrO3       vs Li       -0.6076 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/684 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 684/684 [00:00<00:00, 11163050.33it/s]
+[mp_api] 684 entries in Cl-Cu-Li-O-P-S
+[23/91] Cu2O       vs Li       -0.5532 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/1253 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1253/1253 [00:01<00:00, 865.41it/s]Retrieving ThermoDoc documents: 100%|██████████| 1253/1253 [00:01<00:00, 865.29it/s]
+[mp_api] 1253 entries in Cl-Fe-Li-O-P-S
+[24/91] Fe2O3      vs Li       -0.5947 (0 V)  (9s)
+Retrieving ThermoDoc documents:   0%|          | 0/233 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 233/233 [00:00<00:00, 6224667.72it/s]
+[mp_api] 233 entries in Cl-Fe-Li-P-S
+[25/91] FeCl3      vs Li       -0.5943 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/321 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 321/321 [00:00<00:00, 8857707.79it/s]
+[mp_api] 321 entries in Cl-Ga-Li-O-P-S
+[26/91] Ga2O3      vs Li       -0.5706 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/153 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 153/153 [00:00<00:00, 4753544.53it/s]
+[mp_api] 153 entries in Cl-Ga-Li-P-S
+[27/91] Ga2S3      vs Li       -0.6214 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/153 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 153/153 [00:00<00:00, 4194304.00it/s]
+[mp_api] 153 entries in Cl-Ga-Li-P-S
+[28/91] GaCl3      vs Li       -0.5407 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/284 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 284/284 [00:00<00:00, 7175797.20it/s]
+[mp_api] 284 entries in Cl-Ga-Li-N-P-S
+[29/91] GaN        vs Li       -0.5608 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/297 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 297/297 [00:00<00:00, 7737318.56it/s]
+[mp_api] 297 entries in Cl-Gd-Li-O-P-S
+[30/91] Gd2O3      vs Li       -0.5424 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/327 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 327/327 [00:00<00:00, 8020686.60it/s]
+[mp_api] 327 entries in Cl-Ge-Li-O-P-S
+[31/91] GeO2       vs Li       -0.4662 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/161 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 161/161 [00:00<00:00, 5002095.88it/s]
+[mp_api] 161 entries in Cl-Ge-Li-P-S
+[32/91] GeS2       vs Li       -0.5020 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/129 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 129/129 [00:00<00:00, 3920762.43it/s]
+[mp_api] 129 entries in Cl-Hf-Li-P-S
+[33/91] HfCl4      vs Li       -0.5923 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/295 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 295/295 [00:00<00:00, 7544632.20it/s]
+[mp_api] 295 entries in Cl-Hf-Li-O-P-S
+[34/91] HfO2       vs Li       -0.5661 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/325 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 325/325 [00:00<00:00, 8018522.35it/s]
+[mp_api] 325 entries in Cl-In-Li-O-P-S
+[35/91] In2O3      vs Li       -0.5773 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/332 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 332/332 [00:00<00:00, 8388608.00it/s]
+[mp_api] 332 entries in Cl-La-Li-O-P-S
+[36/91] La2O3      vs Li       -0.5392 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/144 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 144/144 [00:00<00:00, 4541201.32it/s]
+[mp_api] 144 entries in Cl-La-Li-P-S
+[37/91] LaCl3      vs Li       -0.5235 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/180 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 180/180 [00:00<00:00, 5316723.38it/s]
+[mp_api] 180 entries in Cl-F-La-Li-P-S
+[38/91] LaF3       vs Li       -0.5672 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/232 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 232/232 [00:00<00:00, 6359990.38it/s]
+[mp_api] 232 entries in Cl-Li-O-P-S
+[39/91] Li2O       vs Li       -0.5240 (0 V)  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 107/107 [00:00<00:00, 2876862.36it/s]
+[mp_api] 107 entries in Cl-Li-P-S
+[40/91] Li2S       vs Li       -0.5415 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/189 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 189/189 [00:00<00:00, 5429612.71it/s]
+[mp_api] 189 entries in Cl-Li-N-P-S
+[41/91] Li3N       vs Li       -0.5194 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/131 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 131/131 [00:00<00:00, 4010611.85it/s]
+[mp_api] 131 entries in Br-Cl-Li-P-S
+[42/91] LiBr       vs Li       -0.5415 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 107/107 [00:00<00:00, 3533783.69it/s]
+[mp_api] 107 entries in Cl-Li-P-S
+[43/91] LiCl       vs Li       -0.5273 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/131 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 131/131 [00:00<00:00, 4431079.23it/s]
+[mp_api] 131 entries in Cl-F-Li-P-S
+[44/91] LiF        vs Li       -0.5415 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/129 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 129/129 [00:00<00:00, 3837341.96it/s]
+[mp_api] 129 entries in Cl-I-Li-P-S
+[45/91] LiI        vs Li       -0.5415 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/312 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 312/312 [00:00<00:00, 7931047.56it/s]
+[mp_api] 312 entries in Cl-Li-Mg-N-P-S
+[46/91] Mg3N2      vs Li       -0.5446 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/251 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 251/251 [00:00<00:00, 6971988.77it/s]
+[mp_api] 251 entries in Br-Cl-Li-Mg-P-S
+[47/91] MgBr2      vs Li       -0.5272 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/219 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 219/219 [00:00<00:00, 5888157.54it/s]
+[mp_api] 219 entries in Cl-Li-Mg-P-S
+[48/91] MgCl2      vs Li       -0.5559 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/251 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 251/251 [00:00<00:00, 7161702.75it/s]
+[mp_api] 251 entries in Cl-F-Li-Mg-P-S
+[49/91] MgF2       vs Li       -0.5559 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/244 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 244/244 [00:00<00:00, 5685612.09it/s]
+[mp_api] 244 entries in Cl-I-Li-Mg-P-S
+[50/91] MgI2       vs Li       -0.5559 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/431 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 431/431 [00:00<00:00, 9564788.49it/s]
+[mp_api] 431 entries in Cl-Li-Mg-O-P-S
+[51/91] MgO        vs Li       -0.5499 (0 V)  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/219 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 219/219 [00:00<00:00, 5813623.90it/s]
+[mp_api] 219 entries in Cl-Li-Mg-P-S
+[52/91] MgS        vs Li       -0.5559 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/1458 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1458/1458 [00:01<00:00, 759.38it/s]Retrieving ThermoDoc documents: 100%|██████████| 1458/1458 [00:01<00:00, 759.31it/s]
+[mp_api] 1458 entries in Cl-Li-Mn-O-P-S
+[53/91] MnO        vs Li       -0.5525 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/581 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 581/581 [00:00<00:00, 9445312.50it/s]
+[mp_api] 581 entries in Cl-Li-Mo-O-P-S
+[54/91] MoO3       vs Li       -0.4868 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/394 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 394/394 [00:00<00:00, 9180865.42it/s]
+[mp_api] 394 entries in Cl-Li-Na-O-P-S
+[55/91] Na2O       vs Li       -0.5240 (0 V)  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/158 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 158/158 [00:00<00:00, 4570345.05it/s]
+[mp_api] 158 entries in Cl-Li-Na-P-S
+[56/91] Na2S       vs Li       -0.5415 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/184 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 184/184 [00:00<00:00, 5145012.91it/s]
+[mp_api] 184 entries in Cl-I-Li-Na-P-S
+[57/91] NaI        vs Li       -0.5415 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/475 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 475/475 [00:00<00:00, 10011529.65it/s]
+[mp_api] 475 entries in Cl-Li-Nb-O-P-S
+[58/91] Nb2O5      vs Li       -0.3833 (0 V)  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/192 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 192/192 [00:00<00:00, 5478274.61it/s]
+[mp_api] 192 entries in Cl-Li-Nb-P-S
+[59/91] NbCl5      vs Li       -0.4244 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/321 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 321/321 [00:00<00:00, 8209582.83it/s]
+[mp_api] 321 entries in Cl-Li-Nd-O-P-S
+[60/91] Nd2O3      vs Li       -0.5489 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/142 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 142/142 [00:00<00:00, 4284828.55it/s]
+[mp_api] 142 entries in Cl-Li-Nd-P-S
+[61/91] NdCl3      vs Li       -0.5686 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/173 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 173/173 [00:00<00:00, 5374922.90it/s]
+[mp_api] 173 entries in Cl-F-Li-Nd-P-S
+[62/91] NdF3       vs Li       -0.5686 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/838 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 838/838 [00:00<00:00, 14003293.83it/s]
+[mp_api] 838 entries in Cl-Li-Ni-O-P-S
+[63/91] NiO        vs Li       -0.5598 (0 V)  (5s)
+Retrieving ThermoDoc documents:   0%|          | 0/538 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 538/538 [00:00<00:00, 11170968.08it/s]
+[mp_api] 538 entries in Cl-Li-O-P-S-Sb
+[64/91] Sb2O5      vs Li       -0.4682 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/198 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 198/198 [00:00<00:00, 5573638.87it/s]
+[mp_api] 198 entries in Cl-Li-P-S-Sb
+[65/91] Sb2S3      vs Li       -0.5140 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/298 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 298/298 [00:00<00:00, 8063887.69it/s]
+[mp_api] 298 entries in Cl-Li-O-P-S-Sc
+[66/91] Sc2O3      vs Li       -0.5571 (0 V)  (3s)
+Retrieving ThermoDoc documents:   0%|          | 0/142 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 142/142 [00:00<00:00, 4254222.63it/s]
+[mp_api] 142 entries in Cl-Li-P-S-Sc
+[67/91] ScCl3      vs Li       -0.5685 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/177 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 177/177 [00:00<00:00, 5624180.36it/s]
+[mp_api] 177 entries in Cl-F-Li-P-S-Sc
+[68/91] ScF3       vs Li       -0.5685 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/688 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 688/688 [00:00<00:00, 13547798.84it/s]
+[mp_api] 688 entries in Cl-Li-O-P-S-Si
+[69/91] SiO2       vs Li       -0.4601 (0 V)  (5s)
+Retrieving ThermoDoc documents:   0%|          | 0/183 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 183/183 [00:00<00:00, 5117050.88it/s]
+[mp_api] 183 entries in Cl-Li-P-S-Si
+[70/91] SiS2       vs Li       -0.5312 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/300 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 300/300 [00:00<00:00, 8388608.00it/s]
+[mp_api] 300 entries in Cl-Li-O-P-S-Sm
+[71/91] Sm2O3      vs Li       -0.5511 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/137 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 137/137 [00:00<00:00, 4524564.16it/s]
+[mp_api] 137 entries in Cl-Li-P-S-Sm
+[72/91] SmCl3      vs Li       -0.5688 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/575 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 575/575 [00:00<00:00, 12242257.87it/s]
+[mp_api] 575 entries in Cl-Li-O-P-S-Sn
+[73/91] SnO2       vs Li       -0.4689 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/177 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 177/177 [00:00<00:00, 5084875.40it/s]
+[mp_api] 177 entries in Cl-Li-P-S-Sn
+[74/91] SnS2       vs Li       -0.5041 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/146 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 146/146 [00:00<00:00, 4674567.82it/s]
+[mp_api] 146 entries in Cl-Li-P-S-Sr
+[75/91] SrCl2      vs Li       -0.5167 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/330 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 330/330 [00:00<00:00, 8760255.19it/s]
+[mp_api] 330 entries in Cl-Li-O-P-S-Sr
+[76/91] SrO        vs Li       -0.5303 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/366 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 366/366 [00:00<00:00, 9594470.40it/s]
+[mp_api] 366 entries in Cl-Li-O-P-S-Ta
+[77/91] Ta2O5      vs Li       -0.3790 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/163 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 163/163 [00:00<00:00, 5026996.71it/s]
+[mp_api] 163 entries in Cl-Li-P-S-Ta
+[78/91] TaCl5      vs Li       -0.4233 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/210 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 210/210 [00:00<00:00, 6336718.27it/s]
+[mp_api] 210 entries in Cl-Li-P-S-Ti
+[79/91] TiCl4      vs Li       -0.4175 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/210 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 210/210 [00:00<00:00, 5951377.30it/s]
+[mp_api] 210 entries in F-Li-P-S-Ti
+[80/91] TiF4       vs Li       -0.4847 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/709 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 709/709 [00:00<00:00, 13641107.96it/s]
+[mp_api] 709 entries in Cl-Li-O-P-S-Ti
+[81/91] TiO2       vs Li       -0.4505 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/1492 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1492/1492 [00:02<00:00, 636.41it/s]Retrieving ThermoDoc documents: 100%|██████████| 1492/1492 [00:02<00:00, 636.36it/s]
+[mp_api] 1492 entries in Cl-Li-O-P-S-V
+[82/91] V2O5       vs Li       -0.3908 (0 V)  (13s)
+Retrieving ThermoDoc documents:   0%|          | 0/532 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 532/532 [00:00<00:00, 8819643.19it/s]
+[mp_api] 532 entries in Cl-Li-O-P-S-W
+[83/91] WO3        vs Li       -0.6068 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/315 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 315/315 [00:00<00:00, 7637027.51it/s]
+[mp_api] 315 entries in Cl-Li-O-P-S-Y
+[84/91] Y2O3       vs Li       -0.5454 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/136 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 136/136 [00:00<00:00, 4194304.00it/s]
+[mp_api] 136 entries in Cl-Li-P-S-Y
+[85/91] YCl3       vs Li       -0.5680 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/172 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 172/172 [00:00<00:00, 5190074.01it/s]
+[mp_api] 172 entries in Cl-F-Li-P-S-Y
+[86/91] YF3        vs Li       -0.5680 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/548 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 548/548 [00:00<00:00, 10592067.24it/s]
+[mp_api] 548 entries in Cl-Li-O-P-S-Zn
+[87/91] ZnO        vs Li       -0.5529 (0 V)  (4s)
+Retrieving ThermoDoc documents:   0%|          | 0/161 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 161/161 [00:00<00:00, 3730844.99it/s]
+[mp_api] 161 entries in Br-Li-P-S-Zr
+[88/91] ZrBr4      vs Li       -0.4814 (0 V)  (2s)
+Retrieving ThermoDoc documents:   0%|          | 0/161 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 161/161 [00:00<00:00, 4823449.60it/s]
+[mp_api] 161 entries in Cl-Li-P-S-Zr
+[89/91] ZrCl4      vs Li       -0.5392 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/164 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 164/164 [00:00<00:00, 4466661.40it/s]
+[mp_api] 164 entries in F-Li-P-S-Zr
+[90/91] ZrF4       vs Li       -0.4814 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/382 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 382/382 [00:00<00:00, 9480616.14it/s]
+[mp_api] 382 entries in Cl-Li-O-P-S-Zr
+[91/91] ZrO2       vs Li       -0.4462 (0 V)  (3s)
+
+→ /data/work/wt_axis_ncm/db/raw/cascade_axis_li_2026_11_04/designs_li.jsonl

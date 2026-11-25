@@ -1,0 +1,11 @@
+[2026-11-04 13:06:34] 시작 · 결정 D-2026-11-04-cascade-axis-ncm-interface active · OUT=/data/work/wt_axis_ncm/db/raw/cascade_axis_ncm_v2_2026_11_04 · PY=/data/apps/miniforge3/envs/uma/bin/python · resume=0
+[2026-11-04 13:07:09] selftest 둘 통과
+[2026-11-04 13:07:30] manifest 앞 기록
+[2026-11-04 13:07:30] 갈래 셋 발사 (PID 997112 997113 997114 · 대상 91 종 · db/properties/cascade_interface_90.jsonl) — 기대 줄 수 182 · 182 · 6
+[2026-11-04 13:36:20] 갈래 끝 · rc lno=0 lco=0 host=0
+  designs_lno  rc 0 · 줄 182 · ok 182 · 중복 0
+  designs_lco  rc 0 · 줄 182 · ok 182 · 중복 0
+  host         rc 0 · 줄 6 · ok 6 · 중복 0
+[2026-11-04 13:36:25] MP 판 앞뒤: same
+[2026-11-04 13:37:15] 산물 갭 rc=0
+[2026-11-04 13:37:15] 끝 — 회수 블록은 판독기 커밋 뒤에 받는다 (카드 §8 ③)

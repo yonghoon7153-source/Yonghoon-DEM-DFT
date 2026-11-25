@@ -1,0 +1,74 @@
+[
+  {
+    "subject": "official repository root code",
+    "license": "MIT",
+    "source_path": "LICENSE.md",
+    "scope_note": "Does not automatically cover every checkpoint, dataset or separately licensed component.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/LICENSE.md",
+    "source_sha256": "ba0e6b5bf86fdb83e64d58e08d98079b87ba3b72f8b8e8cb2cd215e8dfa4050a"
+  },
+  {
+    "subject": "CGCNN-derived component notice",
+    "license": "MIT",
+    "source_path": "licenses/LICENSE.cgcnn",
+    "scope_note": "Component-specific attribution.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/licenses/LICENSE.cgcnn",
+    "source_sha256": "5c8d90867b77ceb7dd2409896b490382baa15ec6ad84f599bfb931158096bf1b"
+  },
+  {
+    "subject": "MMF-derived component notice",
+    "license": "BSD-style",
+    "source_path": "licenses/LICENSE.mmf",
+    "scope_note": "Component-specific attribution.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/licenses/LICENSE.mmf",
+    "source_sha256": "016a9c3e1bc13370c0b5f962131c08ff6faf86bc8e3403b9be2aadbbc2e524f5"
+  },
+  {
+    "subject": "FAIR-Chem LAMMPS component",
+    "license": "GPL-2.0",
+    "source_path": "src/fairchem/lammps/LICENSE.md",
+    "scope_note": "Treat separately from the root MIT code.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/lammps/LICENSE.md",
+    "source_sha256": "babca4471f254a9e2c3be32916d977aa66f5ca37bc538ce42b0ca7fdf9014629"
+  },
+  {
+    "subject": "pretrained checkpoints",
+    "license": "model-repository specific / gated",
+    "source_path": "README.md",
+    "scope_note": "Accept the relevant Hugging Face license; weights are excluded from this bundle.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+    "source_sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+  },
+  {
+    "subject": "OMat24",
+    "license": "CC BY 4.0",
+    "source_path": "docs/inorganic_materials/datasets/omat24.md",
+    "scope_note": "Dataset license, not checkpoint or software license.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/datasets/omat24.md",
+    "source_sha256": "52834685f001bf4598cb81f9f4c26110adff7ff5846589d886ad2f621e6ec468"
+  },
+  {
+    "subject": "OMol25",
+    "license": "CC BY 4.0",
+    "source_path": "docs/molecules/datasets/omol25.md",
+    "scope_note": "Dataset license, not checkpoint or software license.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omol25.md",
+    "source_sha256": "b25bf00cf109d6c04b1c644f2377093b808a825ad3f92d96472908ed51b1e3ae"
+  },
+  {
+    "subject": "OMC25",
+    "license": "CC BY 4.0",
+    "source_path": "docs/molecules/datasets/omc25.md",
+    "scope_note": "Dataset license, not checkpoint or software license.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omc25.md",
+    "source_sha256": "d5d49992177e16af84273b9138cfd5c02098fedcf8ebf39c8a1fa1d9d6f97c79"
+  },
+  {
+    "subject": "ODAC23/ODAC25",
+    "license": "CC BY 4.0",
+    "source_path": "docs/dac/datasets/odac25.md",
+    "scope_note": "Confirm each dataset card at download time.",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/datasets/odac25.md",
+    "source_sha256": "c79e4c79804cedd83567cea11798e8d01acb1c900603399a852de74f716308e1"
+  }
+]

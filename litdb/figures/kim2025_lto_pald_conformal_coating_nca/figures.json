@@ -1,0 +1,315 @@
+{
+ "slug": "kim2025_lto_pald_conformal_coating_nca",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "p23_main.pdf",
+  "p23_si.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. SEM-EDS mapping images of LTO-coated NCA. alpha+) was used to analyze the composition and bonding state of the coating layer. The particle sizes and compositions of the NCA powder were characterized using a scanning electron microscope (SEM, Hitachi S-4800) equipped with an energy dispersive spectrometer (EDS) for elemental analysis. X-ray diffraction (XRD; Rigaku, miniFlex600) with Cu Kα radiation was employed to examine the crystal structure of NCA. Focus ion beam (FIB; FEI, Helios) was used to prepare cross-sections of the samples, after which the coating thickness and chemical composition were analyzed by using transmission electron microscopy (TEM; JEOL, NEO ARM) and energy dispersive x-ray spectroscopy (EDS), respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.2,
+    297.0,
+    224.0
+   ],
+   "w": 1107,
+   "h": 725,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.154
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. XPS Li 1s, Ti 2p, and O 1s spectra for (a) 1LTO-coated NCA, (b) 3LTO- coated NCA, and (b) 5LTO-coated NCA. 3. Results and discussion 3.1. Morphology and structural characterization The compositions of the deposited thin films formed by adjusting the Li/Ti pulsing ratio were analyzed by using XPS. As shown in Fig. S1, a conformal LTO film with a composition consistent with Li4Ti5O12 was successfully formed. This deposition recipe was then applied to powder ALD to coat NCA particles. Fig. 1 shows SEM-EDS mapping images of LTO-coated NCA particles, indicating that the latter retained a spherical morphology with particle sizes of 13–15 μm, which is similar to the size of the pristine NCA particles (Fig. S2), and that the coating layer formed via powder ALD did not alter the morphology of the base powder. The particle surfaces appeared to be smooth and free of impurities or ag­ glomer",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.5,
+    566.0,
+    303.0
+   ],
+   "w": 1107,
+   "h": 1057,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.782
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. TEM-EDS images of LTO on NCA in the (a) 1LTO-NCA, (b) 3LTO-NCA, and (c) 5LTO-NCA layers and (d) an HR-TEM image and fast-Fourier transformed (FFT) images showing the phases in LTO-coated NCA. were performed to further investigate the morphology and thickness of the coating layer. It was discovered that the 1LTO-, 3LTO-, and 5LTO- NCA layers had approximate thicknesses of 3, 5, and 10 nm, respec­ tively. A statistical analysis of the coating thickness was performed using cross-sectional TEM images of several particles to assess the uniformity of the coating layer (Fig. S5a-f). In addition, elemental overlapping analysis was conducted to examine the elemental distribution within each sample, confirming that a thin and uniform Ti coating layer was formed along the surface of the Ni-based cathode material (Fig. S5g-i). affected by electron transport. The introduction of the LTO coati",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    566.0,
+    453.0
+   ],
+   "w": 2228,
+   "h": 1682,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.487
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Electrochemical performances of LTO-coated NCA and bare NCA at 45 ◦C: (a) charge–discharge curves at 0.1C, (b) rate performance, and (c) cycling per­ formance at 0.33C (2.5–4.25 V vs Li/Li+).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.3,
+    563.7,
+    406.0
+   ],
+   "w": 2218,
+   "h": 1483,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Nyquist plots obtained after discharge of (a) Bare NCA, (b) 1LTO-NCA, (c) 3LTO-NCA and (d) 5LTO-NCA ASSB cells at the indicated cycle number. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    477.7,
+    553.2,
+    730.8
+   ],
+   "w": 2131,
+   "h": 1055,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. XPS S 2p and P 2p profiles for (a,b) the bare NCA cathode and (c,d) the 1LTO-NCA cathode after 1, 20, and 100 cycles. enhanced Li+ transport kinetics and suppressed interfacial polarization. At such high current densities, however, all coated samples show similar capacities due to the dominance of ohmic resistance caused by severe electrolyte decomposition, which overrides the differences in interfacial protection arising from coating thickness. Upon returning to 0.1C after high-rate cycling, the capacity retentions were 65 % (bare), 87 % (1LTO), 96 % (3LTO), and 99 % (5LTO). The enhanced capacity reten­ tion in the LTO-coated samples is attributed to the reduced electronic conductivity of the coating layer effectively suppressing electrolyte decomposition at the interface. Furthermore, the LTO-NCA also exhibited excellent cycling stability even at a high cutoff voltage of 4.5 V ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.6,
+    566.0,
+    341.0
+   ],
+   "w": 2228,
+   "h": 1215,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. HR-TEM images and the corresponding FFT and inverse FFT patterns of (a) bare NCA and (c) 1LTO-NCA after 100 cycles. (b, d) TEM–EDS elemental mapping images of (b) bare NCA and (d) 1LTO-NCA. terms of initial capacity and cycling stability. To investigate the origin of the increased interfacial resistance, XPS was performed on the cathode composites after cycling, the results of which are presented in Fig. 6; it can be seen that even after a single charge–discharge cycle, signals corresponding to electrolyte decomposition products –S–S– (S 2p: 163.5 eV), Li2S (S 2p: 159.5 eV), Li3P (P 2p: 126.5 eV), and poly- phosphide (P 2p: 127–129 eV) were detected. These by-products result from redox reactions between the cathode active material and the sulfide-based electrolyte [80,81]. They are known to increase cell impedance and polarization, which may be associated with hindered lithium-io",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    566.0,
+    571.0
+   ],
+   "w": 2228,
+   "h": 2174,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.392
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Schematic diagrams illustrating the interfacial reaction pathways at the cathode–solid electrolyte interface. destabilizing the crystal structure and inhibiting Li-ion diffusion. resistance and a rapid decline in capacity. However, as cycling pro­ gresses, the extent of electrolyte oxidation gradually decreases, while phase transition of the cathode active material becomes the predomi­ nant degradation mechanism, resulting in continuous capacity fading. To address this issue, we applied a thin conformal LTO coating to sta­ bilize NCA cathode active material in combination with sulfide solid electrolyte LPSCl. The enhanced stabilization and activation effect of the LTO coating was elucidated using advanced electrochemical analysis techniques in combination with XPS and TEM, which provided an atomic-scale understanding of the coating’s characteristics on the cathode material (Fig. ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.9,
+    566.0,
+    256.0
+   ],
+   "w": 2228,
+   "h": 859,
+   "dpi": 300,
+   "src": "p23_main.pdf",
+   "blank": 0.505
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Fig S1. The Li : Ti XPS elemental ratio of Li-Ti-O film vs. the Li : Ti pulsing ratio deposited without rotation",
+   "src": "p23_si.docx",
+   "src_media": "media/image1.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. SEM-EDS mapping images of Bare NCA.",
+   "src": "p23_si.docx",
+   "src_media": "media/image2.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. XRD patterns of Bare NCA, 1LTO-NCA, 3LTO-NCA and 5LTO-NCA.",
+   "src": "p23_si.docx",
+   "src_media": "media/image3.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. TEM-EDS mapping images of (a,b) 1LTO-NCA, (c-d) 3LTO-NCA and (e-f) 5LTO-NCA",
+   "src": "p23_si.docx",
+   "src_media": "media/image4.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5.png",
+   "caption": "Fig, S5. TEM-EDS mapping images of (a, b) 1LTO-NCA, (c, d) 3LTO-NCA, and (e, f) 5LTO-NCA samples. (g-h) Elemental distributions in the EDS overlapping images are represented as follows: Ti (yellow), Ni (green), and Pt (blue) of (g) 1LTO-NCA, (h) 3LTO-NCA and (i) 5LTO-NCA.",
+   "src": "p23_si.docx",
+   "src_media": "media/image5.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": null,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. (a) Discharge capacity, (b) Coulombic efficiency of 1st cycle and (c) capacity retention at 20, 100cycles. Error bars represent one standard deviation from the mean (n=3 cells per CAM)",
+   "src": "p23_si.docx",
+   "src_media": "media/image6.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": null,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. XPS S 2p profiles for Bare NCA, 1LTO-NCA, 3LTO-NCA and 5LTO-NCA after 1cycle.",
+   "src": "p23_si.docx",
+   "src_media": "media/image7.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": null,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. (a) Li ion transport and (b) electron transport of cathode composite composed sulfide solid electrolyte and cathode active material. (c) Linear sweep voltammetry (LSV) of bare NCA and LTO-coated NCA measured from 2.0 to 5.2 V (vs. Li/Li+) at a scan rate of 0.5 mV/s.",
+   "src": "p23_si.docx",
+   "src_media": "media/image8.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": null,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. Differential capacity plots corresponding to 1, 20, 40, 60, 80, 100 cycles of bare NCA and LTO- NCA cathodes (1LTO, 3LTO, 5LTO).",
+   "src": "p23_si.docx",
+   "src_media": "media/image9.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": null,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. XPS Ni 2p, Ti 2p and Li 1s spectra of LTO- NCA cathode after 1, 20, and 100 cycles.",
+   "src": "p23_si.docx",
+   "src_media": "media/image10.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": null,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. Charge-discharge curves for (a) Bare NCA, (b) 1LTO-NCA, (c) 3LTO-NCA and (d) 5LTO-NCA with different c-rates",
+   "src": "p23_si.docx",
+   "src_media": "media/image11.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": null,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. Cycling performance of Bare NCA, 1, 3, 5LTO-NCA at 4.5V",
+   "src": "p23_si.docx",
+   "src_media": "media/image12.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": null,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. HR-TEM images and corresponding FFT patterns for bare NCA after 1 cycle.",
+   "src": "p23_si.docx",
+   "src_media": "media/image13.png",
+   "mapping_evidence": "docx reading-order: word/document.xml 의 run 순서에서 이 이미지 바로 뒤에 나오는 첫 'Fig. S<n>' 캡션. image1..image13 ↔ S1..S13 이 1:1 로 떨어지고 중복이 없다. 유일한 애매점(para 42 에 S10 캡션 텍스트와 image11 이 같이 있음)은 run 순서가 [텍스트 S10 캡션] → [image11] 이라 image11 = S11 로 확정됐다."
+  }
+ ]
+}

@@ -1,0 +1,431 @@
+{
+ "slug": "lischka2025_dem_eirich_intensive_mixer_dry_mixing",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. DEM simulation approach for modeling NMC-622 and carbon black Super C65 mixtures.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    60.8,
+    562.7,
+    283.5
+   ],
+   "w": 2205,
+   "h": 929,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.813
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Experimental results for the specific energy input and equivalent carbon black particle diameter during mixing.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.4,
+    60.7,
+    523.9,
+    304.7
+   ],
+   "w": 1886,
+   "h": 1017,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Specific comminution energy during dry mixing including frictional energy for different mixing tool speeds in EL1.0 mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    330.7,
+    296.3,
+    586.1
+   ],
+   "w": 1104,
+   "h": 1065,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Comparison between experiments and simulations for the power draw of the mixing tool in EL1.0 and EL0.1 at the start of the mixing process tmix = 0.167 min.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    60.8,
+    552.7,
+    292.4
+   ],
+   "w": 2126,
+   "h": 966,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Mixing tool power draw in EL1.0 mixer during comminution of carbon black, solid lines are derived from the cumulative energy input, symbols are simulation results at 0.167 min, 30 min and 90 min for three different mixing tool speeds.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    461.1,
+    296.3,
+    715.7
+   ],
+   "w": 1104,
+   "h": 1062,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Effect of mixing tool and vessel speed on the degree of mixing in Eirich EL1.0 mixer. 58",
+   "rotated_deg": 0,
+   "bbox": [
+    71.4,
+    458.4,
+    523.9,
+    732.9
+   ],
+   "w": 1886,
+   "h": 1144,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Comparison of calculated shear rates (a) and collision velocities (b) in Eirich EL1.0 mixer. 59",
+   "rotated_deg": 0,
+   "bbox": [
+    71.4,
+    491.0,
+    523.9,
+    732.9
+   ],
+   "w": 1886,
+   "h": 1009,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Effect of particle size on the collision behavior and flow field in Eirich EL1.0 mixer. 60",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    474.0,
+    562.6,
+    732.9
+   ],
+   "w": 2205,
+   "h": 1079,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Effect of operation mode on the collision behavior and flow field in Eirich EL1.0 mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    60.7,
+    562.6,
+    314.5
+   ],
+   "w": 2205,
+   "h": 1058,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Effect of vessel incination on the collision behavior and flow field in Eirich EL1.0 mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    341.4,
+    562.7,
+    641.1
+   ],
+   "w": 2205,
+   "h": 1250,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.741
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Effect of vessel speed on the collision behavior and flow field in Eirich EL1.0 mixer. 62",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    457.2,
+    562.7,
+    732.9
+   ],
+   "w": 2205,
+   "h": 1150,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.73
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Effect of filling volume on the collision behavior and flow field in Eirich EL1.0 mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    60.8,
+    562.6,
+    329.1
+   ],
+   "w": 2205,
+   "h": 1119,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 12,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Different mixing tool sizes used for simulations, scaled to 75 % and 125 % of the original size.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    355.5,
+    296.3,
+    551.0
+   ],
+   "w": 1104,
+   "h": 815,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 13,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Influence of mixing tool size on the mixing performance in Eirich EL1.0 mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    60.7,
+    562.7,
+    342.0
+   ],
+   "w": 2205,
+   "h": 1173,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 13,
+   "file": "fig_16.png",
+   "caption": "Fig. 16. Investigated mixing tools with different pin numbers (6 pins is the standard configuration).",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    368.6,
+    524.0,
+    536.4
+   ],
+   "w": 1887,
+   "h": 701,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.714
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 14,
+   "file": "fig_17.png",
+   "caption": "Fig. 17. Effect of mixing tool design on the collision behavior and flow field in Eirich EL1.0 mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    60.8,
+    562.7,
+    346.7
+   ],
+   "w": 2205,
+   "h": 1192,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 14,
+   "file": "fig_18.png",
+   "caption": "Fig. 18. Simulated power specific collision rates for all investigated mixing configu­ rations and tool speeds.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    372.5,
+    294.7,
+    634.1
+   ],
+   "w": 1097,
+   "h": 1091,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 15,
+   "file": "fig_19.png",
+   "caption": "Fig. 19. Comparison of the mass specific energy dissipation during collision (a) and power specific energy dissipation (b) in Eirich EL1.0 mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.4,
+    60.7,
+    523.9,
+    293.5
+   ],
+   "w": 1886,
+   "h": 970,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 DEM simulation parameters used for different stages of comminution in accordance with mixing time and mixing tool speed. Density ρbulk Mixing time tmix Particle diameter Stat. friction p-p μs,pp Dyn. friction p-p μd,pp Stat. friction p-w μs,pw Dyn. friction p-w μd,pw",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.9,
+    562.8,
+    747.7
+   ],
+   "w": 2210,
+   "h": 2938,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Values for agitation and comminution efﬁci ciency ηcb of carbon black during mixing in EL1.0 wtool ηcb (tmix < 1 min) ηcb (tmix = 90 min) 30 m/s 0.58 0.02 25 m/s 0.48 0.05 20 m/s 0.42 0.00",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.9,
+    564.3,
+    747.1
+   ],
+   "w": 2217,
+   "h": 2935,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 Values for the RSD90, MSD and MSD95 for different vessel and mixing tool speeds. Parameter 40 m/s 5 m/s RSD90,0rpm 7.6 s 2.7 s RSD90,85rpm 16.8 s 17.5 s RSD90,170rpm 15.9 s 18.9 s MSD 0.040 m2/s 0.030 m2/s MSD95 0.070 m2/s 0.050 m2/s",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.9,
+    562.7,
+    748.4
+   ],
+   "w": 2210,
+   "h": 2941,
+   "dpi": 300,
+   "src": "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf",
+   "blank": 0.842
+  }
+ ]
+}

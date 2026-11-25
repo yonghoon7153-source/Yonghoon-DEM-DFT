@@ -1,0 +1,6 @@
+&INPUTPP
+  prefix='q3p_MP_07_bader', outdir='/home/kgy/work/runs/nd_q3p_1027/bader/MP_07/tmp/', plot_num=17, filplot='./nd_ae'
+/
+&PLOT
+  iflag=3, output_format=6, fileout='nd_rho_ae.cube'
+/

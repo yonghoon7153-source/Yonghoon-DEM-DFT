@@ -1,0 +1,30 @@
+[2026-09-26 21:09:10] ════ run_sese_gpu · IN=/home/ubuntu/wad4l/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_hollow_fcc/qe · RUN=/home/ubuntu/runs/wad_aprime_s4_v2s2_2026_09_26/V2_hollow_fcc · JOBS=[V2_hollow_fcc_dft_bound V2_hollow_fcc_dft_far V2_hollow_fcc_Ed_m03 V2_hollow_fcc_Ed_p03 V2_hollow_fcc_Ed_p06]
+[2026-09-26 21:09:10] 공존 근거: D-2026-09-23-gabia-gpu-exception-sese · START<2048 MiB · KILL>31000 MiB · 표본 2s · UMA 공존 허용=0 · 허용 PID=[제한 없음]
+[2026-09-26 21:09:12] 랭크 NP=1 · GPU 1 장 · pseudo=/home/ubuntu/wad4l/pseudo_kgy (PSEUDO_DIR 로 교체)
+[2026-09-26 21:09:12] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-09-26 21:09:12] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-26 21:09:12] 디스크 871G 남음 (7% 사용)
+[2026-09-26 21:09:13] GPU 합계 사용량 지금 0 MiB · 호스트 MemAvailable 119404 MiB (시작 문턱 16384 · 중단 4096)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[2026-09-26 21:09:14] ▶ V2_hollow_fcc_dft_bound (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119398 MiB
+[2026-09-26 21:09:15]    래퍼(mpirun) PID 1618966 · pw.x PID 1618984
+[2026-09-26 21:09:45]    ⚠ nvidia-smi 목록에 우리 pw.x(1618984) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:13:08] ■ V2_hollow_fcc_dft_bound rc=0 완료=1 벽시계 233s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118523 MiB · 중단=0
+[2026-09-26 21:13:13] ▶ V2_hollow_fcc_dft_far (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119398 MiB
+[2026-09-26 21:13:14]    래퍼(mpirun) PID 1620964 · pw.x PID 1620982
+[2026-09-26 21:13:45]    ⚠ nvidia-smi 목록에 우리 pw.x(1620982) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:15:25] ■ V2_hollow_fcc_dft_far rc=0 완료=1 벽시계 131s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118495 MiB · 중단=0
+[2026-09-26 21:15:29] ▶ V2_hollow_fcc_Ed_m03 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119408 MiB
+[2026-09-26 21:15:30]    래퍼(mpirun) PID 1622110 · pw.x PID 1622128
+[2026-09-26 21:16:00]    ⚠ nvidia-smi 목록에 우리 pw.x(1622128) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:18:37] ■ V2_hollow_fcc_Ed_m03 rc=0 완료=1 벽시계 188s · 피크 합계 2752 MiB · 자기 — MiB · 호스트 최저 118516 MiB · 중단=0
+[2026-09-26 21:18:42] ▶ V2_hollow_fcc_Ed_p03 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119402 MiB
+[2026-09-26 21:18:43]    래퍼(mpirun) PID 1623763 · pw.x PID 1623781
+[2026-09-26 21:19:13]    ⚠ nvidia-smi 목록에 우리 pw.x(1623781) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:22:02] ■ V2_hollow_fcc_Ed_p03 rc=0 완료=1 벽시계 199s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118515 MiB · 중단=0
+[2026-09-26 21:22:09] ▶ V2_hollow_fcc_Ed_p06 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119415 MiB
+[2026-09-26 21:22:10]    래퍼(mpirun) PID 1625455 · pw.x PID 1625477
+[2026-09-26 21:22:41]    ⚠ nvidia-smi 목록에 우리 pw.x(1625477) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:24:50] ■ V2_hollow_fcc_Ed_p06 rc=0 완료=1 벽시계 161s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118519 MiB · 중단=0
+[2026-09-26 21:24:50] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/ubuntu/runs/wad_aprime_s4_v2s2_2026_09_26/V2_hollow_fcc --qe_in /home/ubuntu/wad4l/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_hollow_fcc/qe

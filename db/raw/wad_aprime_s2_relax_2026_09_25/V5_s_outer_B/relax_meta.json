@@ -1,0 +1,70 @@
+{
+ "model_dir": "/data/work/aprime_s2/db/inputs/wad_aprime_s2_geometries_2026_09_25/V5_s_outer/B",
+ "model": "V5",
+ "registry": "B",
+ "term": "s_outer",
+ "init_sha256": "38011a60da03d6876c26b5dd3b12e578ea2c0162e1987623e127eca6fabb3d7f",
+ "n_atoms": 200,
+ "fixed_n": 60,
+ "lateral_n": 0,
+ "preflight": {
+  "flags": [],
+  "mask_matches_policy": true
+ },
+ "ase": "3.28.0",
+ "fmax_target_eV_A": 0.02,
+ "max_steps": 3000,
+ "optimizer": "fire",
+ "cell_fixed": true,
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "fairchem.core": "2.19.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/root/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ],
+  "d3": {
+   "impl": "simple-dftd3 (python)",
+   "version": "1.6.0",
+   "method": "PBE",
+   "damping": "d3bj (2체)",
+   "params_expected": {
+    "functional": "PBE",
+    "damping": "BJ",
+    "s6": 1.0,
+    "s8": 0.7875,
+    "a1": 0.4289,
+    "a2": 4.4407,
+    "three_body": false
+   }
+  }
+ },
+ "calculator_pbc": [
+  true,
+  true,
+  true
+ ],
+ "calculator_pbc_why": "UMA 는 균일 pbc 만 받는다 · z 영상 간격 ≥ 8 Å > UMA 컷오프 6 Å · QE 와 같은 3축 관례",
+ "steps_taken": 366,
+ "converged_fmax": true,
+ "fmax_free_final_eV_A": 0.01995,
+ "wall_s": 98.8,
+ "relaxed_sha256": "a0d39e8d1e686749292ce78aeda71a2bf71216f62d249ee9298321dc0ba7163e",
+ "disp_max_A": 2.459,
+ "disp_rms_A": 0.977,
+ "interface_check_flags": [],
+ "energies_raw_log_only": {
+  "E_init_eV": -735.4182082495726,
+  "E_final_eV": -742.2619956612042,
+  "⛔": "원출력 기록용 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 (카드 v5 S3 전 예외 규칙)"
+ }
+}

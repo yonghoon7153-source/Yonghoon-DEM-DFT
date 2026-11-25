@@ -1,0 +1,25 @@
+  OK                       P2S_S_A_bound  {'0': 'OK'}
+  OK                       P2S_S_A_far  {'0': 'OK'}
+  MISSING                  P2S_Li_A_bound  {'0': 'MISSING'}
+  MISSING                  P2S_Li_A_far  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_p05_bound  {'0': 'MISSING'}
+  MISSING                  P2S_Li_A_p05_bound  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G3_c2_bound  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G3_c2_far_i  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G3_c2_far_ii  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G4_k62_bound  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G4_k62_far  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G4_k62s2_bound  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G4_k62s2_far  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G4_e650_bound  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_G4_e650_far  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_optB88_bound  {'0': 'MISSING'}
+  MISSING                  P2S_S_A_optB88_far  {'0': 'MISSING'}
+  MISSING                  P2S_Li_A_optB88_bound  {'0': 'MISSING'}
+  MISSING                  P2S_Li_A_optB88_far  {'0': 'MISSING'}
+  SETTINGS_UNVERIFIED      CC_S33_AB_optB88_bound  {'0': 'SETTINGS_UNVERIFIED'}
+  SETTINGS_UNVERIFIED      CC_S33_AB_optB88_far  {'0': 'SETTINGS_UNVERIFIED'}
+  MISSING                  CC_S33_AB_pbed3_bound  {'0': 'MISSING'}
+  MISSING                  CC_S33_AB_pbed3_far  {'0': 'MISSING'}
+  SCF_NOT_CONVERGED        V5_s_outer_A_G4_e70_far_a4  {'a4A': 'SCF_NOT_CONVERGED', 'a4B': 'SCF_NOT_CONVERGED'}
+check 끝 코드 3 (3 = 파일럿 단계 MISSING · 예상)

@@ -1,0 +1,192 @@
+figure,series,x_name,x,y_name,y,note
+figS2,Li6PS5Cl-40um,p_GPa,0.002,rho_rel_pct,64.88,in-die; porosity=35.1%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.048,rho_rel_pct,73.36,in-die; porosity=26.6%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.097,rho_rel_pct,77.77,in-die; porosity=22.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.147,rho_rel_pct,80.84,in-die; porosity=19.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.197,rho_rel_pct,83.23,in-die; porosity=16.8%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.248,rho_rel_pct,85.27,in-die; porosity=14.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.299,rho_rel_pct,87.09,in-die; porosity=12.9%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.349,rho_rel_pct,88.69,in-die; porosity=11.3%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.398,rho_rel_pct,90.15,in-die; porosity=9.8%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.449,rho_rel_pct,91.45,in-die; porosity=8.6%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.498,rho_rel_pct,92.63,in-die; porosity=7.4%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.549,rho_rel_pct,93.73,in-die; porosity=6.3%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.599,rho_rel_pct,94.71,in-die; porosity=5.3%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.649,rho_rel_pct,95.64,in-die; porosity=4.4%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.699,rho_rel_pct,96.43,in-die; porosity=3.6%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.748,rho_rel_pct,97.16,in-die; porosity=2.8%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.798,rho_rel_pct,97.87,in-die; porosity=2.1%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.849,rho_rel_pct,98.54,in-die; porosity=1.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.898,rho_rel_pct,99.19,in-die; porosity=0.8%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,0.948,rho_rel_pct,99.78,in-die; porosity=0.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-40um,p_GPa,1.0,rho_rel_pct,100.03,in-die; porosity=-0.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.008,rho_rel_pct,61.96,in-die; porosity=38.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.048,rho_rel_pct,70.97,in-die; porosity=29.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.098,rho_rel_pct,74.98,in-die; porosity=25.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.149,rho_rel_pct,77.99,in-die; porosity=22.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.198,rho_rel_pct,80.97,in-die; porosity=19.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.248,rho_rel_pct,83.0,in-die; porosity=17.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.298,rho_rel_pct,83.97,in-die; porosity=16.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.348,rho_rel_pct,85.99,in-die; porosity=14.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.399,rho_rel_pct,86.97,in-die; porosity=13.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.449,rho_rel_pct,88.97,in-die; porosity=11.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.498,rho_rel_pct,89.99,in-die; porosity=10.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.549,rho_rel_pct,90.97,in-die; porosity=9.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.599,rho_rel_pct,91.97,in-die; porosity=8.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.649,rho_rel_pct,92.97,in-die; porosity=7.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.699,rho_rel_pct,93.99,in-die; porosity=6.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.747,rho_rel_pct,94.97,in-die; porosity=5.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.799,rho_rel_pct,94.97,in-die; porosity=5.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.849,rho_rel_pct,95.97,in-die; porosity=4.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.897,rho_rel_pct,96.97,in-die; porosity=3.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.949,rho_rel_pct,96.97,in-die; porosity=3.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,0.998,rho_rel_pct,97.98,in-die; porosity=2.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,1.049,rho_rel_pct,98.0,in-die; porosity=2.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,1.097,rho_rel_pct,98.98,in-die; porosity=1.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,1.149,rho_rel_pct,98.98,in-die; porosity=1.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-20um,p_GPa,1.2,rho_rel_pct,99.98,in-die; porosity=0.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.004,rho_rel_pct,57.36,in-die; porosity=42.6%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.049,rho_rel_pct,65.09,in-die; porosity=34.9%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.098,rho_rel_pct,69.22,in-die; porosity=30.8%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.149,rho_rel_pct,71.9,in-die; porosity=28.1%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.198,rho_rel_pct,74.01,in-die; porosity=26.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.248,rho_rel_pct,75.85,in-die; porosity=24.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.298,rho_rel_pct,77.49,in-die; porosity=22.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.348,rho_rel_pct,78.96,in-die; porosity=21.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.399,rho_rel_pct,80.32,in-die; porosity=19.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.449,rho_rel_pct,81.6,in-die; porosity=18.4%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.498,rho_rel_pct,82.79,in-die; porosity=17.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.548,rho_rel_pct,83.95,in-die; porosity=16.1%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.598,rho_rel_pct,85.1,in-die; porosity=14.9%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-11um,p_GPa,0.649,rho_rel_pct,86.14,in-die; porosity=13.9%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.008,rho_rel_pct,47.5,in-die; porosity=52.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.048,rho_rel_pct,56.65,in-die; porosity=43.3%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.098,rho_rel_pct,61.89,in-die; porosity=38.1%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.149,rho_rel_pct,65.46,in-die; porosity=34.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.199,rho_rel_pct,68.47,in-die; porosity=31.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.249,rho_rel_pct,71.28,in-die; porosity=28.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.299,rho_rel_pct,73.73,in-die; porosity=26.3%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.349,rho_rel_pct,75.83,in-die; porosity=24.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.399,rho_rel_pct,77.65,in-die; porosity=22.4%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.449,rho_rel_pct,79.24,in-die; porosity=20.8%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.498,rho_rel_pct,80.75,in-die; porosity=19.3%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.548,rho_rel_pct,82.09,in-die; porosity=17.9%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.599,rho_rel_pct,83.33,in-die; porosity=16.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.649,rho_rel_pct,84.46,in-die; porosity=15.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.699,rho_rel_pct,85.49,in-die; porosity=14.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.749,rho_rel_pct,86.42,in-die; porosity=13.6%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.798,rho_rel_pct,87.27,in-die; porosity=12.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.849,rho_rel_pct,88.03,in-die; porosity=12.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.899,rho_rel_pct,88.78,in-die; porosity=11.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.949,rho_rel_pct,89.46,in-die; porosity=10.5%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,0.999,rho_rel_pct,90.13,in-die; porosity=9.9%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.049,rho_rel_pct,90.73,in-die; porosity=9.3%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.099,rho_rel_pct,91.27,in-die; porosity=8.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.149,rho_rel_pct,91.83,in-die; porosity=8.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.198,rho_rel_pct,92.32,in-die; porosity=7.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.248,rho_rel_pct,92.78,in-die; porosity=7.2%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.299,rho_rel_pct,93.23,in-die; porosity=6.8%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.349,rho_rel_pct,93.61,in-die; porosity=6.4%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.399,rho_rel_pct,93.98,in-die; porosity=6.0%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.448,rho_rel_pct,94.33,in-die; porosity=5.7%; 11um hidden under 4um above 0.65 GPa
+figS2,Li6PS5Cl-4um,p_GPa,1.5,rho_rel_pct,94.64,in-die; porosity=5.4%; 11um hidden under 4um above 0.65 GPa
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.097,sigma_ion_mS_per_cm,3.004,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.147,sigma_ion_mS_per_cm,3.437,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.2,sigma_ion_mS_per_cm,3.743,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.251,sigma_ion_mS_per_cm,3.709,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.298,sigma_ion_mS_per_cm,3.614,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.349,sigma_ion_mS_per_cm,3.527,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.4,sigma_ion_mS_per_cm,3.429,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.45,sigma_ion_mS_per_cm,3.332,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.501,sigma_ion_mS_per_cm,3.243,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-40um decompression (filled),p_GPa,0.602,sigma_ion_mS_per_cm,3.078,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.05,sigma_ion_mS_per_cm,1.629,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.1,sigma_ion_mS_per_cm,2.553,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.149,sigma_ion_mS_per_cm,3.015,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.198,sigma_ion_mS_per_cm,3.209,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.249,sigma_ion_mS_per_cm,3.316,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.3,sigma_ion_mS_per_cm,3.337,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.35,sigma_ion_mS_per_cm,3.318,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.398,sigma_ion_mS_per_cm,3.279,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.449,sigma_ion_mS_per_cm,3.208,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.498,sigma_ion_mS_per_cm,3.13,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.55,sigma_ion_mS_per_cm,3.047,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.6,sigma_ion_mS_per_cm,2.966,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.651,sigma_ion_mS_per_cm,2.882,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.701,sigma_ion_mS_per_cm,2.804,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.75,sigma_ion_mS_per_cm,2.733,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.8,sigma_ion_mS_per_cm,2.657,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.85,sigma_ion_mS_per_cm,2.588,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,0.9,sigma_ion_mS_per_cm,2.518,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.001,sigma_ion_mS_per_cm,2.39,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.052,sigma_ion_mS_per_cm,2.33,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.102,sigma_ion_mS_per_cm,2.267,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.151,sigma_ion_mS_per_cm,2.215,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.201,sigma_ion_mS_per_cm,2.159,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.252,sigma_ion_mS_per_cm,2.106,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.301,sigma_ion_mS_per_cm,2.06,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.353,sigma_ion_mS_per_cm,2.014,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.403,sigma_ion_mS_per_cm,1.972,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-20um decompression (filled),p_GPa,1.503,sigma_ion_mS_per_cm,1.911,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-11um decompression (filled),p_GPa,0.048,sigma_ion_mS_per_cm,2.005,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-11um decompression (filled),p_GPa,0.147,sigma_ion_mS_per_cm,2.49,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-11um decompression (filled),p_GPa,0.199,sigma_ion_mS_per_cm,2.621,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-11um decompression (filled),p_GPa,0.25,sigma_ion_mS_per_cm,2.659,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.049,sigma_ion_mS_per_cm,1.438,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.098,sigma_ion_mS_per_cm,2.059,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.15,sigma_ion_mS_per_cm,2.376,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.199,sigma_ion_mS_per_cm,2.502,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.249,sigma_ion_mS_per_cm,2.542,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.3,sigma_ion_mS_per_cm,2.538,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.35,sigma_ion_mS_per_cm,2.503,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.399,sigma_ion_mS_per_cm,2.46,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.45,sigma_ion_mS_per_cm,2.406,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.499,sigma_ion_mS_per_cm,2.352,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.549,sigma_ion_mS_per_cm,2.291,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.6,sigma_ion_mS_per_cm,2.229,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.65,sigma_ion_mS_per_cm,2.168,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.699,sigma_ion_mS_per_cm,2.106,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.751,sigma_ion_mS_per_cm,2.052,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.8,sigma_ion_mS_per_cm,1.999,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.85,sigma_ion_mS_per_cm,1.944,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.901,sigma_ion_mS_per_cm,1.902,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,0.951,sigma_ion_mS_per_cm,1.855,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.002,sigma_ion_mS_per_cm,1.815,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.051,sigma_ion_mS_per_cm,1.772,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.102,sigma_ion_mS_per_cm,1.732,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.152,sigma_ion_mS_per_cm,1.692,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.203,sigma_ion_mS_per_cm,1.657,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.251,sigma_ion_mS_per_cm,1.625,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.302,sigma_ion_mS_per_cm,1.591,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.352,sigma_ion_mS_per_cm,1.565,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.403,sigma_ion_mS_per_cm,1.538,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.452,sigma_ion_mS_per_cm,1.517,filled markers only (eroded colour blobs); overlapping points missing
+fig1b,Li6PS5Cl-4um decompression (filled),p_GPa,1.503,sigma_ion_mS_per_cm,1.496,filled markers only (eroded colour blobs); overlapping points missing
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.1,sigma_mS_per_cm,1.303,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.2,sigma_mS_per_cm,1.615,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.3,sigma_mS_per_cm,1.777,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.4,sigma_mS_per_cm,1.866,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.5,sigma_mS_per_cm,1.909,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.6,sigma_mS_per_cm,1.935,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.7,sigma_mS_per_cm,1.95,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,0.9,sigma_mS_per_cm,1.946,sigma_bulk 2.0 mS/cm
+fig1c,DEM+GeoDict sigma_ion_sim (11 um),p_GPa,1.0,sigma_mS_per_cm,1.95,sigma_bulk 2.0 mS/cm
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.1,sigma_mS_per_cm,0.959,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.2,sigma_mS_per_cm,1.407,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.3,sigma_mS_per_cm,1.676,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.39,sigma_mS_per_cm,1.843,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.5,sigma_mS_per_cm,1.996,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.6,sigma_mS_per_cm,2.036,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.7,sigma_mS_per_cm,2.038,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.8,sigma_mS_per_cm,2.0,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,0.9,sigma_mS_per_cm,1.95,red rings; 0.8/0.9 GPa averaged duplicates
+fig1c,"experimental sigma_ion_exp (11 um, compression)",p_GPa,1.0,sigma_mS_per_cm,1.852,red rings; 0.8/0.9 GPa averaged duplicates
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,0.05,ln_1_over_1_minus_rho,0.75,rho_rel=0.528 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,0.2,ln_1_over_1_minus_rho,0.84,rho_rel=0.568 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,0.45,ln_1_over_1_minus_rho,0.92,rho_rel=0.601 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,0.6,ln_1_over_1_minus_rho,0.96,rho_rel=0.617 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,0.7,ln_1_over_1_minus_rho,0.98,rho_rel=0.625 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,0.9,ln_1_over_1_minus_rho,1.0,rho_rel=0.632 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,1.15,ln_1_over_1_minus_rho,1.03,rho_rel=0.643 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,1.25,ln_1_over_1_minus_rho,1.04,rho_rel=0.647 — implausibly low vs pure powders (flagged)
+fig5c,mixture 40+4 um (two-tone markers),p_GPa,1.4,ln_1_over_1_minus_rho,1.05,rho_rel=0.650 — implausibly low vs pure powders (flagged)

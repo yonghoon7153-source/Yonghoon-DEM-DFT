@@ -1,0 +1,372 @@
+{
+ "slug": "honrao2021_interpretable_ml_sse_anode_coatings",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "110. Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+  "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Promising electrolyte and anode coating candidates identified through the screening approach. Complete screening results can be found in Supplementary Figs. S3–S6 and Supplementary Table S1. [3D barrier ≤0.5 eV , Ehull ≤30 meV , Eg ≥1 eV].",
+   "rotated_deg": 0,
+   "bbox": [
+    149.2,
+    44.5,
+    562.2,
+    207.1
+   ],
+   "w": 1722,
+   "h": 678,
+   "dpi": 300,
+   "src": "110. Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.955
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 9,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Shapley explanations for individual predictions made by the GB model trained on 3D barriers. Red arrows represent feature effects that drive the predicted 3D barrier higher, while blue arrows represent those that drive the prediction lower. The lengths of the arrows indicate the magnitudes of the effects. From top to bottom: Li9S3N , Li2CO3 , LiBF4 , and Sr4Li(BN2)3.",
+   "rotated_deg": 0,
+   "bbox": [
+    123.0,
+    44.5,
+    561.4,
+    420.7
+   ],
+   "w": 1828,
+   "h": 1568,
+   "dpi": 300,
+   "src": "110. Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.779
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Permutation feature importance plot for the 3D barrier GB model showing the decrease in R2 values upon random permutation of individual feature vectors. Higher values indicate a larger impact on predictions. Only features with the top 10 PFI scores are shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.9,
+    44.5,
+    556.5,
+    205.8
+   ],
+   "w": 1695,
+   "h": 673,
+   "dpi": 300,
+   "src": "110. Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.88
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Permutation feature importance plots for the (a) reduction potential and (b) oxidation potential GB models. Features describing the same element property, measured through different statistics, are clustered together to avoid highly correlated features.",
+   "rotated_deg": 0,
+   "bbox": [
+    123.0,
+    44.5,
+    560.2,
+    195.5
+   ],
+   "w": 1823,
+   "h": 630,
+   "dpi": 300,
+   "src": "110. Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.854
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "FIG. S1: Illustration of the 3D pathway for Li+ migration in Li3PS4, computed using the softBV tool. The pathway represents the lowest energy isosurface that percolates through all three directions of the unit cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    335.8
+   ],
+   "w": 1993,
+   "h": 1125,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.725
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "FIG. S2: Voltage proﬁle depicting the lithiation and delithiation of Li3PS4. The electrochemical stability window of Li3PS4 extends from 1.7-2.2 V, the voltage range corresponding to zero Li uptake. Text indicates the predicted phase equilibria across various voltage ranges.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.2,
+    388.8
+   ],
+   "w": 1993,
+   "h": 1346,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.962
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "FIG. S3: Sulﬁde compounds identiﬁed as promising solid electrolyte candidates by our screening algorithm. Apart from Li2S and Li9S3N, all other sulﬁdes have high reduction potentials and are thus unstable against Li metal. [3D barrier ≤0.5 eV, Ehull ≤30 meV, Eg ≥1 eV]",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.2,
+    388.8
+   ],
+   "w": 1993,
+   "h": 1346,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.961
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "FIG. S4: Halide compounds identiﬁed as promising solid electrolyte candidates by our screening algorithm. LiBF4 and LiSbF4 are predicted to have the lowest 3D barriers. [3D barrier ≤0.5 eV, Ehull ≤30 meV, Eg ≥1 eV]",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.2,
+    388.8
+   ],
+   "w": 1993,
+   "h": 1346,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.952
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "FIG. S5: Oxide compounds identiﬁed as promising solid electrolyte candidates by our screening algorithm. Several oxides also have low reduction potentials, and can act as good anode coatings. [3D barrier ≤0.5 eV, Ehull ≤30 meV, Eg ≥1 eV]",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    388.8
+   ],
+   "w": 1994,
+   "h": 1346,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.936
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "FIG. S6: Other compounds identiﬁed as promising solid electrolyte candidates by our screening algorithm. Nitrides have the lowest reduction potentials among other compounds. [3D barrier ≤0.5 eV, Ehull ≤30 meV, Eg ≥1 eV]",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.2,
+    388.8
+   ],
+   "w": 1993,
+   "h": 1346,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.964
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "FIG. S7: Illustration of the 3D pathway for Li+ migration in a few promising electrolyte and anode coating candidates identiﬁed through our screening approach: (a) Li9S3N, (b) Li10SiP2S12, (c) LiAlB2O5, and (d) LiYO2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    535.2,
+    503.0
+   ],
+   "w": 1955,
+   "h": 1822,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.654
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "FIG. S8: Parity plot comparing the 3D barriers predicted using the GB model against barriers computed with softBV on the held-out test set. Good agreement can be seen between the two in the 0 −1 eV range, most relevant for practical applications.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.2,
+    427.7
+   ],
+   "w": 1993,
+   "h": 1508,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.901
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "FIG. S9: Shapley explanations for individual predictions made by the GB model trained on 3D barriers. From top to bottom: LiErSe2, LiMgB3(H9N)2, and SrLi(BS2)3.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    403.3
+   ],
+   "w": 1993,
+   "h": 1406,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.815
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "FIG. S10: Heatmap plot showing the Pearson correlation coeﬃcients between each pair of input features and between individual features and the softBV 3D barrier (Eb). Blue and red boxes indicate positive and negative correlation, whereas darker and lighter shades represent strong and weak correlation.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.2,
+    388.8
+   ],
+   "w": 1993,
+   "h": 1346,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.558
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "FIG. S11: Parity plots comparing the (a) reduction potentials and (b) oxidation potentials (vs. Li) predicted using the GB models against DFT values on the held-out test set.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    249.3
+   ],
+   "w": 1994,
+   "h": 765,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.886
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2. List of 28 element property features used for predicting oxidation and reduction potentials (vs. Li/ Li+). Each of eight standard element properties are weighted by composition and measured through three different statistics to obtain the first 24 features. The other 4 are new oxidation state features introduced in “Oxidation and reduction potentials”.",
+   "rotated_deg": 0,
+   "bbox": [
+    155.9,
+    278.8,
+    541.0,
+    366.0
+   ],
+   "w": 1606,
+   "h": 365,
+   "dpi": 300,
+   "src": "110. Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.969
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3. The cross-validated performance of our RF and GB models trained using 22 input features on the 3D barrier prediction task. Also compared are three other structure-based representations from literature (with the same GB model in each case).",
+   "rotated_deg": 0,
+   "bbox": [
+    150.9,
+    124.1,
+    558.6,
+    471.6
+   ],
+   "w": 1700,
+   "h": 1448,
+   "dpi": 300,
+   "src": "110. Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.905
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "TABLE S1: Compounds identiﬁed as promising candidates for coatings on Li metal anode, arranged in order of increasing 3D barriers. [Reduction potential (vs. Li) = 0 V, electrochemical window ≥1 V, 3D barrier ≤1 eV, Ehull ≤30 meV, Eg ≥1 eV]",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    74.3,
+    527.2,
+    737.9
+   ],
+   "w": 1918,
+   "h": 2766,
+   "dpi": 300,
+   "src": "110. Sup) Honrao2021_Interpretable_ML_HT_Screening_Li_SSE_Anode_Coatings.PDF",
+   "blank": 0.96
+  }
+ ]
+}

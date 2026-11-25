@@ -1,0 +1,45 @@
+{
+  "checked_at": "2026-08-21",
+  "official_releases_url": "https://github.com/facebookresearch/fairchem/releases",
+  "remote_tag_count": 74,
+  "main_snapshot_commit": "93a03d656806a55f08c7cd126cfaa40ef18181fb",
+  "warning": "The default-branch snapshot is not interchangeable with an installed release. Record the actual package version and checkpoint revision used in calculations.",
+  "latest_observed_package_tags": [
+    {
+      "package": "fairchem-core",
+      "tag": "fairchem_core-2.22.0"
+    },
+    {
+      "package": "fairchem-applications-cattsunami",
+      "tag": "fairchem_applications_cattsunami-1.1.1"
+    },
+    {
+      "package": "fairchem-data-oc",
+      "tag": "fairchem_data_oc-1.0.2"
+    },
+    {
+      "package": "fairchem-lammps",
+      "tag": "fairchem_lammps-0.5.0"
+    },
+    {
+      "package": "fairchem-demo-ocpapi",
+      "tag": "fairchem_demo_ocpapi-0.2.0"
+    },
+    {
+      "package": "fairchem-data-omol",
+      "tag": "fairchem_data_omol-0.1.2"
+    },
+    {
+      "package": "fairchem-data-omat",
+      "tag": "fairchem_data_omat-0.2.0"
+    },
+    {
+      "package": "fairchem-data-odac",
+      "tag": "fairchem_data_odac-0.1.0"
+    },
+    {
+      "package": "fairchem-data-omc",
+      "tag": "fairchem_data_omc-0.1.0"
+    }
+  ]
+}

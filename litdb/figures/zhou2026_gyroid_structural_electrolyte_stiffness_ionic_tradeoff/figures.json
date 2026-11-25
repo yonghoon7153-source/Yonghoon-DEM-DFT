@@ -1,0 +1,393 @@
+{
+ "slug": "zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff",
+ "dpi": 300,
+ "generated": "2026-10-27",
+ "sources": [
+  "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf"
+ ],
+ "missing_labels": [],
+ "page_note": "page = PDF 쪽 (1 쪽 = AIP 표지) · 학술지 쪽 154901-N = page − 1",
+ "note_manual": "2026-10-27 그림 8 · 표 3 · 식 6 = 17 장 전부 렌더 열람 · 그림 8 장은 삽입 래스터 (300 dpi) 경계 크롭 · 표 · 식은 글자 블록 · 괘선 좌표로 손 크롭 · SI 없음 (원문에 SI 언급 없음 · 부록 = 표 I–III)",
+ "data_files": {
+  "source_data_tables.csv": "표 I–III 전사 [인쇄] (텍스트 층 · 렌더 대조)",
+  "digitized.csv": "그림 8 안 인쇄 숫자 [판독] ↔ 표 II 재계산 [우리 산술]",
+  "ours_voxel_fv_reproduction.csv": "우리 독립 복셀 FV 재현 (κ̄) [우리 산술 — 논문 값 아님]"
+ },
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Solid phase domains with varying geometric anisotropy (scaling ratio).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    538.0,
+    295.0,
+    669.3
+   ],
+   "w": 1001,
+   "h": 548,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "caption_note": "sheet 형 고체로 보인다 (곡면 벽) — 원문은 고체 쪽을 정의하지 않음 · 우리 복셀 재현이 시트 정의에서만 표 I 과 맞음 (카드 §7-3)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Liquid phase domains with varying geometric anisotropy (scaling ratio).",
+   "rotated_deg": 0,
+   "bbox": [
+    317.0,
+    102.0,
+    557.0,
+    233.5
+   ],
+   "w": 1001,
+   "h": 548,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. (a) Normalized elastic modulus and ionic conductivity, and (b) tortuosity of the conventional (1:1:1) gyroid as functions of porosity.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    102.0,
+    558.0,
+    301.4
+   ],
+   "w": 2100,
+   "h": 831,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "caption_note": "점 = 표 I (부록이 '그림 원자료' 라고 밝힘) · 육안 대조 일치",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Normalized elastic modulus of the structural electrolyte with varying scaling ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    317.0,
+    503.4,
+    557.0,
+    660.4
+   ],
+   "w": 1001,
+   "h": 655,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "caption_note": "막대 = 표 II Ē (육안 대조 일치)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Normalized ionic conductivity of the structural electrolyte with varying scaling ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    102.0,
+    295.0,
+    263.8
+   ],
+   "w": 1001,
+   "h": 675,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "caption_note": "막대 = 표 II κ̄ (육안 대조 일치)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Tortuosity of gyroid-based microstructures with varying scaling ratios. The tortuosity values are shown for each structure.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    494.0,
+    295.0,
+    660.4
+   ],
+   "w": 1001,
+   "h": 694,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "caption_note": "막대 = 표 II τ = ε/κ̄ = 우리 tau2 (수송 tortuosity · 제곱근 아님)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. Stiffness-conductivity trade-off for gyroid-based microstructures with varying scaling ratios (a:b:c). Normalized elastic modulus is plotted against normalized ionic conductivity for the x, y, and z directions. Each point corresponds to a specific microstructure, as labeled.",
+   "rotated_deg": 0,
+   "bbox": [
+    317.0,
+    102.0,
+    557.0,
+    332.2
+   ],
+   "w": 1001,
+   "h": 960,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "caption_note": "점 = 표 II 18 개 (Ē, κ̄) · [우리 산술] Ē ≈ −0.057 + 0.720 κ̄ (R² 0.991)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "FIG. 8. Directional anisotropy of stiffness and ionic conductivity. Anisotropy ratios Emax/Emin and κmax/κmin quantify the directional contrast in each architecture, while the heatmap shows the enrichment of each directional response relative to that of the (1:1:1) architecture. The microstructures induce combined mechanical and transport anisotropy, with a stronger amplification in stiffness than in ionic conductivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    317.0,
+    102.0,
+    557.0,
+    270.1
+   ],
+   "w": 1001,
+   "h": 701,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "native_dpi": 300.0,
+   "crop_note": "삽입 래스터의 자기 경계 그대로 (원 해상도 300 dpi · 겹치는 글자 · 벡터 없음 확인)",
+   "caption_note": "그림 안 숫자 = 표 II 의 반올림 전 값으로 계산 (±0.01 · digitized.csv) · (2:1:1) E 비 2.3 = 표 값 2.35 의 반올림 칼날",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "I",
+   "page": 10,
+   "file": "tab_I.png",
+   "caption": "TABLE I. Normalized elastic modulus Ē, normalized ionic conductivity κ̄, and tortuosity τ of the gyroid-based structural electrolyte with (1:1:1) microstructure at varying porosity. The elastic moduli, ionic conductivities, and tortuosities are equal in the x, y, and z directions.",
+   "rotated_deg": 0,
+   "bbox": [
+    312.0,
+    392.0,
+    563.0,
+    551.0
+   ],
+   "w": 1046,
+   "h": 663,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "표 제목부터 아래 이중 괘선까지 (벡터 300 dpi · 렌더 확인 · 칸마다 텍스트 층과 대조)",
+   "caption_note": "τ = ε/κ̄ 를 표 값으로 다시 계산 — 최대 차 0.006 (반올림)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "II",
+   "page": 10,
+   "file": "tab_II.png",
+   "caption": "TABLE II. Normalized mechanical and transport properties of gyroid-based structural electrolyte microstructures with varying unit-cell scaling ratios (a:b:c) for a porosity of 60%. Elastic moduli are normalized by the model input solid phase modulus, and ionic conductivities are normalized by the liquid phase conductivity. Tortuosity values (τx, τy, and τz) are reported for x, y, and z directions.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    570.0,
+    563.0,
+    699.0
+   ],
+   "w": 2138,
+   "h": 538,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "표 제목부터 아래 이중 괘선까지 (벡터 300 dpi · 렌더 확인 · 칸마다 텍스트 층과 대조)",
+   "caption_note": "τ = ε/κ̄ 최대 차 0.014 ((4:4:1) τz 5.70 ↔ 0.6/0.105 = 5.714 · 반올림)",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "III",
+   "page": 11,
+   "file": "tab_III.png",
+   "caption": "TABLE III. Normalized elastic moduli, normalized shear moduli, and Poisson's ratios of gyroid-based structural electrolyte microstructures with varying unit-cell scaling ratios (a:b:c) for various porosities ε. Small differences between symmetry-equivalent directions arise from STL geometry import and finite element meshing and are within the numerical precision of the simulations. Note: The effective shear moduli are obtained from the corresponding shear compliance terms. Effective shear moduli are normalized by the shear modulus of the solid phase Gs = Es/(2(1 + νs)). The effective Poisson's ratios are computed from the off diagonal compliance terms. Poisson's ratio νij denotes that the material is loaded along the i axis, and the contraction is measured along the j axis, and νijEj = νjiEi.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    96.0,
+    563.0,
+    317.0
+   ],
+   "w": 2138,
+   "h": 921,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "표 제목부터 아래 이중 괘선까지 (벡터 300 dpi · 렌더 확인 · 칸마다 텍스트 층과 대조)",
+   "caption_note": "E 열은 표 I · II 와 칸마다 같음 (source_data_tables.csv 에는 G · ν 만)",
+   "viewed": true
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "1",
+   "page": 4,
+   "file": "eq_1.png",
+   "caption": "Eq. (1) — gyroid-like implicit isosurface: sin(2πx/a)cos(2πy/b) + sin(2πy/b)cos(2πz/c) + sin(2πz/c)cos(2πx/a) − t = 0 (a, b, c = scaling dimensions in x, y, z; t controls the volume fractions; a = b = c → conventional gyroid).",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    221.0,
+    300.5,
+    280.0
+   ],
+   "w": 887,
+   "h": 247,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "식만 (벡터 300 dpi · 렌더 확인)",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "12",
+   "page": 5,
+   "file": "eq_12.png",
+   "caption": "Eq. (12) — ionic current density i = −κl ∇ϕ (κl = κl I, isotropic liquid conductivity; ϕ = electrolyte potential).",
+   "rotated_deg": 0,
+   "bbox": [
+    405.0,
+    193.0,
+    562.0,
+    209.0
+   ],
+   "w": 655,
+   "h": 67,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "식만 (벡터 300 dpi · 렌더 확인)",
+   "viewed": true
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "16",
+   "page": 5,
+   "file": "eq_16.png",
+   "caption": "Eq. (16) — macroscopic current density i_avg = (1/V_cell) ∫_Ωl i dV (integral over the liquid only, normalised by the WHOLE cell volume).",
+   "rotated_deg": 0,
+   "bbox": [
+    396.0,
+    562.0,
+    562.0,
+    598.0
+   ],
+   "w": 692,
+   "h": 151,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "식만 (벡터 300 dpi · 렌더 확인)",
+   "viewed": true
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "17",
+   "page": 5,
+   "file": "eq_17.png",
+   "caption": "Eq. (17) — homogenized relation i_avg = −κ_eff (∇ϕ)_avg; reported conductivities = diagonal terms of κ_eff.",
+   "rotated_deg": 0,
+   "bbox": [
+    396.0,
+    652.0,
+    562.0,
+    671.0
+   ],
+   "w": 692,
+   "h": 80,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "식만 (벡터 300 dpi · 렌더 확인)",
+   "viewed": true
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "18",
+   "page": 6,
+   "file": "eq_18.png",
+   "caption": "Eq. (18) — normalisation Ē_i = E_i^eff/E_s, κ̄_i = κ_i^eff/κ_l, i ∈ {x, y, z}.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.0,
+    281.0,
+    300.5,
+    311.0
+   ],
+   "w": 837,
+   "h": 126,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "식만 (벡터 300 dpi · 렌더 확인)",
+   "viewed": true
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "19",
+   "page": 7,
+   "file": "eq_19.png",
+   "caption": "Eq. (19) — tortuosity τ_i = ε (1/κ̄_i), i ∈ {x, y, z}; where ε is the porosity of the structural electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.0,
+    349.0,
+    562.0,
+    398.7
+   ],
+   "w": 1038,
+   "h": 208,
+   "dpi": 300,
+   "src": "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf",
+   "crop_note": "식만 (벡터 300 dpi · 렌더 확인)",
+   "viewed": true
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+# litdb digitization — jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum (2026-11-24)
+"# Fig. 3 (p.8 PDF) = bar chart FPD/FPF, native raster 1182x830 px rendered at 600 dpi; Fig. 4 (p.9) and Fig. 5 (p.10) = 1-bit rasters (4817x3637 / 4822x3643 px) rendered at 800 / 600 dpi."
+# axes from frame lines + tick marks (least-squares on 0.0/0.5/1.0/1.5/2.0 x-ticks and the printed y-ticks); marker centre = bbox centre of the opened/filled component.
+# Fig. 4 x read-out reproduces the printed Table 1 CAB ratios to +-0.002 and the x error bars reproduce the printed SD to +-0.002 -> axis calibration verified.
+"# Fig. 3 bar top = top of the contiguous >=20 %-width ink column from the baseline (the thin whisker, 6/48 of the bar width, stops it); error cap = first >=25 %-width row above the bar (some caps fall on text and are left blank)."
+
+figure,panel,series,x_quantity,x_value,y_quantity,y_value,err_low,err_high,note
+Fig.4,erythritol carrier,budesonide,drug-carrier CAB ratio,0.96,FPD per capsule (ug),16.91,13.17,20.7,printed Table 1 CAB 0.96+-0.02; x error bar hidden by the marker
+Fig.4,erythritol carrier,FP,drug-carrier CAB ratio,0.77,FPD per capsule (ug),10.18,8.25,12.37,printed Table 1 CAB 0.77+-0.05; x-bar read 0.718..0.823
+Fig.4,erythritol carrier,FFD,drug-carrier CAB ratio,1.001,FPD per capsule (ug),33.47,32.02,34.92,printed Table 1 CAB 1.0+-0.05; x-bar read 0.949..1.052
+Fig.4,erythritol carrier,SX,drug-carrier CAB ratio,1.12,FPD per capsule (ug),44.73,36.4,53.14,printed Table 1 CAB 1.12+-0.02; x error bar left end hidden; right end 1.162
+Fig.4,lactose carrier,budesonide,drug-carrier CAB ratio,0.82,FPD per capsule (ug),41.68,36.68,46.68,printed Table 1 CAB 0.82+-0.08; x-bar read 0.737..0.901
+Fig.4,lactose carrier,FP,drug-carrier CAB ratio,0.22,FPD per capsule (ug),34.32,31.6,,printed Table 1 CAB 0.22+-0.0; x error bar hidden by the marker
+Fig.4,lactose carrier,FFD,drug-carrier CAB ratio,1.159,FPD per capsule (ug),115.14,109.97,120.31,printed Table 1 CAB 1.16+-0.11; x-bar read 1.048..1.271
+Fig.4,lactose carrier,SX,drug-carrier CAB ratio,2.389,FPD per capsule (ug),56.58,48.78,64.38,printed Table 1 CAB 2.39+-0.02; x error bar hidden by the marker
+Fig.4,mannitol carrier,budesonide,drug-carrier CAB ratio,1.12,FPD per capsule (ug),41.74,36.27,47.18,printed Table 1 CAB 1.12+-0.06; x-bar read 1.057..1.18
+Fig.4,mannitol carrier,FP,drug-carrier CAB ratio,0.459,FPD per capsule (ug),12.08,9.77,14.67,printed Table 1 CAB 0.46+-0.03; x error bar hidden by the marker
+Fig.4,mannitol carrier,FFD,drug-carrier CAB ratio,1.179,FPD per capsule (ug),24.72,20.74,28.66,printed Table 1 CAB 1.18+-0.07; x-bar read 1.107..1.251
+Fig.4,mannitol carrier,SX,drug-carrier CAB ratio,0.649,FPD per capsule (ug),31.82,28.56,35.08,printed Table 1 CAB 0.65+-0.01; x error bar hidden by the marker
+Fig.4,trehalose carrier,budesonide,drug-carrier CAB ratio,1.07,FPD per capsule (ug),42.35,34.52,50.05,printed Table 1 CAB 1.07+-0.06; x-bar read 1.008..1.131
+Fig.4,trehalose carrier,FP,drug-carrier CAB ratio,0.699,FPD per capsule (ug),11.13,8.52,14.03,printed Table 1 CAB 0.7+-0.05; x-bar read 0.647..0.752
+Fig.4,trehalose carrier,FFD,drug-carrier CAB ratio,1.019,FPD per capsule (ug),31.18,24.8,37.55,printed Table 1 CAB 1.02+-0.1; x-bar read 0.917..1.121
+Fig.4,trehalose carrier,SX,drug-carrier CAB ratio,1.369,FPD per capsule (ug),31.47,27.62,35.36,printed Table 1 CAB 1.37+-0.06; x-bar read 1.307..1.432
+Fig.3,erythritol formulations,budesonide,metric,FPD,FPD (ug) / FPF (%),16.64,,19.92,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,erythritol formulations,FP,metric,FPD,FPD (ug) / FPF (%),9.96,,11.83,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,erythritol formulations,FFD,metric,FPD,FPD (ug) / FPF (%),33.15,,34.33,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,erythritol formulations,SX,metric,FPD,FPD (ug) / FPF (%),44.28,,52.48,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,erythritol formulations,budesonide,metric,FPF,FPD (ug) / FPF (%),4.69,,5.51,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,erythritol formulations,FP,metric,FPF,FPD (ug) / FPF (%),2.93,,4.1,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,erythritol formulations,FFD,metric,FPF,FPD (ug) / FPF (%),8.2,,,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,erythritol formulations,SX,metric,FPF,FPD (ug) / FPF (%),10.66,,13.24,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,budesonide,metric,FPD,FPD (ug) / FPF (%),41.12,,46.16,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,FP,metric,FPD,FPD (ug) / FPF (%),34.21,,35.73,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,FFD,metric,FPD,FPD (ug) / FPF (%),114.93,,119.61,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,SX,metric,FPD,FPD (ug) / FPF (%),56.23,,63.73,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,budesonide,metric,FPF,FPD (ug) / FPF (%),16.64,,17.81,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,FP,metric,FPF,FPD (ug) / FPF (%),12.42,,14.29,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,FFD,metric,FPF,FPD (ug) / FPF (%),31.4,,,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,lactose formulations,SX,metric,FPF,FPD (ug) / FPF (%),16.28,,17.1,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,budesonide,metric,FPD,FPD (ug) / FPF (%),41.47,,46.51,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,FP,metric,FPD,FPD (ug) / FPF (%),12.07,,14.29,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,FFD,metric,FPD,FPD (ug) / FPF (%),24.25,,28.23,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,SX,metric,FPD,FPD (ug) / FPF (%),31.63,,34.56,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,budesonide,metric,FPF,FPD (ug) / FPF (%),11.01,,12.18,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,FP,metric,FPF,FPD (ug) / FPF (%),3.63,,5.51,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,FFD,metric,FPF,FPD (ug) / FPF (%),6.79,,,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,mannitol formulations,SX,metric,FPF,FPD (ug) / FPF (%),8.55,,10.43,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,budesonide,metric,FPD,FPD (ug) / FPF (%),41.82,,49.67,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,FP,metric,FPD,FPD (ug) / FPF (%),11.01,,13.59,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,FFD,metric,FPD,FPD (ug) / FPF (%),30.93,,37.02,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,SX,metric,FPD,FPD (ug) / FPF (%),31.28,,34.91,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,budesonide,metric,FPF,FPD (ug) / FPF (%),13.47,,,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,FP,metric,FPF,FPD (ug) / FPF (%),3.28,,4.8,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,FFD,metric,FPF,FPD (ug) / FPF (%),9.25,,10.78,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.3,trehalose formulations,SX,metric,FPF,FPD (ug) / FPF (%),8.55,,,bar height; err_high = error-bar cap (blank = cap fell on significance symbols)
+Fig.5,salbutamol_Hooton2006,previous study,drug-carrier CAB ratio,1.52,FPF (%),31.41,29.21,33.56,
+Fig.5,salbutamol_Hooton2006,previous study,drug-carrier CAB ratio,0.629,FPF (%),10.61,9.27,11.94,
+Fig.5,salbutamol_Hooton2006,previous study,drug-carrier CAB ratio,0.448,FPF (%),9.75,,,
+Fig.5,salbutamol_Hooton2006,previous study,drug-carrier CAB ratio,0.528,FPF (%),5.37,4.09,6.62,
+Fig.5,salbutamol_Hooton2006,previous study,drug-carrier CAB ratio,0.302,FPF (%),0.84,-0.04,,
+Fig.5,budesonide002_Hooton2005,previous study,drug-carrier CAB ratio,0.542,FPF (%),13.25,11.53,14.94,
+Fig.5,budesonide002_Hooton2005,previous study,drug-carrier CAB ratio,0.406,FPF (%),8.17,6.12,10.23,
+Fig.5,budesonide002_Hooton2005,previous study,drug-carrier CAB ratio,0.352,FPF (%),0.45,-0.02,,
+Fig.5,budesonide002_Hooton2005,previous study,drug-carrier CAB ratio,6.62,FPF (%),17.01,,,broken axis right segment (6.0-12.0); text gives 11.42 for the extreme point
+Fig.5,budesonide102_Hooton2005,previous study,drug-carrier CAB ratio,1.189,FPF (%),13.25,11.55,14.94,
+Fig.5,budesonide102_Hooton2005,previous study,drug-carrier CAB ratio,0.885,FPF (%),8.17,6.1,10.21,
+Fig.5,budesonide102_Hooton2005,previous study,drug-carrier CAB ratio,0.783,FPF (%),0.45,-0.02,,two overlapping markers (w 76 px) = two formulations at the same FPF
+Fig.5,budesonide102_Hooton2005,previous study,drug-carrier CAB ratio,11.65,FPF (%),17.01,,,broken axis right segment (6.0-12.0); text gives 11.42 for the extreme point
+Fig.5,salbutamol_Hooton2006,vertical dotted line,drug-carrier CAB ratio,1.003,,,,,caption says these mark the slightly cohesive optima of THIS study (printed optima 1.07-1.16)
+Fig.5,salbutamol_Hooton2006,vertical dotted line,drug-carrier CAB ratio,1.28,,,,,caption says these mark the slightly cohesive optima of THIS study (printed optima 1.07-1.16)
+Fig.5,budesonide002_Hooton2005,vertical dotted line,drug-carrier CAB ratio,1.003,,,,,caption says these mark the slightly cohesive optima of THIS study (printed optima 1.07-1.16)
+Fig.5,budesonide002_Hooton2005,vertical dotted line,drug-carrier CAB ratio,1.283,,,,,caption says these mark the slightly cohesive optima of THIS study (printed optima 1.07-1.16)
+Fig.5,budesonide102_Hooton2005,vertical dotted line,drug-carrier CAB ratio,1.001,,,,,caption says these mark the slightly cohesive optima of THIS study (printed optima 1.07-1.16)
+Fig.5,budesonide102_Hooton2005,vertical dotted line,drug-carrier CAB ratio,1.276,,,,,caption says these mark the slightly cohesive optima of THIS study (printed optima 1.07-1.16)

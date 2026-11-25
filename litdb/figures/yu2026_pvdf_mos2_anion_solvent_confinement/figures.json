@@ -1,0 +1,692 @@
+{
+ "slug": "yu2026_pvdf_mos2_anion_solvent_confinement",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "114. AdvEnergyMater_aenm71556_MAIN.pdf",
+  "114. Sup) AdvEnergyMater_aenm71556_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Schematic illustration of Li+ transport mechanism, coordination environments, and the formed SEI for R-CPE and PPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    558.1,
+    405.3
+   ],
+   "w": 2128,
+   "h": 1541,
+   "dpi": 300,
+   "src": "114. AdvEnergyMater_aenm71556_MAIN.pdf",
+   "blank": 0.199
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Morphological characterization and crystallographic analysis of as-fabricated SPEs. (a) Optical photo of R-CPE. (b) Top-view SEM images of R-CPE with an inset presenting the cross-sectional view. (c) Comparative FTIR spectra of PPE and R-CPE. (d) DFT-optimized molecular conformations of pristine α-PVDF (left) and MoS2 -induced β-phase PVDF (right) driven by the dipole interaction between sulfur terminals in MoS2 and CH2 groups in PVDF. (e) Electrostatic potential calculation for PVDF and MoS2 . (f) 19 F-NMR and (g) 1 H-NMR spectra for PPE and R-CPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.1,
+    457.3
+   ],
+   "w": 2169,
+   "h": 1760,
+   "dpi": 300,
+   "src": "114. AdvEnergyMater_aenm71556_MAIN.pdf",
+   "blank": 0.702
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Li+ solvation structures and transport dynamics. (a) FTIR spectra of N ─C ═ O stretching vibration peak of PPE, R-CPE, and DMF. (b) The percentage of distinct Li+ -FSI− coordination states of R-CPE and PPE. (c) 7 Li-NMR spectra of R-CPE and PPE. (d) Comparative interaction energies for Li+ -FSI− and Li+ -DMF. RDF curves and Li+ coordination numbers for Li+ -O in DMF and Li+ -O in FSI− of (e) PPE and (f) R-CPE. (g) MSD curves and corresponding lithium-ion diffusion coefficient of R-CPE and PPE. (h) Arrhenius plots and (i) ionic conductivity of R-CPE and PPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.1,
+    438.3
+   ],
+   "w": 2170,
+   "h": 1680,
+   "dpi": 300,
+   "src": "114. AdvEnergyMater_aenm71556_MAIN.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Comparative Li/SPEs interface stability of PPE and R-CPE. (a) Tafel polarization profiles and calculated exchange current densities. (b) Critical current density evaluations using symmetric Li|PPE|Li and Li|R-CPE|Li cell. Long-term cycling stability tests of Li||Li symmetric cells at current densities of (c) 0.1 mA cm− 2 and (d) 1 mA h cm− 2 with a fixed charge/discharge time of 1 h. DRT analyses of Li|SPEs|Li cells for (e) PPE and (f) R-CPE during the charge/discharge processes at a current density of 0.1 mA cm− 2 and areal capacity of 0.1 mAh cm− 2 .",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.2,
+    410.3
+   ],
+   "w": 2170,
+   "h": 1565,
+   "dpi": 300,
+   "src": "114. AdvEnergyMater_aenm71556_MAIN.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 SEI composition analysis of cycled Li||Li cells at 0.1 mA cm− 2 and 0.1 mAh cm− 2 for 100 h with PPE and R-CPE. Depth-resolved XPS spectra of the lithium surface for (a) PPE and (b) R-CPE. TOF-SIMS depth profiles for (c) PPE and (d) R-CPE. 3D reconstruction of representative chemical species distributions in (e) PPE and (f) R-CPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.2,
+    537.3
+   ],
+   "w": 2170,
+   "h": 2092,
+   "dpi": 300,
+   "src": "114. AdvEnergyMater_aenm71556_MAIN.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Electrochemical performance of solid-state Li|SPEs|NCM811 full cells. (a) The initial three galvanostatic charge-discharge profiles of Li|R-CPE|NCM811 cells at 0.1 C. (b) Rate and (c) cycling performance at 0.5 C of Li|R-CPE|NCM811 and Li|PPE|NCM811 cells. (d) Long-term cycling performance of Li|R-CPE|NCM811 cells at 2 C. (e) Comparative evaluation of long-term cycling performance in Li||NCM811 full cells using R-CPE and state-of-the-art polymeric electrolyte systems. (f) Cycling performance of the Li|R-CPE|NCM811 pouch cell at 0.2 C. DRT analyses of (g) Li|PPE|NCM811 and h) Li|R-CPE|NCM811 cells during the charge/discharge processes at 0.2 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.1,
+    412.3
+   ],
+   "w": 2170,
+   "h": 1572,
+   "dpi": 300,
+   "src": "114. AdvEnergyMater_aenm71556_MAIN.pdf",
+   "blank": 0.741
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The XRD pattern of as synthesized MoS2.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.3,
+    161.8,
+    435.2,
+    355.6
+   ],
+   "w": 1134,
+   "h": 808,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 8,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. a–d) The XPS spectra, e) nitrogen adsorption-desorption curves and f) pores distribution curves of as synthesized MoS2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    67.6,
+    533.6,
+    355.0
+   ],
+   "w": 1954,
+   "h": 1199,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. SEM images of the as obtained 3D porous few-layered MoS2 framework.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.9,
+    67.0,
+    510.6,
+    433.1
+   ],
+   "w": 1762,
+   "h": 1526,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.226
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. TEM images of as synthesized MoS2.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.2,
+    140.1,
+    490.5,
+    329.3
+   ],
+   "w": 1611,
+   "h": 789,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.175
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 11,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Top-view SEM images of a–c) R-CPE and d–f) PPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.9,
+    114.1,
+    511.2,
+    401.5
+   ],
+   "w": 1781,
+   "h": 1198,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.111
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 12,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. XRD patterns of R-CPE and PPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    182.2,
+    125.9,
+    422.7,
+    336.4
+   ],
+   "w": 1003,
+   "h": 878,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Molecular structure model of MoS2.",
+   "rotated_deg": 0,
+   "bbox": [
+    147.9,
+    95.0,
+    447.3,
+    218.4
+   ],
+   "w": 1248,
+   "h": 516,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.71
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 14,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. FTIR spectra comparing the pure PVDF and MoS2 added PVDF membranes, both without LiFSI incorporation.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    107.0,
+    533.5,
+    283.6
+   ],
+   "w": 1953,
+   "h": 737,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 15,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. TGA curves of R-CPE and PPE at a heating rate of 5 ºC min-1.",
+   "rotated_deg": 0,
+   "bbox": [
+    114.1,
+    124.1,
+    490.1,
+    291.5
+   ],
+   "w": 1568,
+   "h": 698,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 16,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Top-view SEM images of PPE and the precipitated lithium salts on their surfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    94.6,
+    533.1,
+    265.0
+   ],
+   "w": 1952,
+   "h": 711,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.401
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 17,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. a) FTIR spectra of N-C=O stretching vibration peak and b) corresponding percentage of strong and weak coordination in PPE with high or low DMF content. c) FTIR spectra of N-C=O stretching vibration peak and d) corresponding percentage of strong and weak coordination in PPE and R-CPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    69.4,
+    533.6,
+    384.4
+   ],
+   "w": 1954,
+   "h": 1313,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 18,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Deconvoluted Raman spectra and the percentage of distinct Li+-FSI- coordination states of R-CPE and PPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    85.8,
+    533.1,
+    246.0
+   ],
+   "w": 1951,
+   "h": 668,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 19,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Molecular interaction model derived from DFT simulation and corresponding calculated interaction energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    91.8,
+    533.2,
+    518.0
+   ],
+   "w": 1952,
+   "h": 1777,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 20,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Molecular structure models of a) R-CPE and b) PPE for molecular dynamics calculations. c) MD snapshots of PVDF chains adjacent to MoS2. d) Log-log plot of the MSD versus time for Li+. The solid line indicates the normal diffusive regime with a slope close to 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    70.2,
+    533.6,
+    352.4
+   ],
+   "w": 1954,
+   "h": 1177,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 21,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Comparison of ionic conductivity of CPE at 30 ºC.",
+   "rotated_deg": 0,
+   "bbox": [
+    138.8,
+    169.0,
+    459.4,
+    365.5
+   ],
+   "w": 1337,
+   "h": 819,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.804
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 22,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. EIS spectra of a) PPE, b) R-CPE, c) R-CPE-10 and d) R-CPE-15 at varying temperatures. R-CPE-10 and R-CPE-15 represents the PVDF-based CPE with 10wt% and 15wt% MoS2 filled, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    95.8,
+    543.6,
+    436.0
+   ],
+   "w": 1996,
+   "h": 1418,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 23,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. a) Chronoamperometry curves of SS|CPE|SS cells at 10 mV and b) the comparation of electrical conductivity for PVDF-based CPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    112.5,
+    533.6,
+    275.9
+   ],
+   "w": 1954,
+   "h": 682,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 24,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Chronoamperometric responses with corresponding Nyquist plots (inset) for Li+ transference number determination in a) PPE and b) R-CPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    114.6,
+    533.6,
+    291.8
+   ],
+   "w": 1954,
+   "h": 739,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 26,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Mechanical characterization through stress-strain measurements of PPE and R- CPE.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.8,
+    119.6,
+    524.5,
+    335.2
+   ],
+   "w": 1891,
+   "h": 899,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 27,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. The zoom-in view of the initial deposition/stripping profiles in Figure 4c highlighting the concentration polarization region.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    136.2,
+    533.4,
+    328.8
+   ],
+   "w": 1953,
+   "h": 804,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 28,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. In-situ EIS testing of a) PPE and b) R-CPE during every lithium plating and stripping process at 0.1 mA cm-2 / 0.1 mAh cm-2 using Li||Li symmetrical cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    141.4,
+    533.6,
+    311.7
+   ],
+   "w": 1954,
+   "h": 710,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 29,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. The initial three galvanostatic charge-discharge profiles of Li|PPE|NCM811 cells at 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    123.6,
+    533.6,
+    333.2
+   ],
+   "w": 1954,
+   "h": 875,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 30,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Galvanostatic charge-discharge profiles of a) Li|R-CPE|NCM811 and b) Li|PPE|NCM811 cells under varying C-rate conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    88.6,
+    533.6,
+    253.1
+   ],
+   "w": 1954,
+   "h": 686,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 31,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Cycle performance of Li|CPE|NCM811 cells at a current rate of 1C.",
+   "rotated_deg": 0,
+   "bbox": [
+    98.0,
+    114.4,
+    500.3,
+    291.5
+   ],
+   "w": 1677,
+   "h": 739,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 32,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Cycle performance of Li|R-CPE|NCM811 cells at a high current rate of 5 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    138.4,
+    507.5,
+    298.8
+   ],
+   "w": 1845,
+   "h": 670,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 33,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. The GCD curves of Li|R-CPE|NCM811 pouch cell at 0.2 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    117.2,
+    133.3,
+    481.3,
+    335.2
+   ],
+   "w": 1518,
+   "h": 842,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 34,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. EIS of Li|PPE|NCM811 full battery at various states of a) charge and b) discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.9,
+    95.9,
+    511.2,
+    264.2
+   ],
+   "w": 1781,
+   "h": 703,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 35,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. EIS of Li|R-CPE|NCM811 full battery at various states of a) charge and b) discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    88.7,
+    533.3,
+    237.5
+   ],
+   "w": 1953,
+   "h": 621,
+   "dpi": 300,
+   "src": "114. Sup) AdvEnergyMater_aenm71556_SI.pdf",
+   "blank": 0.911
+  }
+ ]
+}

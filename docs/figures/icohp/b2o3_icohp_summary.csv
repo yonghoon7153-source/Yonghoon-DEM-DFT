@@ -1,0 +1,7 @@
+bond,b2o3_ICOHP_eV,N,modelc_ICOHP,comparable_to_modelc,note
+P-O,-8.551,3,,yes,phosphate P-O; new bond from O doping
+B-S,-7.792,6,,yes,thioborate BS3; new bond from B doping (stronger than host P-S)
+P-S,-6.023,29,-6.00,yes,host PS4 backbone; unchanged (+0.4% vs modelc)
+Li-Cl,-2.076,86,-2.103,yes,host; unchanged (extended basis Li 2p) — was basis-limited before
+Li-S,-1.680,234,-1.717,yes,host; unchanged (extended basis Li 2p) — was basis-limited before
+S-S,-0.116,95,-0.11,yes,host; unchanged

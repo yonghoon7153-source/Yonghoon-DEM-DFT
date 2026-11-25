@@ -1,0 +1,13 @@
+# Voronoi 다면체 부피 per-species (A^3). std(V) = 국소 자유부피 무질서 지표.
+# std=0 -> 결정학적 등가자리(질서) · 클수록 site disorder(anti-site·도펀트 국소변형).
+# 3x3x3 PBC 복제 + scipy Voronoi/ConvexHull. 검증: sum(Voronoi)=cell V (LPSOCl 1204.5=1204.5 OK).
+# ⚠ LPSOCl 62원자 / modelc·b2o3 128원자 셀 — n 이 다르므로 std 비교는 자리당 기준으로 읽을 것.
+# ⚠ 생성: tools/comp1_v3/vasp_to_cif.py -> voronoi_volume_disorder.py.
+#    CIF 는 b2o3_relaxV0.cif 와 컬럼을 정확히 맞춰야 한다(occupancy 열 추가 시 좌표가 밀려 조용히 틀린다).
+species,modelc_mean_A3,modelc_std_A3,lpsocl_n,lpsocl_mean_A3,lpsocl_std_A3,b2o3_mean_A3,b2o3_std_A3,std_ratio_lpsocl/modelc,std_ratio_b2o3/modelc
+P,13.993,0.370,5,13.508,1.055,13.143,1.474,2.85,3.98
+Cl,20.308,0.736,8,20.514,0.574,20.765,1.628,0.78,2.21
+Li,20.513,1.150,27,20.384,1.085,20.002,1.705,0.94,1.48
+S,19.550,2.047,21,19.351,2.065,18.659,2.619,1.01,1.28
+B,,,,,,12.653,1.062,,NEW
+O,,,1,16.118,0.000,16.175,1.188,,NEW

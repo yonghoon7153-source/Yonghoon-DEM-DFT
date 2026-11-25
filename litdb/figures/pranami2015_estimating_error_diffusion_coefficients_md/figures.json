@@ -1,0 +1,332 @@
+{
+ "slug": "pranami2015_estimating_error_diffusion_coefficients_md",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "f64f1065-83._Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+  "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic describing the calculation of mean squared displacement MSD(τ) over a given time interval (τ). (A) The MD trajectory where the particle coordinates are recorded at a time interval of Δt, as indicated by vertical tick marks. (B) The time intervals jtf −jti (= τ) over which the displacement of particles is calculated. Mean squared displacement is obtained by taking the mean of the square of these displacements. The separation, δ, between the time origins of two consecutive intervals is given by j+1ti −jti.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    179.1
+   ],
+   "w": 1052,
+   "h": 484,
+   "dpi": 300,
+   "src": "f64f1065-83._Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Normalized autocorrelation function of squared displace- ment samples, RSD(τ,δ) as a function of δ (time units) for diﬀerent values of τ (time units). Data obtained from a MD simulation of 125 particles (NP) comprising a LJ ﬂuid under the conditions described earlier. The plot shows that autocorrelation function decays to a constant value as δ →τ. Therefore, independent sampling of squared displacements would be ensured by choosing δ ≥τ.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    243.3
+   ],
+   "w": 1050,
+   "h": 751,
+   "dpi": 300,
+   "src": "f64f1065-83._Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Plot of the squared displacements (SD) as a function of τ. Data was obtained from a MD simulation of 125 particles (NP) comprising a LJ ﬂuid under the conditions described earlier.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    239.4
+   ],
+   "w": 1051,
+   "h": 735,
+   "dpi": 300,
+   "src": "f64f1065-83._Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Plot of MSD vs τ obtained from two independent MD simulations of an identical system of 125 LJ particles. The error bars indicate 95% conﬁdence intervals. The mean squared displacements from these two runs are statistically diﬀerent as indicated by nonoverlapping 95% conﬁdence intervals. The inset shows a zoomed-in plot to highlight a representative nonoverlapping conﬁdence interval, which is not visible in the main ﬁgure for lower values of τ.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    294.7,
+    306.5,
+    468.2
+   ],
+   "w": 1051,
+   "h": 724,
+   "dpi": 300,
+   "src": "f64f1065-83._Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Variation of the diﬀusion coeﬃcient (D) of LJ ﬂuid particles as a function of the inverse of the simulation box length (L−1). For each box length, 100 independent MD simulations were conducted.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    243.6
+   ],
+   "w": 1050,
+   "h": 752,
+   "dpi": 300,
+   "src": "f64f1065-83._Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Variation of the diﬀusion coeﬃcient (D) of a fractal aggregate containing 64 primary particles and fractal dimension (df) of 2.5 as a function of L−1. The linear relationship between D and L−1 obtained from weighted least-squares regression is shown as the solid black line (l). However, if only one simulation was conducted for each box size, then D could potentially lie on one of the l1, l2, or l3 curves, thus deviating signiﬁcantly from l. D for diﬀerent L−1) was violated here as evident from the increasing spread in D as L−1 increased as shown in Figure 5. The issue of heteroscedasticity was addressed by using a weighted least-squares approach. The reader is referred to SI, section 3 for least squared and weighted least-squares regression analysis of this system and other details. The average diﬀusion coeﬃcient of LJ particles corrected for ﬁnite simulation box size, Do, thus",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    282.2,
+    306.5,
+    455.3
+   ],
+   "w": 1051,
+   "h": 723,
+   "dpi": 300,
+   "src": "f64f1065-83._Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure 3: Distribution of MSD at τ = 10, for N = 125, L = 5.63. Red curve represents a fit to normal distribution. Parameter Estimates Type Parameter Estimate Lower 95% Upper 95% Location µ 15.512558 15.500537 15.524579 Dispersion σ 0.0605846 0.0531937 0.0703796 Goodness-of-Fit Test Shapiro-Wilk W Test W Prob<W 0.993936 0.9376 Note: Ho = The data is from the Normal distribution. Small p-values reject Ho.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.7,
+    104.0,
+    541.2,
+    264.6
+   ],
+   "w": 2036,
+   "h": 670,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure 4: Residuals vs Predicted D shows non-constant variance",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    218.3,
+    548.0,
+    347.1
+   ],
+   "w": 1022,
+   "h": 538,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure 5: Residuals vs 1/L indicates missing term(s). Figure 6: Residual distribution is normally distributed. Summary of Fit RSquare 0.990292 Analysis of Variance Source DF Sum of Squares Mean Square F Ratio Model 1 0.02504288 0.025043 40597.37 Error 398 0.00024551 6.169e-7 Prob > F C. Total 399 0.02528839 <.0001* P < 0.0001 shows that the model is significant compared to D = \u000e\u000f",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    384.9,
+    550.7,
+    514.0
+   ],
+   "w": 2020,
+   "h": 539,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure 7: Regression Plot, D vs 1/L",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    445.5,
+    272.0,
+    577.2
+   ],
+   "w": 859,
+   "h": 550,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 5,
+   "file": "fig_S8.png",
+   "caption": "Figure 8: Pearson’s Residuals vs Predicted D",
+   "rotated_deg": 0,
+   "bbox": [
+    277.4,
+    445.5,
+    475.9,
+    574.8
+   ],
+   "w": 827,
+   "h": 539,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 6,
+   "file": "fig_S9.png",
+   "caption": "Figure 9: Residuals vs 1/L indicates missing term(s). Figure 10: Pearson’s Residuals are normally distributed, N = 1000 Summary of Fit RSquare 0.989298 Analysis of Variance Source DF Sum of Squares Mean Square F Ratio Model 1 104240.19 104240 36792.18 Error 398 1127.62 2.833216 Prob > F C. Total 399 105367.81 <.0001* Lack Of Fit Source DF Sum of Squares Mean Square F Ratio Lack Of Fit 2 731.6200 365.810 365.8099 Pure Error 396 396.0001 1.000 Prob > F Total Error 398 1127.6201 <.0001* Parameter Estimates Term Estimate Std Error t Ratio Prob>|t| Lower 95% Upper 95% Intercept 0.3026702 0.000138 2194.0 <.0001* 0.302399 0.3029414 1/L -0.225606 0.001176 -191.8 <.0001* -0.227918 -0.223294 Goodness-of-Fit Test Shapiro-Wilk W Test W Prob<W 0.995644 0.9884 Note: Ho = The data is from the Normal distribution. Small p-values reject Ho. Performing weight least square fitting remedied non-constant var",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    56.4,
+    556.2,
+    204.4
+   ],
+   "w": 2049,
+   "h": 617,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 7,
+   "file": "fig_S11.png",
+   "caption": "Figure 11: Regression Plot, D vs 1/L 2 Pearson's Residuals 1",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    158.5,
+    273.4,
+    290.1
+   ],
+   "w": 864,
+   "h": 549,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 7,
+   "file": "fig_S12.png",
+   "caption": "Figure 12: Pearson’s Residuals vs Predicted D",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    158.5,
+    501.9,
+    287.6
+   ],
+   "w": 830,
+   "h": 539,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 7,
+   "file": "fig_S13.png",
+   "caption": "Figure 13: Residuals vs 1/L indicates missing term(s). Figure 14: Pearson’s Residuals are normally distributed. Summary of Fit RSquare 0.881493 Analysis of Variance Source DF Sum of Squares Mean Square F Ratio Model 1 268.19525 268.195 282.6553 Error 38 36.05600 0.949 Prob > F C. Total 39 304.25124 <.0001* Lack Of Fit Source DF Sum of Squares Mean Square F Ratio Lack Of Fit 2 0.055997 0.02800 0.0280 Pure Error 36 36.000000 1.00000 Prob > F Total Error 38 36.055997 0.9724 Parameter Estimates Term Estimate Std Error t Ratio Prob>|t| Lower 95% Upper 95% Intercept 0.0070069 0.000117 60.14 <.0001* 0.006771 0.0072427 1/L -0.057123 0.003398 -16.81 <.0001* -0.064002 -0.050245",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    325.5,
+    550.6,
+    454.5
+   ],
+   "w": 2019,
+   "h": 538,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 8,
+   "file": "fig_S16.png",
+   "caption": "Figure 16: Distance of the CoM of a system of 125 LJ particles from the origin along the simulation trajectory.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    269.7,
+    486.6,
+    546.4
+   ],
+   "w": 1755,
+   "h": 1154,
+   "dpi": 300,
+   "src": "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.936
+  }
+ ]
+}

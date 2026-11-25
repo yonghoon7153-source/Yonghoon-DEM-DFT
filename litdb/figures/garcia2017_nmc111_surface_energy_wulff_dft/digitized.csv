@@ -1,0 +1,19 @@
+# garcia2017_nmc111_surface_energy_wulff_dft — values read from the PDF's native 300-ppi figure rasters (pdfimages).
+# Figs 10-11: plot frame and ticks detected in pixels; each coverage line isolated by colour (blue 1/2 ML, orange 1/4 ML, grey 3/4 ML, yellow 1 ML) inside a band, then fitted as a straight line (rms of the fit given). Precision ≈ ±0.02 J/m² on intercepts; slopes ±3 %.
+# Envelope crossings are our arithmetic from the fitted lines. Fig 12: point centroids read on the 300-dpi crop (±1 % Li, ±0.2 eV). TREND / consistency use only.
+figure,series,quantity,value,unit,note
+10,(012) 1/2 ML O (stoichiometric),surface energy (flat),2.104,J/m2,"rms 0.002; Table 1 prints 1.97 for (012)"
+10,(012) 1/4 ML O,line gamma = a*dmu_O + b,"a=0.496, b=3.127",J/m2 per eV,"rms 0.002; 1.64 at dmu_O=-3"
+10,(012) 3/4 ML O,line gamma = a*dmu_O + b,"a=-0.632, b=1.268",J/m2 per eV,"rms 0.040; 3.16 at dmu_O=-3"
+10,(012) 1 ML O,line gamma = a*dmu_O + b,"a=-1.120, b=1.095",J/m2 per eV,"rms 0.017; 1.10 at dmu_O=0"
+10,envelope crossing 1/4 -> 1/2 ML,dmu_O,-2.06,eV,our arithmetic from the fits
+10,envelope crossing 1/2 -> 3/4 ML,dmu_O,-1.32,eV,our arithmetic from the fits
+10,envelope crossing 3/4 -> 1 ML,dmu_O,-0.35,eV,our arithmetic; lowest (012) energy 1.10 at dmu_O = 0
+11,(001) 1/2 ML Li (stoichiometric),surface energy (flat),1.453,J/m2,"rms 0.002; Table 1 prints 0.89 for (001)"
+11,(001) 1/4 ML Li,line gamma = a*mu_Li + b,"a=0.502, b=2.373",J/m2 per eV,"rms 0.003; 0.12 at mu_Li=-4.5"
+11,(001) 3/4 ML Li,line gamma = a*mu_Li + b,"a=-0.622, b=1.986",J/m2 per eV,"rms 0.052; never the lowest in -4.5..0"
+11,envelope crossing 1/4 -> 1/2 ML,mu_Li,-1.83,eV,our arithmetic from the fits
+12,(104) open circles,"(Li content %, E_vac eV)","(11, -9.3); (33, -2.0); (55, 0.9); (78, 4.1); (100, 1.5)",-,point centroids
+12,(012) filled circles,"(Li content %, E_vac eV)","(33, -6.0); (55, -1.0); (78, 0.6); (100, 0.5)",-,point centroids
+12,(104) fitted curve zero crossing,Li content,~45,%,"text: below ~40 % Li spontaneous O release"
+12,(012) fitted curve zero crossing,Li content,~63,%,"text: below 60 % Li"

@@ -1,0 +1,550 @@
+{
+ "slug": "kazyak2020_li_penetration_ceramic_se_operando_microscopy",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "kazyak2020_li_penetration_main.pdf",
+  "kazyak2020_li_penetration_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Through-Plane Cycling in LLZO with Operando Cross-Sectional Visualization Images, schematic, and electrochemical data from operando through-plane Li/LLZO/Li cell. (A) Schematic showing cell geometry. (B) Voltage response of cell during galvanostatic plating at 0.5 mA/cm2. (C) Postmortem image of active area of electrode interface that was plated into. (D–G) Image series from through-plane visualization of cell at times labeled in (B). (D) Before 0.5 mA/cm2 current pulse. (E) Just after nucleation. (F) As Li ﬁlaments reach half-way across the cell. (G) Just after short-circuit. See also Figure S1.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    382.1,
+    363.5
+   ],
+   "w": 1378,
+   "h": 1337,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.499,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Demonstration of In-Plane Visualization Platform (A) Schematic representation of in-plane cell geometry and experimental setup. (B and C) images of in-plane Li/LLZO/Li cell before (B) and after (C) Li penetration and short-circuit. (D and E) Voltage response of cell during stepped current (D), with zoom-in shown in (E). (F) Nyquist plots of in-plane cell before and after cycling until short-circuit. (G) Image showing pellet with multiple in-plane cells deposited on the surface.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    550.1,
+    429.7
+   ],
+   "w": 2077,
+   "h": 1613,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.619,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Different Types or Morphologies of Li Penetration Optical images ([A],[D], [G]), SEM images ([B], [E], [H]), and schematics ([C], [F], [L]) of straight Li-penetration type ([A]–[C]), branching type ([D]–[F]), spalling type ([G]–[I]), and diffuse type ([J]–[L]). Contrast and brightness adjustments were made to the entire image in (A) and (J) to make features more evident in in situ optical images.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.6,
+    42.8,
+    551.4,
+    666.8
+   ],
+   "w": 2083,
+   "h": 2601,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.227,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Cross-Sectional Analysis of Branching-Type Li Filament Postmortem characterization of Li-penetration morphology with scanning electron and optical microscopy. Secondary [(A) and (D)] and backscattered (E) electron images of LLZO cross-section through branching-type Li ﬁlament at location shown in the optical images shown in (B). Optical image of same area of cross-section is shown in (C).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    382.3,
+    317.0
+   ],
+   "w": 1378,
+   "h": 1143,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.295,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Cross-Sectional Analysis of Spalling-Type Li Filament Secondary [(A), (C), and (E)] and backscattered (B) electron images of FIB cross-sections through spalling-type Li ﬁlaments. Top-down (D) and cross- sectional (F) optical images of the same feature shown in (C).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    551.4,
+    335.1
+   ],
+   "w": 2083,
+   "h": 1219,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.261,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Reversibility and Cyclability of Li Filaments: First Cycle (A and B) Optical image of in-plane Li/LLZO/Li cell at end of ﬁrst half-cycle at 75 mA/cm2 (A) and corresponding voltage trace (B). (C and D) Image during second half-cycle before Li is exhausted from ﬁlament structures on the left and corresponding voltage trace (D). (E and F) Image at point in second half-cycle when ﬁlament structures are exhausted of Li (disappear from view) (E) and corresponding voltage trace (F). (G and H) Image from end of second half-cycle (G) and corresponding voltage trace (H).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    382.6,
+    493.4
+   ],
+   "w": 1380,
+   "h": 1878,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.501,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 16,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Reversibility and Cyclability of Li Filaments: Subsequent Cycles Voltage proﬁle of in-plane Li/LLZO/Li cell during galvanostatic cycling at 5 mA/cm2 and 10 mA/cm2 with points in time labeled (A), corresponding to the operando optical images in (B) to (L). (B) End of ﬁrst 5 mA/cm2 half-cycle, showing reversibility of Li penetration structures. (C) End of second half-cycle. (D) End of third half-cycle. (E) Beginning of ﬁrst 10 mA/cm2 half-cycle. (F) Middle of the same half-cycle. (G) End of the same half-cycle, showing dead Li formation. (H) Beginning of sixth half-cycle at 5 mA/cm2. (I) Middle of same half-cycle. (J) End of same half-cycle. (K) Middle of following half-cycle. (L) End of the same half-cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    382.5,
+    440.4
+   ],
+   "w": 1379,
+   "h": 1657,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.347,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 17,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Analysis of Li-Propagation Rate (A–C) Schematic representation of Li propagation and relaxation inside a crack (A). (B) shows Li penetration, and (C) shows Li extrusion. (D) Representative operando optical image of a Li-ﬁlled crack, with areas analyzed in (F) and Figures 9A and 9Blabelled accordingly. (E) Plot of crack growth over time during a representative set of current pulses. (F) Plot of pixel brightness versus position along a line across the crack tip for frames during and after a current pulse. (G) Plot of crack growth rate versus applied current. See also Figures S11 and S12.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.6,
+    42.8,
+    550.1,
+    347.1
+   ],
+   "w": 2077,
+   "h": 1269,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.65,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 18,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Electron and Optical Microscopy Images of Straight-Type Crack Propagation (A and B) SEM image (A) and higher-magniﬁcation image (B) of Li that has been extruded out of the crack where it intersects the surface of the LLZO pellet. (C and D) Operando optical image (C) and higher-magniﬁcation image (D) of straight-type Li penetration. is strongly dependent on temperature and strain rate,38,39 because For this reason Li is susceptible to creep at room temperature, which would allow the Li within a crack to extrude backward when current is stopped. As further evidence of this behavior, Li that was extruded out of the crack is visible in postmortem SEM (Figures 9A and 9B). The relaxation is more dramatic at higher current densities. This is consistent with the fact that the strain rate in Li increases with current density, which leads to a higher stress accumulation at the crack tip.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.6,
+    42.8,
+    382.5,
+    406.1
+   ],
+   "w": 1379,
+   "h": 1515,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.246,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 19,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Analysis of In-Plane Li/LLZO/Li Cell Behavior during Extended Galvanostatic Plating (A–C) Operando optical images at different points in time during Li plating. (D) Voltage response to the 4 mA/cm2 current pulses with inset showing voltage decay after the current pulses for selected pulses. (E) Area-speciﬁc resistance (based on the initial electrode areas) of interface, bulk, and total from EIS after each current pulse.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    550.1,
+    671.3
+   ],
+   "w": 2077,
+   "h": 2620,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.605,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 22,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Cross-Sectional SEM Images of FIB-Cut Li/LLZO Interfaces (A) After stripping. (B) After plating.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    382.1,
+    419.3
+   ],
+   "w": 1378,
+   "h": 1570,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.232,
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 23,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Demonstration of In-Plane Visualization Architecture in Glassy LPS (A and B) Operando optical images of in-plane Li/LPS/Li cell before (A) and after (B) Li penetration. (C–E) Electrochemical data from cycling of the same cell (C), with insets [(D) and (E)] showing zoom-in on a cycle before and during Li-ﬁlament nucleation.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    42.8,
+    550.1,
+    354.0
+   ],
+   "w": 2077,
+   "h": 1297,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "blank": 0.65,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 8,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (A) Applied current density and measured cell polarization as current is increased in the through- plane cell. (B) Optical image of active area of cell after the Li electrode was removed and the interface was gently sanded to reveal the base of the Li filaments. (C) EIS before cycling and after short-circuit.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    582.2
+   ],
+   "w": 2013,
+   "h": 2151,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.794,
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 9,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Electric field magnitude (color) along a cross-section through the center of the two electrodes of an in-plane cell with streamlines representing the direction of the electric field (A) with the near- electrode region labelled as region A and the near-subsurface region between the electrodes labelled as region B. A closer view of region A with potential in color and electric field vector as streamlines (B), and the same for region B (C). Top and bottom values of the color bar represent maximum and minimum values, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    597.9
+   ],
+   "w": 2013,
+   "h": 2217,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.491,
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Current density distribution at the surface (A) and 50 µm subsurface (B) for an in-plane cell with a 1mm thick electrolyte. Schematics of cell geometries and line plot locations (C). Line plot of local current density across the lines labelled in (C) for a 1 mm thick in-plane and equivalent through-plane cell (D) Same line plot for in-plane (E) and through-plane (F) cells with different electrolyte thicknesses.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    616.3
+   ],
+   "w": 2013,
+   "h": 2294,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.733,
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 11,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Potential distribution within the solid electrolyte for through-plane (A) and in-plane (B) cell geometries. Top and bottom values of the color bar represent maximum and minimum values, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    594.2
+   ],
+   "w": 2013,
+   "h": 2202,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 12,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Nyquist plot of in-plane cell with as-deposited Li metal electrodes (prior to annealing) with inset of the equivalent circuit model used to fit the EIS data collected throughout the manuscript.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    335.2
+   ],
+   "w": 2013,
+   "h": 1122,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.864,
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 13,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Highest safe current density and cell polarization for each of the in-plane cells with annealed Li electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    336.4
+   ],
+   "w": 2013,
+   "h": 1127,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.965,
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 14,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (A) Optical image of straight-type Li filament used for crack growth rate measurements in Fig. X. (B) SEM image of FIB-cut cross-section through Li filament shown in (A). (C) Z-profile of Li filament shown in (A, B) collected from optical microscopy with a Keyence microscope.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    404.7
+   ],
+   "w": 2013,
+   "h": 1412,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.563,
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. X-ray diffraction phase analysis with fitted curve and resulting phase content.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    518.1,
+    574.9
+   ],
+   "w": 1884,
+   "h": 2121,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.374
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Presence/absence plot for branching-type Li filaments, and the current density at which nucleation occurred for each of the in-plane cells tested. The video recording for each cell was manually examined and the morphology types present were recorded. This plot shows the current density at which the initial nucleation of Li penetration occurred, and whether branching type filaments were observed.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    353.7
+   ],
+   "w": 2013,
+   "h": 1199,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.97,
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Optical images of the same branching type Li filament with different lighting, as labelled in the panels (A-D). CP stands for cross-polarization.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    342.8
+   ],
+   "w": 2013,
+   "h": 1154,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.451
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. (A) Representative frame from operando imaging during pulsed crack growth experiment with lines overlaid where pixel brightness values were extracted. (B) Extracted pixel brightness values after normalization, along with the hyperbolic tangent fit that was used to track crack-tip position over time.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    418.0
+   ],
+   "w": 2013,
+   "h": 1467,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.662,
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. (A) Optical image of Li filament that propagated along the scratch made by a diamond scribe, and then extended beyond to where the operando crack-growth rate experiments were conducted. (B) Higher magnification image at the tip of the feature shown in (A).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    413.1
+   ],
+   "w": 2013,
+   "h": 1447,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.464,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 5,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Table of parameters used for the COMSOL® model along with source of value. (Parameter | Value | Units | Description | Source) D_Li+ 2.8*10^-13 m2/s diffusivity of Li ions in LLZO (NMR, Hayamizu et al.); D_n 2*10^-15 m2/s diffusivity of negative ions in LLZO (extrapolated from high-temperature data, Kubicek et al.); C_Li+ 0.019675 mol/cm3 concentration of mobile Li ions (assuming half of Li sites are mobile); k_d 1.771*10^-4 s-1 dissociation rate constant (assumed from LiPON model); k_r 9*10^-9 m3/(mol-s) recombination reaction rate (assumed from LiPON model); j0 0.2 mA/cm2 exchange current density (data for Al-doped LLZO, Buschmann et al.); alpha 0.5 charge transfer coefficient (assumed).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    427.4,
+    542.0,
+    591.3
+   ],
+   "w": 1968,
+   "h": 684,
+   "dpi": 300,
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "blank": 0.755,
+   "manual_crop": "Table S1 is an embedded raster image (xref 31) with the caption as a separate one-line text block glued to the body paragraph above; the tool found no table candidate and listed tS1 under missing_labels (refs p2 p5). clip = caption line + embedded raster bbox on SI p.5 (printed p.4) + 2 pt, 300 dpi, tool _shrink (2026-11-24). Caption text here = curator transcription of the raster (no text layer) - checked against this 300-dpi crop (D_n = 2*10^-15, not 10^-16 as first misread from the page render).",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "kazyak2020_li_penetration_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "kazyak2020_li_penetration_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

@@ -1,0 +1,97 @@
+{
+ "schema": "cascade_prerun_seal/v1",
+ "label": "v2_2026_09_08",
+ "sealed_at": "2026-09-08T14:41:28",
+ "⛔_봉인의_뜻": "이 시각 **이후**의 cascade 실행은 이 봉인에 귀속된다. 봉인 뒤에 아래 파일이나 규칙이 바뀌면 그 실행은 이 봉인으로 설명되지 않는다 — 새로 봉인하고 다시 돌려야 한다.",
+ "provenance": {
+  "figure_font": "Liberation Sans (Arial metric-compatible)",
+  "note": "옛 판은 C:/Windows/Fonts/arial.ttf 하나에 묶여 있어 Linux 에서 도구가 아예 안 돌았다. 지금은 Arial → Liberation Sans(메트릭 호환) → DejaVu Sans 폴백이다. 폰트가 다르면 PNG 해시가 달라지므로 재생성 시 원장을 같이 갱신해야 한다."
+ },
+ "sources": {
+  "tools/doping/tier_cascade.sh": {
+   "sha256": "6d6efedec57341c6b5fc44000e27b83ccca248559e264c25b22e496ccf502496",
+   "bytes": 17725
+  },
+  "tools/doping/master_batch_273.sh": {
+   "sha256": "e02162b4f914b01976745fc02f8b8ecf1537ff7662bcee8aa12f5e6baf37ea03",
+   "bytes": 16280
+  },
+  "tools/doping/run_anneal.py": {
+   "sha256": "c583bf0af2662e5835f8bc3c78e17a56db2a8cd53e5e8dc9f8e4cf7ec8e4e94c",
+   "bytes": 22612
+  },
+  "tools/doping/b2o3_enumerate.py": {
+   "sha256": "31c7909408a8842cf147c9dc7e3756b07905dfb721613c7e363109715edb503d",
+   "bytes": 31347
+  },
+  "tools/doping/collect_dataset.py": {
+   "sha256": "9bc263d3d63e0db3b553208ef08212ddb3fbcfb89c855ee929eb3eecbbc48588",
+   "bytes": 20170
+  },
+  "tools/doping/axis_corr_csv.py": {
+   "sha256": "9091f920df799305134edf72d0f2e0b32c867a9589ebc3fbed07c9d39d8939af",
+   "bytes": 69362
+  },
+  "tools/doping/combine_rankings.py": {
+   "sha256": "749a50877d8f929493756506510781c902063cdf096836fae693a082cb669577",
+   "bytes": 39143
+  },
+  "tools/cascade/build_cascade_audit_manifest.py": {
+   "sha256": "e58a90aa8218024d8a5b9e519988c641eb18bd79c9cd083180c2ad99320f450a",
+   "bytes": 53466
+  },
+  "tools/ionic/msd_diffusive_check.py": {
+   "sha256": "5fa59e6cdfa9e681b2991cb88cf774612b017e2d24439235908f4320e0085ce3",
+   "bytes": 158396
+  }
+ },
+ "rules": {
+  "framework_retention": {
+   "상태": "정해짐",
+   "출처": "tools/ionic/msd_diffusive_check.py:307-311 · framework_check()",
+   "규칙": "원소별 severity 의 최대로 판정한다. β ≥ 0.60 또는 ratio_to_Li ≥ 0.25 → framework_melting · β ≥ 0.30 또는 ratio ≥ 0.10 → framework_mobile · 그 외 framework_rigid. 원자 8개 미만 원소는 판정에서 빼되 보고는 한다.",
+   "문턱": {
+    "BETA_RIGID": 0.3,
+    "BETA_MELT": 0.6,
+    "MIN_N": 8,
+    "WARN_RATIO": 0.1,
+    "FAIL_RATIO": 0.25
+   },
+   "⚠": "종별 MSD 가 없으면 **판정 불가**(None)다. traj.xyz 없는 런은 원리적으로 못 본다."
+  },
+  "phase_melting": {
+   "상태": "정해짐 (2026-09-08 결정)",
+   "출처": "framework_check() + 비준 카드 cascade_d_rel_estimand_2026_09_08.json §1",
+   "규칙": "골격 판정이 `framework_mobile` 또는 `framework_melting` 이면 **그 설계는 `no_value`** 다.",
+   "왜_이렇게_되나": "비준 카드가 보고량을 **600 K 단일 온도**로 한정했다. 온도가 하나라 '그 온도를 아레니우스에서 뺀다'(다온도 규칙)가 성립하지 않는다 — 뺄 온도가 그 설계의 전부이므로 값이 없는 것이다.",
+   "⚠": "다온도 규칙(D-2026-09-04-lpsocl-box331-400ps-uniform)은 **이 캠페인에 해당 없음**."
+  },
+  "beta_hop": {
+   "상태": "정해짐 (2026-09-08 결정 · LPSOCl 문턱 승계)",
+   "출처": "kb/concepts/beta-gate.md §7-5(2026-08-26) · §7-8b(회신 F) + lpsocl_box331_closure_conditions_2026_09_07.json C2",
+   "규칙": "판정축은 ① D_inc plateau ② 창 안정성 ③ 홉 수. **β 는 경보로만.** plateau 문턱은 LPSOCl 을 승계한다 — 4창 `((2,50),(10,50),(25,100),(50,100))` **전부**에서 상대산포 ≤ **10 %**.",
+   "⛔_생산시간_단서": "생산시간이 4창을 다 덮어야 한다(≥100 ps). 안 덮으면 그 창은 **조용히 빠지는 것이 아니라 '판정 불가'로 센다.** LPSOCl 200 ps 에서 `_covers` 가 `(50,100)` 을 조용히 빼는 바람에 온도마다 창 수가 달랐고, 그걸 모른 채 세 점을 한 직선에 올렸다.",
+   "⛔_폐기": "`β ≥ 0.80` 고정문턱을 **판정으로 인용 금지**. 우리 운영점에서 거짓탈락률 50 % 다 (citation_hazards: HZ-beta-hard-gate)."
+  },
+  "mlip_applicability": {
+   "상태": "정해짐 (2026-09-08 결정 — **서술 범위를 낮추는 쪽으로**)",
+   "출처": "kb/concepts/md.md:36-37 · CLAUDE.md 데이터 규율 + 비준 카드 §6",
+   "규칙": "UMA-s-1p1(omat)은 LPSCl 계열 MD 의 검증된 표준이고 **Li₃N 에는 사용 금지**. cascade 도판트 30종에 대한 UMA 검증은 **없다** — 따라서 이 캠페인의 결과는 **'UMA 내부 순위'로만 서술한다.** 물리 예측(실제 확산 순위)으로 올리지 않는다.",
+   "⚠_왜_이_선택인가": "점수(UMA)와 검증 D(UMA-MD)가 같은 퍼텐셜이라, UMA 가 이 화학에서 계통적으로 틀리면 둘이 함께 틀리고 **상관은 오히려 좋아진다**. 그 구멍을 계산 없이 메울 방법은 없으므로, 메우는 대신 **주장을 낮춘다.**",
+   "재개_조건": "cascade 도판트 화학의 대표 부분집합에서 **UMA vs DFT 힘 대조**를 통과하면 그때 서술을 물리 예측으로 올린다. 도구는 이미 있다 (`generate_dft_inputs.py --from_traj` + `mlip_committee.py force_contrast`)."
+  },
+  "invalid_run": {
+   "상태": "정해짐 (2026-09-08 결정 — 신설)",
+   "출처": "(repo 에 없어서 신설) 선례: 힘 대조 카드 §8 '20점 중 하나라도 실패한 채 19점으로 판정하지 않는다' · LPSOCl 닫힘조건의 값/HOLD/no_value 3분법",
+   "규칙": "설계마다 **생산자가** 3상태를 붙인다. `ok`(4축 전부 성공 → front 후보) · `partial`(일부 축 실패 → **front 후보에서 제외**, 실패 축을 기록) · `failed`(구조/어닐 단계 실패 → 제외). 재실행은 **1회만**, 사전 선언한 것만. 그리고 **제외된 개수와 사유를 반드시 같이 보고한다** — 227 중 몇이 살아남았는지가 front 해석에 필요하다.",
+   "⛔_폐기한_옛_관행": "*'소비자가 걸러야 한다'*. 산출물 원장이 `cascade_v23_champions_v2.csv` 한계에 그렇게 적어 뒀는데, 실제로는 안 걸러져서 **B_hill 음수 행(Na2S_x100)이 거짓 B/G = 2.50 을 만들어** 랭킹에 들어갔고 연성 주장을 철회해야 했다. 실패는 **생산자가 표시하고 구조적으로 제외**한다."
+  }
+ },
+ "⚠_미정_규칙": [],
+ "⚠_부분미정_규칙": [],
+ "⛔_이_봉인이_보장하지_않는_것": [
+  "규칙의 물리적 타당성 (repo 에 적힌 것을 옮겼을 뿐)",
+  "실행이 실제로 이 코드를 썼는지 (대조는 회수 단계 몫)",
+  "미정 규칙이 나중에 어떻게 정해질지"
+ ]
+}

@@ -1,0 +1,239 @@
+{
+ "slug": "sangros2020_dem_electrical_conductive_paths_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Low- and (b) high-magnification SEM pictures of a CB-LFP granule: Smaller particles correspond to CB whereas the coarse ones correspond to the active material, LFP. – 1) List of symbols at the end of the paper.",
+   "bbox": [
+    50.4,
+    481.2,
+    459.4,
+    645.5
+   ],
+   "w": 1705,
+   "h": 685,
+   "dpi": 300,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.241
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Approximation of the resistance by a cylinder.",
+   "bbox": [
+    50.7,
+    472.6,
+    346.4,
+    529.2
+   ],
+   "w": 1233,
+   "h": 237,
+   "dpi": 300,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.722
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Two-dimensional schematic of the numerical procedure for the determination of the equivalent electrical conductivity of a simulated DEM electrode structure.",
+   "bbox": [
+    50.7,
+    551.1,
+    544.6,
+    688.7
+   ],
+   "w": 2059,
+   "h": 574,
+   "dpi": 300,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.73
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Specific electrical conductivity: obtained experimen- tally, derived using the simulated data and the percolation theo- ry, and determined via the simulated data and the implemented method.",
+   "bbox": [
+    50.7,
+    154.3,
+    308.0,
+    460.9
+   ],
+   "w": 1073,
+   "h": 1279,
+   "dpi": 300,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Modeled specific electrical conductivity and specific number of conductive paths as a function of the amount of CB for the simulated electrode structures. to 10 wt % implies an electrical conductivity increase of about 18.65 %. The formation of conductive paths throughout the electrode causes the initial steep increase in conductivity. Once the amount of CB is sufficient to complete the conductive net- work path within the structure, the increase in conductivity is much slower because it simply implies an increment in the number of networks. This event is known in the literature as the percolation transition and has been commonly observed in various fields of research [47–49]. In order to analyze the electrode structures in more detail, the specific number of conductive paths within each structure was also examined. A direct comparison of this value cannot be made since the sim",
+   "bbox": [
+    305.8,
+    60.3,
+    544.9,
+    240.2
+   ],
+   "w": 997,
+   "h": 750,
+   "dpi": 300,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. ASSB cathodes with (a) 3.7 wt % and (b) 15 wt % CB simulated via DEM, and their corresponding conductive paths obtained by the pathfinding algorithm.",
+   "bbox": [
+    50.7,
+    38.3,
+    289.5,
+    279.5
+   ],
+   "w": 996,
+   "h": 1006,
+   "dpi": 300,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.651
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Modeled specific electrical conductivity and specific ionic conductivity as a function of the amount of CB for the sim- ulated electrode structures",
+   "bbox": [
+    305.8,
+    60.3,
+    544.9,
+    233.6
+   ],
+   "w": 997,
+   "h": 723,
+   "dpi": 300,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Particle sizes of LFP and the cumulative distribution of their incremental increase as input parameters for the genera- tion of the electrode structure in the DEM.",
+   "bbox": [
+    51.4,
+    11.9,
+    589.2,
+    771.6
+   ],
+   "w": 2123,
+   "h": 2998,
+   "dpi": 284,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Input parameters for characterization of the LFP and CB particles.",
+   "bbox": [
+    51.7,
+    11.9,
+    589.2,
+    771.6
+   ],
+   "w": 2122,
+   "h": 2998,
+   "dpi": 284,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3. Experimental values of the electrical conductivity of the LFP and CB powders. Parameter LFP CB Porosity, e [–] 0.60 0.74 Specific electrical conductivity, s [S cm–1] 0.023 4.390",
+   "bbox": [
+    51.7,
+    11.9,
+    589.2,
+    771.6
+   ],
+   "w": 2122,
+   "h": 2998,
+   "dpi": 284,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 7,
+   "file": "tab_4.png",
+   "caption": "Table 4. Properties of the manufactured and numerically generated cathodes. CB content [wt %] 0 0.5 2 3.7 5.2 Electrolyte content, Vel [%] 60.00 48.80 48.80 47.20 46.6 1.61 ·10–3 1.95 ·10–3 6.20 ·10–3 1.59 ·10–2 2.54 ·10–2 Experimental specific electrical conductivity, s [S cm–1] Simulation domain, l = w = h [mm] 6.8 4.57 3.25 2.69 2.43 DEM structure",
+   "bbox": [
+    51.7,
+    11.9,
+    589.2,
+    771.6
+   ],
+   "w": 2122,
+   "h": 2998,
+   "dpi": 284,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 8,
+   "file": "tab_5.png",
+   "caption": "Table 5. Additional cathodes generated numerically with a high CB content. CB content [wt %] 8 10 15 20 Electrolyte content, Vel [%] 45.00 43.00 45.00 46.00 Simulation domain, l = w = h [mm] 2.19 2.05 1.83 1.69 DEM structure",
+   "bbox": [
+    51.7,
+    11.9,
+    589.2,
+    771.6
+   ],
+   "w": 2122,
+   "h": 2998,
+   "dpi": 284,
+   "src": "36. Chem Eng Technol - 2020 - Sangrós Giménez - Modeling the Electrical Conductive Paths within All‐Solid‐State Battery.pdf",
+   "blank": 0.878
+  }
+ ]
+}

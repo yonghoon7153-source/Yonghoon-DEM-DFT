@@ -1,0 +1,191 @@
+{
+ "slug": "imbalzano2021_committee_uq_md_thermodynamic_averages",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Hydrogen-hydrogen radial pair correlation function in water. (Top) pair distribution function computed for a simulation driven by the committee average; (middle) devia- tions, from the plot in the top panel, of the pair distribution functions extracted from M = 4 independent trajectories (one for each NNP, displayed in diﬀerent colours); (bottom) com- parison between the result from an independent trajectory driven by NNP 3 (orange), and the pair correlation obtained from the committee-driven trajectory by direct re-weighting, Eq. (22) and the cumulant expansion approximation (CEA), Eq. (24).",
+   "rotated_deg": 0,
+   "bbox": [
+    25.5,
+    70.4,
+    417.7,
+    369.7
+   ],
+   "w": 1635,
+   "h": 1248,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Graphical summary concerning the essential steps of the workﬂow described in Sec. II to train a committee of ML potentials (and possibly other observables), internally validate and re-calibrate it through a proper scaling factor, α, and ﬁnally use it for uncertainty estimation in molecular dynamics and thermodynamic averages.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    46.1,
+    570.3,
+    313.2
+   ],
+   "w": 2177,
+   "h": 1115,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.658
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. A visualization of the results of the replica-exchange MD simulation of the Phe-Gly-Phe tripeptide, using a weighted- baseline scheme. Central scatter-plot: a set of 2,000 atomic conﬁgurations collected from all replicas is classiﬁed according to the ﬁrst two principal components of their SOAP features (x and y axes), and the replica temperature (z axis, in logarithmic scale). The SOAP representation employs a cut-oﬀradius of 4 ˚A, a basis of n = 6 radial and l = 4 angular functions, and a Gaussian width of 0.3 ˚A. Each point corresponds to one conﬁguration, colour-coded according to the weight of the ML correction to the baseline potential, see Eq. (12). Examples of typical conﬁgurations that are representative of the diﬀerent temperatures and ML correction weights are displayed in the panels surrounding the scatter plot.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.7,
+    46.1,
+    569.9,
+    449.0
+   ],
+   "w": 2177,
+   "h": 1680,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Weights for the ML correction in the weighted-baseline scheme for the Phe-Gly-Phe tripeptide discussed in the text. In the left panels the weights w are displayed at diﬀerent temperatures for a segment of the REMD trajectory. The rightmost panel shows the log-histogram of the occurrences of the weights at diﬀerent temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.5,
+    67.3,
+    568.4,
+    355.5
+   ],
+   "w": 2188,
+   "h": 1202,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.791
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Pair correlation function in water. The committee value (blue solid line) and its uncertainty (shaded red area) as estimated from Eq. (28) are displayed.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    68.8,
+    568.2,
+    186.4
+   ],
+   "w": 2199,
+   "h": 491,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Chemical potential diﬀerence between hexagonal ice and liquid water as a function of temperature. Upper panel: the ﬁt obtained for the committee is displayed together with its uncertainty, estimated as the standard deviation of the model ﬁts. Lower panel: individual ﬁts for each committee model.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    46.1,
+    306.4,
+    278.2
+   ],
+   "w": 1077,
+   "h": 969,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. Projection of the free energy along the proton transfer reaction s O for a system of one methanesulfonic acid molecule dissolved in 20 phenol molecules. s O ≈ 1 indicates the neutral state, while s O < 1 a deprotonated state of the acid. The shaded area represents the ML uncertainty obtained from Eq. (26).",
+   "rotated_deg": 0,
+   "bbox": [
+    305,
+    42,
+    575,
+    230
+   ],
+   "w": 1126,
+   "h": 784,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "note": "수동 복구 — extract_figures.py 의 기하검증이 벡터 draw op 부족으로 오탈락시켰다 (2026-09-09)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "FIG. 8. Machine-learned average density of states, ⟨DOS(E)⟩T , computed for a simulation of liquid gallium at T = 1800 K. The zero is set at the Fermi energy, to which the single- conﬁguration DOS entering the average were align. The average ⟨DOS(E)⟩T (solid line) is reported together with its statistical uncertainty (shaded red area).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.7,
+    40.3,
+    609.8,
+    289.1
+   ],
+   "w": 1247,
+   "h": 1038,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 14,
+   "file": "fig_9.png",
+   "caption": "FIG. 9. Violin plot of biased (green) and unbiased (blue) estimators for the correction factor α, as a function of the number of models in the committee, M.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    46.1,
+    306.2,
+    236.5
+   ],
+   "w": 1076,
+   "h": 795,
+   "dpi": 300,
+   "src": "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf",
+   "blank": 0.931
+  }
+ ]
+}

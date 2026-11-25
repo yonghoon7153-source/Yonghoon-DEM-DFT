@@ -1,0 +1,172 @@
+{
+ "slug": "park2024_sevennet_parallel_gnn_md",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-26",
+ "sources": [
+  "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+  "71. Sup) Park2024_SevenNet_Parallel_GNN_MD.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustrations of message passing in GNN-IPs. (a) Node features of an atom v, denoted as hv (t), before and after the tth message-passing layer. (b) Expansion of the receptive field of the central atom after successive message-passing layers.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    297.5,
+    275.0
+   ],
+   "w": 1051,
+   "h": 920,
+   "dpi": 300,
+   "src": "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Simplified NequIP15 architecture, including communi- cation routines for parallelization. The blue lines represent the forward path, predicting energy E from given atomic numbers {Zi} and atomic positions {ri}. The orange lines depict the reverse path, calculating atomic forces {Fi} as negative gradients of the energy with respect to the atomic positions. Interaction blocks with communica- tions are colored in green. (b) Interaction block of NequIP featuring communication routines, including forward and reverse communica- tions (adapted from ref 15 under a CC-BY 4.0 license. Copyright 2022 Simon Batzner et al.).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    518.5,
+    297.5,
+    644.5
+   ],
+   "w": 1051,
+   "h": 526,
+   "dpi": 300,
+   "src": "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.614
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Workflow of spatial decomposition for GNN-IPs with T message-passing layers. Corresponding to Figure 2, the blue and orange lines represent the forward and reverse paths, respectively. For simplicity, we assume the use of only two processors. (a) Overview of spatial decomposition for GNN-IPs: the forward path involves sequential computations from atomic positions {r} and atomic numbers {Z} to predict energy E. This path consists of a total T message-passing steps and T −1 forward communications of node feature {h}. The reverse path involves computing the gradient of E with respect to atomic positions, resulting in atomic forces {F} as outputs. Similar to the forward path, it includes T gradient-computing steps, each pairing with a message-passing step. For communication routines, there are T −1 reverse communications of energy gradients ∇hE, each paired with a forward communica",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    396.9
+   ],
+   "w": 2151,
+   "h": 1428,
+   "dpi": 300,
+   "src": "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Scaled-size parallel efficiencies with 4608 atoms per GPU in α-quartz SiO2, using the 20 models with different parameters: 4, 8, 16, 32, and 64 channels. The number of message-passing layers is (a) 2 layers, (b) 3 layers, (c) 4 layers, and (d) 5 layers. An ideal case in which parallel efficiency equals 1.0 is represented as the dotted line. SevenNet is identical to that of NequIP and is programmed using PyTorch.41 The e3nn library42 is utilized to ensure equivariance in mathematical operations throughout the neural network. SevenNet leverages TorchScript, the JIT (just-in- time) compiler of PyTorch, to integrate trained models into parallel MD simulations run by LAMMPS. For integration, a separate TorchScript file is used for each message-passing layer with LAMMPS communication routines incorporated between them. These routines have proven their robustness across a broad spectr",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    402.0
+   ],
+   "w": 2151,
+   "h": 1449,
+   "dpi": 300,
+   "src": "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Speedup of the fixed-size tests with 12,960 atoms on α-quartz SiO2, using the 20 models with different parameters: 4, 8, 16, 32, and 64 channels, and the number of message-passing layers: (a) 2 layers, (b) 3 layers, (c) 4 layers, and (d) 5 layers. The speedup curves that correspond to 64 channels with 3, 4, and 5 message-passing layers are omitted because the times taken for one GPU were not available due to limited GPU memory. The dotted line represents an ideal speedup. Figure 5 illustrates the speedup achieved through fixed-size (strong scaling) tests. In general, the impact of the number of message-passing layers on performance gains is minimal, although it exhibits a slight increase as the number of layers grows. To be specific, a model configured with 32 channels and between 2 and 5 message-passing layers registers performance gains ranging from 13.1 to 15.4 when using 32",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    400.9
+   ],
+   "w": 2151,
+   "h": 1445,
+   "dpi": 300,
+   "src": "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Structural properties of amorphous Si3N4 generated by the pretrained model SevenNet-0. (a) Atomistic structure of amorphous Si3N4 with 112,000 atoms. (b) Partial radial distribution function [g(r)] of Si−N, Si−Si, and N−N. (c) Angular distribution function [g(θ)] of Si−N−Si and N−Si−N. Solid lines represent the results reproduced by SevenNet-0 and empty circles represent the DFT results (reproduced with permission from ref 52 Copyright 2022 by the American Physical Society). The model hyperparameters of SevenNet-0 are in line with GNoME, a pretrained model that utilizes the NequIP architecture.24 Thus, SevenNet-0 features 5 interaction blocks with node features comprising irreducible representations of 128 scalars (l = 0), 64 vectors (l = 1), and 32 tensors (l = 2). The convolutional filter employs an rc of 5 Å and a tensor product of learnable radial functions from bases of 8 ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    251.2
+   ],
+   "w": 2151,
+   "h": 821,
+   "dpi": 300,
+   "src": "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Single GPU utilization curve of models with four message-passing layers and 4, 8,",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    92.4,
+    612.0,
+    413.3
+   ],
+   "w": 2550,
+   "h": 1338,
+   "dpi": 300,
+   "src": "71. Sup) Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Weak-scaling performance of SevenNet-0 and MACE-MP-03. The blue circles",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    612.0,
+    333.5
+   ],
+   "w": 2550,
+   "h": 1282,
+   "dpi": 300,
+   "src": "71. Sup) Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "blank": 0.97
+  }
+ ]
+}

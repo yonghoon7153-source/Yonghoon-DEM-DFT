@@ -1,0 +1,48 @@
+&CONTROL
+    calculation     = 'scf'
+    prefix          = 'ZrO2_mp-aaaaaefy'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/hj_s2a_zro2_1117/pseudo'
+    tprnfor         = .true.
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 12
+    ntyp            = 2
+    ecutwfc         = 90.0
+    ecutrho         = 720.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+
+ATOMIC_SPECIES
+  O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
+  Zr    91.224  Zr_pbe_v1.uspp.F.UPF
+
+CELL_PARAMETERS angstrom
+   5.115965352   0.000000000  -0.855876801
+   0.000000000   5.239642083   0.000000000
+  -0.014272495   0.000000000   5.376550244
+
+ATOMIC_POSITIONS angstrom
+Zr               3.6940941845        5.0102158435        3.6271707363
+Zr               3.7012304318        2.8492472814        0.9388956140
+Zr               1.4004624260        2.3903948018        3.5817778295
+Zr               1.4075986733        0.2294262398        0.8935027073
+O                0.3207397899        0.9101935253        4.5154492341
+O                0.3278760372        1.7096275163        1.8271741119
+O                2.8084787665        1.3451780290       -0.3369437574
+O                2.3003503386        3.9649990706        2.1693420787
+O                2.8013425192        1.2746430126        2.3513313649
+O                2.2932140913        3.8944640543        4.8576172009
+O                4.7738168206        3.5300145669        2.6934993317
+O                4.7809530679        4.3294485579        0.0052242095
+
+K_POINTS automatic
+  5 5 4 0 0 0

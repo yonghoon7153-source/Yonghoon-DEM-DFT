@@ -1,0 +1,44 @@
+&CONTROL
+    calculation     = 'scf'
+    prefix          = 'li_atom'
+    outdir          = './tmp'
+    pseudo_dir      = '$PSEUDO_DIR'
+    tprnfor         = .true.
+    forc_conv_thr   = 1.0d-3
+    nstep           = 200
+    disk_io         = 'low'
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 1
+    ntyp            = 1
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+    nspin           = 2
+    starting_magnetization(1) = 1.0
+    vdw_corr        = 'grimme-d3'
+    dftd3_version   = 4
+/
+&ELECTRONS
+    conv_thr        = 1.0d-6
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+&IONS
+    ion_dynamics    = 'bfgs'
+/
+CELL_PARAMETERS angstrom
+  15.0000 0.0 0.0
+  0.0 15.0000 0.0
+  0.0 0.0 15.0000
+
+ATOMIC_SPECIES
+  Li    6.941  Li.pbe-s-kjpaw_psl.1.0.0.UPF
+
+ATOMIC_POSITIONS angstrom
+  Li  7.5000 7.5000 7.5000
+
+K_POINTS gamma

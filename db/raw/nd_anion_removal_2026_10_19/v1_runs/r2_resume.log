@@ -1,0 +1,6 @@
+════ QE relax 재시작 — 판정 ════
+  ⏸ li3nd_mp-976264_p333_r2                    사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+
+▶ li3nd_mp-976264_p333_r2  mode=restart nstep=200  (GPU 여유 49139 MiB)
+   ☠ stopped — .out 을 본다
+끝. 워치로 확인: bash tools/sei/watch_qe_relax.sh

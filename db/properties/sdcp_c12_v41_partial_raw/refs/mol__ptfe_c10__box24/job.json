@@ -1,0 +1,226 @@
+{
+ "kind": "mol_ref",
+ "fragment": "ptfe_c10",
+ "species_order": [
+  "C",
+  "F"
+ ],
+ "counts": [
+  10,
+  22
+ ],
+ "kmesh": {
+  "static": "1 1 1"
+ },
+ "incar_expected": {
+  "static": {
+   "ENCUT": "520",
+   "ISMEAR": "0",
+   "IVDW": "11",
+   "LREAL": ".FALSE.",
+   "ISTART": "0",
+   "ICHARG": "2",
+   "LDIPOL": ".TRUE.",
+   "ISPIN": "2",
+   "ISYM": "0",
+   "LASPH": ".TRUE.",
+   "IDIPOL": "4",
+   "NUPDOWN": "0"
+  }
+ },
+ "kpoints_expected": {
+  "static": {
+   "title": "phase=static k=1 1 1 shift=0 0 0",
+   "mode": "Gamma",
+   "mesh": "1 1 1",
+   "shift": "0 0 0",
+   "⛔": "OUTCAR 의 ` KPOINTS:` 되울림과 **정확히** 같아야 한다. NKPTS 상한만 보면 coarse OUTCAR 를 dense 에 넣어도 통과한다 (회신 AT P0-2)"
+  }
+ },
+ "open_shell": false,
+ "box_margin_A": 24.0,
+ "gas_placement": "com_at_cell_center",
+ "internal_geometry_sha": "71b763fd25252a354ff92552dd9edfbc24cdb1e4af7cbff994d34b6ff5f7bf15",
+ "electronic_state_sha": "44901c0ba55f64e43bc661cfac0140ff26eaea030c1d1008058b28f5cd568940",
+ "fixed_geometry_static": true,
+ "com_frac": [
+  0.5,
+  0.5,
+  0.5
+ ],
+ "phases": [
+  "static"
+ ],
+ "box_A": [
+  27.26,
+  27.24,
+  37.87
+ ],
+ "mol_poscar_idx": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31
+ ],
+ "mol_graph_canonical": [
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   10
+  ],
+  [
+   0,
+   11
+  ],
+  [
+   0,
+   12
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   13
+  ],
+  [
+   1,
+   14
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   15
+  ],
+  [
+   2,
+   16
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   3,
+   17
+  ],
+  [
+   3,
+   18
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   4,
+   19
+  ],
+  [
+   4,
+   20
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   5,
+   21
+  ],
+  [
+   5,
+   22
+  ],
+  [
+   6,
+   7
+  ],
+  [
+   6,
+   23
+  ],
+  [
+   6,
+   24
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   7,
+   25
+  ],
+  [
+   7,
+   26
+  ],
+  [
+   8,
+   9
+  ],
+  [
+   8,
+   27
+  ],
+  [
+   8,
+   28
+  ],
+  [
+   9,
+   29
+  ],
+  [
+   9,
+   30
+  ],
+  [
+   9,
+   31
+  ]
+ ],
+ "registry_role": null,
+ "slab_li_poscar_idx": [],
+ "slab_ni_poscar_idx": [],
+ "top_li_poscar_idx": [],
+ "top_ni_poscar_idx": [],
+ "d3": "on",
+ "ivdw_expected": 11
+}

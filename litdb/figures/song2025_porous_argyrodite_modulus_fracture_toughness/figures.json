@@ -1,0 +1,71 @@
+{
+ "slug": "song2025_porous_argyrodite_modulus_fracture_toughness",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "852c4bbf-3._Investigation_of_the_Mechanical_Properties_of_Porous_Argyrodite_Sulfide_Electrolytes_for_All-Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Experimental setup for Young’s modulus measurement and a representative result. (a) A photograph of the experimental setup showing the individual components; (b) a closer view of the cantilever specimen and the loading pin; (c) an FE simulation model of the specimen that accounts for the exact specimen geometry; (d) the relevant measured displacements versus the time in a representative experiment: loading stage displacement (black), specimen tip displacement measured via DIC (red), load cell (LC) deflection (blue), the left y-axis is for black and red curves, and the right y-axis is for the blue curve; (e) force vs displacement relation extracted from the data in (d). with a standard deviation of 0.03 MPa m (17.6% of the mean value). GPa for 67% density, and 9.80 GPa for 80% density) were smaller than those measured by nanoindentation (i.e., 4.53 GPa for 58% density, 8.74 GPa ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    308.6
+   ],
+   "w": 2151,
+   "h": 1060,
+   "dpi": 300,
+   "src": "852c4bbf-3._Investigation_of_the_Mechanical_Properties_of_Porous_Argyrodite_Sulfide_Electrolytes_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.769
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Experimental setup to measure fracture toughness and a representative result. (a-1) A photograph of the experimental setup highlighting the relevant components; (a-2) a CAD image showing the sample mounted on the fixture; a fracture test specimen: before (b-1) and after (b-2) testing; (b-3) a cross-sectional view of the fracture surface, the red dashed line separates the precrack surface from the fracture surface; (b-4) an FE simulation model that accounts for the exact geometry of each specimen, the mesh, and the loading condition in the FE simulation; (c-1) measured displacements in a representative experiment: loading stage displacement dL (black), LC deflection dC (red), the difference dL−dC (purple), which is the relative displacement between the specimen loading pins; (c-2) force vs loading stage displacement, which shows the peak force at crack initiation, followed by LC",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    404.8
+   ],
+   "w": 2151,
+   "h": 1461,
+   "dpi": 300,
+   "src": "852c4bbf-3._Investigation_of_the_Mechanical_Properties_of_Porous_Argyrodite_Sulfide_Electrolytes_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.641
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Results of fracture toughness measurement. (a) The combinations of K (MPa m ) I versus K (MPa m ) II at fracture in several specimens. Colors distinguish different loading stage speeds. The plotted KI, KII values are extracted from the FE simulations for the samples at the peak force before fracture; (b) K (MPa m ) Ic versus the loading rate K t d /d (MPa m /s) I , where the dashed line shows the average value = K 0.17 MPa m Ic .",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    180.2
+   ],
+   "w": 2151,
+   "h": 525,
+   "dpi": 300,
+   "src": "852c4bbf-3._Investigation_of_the_Mechanical_Properties_of_Porous_Argyrodite_Sulfide_Electrolytes_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.949
+  }
+ ]
+}

@@ -1,0 +1,212 @@
+{
+ "slug": "chaney2024_two_step_sei_growth_argyrodite_li_metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "8. Two-step_growth_SEI_argyrodite_Li_metal_MAIN.pdf",
+  "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Li(110)/LPSC(110) interface model I.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    485.5,
+    277.5,
+    627.5
+   ],
+   "w": 968,
+   "h": 593,
+   "dpi": 300,
+   "src": "8. Two-step_growth_SEI_argyrodite_Li_metal_MAIN.pdf",
+   "blank": 0.652
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Percentage of reduced solid electrolyte vs time, model II. The thick and thin curves correspond to two independent MD simulations with different initial velocities. is not crystalline. Figure 2 displays the evolution of these phases over time, at three different temperatures, from two separate simulations per temperature, where the velocities at the first time step were initialized from two different random seeds (see Supporting Information). The curves in Figure 2 clearly show the two basic steps leading to SEI growth: an initial reduction of argyrodite by metal Li results in the formation of the amorphous phase, followed by the crystallization of the reaction product. This observation is in line with the earlier hypothesis that this solid-state reduction proceeds indirectly via metastable over- lithiation, which later crystallizes in the stable products.12,35",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    54.6,
+    561.5,
+    469.1
+   ],
+   "w": 1051,
+   "h": 1728,
+   "dpi": 300,
+   "src": "8. Two-step_growth_SEI_argyrodite_Li_metal_MAIN.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Evolution of the SEI. Red: crystalline regions. Yellow: amorphous reduced regions. Blue dots: Li metal. Purple polyhedra and green lines correspond to thiophosphate groups and Li−Cl and Li−S bonds, respectively, in the original argyrodite structure. The snapshots correspond to the model II interface for various temperatures at a pressure of 1 bar (seed no. 1 for the initial velocities). For the sake of clarity, the snapshots at 10 ns, showing full crystallization, are included in the Supporting Information rather than in this figure. was attributed to unknown reduced P species, and the possibility of having a solid solution forming rather than separate phases for the different thermodynamically stable products has also been postulated.35 unreacted electrolyte will lead to a decrease in the percentage of amorphous product and a drastic slowdown in the amount of Li diffusing into",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    434.5
+   ],
+   "w": 2151,
+   "h": 1585,
+   "dpi": 300,
+   "src": "8. Two-step_growth_SEI_argyrodite_Li_metal_MAIN.pdf",
+   "blank": 0.408
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Amount of polycrystalline-reduced electrolyte, given as a percentage of the total possible reduction, as a function of time for the model II interface at 1 bar of internal pressure. Notice the different time scales.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    54.8,
+    561.5,
+    518.9
+   ],
+   "w": 1051,
+   "h": 1935,
+   "dpi": 300,
+   "src": "8. Two-step_growth_SEI_argyrodite_Li_metal_MAIN.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure 1: Amount of reduction vs time for crystalline, amorphous, and overall reduced regions of electrolyte. Shown for two MD seeds, distinguished by different line thicknesses. Calculations performed on model I interface of Li-anode/LPSC. The four time-regimes are illustrated in the top-left plot and described in the main paper.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    104.7,
+    546.1,
+    619.2
+   ],
+   "w": 2001,
+   "h": 2145,
+   "dpi": 300,
+   "src": "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure 2: Amount of reduction vs time for model II interface. Identical to Fig. 3 of the main paper, but with both 1bar and 1kbar results.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.6,
+    44.2,
+    551.4,
+    562.0
+   ],
+   "w": 2062,
+   "h": 2159,
+   "dpi": 300,
+   "src": "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure 3: Number of structures in training-set vs MLIP training iterations. Active learning stops selecting new structures after about 40 iterations. The initial training set comprised 2732 structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    64.5,
+    546.0,
+    396.5
+   ],
+   "w": 2001,
+   "h": 1384,
+   "dpi": 300,
+   "src": "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure 4: Top and side views of the atoms belonging to the crystalline region in the 400 K, 1 kbar, seed 1, 3x3 system, at 100 ps, 150 ps, and 200 ps respectively. A continuous layer has formed at 200 ps, preventing Li inflow, and stalling the reaction, despite the fact that there is still a considerable amount of unreacted argyrodite in the system.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    247.8,
+    546.1,
+    497.4
+   ],
+   "w": 2001,
+   "h": 1041,
+   "dpi": 300,
+   "src": "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf",
+   "blank": 0.344
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure 5: Atomic configurations at 10 ns (complement to Fig. 3). Red: crystalline regions. Yellow: amorphous reduced regions. Blue dots: Li-metal. Purple polyhedra and green lines correspond to thiophosphate groups and Li- Cl, Li-S bonds, respectively, in the original argyrodite structure. The snapshots correspond to the model II interface for various tem- peratures at a pressure of 1 bar (seed no. 1 for the initial velocities.)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    140.3,
+    546.1,
+    302.1
+   ],
+   "w": 2001,
+   "h": 675,
+   "dpi": 300,
+   "src": "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf",
+   "blank": 0.488
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 5,
+   "file": "tab_S1.png",
+   "caption": "Table 1: RMS absolute energy difference (eV/atom) for training and test sets in a 10-fold cross-validation.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    481.4,
+    545.1,
+    693.4
+   ],
+   "w": 1993,
+   "h": 884,
+   "dpi": 300,
+   "src": "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf",
+   "blank": 0.928
+  }
+ ]
+}

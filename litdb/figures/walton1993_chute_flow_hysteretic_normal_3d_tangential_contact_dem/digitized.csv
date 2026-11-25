@@ -1,0 +1,114 @@
+figure,series,x,x_unit,y,y_unit,note
+Fig. 2,□ e=0.6 μ=0.4 K=100,1.24,N/σ² (particles per unit area),0.6,mean flow velocity (m/s),"fig_2.png; PDF p.7 raster 300 dpi (1-bit scan); axis frame x 304.68-486.2 pt (N/σ² 0-40), ticks x[pt]=[350.52 395.76 440.88 486.24] for [10 20 30 40]; y ticks left [213.56 188.24 162.68 137.24 111.80 86.72] pt for [0..5] m/s, right axis 0.5 pt higher (scan skew interpolated); marker = ink centroid in ±2 pt box at 600 dpi"
+Fig. 2,□ e=0.6 μ=0.4 K=100,2.5,N/σ² (particles per unit area),0.697,mean flow velocity (m/s),same calibration
+Fig. 2,□ e=0.6 μ=0.4 K=100,5,N/σ² (particles per unit area),1.59,mean flow velocity (m/s),same calibration
+Fig. 2,○ e=0.85 μ=0.4 K=100,0.98,N/σ² (particles per unit area),4.9,mean flow velocity (m/s),"top-left point joined by a near-vertical dashed line to the N=1.24 cluster; x measured (0.98), not a design depth listed in the text; unexplained in the text (accelerating flow?) [미확인]"
+Fig. 2,○ e=0.85 μ=0.4 K=100,10,N/σ² (particles per unit area),1.82,mean flow velocity (m/s),same calibration; N/σ² ≤ 5 points of this series hidden under ●/⊕ markers (cluster ≈0.43–0.86)
+Fig. 2,○ e=0.85 μ=0.4 K=100,20,N/σ² (particles per unit area),3.61,mean flow velocity (m/s),same calibration; no ○ point at N=40 inside the 0–5 m/s frame
+Fig. 2,⊕ e=0.85 μ=0.4 K=10000,20,N/σ² (particles per unit area),2.8,mean flow velocity (m/s),same calibration; ⊕ points at N ≤ 10 not separable (overlap)
+Fig. 2,⊕ e=0.85 μ=0.4 K=10000,40,N/σ² (particles per unit area),4.12,mean flow velocity (m/s),"marker clipped by the right frame; x set to 40 (design), y from centroid; joined to N=20 ⊕ by the dotted line"
+Fig. 2,● e=0.85 μ=0.4 K=1000,1.24,N/σ² (particles per unit area),0.43,mean flow velocity (m/s),overlapping cluster (●/○/⊕ merged blob 0.29–0.50 m/s at 1800 dpi); centre estimated from blob top − marker radius; ±0.05
+Fig. 2,● e=0.85 μ=0.4 K=1000,2.5,N/σ² (particles per unit area),0.48,mean flow velocity (m/s),overlapping cluster as above; ±0.05
+Fig. 2,● e=0.85 μ=0.4 K=1000,5,N/σ² (particles per unit area),0.84,mean flow velocity (m/s),same calibration (○ K=100 overlaps at ≈0.85)
+Fig. 2,● e=0.85 μ=0.4 K=1000,10,N/σ² (particles per unit area),1.7,mean flow velocity (m/s),same calibration
+Fig. 2,● e=0.85 μ=0.4 K=1000,20,N/σ² (particles per unit area),2.72,mean flow velocity (m/s),same calibration
+Fig. 2,● e=0.85 μ=0.4 K=1000,40,N/σ² (particles per unit area),3.72,mean flow velocity (m/s),marker clipped by the right frame; x set to 40
+Fig. 2,■ e=0.95 μ=0.4 K=100+,1.24,N/σ² (particles per unit area),0.36,mean flow velocity (m/s),overlapping cluster; centre from blob bottom + marker radius; ±0.05
+Fig. 2,■ e=0.95 μ=0.4 K=100+,2.5,N/σ² (particles per unit area),0.38,mean flow velocity (m/s),overlapping cluster; ±0.05
+Fig. 2,■ e=0.95 μ=0.4 K=100+,5,N/σ² (particles per unit area),0.67,mean flow velocity (m/s),same calibration
+Fig. 2,■ e=0.95 μ=0.4 K=100+,10,N/σ² (particles per unit area),1.38,mean flow velocity (m/s),same calibration
+Fig. 2,■ e=0.95 μ=0.4 K=100+,20,N/σ² (particles per unit area),2.2,mean flow velocity (m/s),same calibration
+Fig. 2,■ e=0.95 μ=0.4 K=100+,40,N/σ² (particles per unit area),2.84,mean flow velocity (m/s),marker clipped by the right frame; x set to 40
+Fig. 2,⊞ e=0.85 μ=1.0 K=100,1.24,N/σ² (particles per unit area),0.0,mean flow velocity (m/s),≈0 (arrested flow); centroid 0.025 includes bottom-frame ink
+Fig. 2,⊞ e=0.85 μ=1.0 K=100,2.5,N/σ² (particles per unit area),0.0,mean flow velocity (m/s),≈0; centroid 0.012
+Fig. 2,⊞ e=0.85 μ=1.0 K=100,5,N/σ² (particles per unit area),0.0,mean flow velocity (m/s),≈0; centroid 0.022
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",0.53,height (diameters),0.384,velocity (m/s),"PDF p.4 row 1 (scan skew 0.85° removed by rotation); x cal from inner ticks 0.2/0.3/0.5/0.7 m/s and 0.1/0.2/0.3 φ; y cal from left-axis ticks 1–9 diameters; filled-circle markers (instantaneous, solid line) found by 2-px erosion + connected components (open diamonds of the time-average line not read)"
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",1.5,height (diameters),0.478,velocity (m/s),same calibration
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",2.5,height (diameters),0.522,velocity (m/s),same calibration
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",3.49,height (diameters),0.542,velocity (m/s),same calibration
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",4.5,height (diameters),0.575,velocity (m/s),same calibration
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",5.5,height (diameters),0.66,velocity (m/s),same calibration
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",6.5,height (diameters),0.678,velocity (m/s),same calibration
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",7.51,height (diameters),0.679,velocity (m/s),same calibration
+Fig. 1.1a,"N/σ²=1.24 instantaneous (●, solid)",8.51,height (diameters),0.678,velocity (m/s),same calibration
+Fig. 1.1b,"N/σ²=1.24 instantaneous (●, solid)",0.54,height (diameters),0.318,packing fraction,"PDF p.4 row 1 (scan skew 0.85° removed by rotation); x cal from inner ticks 0.2/0.3/0.5/0.7 m/s and 0.1/0.2/0.3 φ; y cal from left-axis ticks 1–9 diameters; filled-circle markers (instantaneous, solid line) found by 2-px erosion + connected components (open diamonds of the time-average line not read)"
+Fig. 1.1b,"N/σ²=1.24 instantaneous (●, solid)",1.53,height (diameters),0.211,packing fraction,same calibration
+Fig. 1.1b,"N/σ²=1.24 instantaneous (●, solid)",2.53,height (diameters),0.1,packing fraction,same calibration
+Fig. 1.1b,"N/σ²=1.24 instantaneous (●, solid)",3.54,height (diameters),0.017,packing fraction,same calibration
+Fig. 1.2a,"N/σ²=2.5 instantaneous (●, solid)",0.54,height (diameters),0.355,velocity (m/s),PDF p.4 row 2 (skew 0.75°); x ticks 0.1–0.7 m/s and 0.05–0.45 φ; y ticks 2–9; same marker method
+Fig. 1.2a,"N/σ²=2.5 instantaneous (●, solid)",1.54,height (diameters),0.513,velocity (m/s),same calibration
+Fig. 1.2a,"N/σ²=2.5 instantaneous (●, solid)",2.54,height (diameters),0.547,velocity (m/s),same calibration
+Fig. 1.2a,"N/σ²=2.5 instantaneous (●, solid)",3.54,height (diameters),0.574,velocity (m/s),same calibration
+Fig. 1.2a,"N/σ²=2.5 instantaneous (●, solid)",4.56,height (diameters),0.606,velocity (m/s),same calibration
+Fig. 1.2a,"N/σ²=2.5 instantaneous (●, solid)",5.55,height (diameters),0.628,velocity (m/s),same calibration
+Fig. 1.2a,"N/σ²=2.5 instantaneous (●, solid)",6.54,height (diameters),0.713,velocity (m/s),same calibration
+Fig. 1.2b,"N/σ²=2.5 instantaneous (●, solid)",0.52,height (diameters),0.404,packing fraction,PDF p.4 row 2 (skew 0.75°); x ticks 0.1–0.7 m/s and 0.05–0.45 φ; y ticks 2–9; same marker method
+Fig. 1.2b,"N/σ²=2.5 instantaneous (●, solid)",1.5,height (diameters),0.391,packing fraction,same calibration
+Fig. 1.2b,"N/σ²=2.5 instantaneous (●, solid)",2.5,height (diameters),0.33,packing fraction,same calibration
+Fig. 1.2b,"N/σ²=2.5 instantaneous (●, solid)",3.52,height (diameters),0.162,packing fraction,same calibration
+Fig. 1.2b,"N/σ²=2.5 instantaneous (●, solid)",4.54,height (diameters),0.022,packing fraction,same calibration
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",0.5,height (diameters),0.548,velocity (m/s),PDF p.4 row 3 (skew ≈0°); x ticks 0.2–1.0 m/s and 0.1–0.5 φ; y ticks 1–9; same marker method
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",1.49,height (diameters),0.845,velocity (m/s),same calibration
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",2.48,height (diameters),0.897,velocity (m/s),same calibration
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",3.47,height (diameters),0.935,velocity (m/s),same calibration
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",4.45,height (diameters),0.96,velocity (m/s),same calibration
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",5.46,height (diameters),0.987,velocity (m/s),same calibration
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",6.46,height (diameters),1.003,velocity (m/s),same calibration
+Fig. 1.3a,"N/σ²=5 instantaneous (●, solid)",7.46,height (diameters),0.977,velocity (m/s),same calibration
+Fig. 1.3b,"N/σ²=5 instantaneous (●, solid)",0.49,height (diameters),0.398,packing fraction,PDF p.4 row 3 (skew ≈0°); x ticks 0.2–1.0 m/s and 0.1–0.5 φ; y ticks 1–9; same marker method
+Fig. 1.3b,"N/σ²=5 instantaneous (●, solid)",1.49,height (diameters),0.479,packing fraction,same calibration
+Fig. 1.3b,"N/σ²=5 instantaneous (●, solid)",2.48,height (diameters),0.52,packing fraction,same calibration
+Fig. 1.3b,"N/σ²=5 instantaneous (●, solid)",3.46,height (diameters),0.514,packing fraction,same calibration
+Fig. 1.3b,"N/σ²=5 instantaneous (●, solid)",4.45,height (diameters),0.45,packing fraction,same calibration
+Fig. 1.3b,"N/σ²=5 instantaneous (●, solid)",5.46,height (diameters),0.239,packing fraction,same calibration
+Fig. 1.3b,"N/σ²=5 instantaneous (●, solid)",6.49,height (diameters),0.017,packing fraction,same calibration
+Fig. 1.4a,"N/σ²=10 instantaneous (●, solid)",0.98,height (diameters),1.305,velocity (m/s),PDF p.5 row 1 (skew 1.25° removed); x ticks 0.25–1.75 m/s (major 0.5 step) and 0.2–0.7 φ; y ticks 2.5–17.5; bins 2 diameters
+Fig. 1.4a,"N/σ²=10 instantaneous (●, solid)",2.95,height (diameters),1.746,velocity (m/s),same calibration
+Fig. 1.4a,"N/σ²=10 instantaneous (●, solid)",4.94,height (diameters),1.794,velocity (m/s),same calibration
+Fig. 1.4a,"N/σ²=10 instantaneous (●, solid)",6.93,height (diameters),1.795,velocity (m/s),same calibration
+Fig. 1.4a,"N/σ²=10 instantaneous (●, solid)",8.95,height (diameters),1.791,velocity (m/s),same calibration
+Fig. 1.4b,"N/σ²=10 instantaneous (●, solid)",0.93,height (diameters),0.418,packing fraction,PDF p.5 row 1 (skew 1.25° removed); x ticks 0.25–1.75 m/s (major 0.5 step) and 0.2–0.7 φ; y ticks 2.5–17.5; bins 2 diameters
+Fig. 1.4b,"N/σ²=10 instantaneous (●, solid)",2.89,height (diameters),0.619,packing fraction,same calibration
+Fig. 1.4b,"N/σ²=10 instantaneous (●, solid)",4.87,height (diameters),0.745,packing fraction,same calibration
+Fig. 1.4b,"N/σ²=10 instantaneous (●, solid)",6.87,height (diameters),0.703,packing fraction,same calibration
+Fig. 1.4b,"N/σ²=10 instantaneous (●, solid)",8.97,height (diameters),0.136,packing fraction,same calibration
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",1.03,height (diameters),2.42,velocity (m/s),PDF p.5 row 2 (skew 1.25°); x ticks 1/2/3 m/s and 0.1–0.7 φ; y ticks 5–20; bins 2 diameters
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",3.08,height (diameters),2.975,velocity (m/s),same calibration
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",5.08,height (diameters),2.978,velocity (m/s),same calibration
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",7.09,height (diameters),2.974,velocity (m/s),same calibration
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",9.11,height (diameters),2.972,velocity (m/s),same calibration
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",11.19,height (diameters),2.967,velocity (m/s),same calibration
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",13.18,height (diameters),2.972,velocity (m/s),same calibration
+Fig. 1.5a,"N/σ²=20 instantaneous (●, solid)",15.16,height (diameters),2.968,velocity (m/s),same calibration
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",1.03,height (diameters),0.335,packing fraction,PDF p.5 row 2 (skew 1.25°); x ticks 1/2/3 m/s and 0.1–0.7 φ; y ticks 5–20; bins 2 diameters
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",3.05,height (diameters),0.685,packing fraction,same calibration
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",5.03,height (diameters),0.727,packing fraction,same calibration
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",7.03,height (diameters),0.728,packing fraction,same calibration
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",9.04,height (diameters),0.72,packing fraction,same calibration
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",11.11,height (diameters),0.706,packing fraction,same calibration
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",13.09,height (diameters),0.729,packing fraction,same calibration
+Fig. 1.5b,"N/σ²=20 instantaneous (●, solid)",15.06,height (diameters),0.601,packing fraction,same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",1.68,height (diameters),3.748,velocity (m/s),"PDF p.5 row 3 (skew 1.25°); x ticks 3.5/4/4.5 m/s and 0.1–0.7 φ; y ticks 15–45 (panel a, also used for b); bins ≈3 diameters"
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",4.54,height (diameters),4.157,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",7.47,height (diameters),4.16,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",10.49,height (diameters),4.162,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",13.45,height (diameters),4.159,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",16.45,height (diameters),4.157,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",19.47,height (diameters),4.159,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",22.45,height (diameters),4.162,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",25.43,height (diameters),4.169,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",28.39,height (diameters),4.175,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",31.45,height (diameters),4.17,velocity (m/s),same calibration
+Fig. 1.6a,"N/σ²=40 instantaneous (●, solid)",34.45,height (diameters),4.174,velocity (m/s),same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",1.65,height (diameters),0.511,packing fraction,"PDF p.5 row 3 (skew 1.25°); x ticks 3.5/4/4.5 m/s and 0.1–0.7 φ; y ticks 15–45 (panel a, also used for b); bins ≈3 diameters"
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",4.49,height (diameters),0.719,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",7.4,height (diameters),0.728,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",10.43,height (diameters),0.723,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",13.41,height (diameters),0.594,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",16.4,height (diameters),0.602,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",19.41,height (diameters),0.606,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",22.43,height (diameters),0.603,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",25.46,height (diameters),0.618,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",28.42,height (diameters),0.607,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",31.38,height (diameters),0.593,packing fraction,same calibration
+Fig. 1.6b,"N/σ²=40 instantaneous (●, solid)",34.33,height (diameters),0.034,packing fraction,same calibration

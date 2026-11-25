@@ -1,0 +1,8 @@
+[B/seed5] final.xyz = relax 본 (plan.json 게이트_입력.final_relax: kind=FIRE, fmax_eV_A=0.05, cell=fixed)
+               PS4   다리S  P–P   최단 (쌍)        최단·P–S 제외     ρ g/cm³
+  원시 t=1050    1.0000    0    0   1.955 (P-S  )  2.204 (Li-S )  1.5178
+  relax        1.0000    0    0   2.026 (P-S  )  2.373 (Li-S )  1.5178
+  원시↔relax 변위 max 1.004 · rms 0.311 Å · 셀 차 0.0e+00 Å
+  → md_init_raw.xyz 썼다 (sha256 d3a8d4678d26139b)
+
+⛔ 판정하지 않았다 — 게이트를 원시·relax 어느 판으로 잴지, 문턱이 무엇인지는 카드·사람 몫이다.

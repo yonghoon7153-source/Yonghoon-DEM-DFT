@@ -1,0 +1,111 @@
+{
+ "slug": "ziemke2026_li3ocl_substitutional_defects",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Cubic crystal structure of lithium oxychloride Li3OCl with space group Pm¯3m and lattice constant 3.88 Å.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    101.1,
+    530.4,
+    319.1
+   ],
+   "w": 1941,
+   "h": 909,
+   "dpi": 300,
+   "src": "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Dependence of the formation energy of lithium vacancy in Li3OCl on the reciprocal of the linear size of calculation supercell 1/L (Å−1). Each supercell is labeled next to its corresponding data point.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    40.5,
+    595.3,
+    436.7
+   ],
+   "w": 2481,
+   "h": 1652,
+   "dpi": 300,
+   "src": "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Dependence of the computational cost for the formation energy of lithium vacancy in Li3OCl on the linear size of calculation supercell L (Å). Each supercell is labeled next to its corresponding data point.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    36.2,
+    595.3,
+    432.3
+   ],
+   "w": 2481,
+   "h": 1652,
+   "dpi": 300,
+   "src": "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1.png",
+   "caption": "Table 1: Structural and bonding modifications induced by substitutional defects at Li lattice sites in Li3OCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    54.3,
+    529.6,
+    774.1
+   ],
+   "w": 1933,
+   "h": 3000,
+   "dpi": 300,
+   "src": "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 14,
+   "file": "tab_2.png",
+   "caption": "Table 2: Substitutional defect formation energies in Li3OCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    59.1,
+    529.6,
+    779.3
+   ],
+   "w": 1927,
+   "h": 2992,
+   "dpi": 299,
+   "src": "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf",
+   "blank": 0.942
+  }
+ ]
+}

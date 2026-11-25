@@ -1,0 +1,466 @@
+{
+ "n_frames": 4000,
+ "dt_ps": 0.1,
+ "total_ps": 400.0,
+ "min_frames": 100,
+ "thresholds": {
+  "o_bond_A": 2.0,
+  "s_bond_A": 2.6,
+  "o_escape_A": 2.5,
+  "s_escape_A": 3.0,
+  "disp_escape_A": 2.0,
+  "min_ps": 10.0
+ },
+ "n_framework": 280,
+ "n_P_bonded_anions": 128,
+ "n_free": 144,
+ "verdict": "framework_mobile",
+ "n_events": 47,
+ "by_elem": {
+  "S": {
+   "events": 23,
+   "n_atoms": 9,
+   "atoms": [
+    40,
+    45,
+    163,
+    168,
+    173,
+    178,
+    419,
+    429,
+    434
+   ]
+  },
+  "Cl": {
+   "events": 23,
+   "n_atoms": 9,
+   "atoms": [
+    54,
+    55,
+    183,
+    188,
+    310,
+    311,
+    316,
+    439,
+    444
+   ]
+  },
+  "P": {
+   "events": 1,
+   "n_atoms": 1,
+   "atoms": [
+    285
+   ]
+  }
+ },
+ "events": [
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 40,
+   "start_ps": 183.9,
+   "length_ps": 11.700000000000001,
+   "peak_disp_A": 3.269181120301046
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 40,
+   "start_ps": 212.60000000000002,
+   "length_ps": 15.8,
+   "peak_disp_A": 3.5201032509787127
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 47.7,
+   "length_ps": 71.3,
+   "peak_disp_A": 4.1100508022084625
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 169.9,
+   "length_ps": 11.8,
+   "peak_disp_A": 3.1155105791529385
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 211.4,
+   "length_ps": 13.200000000000001,
+   "peak_disp_A": 3.2517023020920255
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 224.70000000000002,
+   "length_ps": 11.3,
+   "peak_disp_A": 3.1243949578669703
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 237.4,
+   "length_ps": 11.700000000000001,
+   "peak_disp_A": 3.26420752032905
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 321.90000000000003,
+   "length_ps": 20.400000000000002,
+   "peak_disp_A": 3.610500402755791
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 351.5,
+   "length_ps": 31.6,
+   "peak_disp_A": 3.7889761716519015
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 383.6,
+   "length_ps": 11.100000000000001,
+   "peak_disp_A": 4.149184972420925
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 54,
+   "start_ps": 264.1,
+   "length_ps": 135.9,
+   "peak_disp_A": 9.014059998938624
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 55,
+   "start_ps": 130.6,
+   "length_ps": 269.40000000000003,
+   "peak_disp_A": 6.323041354756321
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 163,
+   "start_ps": 36.300000000000004,
+   "length_ps": 363.70000000000005,
+   "peak_disp_A": 5.886790226043626
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 168,
+   "start_ps": 36.6,
+   "length_ps": 363.40000000000003,
+   "peak_disp_A": 4.752756206242212
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 173,
+   "start_ps": 385.1,
+   "length_ps": 14.9,
+   "peak_disp_A": 6.05154481800951
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 178,
+   "start_ps": 38.7,
+   "length_ps": 12.600000000000001,
+   "peak_disp_A": 3.3391078036390414
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 183,
+   "start_ps": 47.6,
+   "length_ps": 342.20000000000005,
+   "peak_disp_A": 7.008019186907672
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 188,
+   "start_ps": 157.0,
+   "length_ps": 10.100000000000001,
+   "peak_disp_A": 3.5194185025915736
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 188,
+   "start_ps": 352.20000000000005,
+   "length_ps": 15.700000000000001,
+   "peak_disp_A": 3.9356658480836506
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 188,
+   "start_ps": 370.6,
+   "length_ps": 24.200000000000003,
+   "peak_disp_A": 3.8092898195353633
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 309.40000000000003,
+   "length_ps": 13.3,
+   "peak_disp_A": 3.136406174009223
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 310,
+   "start_ps": 192.4,
+   "length_ps": 12.0,
+   "peak_disp_A": 4.058646109580128
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 310,
+   "start_ps": 204.5,
+   "length_ps": 13.3,
+   "peak_disp_A": 4.3427718339091195
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 310,
+   "start_ps": 221.4,
+   "length_ps": 10.200000000000001,
+   "peak_disp_A": 3.6417850061359975
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 310,
+   "start_ps": 239.70000000000002,
+   "length_ps": 22.6,
+   "peak_disp_A": 4.0954646250405515
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 310,
+   "start_ps": 314.40000000000003,
+   "length_ps": 63.6,
+   "peak_disp_A": 4.669426330212577
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 311,
+   "start_ps": 38.300000000000004,
+   "length_ps": 23.0,
+   "peak_disp_A": 4.239058044772093
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 311,
+   "start_ps": 64.5,
+   "length_ps": 76.2,
+   "peak_disp_A": 4.2139708710727755
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 311,
+   "start_ps": 314.0,
+   "length_ps": 10.4,
+   "peak_disp_A": 3.548053910451928
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 311,
+   "start_ps": 332.90000000000003,
+   "length_ps": 16.400000000000002,
+   "peak_disp_A": 3.3490274841019563
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 316,
+   "start_ps": 133.5,
+   "length_ps": 27.6,
+   "peak_disp_A": 3.6052118017397827
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 316,
+   "start_ps": 161.20000000000002,
+   "length_ps": 14.8,
+   "peak_disp_A": 3.476029452301226
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 316,
+   "start_ps": 177.20000000000002,
+   "length_ps": 11.8,
+   "peak_disp_A": 3.6216780396987414
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 316,
+   "start_ps": 207.8,
+   "length_ps": 10.0,
+   "peak_disp_A": 3.619014090143865
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 316,
+   "start_ps": 228.20000000000002,
+   "length_ps": 11.0,
+   "peak_disp_A": 3.8257966942435813
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 316,
+   "start_ps": 240.60000000000002,
+   "length_ps": 159.4,
+   "peak_disp_A": 7.986092564469333
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 419,
+   "start_ps": 19.900000000000002,
+   "length_ps": 380.1,
+   "peak_disp_A": 6.712055009338968
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 429,
+   "start_ps": 53.5,
+   "length_ps": 13.700000000000001,
+   "peak_disp_A": 4.415783841193762
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 429,
+   "start_ps": 67.7,
+   "length_ps": 21.0,
+   "peak_disp_A": 4.497805126642232
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 429,
+   "start_ps": 92.0,
+   "length_ps": 40.7,
+   "peak_disp_A": 4.096797181926595
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 429,
+   "start_ps": 196.20000000000002,
+   "length_ps": 11.3,
+   "peak_disp_A": 3.3656713757545593
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 429,
+   "start_ps": 219.4,
+   "length_ps": 20.900000000000002,
+   "peak_disp_A": 3.5517409573785645
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 429,
+   "start_ps": 240.60000000000002,
+   "length_ps": 12.8,
+   "peak_disp_A": 4.275797030736314
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 429,
+   "start_ps": 278.8,
+   "length_ps": 121.2,
+   "peak_disp_A": 6.345915985007584
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 434,
+   "start_ps": 26.200000000000003,
+   "length_ps": 356.6,
+   "peak_disp_A": 5.068854501227575
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 439,
+   "start_ps": 46.0,
+   "length_ps": 269.8,
+   "peak_disp_A": 6.138189999103255
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 444,
+   "start_ps": 281.1,
+   "length_ps": 11.5,
+   "peak_disp_A": 3.7034361671220215
+  }
+ ],
+ "margin_max_by_elem_kind": {
+  "S/P-bonded": {
+   "max_A": 2.5638329774186603,
+   "escape_A": 3.0,
+   "atom": 290
+  },
+  "O/P-bonded": {
+   "max_A": 1.807769810418046,
+   "escape_A": 2.5,
+   "atom": 305
+  },
+  "P/free": {
+   "max_A": 3.198833564140675,
+   "escape_A": 2.0,
+   "atom": 157
+  },
+  "S/free": {
+   "max_A": 6.712055009338968,
+   "escape_A": 2.0,
+   "atom": 419
+  },
+  "Cl/free": {
+   "max_A": 9.014059998938624,
+   "escape_A": 2.0,
+   "atom": 54
+  }
+ },
+ "⛔": "이 판정은 '자리를 떠났나' 만 본다. β 경보는 지우지 않는다 — 결과 파일에 병기한다.",
+ "traj": "/root/work/runs/b2o3_221_eventrate_400ps/s6/d0.00_cfg0/T700/traj.xyz",
+ "card": "db/properties/lpsocl_box331_closure_amendment_2026_09_11.json"
+}

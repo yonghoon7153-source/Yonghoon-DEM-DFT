@@ -1,0 +1,333 @@
+{
+ "schema": "aprime_s2_geometries/v1",
+ "date": "2026-09-25",
+ "stage": "S2 — 최적화 전 기록 (카드 v5 §0 S2)",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+ "card_content_digest": "126aa58ebdc4803b9615efe165619162fb087dccc201dd699f9c0a09a90e09b1",
+ "builder": {
+  "file": "tools/wad/build_aprime_interfaces.py",
+  "sha256": "d1e996c7142544e034d7cc199af951643afc8a0b4fe6f52d7a034e26f5cf990a",
+  "카드_결박_sha256": "d1e996c7142544e034d7cc199af951643afc8a0b4fe6f52d7a034e26f5cf990a"
+ },
+ "builder_sha_matches_card": true,
+ "what": "UMA+D3 이완에 넣기 **전**의 초기 구조 (bound.extxyz · far.extxyz) + 마스크(fixed_idx · lateral_fixed_idx) + registry 기록 + 끝점 규칙(c · Δ · 간격 · dipfield) — 각 모델 폴더 meta.json · 파일 sha256",
+ "계획_대응": {
+  "V2": "registry 4 (top_fcc · top_hcp · bridge · hollow_fcc) — 카드 G6",
+  "V3": "Ag₄ · 두 종결 × registry A (카드 §4a: 2 종결 × 2 끝점)",
+  "V4": "C₆H₆ · 두 종결 × registry A",
+  "V5": "두 종결 × registry A·B = 표본 ①②③④ · 표본 ⑤(S·A +0.5 Å 인장)는 이완 뒤 강체 이동으로 S3 에서 생성 · ⚠ RESOURCE_BLOCKED (예상) — 프로브가 확정"
+ },
+ "⛔": "이 좌표는 최적화 **전**이다. 이완 뒤 좌표는 S3 에서 봉인한다. 에너지 없음. 여기서 registry 를 바꾸지 않는다.",
+ "models": {
+  "V2": {
+   "top_fcc": {
+    "files_sha256": {
+     "bound": "19207c1f707a8a14691c129eb485df7348ee1c285bcec02a6d07990e911eb44b",
+     "far": "9e62cb27eab5bebd413290d3413ee0f8046dddbcca30d87d8c7d3179c2a20eb4"
+    },
+    "n": {
+     "n_Ag": 12,
+     "n_C": 8
+    },
+    "fixed_n": 6,
+    "lateral_n": 8,
+    "registry": [
+     0.0,
+     0.0
+    ],
+    "c_A": 24.0502,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   },
+   "top_hcp": {
+    "files_sha256": {
+     "bound": "2bf55322553a143643d11e05adb06a4971b630989aedb0417314979abc043765",
+     "far": "6188d30a51c7d7f2e4f3f166d2c5e400538f0de6ecdae274dcd5c0ffeed2a723"
+    },
+    "n": {
+     "n_Ag": 12,
+     "n_C": 8
+    },
+    "fixed_n": 6,
+    "lateral_n": 8,
+    "registry": [
+     0.3333333333333333,
+     0.6666666666666666
+    ],
+    "c_A": 24.0502,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   },
+   "bridge": {
+    "files_sha256": {
+     "bound": "b2baec8dcbaf28ae3091033094669af5f9b4b57f856464094474b7129ad4e943",
+     "far": "f261040fb5ae9e0372e6cb38efd81efc93b634c33ab6b3808a5cd0769e2ba4f7"
+    },
+    "n": {
+     "n_Ag": 12,
+     "n_C": 8
+    },
+    "fixed_n": 6,
+    "lateral_n": 8,
+    "registry": [
+     0.5,
+     0.0
+    ],
+    "c_A": 24.0502,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   },
+   "hollow_fcc": {
+    "files_sha256": {
+     "bound": "084e41beb9f80142b5810cf2b637f063ae1ce382a3b2782066c7cc217556c37b",
+     "far": "236588faf4028453761e189bc58d1812ff47d45cf3538b179571527c186dfd6b"
+    },
+    "n": {
+     "n_Ag": 12,
+     "n_C": 8
+    },
+    "fixed_n": 6,
+    "lateral_n": 8,
+    "registry": [
+     0.6666666666666666,
+     0.3333333333333333
+    ],
+    "c_A": 24.0502,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   }
+  },
+  "V3_s_outer": {
+   "A": {
+    "files_sha256": {
+     "bound": "f38f11700be97315051a753184ec00203ab7737154715651b9110daee1366f26",
+     "far": "14d1dba66e3a1dff95f686fec782a0016a1fde5c03d32c651f2e1d847031a430"
+    },
+    "n": {
+     "n_sub": 110,
+     "n_ads": 4
+    },
+    "fixed_n": 54,
+    "lateral_n": 0,
+    "registry": [
+     108,
+     109,
+     [
+      9.8335,
+      7.8508
+     ]
+    ],
+    "c_A": 39.4478,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   }
+  },
+  "V3_li_outer": {
+   "A": {
+    "files_sha256": {
+     "bound": "1eac3d1af0c1ed7b63d1c01c1fde4f04e4f87e0662f15a655c351948199703b1",
+     "far": "a4cca5aecdf56e82e21b56a55c3db0885538a45693b5a44a6d7c64171c63c6b4"
+    },
+    "n": {
+     "n_sub": 98,
+     "n_ads": 4
+    },
+    "fixed_n": 49,
+    "lateral_n": 0,
+    "registry": [
+     93,
+     94,
+     [
+      6.1715,
+      3.2532
+     ]
+    ],
+    "c_A": 37.0458,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   }
+  },
+  "V4_s_outer": {
+   "A": {
+    "files_sha256": {
+     "bound": "cf08e93eb581844871ee8e74e014c574e494a67861808233d605e0b28995c52f",
+     "far": "03723b4a623a336741d06b038132e8b6706dcbb21da9babbabaca4f4513fb2b1"
+    },
+    "n": {
+     "n_sub": 110,
+     "n_ads": 12
+    },
+    "fixed_n": 54,
+    "lateral_n": 0,
+    "registry": [
+     108,
+     109,
+     [
+      9.8335,
+      7.8508
+     ]
+    ],
+    "c_A": 37.0882,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   }
+  },
+  "V4_li_outer": {
+   "A": {
+    "files_sha256": {
+     "bound": "1c4c5367da94004770a657f7b276941d887f0539e92c41b4869bfa03b2ddde12",
+     "far": "90be462df083014a9fae4ffe2b9a3829974e81d647a56018f41a0a400da9baf4"
+    },
+    "n": {
+     "n_sub": 98,
+     "n_ads": 12
+    },
+    "fixed_n": 49,
+    "lateral_n": 0,
+    "registry": [
+     93,
+     94,
+     [
+      6.1715,
+      3.2532
+     ]
+    ],
+    "c_A": 34.6862,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   }
+  },
+  "V5_s_outer": {
+   "A": {
+    "files_sha256": {
+     "bound": "87f4a443800b2419501ed3df4177e2ba8b42104e34d3055b62fe3b0828e8a787",
+     "far": "55125ebfcc38616d19240da22702e8ea273ae796f7784feec72033c31262ec5b"
+    },
+    "n": {
+     "n_se": 116,
+     "n_Ag": 84
+    },
+    "fixed_n": 60,
+    "lateral_n": 0,
+    "registry": [
+     56,
+     57,
+     [
+      9.7339,
+      5.0275
+     ]
+    ],
+    "c_A": 32.3478,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   },
+   "B": {
+    "files_sha256": {
+     "bound": "38011a60da03d6876c26b5dd3b12e578ea2c0162e1987623e127eca6fabb3d7f",
+     "far": "d5e88615d83360be25ecf080824f4941a6ad713cc666676c47529d2f1fe468b8"
+    },
+    "n": {
+     "n_se": 116,
+     "n_Ag": 84
+    },
+    "fixed_n": 60,
+    "lateral_n": 0,
+    "registry": [
+     56,
+     57,
+     [
+      9.7339,
+      5.0275
+     ]
+    ],
+    "c_A": 32.3478,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   }
+  },
+  "V5_li_outer": {
+   "A": {
+    "files_sha256": {
+     "bound": "569fc0e6c2fb1008744604c1f84652cb1764c35b2ff7f1e5fd5f8ea1a4407b95",
+     "far": "55c9a7cf7df3e6fb022355264895e7c097ac97cd034a03ce5ca3060cbefadfd0"
+    },
+    "n": {
+     "n_se": 92,
+     "n_Ag": 84
+    },
+    "fixed_n": 46,
+    "lateral_n": 0,
+    "registry": [
+     43,
+     44,
+     [
+      2.7258,
+      4.0986
+     ]
+    ],
+    "c_A": 29.9017,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   },
+   "B": {
+    "files_sha256": {
+     "bound": "606e5a723353077f4211e5ca1907e3a5fa1cd092a7ca4ff6d0b70891857c7f8e",
+     "far": "a2f0f593117a71f6563b86ba882ca48063f231ef16b2af83566bff2a95e518fb"
+    },
+    "n": {
+     "n_se": 92,
+     "n_Ag": 84
+    },
+    "fixed_n": 46,
+    "lateral_n": 0,
+    "registry": [
+     43,
+     44,
+     [
+      2.7258,
+      4.0986
+     ]
+    ],
+    "c_A": 29.9017,
+    "far_gap": [
+     8.0,
+     9.0
+    ],
+    "flags": []
+   }
+  }
+ }
+}

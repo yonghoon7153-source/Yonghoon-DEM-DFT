@@ -1,0 +1,44 @@
+&CONTROL
+    calculation     = 'relax'
+    prefix          = 'SO2_mp-aaaabpak'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/cei_gap_1027/pseudo'
+    tprnfor         = .true.
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 6
+    ntyp            = 2
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+&IONS
+/
+
+ATOMIC_SPECIES
+  O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
+  S     32.060  S.pbe-nl-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+      4.2082508300    -0.0376152600     0.0000000000
+     -0.1769014200     4.2047001100     0.0000000000
+      0.0000000000     0.0000000000     5.9034921700
+
+ATOMIC_POSITIONS angstrom
+  S       1.9987057883     2.0999586158     2.9517460850
+  S      -0.0169689167     0.0164161908     0.0000000000
+  O       3.1609530341     2.2149403833     3.7901302894
+  O       1.9222612236     0.9345418486     2.1133618806
+  O       3.9379359286     3.0180842736     0.8383842044
+  O       1.1452783291     0.1313979583     5.0651079656
+
+K_POINTS automatic
+  5 5 4 0 0 0

@@ -1,0 +1,239 @@
+{
+ "slug": "sangros2020_lib_electrode_dem_mech_elec_ionic",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of the overall concept of this study. DEM simulations were used to simulate the calendering and electrochemical cycling processes. Microscale properties were derived from the simulations to deﬁne electrode-scale properties.",
+   "bbox": [
+    42.0,
+    468.6,
+    550.0,
+    696.6
+   ],
+   "w": 2117,
+   "h": 951,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Speciﬁc electrical conductivity, speciﬁc ionic conductivity, and adhesion strength as a function of the ﬁnal electrode porosity after calen- dering. Experimental and simulated results are presented.",
+   "bbox": [
+    42.0,
+    65.5,
+    295.0,
+    366.0
+   ],
+   "w": 1055,
+   "h": 1253,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Average particle strength as a function of the size for NMC particles measured via nanoindentation.",
+   "bbox": [
+    297.0,
+    65.5,
+    550.0,
+    248.7
+   ],
+   "w": 1055,
+   "h": 765,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Coordination number along the charging–discharging process for the four calendered electrodes. b) Number of bonds per particle along the charging–discharging process for the four calendered electrodes.",
+   "bbox": [
+    45.0,
+    448.2,
+    553.0,
+    696.6
+   ],
+   "w": 2118,
+   "h": 1036,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Stress evolution along the ﬁrst electrochemical cycle for the previously calendered electrodes.",
+   "bbox": [
+    42.0,
+    513.8,
+    295.0,
+    696.6
+   ],
+   "w": 1055,
+   "h": 763,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Stress evolution along the ﬁrst electrochemical cycle for the pre- viously calendered electrodes C2 and C4, considering the effect of the binder (solid lines) and without the effects of the binder (dashed lines).",
+   "bbox": [
+    297.0,
+    503.6,
+    550.0,
+    686.6
+   ],
+   "w": 1055,
+   "h": 763,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Evolution of electrode porosity as a function of the applied mechanical stress for the simulated electrodes with different initial non- calendering porosities.",
+   "bbox": [
+    45.0,
+    65.5,
+    298.0,
+    248.1
+   ],
+   "w": 1055,
+   "h": 762,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Values of porosity at the position of the maximum mechanical stress (position B) and at the end of the calendering process (position C) as a function of the initial noncalendered porosity (position A).",
+   "bbox": [
+    300.0,
+    65.5,
+    553.0,
+    247.5
+   ],
+   "w": 1055,
+   "h": 760,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Modeled speciﬁc electrical conductivity, speciﬁc ionic conductiv- ity, and adhesion strength as a function of the initial noncalendered elec- trode porosity.",
+   "bbox": [
+    300.0,
+    300.1,
+    553.1,
+    598.6
+   ],
+   "w": 1055,
+   "h": 1245,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Schematic of the DEM simulation regarding the calendering process. Starting from position A, the electrode is compressed till position B is achieved. Finally, due to the elastic recovery, the ﬁnal struc- ture is obtained (position C).",
+   "bbox": [
+    45.0,
+    65.5,
+    298.0,
+    255.6
+   ],
+   "w": 1055,
+   "h": 793,
+   "dpi": 300,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.537
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Relevant structural and process parameters of the simulated calendered cathodes and the initial noncalendered cathode.",
+   "bbox": [
+    46.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "w": 2144,
+   "h": 2999,
+   "dpi": 284,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Fraction of broken particles for the calendered electrodes simulated via DEM.",
+   "bbox": [
+    43.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf",
+   "blank": 0.881
+  }
+ ]
+}

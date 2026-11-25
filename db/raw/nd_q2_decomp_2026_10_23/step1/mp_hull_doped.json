@@ -1,0 +1,86 @@
+{
+  "cif": [
+    "db/structures/modelc_nd_doped_DFTrelax.cif"
+  ],
+  "composition": "Li48 Nd2 P10 S41 Cl16 O3",
+  "reduced": "Li48Nd2P10S41Cl16O3",
+  "elements": [
+    "Li",
+    "Nd",
+    "P",
+    "S",
+    "Cl",
+    "O"
+  ],
+  "mode": "mp",
+  "n_mp_entries": 322,
+  "hull_energy_eV": -755.8840003651044,
+  "hull_energy_per_atom": -6.29903333637587,
+  "decomposition_products": {
+    "NdS2": 0.0167,
+    "Li2O": 0.075,
+    "NdPS4": 0.0667,
+    "Li3P": 0.2889,
+    "LiCl": 0.2667,
+    "S": 0.2861
+  },
+  "decomposition_entries": [
+    {
+      "formula": "Li3P",
+      "entry_id": {
+        "identifier": "mp-aaaaabci",
+        "suffix": "r2SCAN",
+        "separator": "-"
+      },
+      "amount": 0.288889
+    },
+    {
+      "formula": "S",
+      "entry_id": {
+        "identifier": "mp-aaaaaacz",
+        "suffix": "r2SCAN",
+        "separator": "-"
+      },
+      "amount": 0.286111
+    },
+    {
+      "formula": "LiCl",
+      "entry_id": {
+        "identifier": "mp-aaaabhwz",
+        "suffix": "r2SCAN",
+        "separator": "-"
+      },
+      "amount": 0.266667
+    },
+    {
+      "formula": "Li2O",
+      "entry_id": {
+        "identifier": "mp-aaaaacxk",
+        "suffix": "r2SCAN",
+        "separator": "-"
+      },
+      "amount": 0.075
+    },
+    {
+      "formula": "NdPS4",
+      "entry_id": {
+        "identifier": "mp-aaaaafmc",
+        "suffix": "r2SCAN",
+        "separator": "-"
+      },
+      "amount": 0.066667
+    },
+    {
+      "formula": "NdS2",
+      "entry_id": {
+        "identifier": "mp-aaaaaubw",
+        "suffix": "r2SCAN",
+        "separator": "-"
+      },
+      "amount": 0.016667
+    }
+  ],
+  "mp_database_version": "2026.09.28",
+  "query_utc": "2026-10-23T13:50:19+00:00",
+  "note": "MP-energy hull. Products + hull energy at our composition. Absolute E_above_hull of OUR structure needs an MP-compatible energy (use --mode uma for a self-consistent number)."
+}

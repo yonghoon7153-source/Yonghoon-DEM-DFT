@@ -1,0 +1,67 @@
+{
+  "base_commit": "dad10ecf327fe836b4d807a60cba4cc7056cc778",
+  "scope": "DI review P0 3 + P1 2; local patch only",
+  "files": {
+    "tools/ionic/melt_quench_uma.py": {
+      "before_sha256": "bc325e25ef7f2bba4233520f79c70b27288568367ee9394e98b39bdf2ea4cb24",
+      "after_sha256": "ca81a6c3d554ce13c43cae01a2724756f755dc6d36c2cf21343b6f81d169f37a"
+    },
+    "tools/ionic/li2s2_stage1_runner.py": {
+      "before_sha256": "ee20b434b428b590c12c785b3e09ab4d1744690363cba5d30428e7e68f734757",
+      "after_sha256": "f52cf9fd48af83401bc06f9e1b2b578930ea63295e6b72d3d59b30c3af947c3a"
+    }
+  },
+  "checks": {
+    "driver_selftest": {
+      "pass": 191,
+      "fail": 0
+    },
+    "runner_selftest_windows_worker_thread": {
+      "pass": 56,
+      "fail": 0,
+      "posix_only_checks": "not executed"
+    },
+    "targeted_regressions": {
+      "baseline": {
+        "passed": 11,
+        "failed": 0
+      },
+      "retry_guard_removed": {
+        "passed": 10,
+        "failed": 1
+      },
+      "archive_cost_join_removed": {
+        "passed": 10,
+        "failed": 1
+      },
+      "proc_error_swallowed": {
+        "passed": 10,
+        "failed": 1
+      },
+      "cleanup_cost_omitted": {
+        "passed": 10,
+        "failed": 1
+      },
+      "wallclock_duration": {
+        "passed": 10,
+        "failed": 1
+      },
+      "cross_boot_cost_accepted": {
+        "passed": 9,
+        "failed": 2
+      }
+    },
+    "git_apply_check": true,
+    "git_apply_roundtrip_sha_match": true,
+    "non_code_snapshot_files_unchanged": true
+  },
+  "limitations": [
+    "Actual Linux process-group tests not run here.",
+    "No UMA/MD/DFT run.",
+    "No remote repo update or push.",
+    "Existing proposed governance decision unchanged.",
+    "Orphan executions without a matching host/boot clock remain cost-unknown; UTC difference is not substituted.",
+    "Archived attempts must stay inside the same run root A/B folders. Deleting all independent records is outside recovery capability."
+  ],
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+}

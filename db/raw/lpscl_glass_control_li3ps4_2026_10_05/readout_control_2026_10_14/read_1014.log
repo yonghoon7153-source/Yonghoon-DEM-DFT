@@ -1,0 +1,29 @@
+li2s 대조 판독 · A /data/work/runs/lpscl_glass_md_v2_2026_09_30 · B /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 · n_boot 400 · 600 K · 골격 네 기준 {'①_P_frac_frames_changed_max': 0.05, '②_S_moved_max': 0, '③_SS_new_pairs_max': 0, '④_S_transient_max': 5}
+도구 sha16 · glass_v2_readout.py 097c8a8092e011e7 · msd_diffusive_check.py a2c06ce2bde2e733 · quench_ss_event.py 02d61d82e9b64cc0 · aimd_jump_stats.py 46eff8d348cb5641 · melt_quench_uma.py 47c7e0aab5d14fbd · disorder_ensemble_diffusion.py c3e2d358ee53cefa
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed1 (kgy)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed2 (gabia)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed3 (kgy)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed4 (gabia)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed5 (gabia)
+  … /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 seed1 (kgy)
+  … /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 seed2 (gabia)
+  … /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 seed3 (kgy)
+  … /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 seed4 (gabia)
+  … /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 seed5 (gabia)
+■ A 600 K — N = 5/5 (C1 ∧ 최종 C2) · R 집합 [1, 2, 3, 4, 5] · 골격 이동 []
+   seed1 kgy   C1 통과 (48.4 Å²) · β_MTO 0.8906 · σ 거리 끝 b256 3.947 · 앞 b192 3.336 → **통과** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 1868 · T 601.65±46.39 K · p90² 중앙 56.55 · 최대 75.22 · (d/2)² 48.88 · 초과 창 6/8
+   seed2 gabia C1 통과 (57.3 Å²) · β_MTO 0.9310 · σ 거리 끝 b256 5.194 · 앞 b192 4.433 → **통과** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 2188 · T 605.25±45.97 K · p90² 중앙 61.19 · 최대 71.62 · (d/2)² 49.76 · 초과 창 8/8
+   seed3 kgy   C1 통과 (46.3 Å²) · β_MTO 0.8810 · σ 거리 끝 b256 2.578 · 앞 b192 2.155 → **통과** | 골격 통과 (① 0.006 · ② 0 · ③ 0 · ④ 1) | N_eff 2186 · T 600.31±45.48 K · p90² 중앙 55.25 · 최대 75.96 · (d/2)² 49.45 · 초과 창 6/8
+   seed4 gabia C1 통과 (46.9 Å²) · β_MTO 0.8818 · σ 거리 끝 b256 3.003 · 앞 b192 2.894 → **통과** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 2300 · T 602.62±44.95 K · p90² 중앙 59.82 · 최대 72.67 · (d/2)² 49.5 · 초과 창 7/8
+   seed5 gabia C1 통과 (48.2 Å²) · β_MTO 0.8952 · σ 거리 끝 b256 7.504 · 앞 b192 5.692 → **통과** | 골격 통과 (① 0.00425 · ② 0 · ③ 0 · ④ 2) | N_eff 2197 · T 601.21±44.81 K · p90² 중앙 59.39 · 최대 71.61 · (d/2)² 48.94 · 초과 창 7/8
+■ B 600 K — N = 1/5 (C1 ∧ 최종 C2) · R 집합 [2] · 골격 이동 []
+   seed1 kgy   C1 통과 (34.0 Å²) · β_MTO 0.8459 · σ 거리 끝 b256 1.706 · 앞 b192 1.872 → **경계 · 구분 불가** | 골격 통과 (① 0.0025 · ② 0 · ③ 0 · ④ 1) | N_eff 1288 · T 603.68±46.26 K · p90² 중앙 51.05 · 최대 54.91 · (d/2)² 49.24 · 초과 창 6/8
+   seed2 gabia C1 통과 (35.9 Å²) · β_MTO 0.8529 · σ 거리 끝 b256 2.034 · 앞 b192 2.018 → **통과** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 1480 · T 601.51±44.21 K · p90² 중앙 60.09 · 최대 68.1 · (d/2)² 49.43 · 초과 창 8/8
+   seed3 kgy   C1 통과 (36.3 Å²) · β_MTO 0.8725 · σ 거리 끝 b256 1.838 · 앞 b192 1.868 → **경계 · 구분 불가** | 골격 통과 (① 0.003 · ② 0 · ③ 0 · ④ 1) | N_eff 1228 · T 603.96±45.97 K · p90² 중앙 53.8 · 최대 66.45 · (d/2)² 51.55 · 초과 창 4/8
+   seed4 gabia C1 통과 (31.1 Å²) · β_MTO 0.8371 · σ 거리 끝 b256 1.504 · 앞 b192 1.222 → **경계 · 구분 불가** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 1264 · T 604.93±44.52 K · p90² 중앙 50.97 · 최대 59.16 · (d/2)² 50.81 · 초과 창 4/8
+   seed5 gabia C1 통과 (26.3 Å²) · β_MTO 0.8202 · σ 거리 끝 b256 0.534 · 앞 b192 0.666 → **경계 · 구분 불가** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 933 · T 600.86±44.7 K · p90² 중앙 43.52 · 최대 57.13 · (d/2)² 51.48 · 초과 창 3/8
+   A 시드 간 상대 산포 (R 집합 · 보고량 ③) n 5 · IQR/중앙 0.0345 · max/min 1.2604 · sd(ln D) 0.0934 · D/중앙 [0.9552, 0.9698, 1.0, 1.0042, 1.2039] | N 집합 (기록) n 5 · IQR/중앙 0.0345 · max/min 1.2604
+   B 시드 간 상대 산포 (R 집합 · 보고량 ③) n 1 · IQR/중앙 — · max/min — · sd(ln D) — · D/중앙 — | N 집합 (기록) n 1 · IQR/중앙 — · max/min —
+   대조 잡 (A ↔ v2 마감): D/중앙 같음 (최대 차 0.0) · p90² 5/5 같음
+→ 갈래 (규칙 적용): c2 (N_B = 1 ≤ 2) — R 을 내지 않는다 · '같은 게이트 · 같은 온도에서 B 가 통과하지 못했다' 를 1차 관측으로 적는다 · 다음 = B 측정 가능 온도 (새 카드)
+-> /data/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13/readout_control/readout_control.json

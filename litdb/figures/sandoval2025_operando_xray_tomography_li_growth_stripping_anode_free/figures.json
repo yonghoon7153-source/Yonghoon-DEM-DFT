@@ -1,0 +1,347 @@
+{
+ "slug": "sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "sandoval2025b_operando_xct_li_growth_main.pdf",
+  "sandoval2025b_operando_xct_li_growth_sup3.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) Schematic of the custom-built tomography cell and cell stack. (b) Voltage curves during galvanostatic deposition/stripping of lithium in three different anode-free cells with lithium counter electrodes (cases A, B, and C) using interlayer-coated Cu current collectors. All three cells were cycled using an initial current density of 0.5 mA cm−2 and an areal capacity of 3 mAh cm−2 for the first lithium deposition, followed by different treatments (see text). (c–e) Reconstructed image slices of the full cell stacks with magnified interfaces below each stack image. These image slices are from after the initial 3 mAh cm−2 was deposited at the current collector. (c) Case A (Au-coated current collector); (d) case B (Ag-coated current collector); (e) case C (Au-coated current collector).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    298.0,
+    558.8,
+    657.2
+   ],
+   "w": 2177,
+   "h": 1498,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "blank": 0.563,
+   "caption_raw": "Fig. 1 (a) Schematic of the custom-built tomography cell and cell stack. (b) Voltage curves during galvanostatic deposition/stripping of lithium in three diﬀerent anode-free cells with lithium counter electrodes (cases A, B, and C) using interlayer-coated Cu current collectors. All three cells were cycled using an initial current density of 0.5 mA cm−2 and an areal capacity of 3 mAh cm−2 for the ﬁrst lithium deposition, followed by diﬀerent treat- ments (see text). (c–e) Reconstructed image slices of the full cell stacks with magniﬁed interfaces below each stack image. These image slices are from after the initial 3 mAh cm−2 was deposited at the current collector. (c) Case A (Au-coated current collector); (d) case B (Ag-coated current col- lector); (e) case C (Au-coated current collector).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); pixel measurement of the three 250 um scale bars (73/78/75 px) and vertical layer profiles in panels c-e (SSE/Li counter-electrode thickness); panel b compared with sup1.xlsx Summary voltage data"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Filament-driven crack growth during deposition in case A. (a and b) 3D rendering of the analyzed subvolume near the working electrode current collector (a) before any lithium deposition and (b) after 3.0 mAh cm−2 of deposition. The top surface of the 3D rendering is the current collector|SSE interface, and the lithium counter electrode is located well below the reconstructed volume. (c–e) Reconstructed image slices taken from tomographic scans during deposition for case A from three different locations. The location of each image slice within the subvolume is shown in (a) with the green, red, and orange outlines indicating the locations of c, d, and e, respectively. The current collector|SSE interface is at the top of these images.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.7,
+    493.5
+   ],
+   "w": 2177,
+   "h": 1872,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "blank": 0.557,
+   "caption_raw": "Fig. 2 Filament-driven crack growth during deposition in case A. (a and b) 3D rendering of the analyzed subvolume near the working electrode current collector (a) before any lithium deposition and (b) after 3.0 mAh cm−2 of deposition. The top surface of the 3D rendering is the current col- lector|SSE interface, and the lithium counter electrode is located well below the reconstructed volume. (c–e) Reconstructed image slices taken from tomographic scans during deposition for case A from three diﬀerent locations. The location of each image slice within the subvolume is shown in (a) with the green, red, and orange outlines indicating the locations of c, d, and e, respectively. The current collector|SSE interface is at the top of these images.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); axis labels (1116 um x 368 um) and frame times read"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Lithium stripping in case A. (a and b) Reconstructed image slices taken from tomographic scans during stripping from the locations shown in Fig. 2c and e, respectively. Red arrows show points where lithium recedes during stripping. Green arrows denote new cracks that form during stripping due to closure of the lithium-filled cracks. (c) The segmented total pore and crack volume within the SSE plotted as a function of time for the larger subvolume denoted in Fig. S1 (green outline), with the galvanostatic curve for reference above. The total pore and crack volume includes both the porosity in the initial pellet and the additional crack volume caused during lithium growth and stripping within the SSE.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.7,
+    282.7
+   ],
+   "w": 2176,
+   "h": 993,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "blank": 0.713,
+   "caption_raw": "Fig. 3 Lithium stripping in case A. (a and b) Reconstructed image slices taken from tomographic scans during stripping from the locations shown in Fig. 2c and e, respectively. Red arrows show points where lithium recedes during stripping. Green arrows denote new cracks that form during strip- ping due to closure of the lithium-ﬁlled cracks. (c) The segmented total pore and crack volume within the SSE plotted as a function of time for the larger subvolume denoted in Fig. S1 (green outline), with the galvanostatic curve for reference above. The total pore and crack volume includes both the porosity in the initial pellet and the additional crack volume caused during lithium growth and stripping within the SSE.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); panel c digitised (40 dot centroids; y ticks 350.5 px=500 and 827.0 px=250 x10^4 um3; x 54.5 px/h) and compared point by point with sup2.xlsx 'Case A' sheet (sheet = small subvolume, not this plot)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Reconstructed image slices taken from tomographic scans of the cell denoted as case B showing the interface between the working electrode (“Current Collector”) and the LPSC at various stages of cycling. (a) The pristine state before cycling. (b) After 3.0 mAh cm−2 of lithium was deposited on the working electrode. (c) After 2.8 mAh cm−2 of lithium was stripped. (d) After re-deposition of 3.0 mAh cm−2 of lithium. (e) After increasing the current density to 1.5 mA cm−2 and depositing 0.80 mAh cm−2 of lithium. (f) After further increasing the current density to 3.0 mA cm−2 and depositing 0.80 mAh cm−2, at which point the cell short-circuited.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.7,
+    195.1
+   ],
+   "w": 2177,
+   "h": 628,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "blank": 0.511,
+   "caption_raw": "Fig. 4 Reconstructed image slices taken from tomographic scans of the cell denoted as case B showing the interface between the working elec- trode (“Current Collector”) and the LPSC at various stages of cycling. (a) The pristine state before cycling. (b) After 3.0 mAh cm−2 of lithium was de- posited on the working electrode. (c) After 2.8 mAh cm−2 of lithium was stripped. (d) After re-deposition of 3.0 mAh cm−2 of lithium. (e) After increasing the current density to 1.5 mA cm−2 and depositing 0.80 mAh cm−2 of lithium. (f) After further increasing the current density to 3.0 mA cm−2 and depositing 0.80 mAh cm−2, at which point the cell short-circuited.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); Li layer width in panel b checked against the 50 um bar (56 px)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Segmentation analysis of lithium evolution for case B. (a) Electrochemical curve, (b) average thickness over time for the working electrode (right axis) and average thickness change for the counter electrode (left axis), and (c) the standard deviation of the average thickness for the working and counter electrodes. (d and e) Thickness maps showing the lithium thickness across the segmented area of the interface for the counter electrode (d) and working electrode (e) at (i) the end of the third half-cycle, (ii) after holding at 1.5 mA cm−2, and (iii) after holding at 3.0 mA cm−2. Thickness maps were generated by summing the entire lithium thickness at each position across the interface at both electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.7,
+    302.8
+   ],
+   "w": 2177,
+   "h": 1077,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "blank": 0.55,
+   "caption_raw": "Fig. 5 Segmentation analysis of lithium evolution for case B. (a) Electrochemical curve, (b) average thickness over time for the working electrode (right axis) and average thickness change for the counter electrode (left axis), and (c) the standard deviation of the average thickness for the working and counter electrodes. (d and e) Thickness maps showing the lithium thickness across the segmented area of the interface for the counter elec- trode (d) and working electrode (e) at (i) the end of the third half-cycle, (ii) after holding at 1.5 mA cm−2, and (iii) after holding at 3.0 mA cm−2. Thickness maps were generated by summing the entire lithium thickness at each position across the interface at both electrodes.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); panels b-c compared point by point with sup2.xlsx 'Case B' sheet (all 21 points match); colour bars of d-e read"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Lithium filament growth in case C. (a) Tomographic images after (i) 3.0 mAh cm−2 of deposition at 0.5 mA cm−2, (ii) after an additional 0.75 mAh cm−2 of deposition at 0.75 mA cm−2, (iii) after an additional 1.0 mAh cm−2 deposition at 1.0 mA cm−2, and (iv) after additional deposition at 2.0 mA cm−2. New filaments within the SSE in each image frame are highlighted in yellow. (b) Three-dimensional rendering of the segmented SSE after cell failure. The lithium filament network (gray) is evident within the SSE volume (purple).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.7,
+    181.2
+   ],
+   "w": 2177,
+   "h": 570,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "blank": 0.41,
+   "caption_raw": "Fig. 6 Lithium ﬁlament growth in case C. (a) Tomographic images after (i) 3.0 mAh cm−2 of deposition at 0.5 mA cm−2, (ii) after an additional 0.75 mAh cm−2 of deposition at 0.75 mA cm−2, (iii) after an additional 1.0 mAh cm−2 deposition at 1.0 mA cm−2, and (iv) after additional deposition at 2.0 mA cm−2. New ﬁlaments within the SSE in each image frame are highlighted in yellow. (b) Three-dimensional rendering of the segmented SSE after cell failure. The lithium ﬁlament network (gray) is evident within the SSE volume (purple).",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); 250 um bar (85 px) and layer profile of panel a(i) measured"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Reconstructed X-ray CT image slice of the pristine cell for Case A. Large LPSC particles are evident throughout the SSE, with various pores in the LPSC apparent prior to deposition. Video S1 includes the region outlined in purple, magnified on the right. Image segmentation was conducted in a smaller subvolume (outlined in blue in the image on the right) to track crack evolution during lithium deposition and stripping (Figs. 2-3a, b). The extended subvolume (outlined in green) was segmented to track the total volume throughout the entire SSE pellet thickness in Fig. 3c.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    80.3,
+    549.0,
+    346.5
+   ],
+   "w": 2013,
+   "h": 1110,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.386,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); 250 um / 150 um bars measured; green/blue box heights read"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. 3D rendering of the subvolume for Case A at the end of stripping. Compared to Fig. 2a and b, it is apparent that many of the original pores have closed, although some are still visible. Any dead lithium present is also captured in the final pore+crack volume.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    276.0
+   ],
+   "w": 2013,
+   "h": 875,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.625,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Example line scan analysis carried out on reconstructed X-ray CT images by measuring the intensity across a line scan in regions of interest as seen in (a) and analyzed at various positions across the entire subvolume (b). A line is drawn to encompass a large portion of the crack/pore and extends beyond into the SSE. The grayscale pixel intensities are then extracted and plotted as in (c). Line scans were collected for pores and cracks throughout the entire subvolume and assessed.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    366.0
+   ],
+   "w": 2013,
+   "h": 1250,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.528,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); panel b dimension labels (364 x 1116 x 368 um) used to identify the sup2 'Case A' series"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Histogram of the measured grayscale pixel intensities for original pores and new cracks caused during lithium deposition (presumably lithium-filled cracks). Pixel counts are defined as the number of pixels along the line scan with an intensity corresponding to voids or lithium. Line scans were taken across 28 scans and plotted. The grayscale intensity distribution for pores/voids and lithium overlap, thus indicating that intensity tracking is not sufficient to differentiate the two.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    38.3,
+    572.3,
+    316.1
+   ],
+   "w": 2110,
+   "h": 1159,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.831,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); bar heights read on both y axes (left Li 0-70, right voids 0-25)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (a) Voltage curves during galvanostatic deposition of lithium in three different anode-free tomography cells with lithium counter electrodes using interlayer-coated Cu current collectors. Voltage curves for case A (the same data as in Fig. 1b) are compared to two other tomographic cells (cell 1 and 2), all of which use the same coarse-grained LPSC. Lithium deposition was performed at a current density of 0.5 mA cm-2 for all three cells. (b) Reconstructed image slices taken from tomographic scans in the (i, ii) pristine state and (iii, iv) at the end of deposition for cell 1 and cell 2 from (a), respectively. Pre-existing porosity prior to lithium deposition is circled in blue, and filamentary lithium is highlighted in red. The lithium counter electrode is below these images.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    264.4
+   ],
+   "w": 2013,
+   "h": 827,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.534,
+   "caption_raw": "Figure S5. (a) Voltage curves during galvanostatic deposition of lithium in three different anode- free tomography cells with lithium counter electrodes using interlayer-coated Cu current collectors. Voltage curves for case A (the same data as in Fig. 1b) are compared to two other tomographic cells (cell 1 and 2), all of which use the same coarse-grained LPSC. Lithium deposition was performed at a current density of 0.5 mA cm-2 for all three cells. (b) Reconstructed image slices taken from tomographic scans in the (i, ii) pristine state and (iii, iv) at the end of deposition for cell 1 and cell 2 from (a), respectively. Pre-existing porosity prior to lithium deposition is circled in blue, and filamentary lithium is highlighted in red. The lithium counter electrode is below these images.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. (a) Thickness map of the pristine counter electrode for Case B. Defects are present across the interface prior to lithium stripping. (b) Pristine X-ray CT image of Case B. LPSC inclusions in the lithium counter electrode are circled in red, corresponding to the thickness map in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    258.0
+   ],
+   "w": 2013,
+   "h": 800,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.436,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); 150 um bar (97 px) and layer profile of panel b measured; colour bar of a read"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (a) Three-dimensional rendering of segmented filamentary cracks within the SSE at the end of the experiment in Case B. The entire 2 mm SSE volume is segmented, shown in purple. The working electrode is above and the counter electrode is below this volume. Multiple spallation-type cracks are seen around the edges of the cell. A large connecting filament causing the short circuit in the cell is observed near the edge. (b) Reconstructed X-ray CT image slice showing the cracks within the SSE at the end of the experiment.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    258.0
+   ],
+   "w": 2013,
+   "h": 800,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.466,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); 150 um bar (93 px) and layer profile of panel b measured"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Reconstructed X-ray CT image slice of the pristine cell for Case C. A compact SSE separator is observed, similar to that of Case B.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    328.0
+   ],
+   "w": 2013,
+   "h": 1092,
+   "dpi": 300,
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "blank": 0.436,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: full-resolution Read of this PNG (displayed at ~2000 px width); 250 um bar (181 px) and layer profile measured"
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "sandoval2025b_operando_xct_li_growth_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "sandoval2025b_operando_xct_li_growth_sup3.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "hand_notes": [
+  "2026-11-24 litdb-curator: all 14 crops (main Fig. 1-6, SI Fig. S1-S8; no tables in this paper) came from one tool run (--slug ... --pdf main SI --clean); no manual crop, no recrop, missing_labels = []. Fig. S1 crop also contains the SI page heading 'SUPPLEMENTARY FIGURES' (cosmetic, left as is).",
+  "2026-11-24 litdb-curator: caption clean-up = ligatures (fi/ff) and line-break hyphens only (treatments, collector, stripping, electrode, deposited, anode-free); original text kept in caption_raw.",
+  "2026-11-24 litdb-curator: video frames (video_frames/, 58 JPG from the five SI videos sup4-sup8 = Video S1-S5) are outside this manifest and are deleted by --clean; the ffmpeg commands and the sup-to-Video mapping are recorded in the digest (section 'Video set')."
+ ]
+}

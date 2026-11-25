@@ -1,0 +1,372 @@
+{
+ "slug": "deklerk2018_diffusion_analysis_md_beta_li3ps4",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+  "1109599e-86._Sup_Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Histogram showing the vibrational amplitude of Li ions in β-Li3PS4 at 600 K, with the ﬁtted Gaussian (solid red line) and the standard deviation (±0.495 Å, dotted green line). frequency. The vibrational spectrum is obtained by determin- ing the derivative of the absolute displacement (Δri) per atom (i) at every time step (t):",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    231.4
+   ],
+   "w": 1051,
+   "h": 701,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Vibration frequency spectrum of Li-ions in β-Li3PS4 at 600 K, the average frequency of 8.29 (±0.46) × 1012 Hz is shown by the solid (±dotted) red line.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    381.8,
+    306.5,
+    550.0
+   ],
+   "w": 1050,
+   "h": 702,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Energy landscape and the corresponding ion density, with sites A, B, and C.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    155.6
+   ],
+   "w": 1051,
+   "h": 386,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.571
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic pictures of the energy landscape due to the crystal lattice (top) and the Coulomb repulsion of another Li ion (middle) during a collective jump, giving the energy landscape experienced by the gray Li ion (bottom). Step 1: situation before a collective jump. Step 2: the other ion moves to the right and makes the barrier between the gray ion and the next site disappear. Step 3: situation after the collective jump.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    162.1
+   ],
+   "w": 1051,
+   "h": 413,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Jump diﬀusion paths at 600 K for (a) β-Li2.75PS4, (b) β- Li3PS4, and (c) β-Li3.25PS4. Li-ion sites are shown by 4b = blue, 4c = green, and 8d = black. The jump types are shown by 4b−4c = red, intralayer = pink, and interlayer = cyan, thicker lines correspond to larger jump rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    659.3
+   ],
+   "w": 1051,
+   "h": 2484,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Tracer diﬀusivity from the current MD simulations, Phani et al.13 and Yang et al.49",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    173.7,
+    570.5,
+    347.7
+   ],
+   "w": 1051,
+   "h": 726,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Jump rates for the 4b−4c and interplane jumps.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    298.2,
+    248.4
+   ],
+   "w": 1016,
+   "h": 773,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Activation energy at 600 K for (a) 4b−4c and (b) intraplane jumps.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    445.2
+   ],
+   "w": 1051,
+   "h": 1592,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Percentage of collective jumps in the MD simulations Surprisingly, the lower Li concentration in Li2.75PS4 leads to a higher percentage of collective jumps. As shown in Figure 7, the jump rate is similar in all three compositions, indicating that collective jumps occur more frequently when there are more Li vacancies, but the mechanism behind this eﬀect is unclear.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    252.0
+   ],
+   "w": 1051,
+   "h": 787,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Number of collective jumps versus the time condition (in units of the attempt frequency).",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    394.6,
+    306.5,
+    566.6
+   ],
+   "w": 1051,
+   "h": 717,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "Figure 11. (a) Attempt frequencies and (b) vibration amplitudes from the MD simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.4,
+    458.9
+   ],
+   "w": 1050,
+   "h": 1650,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Jump diﬀusion paths at 600 K for (a) β-Li2.75PS3.75Br0.25 and (b) β-Li3PS3.75O0.25. Li-ion sites are shown by 4b = blue, 4c = green, and 8d = black. The jump types are shown by 4b−4c = red, intralayer = pink, and interlayer = cyan, thicker lines correspond to larger jump rates. ionic radius of oxygen56 results in a smaller O−Li distance compared to the S−Li distance. However, the Li density of the ﬁrst coordination shell in the RDF is signiﬁcantly lower around the O atoms. Integrating the Li density up to 3.5 Å shows that (on average) there are 2.9 Li atoms in the ﬁrst coordination shell of O atoms, and 3.5 Li atoms in the ﬁrst coordination shell of S atoms. This implies that it is unfavorable for Li ions to be near the O atoms in β-Li3PS3.75O0.25, and these Li ions must be accommodated elsewhere within the crystal structure. Oxygen doping thus changes the distribution of Li i",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    509.0
+   ],
+   "w": 1051,
+   "h": 1858,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 10,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Activation energies at 600 K in Br- and O-doped β-Li3PS4 for (a) 4b−4c and (b) intraplane jumps.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    445.9
+   ],
+   "w": 1051,
+   "h": 1596,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 10,
+   "file": "fig_14.png",
+   "caption": "Figure 14. O−Li and S−Li distribution in β-Li3PS3.75O0.25 at 600 K, calculated using eq 10.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    475.2,
+    570.5,
+    672.2
+   ],
+   "w": 1051,
+   "h": 821,
+   "dpi": 300,
+   "src": "564a5b44-86._Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Mean squared displacement of Li-ions in β-Li3PS4 during the MD-simulation at 600 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    153.9,
+    546.0,
+    411.6
+   ],
+   "w": 2001,
+   "h": 1074,
+   "dpi": 300,
+   "src": "1109599e-86._Sup_Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Occupancy of the 4c position for the diﬀerent compositions at the simulated temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    152.2,
+    546.0,
+    432.7
+   ],
+   "w": 2001,
+   "h": 1169,
+   "dpi": 300,
+   "src": "1109599e-86._Sup_Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Radial distribution functions of β-Li3PS4, β-Li3PS3.75O0.25 and β-Li2.75PS3.75Br0.25 at 600 K for (a) lithium, (b) sulfur, and (c) phosphor.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    186.1,
+    546.0,
+    552.4
+   ],
+   "w": 2001,
+   "h": 1527,
+   "dpi": 300,
+   "src": "1109599e-86._Sup_Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Amount of collective jumps for all the jump combinations from MD simulations at 600 K in (a) β-Li2.75PS4, (b) β-Li3PS4, and (c) β-Li3.25PS4. ’-s’ means that a jump is within the same layer, ’-i’ means an interlayer jump.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    153.9,
+    546.0,
+    521.1
+   ],
+   "w": 2001,
+   "h": 1531,
+   "dpi": 300,
+   "src": "1109599e-86._Sup_Analysis_of_diffusion_in_solidstate_electrolytes_through_MD_simulations_improvement_of_the_Liion_conductivity_in__Li_PS__as_an_example.pdf",
+   "blank": 0.632
+  }
+ ]
+}

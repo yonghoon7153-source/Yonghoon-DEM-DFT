@@ -1,0 +1,40 @@
+[10-16 07:28:48] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-16 07:28:48] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-16 07:28:48]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-16 07:28:48]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-16 07:28:48] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-16 07:28:48] 설정 균일성 ✓ (8점 동일 · key bc3759b0)
+               occupations = 'smearing'
+               electron_maxstep = 100
+               mixing_mode  = 'plain'
+[10-16 07:28:48] 점 8개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-16 07:28:48]   VRAM 여유 19688 MiB (문턱 8000)
+[10-16 08:00:59] ✓ Li2S  32분
+[10-16 08:00:59]   VRAM 여유 19688 MiB (문턱 8000)
+[10-16 16:29:08] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-16 16:29:08] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-16 16:29:08]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-16 16:29:08]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-16 16:29:08] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-16 16:29:08] 설정 균일성 ✓ (8점 동일 · key bc3759b0)
+               occupations = 'smearing'
+               electron_maxstep = 100
+               mixing_mode  = 'plain'
+[10-16 16:29:08] 점 8개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-16 16:29:08] skip Li2S (완료: JOB DONE + 수렴 + 힘)
+[10-16 16:29:08]   VRAM 여유 23740 MiB (문턱 8000)
+[10-16 18:47:03] ✓ Li3PS4  137분
+[10-16 18:47:03]   VRAM 여유 22029 MiB (문턱 8000)
+[10-16 19:18:20] ✓ MLi_03  31분
+[10-16 19:18:20]   VRAM 여유 21667 MiB (문턱 8000)
+[10-16 19:46:59] ✓ MLi_04  28분
+[10-16 19:46:59]   VRAM 여유 21668 MiB (문턱 8000)
+[10-16 20:06:16] ✓ MLi_05  19분
+[10-16 20:06:16]   VRAM 여유 21666 MiB (문턱 8000)
+[10-16 20:41:51] ✓ MP_00  35분
+[10-16 20:41:51]   VRAM 여유 21667 MiB (문턱 8000)
+[10-16 20:59:11] ✓ MP_07  17분
+[10-16 20:59:11]   VRAM 여유 21666 MiB (문턱 8000)
+[10-16 21:23:50] ✓ MP_09  24분
+[10-16 21:23:50] 끝 — 완료 7 · 건너뜀 1 · 실패 0 · 총 294분
+다음: UMA 힘 (같은 frame.xyz) → 분석

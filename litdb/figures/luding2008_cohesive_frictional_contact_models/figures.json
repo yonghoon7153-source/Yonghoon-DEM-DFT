@@ -1,0 +1,106 @@
+{
+ "slug": "luding2008_cohesive_frictional_contact_models",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/03. Cohesive, frictional powders contact models for tension.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Left: Two particle contact with overlap δ in normal direction. Right: Schematic graph of the piece-wise linear, hysteretic, adhesive force–displacement model in normal direction. The non-contact forces, indicated by f0 and the line for negative δ, are neglected in the rest of the paper",
+   "bbox": [
+    45.0,
+    529.5,
+    295.1,
+    660.8
+   ],
+   "w": 1043,
+   "h": 548,
+   "dpi": 300,
+   "src": "03. Cohesive, frictional powders contact models for tension.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 9,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Top Axial tensile stress plotted against tensile strain for simu- lations with weak, moderate and strong particle contact adhesion; the kc/k values are given in the inset. The line gives a ﬁt to the linear elastic regime with Ct = 3.1011 N/m2. Bottom Axial compressive stress plot- ted against compressive strain for two of the parameter sets from the top panel. The initial slope is the same as in the top panel, indicating that the linear elastic regime is identical for tension and compression",
+   "bbox": [
+    45.0,
+    67.2,
+    295.2,
+    417.2
+   ],
+   "w": 1043,
+   "h": 1459,
+   "dpi": 300,
+   "src": "03. Cohesive, frictional powders contact models for tension.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Color online Snapshot from a tensile test with kc/k = 1/2 at horizontal strain of εxx ≈0.8. The color code denotes the distance from the viewer: blue, green, and red correspond to large, moderate, and short distance",
+   "bbox": [
+    300.2,
+    50.8,
+    550.3,
+    172.1
+   ],
+   "w": 1043,
+   "h": 507,
+   "dpi": 300,
+   "src": "03. Cohesive, frictional powders contact models for tension.pdf",
+   "blank": 0.461
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Tensile stress plotted against tensile strain for simulations with weak contact adhesion kc/k = 1/2, and with different rolling- and torsion friction coefﬁcients, as given in the inset. The lines show the same ﬁt as in Fig. 2",
+   "bbox": [
+    45.0,
+    51.4,
+    295.2,
+    436.2
+   ],
+   "w": 1043,
+   "h": 1605,
+   "dpi": 300,
+   "src": "03. Cohesive, frictional powders contact models for tension.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Microscopic material parameters used (second column) Symbol Value rescaled units SI-units tu 1 1µs 10−6 s",
+   "bbox": [
+    46.0,
+    28.2,
+    549.3,
+    721.2
+   ],
+   "w": 2098,
+   "h": 2888,
+   "dpi": 300,
+   "src": "03. Cohesive, frictional powders contact models for tension.pdf",
+   "blank": 0.887
+  }
+ ]
+}

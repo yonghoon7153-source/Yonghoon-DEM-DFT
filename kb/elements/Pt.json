@@ -1,0 +1,81 @@
+{
+  "symbol": "Pt",
+  "name": "Platinum",
+  "Z": 78,
+  "role": "78번 5d 백금족 귀금속(Group 10, Ni/Pd 동족). SSB 앵커 없음 — 백과사전/전극·촉매 관점. 전기화학의 원형 금속: 표준수소전극(SHE)·상대전극·연료전지 ORR/HER 전기촉매(Pt/C)가 모두 Pt. +2/+4가 흔하고 바닥상태는 5d⁹6s¹(예외적 채움). Adams 촉매 PtO₂, 자동차 삼원촉매, 시스플라틴 항암제도 대표. 불활성 전극·집전체·접점 관점 가능하나 SSB 직접 무관.",
+  "oxidation_states": [
+    "+2",
+    "+4",
+    "0"
+  ],
+  "electronegativity": 2.28,
+  "ionic_radius_A": {
+    "Pt2+_sq": 0.6,
+    "Pt2+_VI": 0.8,
+    "Pt4+_VI": 0.625,
+    "_note": "Shannon 1976: Pt²⁺(d⁸) 사각평면 IVSQ 0.60 Å, 팔면체 VI 0.80 Å; Pt⁴⁺ VI 0.625 Å. Pt²⁺는 d⁸이라 사각평면 선호(시스플라틴). 귀금속이라 SSB 격자 치환 대상 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "Pt/C (담지 백금)",
+      "context": "연료전지 전기촉매",
+      "battery_role": "SSB 무관 — PEM 연료전지 ORR/HER 표준 전기촉매(수계/고분자막 맥락)",
+      "note": "나노입자 Pt; Pt 4f7/2 ~71.1 eV(금속)"
+    },
+    {
+      "formula": "PtO2 (Adams 촉매)",
+      "context": "산화물(+4)",
+      "battery_role": "SSB 무관 — 수소화 촉매 전구체(반응 중 Pt-black로 환원)",
+      "note": "Pt 4f7/2 ~74.5 eV(Pt⁴⁺)"
+    },
+    {
+      "formula": "H2PtCl6 (염화백금산)",
+      "context": "가용성 전구체",
+      "battery_role": "SSB 무관 — Pt 도금·담지촉매·나노입자 합성 표준 출발물",
+      "note": "Pt⁴⁺; hydrosilylation Karstedt 촉매(Pt⁰)로도 이어짐"
+    },
+    {
+      "formula": "cis-PtCl2(NH3)2 (시스플라틴)",
+      "context": "배위 화합물(+2)",
+      "battery_role": "SSB 무관 — DNA 가교 항암제(사각평면 Pt²⁺)",
+      "note": "trans체는 비활성 — 기하 특이성 고전 예"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 다만 전기화학 기준전극(SHE)·불활성 상대/작업전극·집전체·접점 금속 관점은 확고. 연료전지 ORR 전기촉매 활성이 Pt d-band center로 설명되나 이는 수계/막 계면이지 황화물 SE 계면과 별개. 실험적으로는 SSB 셀의 집전체·프로브 금속으로 접할 수 있음.",
+  "xps": [
+    {
+      "core": "Pt 4f7/2",
+      "BE_eV": 71.1,
+      "assignment": "Pt metal / Pt⁰ (4f5/2 ~+3.33 eV 더블릿; 보고 ~71.0-71.2 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Pt 4f7/2",
+      "BE_eV": 72.4,
+      "assignment": "PtO / Pt²⁺ (~72.3-72.5 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Pt 4f7/2",
+      "BE_eV": 74.5,
+      "assignment": "PtO2 / Pt⁴⁺ (보고 ~74.1-74.7 eV)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [],
+  "dos_character": "5d⁹6s¹ 귀금속 — 금속 Pt는 5d 밴드가 E_F 바로 아래 큰 DOS로 걸쳐 있어 촉매 활성(ORR·수소화)의 근원(d-band center 모델). Pt²⁺(d⁸)는 사각평면, Pt⁴⁺(d⁶ 저스핀)는 팔면체. 높은 일함수·불활성으로 기준/상대전극에 이상적. SSB 절연 밴드갭과 무관한 금속/전극 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — 백금족(Pt/Pd) 화학",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Pt²⁺ sq 0.60 Å)",
+    "Nørskov et al., J. Phys. Chem. B 108, 17886 (2004) — Pt ORR d-band 전기촉매 이론"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d⁹ 6s¹",
+    "electron_config": "[Xe] 4f¹⁴ 5d⁹ 6s¹",
+    "valence_orbitals": "5d⁹ 6s¹ — 예외적 채움(5d⁹+6s¹, 정상 5d⁸6s²가 아님). Pt²⁺면 5d⁸ 사각평면, Pt⁴⁺면 5d⁶(저스핀)",
+    "band_character": "금속 Pt는 5d 밴드가 E_F 바로 아래 큰 DOS → ORR·수소화 촉매 활성(d-band center). Pt²⁺(d⁸) 사각평면, Pt⁴⁺(d⁶) 팔면체. 높은 일함수·불활성으로 기준/상대전극 이상적. SSB 밴드엣지와 무관",
+    "bonding": "Pt–O(PtO₂)·Pt–Cl(PtCl₆²⁻)·Pt–N(시스플라틴) 배위, 금속상 fcc 결합. 백금족 촉매·전극 표면화학"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

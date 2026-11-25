@@ -1,0 +1,199 @@
+{
+ "slug": "yano2026_se_psd_width_ionic_tortuosity_dem",
+ "dpi": 200,
+ "generated": "2026-10-30",
+ "method": "카드 작성자 손 크롭 — 200 dpi 쪽 렌더 · 캡션 뺀 패널 영역 (그림 1–13 + 표 1–4 · 카드 실독 기록) · bbox 미기록",
+ "sources": [
+  "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+ ],
+ "note_manual": "2026-10-30 정본 반입 때 색인 신설 (반입 묶음에 figures.json 이 없어 webapp 에 그림이 안 보이고 인덱스 그림 칸이 '—' 였다). 캡션 = 원 PDF 텍스트 층 그대로 (PyMuPDF · 줄바꿈 soft hyphen 만 이음 · 쪽 텍스트에 있는지 대조) · page = 캡션이 있는 PDF 쪽 (그 쪽 그림 요소 위치로 확인) · w/h = PNG 실측 · bbox 는 크롭 좌표 기록이 없어 넣지 않았다 (추정하지 않음).",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Size distributions of NCM, pristine LPSCl, and comminuted LPSCl.",
+   "w": 652,
+   "h": 661,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Cole–Cole plots of the pellets with pristine and comminuted LPSCl powders.",
+   "w": 651,
+   "h": 608,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Representative impedance composite results.",
+   "w": 651,
+   "h": 614,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Calculation domain for DEM simulations.",
+   "w": 591,
+   "h": 862,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Example of A* search algorithm result.",
+   "w": 572,
+   "h": 417,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. SEM images of pellet surface under different mass fractions—NCM:pristine LPSCl:comminuted LPSCl = (a) 70:30:0, (b) 70:20:10, (c) 70:10:20, and (d) 70:0:30.",
+   "w": 1084,
+   "h": 1088,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Relative density as a function of comminuted LPSCl mass fraction.",
+   "w": 572,
+   "h": 555,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Conductivity as a function of comminuted LPSCl mass fraction and (b) diagram of electron and ion conduction paths.",
+   "w": 651,
+   "h": 1269,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Tortuosity of ionic conductive paths as a function of comminuted LPSCl mass fraction.",
+   "w": 595,
+   "h": 593,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Relationship between mass fraction of comminuted LPSCl and relative density.",
+   "w": 651,
+   "h": 609,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 7,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Comparison of experimental and simulated tortuosity as a function of comminuted LPSCl mass fraction.",
+   "w": 611,
+   "h": 641,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 7,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Frequency distribution of number of particles in a path.",
+   "w": 572,
+   "h": 395,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 8,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Comparison of experimental tortuosity with simulation results using modified tortuosity.",
+   "w": 611,
+   "h": 612,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Wet milling process conditions.",
+   "w": 705,
+   "h": 125,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 DEM simulation particle properties.",
+   "w": 705,
+   "h": 305,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 4,
+   "file": "tab_3.png",
+   "caption": "Table 3 EEPA parameters.",
+   "w": 705,
+   "h": 260,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 4,
+   "file": "tab_4.png",
+   "caption": "Table 4 Battery materials size distributions for DEM simulation.",
+   "w": 705,
+   "h": 411,
+   "src": "d96b041b-1._Effect_of_size_distribution_of_solid_electrolyte_on_tortuosity_of_ionic_conductive_paths_A_combined_experimental_and_simulation_study.pdf"
+  }
+ ]
+}

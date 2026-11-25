@@ -1,0 +1,19 @@
+﻿# AE Bader net charge (e) — QE pp.x plot_num=17 (all-electron **valence** density) + PAW kjpaw_psl,
+#   Henkelman bader -p all_atom.  net = ZVAL - N_bader.
+# ⚠ plot_num=17 은 frozen core 를 복원하지 않는다 — Z 가 아니라 ZVAL 로 빼야 한다
+#   (2026-07-30 이 규약을 어겨 Cl +9.086 같은 값이 나온 사고가 있었다).
+# ⚠ **이 세 파일끼리만 비교 가능**하다. 다른 밀도 소스(USPP 가전자 plot_num=0, NC ONCV)로 낸
+#   Bader 와 같은 표에 놓지 말 것 — 도핑 효과가 아니라 방법 차이를 보게 된다.
+# system: b2o3 = B2O3-doped LPSCl1.6 (Li58P8B2S41O3Cl16, 128at)  (O 3개 + B 2개)
+# source: db/properties/b2o3_charge_xps.csv (site-resolved, Henkelman on QE density)
+# ⚠ b2o3 는 USPP 가전자 밀도 기반 자리분해 — B 가 맨 +3 코어로 보인다(산화상태 수준, 추세는 신뢰).
+species_or_site,bader_net_e,note
+Li,+0.881,불변
+P,+4.691,3계 중 최대 — O 3개
+S_avg,-1.80,
+Cl,-0.914,불변
+B,+3.0,NEW: 완전 형식전하 -> B-S 공유-극성 결합으로 큰 전하이동 (ELF 0.959)
+O,-1.918,NEW: O2- 근처 (ELF P-O 0.930)
+free-S,-1.692,자리분해
+B-S(BS3),-1.872,B 에 결합한 S = 가장 전하 풍부
+PS4-S,-1.823,호스트 thiophosphate S

@@ -1,0 +1,186 @@
+{
+ "slug": "nguyen2020_electrode_tortuosity_factor",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Schematics of experimental setup and the physics underlying the two methods for determining tortuosity factors of porous electrodes: a eRDM16, and b eSCM17,18. The arrows show different conducting pathways traveled by charged particles(ions/electrons). which undermines the simpliﬁed assumptions in the analysis. However, the following two adapted versions of these methods have been proposed: factor of a porous structure can be determined based on the ratio of the effective and intrinsic transport properties. Various “geometrical tortuosities” can also be found in the literature, but these are not well suited to characterizing 3D pore networks and they suffer from key conceptual limitations such as ignoring constriction in ﬂow paths.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    71.9,
+    565.4,
+    255.8
+   ],
+   "w": 2193,
+   "h": 767,
+   "dpi": 300,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.476
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Illustration of different types of pores that can be present within porous electrodes and their effects on the tortuosity factor τ and McMullin number NM determination. The simulated steady-state scalar distributions are shown as well as the normalized ﬂux maps. Case A: microstructure with ﬁve different pores types: gray—through pores; blue—dead-end pores for eRDM, that may or may not be available for eSCM, depending on the orientation of the CV; purple—dead-end pores for eRDM that branch from the through pores; green—dead-end pores like Blue but could become through pores if the CV was larger as it extends out the side of the CV; and red—small corner regions having low ﬂux. Case B: microstructure with only through-pores (gray) based on low ﬂux threshold. The microstructure size is 256 × 56 pixels. has made this method of tortuosity factor determination the standard when using tom",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    69.5,
+    556.0,
+    261.5
+   ],
+   "w": 2193,
+   "h": 801,
+   "dpi": 300,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.72
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Comparison of the two approaches applied to the simplest cases. a Simulated EIS of eSCM of the two 2D microstructures containing either only straight through-pores (red) or only straight dead-end pores (blue) along with the corresponding ﬁts with Eq. 4. The inset image displays the zoom at the mid-frequency region. The 45° slope in dashed line is used to guide the eyes; b The geometry of two microstructures with τe and τ derived from the eSCM and eRDM simulations. The box color corresponds to the colors in the Nyquist plot. The light blue band in the middle of the SCM geometries represents a separator with a direct pore connecting the two sides. The microstructure size is 100 × 100 pixels, the pixel size equals 1 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    53.3,
+    565.4,
+    219.0
+   ],
+   "w": 2193,
+   "h": 692,
+   "dpi": 300,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Comparison of two approaches with 2D microstructures. a The four 2D microstructures are presented along with τ, NM given by eRDM and τe, NM;e given by eSCM in each case; the current collector “CC side” and the separator “Sep side” are labeled; b simulated EIS of eSCM of the four microstructures along with the ﬁt using Eq. 4, the inset graph shows a zoom on the mid-frequency region to highlight the deviation of the simulated EIS shape from the conventional TLM response. The 45° slope in dashed line is used to guide the eyes. The numerically-generated microstructure size is 300 × 300 pixels, the pixel size equals 1 µm. τe is more relevant to predicting the performance of battery electrodes. labeled, case B shows a microstructure that contains only the through pores (in gray) previously presented in case A. It’s interesting to note that the value of NM is the same for cases A and B, ",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    293.1,
+    565.4,
+    454.9
+   ],
+   "w": 2193,
+   "h": 675,
+   "dpi": 300,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Illustration of a numerically generated 3D microstructure having two adjacent layers with two different porosities. 90% of volume has ε = 35%, while 10% (cyan box) of volume has ε = 20%. a The plot shows the simulated EIS of eSCM along with the ﬁt using Eq. 4. The plot contains an inset showing the cross-section of the two microstructures, that have either the lower porosity region at the current collector side (blue square) or at the separator side (red square), in symmetric cell conﬁguration with the associated electrode tortuosity factor τe; b The 3D microstructure that has lower porosity at the top is shown in detail along with the associated tortuosity factor τ given by eRDM simulation. The simulated ﬂux density shows a lower density on the top corresponding with the lower porosity region. The pore network separated in through-pores and dead-end pores is also presented. The m",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    53.3,
+    556.0,
+    255.8
+   ],
+   "w": 2193,
+   "h": 845,
+   "dpi": 300,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Impedance theory of the eSCM method. a An ideal impedance response of a porous electrode in blocking condition (no faradaic process so ~zt becomes cdl which is the pure capacitance of the double layer) along with the ﬁt using the TLM represented in b, which allows the determination of τe. Here, since only the impedance of the single electrode is considered, the contribution of the ionic resistance from the separator is not represented in the TLM as well as does not appear in the EIS spectra. The dashed line is used to highlight the 45° slope of the medium frequency region.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    84.4,
+    289.9,
+    299.2
+   ],
+   "w": 1085,
+   "h": 896,
+   "dpi": 300,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.746
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Illustration of the use of segmented tomographic data as input along with the governing equation and boundary conditions for: a eRDM and b eSCM simulation implemented in TauFactor. Voxels in blue represent the pore network, transparent voxels represent the solid phase. For eRDM, ^C is the complex concentration of the diffusing species. For eSCM, there is a domain in between the two electrodes that represents the porous separator. Since there is no electrochemical reaction occurring in the system, ~Φ1 and ~Φ2 are simply the electron- conducting phase (solid) and ionic-conducting phase (liquid) electric potentials respectively; ω is the radial frequency of the boundary stimulation; j is the imaginary unit; cdl is the interfacial double layer capacitance per unit microstructural active surface area. For both methods, Ω is the pore network domain in the system (in both electrodes and ",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    73.0,
+    565.4,
+    222.6
+   ],
+   "w": 2193,
+   "h": 625,
+   "dpi": 300,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1.png",
+   "caption": "Table 1. Parameters used in eSCM simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    29.2,
+    564.5,
+    765.5
+   ],
+   "w": 2134,
+   "h": 2998,
+   "dpi": 293,
+   "src": "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf",
+   "blank": 0.864
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p6 영역 없음"
+   ],
+   "near_miss": [
+    {
+     "page": 6,
+     "text": "Figure 5 shows two speciﬁc cases where there is a good agreement in the tortuosity factor "
+    }
+   ]
+  }
+ ]
+}

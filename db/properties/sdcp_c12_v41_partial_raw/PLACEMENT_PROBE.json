@@ -1,0 +1,51 @@
+{
+ "schema": "placement_probe/v1",
+ "at": "2026-09-12T04:53:59Z",
+ "mode": "hydra",
+ "hosts_source": "VASP_HOSTFILE=/home/kgy/projects/sdcp_c12_v41_2026_09_11/hosts_123690.txt",
+ "concurrent_probes": 1,
+ "expected": {
+  "nodes_per_job": 1,
+  "ranks_per_node": 64,
+  "need_GiB_per_node": 177.02,
+  "usable_frac": 0.85
+ },
+ "node_mem_GiB_min": 503.44,
+ "scheduler_alloc_GiB_runner": null,
+ "limit_state_rule": {
+  "finite": "cgroup 계층에서 읽은 유한 제한 (min(제한, MemTotal))",
+  "unlimited": "제한 파일을 실제로 읽었고 전부 max — 상한 = min(스케줄러 할당(관측 시), MemTotal)",
+  "unobserved": "제한을 못 읽음 — **정지** (물리 RAM 으로 대체하지 않는다 · Codex v39 P1)"
+ },
+ "probes": [
+  {
+   "probe": 1,
+   "ranks_seen": 64,
+   "hosts": {
+    "n33": 64
+   },
+   "slot_hosts": [
+    "n33"
+   ],
+   "node_mem_GiB": {
+    "n33": 503.44
+   },
+   "node_mem": {
+    "n33": {
+     "state": "unlimited",
+     "limit_GiB": null,
+     "memtotal_GiB": 503.44,
+     "bound_GiB": 503.44,
+     "basis": "cgroup 무제한 (검증: all-readable-levels-max:1) · 상한 = MemTotal 503.4 (러너 호스트에서 스케줄러 할당 미관측)"
+    }
+   },
+   "limit_states": {
+    "unlimited": 1
+   },
+   "ok": true,
+   "why": []
+  }
+ ],
+ "all_ok": true,
+ "⛔_이_기록이_보증하지_않는_것": "메모리 대역·통신망·NUMA. VASP 자체의 배치도 아니다 — 같은 launcher·같은 플래그로 프로브를 놓아 본 결과다. 'unlimited' 는 cgroup 이 안 막는다는 뜻이지 스케줄러가 코어·메모리를 예약했다는 증거가 아니다."
+}

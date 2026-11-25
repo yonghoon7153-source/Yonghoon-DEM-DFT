@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'Ni3S4_mp-aaaaabok'
+  outdir = './tmp'
+  fildos = 'Ni3S4_mp-aaaaabok.dos'
+  degauss = 0.007
+/

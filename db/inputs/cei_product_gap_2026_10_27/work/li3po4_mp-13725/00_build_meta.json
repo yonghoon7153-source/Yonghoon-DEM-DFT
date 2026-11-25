@@ -1,0 +1,41 @@
+{
+ "tag": "li3po4_mp-13725",
+ "structure": "db/structures/sei_li3po4_mp-13725.vasp",
+ "structure_sha256": "36f8558caed879cdee112a52d960845e291a4de3fa354ba9e127cbf386b1bb22",
+ "species": [
+  "Li",
+  "O",
+  "P"
+ ],
+ "nspin": 1,
+ "tm_state": null,
+ "tm_moment_rule": null,
+ "magmom_sidecar": null,
+ "starting_magnetization": null,
+ "tot_magnetization_initial": null,
+ "hubbard": null,
+ "hubbard_policy": null,
+ "ecut_wfc_rho": [
+  60.0,
+  480.0
+ ],
+ "cell_policy": "vc-relax",
+ "pseudo": {
+  "Li": "Li.pbe-sl-kjpaw_psl.1.0.0.UPF",
+  "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+  "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  5,
+  5,
+  4
+ ],
+ "k_gap": [
+  9,
+  9,
+  7
+ ],
+ "nbnd_gap": 59,
+ "gap_step": "03_nscf_gap.in"
+}

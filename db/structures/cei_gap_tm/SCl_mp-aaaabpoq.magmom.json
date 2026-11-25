@@ -1,0 +1,42 @@
+{
+ "material_id": "mp-aaaabpoq",
+ "ordering": "Unknown",
+ "magmoms": [
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "symbols": [
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "Cl",
+  "Cl",
+  "Cl",
+  "Cl",
+  "Cl",
+  "Cl",
+  "Cl",
+  "Cl"
+ ],
+ "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+ "sum_muB": 0.0
+}

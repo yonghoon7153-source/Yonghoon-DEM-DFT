@@ -1,0 +1,237 @@
+[
+  {
+    "dataset_id": "omol25",
+    "label": "OMol25",
+    "domain": "Organic molecules",
+    "primary_labels": [
+      "energy",
+      "forces",
+      "charge",
+      "spin"
+    ],
+    "role": "Molecular quantum chemistry training and evaluation",
+    "license_note": "Check the dataset card; repository license does not automatically cover payloads.",
+    "sources": [
+      {
+        "source_path": "docs/molecules/datasets/omol25.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omol25.md",
+        "sha256": "b25bf00cf109d6c04b1c644f2377093b808a825ad3f92d96472908ed51b1e3ae"
+      }
+    ]
+  },
+  {
+    "dataset_id": "omol25_elec",
+    "label": "OMol25 Electronic",
+    "domain": "Organic molecules",
+    "primary_labels": [
+      "electronic-structure targets"
+    ],
+    "role": "Electronic-property extension of the molecular domain",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/molecules/datasets/omol25_elec.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omol25_elec.md",
+        "sha256": "636d37c9848d2f7c9c6985e6c8d3fee73ca455034768341d1d1b5e6976125fd9"
+      }
+    ]
+  },
+  {
+    "dataset_id": "omc25",
+    "label": "OMC25",
+    "domain": "Organic molecular crystals",
+    "primary_labels": [
+      "energy",
+      "forces",
+      "stress"
+    ],
+    "role": "Periodic molecular-crystal training and benchmarks",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/molecules/datasets/omc25.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omc25.md",
+        "sha256": "d5d49992177e16af84273b9138cfd5c02098fedcf8ebf39c8a1fa1d9d6f97c79"
+      }
+    ]
+  },
+  {
+    "dataset_id": "omat24",
+    "label": "OMat24",
+    "domain": "Inorganic materials",
+    "primary_labels": [
+      "energy",
+      "forces",
+      "stress"
+    ],
+    "role": "Large-scale inorganic training data and Matbench-compatible discovery evaluation",
+    "license_note": "The documentation identifies CC BY 4.0 for OMat24; model licenses remain separate.",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/datasets/omat24.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/datasets/omat24.md",
+        "sha256": "52834685f001bf4598cb81f9f4c26110adff7ff5846589d886ad2f621e6ec468"
+      }
+    ]
+  },
+  {
+    "dataset_id": "oc20",
+    "label": "OC20",
+    "domain": "Heterogeneous catalysis",
+    "primary_labels": [
+      "surface-adsorbate energies",
+      "forces"
+    ],
+    "role": "Catalyst structure-to-energy/force benchmarks",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/oc20.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20.md",
+        "sha256": "b01cbd068438d81f12455027a32bb21c81a7884be67163b292658a6c24740030"
+      }
+    ]
+  },
+  {
+    "dataset_id": "oc20_mads",
+    "label": "OC20 Multiple Adsorbates",
+    "domain": "Heterogeneous catalysis",
+    "primary_labels": [
+      "multi-adsorbate structures"
+    ],
+    "role": "Multiple-adsorbate extension",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/oc20_mads.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20_mads.md",
+        "sha256": "91d4a8a8e3c93e5f516b2dea9331d512316b1fa7bacc39799c2a27df7f8d7382"
+      }
+    ]
+  },
+  {
+    "dataset_id": "oc22",
+    "label": "OC22",
+    "domain": "Oxide catalysis",
+    "primary_labels": [
+      "energy",
+      "forces"
+    ],
+    "role": "Oxide surface and catalyst-support domain",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/oc22.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc22.md",
+        "sha256": "1bb62e0c69fcfcbfa7a3b77f73cf0997d85824e3f68693a886956f9e7ffabe21"
+      }
+    ]
+  },
+  {
+    "dataset_id": "oc20dense",
+    "label": "OC20-Dense",
+    "domain": "Heterogeneous catalysis",
+    "primary_labels": [
+      "dense adsorbate placement and relaxations"
+    ],
+    "role": "Adsorption-energy discovery benchmark",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/oc20dense.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20dense.md",
+        "sha256": "fa8277d50fe6ee49fcc7754be6bf15a459e97ee94124158d2a27f988cf74b609"
+      }
+    ]
+  },
+  {
+    "dataset_id": "oc20neb",
+    "label": "OC20NEB",
+    "domain": "Catalytic transition states",
+    "primary_labels": [
+      "NEB paths",
+      "transition-state energies"
+    ],
+    "role": "Catalysis-specific transition-state benchmark",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/oc20neb.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20neb.md",
+        "sha256": "7c0ff23c652c71ee44063f91076d256056900c90627324d092918c2f8d4f5dd7"
+      }
+    ]
+  },
+  {
+    "dataset_id": "ocx24",
+    "label": "OCx24",
+    "domain": "Experimental catalysis",
+    "primary_labels": [
+      "experimental catalyst properties"
+    ],
+    "role": "Experiment-linked catalyst data",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/ocx24.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/ocx24.md",
+        "sha256": "8bac7fc5c830b9583761d2791a8a060af9c3934f1f48cc75724cfc018cd509ff"
+      }
+    ]
+  },
+  {
+    "dataset_id": "oc25",
+    "label": "OC25",
+    "domain": "Solid-liquid interfaces",
+    "primary_labels": [
+      "energy",
+      "forces",
+      "stress"
+    ],
+    "role": "Electrochemical/catalytic interface training domain",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/oc25.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc25.md",
+        "sha256": "56fbf38a035afeb5c8a43305f23a151afe297a3555a188b1ccd93cd44cfca210"
+      }
+    ]
+  },
+  {
+    "dataset_id": "odac23",
+    "label": "ODAC23",
+    "domain": "Direct air capture",
+    "primary_labels": [
+      "MOF-adsorbate energies",
+      "forces"
+    ],
+    "role": "CO2/H2O adsorption in MOFs",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/dac/datasets/odac23.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/datasets/odac23.md",
+        "sha256": "b17753772b860082825484be6637e13bb1cb6715a20c826cbe2b16988b8b758e"
+      }
+    ]
+  },
+  {
+    "dataset_id": "odac25",
+    "label": "ODAC25",
+    "domain": "Direct air capture",
+    "primary_labels": [
+      "MOF-adsorbate energies",
+      "forces"
+    ],
+    "role": "Expanded DAC benchmark and model domain",
+    "license_note": "Check the dataset card.",
+    "sources": [
+      {
+        "source_path": "docs/dac/datasets/odac25.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/datasets/odac25.md",
+        "sha256": "c79e4c79804cedd83567cea11798e8d01acb1c900603399a852de74f716308e1"
+      }
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+species,modelc_mean_A3,modelc_std_A3,b2o3_mean_A3,b2o3_std_A3,std_ratio_b2o3/modelc
+P,13.993,0.370,13.143,1.474,3.98
+Cl,20.308,0.736,20.765,1.628,2.21
+Li,20.513,1.150,20.002,1.705,1.48
+S,19.550,2.047,18.659,2.619,1.28
+B,,,12.653,1.062,NEW
+O,,,16.175,1.188,NEW
+# std(Voronoi volume) = site-disorder metric. modelc column reproduces deck slide 9/17 EXACTLY (P0.37/Cl0.74/Li1.15/S2.05; Cl mean 20.3).
+# B2O3 doping RAISES disorder for every framework species (P x4 from O@PS4->PS3O, Cl x2.2, Li x1.5, S x1.3) + adds small/hard B(12.7),O(16.2).
+# Consistent with 'disorder up -> conduction up' (MD 4d-Cl anti-site 25% vs modelc 10%). Method: scipy Voronoi on 3x3x3 PBC replica; sum(Voronoi)==cell V (exact).

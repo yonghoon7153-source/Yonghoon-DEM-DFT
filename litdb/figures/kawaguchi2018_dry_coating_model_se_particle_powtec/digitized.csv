@@ -1,0 +1,351 @@
+# kawaguchi2018_dry_coating_model_se_particle_powtec — figure readings (판독) · 2026-11-12
+# Fig. S1, Fig. S2 (SI, VECTOR): marker / polyline coordinates read directly from the PDF drawing commands (PyMuPDF get_drawings), no pixels involved.
+#   Fig. S1 axes from the frame lines: x 0-80 um = 170.31-481.92 pt, y 0-6 N^0.5 = 531.94-309.77 pt. Triangle marker (Na2SO4) = centroid of its 3 vertices
+#   (the first point falls on the origin within 0.01 pt); circle marker (sulfide) = bounding-box centre shifted by (+0.40, +0.42) pt so that its first point
+#   falls on the origin (a constant offset of the circle glyph). Reading uncertainty about +-0.1 um / +-0.01 N^0.5. Points are in drawing order
+#   (= loading, then unloading). Fig. S2 axes: x log 0.01-100 um = 169.61-481.46 pt, y 0-2 = 573.26-350.67 pt; the plotted function integrates to 1.000
+#   over ln(x) for both powders (so it is a density per ln x).
+# Fig. 8, 10, 11 (main article, RASTER): read on the embedded native rasters (Fig. 8 = xref 57, 1114x540 px ~200 dpi; Fig. 10 = xref 69, 2320x1719 px ~800 dpi, 1-bit;
+#   Fig. 11 = xref 70, 581x492 px ~200 dpi). Axes from the tick marks: Fig. 8a x 0/100/200/300/400 MPa = 84.5/182.5/280.5/378.5/476.5 px (0.98 px per MPa),
+#   y 10^0 ... 10^10 Ohm m = 353.5 ... 38.5 px (31.5 px per decade -> +-1 px = +-7.6 %); Fig. 8b y 0/0.5/1.0/1.5 = 353.5/255.0/156.5/57.5 px;
+#   Fig. 10 x 0-7 = 357.5-2254.0 px, y 0-0.7 = 1408.5-54.5 px (193.4 px per 0.1 -> +-2 px = +-0.001); Fig. 11 y 0-0.30 = 352.5-13.5 px (11.3 px per 0.01).
+#   Markers: filled = eroded-blob centre, open = centroid of the enclosed white interior; overlapped markers are flagged in the note column with the rule used.
+# Self-checks: (i) Eq. (1) with the Fig. 8a readings at 360 MPa gives R_inc = 0.092 / 0.112 / 1.52 (x1e4 Ohm m) for A / B / C (x = 0.30, 0.30, 0.2024)
+#   vs the Fig. 8b bars 0.096 / 0.122 / 1.51; (ii) Fig. 10 frequencies sum to 1.007 / 1.000 / 1.009 (A / B / C); (iii) Table S1 prints relative residual depth
+#   0.80 / 0.94 and loading slope 6.06e-2 / 6.79e-2 N^0.5/um - the re-derived values are in the summary rows.
+# printed (인쇄) values are NOT repeated here (card §3: Table 1, Table 2, Table S1, 20.24 wt.%, 16,000 rpm, device geometry, 0.5 um layer).
+# columns: figure,panel,series,x,x_unit,y,y_unit,note
+figure,panel,series,x,x_unit,y,y_unit,note
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,0.0,penetration depth um,0.0,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,1.8,penetration depth um,0.223,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,3.8,penetration depth um,0.316,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,5.39,penetration depth um,0.411,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,7.0,penetration depth um,0.547,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,8.59,penetration depth um,0.623,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,10.0,penetration depth um,0.734,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,11.6,penetration depth um,0.842,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,13.0,penetration depth um,0.927,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,14.4,penetration depth um,1.004,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,15.8,penetration depth um,1.104,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,17.0,penetration depth um,1.204,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,18.4,penetration depth um,1.268,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,19.59,penetration depth um,1.37,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,20.8,penetration depth um,1.442,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,22.0,penetration depth um,1.529,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,23.2,penetration depth um,1.615,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,24.2,penetration depth um,1.682,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,25.4,penetration depth um,1.769,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,26.4,penetration depth um,1.841,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,27.4,penetration depth um,1.913,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,28.6,penetration depth um,1.989,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,29.6,penetration depth um,2.056,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,29.6,penetration depth um,2.131,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,31.59,penetration depth um,2.193,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,32.6,penetration depth um,2.268,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,33.6,penetration depth um,2.327,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,34.6,penetration depth um,2.395,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,35.59,penetration depth um,2.461,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,36.6,penetration depth um,2.515,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,37.59,penetration depth um,2.577,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,38.39,penetration depth um,2.632,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,39.4,penetration depth um,2.698,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,40.39,penetration depth um,2.751,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,41.4,penetration depth um,2.809,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,42.2,penetration depth um,2.865,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,43.19,penetration depth um,2.922,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,44.2,penetration depth um,2.976,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,45.2,penetration depth um,3.033,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,46.0,penetration depth um,3.081,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,47.0,penetration depth um,3.131,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,47.8,penetration depth um,3.191,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,48.79,penetration depth um,3.24,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,49.59,penetration depth um,3.288,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,50.59,penetration depth um,3.34,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,51.4,penetration depth um,3.395,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,52.2,penetration depth um,3.444,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,53.2,penetration depth um,3.497,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,54.0,penetration depth um,3.542,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,54.79,penetration depth um,3.593,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,55.6,penetration depth um,3.641,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,56.6,penetration depth um,3.688,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,57.4,penetration depth um,3.733,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,58.2,penetration depth um,3.782,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,59.0,penetration depth um,3.826,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,59.99,penetration depth um,3.874,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,60.79,penetration depth um,3.921,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,61.59,penetration depth um,3.968,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,62.39,penetration depth um,4.014,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,62.99,penetration depth um,4.059,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,63.79,penetration depth um,4.104,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,64.6,penetration depth um,4.151,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,65.4,penetration depth um,4.198,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,66.0,penetration depth um,4.24,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,66.79,penetration depth um,4.287,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,67.59,penetration depth um,4.332,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,68.2,penetration depth um,4.376,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,69.0,penetration depth um,4.421,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | loading,69.59,penetration depth um,4.466,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,69.8,penetration depth um,4.421,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,69.8,penetration depth um,4.349,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,69.4,penetration depth um,4.28,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,69.2,penetration depth um,4.213,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,69.0,penetration depth um,4.145,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,68.79,penetration depth um,4.08,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,68.4,penetration depth um,4.013,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,68.2,penetration depth um,3.947,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,67.8,penetration depth um,3.877,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,67.59,penetration depth um,3.808,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,67.19,penetration depth um,3.739,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,67.0,penetration depth um,3.671,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,66.6,penetration depth um,3.597,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,66.39,penetration depth um,3.525,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,66.0,penetration depth um,3.45,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,65.59,penetration depth um,3.376,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,65.4,penetration depth um,3.298,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,64.99,penetration depth um,3.223,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,64.6,penetration depth um,3.139,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,64.4,penetration depth um,3.058,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,63.99,penetration depth um,2.976,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,63.6,penetration depth um,2.893,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,63.4,penetration depth um,2.806,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,62.99,penetration depth um,2.719,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,62.59,penetration depth um,2.625,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,62.2,penetration depth um,2.529,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,61.79,penetration depth um,2.43,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,61.59,penetration depth um,2.327,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,61.2,penetration depth um,2.22,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,60.79,penetration depth um,2.109,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,60.39,penetration depth um,1.995,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,59.99,penetration depth um,1.87,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,59.4,penetration depth um,1.739,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,59.0,penetration depth um,1.593,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,58.6,penetration depth um,1.448,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,58.0,penetration depth um,1.288,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,57.59,penetration depth um,1.108,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,57.0,penetration depth um,0.882,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,56.39,penetration depth um,0.623,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | unloading,55.8,penetration depth um,0.223,sqrt(load) N^0.5,
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | summary: max load point,69.59,penetration depth um,4.466,sqrt(load) N^0.5,P_max = 19.95 N (card arithmetic = y^2)
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | summary: max depth,69.8,penetration depth um,,,largest depth of the whole cycle
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | summary: residual depth (card arithmetic),55.36,penetration depth um,0,sqrt(load) N^0.5,"straight line through the 3 lowest unloading points, extrapolated to zero load; h_r/h_max = 0.793"
+Fig. S1,,sulfide SE 75Li2S-25P2S5 pellet | summary: loading slope refit (card arithmetic),,,0.0658,N^0.5/um,least squares through the origin over the whole loading branch; with free intercept 0.0628; secant at P_max 0.0642; printed Table S1 value 6.06e-2
+Fig. S1,,Na2SO4 pellet | loading,0.0,penetration depth um,-0.0,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,1.8,penetration depth um,0.223,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,3.4,penetration depth um,0.316,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,5.21,penetration depth um,0.447,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,6.8,penetration depth um,0.565,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,8.41,penetration depth um,0.686,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,9.8,penetration depth um,0.812,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,11.2,penetration depth um,0.883,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,12.6,penetration depth um,1.0,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,14.0,penetration depth um,1.082,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,15.2,penetration depth um,1.17,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,16.4,penetration depth um,1.261,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,17.8,penetration depth um,1.364,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,18.8,penetration depth um,1.449,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,20.0,penetration depth um,1.546,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,21.2,penetration depth um,1.625,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,22.4,penetration depth um,1.706,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,23.6,penetration depth um,1.783,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,24.6,penetration depth um,1.855,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,25.8,penetration depth um,1.934,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,26.8,penetration depth um,2.007,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,27.8,penetration depth um,2.066,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,29.0,penetration depth um,2.142,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,30.0,penetration depth um,2.204,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,31.0,penetration depth um,2.276,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,32.2,penetration depth um,2.345,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,33.0,penetration depth um,2.4,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,34.0,penetration depth um,2.476,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,35.0,penetration depth um,2.539,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,36.0,penetration depth um,2.606,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,37.0,penetration depth um,2.661,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,37.8,penetration depth um,2.72,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,38.8,penetration depth um,2.791,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,39.8,penetration depth um,2.846,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,40.6,penetration depth um,2.902,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,41.6,penetration depth um,2.965,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,42.4,penetration depth um,3.022,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,43.4,penetration depth um,3.071,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,44.2,penetration depth um,3.129,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,45.2,penetration depth um,3.187,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,46.0,penetration depth um,3.241,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,46.8,penetration depth um,3.295,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,47.8,penetration depth um,3.347,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,48.6,penetration depth um,3.399,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,49.4,penetration depth um,3.451,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,50.2,penetration depth um,3.504,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,51.0,penetration depth um,3.558,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,51.8,penetration depth um,3.601,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,52.8,penetration depth um,3.657,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,53.6,penetration depth um,3.708,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,53.4,penetration depth um,3.756,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,55.2,penetration depth um,3.801,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,55.8,penetration depth um,3.856,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,56.8,penetration depth um,3.9,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,57.4,penetration depth um,3.95,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,58.2,penetration depth um,3.999,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,59.0,penetration depth um,4.047,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,59.8,penetration depth um,4.093,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,60.39,penetration depth um,4.14,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,61.2,penetration depth um,4.19,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,62.0,penetration depth um,4.233,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,62.79,penetration depth um,4.279,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,63.6,penetration depth um,4.324,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,64.2,penetration depth um,4.369,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,65.0,penetration depth um,4.413,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | loading,65.6,penetration depth um,4.459,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.0,penetration depth um,4.425,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.2,penetration depth um,4.347,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.2,penetration depth um,4.267,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.4,penetration depth um,4.189,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.4,penetration depth um,4.113,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.2,penetration depth um,4.036,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.2,penetration depth um,3.96,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.2,penetration depth um,3.878,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.2,penetration depth um,3.801,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.0,penetration depth um,3.72,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.0,penetration depth um,3.638,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,66.0,penetration depth um,3.557,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.8,penetration depth um,3.47,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.8,penetration depth um,3.384,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.6,penetration depth um,3.297,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.6,penetration depth um,3.206,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.4,penetration depth um,3.113,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.4,penetration depth um,3.018,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.2,penetration depth um,2.919,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.2,penetration depth um,2.816,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,65.0,penetration depth um,2.711,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,64.8,penetration depth um,2.606,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,64.8,penetration depth um,2.486,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,64.6,penetration depth um,2.371,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,64.4,penetration depth um,2.247,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,64.2,penetration depth um,2.119,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,64.2,penetration depth um,1.98,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,63.8,penetration depth um,1.83,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,63.6,penetration depth um,1.676,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,63.4,penetration depth um,1.5,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,63.2,penetration depth um,1.308,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,63.0,penetration depth um,1.082,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,62.6,penetration depth um,0.8,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | unloading,62.2,penetration depth um,0.387,sqrt(load) N^0.5,
+Fig. S1,,Na2SO4 pellet | summary: max load point,65.6,penetration depth um,4.459,sqrt(load) N^0.5,P_max = 19.88 N (card arithmetic = y^2)
+Fig. S1,,Na2SO4 pellet | summary: max depth,66.4,penetration depth um,,,largest depth of the whole cycle
+Fig. S1,,Na2SO4 pellet | summary: residual depth (card arithmetic),61.74,penetration depth um,0,sqrt(load) N^0.5,"straight line through the 3 lowest unloading points, extrapolated to zero load; h_r/h_max = 0.930"
+Fig. S1,,Na2SO4 pellet | summary: loading slope refit (card arithmetic),,,0.07,N^0.5/um,least squares through the origin over the whole loading branch; with free intercept 0.0662; secant at P_max 0.0680; printed Table S1 value 6.79e-2
+Fig. S2,,NCM,4.007,particle size um,0.601,distribution function (density per ln x),
+Fig. S2,,NCM,4.447,particle size um,1.007,distribution function (density per ln x),
+Fig. S2,,NCM,4.936,particle size um,1.514,distribution function (density per ln x),
+Fig. S2,,NCM,5.478,particle size um,1.715,distribution function (density per ln x),
+Fig. S2,,NCM,6.077,particle size um,1.691,distribution function (density per ln x),
+Fig. S2,,NCM,6.748,particle size um,1.484,distribution function (density per ln x),
+Fig. S2,,NCM,7.485,particle size um,0.994,distribution function (density per ln x),
+Fig. S2,,NCM,8.308,particle size um,0.595,distribution function (density per ln x),
+Fig. S2,,NCM | summary (card arithmetic),5.759,D50 um (trapezoid over the plotted channels),,,D10 4.36 · D90 7.62 um; integral over ln x = 0.9998; printed D50 = 5.4 um
+Fig. S2,,Na2SO4,0.1071,particle size um,0.015,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.1188,particle size um,0.052,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.1316,particle size um,0.12,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.1459,particle size um,0.176,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.1617,particle size um,0.242,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.1794,particle size um,0.276,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.1987,particle size um,0.288,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.2203,particle size um,0.282,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.2444,particle size um,0.251,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.2707,particle size um,0.218,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.3001,particle size um,0.17,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.3329,particle size um,0.139,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.3689,particle size um,0.112,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.4089,particle size um,0.108,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.4536,particle size um,0.122,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.5028,particle size um,0.154,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.5571,particle size um,0.21,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.618,particle size um,0.265,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.6851,particle size um,0.335,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.759,particle size um,0.383,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.8418,particle size um,0.42,distribution function (density per ln x),
+Fig. S2,,Na2SO4,0.9333,particle size um,0.437,distribution function (density per ln x),
+Fig. S2,,Na2SO4,1.034,particle size um,0.429,distribution function (density per ln x),
+Fig. S2,,Na2SO4,1.146,particle size um,0.419,distribution function (density per ln x),
+Fig. S2,,Na2SO4,1.272,particle size um,0.398,distribution function (density per ln x),
+Fig. S2,,Na2SO4,1.41,particle size um,0.384,distribution function (density per ln x),
+Fig. S2,,Na2SO4,1.562,particle size um,0.373,distribution function (density per ln x),
+Fig. S2,,Na2SO4,1.732,particle size um,0.365,distribution function (density per ln x),
+Fig. S2,,Na2SO4,1.921,particle size um,0.364,distribution function (density per ln x),
+Fig. S2,,Na2SO4,2.128,particle size um,0.354,distribution function (density per ln x),
+Fig. S2,,Na2SO4,2.36,particle size um,0.34,distribution function (density per ln x),
+Fig. S2,,Na2SO4,2.616,particle size um,0.32,distribution function (density per ln x),
+Fig. S2,,Na2SO4,2.899,particle size um,0.294,distribution function (density per ln x),
+Fig. S2,,Na2SO4,3.216,particle size um,0.26,distribution function (density per ln x),
+Fig. S2,,Na2SO4,3.564,particle size um,0.218,distribution function (density per ln x),
+Fig. S2,,Na2SO4,3.952,particle size um,0.173,distribution function (density per ln x),
+Fig. S2,,Na2SO4,4.381,particle size um,0.118,distribution function (density per ln x),
+Fig. S2,,Na2SO4,4.857,particle size um,0.074,distribution function (density per ln x),
+Fig. S2,,Na2SO4,5.383,particle size um,0.032,distribution function (density per ln x),
+Fig. S2,,Na2SO4,5.965,particle size um,0.008,distribution function (density per ln x),
+Fig. S2,,Na2SO4 | summary (card arithmetic),1.0,D50 um (trapezoid over the plotted channels),,,D10 0.195 · D90 2.97 um; integral over ln x = 1.0003; printed D50 = 0.95 um
+Fig. 8,a,Na2SO4 (filled circle),14.5,compression pressure MPa (nominal 15),1380000000.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,Na2SO4 (filled circle),49.5,compression pressure MPa (nominal 50),1270000000.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,Na2SO4 (filled circle),99.5,compression pressure MPa (nominal 100),1140000000.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,Na2SO4 (filled circle),199.5,compression pressure MPa (nominal 200),985000000.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,Na2SO4 (filled circle),359.3,compression pressure MPa (nominal 360),679000000.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,Na2SO4 (filled circle),404.3,compression pressure MPa (nominal 405),557000000.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,NCM (filled square),14.8,compression pressure MPa (nominal 15),478.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,NCM (filled square),49.5,compression pressure MPa (nominal 50),149.0,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,NCM (filled square),99.5,compression pressure MPa (nominal 100),83.3,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,NCM (filled square),199.5,compression pressure MPa (nominal 200),49.9,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,NCM (filled square),359.6,compression pressure MPa (nominal 360),34.9,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,NCM (filled square),404.5,compression pressure MPa (nominal 405),33.4,electrical resistivity Ohm m,filled-marker blob centre
+Fig. 8,a,Powder C (open square),14.3,compression pressure MPa (nominal 15),200000.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder C (open square),49.0,compression pressure MPa (nominal 50),215000.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder C (open square),99.5,compression pressure MPa (nominal 100),289000.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder C (open square),199.5,compression pressure MPa (nominal 200),27800.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder C (open square),359.2,compression pressure MPa (nominal 360),3110.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder C (open square),404.1,compression pressure MPa (nominal 405),2490.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder B (open triangle),14.8,compression pressure MPa (nominal 15),305000.0,electrical resistivity Ohm m,marker mostly hidden behind the Powder C square - centre from the visible apex (row 173) + 7.75 px (apex-to-centroid distance of the unobstructed triangles); +-1.5 px = +-12 %
+Fig. 8,a,Powder B (open triangle),50.0,compression pressure MPa (nominal 50),3110.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder B (open triangle),100.0,compression pressure MPa (nominal 100),1030.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder B (open triangle),199.9,compression pressure MPa (nominal 200),537.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder B (open triangle),359.9,compression pressure MPa (nominal 360),370.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder B (open triangle),404.8,compression pressure MPa (nominal 405),349.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder A (open circle),14.5,compression pressure MPa (nominal 15),9230.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder A (open circle),49.5,compression pressure MPa (nominal 50),1040.0,electrical resistivity Ohm m,centroid of the white interior of the open marker
+Fig. 8,a,Powder A (open circle),99.5,compression pressure MPa (nominal 100),599.0,electrical resistivity Ohm m,marker partly hidden behind the Powder B triangle - centre from the visible bottom outline row - 6.0 px (outer radius of the unobstructed circles); +-1.5 px = +-12 %
+Fig. 8,a,Powder A (open circle),199.5,compression pressure MPa (nominal 200),416.0,electrical resistivity Ohm m,marker partly hidden behind the Powder B triangle - centre from the visible bottom outline row - 6.0 px (outer radius of the unobstructed circles); +-1.5 px = +-12 %
+Fig. 8,a,Powder A (open circle),359.7,compression pressure MPa (nominal 360),311.0,electrical resistivity Ohm m,marker partly hidden behind the Powder B triangle - centre from the visible bottom outline row - 6.0 px (outer radius of the unobstructed circles); +-1.5 px = +-12 %
+Fig. 8,a,Powder A (open circle),404.6,compression pressure MPa (nominal 405),289.0,electrical resistivity Ohm m,marker partly hidden behind the Powder B triangle - centre from the visible bottom outline row - 6.0 px (outer radius of the unobstructed circles); +-1.5 px = +-12 %
+Fig. 8,b,Powder A,360,pellet pressure MPa (caption),0.096,R_inc x1e4 Ohm m,"bar-top outline row 334.5 (0 at 353.5, 1.5 at 57.5 px); +-1 px = +-0.005"
+Fig. 8,b,Powder B,360,pellet pressure MPa (caption),0.122,R_inc x1e4 Ohm m,"bar-top outline row 329.5 (0 at 353.5, 1.5 at 57.5 px); +-1 px = +-0.005"
+Fig. 8,b,Powder C,360,pellet pressure MPa (caption),1.51,R_inc x1e4 Ohm m,"bar-top outline row 55.5 (0 at 353.5, 1.5 at 57.5 px); +-1 px = +-0.005"
+Fig. 10,,Powder A (filled circle),0,NCM-NCM contacts per NCM particle (cross-section),0.0162,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder A (filled circle),1,NCM-NCM contacts per NCM particle (cross-section),0.0812,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder A (filled circle),2,NCM-NCM contacts per NCM particle (cross-section),0.19,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder A (filled circle),3,NCM-NCM contacts per NCM particle (cross-section),0.3178,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder A (filled circle),4,NCM-NCM contacts per NCM particle (cross-section),0.261,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder A (filled circle),5,NCM-NCM contacts per NCM particle (cross-section),0.1131,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder A (filled circle),6,NCM-NCM contacts per NCM particle (cross-section),0.0274,frequency,circle fused with the Powder C square below it - centre from the top edge row 1327 + 28.5 px (radius of free circles)
+Fig. 10,,Powder A (filled circle),7,NCM-NCM contacts per NCM particle (cross-section),0.0,frequency,"hidden inside the Powder C square on the axis - no part rises above it: <= 0.002, taken as 0"
+Fig. 10,,Powder B (open triangle),0,NCM-NCM contacts per NCM particle (cross-section),0.314,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder B (open triangle),1,NCM-NCM contacts per NCM particle (cross-section),0.3923,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder B (open triangle),2,NCM-NCM contacts per NCM particle (cross-section),0.24,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder B (open triangle),3,NCM-NCM contacts per NCM particle (cross-section),0.0497,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder B (open triangle),4,NCM-NCM contacts per NCM particle (cross-section),0.0042,frequency,partly hidden behind the Powder C square - centre from the visible apex row 1364 + 36.4 px
+Fig. 10,,Powder B (open triangle),5,NCM-NCM contacts per NCM particle (cross-section),0.0,frequency,on the axis (hidden by the other markers): taken as 0
+Fig. 10,,Powder B (open triangle),6,NCM-NCM contacts per NCM particle (cross-section),0.0,frequency,taken as 0
+Fig. 10,,Powder B (open triangle),7,NCM-NCM contacts per NCM particle (cross-section),0.0,frequency,taken as 0
+Fig. 10,,Powder C (half-filled square),0,NCM-NCM contacts per NCM particle (cross-section),0.5919,frequency,marker on the left axis - centre from outline rows 236-291
+Fig. 10,,Powder C (half-filled square),1,NCM-NCM contacts per NCM particle (cross-section),0.2935,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder C (half-filled square),2,NCM-NCM contacts per NCM particle (cross-section),0.0964,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder C (half-filled square),3,NCM-NCM contacts per NCM particle (cross-section),0.0212,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder C (half-filled square),4,NCM-NCM contacts per NCM particle (cross-section),0.0033,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder C (half-filled square),5,NCM-NCM contacts per NCM particle (cross-section),0.0014,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder C (half-filled square),6,NCM-NCM contacts per NCM particle (cross-section),0.0013,frequency,marker centre (ink-core / interior centroid)
+Fig. 10,,Powder C (half-filled square),7,NCM-NCM contacts per NCM particle (cross-section),0.0,frequency,"on the axis: <= 0.002, taken as 0"
+Fig. 11,,Powder A | bar (mean),360,pellet pressure MPa (caption),0.2018,void fraction,bar-top outline row 124.50; 11.3 px per 0.01
+Fig. 11,,Powder A | error bar upper cap (max of n = 3),360,pellet pressure MPa (caption),0.225,void fraction,cap row 98.25
+Fig. 11,,Powder A | error bar lower cap (min of n = 3),360,pellet pressure MPa (caption),0.1843,void fraction,cap row 144.25
+Fig. 11,,Powder B | bar (mean),360,pellet pressure MPa (caption),0.1737,void fraction,bar-top outline row 156.25; 11.3 px per 0.01
+Fig. 11,,Powder B | error bar upper cap (max of n = 3),360,pellet pressure MPa (caption),0.1785,void fraction,cap row 150.75
+Fig. 11,,Powder B | error bar lower cap (min of n = 3),360,pellet pressure MPa (caption),0.1695,void fraction,cap row 161.00
+Fig. 11,,Powder C | bar (mean),360,pellet pressure MPa (caption),0.1212,void fraction,bar-top outline row 215.50; 11.3 px per 0.01
+Fig. 11,,Powder C | error bar upper cap (max of n = 3),360,pellet pressure MPa (caption),0.131,void fraction,cap row 204.50
+Fig. 11,,Powder C | error bar lower cap (min of n = 3),360,pellet pressure MPa (caption),0.1142,void fraction,cap row 223.50

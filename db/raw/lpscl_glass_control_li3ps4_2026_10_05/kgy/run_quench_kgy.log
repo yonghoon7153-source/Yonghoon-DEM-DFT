@@ -1,0 +1,10 @@
+[2026-10-05 15:35:59] START @ c704348b0 · 변경 0 · RUN /home/kgy/work/runs/lpscl_glass_control_li3ps4_2026_10_05 · 시드 1 2 3 4 5 · 인자 --system B --n_fu 15 --quench_rate 1e12 --melt_ps 100 --hold_ps 50 --dt_fs 2 --save_ps 1.0 --turbo
+[2026-10-05 15:35:59] seed1 시작 · GPU 사용 3117 MiB
+   [B seed1] 120 원자 · 셀 15.52 Å · 담금질 900 ps (450000 스텝) → /home/kgy/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed1
+   UMA inference mode: turbo
+[2026-10-06 23:37:47] seed1 끝 · 115307 s · 게이트 입력 rc 0 (판정은 repo)
+[2026-10-06 23:37:47] seed2 시작 · GPU 사용 800 MiB
+   [B seed2] 120 원자 · 셀 15.52 Å · 담금질 900 ps (450000 스텝) → /home/kgy/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed2
+   UMA inference mode: turbo
+[2026-10-07 14:21:13] seed2 끝 · 53005 s · 게이트 입력 rc 0 (판정은 repo)
+[2026-10-07 14:21:13] ⛔ seed3 — 결과 없이 폴더만 있다 (중간에 멈춤?) · 멈춘다 — 흔적을 보고 사람이 정한다

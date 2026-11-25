@@ -1,0 +1,81 @@
+{
+  "symbol": "Pd",
+  "name": "Palladium",
+  "Z": 46,
+  "role": "46번 4d 백금족 귀금속(Group 10, Ni/Pt 동족). SSB 앵커 없음 — 백과사전/촉매·전극 관점. 바닥상태 4d¹⁰5s⁰라 주기율표에서 최외각 s가 완전히 빈 유일한 원소. +2가 대표(PdO, PdCl₂), +4도 존재. 교차짝지음(Suzuki/Heck) 촉매, 수소화, 자동차 삼원촉매의 핵심이며 H₂를 대량 흡수(PdHx)해 수소 정제·저장·수소투과막에도 쓰임. 전극·접점 금속 관점 가능하나 SSB 직접 무관.",
+  "oxidation_states": [
+    "+2",
+    "+4",
+    "0"
+  ],
+  "electronegativity": 2.2,
+  "ionic_radius_A": {
+    "Pd2+_sq": 0.64,
+    "Pd2+_VI": 0.86,
+    "Pd4+_VI": 0.615,
+    "_note": "Shannon 1976: Pd²⁺(d⁸) 사각평면 IVSQ 0.64 Å, 팔면체 VI 0.86 Å; Pd⁴⁺ VI 0.615 Å. Pd²⁺는 d⁸이라 사각평면 배위 선호. 귀금속이라 SSB 격자 치환 대상 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "PdO",
+      "context": "산화물(+2)",
+      "battery_role": "SSB 무관 — 정방정 Pd²⁺ 산화물(산화 촉매·CH₄ 연소)",
+      "note": "Pd 3d5/2 ~336.9 eV(Pd²⁺). Raman ~651 cm⁻¹(B1g). ~800°C 이상서 금속으로 분해"
+    },
+    {
+      "formula": "PdCl2 / Na2PdCl4",
+      "context": "가용성 전구체",
+      "battery_role": "SSB 무관 — Wacker 산화 촉매, 무전해 도금, 나노입자 합성 출발물",
+      "note": "Pd 3d5/2 ~338 eV(Pd²⁺ 염화물)"
+    },
+    {
+      "formula": "PdHx (팔라듐 수소화물)",
+      "context": "침입형 수소화물",
+      "battery_role": "SSB 무관 — 수소 저장·정제·수소투과막; Pd 격자에 H 대량 흡수(α/β 상)",
+      "note": "H/Pd~0.6까지; 수소 게터·전극 소재로 유명"
+    },
+    {
+      "formula": "Pd/C · Pd 교차짝지음 촉매",
+      "context": "산업/합성 촉매",
+      "battery_role": "SSB 무관 — 수소화(Pd/C), Suzuki·Heck·Negishi 교차짝지음(2010 노벨), 삼원촉매",
+      "note": "귀금속 촉매의 간판; 전극·리드프레임 접점 금속으로도 사용"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 다만 전극·집전체·접점 금속 관점은 성립(귀금속 불활성 전극, 리드프레임). 수소 저장/막 소재로서의 PdHx는 수소전극 맥락이지 황화물 SE 계면과는 별개. Group 10 동족 Pt와 함께 촉매·전극 금속으로 묶임.",
+  "xps": [
+    {
+      "core": "Pd 3d5/2",
+      "BE_eV": 335.4,
+      "assignment": "Pd metal / Pd⁰ (보고 ~335.0-335.4 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Pd 3d5/2",
+      "BE_eV": 336.9,
+      "assignment": "PdO / Pd²⁺ (보고 ~336.3-337.5 eV); PdCl₂는 ~338 eV로 더 높음",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 651,
+      "assignment": "PdO B1g 모드 — 정방정 산화물 지문(금속 Pd는 1차 라만 없음)",
+      "ref": "PdO Raman 참조"
+    }
+  ],
+  "dos_character": "4d¹⁰5s⁰ 귀금속 — 금속 Pd는 4d 밴드 상단이 E_F에 걸쳐(4d가 완전히 다 안 채워진 밴드) 큰 상태밀도를 가짐 → 높은 수소 용해도·촉매 활성의 근원. Pd²⁺(d⁸)는 사각평면장에서 dx²−y² 비움. PdO는 좁은-갭 반도체. SSB 절연 밴드갭과는 무관한 금속/촉매 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — 백금족(Pd/Pt) 화학·PdHx",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Pd²⁺ sq 0.64 Å)",
+    "Nobel Prize in Chemistry 2010 (Heck/Negishi/Suzuki) — Pd 촉매 교차짝지음"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰",
+    "electron_config": "[Kr] 4d¹⁰ 5s⁰",
+    "valence_orbitals": "4d¹⁰ 5s⁰ — 예외적 채움(주기율표에서 최외각 s가 완전히 빈 유일한 바닥상태 원소). Pd²⁺면 4d⁸ 사각평면",
+    "band_character": "금속 Pd는 4d 밴드 상단이 E_F에 걸쳐 큰 DOS → 높은 H 용해도·촉매 활성; Pd²⁺(d⁸) 사각평면, PdO는 좁은-갭 반도체. SSB 밴드엣지와 무관",
+    "bonding": "Pd–O(PdO)·Pd–Cl·Pd–P 배위, Pd–H 침입형(PdHx), 금속상 fcc 결합. 백금족 촉매·수소 흡장"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

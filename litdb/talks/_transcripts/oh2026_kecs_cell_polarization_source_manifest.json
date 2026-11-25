@@ -1,0 +1,45 @@
+{
+ "slug": "oh2026_kecs_cell_polarization",
+ "generated": "2026-08-25",
+ "schema": "talk_source_manifest/v1",
+ "sources": {
+  "deck_pdf": {
+   "file": "oh2026_kecs_cell_polarization.pdf",
+   "sha256": "bfbccf75efa4752df386809c7d12fb513550b451d0e1ba485ad80ab5af61b615",
+   "bytes": 7112694
+  },
+  "stt_txt": {
+   "file": "oh2026_kecs_cell_polarization_raw.txt",
+   "sha256": "587a305cda1f88550107b73e147155ef773781dd7a86e7be78734fa36c9d2673",
+   "bytes": 81446
+  }
+ },
+ "audio_status": "absent",
+ "stt_engine": null,
+ "stt_engine_status": "unknown",
+ "rights_status": "unknown",
+ "qa_consent_status": "unknown",
+ "off_record_status": "unknown",
+ "citable": false,
+ "external_use_allowed": false,
+ "slots_expected": 52,
+ "coverage": {},
+ "promotion_blockers": [
+  {
+   "field": "audio_status",
+   "why": "음성 미보유 → [말]·직접인용·speech-only claim 차단"
+  },
+  {
+   "field": "rights_status",
+   "why": "권리 미상 → 외부 공개·원고 사용 차단"
+  },
+  {
+   "field": "qa_consent_status",
+   "why": "Q&A 동의 미상 → Q&A 외부 사용 차단"
+  },
+  {
+   "field": "stt_engine_status",
+   "why": "STT 엔진 미상 → transcript-derived claim 승격 차단 (deck-only claim 은 막지 않는다)"
+  }
+ ]
+}

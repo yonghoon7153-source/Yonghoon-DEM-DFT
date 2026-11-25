@@ -1,0 +1,240 @@
+{
+ "slug": "liu2025_dry_processing_high_energy_li_batteries_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+  "DEM 논문/54. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Estimated energy density of the solid state (SE density: 2 g cm−3) lithium metal batteries (LMBs, anode speciﬁc capacity: 2000 mAh g−1), tab and package materials are not included. a) With Ni-rich LiNixCoyMn(1-x-y)O2 (NCM) (negative to positive capacity ratio (N/P): 1, AM ratio in electrode: 80%, reversible capacity: 200 mAh g−1) or sulfur (N/P ratio = 2, AM ratio: 50%, AM utilization: 80%, reversible capacity: 1350 mAh g−1) as cathode material, of diﬀerent Careal, SE thickness: 30 μm; b) with SE membrane of diﬀerent thicknesses (Li-S battery, areal capacity: 6 mAh cm−2 as labeled by the pentacle in Figure 1a). The inserts scheme illustrates the eﬀect of a thick electrode and thin SE on reducing the inactive materials. Other details are given in Tables S1–S3 (Supporting Information).",
+   "bbox": [
+    42.0,
+    70.7,
+    550.0,
+    216.1
+   ],
+   "w": 2118,
+   "h": 607,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Areal capacity and porosity of the cathodes from typical commercial batteries.",
+   "bbox": [
+    44.8,
+    529.1,
+    351.2,
+    710.4
+   ],
+   "w": 1278,
+   "h": 756,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.484
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Typical electrode microstructural characteristics and key quanti- tative descriptors.",
+   "bbox": [
+    44.8,
+    70.7,
+    297.7,
+    269.7
+   ],
+   "w": 1055,
+   "h": 830,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.517
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. The inﬂuence of pore structures on battery performances. a) Nano-CT results of DP-0%F and DP-1%F electrodes, comparison of tortuosity between diﬀerent electrodes, and rate performance of the LCO electrodes. Reproduced with permission.[77] Copyright 2024, Wiley. b) Schematic diagram of the ion path in the LFP electrodes using diﬀerent CAs, comparison of tortuosity and porosity, and long-term cycling performances at 0.1C. Reproduced with permission.[78] Copyright 2025, Wiley. c) Surface resistance and the cumulative intrusion-pore size curve of DEs-M@EP and DEs-PVDF, CV scans and the corresponding peak current vs scan rate plots demonstrated the enhanced kinetics. Reproduced with permission.[79] Copyright 2025, Wiley.",
+   "bbox": [
+    42.0,
+    70.9,
+    550.1,
+    391.7
+   ],
+   "w": 2118,
+   "h": 1338,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.729
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The role of charge transportation in DPT thick electrodes. a) Schematic diagram of PAN’s function in promoting Li+ transport, EIS plots of the electrodes using diﬀerent binders after the ﬁrst cycle, and the cycling performances. Reproduced with permission.[84] Copyright 2025, Elsevier Ltd. b) Ion conduction mechanism of PPC, charge–discharge and cycling performance of PPC-LFP batteries at 0.5 C. Reproduced with permission.[86] Copyright 2023, Springer Nature. c) Schematic diagram of the CEI formed by LiPF6 or LiClO4 electrolyte and rate performance of the DP electrodes using diﬀerent electrolytes. Reproduced with permission.[87] Copyright 2023, American Chemical Society.",
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    411.0
+   ],
+   "w": 2118,
+   "h": 1417,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Strategies to suppress the reduction of PTFE. a) PEO or P(VDF–TrFE–CFE) coating. Reproduced with permission.[92] Copyright 2024, American Chemical Society. b) FEC-derived SEI forms a physical barrier between PTFE and the charge, as illustrated by the CV curves and the Raman spectra after 1 cycle. Reproduced with permission.[93] Copyright 2024, Elsevier Ltd. c) Schematic diagram of DPT graphite anode with or without PVP, voltage curves in the ﬁrst cycle, and EIS spectra after 10 cycles of the electrodes. Reproduced with permission.[94] Copyright 2024 Elsevier B.V.",
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    448.0
+   ],
+   "w": 2118,
+   "h": 1574,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.663
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Issues in SE ﬁlm fabrication using BF tech and strategies to settle them. a) Reaction between PTFE and lithium metal. Reproduced with permission.[99] Copyright 2023, Wiley. b) PEVA skeleton support provides suﬃcient rigidity for the LPSC ﬁlms. Reproduced with permission.[101] Copyright 2024, Wiley. c) Low melting point and lithium conductive polymer binders PLI (prepared by adding LiTFSI and ionic liquid Pyr13TFSI to PCL) form a uniform coating on SE at 80 °C and facilitate the inter-particle ion transport.[113]",
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    422.7
+   ],
+   "w": 2118,
+   "h": 1467,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.295
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 13,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Charge transportation in the solid-state cathodes. a) Left: microstructure of the composite cathode (AM ratio: 80%) with diﬀerent SE particle sizes, 3 μm (upper) and 5 μm (lower), and relationship between speciﬁc capacity and SE particle size (right).[125] b) Illustration of the coating process and ion transport in the NCM cathodes.[126] c) Redox mediators (the highly conductive Li2S/NbSe2) provide eﬃcient charge transport paths in the cathode.[131] Copyright 2024, Wiley. d) LBPSI can act as both an electron and an ion transport media. Reproduced with permission.[146] Copyright 2025, Springer Nature.",
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    451.7
+   ],
+   "w": 2118,
+   "h": 1588,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.591
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 15,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Strategy to mitigate the interfaces in the ASSB cathode. a) Schematic diagram of AEA cathode, all cathodes are composed of all-electrochem- active materials. Reproduced with permission.[152] Copyright 2021, Springer Nature. b) Charge transport in the all-in-one electrode composed of MS and S. Reproduced with permission.[150] Copyright 2022, American Chemical Society. c) The cathode of the fully active material composed of lithium transition metal oxides can provide a homointerface. Reproduced with permission.[133] Copyright 2024, Springer Nature.d) high ionic/electron conductivity and small volume strain enable Li1.75Ti2(Ge0.25P0.75S3.8Se0.2)3 to prepare homogenized cathode materials. Reproduced with permission.[135] Copyright 2024, Springer Nature.",
+   "bbox": [
+    44.8,
+    70.7,
+    552.9,
+    507.7
+   ],
+   "w": 2118,
+   "h": 1822,
+   "dpi": 300,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.425
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Electrode parameters of typical commercial LIBs.",
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.7
+   ],
+   "w": 2145,
+   "h": 2999,
+   "dpi": 284,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2. Composition and characteristics of typical ISE ﬁlms. Electrolyte Binder and its utilization Thickness/um 𝜎/mS cm−1 Refs. LGPS PTFE, 1% 100 0.34 [110] Li5.4PS4.4Cl1.6 PTFE, 0.2% 30 8.4 [22] LPSCl PTFE, 0.5% 18 0.85 [111] LPSCl PTFE, 0.2% 40 8.4 [112] LPSCl PTFE, 0.5% 15–20 1.7 [102] Li3InCl5 PTFE, 0.5% 15–20 1.0 [102] Li6.5La3Zr1.5Ta0.5O12 PTFE, 0.5% 15–20 0.52 [102] Li5.7PS4.7Cl1.3 0.5% PTFE with poly(ethylene vinyl acetate) scaﬀold 40 1.1 [101] LPSCl Polycaprolactone-based binder, 7% 80 0.85 [113] LPSCl Thermoplastic polyamide, 3% 25 2.1 [17]",
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.7
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 12,
+   "file": "tab_3.png",
+   "caption": "Table 3. Cathode components and performance in all-solid-state batteries.",
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.7
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "32. Small - 2025 - Liu - Dry Processing Technique for High‐Energy Density Lithium Batteries.pdf",
+   "blank": 0.897
+  }
+ ]
+}

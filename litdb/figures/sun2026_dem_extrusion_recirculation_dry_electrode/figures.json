@@ -1,0 +1,211 @@
+{
+ "slug": "sun2026_dem_extrusion_recirculation_dry_electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic process of SF 3D printing battery process using a TSE formulated with two groups of materials: group A contains LiFePO4 (LFP), group B contains PP, PCL, polypropylene-block PBE, and carbon nanofibers.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    568.6,
+    553.1,
+    725.7
+   ],
+   "w": 2135,
+   "h": 655,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Schematic of the extruder and the particles involved in our modeling work and definitions of the locations of “Sample 1” and “Sample 2” for the microstructure analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    543.0,
+    552.7,
+    725.7
+   ],
+   "w": 2133,
+   "h": 762,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.572
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic representation of the forces used in our model for describing the interaction between two particles i and j in contact.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.9,
+    498.3,
+    551.6,
+    725.7
+   ],
+   "w": 1054,
+   "h": 948,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.555
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Screenshots of simulations using two different injection sequences over several specific time intervals.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    563.0,
+    529.9,
+    734.7
+   ],
+   "w": 2038,
+   "h": 717,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Curves of porosity of F2 as a function of simulation time for various rotation speeds: a) sequential injection, b) simultaneous injection, and c) coordination number (colorbar) of AM–AM particles in the sequential injection of F2 under three rotation speeds andt ¼ 70 M.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    242.4,
+    531.4,
+    724.3
+   ],
+   "w": 2045,
+   "h": 2008,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. The porosity of the “Sample 1” microstructures over time using four different material formulations (F1–F4, see Table 1) under two injection sequences: a) sequential injection and b) simultaneous injection.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    242.0,
+    535.7,
+    725.7
+   ],
+   "w": 2063,
+   "h": 2016,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Figure 7. The coordination number of BC-BC and the RDF for F1 under the two injection scenarios (left and right, respectively) at 70 M Δt.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    488.8,
+    546.4,
+    734.7
+   ],
+   "w": 2107,
+   "h": 1026,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a) Schematic of the five zones selected and the plot of the AM particles mass within them as a function of the residence time and b) plot of the standard deviation of the AM particles mass within the five locations as a function of the residence time.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    286.5,
+    553.6,
+    725.7
+   ],
+   "w": 2137,
+   "h": 1831,
+   "dpi": 300,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. The material property parameters of the AM and BC particles in the DEM simulations of this study. Particles Young modulus [pg μm\u00031 μs\u00032] Poisson ratio AM 123.9 \u0001 103 0.280 BC–F1 112.14 0.438",
+   "rotated_deg": 0,
+   "bbox": [
+    29.0,
+    12.0,
+    589.2,
+    779.4
+   ],
+   "w": 2187,
+   "h": 2996,
+   "dpi": 281,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 9,
+   "file": "tab_2.png",
+   "caption": "Table 2. The average over 30–70 M Δt of tortuosity factor, effective diffusivity, and electrical conductivity for each material injection scenario. Average [30–70 M Δt] Sequential injection Simultaneous injection Tortuosity Effective diffusivity Electrical conductivity Tortuosity Effective diffusivity Electrical conductivity [m2 s\u00031] [m2 s\u00031] [S m\u00031] [S m\u00031] factor factor F1 2.949 0.111 1.541 2.907 0.115 1.547 F2 3.020 0.105 1.615 2.967 0.110 1.635 F3 3.102 0.100 1.726 3.059 0.103 1.728 F4 3.450 0.080 2.037 3.388 0.083 2.053",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    12.0,
+    589.2,
+    779.4
+   ],
+   "w": 2137,
+   "h": 2996,
+   "dpi": 281,
+   "src": "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf",
+   "blank": 0.827
+  }
+ ]
+}

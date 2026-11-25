@@ -1,0 +1,952 @@
+{
+ "slug": "zaby2026_reliable_conductivity_estimates_md",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+  "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 | Top: Molecular representations for 1-ethyl-3-methylimida- zolium, [EMIm]+; dicyanamide, [DCA]−; ethylene glycol dimethyl ether, DME; and bis(fluorosulfonyl)imide, [FSI]−. Atoms H, C, N, O, F, and S are colored white, orange, blue, red, green, and yellow, respectively. Bottom: Workflow for the Einstein–Helfand approach. Gray nodes indicate obliga- tory work steps, red nodes indicate steps necessary for EH approach (A), and blue nodes correspond to the steps needed for EH approach (B).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    26.1,
+    295.2,
+    347.9
+   ],
+   "w": 1068,
+   "h": 1342,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 | Conductivities for (top) [EMIm][DCA] computed from the IL1000 and IL1000 pol simulations and for (bottom) LiFSI/DME at different concentrations, obtained with the Einstein–Helfand (EH) and Green– Kubo (GK) approaches. For both approaches, the corresponding Nernst–Einstein conductivities (EH-NE and GK-NE) are shown as well. Experimental reference values are shown as dashed lines and were taken from (top) ref. [98] and interpolated from (bottom) refs. [86, 87], respec- tively; see Section S4.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    343.6,
+    556.0,
+    641.6
+   ],
+   "w": 1067,
+   "h": 1243,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.654
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 | Ideal transport numbers of the cation and anion for all simulations of (top) [EMIm][DCA] and (bottom) LiFSI/DME obtained by fitting the linear regimes of the ions’ collective MSDs (EH, plain bars) or from the integral of the autocorrelation functions of the ions’ microscopic currents (GK, hatched bars).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    29.0,
+    556.0,
+    302.9
+   ],
+   "w": 1067,
+   "h": 1142,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.746
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 | Real transport numbers calculated using the Einstein– Helfand (left) and Green–Kubo (right) methods with different reference frames for the LiFSI/DME systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    424.2,
+    295.2,
+    699.1
+   ],
+   "w": 1068,
+   "h": 1146,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 | Conductivities for the LiFSI/DME system obtained from the Einstein–Helfand (top) or Green–Kubo approach (bottom) with dif- ferent fitting strategies. Experimental reference values are shown as dashed lines and were interpolated from refs. [86, 87]; see Section S4. FIGURE 5 | Integral of the autocorrelation functions used to calculate the ionic conductivity within the GK approach for the LiFSI/DME system at 1.0 and 3.5 M. The black curves are the averaged integrals, while the colored ones are moving averages of the individual replicas over a 200-fs window. detected diffusive regions. A fixed fit window may still yield acceptable estimates if the chosen window appropriately captures the diffusive regime across all replicas. However, the optimal window location is system dependent, and intermediate-time devi- ations from linearity can bias the fitted slope and distort the final e",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    26.0,
+    556.0,
+    255.2
+   ],
+   "w": 2154,
+   "h": 956,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.808
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 | Exemplary display of varying weighted means obtained from the averaging of segments within replicas (blue) vs. averaging seg- ments across replicas (red) for the IL1000 system. The index on the x-axis denotes the replica or segment index, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    543.3,
+    295.2,
+    687.6
+   ],
+   "w": 1067,
+   "h": 602,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 14,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 | EH conductivity, NE conductivity, and anion–cation cross-contribution as obtained from the IL1000 pol simulation with different maximum correlation depths (top) and the corresponding standard error (bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    35.4,
+    295.2,
+    237.5
+   ],
+   "w": 1068,
+   "h": 843,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 14,
+   "file": "fig_9.png",
+   "caption": "FIGURE 9 | Decomposition into self- and cross-terms of the (left) total conductivity and (right) the cation contributions in the barycentric frame of reference, as obtained from the CL&P simulations of [EMIm][DCA] containing different amounts of ion pairs.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    492.1,
+    556.0,
+    687.6
+   ],
+   "w": 1067,
+   "h": 815,
+   "dpi": 300,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 12,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Calculated ionicities for all simulations of (top) [EMIm][DCA] and (bottom) LiFSI/DME. The blue bars denote ionicities obtained via the Einstein formulation, while the orange bars correspond to the ionicities from Green–Kubo-based correlation functions.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.5,
+    86.2,
+    549.4,
+    444.8
+   ],
+   "w": 2022,
+   "h": 1495,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 15,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Charge autocorrelation functions (CACFs) of LiFSI/DME at different salt concentrations. The black curve shows the averaged CACF. The colored curves show the individual replica CACFs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.5,
+    244.8,
+    549.4,
+    338.0
+   ],
+   "w": 2022,
+   "h": 390,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.823
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 16,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Charge autocorrelation functions (CACFs) as computed from different [EMIm][DCA] simulations. The black curve shows the averaged CACF. The colored curves show the individual replica CACFs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    425.4,
+    547.3,
+    518.6
+   ],
+   "w": 2011,
+   "h": 389,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.72
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 19,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Self-diffusion coefficients of the different simulated systems as obtained from molecular dynamics simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    67.1,
+    547.5,
+    429.4
+   ],
+   "w": 2012,
+   "h": 1511,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 20,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Collective mean square displacements (CMSDs) of LiFSI/DME at different salt concentrations. The black curve shows the averaged CMSD, and the colored curves show the individual replica CMSDs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    67.1,
+    547.6,
+    200.6
+   ],
+   "w": 2012,
+   "h": 557,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 20,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Collective mean square displacements (CMSDs) as computed from different [EMIm][DCA] simulations. The black curve shows the averaged CMSD, and the colored curves show the individual replica CMSDs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    256.3,
+    547.7,
+    475.4
+   ],
+   "w": 2013,
+   "h": 914,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 21,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Comparison of fitting methods applied to the average CMSD as obtained from the LiFSI/DME simulations at a salt concentration of 1.0 M. The automated fit window search as implemented in Travis identifies a window of 60 ps to 24 ns as diffusive regime. The weighted fit emphasizes the early to mid-time regions with low uncertainties, yielding a conductivity estimate of 2.03 S m−1 close to the reference value of 2.14 S m−1. The fixed tail fit treats the second half of the CMSD, 15 ns to 30 ns, as fit window. The weighted fit in that range yields an estimate of 0.73 S m−1, significantly underestimating the reference value.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    82.4,
+    548.7,
+    282.5
+   ],
+   "w": 2018,
+   "h": 835,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 21,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Comparison of fitting methods applied to the average CMSD as obtained from the LiFSI/DME simulations at a salt concentration of 2.0 M. The automated fit window search as implemented in Travis identifies a window of 60 ps to 25.5 ns as diffusive regime. The weighted fit emphasizes the early to mid-time regions with low uncertainties, yielding a conductivity estimate of 1.34 S m−1. The fixed tail fit treats the second half of the CMSD, 15 ns to 30 ns, as fit window. The weighted fit in that range yields an estimate of 0.85 S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.3,
+    418.3,
+    547.5,
+    618.4
+   ],
+   "w": 2014,
+   "h": 835,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 22,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Comparison of fitting methods applied to the average CMSD as obtained from the LiFSI/DME simulations at a salt concentration of 3.5 M. The automated fit window search as implemented in Travis identifies a window of 360 ps to 16.5 ns as diffusive regime. The weighted fit emphasizes the early to mid-time regions with low uncertainties, yielding a conductivity estimate of 0.41 S m−1. The fixed tail fit treats the second half of the CMSD, 15 ns to 30 ns, as fit window. The weighted fit in that range yields an estimate of 0.22 S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.5,
+    250.3,
+    547.5,
+    450.5
+   ],
+   "w": 2014,
+   "h": 836,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 25,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Comparison of conductivity estimates obtained from averaging within replicas and between replicas for the LiFSI/DME system at different concentrations. The index on the x-axis denotes the replica or segment index, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    67.1,
+    547.3,
+    202.9
+   ],
+   "w": 2011,
+   "h": 567,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 25,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Comparison of conductivity estimates obtained from averaging within replicas and between replicas for the different [EMIm][DCA] simulations. The index on the x-axis denotes the replica or segment index, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    258.7,
+    547.3,
+    477.8
+   ],
+   "w": 2011,
+   "h": 914,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 26,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. EH conductivity, NE conductivity, and anion-cation cross contribution as obtained from the LiFSI/DME simulations with different maximum correlation depths (top) and the corresponding standard error (bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    317.7,
+    547.3,
+    462.7
+   ],
+   "w": 2011,
+   "h": 605,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 27,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Decomposition into self- and cross-terms of the (left) total Einstein–Helfand conduc- tivity, (center) the cation contributions, and (right) the anion contributions, as obtained from the LiFSI/DME simulations at different salt concentrations.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    67.1,
+    549.1,
+    248.7
+   ],
+   "w": 2018,
+   "h": 758,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 27,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Decomposition into self- and cross-terms of the (left) total Einstein–Helfand conduc- tivity, (center) the cation contributions, and (right) the anion contributions, as obtained from the CL&P simulations of [EMIm][DCA] containing different amounts of ion pairs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    304.5,
+    549.1,
+    514.0
+   ],
+   "w": 2018,
+   "h": 874,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 | Diffusion coefficients D and corresponding standard errors (SE) in 10−10 m2 s−1 for all simulations of [EMIm][DCA]. Simulation Species D SE(D) IL125 Anion 1.8807 0.0232 IL125",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    28.7,
+    555.0,
+    763.7
+   ],
+   "w": 2095,
+   "h": 2992,
+   "dpi": 293,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "TABLE 2 | Diffusion coefficients D and corresponding standard errors (SE) in 10−10 m2 s−1 for all simulations of the LiFSI/DME system. Simulation Species D SE(D) 1.0 M Anion 5.5465 0.0779 2.0 M 2.0822 0.0214 3.5 M 0.3030 0.0060 1.0 M Cation 5.0220 0.0667 2.0 M 2.1117 0.0140 3.5 M 0.3503 0.0043 1.0 M Solvent 10.4773 0.0449",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    28.7,
+    555.0,
+    763.7
+   ],
+   "w": 2095,
+   "h": 2992,
+   "dpi": 293,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 13,
+   "file": "tab_3.png",
+   "caption": "TABLE 3 | Comparison of mean standard errors from segment-wise (SEacross rep.) and replica-wise (SEwithin rep.) averaging for all [EMIm][DCA] simulations. All values are given in S m−1. Simulation SEacross rep. SEwithin rep. IL125 0.2522 0.1675 IL125 long 0.2353 0.1751 IL250 0.2330 0.1749 IL500 0.2116 0.1521",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    27.4,
+    555.1,
+    763.7
+   ],
+   "w": 2095,
+   "h": 2997,
+   "dpi": 293,
+   "src": "5e9d5f12-85._Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2. MD simulation box compositions for all simulated systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    66.8,
+    548.1,
+    712.1
+   ],
+   "w": 2012,
+   "h": 2690,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 8,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Experimental conductivities of LiFSI/DME at different salt concentrations and tem- peratures sourced from literature, as well as calculated reference conductivities obtained from interpolation. Source c / mol L−1 T / K σ / S m−1 Qian et al.14 1.0 298.15 1.69 2.0 298.15 1.31 3.0 298.15 0.94 3.6 298.15 0.72 4.0 298.15 0.57 5.0 298.15 0.17 Zhao et al.15 1.0 253.15 1.17 1.0 263.15 1.38 1.0 273.15 1.62 1.0 283.15 1.80 1.0 293.15 1.96 1.0 303.15 2.12 1.0 313.15 2.26 1.0 323.15 2.30 1.0 333.15 2.33 Interpolation 1.0 333.15 2.14 ± 0.28 2.0 333.15 1.66 ± 0.22 3.5 333.15 0.96 ± 0.13",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    66.7,
+    548.1,
+    719.5
+   ],
+   "w": 2012,
+   "h": 2720,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 9,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Diffusion coefficients D, corresponding standard errors SE(D), Yeh–Hummer corrections ∆DYH, and corrected diffusion coefficients Dcorr = D + ∆DYH in 10−10 m2 s−1 for all simulations of [EMIm][DCA].",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    66.8,
+    546.3,
+    758.4
+   ],
+   "w": 2008,
+   "h": 2883,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 10,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Diffusion coefficients D, corresponding standard errors SE(D), Yeh–Hummer corrections ∆DYH, and corrected diffusion coefficients Dcorr = D + ∆DYH in 10−10 m2 s−1 for all simulations of the LiFSI/DME system.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.0,
+    66.8,
+    547.8,
+    703.1
+   ],
+   "w": 2013,
+   "h": 2652,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 11,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Ionic conductivities in S m−1 as obtained from different [EMIm][DCA] simulations with the Einstein–Helfand (EH) and Green–Kubo (GK) approach, as well as the corresponding Nernst–Einstein (NE) conductivities.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    68.2,
+    547.5,
+    728.3
+   ],
+   "w": 2010,
+   "h": 2751,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 11,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Ionic conductivities in S m−1 as obtained from LiFSI/DME simulations at different concentrations with the Einstein–Helfand (EH) and Green–Kubo (GK) approach, as well as the corresponding Nernst–Einstein (NE) conductivities.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    68.2,
+    547.5,
+    728.3
+   ],
+   "w": 2010,
+   "h": 2751,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 14,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Ionicities of the [EMIm][DCA] systems obtained from the EH and GK approaches.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.1,
+    172.0,
+    536.6,
+    616.5
+   ],
+   "w": 1923,
+   "h": 1853,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 14,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Ionicities of the LiFSI/DME systems obtained from the EH and GK approaches.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    172.0,
+    532.2,
+    616.5
+   ],
+   "w": 1887,
+   "h": 1853,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 23,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Ideal transport numbers of the [EMIm][DCA] systems obtained from the EH and GK approaches, resolved into cation and anion self contributions.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    68.1,
+    546.7,
+    545.1
+   ],
+   "w": 2006,
+   "h": 1989,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 23,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Ideal transport numbers of the LiFSI/DME systems obtained from the EH and GK approaches, resolved into cation and anion self contributions.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    68.1,
+    546.7,
+    545.1
+   ],
+   "w": 2006,
+   "h": 1989,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 23,
+   "file": "tab_S12.png",
+   "caption": "Table S12. Real transport numbers of the [EMIm][DCA] systems in the mass-fixed reference frame, obtained from the EH and GK approaches.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    68.1,
+    547.8,
+    545.1
+   ],
+   "w": 2011,
+   "h": 1989,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 24,
+   "file": "tab_S13.png",
+   "caption": "Table S13. Real transport numbers of the LiFSI/DME systems in different reference frames, obtained from the EH and GK approaches.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    294.0,
+    547.8,
+    494.4
+   ],
+   "w": 2011,
+   "h": 836,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "tS14",
+   "kind": "table",
+   "label": "S14",
+   "page": 28,
+   "file": "tab_S14.png",
+   "caption": "Table S14. Total Einstein–Helfand conductivity decomposition of the [EMIm][DCA] systems. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    70.5,
+    546.3,
+    717.9
+   ],
+   "w": 2005,
+   "h": 2699,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "tS15",
+   "kind": "table",
+   "label": "S15",
+   "page": 28,
+   "file": "tab_S15.png",
+   "caption": "Table S15. Ion-resolved Einstein–Helfand conductivity decomposition of the [EMIm][DCA] systems in the barycentric reference frame. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    82.6,
+    546.3,
+    717.9
+   ],
+   "w": 2005,
+   "h": 2648,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS16",
+   "kind": "table",
+   "label": "S16",
+   "page": 28,
+   "file": "tab_S16.png",
+   "caption": "Table S16. Total Green–Kubo conductivity decomposition of the [EMIm][DCA] systems. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    82.6,
+    546.3,
+    717.9
+   ],
+   "w": 2005,
+   "h": 2648,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS17",
+   "kind": "table",
+   "label": "S17",
+   "page": 28,
+   "file": "tab_S17.png",
+   "caption": "Table S17. Ion-resolved Gree–Kubo conductivity decomposition of the [EMIm][DCA] systems in the barycentric reference frame. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    82.6,
+    546.3,
+    717.9
+   ],
+   "w": 2005,
+   "h": 2648,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS18",
+   "kind": "table",
+   "label": "S18",
+   "page": 29,
+   "file": "tab_S18.png",
+   "caption": "Table S18. Total Einstein–Helfand conductivity decomposition of the LiFSI/DME systems. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    98.6,
+    546.3,
+    689.8
+   ],
+   "w": 2005,
+   "h": 2465,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS19",
+   "kind": "table",
+   "label": "S19",
+   "page": 29,
+   "file": "tab_S19.png",
+   "caption": "Table S19. Ion-resolved Einstein–Helfand conductivity decomposition of the LiFSI/DME systems in different reference frames. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    139.7,
+    546.3,
+    689.8
+   ],
+   "w": 2005,
+   "h": 2293,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "tS20",
+   "kind": "table",
+   "label": "S20",
+   "page": 29,
+   "file": "tab_S20.png",
+   "caption": "Table S20. Total Green–Kubo conductivity decomposition of the LiFSI/DME systems. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    139.7,
+    546.3,
+    689.8
+   ],
+   "w": 2005,
+   "h": 2293,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "tS21",
+   "kind": "table",
+   "label": "S21",
+   "page": 30,
+   "file": "tab_S21.png",
+   "caption": "Table S21. Ion-resolved Green–Kubo conductivity decomposition of the LiFSI/DME systems in different reference frames. All values are given in S m−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    273.7,
+    546.3,
+    514.7
+   ],
+   "w": 2005,
+   "h": 1005,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "tS22",
+   "kind": "table",
+   "label": "S22",
+   "page": 31,
+   "file": "tab_S22.png",
+   "caption": "Table S22. Einstein–Helfand and Green–Kubo analyses of a 10 ns long trajectory of 1000 [EMIm][DCA] ion pairs with the CL&P force field and a dumping frequency of 20 fs for differ- ent maximum correlation depths. Both methods show consistent results over a significant correlation depth range. EH might suffer from inclusion of parts of the balistic regime, while GK might suffer from integral inaccuracies due to the comparably low dumping frequency. While this trajectory might offer a more reasonable comparison of the two methods, it requires over 900 GB of disc space, making it unaffordable to store multiple sets of replicas of similar simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    68.1,
+    548.5,
+    728.5
+   ],
+   "w": 2014,
+   "h": 2753,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "tS23",
+   "kind": "table",
+   "label": "S23",
+   "page": 31,
+   "file": "tab_S23.png",
+   "caption": "Table S23. Conductivities and corresponding standard errors obtained from the 10 short (100 ps) replicas of the 1.0 M LiFSI/DME system with different analysis methods. When using the same set of trajectories and similar cross-replica averaging schemes, the obtained conductivities are in excellent agreement within their standard errors.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    68.1,
+    548.5,
+    728.5
+   ],
+   "w": 2014,
+   "h": 2753,
+   "dpi": 300,
+   "src": "ea0a0cb8-85._Sup_Lessons_Learned_on_Obtaining_Reliable_Conductivity_Estimates_From_Molecular_Dynamics_Simulations.pdf",
+   "blank": 0.927
+  }
+ ]
+}

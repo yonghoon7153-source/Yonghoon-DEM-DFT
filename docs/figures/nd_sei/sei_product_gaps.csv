@@ -1,0 +1,19 @@
+# SEI / decomposition-product band gaps (Materials Project) for Nd2O3-doped LPSCl1.6.
+# gap_eV_MP: MP band gap (PBE/PBE+U). Nd-bearing rows are a LOWER BOUND (4f mis-placement;
+#   real gap larger -> see exp_anchor). O_derived: contains O (forms only with O-doping).
+# role: insulator (>=4 eV, e-blocking passivation) / marginal (2-4) / conductor (<2, e- leak).
+# side: which interface it passivates (anode reduction V->0 / cathode oxidation V>=2.45 / bulk-GB).
+# Source: tools/oxidation/sei_product_gaps.py (MP) ; roles/sides: nd2o3_master_findings_2026_06_18.md §3.
+product,gap_eV_MP,exp_anchor_eV,Nd_bearing_MPlowerbound,O_derived,role,side,note
+LiCl,6.65,~9.4,no,no,insulator,anode+cathode,"anode SEI (with Li2O); also a modelc product"
+Li3PO4,5.73,~8,no,yes,insulator,bulk-GB+cathode,"O-derived; blocks GB e- network (sigma_e down) + cathode passivation"
+NdPO4,5.55,wide(monazite),yes,yes,insulator,cathode,"Nd3+ survives high V -> cathode passivation"
+Li2O,5.24,~7.99,no,yes,insulator,anode,"O-derived anode SEI (replaces conductive Li3P)"
+NdOCl,4.77,~4.5(Nd2O3 anchor),yes,yes,insulator,cathode,""
+NdCl3,4.30,~5,yes,no,insulator,cathode,"Nd3+ survives high V -> cathode passivation"
+LiNdO2,4.21,~3.5(est),yes,yes,insulator,cathode,""
+Li2S,3.90,~3.9,no,no,marginal,anode+cathode,"forms in both doped & undoped; semi-insulating"
+Nd2O3,3.81,~4.7,yes,yes,marginal,cathode,""
+Nd2S3,1.79,—,yes,no,conductor,—,"avoid"
+Li3P,0.70,~0.7,no,no,conductor-LEAK,anode,"UNDOPED anode leak product -> O replaces with Li2O/Li3PO4"
+NdS,0.00,—,yes,no,metal,—,"avoid (metallic)"

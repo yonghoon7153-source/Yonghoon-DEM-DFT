@@ -1,0 +1,67 @@
+&CONTROL
+    calculation = 'vc-relax'
+    prefix      = 'Nd2S3'
+    outdir      = './tmp'
+    pseudo_dir  = '/home/kgy/work/pseudo'
+    tprnfor     = .true.
+    tstress     = .true.
+    etot_conv_thr = 1.0d-6
+    forc_conv_thr = 1.0d-4
+    nstep        = 200
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = 20
+    ntyp        = 2
+    ecutwfc     = 70.0
+    ecutrho     = 560.0
+    occupations = 'smearing'
+    smearing    = 'mv'
+    degauss     = 0.01
+    nosym       = .true.
+/
+&ELECTRONS
+    conv_thr     = 1.0d-9
+    electron_maxstep = 100
+    mixing_mode  = 'plain'
+    mixing_beta  = 0.3
+    mixing_ndim  = 8
+    diagonalization = 'david'
+/
+&IONS
+    ion_dynamics = 'bfgs'
+/
+&CELL
+    cell_dynamics = 'bfgs'
+    press_conv_thr = 0.5
+/
+ATOMIC_SPECIES
+  Nd  144.242  Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF
+  S  32.0650  S.pbe-nl-kjpaw_psl.1.0.0.UPF
+CELL_PARAMETERS angstrom
+    4.0580020000    0.0000000000    0.0000000000
+    0.0000000000    7.5130600000    0.0000000000
+    0.0000000000    0.0000000000   15.6832640000
+ATOMIC_POSITIONS crystal
+  Nd    0.7500000000    0.2353030000    0.5440170000
+  Nd    0.2500000000    0.7646970000    0.4559830000
+  Nd    0.7500000000    0.7353030000    0.9559830000
+  Nd    0.2500000000    0.2646970000    0.0440170000
+  Nd    0.2500000000    0.1448840000    0.7956320000
+  Nd    0.7500000000    0.8551160000    0.2043680000
+  Nd    0.2500000000    0.6448840000    0.7043680000
+  Nd    0.7500000000    0.3551160000    0.2956320000
+  S    0.2500000000    0.0096350000    0.6091180000
+  S    0.7500000000    0.9903650000    0.3908820000
+  S    0.2500000000    0.5096350000    0.8908820000
+  S    0.7500000000    0.4903650000    0.1091180000
+  S    0.7500000000    0.3544450000    0.7188800000
+  S    0.2500000000    0.6455550000    0.2811200000
+  S    0.7500000000    0.8544450000    0.7811200000
+  S    0.2500000000    0.1455550000    0.2188800000
+  S    0.2500000000    0.3740320000    0.4325530000
+  S    0.7500000000    0.6259680000    0.5674470000
+  S    0.2500000000    0.8740320000    0.0674470000
+  S    0.7500000000    0.1259680000    0.9325530000
+K_POINTS automatic
+  7 4 2 0 0 0

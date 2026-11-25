@@ -1,0 +1,382 @@
+{
+ "slug": "kato2018_thick_electrode_assb_cycle_tortuosity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "22. All-solid-state batteries with thick electrode configurations.pdf",
+  "22. Sup) All-solid-state batteries with thick electrode configurations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic representation of the experimental setup. (b) The charge/discharge capability of the thick electrode conﬁguration. (c) Cycling performance of the L600 conﬁguration.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    358.3
+   ],
+   "w": 2151,
+   "h": 1231,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.904,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Charge/discharge curves of the all-solid-state cells. (a) The charge/discharge capability of the thick electrode conﬁguration. The discharge behavior was investigated by varying (b) the current density, (c) the electrode thickness, and (d) the ionic conductivity of the cathode layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    214.2,
+    570.5,
+    518.0
+   ],
+   "w": 2151,
+   "h": 1267,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.947,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Capacity−rate plots for the all-solid-state cells for electrodes L75−L600 at an applied current range of 0.1−100 mA cm−2. Fitting was carried out using eq 4 and the value of (1/(q_c κ_eff_cj) + 1/(q_a κ_eff_a))^−1 was estimated for each system.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    352.9,
+    306.4,
+    598.2
+   ],
+   "w": 1050,
+   "h": 1023,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.923,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Impedance spectroscopy of the all-solid-state cells at 4.1 V: (a) Nyquist plots, (b,c) Bode plots. (d,e) The equivalent circuit used for the simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    384.1
+   ],
+   "w": 2151,
+   "h": 1338,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.949,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Capacity loading of the L600 cell prepared in this study. The reported values for LiCoO2 and graphite systems are also plotted. All capacities were calculated using specific capacities of 137 and 370 mAh g−1 for LCO and graphite, respectively. The values listed in Table 2 (main text) were used for the density of each electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    171.4,
+    296.4,
+    451.3,
+    513.0
+   ],
+   "w": 1167,
+   "h": 903,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.89,
+   "manual_crop": "auto crop cut the rotated x-axis category labels (Zhang/Sakuda/Ohtomo/This study) because the caption block's top overlaps the last raster strip; clip = union of the six stacked raster strips on SI p.2, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Evolution of (a) the energy densities, and (b) the specific energies of the cells. Values are calculated assuming a cell configuration that employs a 20 µm current collector for the cathode (Al; 2.7 g/cc) and the anode (Cu; 8.9 g/cc).",
+   "rotated_deg": 0,
+   "bbox": [
+    171.7,
+    283.6,
+    439.7,
+    642.6
+   ],
+   "w": 1118,
+   "h": 1497,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.96,
+   "manual_crop": "auto crop included the body-text line 'separator and current collectors.' above the figure and cut the panel (b) x-axis title; clip = union of the eight stacked raster strips on SI p.3, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. XRD pattern of SE1. The main phase was identified as Li10GeP2S12. ▼: Beta phase diffraction peaks.",
+   "rotated_deg": 0,
+   "bbox": [
+    177.6,
+    517.6,
+    435.6,
+    659.1
+   ],
+   "w": 1076,
+   "h": 591,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.945,
+   "manual_crop": "auto crop cut the x-axis tick labels and the 2θ axis title (the caption block's top overlaps the last raster strip); clip = union of the three stacked raster strips on SI p.4, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. XRD pattern of SE2.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.4,
+    258.6,
+    376.6,
+    448.5
+   ],
+   "w": 1106,
+   "h": 792,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.969,
+   "manual_crop": "auto crop included the body-text line 'specimen was obtained.' above the vector plot; clip = below that line to below the 2θ axis title on SI p.5, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. XRD pattern of SE3.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.8,
+    102.4,
+    381.5,
+    302.6
+   ],
+   "w": 1174,
+   "h": 835,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.972,
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Cross-sectional SEM image of the cathode layers containing (a) SE1 and (b) SE2, and (c) the anode layer containing SE3. Scale bar=10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.2,
+    134.2,
+    507.0,
+    355.7
+   ],
+   "w": 1675,
+   "h": 923,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.648,
+   "manual_crop": "auto crop included the '3. SEM images of all-solid-state cells' section heading above the figure; clip = union of the seven stacked raster strips on SI p.8, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. The simulated rate-capacity characteristics of our cells plotted using Eq. 4 with (i) a low tortuosity factor (τ=ε−0.5) and (ii) a high ionic conductivity (κ=10 mS cm−1) for the solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    194.4,
+    168.1,
+    419.2,
+    356.3
+   ],
+   "w": 937,
+   "h": 785,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.903,
+   "manual_crop": "auto crop included the '5. Estimation of battery performance' section heading and cut the x-axis title (the caption block's top overlaps the last raster strip); clip = union of the four stacked raster strips on SI p.11, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. Details of the Solid Electrolytes Employed Herein",
+   "rotated_deg": 0,
+   "bbox": [
+    58.5,
+    389.5,
+    302.5,
+    469.5
+   ],
+   "w": 1018,
+   "h": 335,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.685,
+   "manual_crop": "auto extractor returned no table for Table 1 (missing_labels t1, left column of PDF p.2 = printed 608); clip = caption top to the bottom rule of the table (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 2,
+   "file": "tab_2.png",
+   "caption": "Table 2. Powder Mixtures Employed for Preparation of the Cathode and Anode Layers",
+   "rotated_deg": 0,
+   "bbox": [
+    58.5,
+    665.5,
+    566.5,
+    763.0
+   ],
+   "w": 2118,
+   "h": 408,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.695,
+   "manual_crop": "auto crop ran into the page footer (page number 608, DOI and journal line); clip = caption top to the last table row on PDF p.2 (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 3,
+   "file": "tab_3.png",
+   "caption": "Table 3. Properties of the Prepared Cathode and Anode Layers",
+   "rotated_deg": 0,
+   "bbox": [
+    58.5,
+    65.0,
+    566.5,
+    214.5
+   ],
+   "w": 2118,
+   "h": 624,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.74,
+   "manual_crop": "auto crop stopped after the column headers and cut the table body (only a sliver of the L75 row); clip = caption top to the bottom rule of the full-width table at the top of PDF p.3 = printed 609 (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 4,
+   "file": "tab_4.png",
+   "caption": "Table 4. Cell Parameters for the Prepared All-Solid-State Batteries",
+   "rotated_deg": 0,
+   "bbox": [
+    322.5,
+    179.5,
+    566.5,
+    283.0
+   ],
+   "w": 1018,
+   "h": 433,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.948,
+   "manual_crop": "auto extractor returned no table for Table 4 (not even listed as missing; right column of PDF p.4 = printed 610); clip = caption top to the bottom rule of the table (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 4,
+   "file": "tab_5.png",
+   "caption": "Table 5. Obtained Values for Ionic Transportation in the Electrode Layers",
+   "rotated_deg": 0,
+   "bbox": [
+    322.5,
+    465.5,
+    566.5,
+    558.0
+   ],
+   "w": 1018,
+   "h": 386,
+   "dpi": 300,
+   "src": "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.943,
+   "manual_crop": "auto extractor returned no table for Table 5 (not even listed as missing; right column of PDF p.4 = printed 610); clip = caption top to the bottom rule of the table (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Parameters used for the impedance simulations of Figure 4 for (a) L300 and (b) L600",
+   "rotated_deg": 0,
+   "bbox": [
+    99.5,
+    145.5,
+    511.5,
+    437.0
+   ],
+   "w": 1718,
+   "h": 1215,
+   "dpi": 300,
+   "src": "22. Sup) All-solid-state batteries with thick electrode configurations.pdf",
+   "blank": 0.943,
+   "manual_crop": "auto crop took most of SI p.9 (section heading, the following body text, Eq. S1 and the vertical download stamp); clip = caption top to the end of the table footnotes, both sub-tables (a) and (b) (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

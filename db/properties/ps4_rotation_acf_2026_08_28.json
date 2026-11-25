@@ -1,0 +1,211 @@
+{
+  "date": "2026-08-28",
+  "제목": "T16 PS₄ 배향 자기상관 71궤적 — PS₄ 는 안 돈다(재확인). **+O 가 흔들림 원뿔을 좁힌다**(신규)",
+  "출처_처방": "shin2026_bh4_reorientation_li_transport_li6ps5x (litdb) · kb/open_items.md T16",
+  "새_계산": "0회 — 기존 궤적 후처리",
+  "도구": "tools/ionic/anion_rotation_acf.py (selftest 20건, 음성 6건)",
+  "무엇을_쟀나": "P→S 결합 단위벡터의 배향 자기상관 C₂(t)=⟨P₂(u(0)·u(t))⟩. NMR 쌍극자 완화가 ℓ=2 라 C₂ 가 SLR 의 계산 대응물이다. 고원값 C₂(∞) → 차수 S=√C₂ → 원뿔 반각 θ₀ (S = cosθ₀(1+cosθ₀)/2).",
+  "판정_분포": {
+    "reorienting": 0,
+    "libration": 62,
+    "undecided": 9,
+    "rigid": 0,
+    "총": 71,
+    "제외": "licube 2건(argyrodite 아님)"
+  },
+  "결과_1_재확인": {
+    "진술": "**PS₄ 는 어느 온도·조성에서도 재배향하지 않는다** (reorienting 0/71). 500–1000 K 전부 원뿔 안 흔들림(libration)이다.",
+    "신규성": "⛔ 없음 — Shin 2026 이 PS₄ 를 '안 돈다'고 판정한 것의 재확인이다. T16 카드가 미리 적어둔 그대로다."
+  },
+  "결과_2_신규_O치환": {
+    "진술": "**+O(lpsocl)가 무도핑(modelc)보다 PS₄ 흔들림 원뿔을 좁힌다** — 즉 굳힌다.",
+    "Δcone_deg": {
+      "500 K": 0.46,
+      "600 K": 0.41,
+      "700 K": 0.53,
+      "900 K": 0.21,
+      "1000 K": -1.04
+    },
+    "유의성": {
+      "부호검정": "4/5 온도에서 같은 방향, p = 0.031",
+      "700 K": "7.0σ (표본이 맞는 유일한 온도, 각 n=5)",
+      "600 K": "2.9σ",
+      "900 K": "0.5σ (유의 아님)",
+      "1000 K": "뒤집히지만 modelc n=2 이고 한 시드가 PS₄ 붕괴(C₂=0.41)"
+    },
+    "왜_신규인가": "T16 카드가 지목한 문헌 공백이 정확히 '우리 도펀트가 PS₄ 회전을 바꾸는가' 였다. Shin 2026 은 BH₄ 를 다뤘고 PS₄ 의 도펀트 의존성은 안 봤다.",
+    "크기": "0.4–0.5° — 작다. 온도 100 K 올릴 때 변화(≈0.9°)의 절반 수준이다"
+  },
+  "결과_3_B2O3": {
+    "진술": "**B₂O₃ 는 일관된 효과가 없다.** 600 K +0.0062 · 700 K −0.0089 · 1000 K −0.0122 로 부호가 바뀐다.",
+    "이유_추정": "700 K 에 시드 하나가 C₂=0.8399 로 크게 벗어난다(나머지 0.905–0.909). 그리고 b2o3 는 **모든 온도에서 PS₄ 붕괴 시드가 나온다** — 600 K 조차 1/3.",
+    "골격게이트와_정합": "2026-08-25 골격 게이트가 b2o3 800 K↑ 를 실격시켰는데, 여기서는 600 K 부터 이미 PS₄ 가 흔들린다"
+  },
+  "결과_4_온도의존": {
+    "modelc 원뿔 반각": {
+      "500 K": 13.82,
+      "600 K": 14.25,
+      "700 K": 15.19,
+      "800 K": 15.94,
+      "900 K": 16.8,
+      "1000 K": 17.4
+    },
+    "진술": "단조 증가. 500→1000 K 에 3.6° — 열적 확장이다. 조성 차이(0.4–0.5°)보다 훨씬 크다"
+  },
+  "undecided_는_붕괴신호": {
+    "b2o3": {
+      "600 K": 1,
+      "800 K": 1,
+      "1000 K": 1,
+      "1200 K": 5
+    },
+    "modelc": {
+      "1000 K": 1
+    },
+    "의미": "C₂ 가 0.30–0.81 로 떨어지면 사면체가 유지되지 않는다는 뜻이다. b2o3 는 전 온도에서 나오고 modelc 는 1000 K 한 시드뿐이다"
+  },
+  "교차관측": "modelc 1000 K s2 는 PS₄ 가 붕괴(C₂=0.41)한 시드인데, van Hove 에서는 **봉우리가 가장 작았다**(7.48 vs 10.62/11.33). 즉 PS₄ 가 가장 많이 흔들린 시드에서 Li 가 가장 덜 움직였다. Shin 2026 의 인과 방향(회전이 Li 를 돕는다)과 반대로 보이지만 **n=1 이고 '붕괴' 는 '회전'이 아니다** — 주장이 아니라 관측으로만 남긴다",
+  "⛔_한계": [
+    "절대 원뿔각은 **UMA 의 PS₄ 강성에 달렸고 검증 안 됐다** (Li₃N 전례). 조성 순서만 인용 가능하다",
+    "그 순서조차 UMA 가 O 치환의 **상대적** 굳힘을 맞게 낸다는 가정 위에 있다",
+    "Shin 2026 의 인과 증거(회전 자유도만 얼린 대조 MD 에서 D 2–3배 감소)는 여기서 재현 안 했다 — 별도 계산이 필요하다",
+    "개별 S 를 추적하므로 사면체 대칭(P–S 축 둘레 120°)에 의한 탈상관도 센다. NMR 이 보는 것과는 같지만 '모양이 바뀌었나'와는 다르다",
+    "대부분 조건이 n=3–5 다. 700 K 만 표본이 맞다",
+    "τ_rot 를 하나도 못 냈으므로 **Ea_rot 도 없다** — SLR 과의 직접 비교는 아직 불가능하다"
+  ],
+  "per_group": {
+    "b2o3_T600": {
+      "n_total": 3,
+      "n_libration": 2,
+      "n_undecided": 1,
+      "C2_plateau_mean": 0.9168,
+      "C2_sd": 0.0001,
+      "cone_half_angle_deg": 13.73
+    },
+    "lpsocl_T900": {
+      "n_total": 3,
+      "n_libration": 3,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.8806,
+      "C2_sd": 0.0091,
+      "cone_half_angle_deg": 16.59
+    },
+    "modelc_T900": {
+      "n_total": 4,
+      "n_libration": 4,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.8777,
+      "C2_sd": 0.004,
+      "cone_half_angle_deg": 16.8
+    },
+    "modelc_T1000": {
+      "n_total": 3,
+      "n_libration": 2,
+      "n_undecided": 1,
+      "C2_plateau_mean": 0.8695,
+      "C2_sd": 0.0021,
+      "cone_half_angle_deg": 17.4
+    },
+    "modelc_T600": {
+      "n_total": 4,
+      "n_libration": 4,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.9107,
+      "C2_sd": 0.003,
+      "cone_half_angle_deg": 14.25
+    },
+    "modelc_T800": {
+      "n_total": 3,
+      "n_libration": 3,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.8893,
+      "C2_sd": 0.0013,
+      "cone_half_angle_deg": 15.94
+    },
+    "lpsocl_T1000": {
+      "n_total": 6,
+      "n_libration": 6,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.8544,
+      "C2_sd": 0.0392,
+      "cone_half_angle_deg": 18.44
+    },
+    "lpsocl_T600": {
+      "n_total": 16,
+      "n_libration": 16,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.9155,
+      "C2_sd": 0.003,
+      "cone_half_angle_deg": 13.85
+    },
+    "b2o3_T700": {
+      "n_total": 4,
+      "n_libration": 4,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.8902,
+      "C2_sd": 0.0336,
+      "cone_half_angle_deg": 15.88
+    },
+    "lpsocl_T700": {
+      "n_total": 5,
+      "n_libration": 5,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.9057,
+      "C2_sd": 0.0011,
+      "cone_half_angle_deg": 14.66
+    },
+    "modelc_T700": {
+      "n_total": 5,
+      "n_libration": 5,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.8991,
+      "C2_sd": 0.0018,
+      "cone_half_angle_deg": 15.19
+    },
+    "b2o3_T1200": {
+      "n_total": 6,
+      "n_libration": 1,
+      "n_undecided": 5,
+      "C2_plateau_mean": 0.7458,
+      "C2_sd": null,
+      "cone_half_angle_deg": 25.02
+    },
+    "b2o3_T1000": {
+      "n_total": 3,
+      "n_libration": 2,
+      "n_undecided": 1,
+      "C2_plateau_mean": 0.8572,
+      "C2_sd": 0.017,
+      "cone_half_angle_deg": 18.24
+    },
+    "b2o3_T800": {
+      "n_total": 3,
+      "n_libration": 2,
+      "n_undecided": 1,
+      "C2_plateau_mean": 0.896,
+      "C2_sd": 0.0053,
+      "cone_half_angle_deg": 15.44
+    },
+    "lpsocl_T500": {
+      "n_total": 1,
+      "n_libration": 1,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.9211,
+      "C2_sd": null,
+      "cone_half_angle_deg": 13.37
+    },
+    "modelc_T500": {
+      "n_total": 1,
+      "n_libration": 1,
+      "n_undecided": 0,
+      "C2_plateau_mean": 0.9158,
+      "C2_sd": null,
+      "cone_half_angle_deg": 13.82
+    }
+  },
+  "재현": "python3 tools/ionic/anion_rotation_acf.py --traj <traj.xyz> --label <L> --out_dir <D>",
+  "출처": {
+    "gabia": "/root/work/rotacf/ (18궤적)",
+    "kgy": "/home/kgy/work/rotacf/ (53궤적)"
+  }
+}

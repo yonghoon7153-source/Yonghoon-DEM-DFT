@@ -1,0 +1,17 @@
+release	R2-REL-2026-10-26
+stages	1 2 3 4
+cap_h	1	232
+cap_h	2	802
+cap_h	3	279
+cap_h	4	24
+total_cap_h	1430
+vasp_version	vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex
+kernel_sha256	b3c9452a98e86a0efb775c5d9bfc1182d331e6949e930b8c172bb5b13f6809a9
+species_sha256	Ag	6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d
+species_sha256	C	253f7b50bb8d59471dbedb8285d89021f4a42ed1a2c5d38a03a736e69125dd95
+species_sha256	Cl	9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931
+species_sha256	Li_sv	7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895
+species_sha256	P	df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88
+species_sha256	S	0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132
+restart_read_regex	the WAVECAR file was read successfully
+kernel_read_regex	vdW kernel read from vdw_kernel.bindat

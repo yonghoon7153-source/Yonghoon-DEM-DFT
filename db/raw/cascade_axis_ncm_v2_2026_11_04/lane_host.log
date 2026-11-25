@@ -1,0 +1,21 @@
+종 1개 x 상대 6개 = 6 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/838 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 838/838 [00:00<00:00, 12204259.56it/s]
+[mp_api] 838 entries in Cl-Li-Ni-O-P-S
+[1/1] HOST       vs LNO_full -0.4252 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/838 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 838/838 [00:00<00:00, 12037077.92it/s]
+[mp_api] 838 entries in Cl-Li-Ni-O-P-S
+[1/1] HOST       vs LNO_half -0.6194 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3691.69it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3688.97it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[1/1] HOST       vs LCO_full -0.3227 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3625.63it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3623.07it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[1/1] HOST       vs LCO_half -0.4549 (0 V)  (7s)
+Retrieving ThermoDoc documents:   0%|          | 0/4886 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  41%|████      | 2000/4886 [00:03<00:04, 581.46it/s]Retrieving ThermoDoc documents:  61%|██████▏   | 3000/4886 [00:07<00:05, 358.75it/s]Retrieving ThermoDoc documents:  82%|████████▏ | 4000/4886 [00:12<00:03, 274.45it/s]Retrieving ThermoDoc documents: 100%|██████████| 4886/4886 [00:16<00:00, 254.78it/s]Retrieving ThermoDoc documents: 100%|██████████| 4886/4886 [00:16<00:00, 290.68it/s]
+[mp_api] 4886 entries in Cl-Co-Li-Mn-Ni-O-P-S
+[1/1] HOST       vs NCM_full -0.3777 (0 V)  (38s)
+Retrieving ThermoDoc documents:   0%|          | 0/4886 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  41%|████      | 2000/4886 [00:03<00:05, 566.88it/s]Retrieving ThermoDoc documents:  61%|██████▏   | 3000/4886 [00:07<00:05, 358.22it/s]Retrieving ThermoDoc documents:  82%|████████▏ | 4000/4886 [00:12<00:03, 280.15it/s]Retrieving ThermoDoc documents: 100%|██████████| 4886/4886 [00:17<00:00, 246.49it/s]Retrieving ThermoDoc documents: 100%|██████████| 4886/4886 [00:17<00:00, 285.00it/s]
+[mp_api] 4886 entries in Cl-Co-Li-Mn-Ni-O-P-S
+[1/1] HOST       vs NCM_half -0.5570 (0 V)  (38s)
+
+→ /data/work/wt_axis_ncm/db/raw/cascade_axis_ncm_v2_2026_11_04/host.jsonl

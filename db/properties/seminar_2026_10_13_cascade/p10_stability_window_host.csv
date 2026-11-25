@@ -1,0 +1,7 @@
+# Page 10 — Li6PS5Cl host (Li24P4S20Cl4) stability window, grand-potential phase diagram, Materials Project phases (0 K), identical in all 84 phase sets.
+# Source: db/properties/oxidation_stability_cascade_v3_pinned.json hosts_by_phase_set (corrected definition 2026-09-22 / 10-01).
+# Corrected definition: window = oxidation limit − decomposition-without-Li-exchange voltage. The legacy (wider) window is NOT in this file.
+quantity,voltage_V_vs_Li,reaction
+lower bound (decomposition without Li exchange),1.717,4 Li6PS5Cl -> 4 Li3PS4 + 4 Li2S + 4 LiCl
+"upper bound (oxidation onset, Li release)",2.14,4 Li6PS5Cl -> LiS4 + 4 Li3PS4 + 4 LiCl + 7 Li
+stable window width,0.423,upper − lower

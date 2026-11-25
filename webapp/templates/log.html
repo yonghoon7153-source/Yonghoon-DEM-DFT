@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block title %}Work Log · DFT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Work Log · 작업 기록</h1>
+    {# ⚠ 이게 **수기 일지**라는 말을 화면이 해야 한다. 안 하면 빈 구간이
+       "그때 일이 없었다" 로 읽힌다 — 실제로는 커밋 806개가 있던 구간이다. #}
+    <div class="sub">손으로 남기는 일지다 — <b>전수 기록이 아니다.</b>
+      결정·계산등록·결과·메모를 남기면 <code>webapp/journal.jsonl</code>에 저장 (db와 함께 커밋)</div></div>
+  <div class="page-actions">
+    {# 저널 본문이 결정 ID 를 맨 글자로 인용한다. 갈 데를 준다. #}
+    <a class="btn" href="/governance">⚖ 판정 원장</a>
+    <a class="btn" href="/todo">📋 미결</a>
+    <a class="btn" href="/notes">📝 메모</a></div>
+</div>
+
+{# 하위 페이지 — 작업 기록의 한 갈래다. 사이드바에만 두면 여기 들어온 사람이 못 본다. #}
+<div class="card" style="border-left:4px solid #7c3aed">
+  <h3 style="margin-top:0">📂 하위 페이지</h3>
+  {# 2026-09-14 — 주간 정리. 문서는 kb/reports/weekly_YYYY_MM_DD.md, 화면은 /weekly 가 읽는다. #}
+  <p style="margin:4px 0"><a href="/weekly"><b>📅 주간 정리</b></a>
+    <span class="muted">— 일주일 단위 정리(주간보고 초안). 커밋·리뷰·원장에서 모아 슬라이드 양식
+    (섹션 → ■ 결과 → • 근거 → 그림)으로 적는다. 확정값의 지위는 원장이 정한다.
+    kb/reports/weekly_YYYY_MM_DD.md</span></p>
+  <p style="margin:4px 0"><a href="/requests"><b>✉ 1저자 요청 대장</b></a>
+    <span class="muted">— 요청 10건의 상태(완료/부분/막힘)와 무엇이 막고 있는지.
+    kb/reports/paper_first_author_requests_2026_08.md</span></p>
+  {# ⛔ 이 카드의 숫자는 원본 explainer 의 **판정문**이어야 한다 (2026-09-09 정정).
+     종전 문구 "게이트 오탐 30→0 · 자기 basin 벌점 50 meV · ptfe_dimer 2-seed
+     0.1 meV 일치" 는 셋 다 그 문서가 **금지한 표현**이었다:
+       ① 30→0 은 INCAR 불일치지 게이트가 아니다 — 게이트는 0/30 → 17/30 이고
+          남은 13건은 진짜 물리 문제다 (explainer L223-224).
+       ② basin 어긋남 ~50 meV 는 **진단값이지 측정이 아니다** (L165, 교차리뷰 정정).
+       ③ k-점 미검증이라 **"0.1 meV 정확도" 라는 말을 쓰지 않는다** (L199).
+     요약이 원문 단서를 떼고 숫자만 옮기면 그게 곧 낡은 인용이다. #}
+  <p style="margin:4px 0"><a href="/sdcp"><b>🧪 SDCP wave1 — 바인더가 앉는 자리</b></a>
+    <span class="muted">— VASP 외주 30잡 회수·해석. INCAR 불일치 30→0 ·
+    게이트 <b>0/30 → 17/30</b>(남은 13건은 물리 문제) ·
+    basin 어긋남 ~50 meV <b>진단값</b>(측정 아님) ·
+    ptfe_dimer 두 branch 0.09 meV(<b>정확도 주장 아님</b> — k-점 미검증).
+    kb/results/sdcp_wave1_explainer_2026_08_25.md</span></p>
+</div>
+
+<div class="card">
+  <h3>＋ 기록 추가</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+    <label class="sr-only" for="kind">기록 종류</label>
+    <select id="kind" class="search" style="max-width:150px">
+      <option value="decision">결정</option>
+      <option value="calc">계산 등록</option>
+      <option value="result">결과</option>
+      <option value="note">메모</option>
+    </select>
+    <label class="sr-only" for="comp">조성</label>
+    <select id="comp" class="search" style="max-width:170px">
+      <option value="">(조성 없음)</option>
+      {% for cid,c in COMPS.items() %}<option value="{{ cid }}">{{ c.label }}</option>{% endfor %}
+    </select>
+  </div>
+  <label class="sr-only" for="text">기록 내용</label>
+  <textarea id="text" class="search" style="max-width:100%;width:100%;height:80px;font-family:var(--font)"
+    placeholder="예) comp2 elastic USPP·k444 재측정 시작 — comp1 완전복제, gabia comp2_elastic_uspp"></textarea>
+  <div style="margin-top:10px"><button class="btn primary" onclick="saveLog()">저장</button></div>
+</div>
+
+{# ── 타임라인 (v3 묶음 H) ────────────────────────────────────────────────────
+   /notes 의 패턴을 **그대로** 쓴다 (검색 상자 + 종류 칩 + 날짜 묶음, 전부 브라우저
+   필터). 새로 짜지 않는다 — 코드 규율 사다리 ③.
+   ⛔ journal.jsonl 의 kind 문자열은 고치지 않는다. 칩은 표시층 어휘(kindlabel)로만
+     접고, 모르는 값은 원문 그대로 뱃지에 나온다. #}
+<div class="section-title">기록 타임라인 · {{ entries|length }}건</div>
+
+<div class="card" style="padding:14px 16px">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <label class="sr-only" for="jq">기록 검색</label>
+    <input class="search" id="jq" style="flex:1 1 260px"
+           placeholder="본문 · 조성 · 종류로 검색…" oninput="japply()">
+    <span class="v3-chips" style="margin:0">
+      <button type="button" class="v3-chip active" data-k="" onclick="setJK(this)">전체</button>
+      {% for k in kinds %}
+      <button type="button" class="v3-chip" data-k="{{ k }}" onclick="setJK(this)">{{ k }}</button>
+      {% endfor %}
+    </span>
+  </div>
+</div>
+
+<div id="timeline">
+{% for g in groups %}
+{# 기록 없는 구간 — **비어 있는 것과 일이 없었던 것은 다른 말이다.** #}
+{% if g.gap %}
+<div class="jgap muted">{{ g.gap.from }} ~ {{ g.gap.to }} · 기록 없음({{ g.gap.days }}일)
+  {%- if g.gap.note %} · 같은 구간 {{ g.gap.note }}{% endif %}</div>
+{% endif %}
+<section class="ndaygrp" data-date="{{ g.date }}">
+  <div class="nday">
+    <span class="nday-d">{{ g.date or '시각 없음' }}</span>
+    <span class="nday-n muted">{{ g.n }}건</span>
+    <span class="nday-line"></span>
+  </div>
+  {% for e in g['items'] %}
+  {# 회신 BG ② — 기록의 **본문은 고치지 않는다**. 어느 정본 주장을 말하는지만 결속한다 #}
+  <div class="card jcard" style="margin-bottom:8px;padding:12px 16px"
+       data-k="{{ e.kind|kindlabel }}"
+       data-s="{{ (e.text ~ ' ' ~ e.kind ~ ' ' ~ (e.comp or ''))|lower }}"
+       {%- if e.claims %} data-claim="{{ e.claims|join(' ') }}"{% endif %}>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span class="badge b-fam">{{ e.kind|kindlabel }}</span>
+      {% if e.kind|kindlabel != e.kind %}<span class="mono muted"
+        style="font-size:.66rem" title="journal.jsonl 원문 kind">{{ e.kind }}</span>{% endif %}
+      {% if e.comp %}<span class="badge b-canon">{{ COMPS.get(e.comp,{}).get('label', e.comp) }}</span>{% endif %}
+      <span class="mono muted" style="font-size:.72rem;margin-left:auto">{{ e.ts or '시각 없음' }}</span>
+    </div>
+    {# ⚠ 로그 본문은 마크다운 섞인 평문 — 그냥 찍으면 별표가 노출된다 (2026-08-07) #}
+    <div style="margin-top:6px;font-size:.9rem;white-space:pre-wrap;line-height:1.55">{{ e.text|mdlite }}</div>
+  </div>
+  {% endfor %}
+</section>
+{% else %}
+<div class="card"><span class="muted">아직 기록이 없어요 — 위에서 첫 기록을 추가하세요.</span></div>
+{% endfor %}
+</div>
+<div class="card" id="jnores" style="display:none"><div class="muted">찾는 기록이 없어요.</div></div>
+
+{# ── handoff 격자 (v3 묶음 H) ────────────────────────────────────────────────
+   94장을 3열로 다 깔면 무엇이 최근인지 안 읽힌다. 최근 10장만 펼치고 나머지는
+   접는다 — **접는 것이지 지우는 게 아니다**(지우면 '안 돌린 계산' 으로 보인다). #}
+{% set recent = handoffs[:10] %}{% set older = handoffs[10:] %}
+<div class="section-title">Session Handoffs · kb/results ({{ handoffs|length }})</div>
+<div class="muted" style="font-size:.74rem;margin:-6px 0 8px">날짜 역순 · 날짜는
+  파일명에서 읽는다(없으면 “날짜 미상”). 최근 {{ recent|length }}장을 펼치고 나머지는 접었다.</div>
+{% macro hcard(h) %}
+<div class="card" onclick="openH('{{ h.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:13px 16px">
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
+    <span class="badge b-fam">{{ h.date or '날짜 미상' }}</span>
+    {% for c in h.comps %}<span class="badge b-canon">{{ COMPS.get(c,{}).get('label', c) }}</span>{% endfor %}
+  </div>
+  <div style="font-weight:600;font-size:.84rem;line-height:1.4">{{ h.name }}</div>
+  {% if h.first %}<div class="muted" style="font-size:.72rem;margin-top:4px;line-height:1.45">{{ h.first }}</div>{% endif %}
+  <div class="mono muted" style="font-size:.66rem;margin-top:4px">{{ h.id }}.md</div>
+</div>
+{% endmacro %}
+<div class="grid grid-3">
+{% for h in recent %}{{ hcard(h) }}{% else %}
+<div class="card"><span class="muted">handoff 문서 없음</span></div>
+{% endfor %}
+</div>
+{% if older %}
+<details class="v3-fold">
+  <summary>옛 handoff {{ older|length }}장 (지운 것이 아니라 접은 것이다)</summary>
+  <div class="grid grid-3" style="margin-top:8px">
+    {% for h in older %}{{ hcard(h) }}{% endfor %}
+  </div>
+</details>
+{% endif %}
+
+<div class="modal" id="hmodal" role="dialog" aria-modal="true" aria-labelledby="h-t" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-body" style="max-width:860px;width:100%">
+    <div class="modal-head"><h3 id="h-t" class="mono" style="font-size:.82rem"></h3>
+      <button class="btn sm" onclick="document.getElementById('hmodal').classList.remove('open')">✕ 닫기</button></div>
+    <div class="doc" id="h-b" style="border:none;box-shadow:none;border-radius:0"></div>
+  </div>
+</div>
+<style>
+  /* 기록 없는 구간 — 회색 한 줄. 있는 것처럼 보이지 않게 카드가 아니라 줄로 그린다. */
+  .jgap{font-size:.74rem;margin:14px 0 6px;padding:5px 10px;border-left:3px solid var(--border);
+        background:var(--bg2,transparent);border-radius:0 6px 6px 0}
+</style>
+<script>
+function saveLog(){
+  let t=document.getElementById('text').value.trim();
+  if(!t){showToast('내용을 입력하세요');return;}
+  fetch('/api/log',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({kind:document.getElementById('kind').value,
+      comp:document.getElementById('comp').value,text:t})})
+   /* 서버가 친절한 세 필드(err·why·how)를 주는데 종전엔 '저장 실패' 네 글자로 버렸다. */
+   .then(r=>r.json().then(d=>({ok:r.ok,d:d})))
+   .then(x=>{ if(x.ok&&x.d.ok){showToast('저장됨');location.reload();}
+              else{showToast((x.d.err||'저장 실패')+(x.d.why?' — '+x.d.why:''));} })
+   .catch(()=>showToast('네트워크 오류'));
+}
+/* ⚠ 404 도 JSON 이다(라우트에서 고쳤다). 그래도 r.ok 를 본다 — 서버가 HTML 을
+   돌려주는 경로가 생기면 모달이 '로딩...' 으로 굳는 게 종전 증상이었다. */
+function openH(id){
+  document.getElementById('h-t').textContent=id+'.md';
+  document.getElementById('h-b').innerHTML='<span class="muted">로딩...</span>';
+  document.getElementById('hmodal').classList.add('open');
+  fetch('/api/handoff/'+encodeURIComponent(id))
+    .then(r=>r.json().then(d=>({ok:r.ok,d:d})))
+    .then(x=>{ document.getElementById('h-b').innerHTML =
+        (x.ok&&x.d.html) ? x.d.html
+        : '<div class="muted">'+((x.d&&x.d.error)||'문서를 못 읽었다')+'</div>'; })
+    .catch(()=>{document.getElementById('h-b').innerHTML=
+        '<div class="muted">문서를 못 읽었다 — 응답이 JSON 이 아니다</div>';});
+}
+/* 종류 칩 + 검색 — /notes 의 napply 와 같은 규칙. 비어 버린 날짜 묶음은 통째로 숨긴다
+   (안 그러면 날짜 머리만 남아 결과가 있는 것처럼 보인다). 갭 줄도 같이 숨긴다. */
+var curJK='';
+function setJK(b){
+  curJK=b.dataset.k;
+  document.querySelectorAll('.v3-chip').forEach(function(x){x.classList.remove('active');});
+  b.classList.add('active'); japply();
+}
+function japply(){
+  var q=(document.getElementById('jq').value||'').toLowerCase().trim(), n=0;
+  document.querySelectorAll('#timeline .ndaygrp').forEach(function(g){
+    var seen=0;
+    g.querySelectorAll('.jcard').forEach(function(c){
+      var show=(!q||(c.dataset.s||'').indexOf(q)>=0)&&(!curJK||c.dataset.k===curJK);
+      c.style.display=show?'':'none'; if(show){seen++;n++;}
+    });
+    g.style.display=seen?'':'none';
+    var nn=g.querySelector('.nday-n'); if(nn) nn.textContent=seen+'건';
+    var gap=g.previousElementSibling;
+    if(gap&&gap.classList.contains('jgap')) gap.style.display=seen?'':'none';
+  });
+  document.getElementById('jnores').style.display=n?'none':'';
+}
+japply();
+</script>
+{% endblock %}

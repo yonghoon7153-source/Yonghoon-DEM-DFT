@@ -1,0 +1,41 @@
+{
+ "tag": "NiS2_mp-aaaaadju",
+ "structure": "db/structures/cei_gap_tm/NiS2_mp-aaaaadju.vasp",
+ "structure_sha256": "88c2a58a2046846ab864bd928de81ee068211c0cac4add66b6eb6667a6072bc0",
+ "species": [
+  "Ni",
+  "S"
+ ],
+ "nspin": 2,
+ "tm_state": "mp",
+ "tm_moment_rule": "c_fm_highspin_start",
+ "magmom_sidecar": "db/structures/cei_gap_tm/NiS2_mp-aaaaadju.magmom.json",
+ "starting_magnetization": {
+  "Ni": 0.1111111111111111
+ },
+ "tot_magnetization_initial": 8,
+ "hubbard": null,
+ "hubbard_policy": "mp",
+ "ecut_wfc_rho": [
+  60.0,
+  480.0
+ ],
+ "cell_policy": "vc-relax",
+ "pseudo": {
+  "Ni": "ni_pbe_v1.4.uspp.F.UPF",
+  "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  4,
+  4,
+  4
+ ],
+ "k_gap": [
+  8,
+  8,
+  8
+ ],
+ "nbnd_gap": 97,
+ "gap_step": "skipped: electronic_class=metal — 금속엔 VBM/CBM 이 없다"
+}

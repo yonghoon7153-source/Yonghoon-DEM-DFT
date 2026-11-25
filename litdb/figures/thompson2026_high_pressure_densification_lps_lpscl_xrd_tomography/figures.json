@@ -1,0 +1,526 @@
+{
+ "slug": "thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+  "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Density, measured with the Beer-Lambert absorption density method, as a function of pressure for both LPSCl and LPS in compression and decompression. Due to a technical issue, measurement at 66 and 135 MPa for LPSCl material are missing.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    303.4,
+    243.3
+   ],
+   "w": 1067,
+   "h": 867,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.919,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Reconstructed X-ray tomography images of LPSCl during the densification process with three features highlighted: i. & ii.) inter- granular pores iii.) intra-granular pores and iv.) impurities. The removal of pores and the merging of grains can be followed as a function of pressure. Voxel size = 1.277 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    564.2,
+    552.3
+   ],
+   "w": 2153,
+   "h": 2154,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.21,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Reconstructed X-ray tomography images of LPS during the densification process with three features highlighted: i. & ii.) inter-granular pores and iii.) impurities. The removal of pores and the merging of grains can be followed as a function of pressure. Voxel size = 1.277 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    564.2,
+    555.3
+   ],
+   "w": 2153,
+   "h": 2168,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.216,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Scanning electron microscopy images taken in secondary electron mode of LPSCl (a,b), and LPS (c,d) showing the fracture surface of the pellets densified at 3.7 GPa. (a) The dotted red line denotes the separation between the upper surface of the pellet that was in contact with the brass pin, and the fracture surface (cross-section).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    306.3
+   ],
+   "w": 2153,
+   "h": 1130,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.431,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 X-ray diffraction data of LPSCl as a function of pressure applied, showing clearly the shifting in peak position and the peak broadening.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    564.1,
+    288.3
+   ],
+   "w": 2153,
+   "h": 1057,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.894,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 (a) Experimental data (purple points), calculated profiles (black line), and difference curves (purple line) from the Rietveld refinements collected at 0 MPa. Three 2-theta intervals (43–44.5◦, 73.4–76◦, and 89.1–91.4◦), marked with red brackets, were excluded because they contain peaks from the cell assembly. (b) Dependence of lattice parameter and (c) strain on pressure. Purple circles represent pressure increase, and orange triangles represent pressure release.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    325.3
+   ],
+   "w": 2153,
+   "h": 1209,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.932,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 Li atomic position coordinates and their uncertainties at each measured pressure. (a) Fractional coordinates along the x and y directions; (b) fractional coordinate along the z direction.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    392.3,
+    564.2,
+    540.2
+   ],
+   "w": 2153,
+   "h": 617,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.939,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 Evolution of ionic conductivity as a function of pressure. The ionic conductivity of LPS is approximately an order of magnitude lower than that of LPSCl; it is therefore plotted with a second y-axis scale on the right-hand side.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    303.4,
+    218.3
+   ],
+   "w": 1067,
+   "h": 762,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.901,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "FIGURE 9 Structure of Li6PS5Cl and Li+ bond-valence energy landscape (BVEL) at 0.64 eV above the site minimum energy at 0 MPa. Red regions indicate Li+ migration pathways.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    281.6,
+    303.4,
+    461.7
+   ],
+   "w": 1067,
+   "h": 751,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.562,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "FIGURE 10 Pressure dependence of (a) percolation energy and (b) Li-site energy, derived from bond-valence calculations. Purple symbols denote increasing pressure, while orange symbols denote pressure release. Bond-valence energy landscapes (BVELs) corresponding to 0 MPa, 1.59 GPa, and 3.89 GPa are shown in panel (b) at a constant percolation activation energy cutoff of 0.64 eV.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    564.2,
+    184.3
+   ],
+   "w": 2153,
+   "h": 623,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.928,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "FIGURE 11 Plot of ln(σT) as a function of pressure. The gradient of this plot can be used to calculate the activation volume of the solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    123.9,
+    247.2,
+    487.9,
+    437.3
+   ],
+   "w": 1517,
+   "h": 793,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "viewed": true,
+   "manual_crop": "2026-10-13 수동 크롭 — 자동 추출이 번호 공백으로 놓침 (후보 p10 캡션 'FIGURE 11 Plot of ln(σT)…' 이 본문 단 사이 위치). clip = 래스터 (125.9, 249.2, 485.9, 435.3) + 2 pt · 캡션 y 447.8 앞"
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "FIGURE 12 (a) CAD images illustrating the layout of the PE press (UToPEC) at Psiché beamline. (b) Airtight clamp holding the high-pressure cell squeezed between the two anvils, and a cross section of the anvils showing the high-pressure cell, (c) detail of the high-pressure cell with 1-anti-extrusion ring (PEEK); 2-gasket made of amorphous boron-epoxy composite ; 3-brass cap; 4-Teflon (PTFE) tube.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    564.2,
+    229.3
+   ],
+   "w": 2153,
+   "h": 811,
+   "dpi": 300,
+   "src": "5. High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.6,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. SEM images for pristine LPS (a &b) and LPSCl (c & d) solid electrolyte powders Note S1. Crystallographic Density XRD data give access to the crystallographic component of the density, ignoring morphological effects. The crystallographic density is calculated from the LPSCl structural model using a Lebail fitting method[1]. Figure S2 shows the evolution of crystallographic density as a function of pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.4,
+    373.6
+   ],
+   "w": 1953,
+   "h": 1287,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.102,
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Crystallographic density of LPSCl as a function of the pressure applied.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.0,
+    519.8,
+    479.2,
+    704.1
+   ],
+   "w": 1514,
+   "h": 769,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.911,
+   "auto_bbox": [
+    64.8,
+    496.6,
+    483.2,
+    708.1
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 상단 496.6 pt 가 앞 문단 끝 줄 'as a function of pressure.' (y 502.6–514.6) 을 넣었다. clip = 래스터 (118.0, 521.8, 477.2, 702.1) + 2 pt",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. X-ray diffraction data of LPSCl as a function of pressure applied collected using a UToPEC press at psiché beamline (Soleil synchrotron).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    299.2,
+    533.6,
+    538.3
+   ],
+   "w": 1954,
+   "h": 997,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.77,
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. X-ray diffraction data of Li3PS4 as a function of pressure applied collected using a UToPEC press at psiché beamline (Soleil synchrotron). . Note S2. Anisotropic Strain The Williamson–Hall (W–H) method is a well-established approach for simultaneously evaluating anisotropic strain and crystallite size in powder X-ray diffraction samples as a function of applied pressure[2, 3]. Anisotropic strain arises primarily from dislocations and other crystallographic defects that disrupt the long-range order of the crystal lattice[3]. Within this framework, both the position and the broadening of diffraction peaks in an XRD pattern can be quantitatively correlated, as expressed in Equation S1. 𝛽𝑐𝑜𝑠(𝜃) = (∈𝑊𝐻)4 𝑠𝑖𝑛(𝜃) + 𝑘𝜆 Equation S1 𝑑𝑋𝑅𝐷",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.6,
+    303.0
+   ],
+   "w": 1954,
+   "h": 993,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.748,
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Williamson-Hall plots for diffractograms measured at a.) 66 MPa, b.) 479 MPa, C.) 3771 MPa, and d.) 1143 MPa during the pressure down-ramp. The legends on the diffractograms reference the crystallographic planes to which the diffraction peaks are associated. The six most prominent Bragg reflections between 0 -60◦ (Cu, K−α) were fit to produce, using a split pseudo-Voigt function, the Williamson-Hall plots.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.6,
+    457.9
+   ],
+   "w": 1954,
+   "h": 1638,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.87,
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Plot of Williamson-Hall anisotropic strain as a function of pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    109.4,
+    482.9,
+    294.9
+   ],
+   "w": 1743,
+   "h": 774,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.926,
+   "viewed": true
+  },
+  {
+   "key": "fS7a",
+   "kind": "figure",
+   "label": "S7a",
+   "page": 7,
+   "file": "fig_S7a.png",
+   "caption": "Figure S7 (SI p.7 부분 — 캡션은 p.8): Rietveld refinements of NPD (data · fit · difference · LPSCl · Pb ticks) — 앞 패널들 (압력 증가)",
+   "rotated_deg": 0,
+   "bbox": [
+    140.4,
+    68.8,
+    454.2,
+    711.1
+   ],
+   "w": 1308,
+   "h": 2677,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "viewed": true,
+   "manual_crop": "2026-10-13 수동 크롭 — Figure S7 은 SI p.7–8 두 쪽에 걸친다 — 자동 추출은 캡션이 있는 p.8 의 패널만 잘랐다. p.7 래스터 세 장 합집합 (142.4, 70.8, 452.2, 709.1) + 2 pt",
+   "si": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Experimental data (purple points), calculated profiles (black line), and difference curves (purple line) from the Rietveld refinements. Panels a–f correspond to increasing pressure (0, 630, 1146, 1699, 2249, 2731, and 3809 MPa), and panels g–h correspond to decreasing pressure (2255 and 1837 MPa). Three 2Q intervals (43-44.5°, 73.4-76°, and 89.1-91.4°), marked with red brackets, were excluded because they contain pressure-independent peaks from the cell assembly.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    532.9,
+    444.3
+   ],
+   "w": 1951,
+   "h": 1582,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.905,
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Calibration curve of the “10-3.5” set-up in the UToPEC press established from in situ X-ray diffraction of a NaCl sample loaded in the Teflon tube. The pressure applied to the sample was estimated using the equation of state of NaCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.1,
+    444.5,
+    446.1,
+    623.5
+   ],
+   "w": 1238,
+   "h": 746,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.97,
+   "auto_bbox": [
+    64.8,
+    390.3,
+    522.1,
+    610.5
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 상단 390.3 pt 가 Eq. (S5) 수식 줄 (y 396–418) 을 넣었다. clip = 래스터 (151.1, 446.5, 444.1, 621.5) + 2 pt",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Structurally refined parameters for each measured pressure during pressure increase (0, 630, 1146, 1699, 2249, 2731, and 3809 MPa) and decrease (2255 and 1837 MPa). Standard errors are given for all refined values and are in parentheses. All other structural parameters were fixed to values refined at 0 MPa, given in Table S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.8,
+    71.1,
+    528.6,
+    296.4
+   ],
+   "w": 1917,
+   "h": 939,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.897,
+   "auto_bbox": [
+    65.8,
+    68.1,
+    531.9,
+    768.1
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체 (1943x2918) 를 잡았다 — 표가 래스터 그림이라 경계를 못 찾음. clip = 캡션 (y 73.1) + 표 래스터 (70.8, 151.4, 524.5, 294.4) + 2 pt",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 9,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Refined crystal structure at 0 MPa; standard errors are given in parentheses. All parameters except the Li-site position were fixed for refinements at higher pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.8,
+    346.0,
+    529.6,
+    507.2
+   ],
+   "w": 1921,
+   "h": 673,
+   "dpi": 300,
+   "src": "5. Sup) High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement.pdf",
+   "blank": 0.899,
+   "auto_bbox": [
+    65.8,
+    68.1,
+    531.4,
+    768.1
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체를 잡았다. clip = 캡션 (y 348.0) + 표 래스터 (70.8, 385.9, 527.6, 505.2) + 2 pt",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 — 손 크롭 6 장 (fig_11 번호 공백 누락 · tab_S1 · tab_S2 래스터 표 쪽 전체 · fig_S2 앞 문단 혼입 · fig_S8 수식 줄 혼입 · fig_S7a 두 쪽에 걸친 S7 의 p.7 패널) · 판독 원자료 digitized.csv 74 행 · 크롭 전부 Read (낱장 또는 contact sheet) 로 확인"
+}

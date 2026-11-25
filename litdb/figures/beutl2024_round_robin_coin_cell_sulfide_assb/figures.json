@@ -1,0 +1,362 @@
+{
+ "slug": "beutl2024_round_robin_coin_cell_sulfide_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-14",
+ "sources": [
+  "main.pdf"
+ ],
+ "crop_method": "PyMuPDF get_pixmap(clip=bbox pt, dpi=300) - bbox = embedded raster rect + ~2.5 pt margin (figures) or text-block extents (tables, vector text); all crops visually checked; blank = fraction of pixels with gray >= 250",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 (A) XRD pattern, (B) SEM, and (C) EDS of the NCM90505 and LPSCl powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    53,
+    552,
+    493
+   ],
+   "w": 2121,
+   "h": 1835,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.793,
+   "note": "SEM scale bars read 2 um (NMC90505) and 5 um (LPSCl) [read]; NMC crystals look ~1-4 um vs text p.3 '10-15 um'; LPSCl shows agglomerates of fine particles. LPSCl EDS spectrum shows O and C peaks not quantified in the inset table."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 (A) Uniaxial hydraulic press and press-dye of 10 mm and (B) prepared LPSCl pellet with a diameter of 10 mm and a thickness of 0.8 mm.",
+   "rotated_deg": 0,
+   "bbox": [
+    115,
+    53,
+    480,
+    315
+   ],
+   "w": 1521,
+   "h": 1093,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.162,
+   "note": "Photo label on the press reads 'MP150'; text p.4 says 'Maassen MP15'. Pellet = RC2 example."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Prepared bilayer pellet consisted of LPSCl electrolyte and NMC cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    115,
+    54,
+    480,
+    234
+   ],
+   "w": 1521,
+   "h": 750,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.507
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Schematic illustration of assembling SSB cell of CR2032 for (A) ionic conductivity measurement, (B) Li plating/stripping test, (C) cycling & C-rate tests, and (D) step by step of the preparation of CR2032 cells for Li plating/stripping test (for example). Note: the same approach is used for Ionic Conductivity and Cycling & CR tests.",
+   "rotated_deg": 0,
+   "bbox": [
+    77,
+    54,
+    519,
+    647
+   ],
+   "w": 1843,
+   "h": 2471,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.71,
+   "note": "Panels (a)(b) print '0.4 tons for seconds, realize > 2.9 tons for 2 mins = 800 um' (2.9 t on 10 mm = 362 MPa, 0.4 t = 50 MPa [our arithmetic]); text p.4 says 360 MPa for 3 min. Panel (c) cathode mix '10 mg = 5.7 mg + 4 mg + 0.3 mg'."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Nyquist plots of (A) SS|SE|SS and (B) co-pressed Al/C|SE|Al/C cells configuration with the equivalent circuit obtained in RC3.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    198,
+    552,
+    446
+   ],
+   "w": 2121,
+   "h": 1034,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.915,
+   "note": "Inset (a): first HF point Z' ~0.29 kOhm cm2 with -Z'' ~0.5 (intercept outside 1 MHz window) [read]. Inset (b): HF intercept ~0.085 kOhm cm2 [read] -> ~0.94 mS/cm if l = 0.8 mm [our arithmetic] (text says 1e-3, Table 2 says 1.8e-3). Legend (a) prints 'SS | LPSCl | SE'."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 The lithium plating and stripping for LPSCl pellets at a current density of 0.15 mA cm−2 obtained at different institutions: (A) RC1; (B) RC2; and (C) RC3.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    54,
+    552,
+    519
+   ],
+   "w": 2121,
+   "h": 1938,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.805,
+   "note": "One cell per lab shown ('Cell 1'); RC2 drops to ~0 V at ~177 h (short) [read]; RC4 not shown."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 Nyquist plots of symmetric Li|LPSCl|Li cells obtained for time for studying the Li/sulfide interfacial stability: (A) RC2 and (B) RC3.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    560,
+    552,
+    706
+   ],
+   "w": 2121,
+   "h": 609,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 Critical current densities of the symmetric Li|LPSCl|Li cell via the plating and striping experiments at different current density for 1 h each half cycle. Blue line shows the results obtained at RC2 while grey line corresponds to results obtained at RC3.",
+   "rotated_deg": 0,
+   "bbox": [
+    115,
+    158,
+    480,
+    444
+   ],
+   "w": 1521,
+   "h": 1192,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 14,
+   "file": "fig_9.png",
+   "caption": "FIGURE 9 Rate capabilities of NMC90505|LPSCl|Li cell of 2.0 mA h cm−2 in potential range of 2.6 and 4.3 V at room temperature: (A) RC1; (B) RC2; (c) RC3; (D) RC4.",
+   "rotated_deg": 0,
+   "bbox": [
+    110,
+    54,
+    485,
+    647
+   ],
+   "w": 1563,
+   "h": 2471,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 15,
+   "file": "fig_10.png",
+   "caption": "FIGURE 10 Cycle-life of NMC90505|LPSCl|Li cell of 1.5 mA h cm−2 at C/20 in potential range of 2.6 and 4.3 V at room temperature C/20: (A) RC1; (B) RC2; (C) RC3.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    54,
+    552,
+    664
+   ],
+   "w": 2121,
+   "h": 2542,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.88,
+   "note": "RC1 panel (a): first ~10 discharge/CE points coincide point-by-point with Fig 9a rate-test points [read] - possibly the same cell/data; no explanation in text. RC4 not shown."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 Electrochemical test specifications.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    52,
+    291,
+    472
+   ],
+   "w": 1034,
+   "h": 1751,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.562,
+   "note": "Ionic conductivity row prints '-25 C'; text p.8 says measured at 25 C."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 9,
+   "file": "tab_2.png",
+   "caption": "TABLE 2 Ionic conductivity of LPSCl sulfide electrolyte obtained in the round-robin test (RRT).",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    52,
+    552,
+    177
+   ],
+   "w": 2121,
+   "h": 522,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.443
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "TABLE 3 Lithium stripping-plating results obtained in the round-robin test (RRT).",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    52,
+    291,
+    154
+   ],
+   "w": 1034,
+   "h": 426,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.543
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 10,
+   "file": "tab_4.png",
+   "caption": "TABLE 4 Resistance obtained in stability test at different time control.",
+   "rotated_deg": 0,
+   "bbox": [
+    304,
+    52,
+    552,
+    177
+   ],
+   "w": 1034,
+   "h": 522,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.449
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 12,
+   "file": "tab_5.png",
+   "caption": "TABLE 5 Overpotential obtained in critical current density (CCD) test at different current densities.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    52,
+    552,
+    138
+   ],
+   "w": 2121,
+   "h": 359,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.487,
+   "note": "Column units print 'mA cm-2' for 10-500; Sec. 2.8 (p.8) defines 10-500 uA cm-2 then 1 and 2 mA cm-2 (1000, 2000 uA cm-2)."
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 13,
+   "file": "tab_6.png",
+   "caption": "TABLE 6 Results of rate capability test.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    52,
+    291,
+    197
+   ],
+   "w": 1034,
+   "h": 605,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.555,
+   "note": "Note says values = charge/discharge of the second cycle at C/20."
+  },
+  {
+   "key": "t7",
+   "kind": "table",
+   "label": "7",
+   "page": 13,
+   "file": "tab_7.png",
+   "caption": "TABLE 7 Cycling life assessments of NMC versus Li full cell at C/20.",
+   "rotated_deg": 0,
+   "bbox": [
+    304,
+    52,
+    552,
+    178
+   ],
+   "w": 1034,
+   "h": 526,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.518,
+   "note": "RC2 'Last cycle 140/137 (13th cycle)' vs Fig 10b 13th-cycle discharge ~95 mAh/g [read]."
+  }
+ ]
+}

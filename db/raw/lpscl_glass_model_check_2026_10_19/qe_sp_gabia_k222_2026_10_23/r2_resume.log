@@ -1,0 +1,4 @@
+════ QE relax 재시작 — 판정 ════
+  ⏸ li3nd_mp-976264_p333_r2                    사람이 세움(EXIT·max_seconds) → nstep 136 · restart (BFGS 이력 승계)
+
+▶ li3nd_mp-976264_p333_r2  mode=restart nstep=136  (GPU 여유 49139 MiB)

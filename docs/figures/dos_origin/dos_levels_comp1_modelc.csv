@@ -1,0 +1,8 @@
+quantity,unit,comp1_LPSCl,modelc_LPSCl1.6
+VBM,eV,2.128,2.445
+CBM,eV,4.194,4.544
+EF,eV,3.724,3.487
+EF_VBM,eV,1.596,1.042
+CBM_EF,eV,0.47,1.057
+gap,eV,2.066,2.099
+NEF,states/eV/f.u.,0.0,0.0

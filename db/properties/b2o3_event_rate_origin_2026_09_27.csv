@@ -1,0 +1,12 @@
+"# B2O3@LPSCl1.6 framework-site event rate (512 atoms, 5 seeds x 400 ps per T). Values = sealed sentences. Not an ion-migration barrier; not conductivity."
+"# CI95 = Poisson (Garwood), assumes independent events; runs over-dispersed (var/mean 2.317-17.475). control_ub = one-sided 95% upper bound for 0 events in 30 control runs. source: db/properties/b2o3_framework_event_rate_result_2026_09_26.json"
+T_K,group,rate_per_ns_cell,CI95_lo,CI95_hi,runs_with_events,runs_total,events_total,var_over_mean,control_ub_per_T_per_ns_cell
+600,P_center,8.0,4.57,12.99,2,5,16,6.156,0.7489
+600,S_free,42.5,33.95,52.55,5,5,85,10.0,0.7489
+600,Cl,25.5,18.99,33.53,5,5,51,5.069,0.7489
+650,P_center,2.0,0.54,5.12,1,5,4,4.0,0.7489
+650,S_free,71.0,59.8,83.69,5,5,142,4.183,0.7489
+650,Cl,8.5,4.95,13.61,2,5,17,6.412,0.7489
+700,P_center,19.0,13.45,26.08,5,5,38,7.211,0.7489
+700,S_free,50.0,40.68,60.81,4,5,100,17.475,0.7489
+700,Cl,52.0,42.49,63.01,5,5,104,2.317,0.7489

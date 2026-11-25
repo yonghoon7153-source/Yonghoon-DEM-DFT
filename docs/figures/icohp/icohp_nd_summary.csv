@@ -1,0 +1,10 @@
+"# ICOHP (eV/bond, total=spin1+spin2), 4.0 A cutoff PAW kjpaw LOBSTER5.1.1; from nd_icohp.json"
+bond,comp1_eV,modelc_eV,nd_eV,nd_vs_modelc_pct,d_A,N_nd,character,role
+P–S,-5.944,-6.0,-5.976,+0.4%,2.064,37,covalent backbone,host (unchanged)
+Li–S,-1.592,-1.717,-1.647,+4.1%,2.52,199,ionic,host (unchanged)
+Li–Cl,-1.855,-2.103,-2.132,−1.4%,2.52,79,ionic,host (unchanged)
+S–S,-0.107,-0.11,-0.101,~0,,117,non-bonding,host (unchanged)
+P–O,,,-8.43,nd-only,1.571,3,strong polar covalent,O effect
+Nd–O,,,-0.42,nd-only,2.545,2,weak ionic,Nd ionic
+Nd–S,,,-0.436,nd-only,2.898,8,weak ionic,Nd ionic
+Nd–Cl,,,-0.571,nd-only,2.772,2,weak ionic,Nd ionic

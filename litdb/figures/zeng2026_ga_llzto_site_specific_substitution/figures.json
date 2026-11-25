@@ -1,0 +1,402 @@
+{
+ "slug": "zeng2026_ga_llzto_site_specific_substitution",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-16",
+ "sources": [
+  "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+  "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 33,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Preparation of Ga-LLZTO. Schematic illustration of the lithium site-specific",
+   "rotated_deg": 0,
+   "bbox": [
+    70.4,
+    121.7,
+    502.3,
+    432.2
+   ],
+   "w": 1800,
+   "h": 1294,
+   "dpi": 300,
+   "src": "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+   "blank": 0.373
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 34,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Characterization of Ga-LLZTO. (a) TEM images of LLZTO, (b) Heated-",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    494.6
+   ],
+   "w": 2135,
+   "h": 1953,
+   "dpi": 300,
+   "src": "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 35,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Preserved ionic conductivity of Ga-LLZTO. (a) EIS curves of Ga-LLZTO",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    369.7
+   ],
+   "w": 2135,
+   "h": 1433,
+   "dpi": 300,
+   "src": "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 36,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Superior stability of Ga-LLZTO against ambient environment. FTIR spectra",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    635.0
+   ],
+   "w": 2135,
+   "h": 2538,
+   "dpi": 300,
+   "src": "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 38,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Superior stability of Ga-LLZTO against organic solvents. (a) Optical images",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    494.6
+   ],
+   "w": 2135,
+   "h": 1953,
+   "dpi": 300,
+   "src": "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+   "blank": 0.755
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 39,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Electrochemical performance of ASSBs based aged-Ga-LLZTO. (a)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    494.6
+   ],
+   "w": 2135,
+   "h": 1953,
+   "dpi": 300,
+   "src": "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. XRD patterns of samples before and after vacuum vapor ion-exchange in the quartz tube.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Depth-resolved XPS survey spectra of Ga-LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. EDS-mapping images of Ga-LLZTO and elemental distribution of Ga Kα1, Zr Kα1 and O Kα1.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Depth-resolved XPS fine spectra of Ga 3d for Ga-LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Distribution of gallium and lithium content of LLZTO and Ga-LLZTO via ICP tests.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": null,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. The calculated PDOS of Ga-LLZTO and pristine LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": null,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Gaussian–Lorentzian hybridized bands corresponding to various lithium sites in the NMR spectra of Ga-LLZTO and LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": null,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. The XRD Rietveld Refinement of Ga occupancy on tetrahedral Li sites in LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": null,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Visualization of the Li+ migration path in pristine LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": null,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Visualization of the Li+ migration path in Ga-LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": null,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. C 1s XPS spectra of LLZTO and Ga-LLZTO after air exposure for 120 days.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": null,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. O 1s XPS spectra of LLZTO and Ga-LLZTO after air exposure for 120 days.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": null,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. The pH values of pristine LLZTO, heated-LLZTO, Ga-doped LLZTO, and Ga-LLZTO before and after aging.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": null,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Cross-sectional morphologies of LLZTO and Ga-LLZTO pellets after exposure in ambient air for different durations, the dotted lines mark the impurity layer generated on the surface of LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": null,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. 2D intensity DRT contour calculated from EIS results of LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": null,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. 2D intensity DRT contour calculated from EIS results of Ga-LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": null,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. The XRD pattern of Ga-doped LLZTO indicates that doping doesn’t alter the crystal structure of LLZTO, and Ga-doped LLZTO retains the cubic phase.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": null,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. (a) Raman spectra and (b) XRD patterns of Ga-doped LLZTO and Ga-LLZTO before and after exposure in ambient air for 20 days.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": null,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Loop structure of Li arrangement in a) pristine LLZTO where Li1 and Li2 represent 24d and 48e/96h site, respectively; b) Ga-doped LLZTO where Ga occupies 24d site and c) Ga-LLZTO where Ga occupies 48e/96h site[1].",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": null,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Optical images of LLZTO (left) and Ga-LLZTO (right) in PVDF-NMP system.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": null,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. (a) Galvanostatic performance of Li|Ga-LLZTO|Li cell. (b) EIS spectrum of Li|Ga-LLZTO|Li before and after cycling for 500 cycles. (c) Critical current density of Li|Ga-LLZTO|Li.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": null,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. EIS curves of PEO-based composite electrolytes using fresh Ga-LLZTO, aged-Ga-LLZTO, fresh LLZTO and aged-LLZTO at room temperature.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": null,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. EIS curves of 8 wt.% Ga-LLZTO in PEO (8G-PEO), 8 wt.% LLZTO in PEO (8L-PEO) and PEO at room temperature.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": null,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. EIS of ASSBs with fresh Ga-LLZTO.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": null,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Charging and discharging curves of aged-Ga-LLZTO and aged-LLZTO-based cells at different rates.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": null,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Cyclability of cells with fresh Ga-LLZTO at 0.2 C.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": null,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. Optical images of LLZTO (left) and Ga-LLZTO (right) in the slurry of (a, b) LiFePO4 and (c, d) NCM811 composite cathode.",
+   "src": "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx",
+   "from": "SI docx (embedded image, 문서순 매핑)"
+  }
+ ]
+}

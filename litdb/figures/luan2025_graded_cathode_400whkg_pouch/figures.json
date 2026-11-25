@@ -1,0 +1,144 @@
+{
+ "slug": "luan2025_graded_cathode_400whkg_pouch",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-11",
+ "sources": [
+  "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Factors inﬂuencing gravimetric energy density in ASSBs. a) Key parameters inﬂuencing the gravimetric energy density toward 400 Wh kg−1, including areal capacity, reversible capacity, active material fraction, and the number of electrode layers. Gravimetric energy density plotted as a function of b) CAM fraction at a ﬁxed areal capacity of 4 mAh cm−2 and c) areal capacity at a ﬁxed cathode fraction of 80%.",
+   "bbox": [
+    42.0,
+    71.1,
+    550.0,
+    415.1
+   ],
+   "w": 2118,
+   "h": 1434,
+   "dpi": 300,
+   "src": "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf",
+   "blank": 0.458
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical and structural characterization of NCM88 cathodes with varying CAM fraction and areal capacity. Charge–discharge voltage proﬁles of electrodes with diﬀerent cathode fractions at areal capacities of a) 4 mAh cm−2, b) 2 mAh cm−2, and c) 1 mAh cm−2. d) Speciﬁc capacity comparison under varying cathode fractions and areal capacity conditions. e) Schematic illustration of the theoretical and practical capacities of ASSBs with cathodes containing 95% CAM. f) XRD patterns collected from the current collector side of cathodes with areal capacities of 3 and 6 mAh cm−2 before and after charging.",
+   "bbox": [
+    42.0,
+    70.7,
+    550.1,
+    535.7
+   ],
+   "w": 2118,
+   "h": 1939,
+   "dpi": 300,
+   "src": "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf",
+   "blank": 0.499
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Design strategy and transport behavior in thick cathodes of ASSBs. Schematic architectures of a) normal cathode and b) optimized cathode. c) Theoretical (solid line) and practically attainable (dashed line) current density distribution across the electrode thickness. Schematic illustration of Li-ion transport during discharging in thick cathodes of ASSBs: d) normal cathode and e) optimized cathode based on the Li-ion ﬂux.",
+   "bbox": [
+    42.0,
+    70.6,
+    550.0,
+    616.7
+   ],
+   "w": 2118,
+   "h": 2276,
+   "dpi": 300,
+   "src": "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf",
+   "blank": 0.451
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Structural design and electrochemical behavior of graded cathodes in ASSBs. Structural schematics of a) positive, b) uniform, and c) reverse distribution cathodes. Charge–discharge proﬁles of electrodes d) I, e) II, and f) III at 4 mAh cm−2 under 0.1 C, with an average cathode fraction of 91.5%. COMSOL phase-ﬁeld simulated time-voltage curves of cathodes with g) positive, h) uniform, and i) reverse SE distributions, and the corresponding j), k) and l) Li-ion concentration distributions after discharge, respectively, where the cathode comprises Region 1 (upper) and Region 2 (lower).",
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    465.7
+   ],
+   "w": 2118,
+   "h": 1647,
+   "dpi": 300,
+   "src": "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf",
+   "blank": 0.658
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical analysis and characterization of cells with diﬀerent SE distribution architectures. a) Nyquist plots and b) rate performance of cells assembled with cathodes exhibiting positive, uniform, and reverse in SE distributions. c) GITT curves and d) linear ﬁtting of peak oxidation current (Ip) versus scan rate of cathodes with positive and uniform distributions. Nyquist plots during the second charge and discharge for e,f) positive and g,h) uniform distribution cathodes. 3D-DRT contour maps during the second charge and discharge for i,j) positive and k,l) uniform distribution cathodes. TOF-SIMS m) secondary images of the positive and uniform cathodes and 3D renderings of the n) positive and o) uniform cathodes.",
+   "bbox": [
+    42.0,
+    70.5,
+    550.0,
+    547.7
+   ],
+   "w": 2118,
+   "h": 1990,
+   "dpi": 300,
+   "src": "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf",
+   "blank": 0.577
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Fabrication and electrochemical performance of all-solid-state pouch cells with graded composite cathodes. a) Schematic illustration of the dry electrode fabrication process for the gradient composite cathode and b), c) corresponding optical photographs. d) Cross-sectional SEM image of the gradient electrode with e) a locally enlarged SEM view and f) the corresponding elemental mapping images. g) Cross-sectional SEM image of the four-layer gradient cathode. h) Charge-discharge proﬁles and i) cycling performance of the pouch cell with the positive distribution cathode. j) Schematic, k) optical images, and l) charge-discharge proﬁles of a 5 Ah all-solid-state pouch cell with a positive distribution cathode and an NCM88 | LPSC | Si conﬁguration.",
+   "bbox": [
+    42.0,
+    71.2,
+    550.1,
+    556.7
+   ],
+   "w": 2118,
+   "h": 2024,
+   "dpi": 300,
+   "src": "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf",
+   "blank": 0.644
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Experimental and simulated evaluation of cathode performance under varying SE and conductive agent conﬁgurations. a) Discharge speciﬁc capacities of cells and b) electronic conductivities of composite cathodes as a function of SE fraction. c) COMSOL phase-ﬁeld simulated discharge times of cathodes with diﬀerent conﬁgurations and d) corresponding discharge voltage proﬁles with varying conductive agent gradient conﬁgurations (electrolyte layer side + current collector side).",
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    314.7
+   ],
+   "w": 2118,
+   "h": 1017,
+   "dpi": 300,
+   "src": "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf",
+   "blank": 0.802
+  }
+ ]
+}

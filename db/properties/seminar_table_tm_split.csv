@@ -1,0 +1,32 @@
+# Why the slide says 'late transition metals (Fe-Cu)' and not 'transition metals'.,,,,,
+"# The split is INSIDE the d-block: Sc (0.83) and Cr (0.82) are the two highest scorers overall,",,,,,
+#   while Cu Ni Co Fe are the four lowest of all 36 cation elements.,,,,,
+"# ** CAVEAT ** the claim is exact for the 3d row only. Ag (group 11, 4d) is also a late",,,,,
+#   transition metal but scores 0.44 - mid-pack. That is why the slide names the range (Fe-Cu),,,,,
+"#   instead of saying 'late transition metals' unqualified. Mn (group 7, 0.46) is the boundary:",,,,,
+"#   the drop is sharp from group 8 on, which is where the bullet starts.",,,,,
+# Pool: cascade_v23_ranked_v2.csv (89 species). Score = best composite among that element's compounds.,,,,,
+"# Ranking is NOT approved (see cascade_audit_artifact_status.csv) - use the group trend, not the order.",,,,,
+element,group,d_row,d_block_band,best_composite_score,best_compound
+Sc,3,3d,early (3-6),0.827,Sc2O3
+Y,3,4d,early (3-6),0.693,Y2O3
+Ti,4,3d,early (3-6),0.415,TiO2
+Zr,4,4d,early (3-6),0.461,ZrF4
+Hf,4,5d,early (3-6),0.520,HfO2
+V,5,3d,early (3-6),0.508,V2O5
+Nb,5,4d,early (3-6),0.618,Nb2O5
+Ta,5,5d,early (3-6),0.608,Ta2O5
+Cr,6,3d,early (3-6),0.820,Cr2O3
+Mo,6,4d,early (3-6),0.580,MoO3
+W,6,5d,early (3-6),0.651,WO3
+Mn,7,3d,mid (7),0.459,MnO
+Fe,8,3d,late (8-11),0.378,Fe2O3
+Co,9,3d,late (8-11),0.317,CoO
+Ni,10,3d,late (8-11),0.293,NiO
+Cu,11,3d,late (8-11),0.262,Cu2O
+Ag,11,4d,late (8-11),0.441,Ag2O
+Zn,12,3d,post-d (12),0.469,ZnO
+MEAN early (3-6),,,,0.609,n=11
+MEAN mid (7),,,,0.459,n=1
+MEAN late (8-11),,,,0.338,n=5
+MEAN late 3d only (Fe-Cu),,,,0.312,n=4

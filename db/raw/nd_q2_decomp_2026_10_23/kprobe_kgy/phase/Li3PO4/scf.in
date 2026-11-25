@@ -1,0 +1,57 @@
+&CONTROL
+    calculation = 'scf'
+    prefix      = 'Li3PO4'
+    outdir      = './tmp'
+    pseudo_dir  = '/home/kgy/work/pseudo'
+    tprnfor     = .true.
+    tstress     = .true.
+    etot_conv_thr = 1.0d-6
+    forc_conv_thr = 1.0d-4
+    nstep        = 200
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = 16
+    ntyp        = 3
+    ecutwfc     = 70.0
+    ecutrho     = 560.0
+    occupations = 'smearing'
+    smearing    = 'mv'
+    degauss     = 0.01
+    nosym       = .false.
+/
+&ELECTRONS
+    conv_thr     = 1.0d-9
+    electron_maxstep = 100
+    mixing_mode  = 'plain'
+    mixing_beta  = 0.3
+    mixing_ndim  = 8
+    diagonalization = 'david'
+/
+ATOMIC_SPECIES
+  Li  6.9410  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+  O  15.9994  O.pbe-n-kjpaw_psl.0.1.UPF
+  P  30.9740  P.pbe-n-kjpaw_psl.1.0.0.UPF
+CELL_PARAMETERS angstrom
+   4.896481815  -0.000000025  -0.000000003
+  -0.000000027   5.273594861  -0.000000012
+  -0.000000004  -0.000000013   6.146743227
+ATOMIC_POSITIONS crystal
+Li               0.5094345349        0.8447154081        0.0000000005
+Li               0.0094345366        0.1552845941        0.5000000140
+Li               0.5087737137        0.3265872993        0.2526248653
+Li               0.0087737053        0.6734127074        0.2473751328
+Li               0.0087737163        0.6734127091        0.7526248540
+Li               0.5087737288        0.3265873003        0.7473751358
+P                0.5013527125        0.8244232388        0.5000000092
+P                0.0013527277        0.1755767622       -0.0000000004
+O                0.1074603879        0.3142850950        0.7914385601
+O                0.6029952552        0.1053819913        0.5000000012
+O                0.1826492966        0.8188287373        0.4999999965
+O                0.6826492923        0.1811712581        0.0000000006
+O                0.6074603743        0.6857148994        0.2914385314
+O                0.1074603801        0.3142850895        0.2085614616
+O                0.1029952585        0.8946180069       -0.0000000019
+O                0.6074603793        0.6857149033        0.7085614392
+K_POINTS automatic
+  8 7 6 0 0 0

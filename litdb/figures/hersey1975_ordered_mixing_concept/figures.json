@@ -1,0 +1,35 @@
+{
+ "slug": "hersey1975_ordered_mixing_concept",
+ "dpi": 240,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "ab654539-31._Ordered_mixing_A_new_concept_in_powder_mixing_practice.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1.(a). Ordered mixture of equal proportions of black and white particles. Fig. 1(b). Randomized mixture of equal proportions of black and white particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    85,
+    277,
+    191
+   ],
+   "w": 791,
+   "h": 354,
+   "dpi": 240,
+   "src": "ab654539-31._Ordered_mixing_A_new_concept_in_powder_mixing_practice.pdf",
+   "blank": 0.533,
+   "recrop": "2026-10-13 손 크롭 — 원 스캔 240 dpi 그대로 (업샘플 없음) · 캡션은 그림 아래 본문 단에 따로 있어 제외",
+   "viewed": true,
+   "note": "각 9 x 9 칸 — 격자 판독 = digitized.csv. 원문에 표 없음."
+  }
+ ],
+ "missing_labels": []
+}

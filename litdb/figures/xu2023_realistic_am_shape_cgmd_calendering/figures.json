@@ -1,0 +1,153 @@
+{
+ "slug": "xu2023_realistic_am_shape_cgmd_calendering",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-11",
+ "sources": [
+  "main.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Quantitative analysis of the μ-XCT data. A: Global 3D microstructures of the uncalendered and calendered electrodes. B: The porosity and tortuosity factor study on the μ-XCT data. C: Subvolumes selected from uncalendered and calendered electrodes, respectively. D: The volume fraction change of the two phases in the direction of the electrode’s thickness.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    291.1
+   ],
+   "w": 2227,
+   "h": 1009,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic representation of the NMC111 AM structure generation procedure. A stack of 2D two-phase maps is reconstructed into a 3D volume, and the individual particles of AM are labeled. The particles cut at the border are removed. Each particle is separately transformed into a 3D matrix and stored in a database sorted by size. The secondary particles with realistic shapes are constructed from the 3D matrix by stacking spherical primary particles, and then randomly picked, rotated and displaced to generate the initial structure. The computational workflow for simulating the manufacturing process of NMC cathode is schematized: slurry, drying and calendering simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.0,
+    341.0,
+    382.0,
+    586.0
+   ],
+   "w": 1447,
+   "h": 1022,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.0,
+   "note": "left-column body; caption sits in right column so the automatic caption-anchored crop skipped it (manually added 2026-09-11)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Results validation and microstructure study. A: Comparison between experimental and simulated porosity for both electrode compositions as a function of compression degree. B: Tortuosity factor as a function of the porosity during the simulated calendering and comparison with micro-XCT data. C and F: The 3D structure resulting from the calendering model. D and G: Pore, CBD and AM volume distribution along the thickness direction. E and H: Cross-sectional view for the electrodes. Panels C through H correspond to the 96% NMC - 4% CBD formulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.0,
+    374.0,
+    382.0,
+    736.0
+   ],
+   "w": 1447,
+   "h": 1509,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.0,
+   "note": "left-column body; caption sits in right column so the automatic caption-anchored crop skipped it (manually added 2026-09-11)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Pore network study on uncalendered and calendered electrodes from the model for 96% AM – 4% CBD electrode. A, B, E and F: Color-coded throats between different pores for uncalendered (A, E) and calendered (B, F) electrodes coming from simulations (A, B) and μ-XCT experiments (E, F). The color bar represents the radius of each throat. C, D, G and H: Size and coordination number of each pore in the PNM as a function of their position along the elec­ trode’s thickness. The color bar indicates the equiv­ alent diameter of the pores. I: Global pore size distribution. J: Global throat size distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.6,
+    371.2,
+    565.8,
+    697.8
+   ],
+   "w": 1098,
+   "h": 1362,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.773
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. The study on deformation of secondary particles. A and B: The distri­ bution of Krumbein sphericity value in the uncalendered and calendered elec­ trode for two different formulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    171.2,
+    563.7,
+    697.8
+   ],
+   "w": 2218,
+   "h": 2195,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.809
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Parameters related to the material properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    562.7,
+    747.9
+   ],
+   "w": 2210,
+   "h": 2986,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Comparison of experimental and simulation densities of two slurry compositions with different formulations. Formulation Density (g/cm3)",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    746.4
+   ],
+   "w": 2213,
+   "h": 2980,
+   "dpi": 300,
+   "src": "main.pdf",
+   "blank": 0.84
+  }
+ ]
+}

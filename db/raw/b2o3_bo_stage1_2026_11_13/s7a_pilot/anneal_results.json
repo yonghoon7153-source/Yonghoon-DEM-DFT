@@ -1,0 +1,142 @@
+{
+  "provenance": {
+    "timestamp_iso": "2026-11-09T22:47:01.156788+09:00",
+    "python_version": "3.11.15",
+    "platform": "Linux-6.8.0-110-generic-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "hostname": "kserver116-27",
+    "ase_version": "3.28.0",
+    "numpy_version": "2.4.4",
+    "scipy_version": "1.17.1",
+    "fairchem_version": "unknown",
+    "torch_version": "2.8.0+cu128",
+    "uma_model_name": "uma-s-1p1",
+    "uma_task_name": "omat",
+    "git_commit": "12d3c1bbdde18f073b2eae1799b40a4faf6c87de",
+    "git_branch": "HEAD",
+    "git_dirty": false
+  },
+  "temperature_K": 500.0,
+  "time_ps": 100.0,
+  "model": "uma-s-1p1/omat",
+  "n_done": 1,
+  "n_converged": 1,
+  "n_unconverged": 0,
+  "n_failed": 0,
+  "results": [
+    {
+      "name": "cfg0040_E-2252.241_O-bo4",
+      "seed": 20298634,
+      "rng_streams": {
+        "velocities": 20298634,
+        "langevin": 21298637
+      },
+      "struct_sha256": {
+        "input": "1e28af3c6b2e73b4",
+        "post_md": "b17ecc7f6e4b9456",
+        "post_relax": "ed30945f3f35d7f6"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/data/work/runs/b2o3_bo_2026_11_09/s6_screen/cfg0040_E-2252.241_O-bo4/post_relax.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 100.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -543.416289428519,
+      "E_md_final": -535.3854076911441,
+      "E_post_relax": -543.9997449497778,
+      "delta_E_anneal_meV_per_atom": -4.558246259834142,
+      "cell_pre": [
+        [
+          6.939527034469135,
+          -0.02159340523757825,
+          -0.011876394420200683
+        ],
+        [
+          6.902079392760808,
+          11.928355146881096,
+          -0.03790978551062029
+        ],
+        [
+          17.269582100088602,
+          9.843280139842182,
+          28.945817433831788
+        ]
+      ],
+      "cell_post": [
+        [
+          6.93581533448786,
+          -0.026387408267455514,
+          -0.029958617692521606
+        ],
+        [
+          6.890248831035377,
+          11.935306211580693,
+          -0.052411355074287916
+        ],
+        [
+          17.1781986394109,
+          9.84964380393085,
+          28.961245289433506
+        ]
+      ],
+      "volume_pre": 2404.609442656137,
+      "volume_post": 2410.422167278952,
+      "t_md_s": 4700.95213675499,
+      "t_relax_s": 22.50954532623291,
+      "n_relax_steps": 211,
+      "relax_steps_max": 1500,
+      "relax_fmax": 0.05,
+      "fmax_final": 0.04953315767078339,
+      "opt_run_returned": null,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7a_pilot/cfg0040_E-2252.241_O-bo4/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7a_pilot/cfg0040_E-2252.241_O-bo4/post_relax.xyz",
+      "outputs": {
+        "post_md": {
+          "rel": "cfg0040_E-2252.241_O-bo4/post_md.xyz",
+          "sha256": "e4addacdaac7bda7552f59ee83948791c18631c7fb57721830d583076fbeff4f"
+        },
+        "post_relax": {
+          "rel": "cfg0040_E-2252.241_O-bo4/post_relax.xyz",
+          "sha256": "7797a3e4b7e5c68061ca548b99d27ad508adbc661e005405c53a4848e0a5fa41"
+        },
+        "md_traj": {
+          "rel": "cfg0040_E-2252.241_O-bo4/md.traj",
+          "sha256": "f15d1b19766559751ffd65015c2725365b9e2ad7cc308016b18ac18f199026eb",
+          "n_frames": 101,
+          "log_every_steps": 500,
+          "dt_fs": 2.0,
+          "n_steps": 50000
+        }
+      },
+      "log_every_steps": 500,
+      "composition": {
+        "B": 2,
+        "Cl": 16,
+        "Li": 58,
+        "O": 3,
+        "P": 8,
+        "S": 41
+      },
+      "status": "converged",
+      "identity": {
+        "input_file_sha256": "9ec52ed2cc87591afc7158e7312449e3a7eaeeb51d40677269377e2423772aa3",
+        "input_struct": "1e28af3c6b2e73b4",
+        "n_atoms": 128,
+        "stage": "anneal_relax",
+        "temperature_K": 500.0,
+        "time_ps": 100.0,
+        "dt_fs": 2.0,
+        "friction": 0.01,
+        "relax_steps": 1500,
+        "relax_fmax": 0.05,
+        "cell_relax": true,
+        "seed": 20298634,
+        "model": "uma-s-1p1/omat",
+        "purpose": "b2o3_bo/pilot_run"
+      },
+      "identity_sha": "187fea725e04d809da3fb40bb0393712d3f80cdab48607c92388939ec2b92574"
+    }
+  ]
+}

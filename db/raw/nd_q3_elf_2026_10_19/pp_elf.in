@@ -1,0 +1,6 @@
+&INPUTPP
+  prefix='nd_elf_nc', outdir='./tmp', plot_num=8, filplot='./nd_elf_pl'
+/
+&PLOT
+  iflag=3, output_format=6, fileout='nd_elf_nc.cube'
+/

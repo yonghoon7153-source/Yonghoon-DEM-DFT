@@ -1,0 +1,184 @@
+{
+ "slug": "cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-09",
+ "sources": [
+  "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Views for a mixture ratio κ = 0.5 and different reduced pressure P/E with µ = 0.2. The inset shows the finite element mesh used. The rigid particles are colored in grey.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    80.0,
+    278.0,
+    197.0
+   ],
+   "w": 884,
+   "h": 488,
+   "dpi": 300,
+   "src": "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf",
+   "blank": 0.583,
+   "src_native": [
+    685,
+    371
+   ],
+   "manual_crop": "clip = embedded raster rect padded ~2 pt (native 685×371 px; a white background rect of the same size underlies it — the mesh inset is part of the raster); caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "κ = 0.5 · μ = 0.2 침대의 두 압력 (P/E = 2.0 × 10⁻² · 2.0 × 10⁻¹) 스냅숏과 변형 원판의 FE 메시 (92 삼각형) 삽도 — 입자 하나당 요소 ~100 개로도 다각형 형상 변화가 그려진다는 해상도 감각을 준다.  후보 B (입자별 FE) 의 해상도 하한 참고값이고, MPM 이라면 SE 한 알당 격자 칸 수가 같은 역할 (우리 n_grid 384 · dx ≈ 141 nm 에서 ⌀1 µm SE ≈ 7 칸 — 파생 산술)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Packing fraction φ as a function of P/E for mixtures of κ ∈ [0.2, ..., 1] and µ ∈ {0, 0.2}. The predictions given by the micro-mechanical equation (Eq. (5)) and the ones given by the Platzer et al. model are also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    79.5,
+    542.0,
+    216.5
+   ],
+   "w": 989,
+   "h": 572,
+   "dpi": 300,
+   "src": "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf",
+   "blank": 0.876,
+   "src_native": null,
+   "manual_crop": "vector figure — clip = union of the figure's drawing paths and axis/legend text spans in the column band above the caption, padded ~2–3 pt; caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "같은 자료 (PRE 2020 그림 3a · 9a) 위에 식 (5) (파선) 와 Platzer 식 (점선) 을 한 판에 겹쳤다 — 둘 다 곡선을 잘 따르므로 'φ(P) 곡선이 맞는다' 만으로는 모델을 가를 수 없다.  재설계 후보 비교도 φ(P) 하나가 아니라 Z(φ) · K(φ) · φmax(κ) 같은 2차 관측량까지 맞춰야 판별된다."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 2,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Bulk modulus K over E as a function of the packing fraction φ for different values of κ and for µ = 0 and 0.2. We also present the predictions given by Eq. (3) and the bulk modulus computed from the Platzer et al. model.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    285.0,
+    541.0,
+    424.0
+   ],
+   "w": 985,
+   "h": 580,
+   "dpi": 300,
+   "src": "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf",
+   "blank": 0.916,
+   "src_native": null,
+   "manual_crop": "vector figure — clip = union of the figure's drawing paths and axis/legend text spans in the column band above the caption, padded ~2–3 pt; caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "K/E 의 φmax 근처 발산을 식 (3) (단일 입자 Kp × Zφ/2π) 과 Platzer 미분이 함께 따라간다 — 다체계 강성이 '단일 입자 벌크 응답 × 연결성' 으로 환산된다는 이 그룹 논지의 그림.  재설계 MPM 에서 SE 단일 입자 응답과 침대 응답을 따로 재어 이 환산이 성립하는지 확인할 수 있다 (후보 C 의 벌크탄성 처방과 같은 방향)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Figure 4. The reduced coordination number Z − Z0 as a function of the reduced solid fraction φ − φ0 for all the values of κ and µ simulated. The dashed line is the power-law relation Z − Z0 = ξ(φ − φ0)^α.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    79.5,
+    290.0,
+    219.5
+   ],
+   "w": 982,
+   "h": 584,
+   "dpi": 300,
+   "src": "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf",
+   "blank": 0.933,
+   "src_native": null,
+   "manual_crop": "vector figure — clip = union of the figure's drawing paths and axis/legend text spans in the column band above the caption, padded ~2–3 pt; caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Z − Z0 = ξ(φ − φ0)^α, ξ ≈ 5.1 · α ≈ 0.5 가 κ · μ 무관 (PRE 2020 그림 6 과 같은 자료, 표지만 다름).  단일 속도장 MPM 은 Z 를 정의할 수 없어 이 법칙을 쓰려면 입자 정체성이 남는 방법 (A′ · B · C · C′ · D0) 이 필요하다."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 3,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The packing fraction as a function of the scaled pressure applied on the particle for different mesh resolutions, Ne.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.0,
+    79.5,
+    541.0,
+    216.5
+   ],
+   "w": 985,
+   "h": 572,
+   "dpi": 300,
+   "src": "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf",
+   "blank": 0.945,
+   "src_native": null,
+   "manual_crop": "vector figure — clip = union of the figure's drawing paths and axis/legend text spans in the column band above the caption, padded ~2–3 pt; caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "단일 입자 상자 압축의 메시 수렴 (Ne = 92 → 968) — 결과가 거의 안 변하므로 2D 원판 하나당 ~100 요소면 충분하다는 근거.  재설계 B (입자별 FE) 의 요소 수 · MPM 의 SE 한 알당 칸 수를 정할 때 같은 형식의 수렴 시험을 먼저 하라는 선례."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. Values of φ and Z at the jammed state for the different samples of mixtures simulated.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    520.0,
+    538.6,
+    608.0
+   ],
+   "w": 964,
+   "h": 368,
+   "dpi": 300,
+   "src": "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf",
+   "blank": 0.905,
+   "src_native": null,
+   "manual_crop": "table region rendered by hand incl. top/bottom rules; caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "시작 상태 기록: φ0 = 0.805–0.815 · Z0 = 3.3–3.7 (κ · μ 별) — 식 (5) 의 입력이며 재설계 모델도 압밀 곡선과 함께 '시작 패킹의 φ0 · Z0' 를 기록해야 비교가 된다.  본문은 'μ → 0 이면 Z0 → 4' 라는데 μ = 0 에서 Z0 = 3.4–3.6 (rattler 포함 여부 [미확인]) — 본문은 이 표를 'Tab. 2' 로 부른다 (번호 불일치)."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_mixture_compaction_law.png",
+   "caption": "Equation (5), p.4: P(φ, κ)/E ≃ −(bφ/2π){Z0 + ξ(φ − φ0)^α} ln[(φmax(κ) − φ)/(φmax(κ) − φ0)] — compaction equation (same form as PRE 2020 Eq. (12)).",
+   "rotated_deg": 0,
+   "bbox": [
+    56.7,
+    98.0,
+    295.0,
+    134.0
+   ],
+   "w": 994,
+   "h": 151,
+   "dpi": 300,
+   "src": "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf",
+   "blank": 0.929,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "PRE 2020 식 (12) 와 같은 압밀 법칙 — φmax(κ) 만 거시 적합.  이 판에서는 입력 φ0 · Z0 가 Table 1 에 함께 있어 형식 그대로 재계산할 수 있다."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "all printed figures (Fig. 1, Fig. 2, Fig. 3, Fig. 4, Fig. 5) + tables cropped by hand at 300 dpi with PyMuPDF (no automatic extractor run — staged crops for the canonical drawer); key equations added as kind=equation because the PDF text layer garbles them; every PNG opened and checked; border-ink check 0 for all (2026-11-09, litdb-curator)"
+}

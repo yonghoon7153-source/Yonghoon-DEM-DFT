@@ -1,0 +1,7 @@
+bond,cell,n_bonds,mean_dist_A,elf_midpoint,elf_sd
+P-S,Nd_doped,37,2.065,0.943,0.002
+O-P,Nd_doped,3,1.571,0.923,0.002
+Nd-S,Nd_doped,8,2.879,0.466,0.067
+Cl-Nd,Nd_doped,2,2.748,0.372,0.01
+Nd-O,Nd_doped,2,2.492,0.311,0.033
+P-S,undoped_LPSCl1.6,20,2.06,0.944,0.001

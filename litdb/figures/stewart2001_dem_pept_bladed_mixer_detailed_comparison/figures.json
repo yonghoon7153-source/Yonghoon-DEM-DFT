@@ -1,0 +1,1567 @@
+{
+ "slug": "stewart2001_dem_pept_bladed_mixer_detailed_comparison",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "printed_page": 5458,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Sketch of experimental apparatus. All dimensions are in millimetres.",
+   "rotated_deg": 0,
+   "bbox": [
+    66,
+    572,
+    262,
+    712
+   ],
+   "w": 827,
+   "h": 593,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.84,
+   "auto_bbox": [
+    34.9,
+    570.9,
+    286.0,
+    713.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut by hand: clip = embedded raster bounds (xref 4, 517×362 px) rendered at 300 dpi → ink trim (grey < 235) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실험 믹서 치수: 지름 249 · 축 32 · 날 높이 40 · 날 길이 102 · 축–날 간격 6.5 mm → 16 + 6.5 + 102 = 124.5 = 249/2 (날이 벽까지) [카드 산술].  모의는 받침을 무시하고 날을 축에서 벽까지로 늘렸다 (p.5459)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Two-dimensional illustration of the forces acting on particle p in contact with particle q.",
+   "rotated_deg": 0,
+   "bbox": [
+    60,
+    556,
+    266,
+    711
+   ],
+   "w": 871,
+   "h": 656,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.95,
+   "auto_bbox": [
+    34.9,
+    554.7,
+    286.0,
+    712.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut by hand: clip = embedded raster bounds (xref 8, 1644×1211 px) rendered at 300 dpi → ink trim (grey < 235) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "식 (1)–(2) 과 힘 다섯의 기호 그림 (2D 도식일 뿐 — 계산은 3D)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "printed_page": 5463,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Surfaces from PEPT experiment and the five DEM simulations. Cells shown are 1 cm cubes occupied by the tracer for more than 0.5 s. Cell shade indicates height above base. The results are plotted as though the beds were moving clockwise.",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    397,
+    274,
+    692
+   ],
+   "w": 925,
+   "h": 1227,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.573,
+   "auto_bbox": [
+    34.9,
+    397.7,
+    286.0,
+    692.7
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut by hand: clip = embedded raster bounds (xref 21, 584×787 px) rendered at 300 dpi → ink trim (grey < 235) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "날 앞 더미 · 날 뒤 평평 — 더미 꼭대기는 실험이 E 를 뺀 모든 경우보다 높다 · 경사각 = 표 2 (실험 21° · A–E 18–25°)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "printed_page": 5463,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Flow pattern. The particles flow along the base of the mixer, rising in front of the blades to form heaps. Particles at the top of these heaps flow over the blade or back down the heap faces, rejoining the flow toward the blade at the base of the heaps.",
+   "rotated_deg": 0,
+   "bbox": [
+    359,
+    65,
+    488,
+    176
+   ],
+   "w": 548,
+   "h": 469,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.494,
+   "auto_bbox": [
+    297.9,
+    63.7,
+    549.0,
+    177.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut by hand: clip = embedded raster bounds (xref 22, 332×283 px) rendered at 300 dpi → ink trim (grey < 235) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "날 상대 기준틀의 유동 경로 (정성)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "printed_page": 5464,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Velocities fields from experiment and DEM simulations. The cell shade indicates the vertical velocity while the vectors show horizontal velocity.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    64,
+    290,
+    369
+   ],
+   "w": 1026,
+   "h": 1271,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.735,
+   "auto_bbox": [
+    34.9,
+    79.8,
+    286.0,
+    370.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop started below the section-height header row '0.000m to 0.015m · 0.030m to 0.045m · 0.060m to 0.075m' and cut the top of the first row), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "행 = 실험 · 경우 A–E · 열 = 바닥 (0–15 mm) · 날 꼭대기 (30–45 mm) · 더미 꼭대기 (60–75 mm) · 음영 = 수직 속도 (−0.006 … 0.005 m/s 다섯 칸) · 화살표 축척 0.600 m/s [인쇄 범례]."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "printed_page": 5464,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Minimum blade to cell transit time for the experiment and DEM simulations. The simulated duration was not long enough to provide complete data for case A.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.5,
+    64,
+    546,
+    371.5
+   ],
+   "w": 1025,
+   "h": 1275,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.75,
+   "auto_bbox": [
+    297.9,
+    80.5,
+    549.0,
+    372.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop started below the section-height header row and cut the top of the first row), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "음영 = 최소 날–셀 시간 (< 1.5 · 1.5–3 · 3–4.5 · 4.5–6 · ≥ 6 s) [인쇄 범례] · A 의 빈칸 = 분석 20 s 로 소용돌이 가운데까지 못 감."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "printed_page": 5465,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Average blade to cell transit time for the experiment and DEM simulations. As the DEM simulations covered a much shorter period than the experiment, the range of times differs greatly between the simulations and the experiment. However, the highest and lowest values are in the same parts of the mixer.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    64,
+    290,
+    362
+   ],
+   "w": 998,
+   "h": 1243,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.749,
+   "auto_bbox": [
+    34.9,
+    79.5,
+    286.0,
+    362.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop started below the section-height header row and cut the top of the first row), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "음영 = 평균 날–셀 시간 (< 1.5 · 1.5–4 · 4–6.5 · 6.5–9 · ≥ 9 s) [인쇄 범례] · 실험 재순환 100 s ↔ 모의 20 s 한계."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "printed_page": 5465,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Dispersion index for the experiment and the DEM simulations. The dispersion index is the standard deviation of displacement after one blade pass.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.5,
+    64,
+    546,
+    369
+   ],
+   "w": 1026,
+   "h": 1271,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.757,
+   "auto_bbox": [
+    297.9,
+    79.6,
+    549.0,
+    370.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop started below the section-height header row and cut the top of the first row), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "음영 = 분산 지수 (< 0.015 · … · ≥ 0.045 m) [인쇄 범례] · 모의는 날 꼭대기 벽 근처 고분산 영역을 못 낸다 (p.5465)."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "printed_page": 5466,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Unit velocity vectors (trajectories) from experiment and DEM simulations. These show the direction of motion in each cell. The vertical component is shown by the shade of each cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    64,
+    290,
+    368
+   ],
+   "w": 1026,
+   "h": 1266,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.742,
+   "auto_bbox": [
+    34.9,
+    178.3,
+    286.0,
+    368.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop started at y 178 pt and dropped the header row and the first one and a half rows of panels), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "단위 속도 (방향) · 음영 = 수직 성분 (−0.290 … 0.249 다섯 칸) [인쇄 범례] · 방향 r² 0.86–0.93 (표 2)."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "printed_page": 5466,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Speed fields from experiment and DEM simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.5,
+    64,
+    546,
+    368.5
+   ],
+   "w": 1025,
+   "h": 1265,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.745,
+   "auto_bbox": [
+    297.9,
+    197.7,
+    549.0,
+    369.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop started at y 198 pt and dropped the header row and the first rows of panels; the auto caption also swallowed body text and is replaced by the printed caption), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "음영 = 속력 (< 0.011 · 0.011–0.034 · 0.034–0.057 · 0.057–0.080 · ≥ 0.080 m/s) [인쇄 범례] · 본문의 '(blue) zones' ↔ 인쇄 회색조."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "printed_page": 5467,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Velocity component and speed frequency distributions from the experiment and the DEM simulations. Velocities are in m s−1, bar height indicates frequency (proportion of cells with velocities in bin). There are 32 bins for each histogram, with the first and last bins containing the frequencies of all values outside the range. Truncated bars have been shaded.",
+   "rotated_deg": 0,
+   "bbox": [
+    82,
+    62,
+    505,
+    640
+   ],
+   "w": 1774,
+   "h": 2403,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.89,
+   "auto_bbox": [
+    34.9,
+    61.0,
+    549.1,
+    637.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut by hand: clip = embedded raster bounds (xref 35, 1149×1567 px) rendered at 300 dpi → ink trim (grey < 235) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "행 = 실험 · A–E · 열 = 속력 (0–0.15 m/s) · 수직 · 반지름 · 접선 성분 · ⚠ 분포가 비슷해 보여도 세부 비교에는 못 쓴다 (p.5466 — B–D 가 분포로는 낫게 보이나 E 가 더 가깝다)."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 12,
+   "printed_page": 5468,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Examples of normalised velocity errors in one horizontal cross section. Simulation case B.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    64,
+    295,
+    267
+   ],
+   "w": 832,
+   "h": 812,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.826,
+   "auto_bbox": [
+    34.9,
+    64.8,
+    286.0,
+    261.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column width with uneven margins), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "case B · 날 꼭대기 단면 (30–45 mm) · 위 Δv/속력 · 가운데 Δv/속력 중앙값 · 아래 Δv/오차 SD (< 2.5 … ≥ 5.0) [인쇄 범례] — 같은 셀이 지표마다 다르게 보인다."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "printed_page": 5468,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Number of velocity criteria met for each DEM simulation. The cell shade indicates how many of the three velocity acceptance criteria were met in each cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    352,
+    551,
+    712
+   ],
+   "w": 1308,
+   "h": 1460,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.709,
+   "auto_bbox": [
+    36.8,
+    513.6,
+    550.9,
+    705.7
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop took only the lower half of the full-width figure (rows of cases C–E) and dropped the header row and the rows of cases A–B), re-cut by hand from the vector page: clip = column from just below the running head to just above the caption (text-layer line boxes), rendered at 300 dpi → ink trim (grey < 245, so the lightest legend shade is kept) → white canvas with a uniform 6 pt margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "행 = 경우 A–E · 음영 = 충족 기준 수 0–3 · A · D 는 날 근처 · 느린 더미에서만 (p.5468–5469)."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "printed_page": 5460,
+   "file": "tab_1.png",
+   "caption": "Table 1 Parameters used in DEM simulations. The wall and blade are assumed to have the same properties as particles",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    66,
+    548,
+    211
+   ],
+   "w": 2143,
+   "h": 620,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.952,
+   "auto_bbox": [
+    35.9,
+    41.0,
+    548.0,
+    741.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox — the whole page, Tables 1 and 2 together), re-cut by hand: clip = 'Table 1' label to the bottom rule of Table 1 (text-layer line boxes + drawing rules), vector page rendered at 300 dpi → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "N 16,000 · dt 5 × 10⁻⁵ s · d 5 mm · μ_r 0–0.05 mm · μ_s 0.2–0.5 · ρ 2500 kg/m³ · ν 0.3 · E 2.16 × 10⁶ N/m² · c 0.3 — 텍스트 층과 칸마다 대조 = 같음."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "printed_page": 5460,
+   "file": "tab_2.png",
+   "caption": "Table 2 Summary of measures of comparison",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    221,
+    548,
+    586
+   ],
+   "w": 2143,
+   "h": 1534,
+   "dpi": 300,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.961,
+   "auto_bbox": [
+    35.9,
+    41.0,
+    548.0,
+    741.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox — the whole page, Tables 1 and 2 together), re-cut by hand: clip = 'Table 2' label to the bottom rule of Table 2, vector page rendered at 300 dpi → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "다섯 경우 A–E 의 마찰 · 경사각 · 분산 · r² 6 종 · 기울기 2 종 · 기준 충족 셀 비율 — 카드 §3-3 에 전부 옮김 (텍스트 층과 칸마다 대조 = 같음)."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_01_translational_motion.png",
+   "caption": "Eq. (1), p.5459: dv_p/dt = (1/m_p) Σ_q (f_cn,pq + f_cs,pq + f_dn,pq + f_ds,pq) + g — translational motion.",
+   "rotated_deg": 0,
+   "w": 1383,
+   "h": 216,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.958,
+   "bbox": [
+    40.5,
+    409.5,
+    281,
+    444
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_02_rotational_motion.png",
+   "caption": "Eq. (2), p.5459: dω_p/dt = (1/i_p) Σ_q [R_p × (f_cs,pq + f_ds,pq) + τ_r,pq] — rotational motion with the rolling-friction torque.",
+   "rotated_deg": 0,
+   "w": 1386,
+   "h": 216,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.961,
+   "bbox": [
+    40.5,
+    449.5,
+    281,
+    484
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_fcn",
+   "kind": "equation",
+   "label": "f_cn",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_f_cn_normal_contact_force.png",
+   "caption": "Unnumbered, p.5459 right column, with its label line: normal contact force f_cn,pq = −√2E/(3(1 − ν²)√|R_p|) δ_n,pq^{3/2} R_p (Hertz form for two equal spheres).",
+   "rotated_deg": 0,
+   "w": 1131,
+   "h": 308,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.934,
+   "bbox": [
+    303,
+    66.5,
+    545,
+    117
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_fcs",
+   "kind": "equation",
+   "label": "f_cs",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_f_cs_tangential_contact_force.png",
+   "caption": "Unnumbered, p.5459: tangential contact force f_cs,pq = −(μ_s|f_cn,pq|/|δ_s,pq|)[1 − (1 − min{|δ_s,pq|, δ_spq,max}/δ_spq,max)^{3/2}] δ_s,pq (Mindlin–Deresiewicz form; δ_spq,max is not defined in this paper).",
+   "rotated_deg": 0,
+   "w": 1298,
+   "h": 506,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.962,
+   "bbox": [
+    303,
+    118.5,
+    545,
+    206
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows; first cut ended at 199.5 pt and clipped the bottom of the square brackets — re-cut to 206 pt) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_fdn",
+   "kind": "equation",
+   "label": "f_dn",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_f_dn_normal_viscous_damping.png",
+   "caption": "Unnumbered, p.5459: normal viscous damping force f_dn,pq = −c (3m_pE/(√2(1 − ν²)) √(|R_p|δ_n,pq))^{1/2} v_n,pq.",
+   "rotated_deg": 0,
+   "w": 1147,
+   "h": 308,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.939,
+   "bbox": [
+    303,
+    206.5,
+    545,
+    257.5
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_fds",
+   "kind": "equation",
+   "label": "f_ds",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_f_ds_tangential_viscous_damping.png",
+   "caption": "Unnumbered, p.5459: tangential viscous damping force f_ds,pq = −c (6m_pμ_s|f_cn,pq| √(1 − |δ_s,pq|/δ_spq,max)/δ_spq,max)^{1/2} v_s,pq.",
+   "rotated_deg": 0,
+   "w": 1377,
+   "h": 336,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.944,
+   "bbox": [
+    303,
+    259,
+    545,
+    315
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows; first cut ended at 309 pt and touched the large parenthesis — re-cut to 315 pt) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_taur",
+   "kind": "equation",
+   "label": "tau_r",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_tau_r_rolling_friction_torque.png",
+   "caption": "Unnumbered, p.5459: rolling friction torque τ_r,pq = −μ_r|f_cn,pq| ω̂_p (constant magnitude, opposite to the particle's own rotation).",
+   "rotated_deg": 0,
+   "w": 1388,
+   "h": 125,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.934,
+   "bbox": [
+    303,
+    316.5,
+    545,
+    331.0
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_set",
+   "kind": "equation",
+   "label": "eq1-2+forces",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "eq_01_02_forces_governing_set.png",
+   "caption": "Eqs. (1)–(2) (left column) stacked above the five force/torque expressions with their label lines (right column), p.5459 — the complete DEM model of this paper on one image for pasting.",
+   "rotated_deg": 0,
+   "w": 1391,
+   "h": 1925,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.951,
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 3,
+     "clip": [
+      40.5,
+      409.5,
+      281,
+      484
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 3,
+     "clip": [
+      303,
+      66.5,
+      545,
+      331.0
+     ]
+    }
+   ],
+   "manual_crop": "two vector bands cut by hand at 400 dpi (Eqs. 1–2, left column; force/torque block with label lines, right column), each ink-trimmed, stacked top to bottom with an 8 pt gap on a white canvas with a uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 5,
+   "printed_page": 5461,
+   "file": "eq_03_six_point_velocity_cell_mean.png",
+   "caption": "Eq. (3), p.5461: cell-mean velocity v̄_C = Σv_i/n_C with the 'six point' velocity v_i = 0.1(p_{i+5} − p_i)/(t_{i+5} − t_i) + 0.15(…) + 0.25(…) + 0.25(…) + 0.15(…) + 0.1(p_i − p_{i−5})/(t_i − t_{i−5}).",
+   "rotated_deg": 0,
+   "w": 1393,
+   "h": 805,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.955,
+   "bbox": [
+    40.5,
+    374.0,
+    281,
+    520.0
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows; the preceding text line overlapped the Σ band and was painted out above 380 pt (mask)) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e4a",
+   "kind": "equation",
+   "label": "eq4a",
+   "page": 5,
+   "printed_page": 5461,
+   "file": "eq_04a_velocity_error_over_cell_speed.png",
+   "caption": "Eq. (4a), p.5461: Δv_C,spd = |v̄_C,expt − v̄_C,sim| / |v̄_C,expt|.",
+   "rotated_deg": 0,
+   "w": 1389,
+   "h": 208,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.969,
+   "bbox": [
+    303.5,
+    333.0,
+    544,
+    368.5
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e4b",
+   "kind": "equation",
+   "label": "eq4b",
+   "page": 5,
+   "printed_page": 5461,
+   "file": "eq_04b_velocity_error_over_median_speed.png",
+   "caption": "Eq. (4b), p.5461: Δv_C,mspd = |v̄_C,expt − v̄_C,sim| / median(|{V̄_C}_expt|).",
+   "rotated_deg": 0,
+   "w": 1389,
+   "h": 211,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.955,
+   "bbox": [
+    303.5,
+    370.0,
+    544,
+    404.0
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e4c",
+   "kind": "equation",
+   "label": "eq4c",
+   "page": 5,
+   "printed_page": 5461,
+   "file": "eq_04c_velocity_error_over_standard_error.png",
+   "caption": "Eq. (4c), p.5461: Δv_C,SD = |v̄_C,expt − v̄_C,sim| / |√(SE({v_C}_expt)² + SE({v_C}_sim)²)|.",
+   "rotated_deg": 0,
+   "w": 1389,
+   "h": 212,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.935,
+   "bbox": [
+    303.5,
+    405.5,
+    544,
+    438.5
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e5a",
+   "kind": "equation",
+   "label": "eq5a",
+   "page": 6,
+   "printed_page": 5462,
+   "file": "eq_05a_mean_blade_to_cell_time.png",
+   "caption": "Eq. (5a), p.5462: b_C,mean = Σ(t_i − t_blade,i)/n_C for all p_i in C (mean blade-to-cell transit time).",
+   "rotated_deg": 0,
+   "w": 1392,
+   "h": 192,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.962,
+   "bbox": [
+    40.5,
+    81,
+    281,
+    113
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e5b",
+   "kind": "equation",
+   "label": "eq5b",
+   "page": 6,
+   "printed_page": 5462,
+   "file": "eq_05b_min_blade_to_cell_time.png",
+   "caption": "Eq. (5b), p.5462: b_C,min = min(t_i − t_blade,i) for all p_i in C.",
+   "rotated_deg": 0,
+   "w": 1392,
+   "h": 123,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.944,
+   "bbox": [
+    40.5,
+    119.5,
+    281,
+    138
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 6,
+   "printed_page": 5462,
+   "file": "eq_06_dispersion_index.png",
+   "caption": "Eq. (6), p.5462: dispersion index d_Δt,C = |SD({Δp_C})| = |√(Σ(Δp_i − Δp̄_C)²/(n_C − 1))| for all p_i in C (Δt = one blade pass = 3.14 s).",
+   "rotated_deg": 0,
+   "w": 1388,
+   "h": 340,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.957,
+   "bbox": [
+    40.5,
+    580,
+    281,
+    648
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows; the descender of the preceding line was painted out above 587.4–590 pt (mask)) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 6,
+   "printed_page": 5462,
+   "file": "eq_07_coefficient_of_determination.png",
+   "caption": "Eq. (7), p.5462: r²(X, Y) = (ΣXY + ΣXΣY/N)² / ((ΣX² − (ΣX)²/N)(ΣY² − (ΣY)²/N)) — printed with '+' in the numerator (the standard form has '−').",
+   "rotated_deg": 0,
+   "w": 1388,
+   "h": 271,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.943,
+   "bbox": [
+    303.5,
+    307,
+    544,
+    351
+   ],
+   "manual_crop": "equation region cut by hand from the vector page at 400 dpi (tool default 300 dpi; 9–10 pt type) — clip = band between the neighbouring text lines (text-layer line boxes, checked on rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; equation number kept where printed (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "printed_page": 5457,
+   "file": "txt_p1_abstract_overall_well_no_one_set_best.png",
+   "caption": "PDF p.1 (p.5457) Abstract: PEPT of glass beads in a vertical-axis mixer with slowly rotating flat blades; DEM of the same system 'using various sets of parameters for the bed material'; 'The simulations predicted the overall motion of the bed well. However no one set of assumptions was best, but that different sets predicted the detailed motion more accurately in different parts of the bed'.",
+   "rotated_deg": 0,
+   "w": 2860,
+   "h": 757,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.861,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "bbox": [
+    40.5,
+    286.5,
+    543.5,
+    414.3
+   ],
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 1,
+     "clip": [
+      40.5,
+      286.5,
+      543.5,
+      414.3
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-intro-transparent-wall-2d",
+   "page": 1,
+   "printed_page": 5457,
+   "file": "txt_p1_intro_transparent_wall_2d_flows_unreliable.png",
+   "caption": "PDF p.1 (p.5457) §1: mixing experiments through a transparent wall 'have been unable to capture the full three-dimensional motion of particles … most have focused on two-dimensional flows. Furthermore, the effect of the wall on particle motion raises questions about the reliability of quantitative flow data'.",
+   "rotated_deg": 0,
+   "w": 1399,
+   "h": 1183,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.862,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "bbox": [
+    40.5,
+    485.8,
+    280.5,
+    689.6
+   ],
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 1,
+     "clip": [
+      40.5,
+      485.8,
+      280.5,
+      689.6
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-p2-methods-review-dem-cost",
+   "page": 1,
+   "printed_page": 5457,
+   "file": "txt_p1_p2_methods_review_dem_cost_validation.png",
+   "caption": "One paragraph, PDF p.1 right column → p.2 left column (p.5457–5458): soil mechanics (stress only, no inertia) · continuum kinetic-theory models (dilute, rapid flows 'without multiple contacts') · Monte Carlo (needs free-surface shape, no forces) · DEM 'based only on force balances with simple models of inter-particle forces' · 'millions of particles … impracticably long time' · 'without accurate flow data from real systems it is impossible to validate these models'.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 1481,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.849,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 1,
+     "clip": [
+      303.5,
+      593.6,
+      543.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 2,
+     "clip": [
+      40.5,
+      66.3,
+      280.5,
+      175.6
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-mixer-bed",
+   "page": 2,
+   "printed_page": 5458,
+   "file": "txt_p2_mixer_glass_beads_16000_5mm.png",
+   "caption": "§2.1, PDF p.2 left → right column (p.5458): 249 mm mixer, blades 40 mm high, flush with the floor; SiC-painted walls, Perspex base, stainless blades; ~1 rad/s (10 rpm); 2.8 kg of 4.5–5.5 mm glass beads (~16 000); tracer from the bed; simulation = 16 000 beads of 5 mm.",
+   "rotated_deg": 0,
+   "w": 1397,
+   "h": 1868,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.864,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 2,
+     "clip": [
+      40.5,
+      448.5,
+      280.5,
+      557.5
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 2,
+     "clip": [
+      303.5,
+      66.3,
+      543.5,
+      283.0
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-p3-pept-limits",
+   "page": 2,
+   "printed_page": 5458,
+   "file": "txt_p2_p3_pept_limits_2ms_5mm_20hz.png",
+   "caption": "One paragraph, PDF p.2 right → p.3 left (p.5458–5459): PEPT limits — positron range ~1 mm, non-collinear and deflected gamma rays, 0.5 % of pairs detected, 1 mm position uncertainty; up to 2 m/s; 'A tracer moving at 1 m/s can be located to within 5 mm 20 times per second'.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 1679,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.853,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 2,
+     "clip": [
+      303.5,
+      653.5,
+      543.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 3,
+     "clip": [
+      40.5,
+      66.3,
+      280.5,
+      271.0
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-dem-model-parameter-source",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "txt_p3_dem_model_parameters_zhou1999_setup_five_cases.png",
+   "caption": "§2.3, PDF p.3 left column (model statement) stacked above the right-column paragraph after the force laws (p.5459): Cundall and 'Stack' (1979) + rolling friction (Zhou et al., 1999); forces depend on δ_n, δ_s, E and ν; rolling torque from 'elastic hysteresis loss and time-dependent deformation (Tabor, 1955)'; ★ 'Table 1 lists the parameters used in the present simulation, which have been used to simulate the piling process of glass beads (Zhou et al., 1999)'; 16 000 particles settled 0.5 s, 1 rad/s, steady in half a second, bracket ignored; 'A range of sliding and rolling friction coefficients were used … five simulation cases'.",
+   "rotated_deg": 0,
+   "w": 1397,
+   "h": 2333,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 3,
+     "clip": [
+      40.5,
+      286.0,
+      280.5,
+      406.6
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 3,
+     "clip": [
+      303.5,
+      330.2,
+      543.5,
+      616.0
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-p5-dem-to-pept-25s",
+   "page": 3,
+   "printed_page": 5459,
+   "file": "txt_p3_p5_dem_tracks_to_pept_format_25s_resampling.png",
+   "caption": "§3.1, PDF p.3 right → p.4 (both columns below the tables) → p.5 left (p.5459–5461): DEM records 'for periods of approximately 25 s; to operate for even this period was demanding computationally'; many particle tracks → over an hour of data per case; first 5 s ignored; DEM every 0.02 s, PEPT on average 0.07 s → both resampled to 0.05 s by linear interpolation.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 2528,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.864,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 3,
+     "clip": [
+      303.5,
+      640.5,
+      543.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 4,
+     "clip": [
+      40.5,
+      603.6,
+      280.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 4,
+     "clip": [
+      303.5,
+      603.6,
+      543.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 5,
+     "clip": [
+      40.5,
+      66.3,
+      280.5,
+      139.3
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-speed-correction",
+   "page": 5,
+   "printed_page": 5461,
+   "file": "txt_p5_expt_1p04_rads_linear_speed_correction.png",
+   "caption": "PDF p.5 left (p.5461): experiments at 1.04 rad/s (variable-speed drive accuracy); 'the velocity field scales linearly with blade speed (Stewart & Bridgwater, 2001), so a correction of 1/1.04 has been applied to the experimental results'.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 519,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.863,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "bbox": [
+    40.5,
+    245.6,
+    280.5,
+    331.0
+   ],
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 5,
+     "clip": [
+      40.5,
+      245.6,
+      280.5,
+      331.0
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-six-point-cells-accuracy",
+   "page": 5,
+   "printed_page": 5461,
+   "file": "txt_p5_six_point_15mm_cells_accuracy_15_7pct.png",
+   "caption": "PDF p.5 left → right (p.5461): six-point method (11 points); 'While the DEM simulations calculate velocity directly, only the velocities calculated using the method above have been used'; 15 mm cubic cells, ≥ 5 values (most > 30); cell-mean velocities 'accurate to approximately 15% for the PEPT experiment and 7% for the DEM simulations'.",
+   "rotated_deg": 0,
+   "w": 1398,
+   "h": 1878,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 5,
+     "clip": [
+      40.5,
+      569.8,
+      280.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 5,
+     "clip": [
+      303.5,
+      66.3,
+      543.5,
+      223.2
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-transit-time-ranks",
+   "page": 6,
+   "printed_page": 5462,
+   "file": "txt_p6_transit_100s_vortices_25s_ranks.png",
+   "caption": "PDF p.6 left (p.5462): particles can stay 'as long as 100 s' in heap vortices vs < 6 s outside; 'Since the DEM simulations are 25 s long they will clearly not show these very long transit times' → transit-time fields compared as ranks (0–1).",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 1504,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.853,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "bbox": [
+    40.5,
+    237.9,
+    280.5,
+    500.4
+   ],
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 6,
+     "clip": [
+      40.5,
+      237.9,
+      280.5,
+      500.4
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-dispersion-index",
+   "page": 6,
+   "printed_page": 5462,
+   "file": "txt_p6_dispersion_one_blade_pass_3p14s_not_particle_scale.png",
+   "caption": "PDF p.6 left → right (p.5462): symbols of Eq. (6); Δt = one blade pass = 3.14 s; 'The dispersion index is a measure of mixing on the scale of the whole system. It does not represent the mixing at the particle diameter scale'; PEPT records a single particle → area behaviour from multiple visits.",
+   "rotated_deg": 0,
+   "w": 1398,
+   "h": 1408,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.86,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 6,
+     "clip": [
+      40.5,
+      650.0,
+      280.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 6,
+     "clip": [
+      303.5,
+      66.3,
+      543.5,
+      222.8
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p7-p8-blade-friction-assumption",
+   "page": 7,
+   "printed_page": 5463,
+   "file": "txt_p7_p8_velocity_r2_blade_friction_assumption_case_a_third.png",
+   "caption": "One paragraph, PDF p.7 right → p.8 left → p.8 right (p.5463–5464): E highest velocity correlation, A poor; large discrepancies near the blades — PEPT uncertainty and 'the simplifying assumption that the particle–blade friction coefficient is the same as the particle–particle friction coefficient'; case A 'only one-third' of the measured velocities; μ_s 0.3 slightly low, 0.5 slightly high; low friction → pushed 'as a block'; rolling friction weaker than sliding.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 2246,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 7,
+     "clip": [
+      303.5,
+      701.2,
+      543.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 8,
+     "clip": [
+      40.5,
+      413.5,
+      280.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 8,
+     "clip": [
+      303.5,
+      413.5,
+      543.5,
+      438.3
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p9-p10-dispersion-oscillation-pept-error",
+   "page": 9,
+   "printed_page": 5465,
+   "file": "txt_p9_p10_dispersion_steady_field_pept_error_5pct.png",
+   "caption": "One paragraph, PDF p.9 right → p.10 left (p.5465–5466): high dispersion where paths split; oscillation ruled out (SD not varying, kurtosis ≈ −0.1 → 'the velocity field does not change significantly with time'); simulations miss the high-dispersion region at the top of the blade near the wall; E closest in mean; adding PEPT-sized random error raises the dispersion index by '5% or less'.",
+   "rotated_deg": 0,
+   "w": 1396,
+   "h": 1813,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 9,
+     "clip": [
+      303.5,
+      474.3,
+      543.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 10,
+     "clip": [
+      40.5,
+      413.5,
+      280.5,
+      462.2
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x10b",
+   "kind": "text",
+   "label": "p10-histograms-not-useful",
+   "page": 10,
+   "printed_page": 5466,
+   "file": "txt_p10_histograms_not_useful_case_e_closest.png",
+   "caption": "PDF p.10 left → right (p.5466): velocity histograms similar except A, but 'not useful for making detailed comparisons' — B–D histograms look closer than E, 'yet more rigorous comparisons … have shown that case E is certainly closer'.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 882,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 10,
+     "clip": [
+      40.5,
+      665.6,
+      280.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 10,
+     "clip": [
+      303.5,
+      389.5,
+      543.5,
+      462.2
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12-three-criteria",
+   "page": 12,
+   "printed_page": 5468,
+   "file": "txt_p12_three_criteria_not_statistical_test_60pct.png",
+   "caption": "PDF p.12 right (p.5468): a cell is 'accurate' if Δv_mspd < 0.2, Δv_spd < 0.2 or Δv_SD < 2.5 (≈ 95 % confidence with five degrees of freedom); 'the ΔvSD criterion is not a statistical test, it is a measure of error' — a test would only show whether enough data were collected; B, C and E ≈ 60 %.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 1316,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "bbox": [
+    303.5,
+    66.3,
+    543.5,
+    294.9
+   ],
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 12,
+     "clip": [
+      303.5,
+      66.3,
+      543.5,
+      294.9
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x12b",
+   "kind": "text",
+   "label": "p12-p13-cases-by-region",
+   "page": 12,
+   "printed_page": 5468,
+   "file": "txt_p12_p13_cases_a_d_near_blades_b_c_e_regions.png",
+   "caption": "One paragraph, PDF p.12 right → p.13 left (p.5468–5469): 'cases A and D only met the criteria near the blades and in the slow moving parts of the heaps, although case D was much more accurate than case A'; B and C best at the base and inside the heaps; E close in the fast shallow base region, better at the wall in fast heap areas.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 803,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 12,
+     "clip": [
+      303.5,
+      295.2,
+      543.5,
+      342.6
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 13,
+     "clip": [
+      40.5,
+      66.3,
+      280.5,
+      151.4
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x13a",
+   "kind": "text",
+   "label": "p13-conclusions",
+   "page": 13,
+   "printed_page": 5469,
+   "file": "txt_p13_conclusions_friction_geometry_best_cases.png",
+   "caption": "§5 Conclusions, PDF p.13 left (p.5469): good general agreement except A (μ_s too low); sliding friction the most important factor, rolling less; little change 0.3 → 0.5 → 'determined largely by geometric factors'; none predicts the velocity of every part; best cases B, C and E; acceptability depends on the application (wall heat transfer vs granulation / grinding).",
+   "rotated_deg": 0,
+   "w": 1398,
+   "h": 2644,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "bbox": [
+    40.5,
+    174.4,
+    280.5,
+    641.3
+   ],
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 13,
+     "clip": [
+      40.5,
+      174.4,
+      280.5,
+      641.3
+     ]
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x13b",
+   "kind": "text",
+   "label": "p13-dem-limits-single-criterion",
+   "page": 13,
+   "printed_page": 5469,
+   "file": "txt_p13_dem_simple_models_parameters_shape_single_criterion.png",
+   "caption": "PDF p.13 (p.5469), two paragraphs stacked (the paragraph between them, on DEM/PEPT strengths, omitted): PEPT errors vs 'DEM is based on simple models about inter-particle interactions which may not fully represent the physics, and some of required parameters are not readily available … although focused on friction coefficients only … the need for their proper selection'; 'particles of any shape … difficult or more often impossible when using DEM, which is limited currently by computing power'; 'reliance on a particular part of the bed or a single global criterion could prove to be dangerously misleading'.",
+   "rotated_deg": 0,
+   "w": 1397,
+   "h": 1633,
+   "dpi": 400,
+   "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9–10 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; parts stacked top to bottom with an 8 pt gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 13,
+     "clip": [
+      40.5,
+      641.6,
+      280.5,
+      737.0
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 13,
+     "clip": [
+      303.5,
+      66.3,
+      543.5,
+      151.3
+     ]
+    },
+    {
+     "src": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+     "page": 13,
+     "clip": [
+      303.5,
+      330.6,
+      543.5,
+      426.3
+     ]
+    }
+   ],
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found every printed item: Fig. 1–13 and Tables 1–2 (15 pp; no supplementary material is announced) — all 15 auto crops were re-cut by hand: Tables 1–2 (the auto box was the whole page 4 for both), Figs. 5–10 and 12 (vector figures; the section-height header row was cut or, for Figs. 9–10, the first rows of panels were dropped; uneven margins), Fig. 13 (only the lower half of the full-width figure), Figs. 1–4 and 11 (embedded rasters re-cut to the raster bounds with uniform margins; the auto caption of Fig. 10 had swallowed body text and is replaced by the printed caption).  Added by hand: 16 equation crops (kind 'equation': Eqs. 1, 2, the five unnumbered force/torque expressions, the stacked governing set, Eqs. 3, 4a, 4b, 4c, 5a, 5b, 6, 7) and 18 evidence-paragraph crops (kind 'text').  Every one of the 49 crops was opened and checked after cutting.  No digitizing (all comparison numbers are printed in Table 2) (2026-11-12, litdb-curator)",
+ "note_manual": "Printed issues visible in the crops: Eq. (7) numerator printed with '+' (standard form '−'); δ_spq,max used in the tangential force and damping but never defined; notation lists μ_r as 'dimensionless' while Tables 1–2 give mm; 'Cundall and Stack (1979)' in text and references; the time step in Table 1 is 5 × 10⁻⁵ s.",
+ "key_note": "manual keys: e<eq> = equation crop (kind 'equation'; e_set = stacked governing set); x<page><letter> = evidence paragraph (kind 'text'; multi-part paragraphs list their parts)"
+}

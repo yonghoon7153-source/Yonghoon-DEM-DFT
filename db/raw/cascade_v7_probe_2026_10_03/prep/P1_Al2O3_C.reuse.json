@@ -1,0 +1,13 @@
+{
+ "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_C.prepared.json",
+ "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P1_Al2O3_C.prepared.xyz",
+ "sha256": "49ae8eb539264c08c13d476886f6944c3f71e3998f0cd8e406c5f9dfad0d0019",
+ "input_sha256": "ed8c8fc11d1adb75ca3e99227419f4fb97689e1c648d8033f8d1130d8193c700",
+ "n_atoms": 204,
+ "V_A3": 4066.4796953466644,
+ "final_fmax_eV_A": 0.013983418233692646,
+ "converged": true,
+ "copied_to": "/home/kgy/work/runs/cascade_v7_probe_1003/prep/P1_Al2O3_C.prepared.xyz",
+ "copied_utc": "2026-10-03T11:24:38Z",
+ "⚠": "v6 준비를 초기 좌표로만 재사용 (개정 ⑩) — 이 온도에서의 평형을 뜻하지 않는다"
+}

@@ -1,0 +1,53 @@
+{
+  "_id": "nd_icohp_k_mesh_audit_2026_09_18",
+  "_kind": "audit",
+  "_card": "db/properties/nd_icohp_pp_swap_card_2026_09_16.json",
+  "date": "2026-09-18",
+  "무엇": "카드 §4 의 '🔴 k-점: 6월 ICOHP 는 k661 … LOBSTER SCF/NSCF 는 반드시 6 6 1' 을 **실물로 확인하려다** 확인에 실패한 기록. 그리고 그 자리에서 잡힌 도구 결함.",
+
+  "0_왜_이_감사를_했나": "던지기 직전 K_POINTS 를 grep 했더니 생성된 입력이 **2 2 1** 이었다 (카드는 6 6 1). 원인은 `build_lobster_paw_inputs.py` 의 `--kpoints` **기본값 \"2 2 1 0 0 0\"** 이었고, 아무도 플래그를 안 줬다. 빌더 요약이 셀 출처·부피·nbnd·basis 는 다 찍으면서 **k 만 안 찍어서** 화면상 정상으로 보였다. → 도구는 고쳤다(커밋 4cc3a5e07 · a3d5dcc7a: 기본값 제거·required·요약에 출력). 그 다음 '그럼 6월은 뭐였나' 를 물은 것이 이 감사다.",
+
+  "1_실물에서_나온_것": {
+    "gabia_의_LOBSTER_런_전수": [
+      {"경로": "/data/work/runs/comp2_lobster", "nat": 52, "k": "2 2 2 0 0 0"},
+      {"경로": "/data/work/runs/lpsocl_dft/lobster_ext", "nat": 62, "k": "2 2 1 0 0 0"},
+      {"경로": "/data/work/runs/icohp_n5fu", "nat": 66, "k": "2 2 1 0 0 0", "주": "9월 런. ICOHP Nd–S −4.080 의 출처"},
+      {"경로": "/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f", "nat": 120, "k": "2 2 1 0 0 0", "주": "우리 것. 기본값이 준 값이라 **선택이 아니다**"}
+    ],
+    "🔴_6월_Nd_LOBSTER_런": "**gabia 에 없다.** `ICOHPLIST.lobster`·`lobsterin`·`lobsterout` 을 /data/work 와 /root 전체에서 날짜·확장자 필터 없이 찾았고, 나온 LOBSTER 런은 위 넷뿐이다. repo 사본들(db/raw/nd_lobster/)에는 ICOHPLIST 만 있고 **lobsterout 이 없어** k 를 읽을 수 없다. ⇒ 6월 런은 다른 기계(KISTI 추정)이거나 지워졌다.",
+    "주변값들": {
+      "6월_Nd_relax_rank01_141_1A": "k 4 4 4 (nat=120). ⚠ 단 이건 **다른 셀**이다 — a=b=c/10=7.0035, 각 60.000°, V=2428.99 (champion 2399.07 대비 +1.25 %). LOBSTER 런도 아니다.",
+      "우리_ppswap_자신의_02_scf": "k 4 4 1, ecutwfc 60 / ecutrho 480, smearing",
+      "repo_템플릿_주석": "db/inputs/qe_templates/scf_relax.in — '6x6x3 for rhombo (comp3-5, modelc), 6x6x6 for cubic (comp1-2)'",
+      "repo_구조_이름": "modelc_V0_k663.{cif,xyz} — k663"
+    }
+  },
+
+  "2_판정": {
+    "카드_§4_의_'6월은 k661'": "**실물 미확인.** 반증도 아니다 — 6월 런 파일 자체를 못 찾았다. 디스크에 실재하는 값은 4 4 4 · 2 2 1 · 2 2 2 이고 주변 문서의 값은 6 6 3 이라, `k661` 이 `6 6 3` 의 오기일 개연성이 있으나 **이것도 추정**이다.",
+    "⛔_구분": "'못 찾음' 이지 '없음' 이 아니다. 검색은 gabia + repo 사본에 한정됐다. KISTI 는 안 봤다.",
+    "따라서": "어떤 값을 골라도 **'6월과 k 를 맞춘다' 는 보증할 수 없다.** 카드 §4 의 '반드시 6 6 1' 은 그 전제가 확인되지 않았으므로 그대로 집행할 근거가 없다."
+  },
+
+  "3_k_가_이_측정의_부하_변수인가": {
+    "쫓는_효과의_크기": "Nd–S ICOHP 6월 −0.436 vs 9월 −4.080 = **9.4배**",
+    "같은_런쌍의_다른_결합": "P–S 는 10 %, Li–S 는 6 % 차이뿐이다 (카드 §0 🔴결정적_대조). 그 두 런은 **셀도 k 도 다르다**(nat 120 vs 66). ⇒ 셀·k 가 ICOHP 를 흔드는 폭은 수 %~10 % 규모지 9배가 아니다.",
+    "물리": "이 계는 밴드갭 ~2 eV 절연체다 — k 수렴이 빠르고, ICOHP 는 적분량이라 DOS 미세구조보다 먼저 수렴한다.",
+    "⇒": "k 는 **판정을 뒤집을 크기가 아니다.** 다만 '바꾸는 것 하나' 라는 카드의 논리에는 영향이 있으므로, 고른 값과 그 이유를 선언하고 한계로 적는다.",
+    "⛔_이_절은_측정이_아니다": "k 수렴을 **재본 적 없다**. 위는 기존 관측에서의 추론이다. 실제 수렴 시험은 §4 의 탐침으로만 답한다."
+  },
+
+  "4_사후_탐침_결과_보기_전에_적는다": {
+    "무엇": "LOBSTER SCF 가 끝나면 **같은 입력에서 k 만 바꾼 SCF 하나**를 더 돌린다 (NSCF 없음 — 싸다).",
+    "비교량": "total energy / atom, 그리고 SCF 가 찍는 최대 힘 성분",
+    "문턱": "|ΔE|/atom ≤ 1 meV → k 는 부하 변수가 아니라고 기록한다. 초과 → ICOHP 판정에 k 한계를 **명시**하고 dense-k LOBSTER 를 재개 조건에 넣는다.",
+    "⛔": "이 탐침은 ICOHP 의 k 수렴을 직접 재지 않는다 (에너지 대리다). 그 한계를 판정문에 적는다."
+  },
+
+  "5_연결": {
+    "카드": "db/properties/nd_icohp_pp_swap_card_2026_09_16.json §4",
+    "결정": "D-2026-09-18-nd-icohp-kmesh (proposed)",
+    "도구_수정": ["4cc3a5e07 build_lobster_paw_inputs.py --kpoints required + 요약 출력",
+                   "a3d5dcc7a build_elastic_strain_inputs.py · build_v0_relax_input.py 동일 결함 + 호출부 4곳 명시화"]
+  }
+}

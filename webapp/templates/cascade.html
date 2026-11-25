@@ -1,0 +1,1774 @@
+{% extends "base.html" %}
+{% block title %}Cascade / ML · Doping Screening{% endblock %}
+{% block head %}<script src="{{ vsrc('plotly.min.js','https://cdn.plot.ly/plotly-2.35.2.min.js') }}"></script>{% endblock %}
+
+{% macro num(v) %}{% if v is number %}{% if v == v|round(0) %}{{ v|int }}{% else %}{{ '%.3f'|format(v) }}{% endif %}{% else %}{{ v }}{% endif %}{% endmacro %}
+{% macro sf(v, nd=3) %}{% if v is number %}{{ ('%.'~nd~'f')|format(v) }}{% else %}{{ v if v is not none else '' }}{% endif %}{% endmacro %}
+{# litdb digest 링크 — raw 는 'slug' 또는 'slug (역할메모)' 둘 다 허용. digest 없는 slug 는 링크를 죽인다. #}
+{% macro plink(raw, label=None) %}{% set s = (raw|string).split(' ')[0] %}{% set extra = (raw|string)[s|length:]|trim %}{%
+  if s in (lit_have or []) %}<a class="lit-chip" href="/literature?open={{ s }}" title="{{ (s)|plain }}{{ (' ' ~ extra if extra)|plain }}" onclick="return openPaperM('{{ s }}',event)">📄 {{ label or s }}</a>{%
+  else %}<span class="lit-chip off" title="litdb digest 없음">{{ label or s }}</span>{% endif %}{% endmacro %}
+{# `not_map` = {열이름: claim_id} — 그 **열의 칸에만** 부인을 건다.
+   ⛔ Codex BI P0-2a/P0-3 (2026-09-08) — 종전에는 표 전체를 `data-claim-not` div 로
+   감쌌다. 실측 td 600 · 텍스트노드 605 · 3800자를 부인 하나가 덮었고, 그 안에
+   **진짜 철회 인용을 심어도 통과**했다(자유텍스트·숫자만 둘 다 재현). 부인은 담요가
+   아니라 셀 단위 선언이어야 한다. #}
+{# ⛔ BI-4 P0-2 — `not_src_ds` 는 **어느 원자료인가**. 좌표에 데이터셋 이름이 없으면
+   `canonical.verify_disclaimers()` 가 대조할 수 없고 그 부인은 미검증으로 떨어진다.
+   좌표 문법: `<데이터셋>|<키열>=<키값>|<열>` (데이터셋 = db/properties/<이름>.csv). #}
+{% macro gtable(t, cols, mo_col=None, modb={}, not_map={}, not_src_ds=None) %}
+<div class="tbl-scroll"><table class="data-table sortable"><thead><tr>
+{% for c in cols %}<th onclick="sortT(this,{{ loop.index0 }})" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">{{ c }}</th>{% endfor %}</tr></thead><tbody>
+{% for row in (t.data or []) %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}"{% if not_map.get(c) %} data-claim-not="{{ not_map[c] }}" data-claim-not-src="{% if not_src_ds %}{{ not_src_ds }}|{% endif %}{{ cols[0] }}={{ row[cols[0]] }}|{{ c }}"{% endif %}>{% if mo_col and c == mo_col and row[c] in modb %}<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ row[c] }}')" onkeydown="_kbd(event)">{{ row[c] }}</span>{% else %}{{ num(row[c]) }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>{% endmacro %}
+
+{# 값 충돌 레코드 → 사람이 읽는 한 줄. 원장은 str 인 것도 dict 인 것도 있어서
+   `{{ c|bold }}` 하나로 찍으면 dict 는 **파이썬 repr 이 그대로 화면에 샌다**
+   (`{&#39;resolution&#39;: …}` 이 최상단 빨간 상자에 노출됐다 — 2026-09-09 P0-10).
+   ⛔ 이 매크로가 못 하는 것: 중첩 dict(`checked`) 의 수치는 안 보여준다. 원장 파일을
+      봐야 한다 — 화면에 dict 를 펴 붙이느니 안 싣는다. #}
+{# 게이트가 걸린 자리에서 **숫자 대신 '가려짐'** 을 찍는다.
+   ⛔ CLAUDE.md — 없는 것을 0 으로 표시하지 않는다. 게이트 뒤의 0 은 "없다" 가 아니라
+      "이 응답에서 뺐다" 다. 라우트가 None 을 넘기면(app.py stats) 여기서 자물쇠가 뜬다. #}
+{% macro gnum(v) %}{% if v is none %}<span class="mono muted" title="이 화면에서 가려져 있다 — ?archive=1 로 열린다">🔒 가려짐</span>{% else %}{{ v }}{% endif %}{% endmacro %}
+
+{# archive 게이트가 걸린 표 자리 — 표 대신 '보관함 열기' 버튼 하나만 남긴다.
+   ⛔ 이 상자를 '경고 배너 + DOM 에는 싣기' 로 되돌리지 말 것. 그게 정확히 2026-08-16
+      Codex P0-5 가 잡은 사고다(같은 파일을 /api/file 은 403 으로 막는다). #}
+{% macro archive_box(what, anchor) %}
+<div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+  <b>🗄 보관함 — 기본 화면에서 내보내지 않는다</b>
+  <div class="muted" style="font-size:.9em;margin:6px 0 8px">{{ what }}
+    이 산출물은 <span class="mono">cascade_audit_manifest.json</span> 에 등재돼 있지 않다 —
+    <b>미등재는 미승인</b>으로 다룬다(같은 파일을 <span class="mono">/api/file</span> 로 받으면 403).</div>
+  <a class="btn" href="/cascade?archive=1#{{ anchor }}">보관함 열기 →</a>
+</div>
+{% endmacro %}
+
+{% macro conflict_txt(c) %}{% if c is string %}{{ c }}{% elif c is mapping %}{% for k, v in c.items() if v is string %}{{ '' if loop.first else ' · ' }}{{ v }}{% endfor %}{% else %}{{ c }}{% endif %}{% endmacro %}
+
+{# ⛔ 2026-08-14 (Codex 리뷰 P0-4) — 47종/수작업 축이 archive 표시 없이 current 탭처럼
+   살아 있었다. 모든 남은 탭에 **무엇으로 만든 표인지 + 왜 결과가 아닌지**를 붙인다. #}
+{% macro tabstate(kind, source, why) %}
+<div class="callout {{ 'cal-danger' if kind == 'superseded' else 'cal-warning' }}" style="margin:0 0 12px;font-size:.83rem">
+  <b>{% if kind == 'superseded' %}🗄 superseded — 결과로 인용하지 말 것{% else %}⚠ 미검증 — 결과로 인용하지 말 것{% endif %}</b>
+  <span class="mono muted" style="margin-left:6px">{{ source }}</span>
+  <div style="margin-top:5px">{{ why|bold }}</div>
+</div>
+{% endmacro %}
+
+{% block content %}
+{# 색은 style.css 의 --grp-* 토큰 (테마 따라감) — JS 리터럴 하드코딩 금지 #}
+{% set gcol = {'TM':'var(--grp-tm)','lanthanide':'var(--grp-lanthanide)','main-group':'var(--grp-main)','alk.earth':'var(--grp-alkearth)','alkali':'var(--grp-alkali)'} %}
+<div class="page-header">
+  <div><h1>🤖 AI 계산 기반 도핑 스크리닝 <span class="muted" style="font-size:.7em">(cascade · UMA)</span></h1>
+    <div class="sub">{{ casc.meta.scope }}</div></div>
+</div>
+
+{# ══ 처음 보는 사람용 (2026-08-25) ══════════════════════════════════════
+   이 페이지는 숫자가 네 개(3615/681/90/47) 돌아다니는데 그게 각각 뭔지 어디에도
+   안 적혀 있었다. 첫 화면에서 그것부터 준다. 심화 내용은 ⚙ 로 표시하고 접는다. #}
+<style>
+  .lv{display:inline-block;padding:1px 7px;border-radius:99px;font-size:.68rem;
+      font-weight:700;vertical-align:middle;margin-left:6px}
+  .lv-b{background:#d1fae5;color:#065f46}   /* 기초 */
+  .lv-a{background:#fef3c7;color:#92400e}   /* 심화 */
+  .fn{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+  .fn-c{border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+  .fn-n{font-size:1.5rem;font-weight:800;line-height:1.1}
+  .fn-t{font-size:.78rem;font-weight:700;margin-top:2px}
+  .fn-d{font-size:.74rem;color:var(--muted);margin-top:3px;line-height:1.45}
+</style>
+
+<div class="card" style="border-left:4px solid #7c3aed">
+  <h3 style="margin-top:0">이 페이지가 무엇인가 <span class="lv lv-b">기초</span></h3>
+  <p style="font-size:.94rem;line-height:1.65;margin:6px 0">
+    황화물 고체전해질(Li₆PS₅Cl)에 <b>다른 원소를 조금 섞으면 더 좋아지는가</b> —
+    이걸 실험 대신 계산으로 미리 걸러내는 파이프라인이다.
+    수천 개 후보를 <b>싼 계산부터 비싼 계산 순서로</b> 통과시키며 떨어뜨린다.
+    그래서 <b>cascade</b>(폭포)다. 힘은 머신러닝 퍼텐셜(<b>UMA</b>)이 계산한다 —
+    DFT 보다 10³~10⁴ 배 빨라서 수천 개를 볼 수 있지만, 그만큼 <b>순위를 믿는 데
+    조건이 붙는다</b>(아래 ⚠ 카드).
+  </p>
+
+  <h4 style="margin:14px 0 4px;font-size:.9rem">숫자 네 개가 각각 무엇인가 <span class="lv lv-b">기초</span></h4>
+  <div class="fn">
+    <div class="fn-c"><div class="fn-n">3,615</div><div class="fn-t">계산한 구조</div>
+      <div class="fn-d">조성 × 도펀트 자리 × 시드. 한 화합물이 여러 자리·배열을 갖는다.</div></div>
+    <div class="fn-c"><div class="fn-n">681</div><div class="fn-t">하류까지 간 구조</div>
+      <div class="fn-d">BVSE·어닐링·탄성까지 받은 것. 상위 10개만 내려보내는 <b>설계</b>지
+        결손이 아니다.</div></div>
+    <div class="fn-c"><div class="fn-n">90</div><div class="fn-t">완주한 화합물</div>
+      <div class="fn-d">산화물 37 · 염화물 19 · 불화물 10 · 황화물 10 · 브롬 5 · 질화 5 · 요오드 4</div></div>
+    <div class="fn-c" style="border-color:#7c3aed"><div class="fn-n">47</div><div class="fn-t">순위표에 오른 것</div>
+      <div class="fn-d"><b>산화물 37 + 불화물 10.</b> 나머지 43종은 <b>전기화학 창(ESW)</b>이
+        아직 없어서 빠졌다 — 성적이 나빠서가 아니다.</div></div>
+  </div>
+  <p class="muted" style="font-size:.8rem;margin:2px 0 0">
+    ⇒ <b>47 vs 90 을 가른 축은 ESW 하나다.</b> 탄성·BVSE 는 90종 전부 있었다.</p>
+
+  <h4 style="margin:16px 0 4px;font-size:.9rem">지금 말할 수 있는 것 / 없는 것 <span class="lv lv-b">기초</span></h4>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+    <div style="border:1px solid #0d9488;border-radius:8px;padding:9px 12px">
+      <b style="color:#0d9488">✅ 말할 수 있다</b>
+      <ul style="margin:6px 0 0;padding-left:18px;font-size:.85rem;line-height:1.6">
+        <li>어떤 도펀트가 <b>구조를 덜 흔드는가</b> (같은 프로토콜 안에서의 순서)</li>
+        <li>계열별 <b>경향</b> — 예: Br 이 늘면 부착일이 준다</li>
+        <li>어느 축이 <b>서로 충돌하는가</b> (아래 축 상관)</li>
+      </ul>
+    </div>
+    <div style="border:1px solid #be123c;border-radius:8px;padding:9px 12px">
+      <b style="color:#be123c">⛔ 말할 수 없다</b>
+      <ul style="margin:6px 0 0;padding-left:18px;font-size:.85rem;line-height:1.6">
+        <li><b>절대값</b> — 전도도 mS/cm, 장벽 eV 를 그대로 인용 금지</li>
+        <li><b>승인된 1위</b> — current ranking 0종이다</li>
+        <li><b>이온전도도 순위</b> — MD σ 는 비용 때문에 <b>안 돌렸다</b>(설계 결정).
+            대신 정적 BVSE 프록시를 쓴다 — <b>그건 전도도가 아니다</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <details style="margin-top:14px">
+    <summary style="cursor:pointer;font-weight:700;font-size:.9rem">
+      ⚙ 파이프라인 20 단계는 무엇을 하나 <span class="lv lv-a">심화</span></summary>
+    <div style="font-size:.86rem;line-height:1.7;margin-top:8px">
+      <pre style="font-size:.8rem;white-space:pre-wrap">00 preflight   전제 확인 (구조·의사퍼텐셜·자원)
+01 구조 생성    도펀트를 어느 자리에 몇 개 넣을지 열거
+02 UMA screen  전부 완화 → 에너지·부피변화. 여기서 대부분 떨어진다
+03 winners     그룹마다 대표 하나
+04 anneal      500 K 로 50 ps 흔들어 국소최소 탈출 → 다시 완화
+05 BVSE        Li 가 지나갈 통로가 있나 (정적 계산 · MD 아님)
+06~08 EOS·탄성  부피-에너지 곡선 → 체적탄성률·전단탄성률
+09f ESW        전기화학 안정 창 (산화·환원 전위)
+10 σ MD        ⛔ 껐다 (비용) — TOP_K_SIGMA=0
+11 W_ad        ⛔ 미실행</pre>
+      <p style="margin:6px 0 0">총 투입 <b>~1,100 GPU-시간</b>. 10·11 을 켰으면
+        4,600 시간이었을 것이다 — 그래서 껐고, 그 결정이 이 페이지의 가장 큰 단서다.</p>
+    </div>
+  </details>
+</div>
+
+{# 다축 스크리닝 묶음 2 (2026-11-11 닫힘) — 원소별 효과 · 두 축 Pareto 그림 (숫자는 data.cascade_bundle2() 에서만) #}
+{% include "_cascade_bundle2.html" %}
+
+<div class="card cascade-method">
+  <div class="cm-grid">
+    <div><span class="cm-l">엔진</span>{{ casc.meta.engine }}</div>
+    <div><span class="cm-l">스코어</span><span class="mono">{{ casc.meta.score_formula }}</span></div>
+    <div class="cm-warn"><span class="cm-l">⚠ 주의</span>{{ casc.meta.caveat|bold }}</div>
+    <div><span class="cm-l">검증</span>{{ casc.meta.verified }}</div>
+  </div>
+</div>
+
+{# ── 📜 방법 계보 — 스크리닝 문헌 → 우리 cascade. 각 항목은 litdb digest 링크 ── #}
+{% if lineage %}
+<details class="card lineage-card" id="lineage">
+  <summary><span class="ln-tag">📜 방법 계보</span>
+    Ong 2013 → Zhu 2015 → Richards 2016 → Xiao 2019 → 우리 cascade
+    <span class="muted" style="font-weight:400">· ML 3세대 · MD 규율 — 클릭해서 펼치기</span></summary>
+  <div class="ln-note">{{ lineage.note|bold }}</div>
+  {% for ch in lineage.chains %}
+  <div class="ln-chain">
+    <div class="ln-title">{{ ch.icon }} {{ ch.title }}</div>
+    <ol class="ln-steps">
+      {% for s in ch.steps %}
+      <li class="ln-step{% if '⛔' in s.ours %} ln-gap{% endif %}">
+        <div class="ln-who">{{ plink(s.paper, s.who ~ ' ' ~ s.year) }}</div>
+        <div class="ln-what">{{ s.what|bold }}</div>
+        <div class="ln-ours"><span class="ln-l">우리</span>{{ s.ours|bold }}</div>
+      </li>
+      {% endfor %}
+      <li class="ln-step ln-end">
+        <div class="ln-who"><span class="ln-badge-ours">여기</span></div>
+        <div class="ln-what"><b>{{ ch.end.title }}</b></div>
+        <div class="ln-ours">{{ ch.end.what|bold }}</div>
+      </li>
+    </ol>
+  </div>
+  {% endfor %}
+  <div class="ln-axes">
+    <div>
+      <h4>➕ 우리가 <b>추가</b>한 축 <span class="muted" style="font-weight:400;font-size:.74rem">문헌 재현이 아니라 확장</span></h4>
+      {% for a in lineage.axes_added %}
+      <div class="ln-ax ln-ax-add"><b>{{ a.axis }}</b><div class="muted">{{ a.why }}</div>
+        <div class="ln-ax-cav">⚠ {{ a.caveat|bold }}</div></div>
+      {% endfor %}
+    </div>
+    <div>
+      <h4>⛔ 문헌에 있고 우리에겐 <b>없는</b> 축 <span class="muted" style="font-weight:400;font-size:.74rem">'전부 재현했다'고 쓰면 틀린다</span></h4>
+      {% for a in lineage.axes_missing %}
+      <div class="ln-ax ln-ax-miss"><b>{{ a.axis }}</b><div class="muted">문헌: {{ a.lit }}</div>
+        <div class="ln-ax-cav">{{ a.status|bold }}</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</details>
+{% endif %}
+
+{# ── 최상단 = 파이프라인 실측. 옛 타일(47/4/141/14)은 superseded 보관함으로 내렸다.
+     그 숫자들은 2026-06-29 에 멈춘 취합 경계였고 승인 결과가 아니다 (2026-08-14 개정). #}
+{% set T = casc.truth %}
+{% if not T.ok %}
+{# fail-closed — manifest 가 없거나 파일이 바뀌었는데 manifest 가 안 따라왔다.
+   숫자를 추측해서 띄우느니 아무것도 안 띄운다. #}
+<div class="callout cal-danger" style="margin:10px 0;font-size:.86rem">
+  <b>⛔ artifact manifest 가 유효하지 않아 headline 을 표시하지 않는다 (fail-closed).</b>
+  <ul style="margin:6px 0 0;padding-left:18px">
+    {% for p in T.problems %}<li>{{ p }}</li>{% endfor %}
+    {% for path, why in T.stale %}<li><span class="mono">{{ path }}</span> — {{ why }}</li>{% endfor %}
+  </ul>
+  <div class="muted" style="margin-top:6px">복구: <span class="mono">python3 tools/cascade/rebuild_pool_inputs.py</span></div>
+</div>
+{% else %}
+<div class="stat-tiles st-6">
+  {% for key, val, label, note in T.tiles %}
+  <div class="st{% if val == 0 %} st-zero{% endif %}" title="{{ note|plain }}">
+    <div class="st-v">{{ val }}</div><div class="st-l">{{ label }}</div>
+    <div class="st-l" style="opacity:.8">{{ note }}</div>
+  </div>
+  {% endfor %}
+</div>
+<div class="callout cal-danger" style="margin:10px 0;font-size:.84rem">
+  <b>현재 승인된 도펀트 랭킹은 0건이다.</b> {{ T.why_zero|bold }}
+  <div class="muted" style="margin-top:6px;font-size:.94em">
+    <b>호스트</b> {{ T.host.formula_hint }} — {{ T.host.evidence }} ({{ T.host.not }}).
+    <b>실측 농도</b> x = {{ T.actual_x }} — {{ T.actual_x_note }}</div>
+  <div class="muted" style="margin-top:4px;font-size:.94em">아래 <b>🗄 47종 (superseded)</b> 와
+    <b>🔁 90종 회수분</b> 은 둘 다 <b>보관·진단용</b>으로만 열어둔다 — 원자료·ESW 는 90종 전수라 그대로 내려받을 수 있다.</div>
+</div>
+{% endif %}
+
+{# ══ 캠페인 지위 밴드 (v3 묶음 E · P0-13, 2026-09-09) ═════════════════════════
+   이 화면이 말하던 최신 날짜가 2026-08-25 였다 — 회신 AL 의 NO-GO(08-30)도, 09-08 에
+   비준된 보고량 카드도, 같은 날 봉인도 한 글자도 없었다. 값은 하드코딩이 아니라
+   `data.cascade_campaign_band()` 가 비준 카드·봉인 파일에서 읽어 온다. #}
+{% include "_campaign_band.html" %}
+
+{# ══ §4b 셀 정책 — V₀ 가 조건에 따라 움직이는가 (2026-09-13, 회신 BQ·BQ-2) ═══════
+   ⛔ 숫자는 **화면이 보관하지 않는다** — data.cascade_pilot_4b() 가 원장
+     db/properties/cascade_pilot_4b_regate_2026_09_13.json 하나만 읽는다.
+   ⛔ 철회한 두 해석은 citation_hazards 의 id 를 단 요소 **안**에 있다 (data-claim).
+     근처에 ⛔ 표지를 두는 것은 결속이 아니다 — 값이 복사될 때 표지가 안 따라간다.
+   ⛔ 표식은 CSS content 가 아니라 **텍스트 노드**(.claim-mark)다. #}
+{% if p4b and p4b.ok %}
+<div class="card" style="border-left:4px solid #be123c">
+  <h3 style="margin-top:0">§4b 셀 정책 — <b>{{ p4b.table_title }}</b>
+    <span class="lv lv-a">심화</span>
+    {% if not p4b.citable %}<span class="claim-mark" style="color:#be123c">[⛔미완·인용금지]</span>{% endif %}
+  </h3>
+
+  {% if not p4b.citable %}
+  <div class="callout cal-danger" style="font-size:.82rem">
+    <b>이 표는 아직 인용할 수 없다.</b> {{ p4b.why_not_citable|bold }}
+  </div>
+  {% endif %}
+
+  <p style="font-size:.86rem;margin:10px 0 4px">
+    카드 v4 §4b ① 은 <b>“H0·P1·P2 에 같은 형상 정책”</b> 이고, 이어서 V₀ 실제 적용 → 고정셀 완화 →
+    응력 기록 → 후속 연결을 요구한다. 아래 표는 그 준비가 <b>어느 설정에서 되는가</b>를 세는 것이지,
+    “조건 독립인 유일한 EOS” 의 증명이 아니다 (회신 BQ-3 Q3).
+  </p>
+  {% if p4b.not_this %}<div class="muted" style="font-size:.8rem;margin-bottom:6px">{{ p4b.not_this|bold }}</div>{% endif %}
+  {% if p4b.by_condition %}
+  <div style="font-size:.82rem;margin:6px 0">
+    <b>조건별 자격</b>:
+    {% for c, v in p4b.by_condition.items() %}<span style="margin-right:10px"><code>{{ c }}</code> {{ v }}</span>{% endfor %}
+    — <b>다섯 구조가 모두 준비된 공통 설정은 없다.</b>
+  </div>
+  {% endif %}
+  <div class="muted" style="font-size:.8rem;margin-bottom:8px">{{ p4b.why_not_window_dependent|bold }}</div>
+  {% if p4b.summary %}
+  <div class="callout cal-warn" style="font-size:.85rem;margin:8px 0">{{ p4b.summary|bold }}</div>
+  {% endif %}
+
+  <table class="tbl" style="font-size:.84rem">
+    <thead><tr><th>구조</th><th class="num">조건 수</th><th class="num">V₀ 폭 (Å³)</th>
+      <th class="num">V₀ 폭 %</th><th class="num">자격</th><th>B₀′ 범위</th></tr></thead>
+    <tbody>
+    {% for r in p4b.spread %}
+      <tr{% if r.ordered %} style="background:#fef9c3"{% endif %}>
+        <td>{{ r.structure }}{% if r.ordered %} <b>(질서)</b>{% endif %}</td>
+        <td class="num">{{ r.n_conditions }}</td>
+        <td class="num">{{ '%.1f'|format(r.V0_range_A3) }}</td>
+        <td class="num"><b>{{ '%.2f'|format(r.V0_range_pct) }} %</b></td>
+        <td class="num"><b>{{ r.n_eligible }}/{{ r.n_conditions }}</b></td>
+        <td class="num">{{ '%.2f'|format(r.Bp_min) }} … {{ '%.2f'|format(r.Bp_max) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="muted" style="font-size:.8rem;margin-top:8px">
+    {% for n in p4b.read_notes %}<div style="margin-top:3px">· {{ n|bold }}</div>{% endfor %}
+  </div>
+
+  <h4 style="margin:14px 0 4px">리뷰 두 번이 잡아낸 것은 물리가 아니었다</h4>
+  <p style="font-size:.84rem;margin:0 0 6px">
+    회신 BQ → BQ-2 가 <b>NO-GO</b> 를 낸 이유는 같은 병이 <b>세 군데</b>에 있었기 때문이다 —
+    <b>계산해서 기록은 하는데 그 결과가 판정에 연결돼 있지 않았다.</b>
+    셋 다 selftest 53건을 통과하고 있었다. <b>양성 시험만으로는 이것을 못 잡는다.</b>
+  </p>
+  <table class="tbl" style="font-size:.82rem">
+    <thead><tr><th>어디</th><th>기록은 했다</th><th>그런데 판정은</th></tr></thead>
+    <tbody>
+      <tr><td>P0-1 수렴</td><td>점마다 <code>converged</code>·<code>final_fmax</code></td>
+          <td><b><code>fit_quality_ok</code> 가 안 본다</b></td></tr>
+      <tr><td>Q2 높이/모양</td><td><code>shape_max</code>·<code>level_offset</code></td>
+          <td><b>게이트는 원시 <code>dE/span</code> 을 본다</b></td></tr>
+      <tr><td>P0-3 상태 승계</td><td>가지 구조를 돌려줬다</td>
+          <td><b>실패해도 그대로 승격된다</b></td></tr>
+    </tbody>
+  </table>
+
+  <h4 style="margin:14px 0 4px">⛔ 이 캠페인에서 <b>철회된 해석</b> — 인용 금지</h4>
+  <div style="font-size:.83rem">
+    <div data-claim="HZ-4b-updown-convergence-misread" style="margin:4px 0">
+      <b>“세 구조 다 7/7 수렴 → 미수렴 가설은 죽는다”</b><span class="claim-mark">[⛔철회·인용금지]</span>
+      — 화면의 7/7 은 <b>올라가는 갈래뿐</b>이었다. 이력현상은 두 갈래 <b>사이</b>의 양이다.
+    </div>
+    <div data-claim="HZ-4b-cross-window-shape-ratio" style="margin:4px 0">
+      <b>“창을 좁히니 모양차가 26배·247배 줄었다 (H0 는 1.7배) → 창 효과로 설명 안 된다”</b><span class="claim-mark">[⛔철회·인용금지]</span>
+      — 창별 비교는 <b>공통 부피점</b>에서 해야 한다. 모양차 수치 자체는 실측이고 살아 있다;
+      철회된 것은 <b>그 비율로 기전을 가르는 추론</b>이다.
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:.79rem;margin-top:10px">
+    <b>이 패널이 말하지 않는 것</b>
+    {% for n in p4b.not_saying %}<div>· {{ n|bold }}</div>{% endfor %}
+  </div>
+  <div class="muted" style="font-size:.78rem;margin-top:6px">
+    생성 {{ p4b.method.generated_by }} · 재판정 {{ p4b.method.regated_by }}<br>
+    {{ p4b.method.machine }} · {{ p4b.method.protocol }} ·
+    재판정 요약 판정변경 {{ p4b.method.regate_summary.verdict_changed }} ·
+    <b>사유변경 {{ p4b.method.regate_summary.reason_changed }}</b>
+  </div>
+</div>
+{% endif %}
+
+{# ⚠ verified 서브셋 최상위에 _CONFLICT_UNRESOLVED_* 가 있는데 화면 어디에도 안 떴다.
+   모든 verdict 가 "⚠ 잠정(값 충돌 미해소)" 로 시작하는데 대시보드는 그 도펀트를 1위로
+   올린다 — 충돌을 띄우지 않으면 사이트가 스스로 모순된다 (2026-07-29 감사).
+   ⛔ 2026-09-09 (P0-10) — 루프 조건이 `_CONFLICT` 였다. **2026-08-12 에 해소된**
+   `_CONFLICT_RESOLVED_2026_08_12` 까지 '미해소' 빨간 제목 아래로 끌려왔고, 그 값이
+   str 이 아니라 dict 라 `|bold` 가 **파이썬 repr 을 이스케이프해 화면에 노출**했다
+   (`{&#39;resolution&#39;: …}`). 정본 citation_hazards.json 도 이 건을 `RESOLVED` 로
+   등재한다. 그리고 꼬리말 '이 서브셋의 verdict 는 전부 잠정' 은 원장에 근거가 없다
+   (doping_cascade_verified.json 안 '잠정' 은 그 충돌 문자열 자체 1회뿐) — 삭제한다.
+   해소분은 지우지 않고 **회색으로 접는다.** #}
+{% set _conf = [] %}{% set _done = [] %}
+{% for k, v in (casc.verified or {}).items() if k.startswith('_CONFLICT') %}
+  {% set _ = (_conf if k.startswith('_CONFLICT_UNRESOLVED') else _done).append((k, v)) %}
+{% endfor %}
+{% if _conf %}
+<div class="callout cal-danger" style="margin:10px 0;font-size:.82rem">
+  <b>⚠ verified 서브셋에 미해소 값 충돌이 있다</b>
+  <ul style="margin:6px 0 0;padding-left:18px">
+    {# dict 가 섞여 들어와도 repr 을 흘리지 않는다 — 사람이 읽을 절만 뽑아 쓴다 #}
+    {% for k, c in _conf %}<li>{{ conflict_txt(c)|bold }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+{% if _done %}
+<details class="v3-fold card" style="margin:10px 0;font-size:.82rem;border-left:4px solid var(--muted)">
+  <summary style="font-weight:700">🗄 해소된 값 충돌 {{ _done|length }}건 — 기록으로만 남긴다</summary>
+  <ul style="margin:8px 0 0;padding-left:18px;line-height:1.6">
+    {% for k, c in _done %}<li><span class="mono muted">{{ k }}</span> — {{ conflict_txt(c)|bold }}</li>{% endfor %}
+  </ul>
+</details>
+{% endif %}
+<div class="tabs" id="tabs">
+  {# 순서 = 신뢰도 순. 승인된 결과가 없으므로 **감사 화면이 기본**이다 (2026-08-14). #}
+  <button class="active" data-tab="audit">📋 현황·감사</button>
+  <button data-tab="esw">🧪 Oxidation ESW <span class="tb-ok">90종</span></button>
+  {% if casc.v2 and casc.v2.present %}<button data-tab="v2">🔁 90종 회수분 <span class="tb-diag">diagnostic</span></button>{% endif %}
+  <button data-tab="ion">🔎 G4 프록시 분해</button>
+  <button data-tab="champ">⚙️ Champions</button>
+  {% if casc.themes %}<button data-tab="theme">🎯 테마</button>{% endif %}
+  {% if casc.stability %}<button data-tab="stab">🛡 안정성 3축</button>{% endif %}
+  <button data-tab="syn">🤝 Co-doping</button>
+  <button data-tab="board">🗄 47종 리더보드 <span class="tb-sup">superseded</span></button>
+  {% if casc.funnel %}<button data-tab="funnel">🗄 47종 깔때기 <span class="tb-sup">superseded</span></button>{% endif %}
+</div>
+
+<!-- Leaderboard -->
+{# ══ 📋 현황·감사 — 기본 화면. 축별 완성도와 결측을 결과보다 먼저 보여준다 ══ #}
+<div class="tab-panel active" id="tab-audit">
+  {% set VA = (casc.v2 or {}).audit %}{% set VS = ((casc.v2 or {}).meta or {}).status or {} %}
+
+  {# ══ 이 축의 근본 한계 — 결과보다 먼저 (2026-08-25) ══════════════════════
+     스크리닝은 **근접 후보의 순위**를 매기는 일이다. 그런데 우리가 순위를 매기는
+     엔진(UMA)이 바로 그 구간에서 가장 약하다는 외부 증거가 이번에 들어왔다.
+     결과 표 아래에 각주로 달면 아무도 안 본다 — 맨 위에 세운다. #}
+  <div class="card" style="border-left:4px solid #be123c">
+    <h3>⚠ 이 축의 근본 한계 — <b>평균이 좋아도 순위는 틀린다</b><span class="lv lv-a">심화</span></h3>
+    <p style="font-size:.88rem;background:rgba(190,18,60,.06);padding:8px 11px;border-radius:8px;margin:6px 0"><b>한 줄로:</b> 우리가 쓰는 계산 엔진은 <b>평균 오차는 아주 작은데, 비슷비슷한 후보끼리의 순서는 자주 틀린다.</b> 그런데 스크리닝이 하는 일이 바로 그 순서 매기기다 — 그래서 이 페이지의 순위를 결론으로 쓰지 않는다.</p>
+    <p style="font-size:.9rem;margin:6px 0">
+      스크리닝은 <b>후보들 사이의 순위</b>를 매기는 일이다. 그런데 MLIP 의 강점은
+      <b>평균 오차</b>이고, 평균이 감추는 것이 정확히 <b>근접 후보 간 순위</b>다.
+      서로 다른 네 곳에서 같은 결론이 나왔다:
+    </p>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>출처</th><th>평균 지표</th><th>순위 지표</th></tr></thead><tbody>
+      <tr><td><b>Kalikadien 2026</b> <span class="muted">(우리와 같은 UMA-s-1.1 을 제3자가 감사)</span></td>
+          <td>R² 0.96–0.97 · RMSE 2.4–4.9 kJ/mol</td>
+          <td><b style="color:#be123c">Spearman 신뢰율 44–84 %</b> · 역순위 2건</td></tr>
+      <tr><td><b>UMA 원논문</b> <span class="muted">부록 G</span></td>
+          <td>WBM 20.2 meV/atom</td>
+          <td><b style="color:#be123c">우리 버전·우리 task(`omat`) 가 결합영역 밖에서 비물리적 요동</b></td></tr>
+      <tr><td><b>우리 Li₃PS₄ 힘 벤치</b></td>
+          <td>MAE 30.0 meV/Å <span class="muted">(전용 모델보다 좋다)</span></td>
+          <td><b style="color:#be123c">최악 0.477 eV/Å = 평균의 16배</b></td></tr>
+      <tr><td><b>우리 47종 챔피언 점수</b></td>
+          <td>—</td>
+          <td><b style="color:#be123c">후보 수 ↔ 챔피언 점수 r = +0.321</b> = best-of-N 인공물</td></tr>
+    </tbody></table></div>
+    <p style="font-size:.88rem;margin:8px 0 4px">
+      ⛔ <b>저자의 면책을 우리 실패에 쓰면 안 된다.</b> Kalikadien 은
+      <i>"실패는 ΔE &lt; 21–52 meV 인 near-degenerate 영역에만"</i> 이라고 적지만,
+      우리 b2o3 O-자리는 DFT 가 <b>−6.63 eV(≈640 kJ/mol)</b> 로 갈렸다 — 저들 임계의
+      <b>130–320배</b>다. Li₃N 은 결정론적 편향이다.
+      <b>in-distribution 순위잡음</b>과 <b>분포 밖 계통 오답</b>은 다른 병이다.
+    </p>
+    <p style="font-size:.88rem;margin:4px 0">
+      ✅ 그래서 이 화면의 규율이 이렇게 선다 — <b>승인된 current ranking 0종</b>,
+      점수는 <b>같은 프로토콜 안의 상대 비교</b>로만, 챔피언 점수는
+      <b>후보 수를 함께 보지 않으면 읽지 않는다</b>.
+      쓸 수 있는 외부 논거는 하나뿐이다: <i>"in-distribution 에서조차 랭킹 신뢰율이 44–84 % 다."</i>
+    </p>
+    <p class="muted" style="font-size:.76rem">
+      근거: <a href="/fairchem">Fair-Chem·UMA</a> ·
+      <code>litdb/papers/kalikadien2026_uma_tm_catalyst_conformer_ranking.md</code> ·
+      <code>litdb/papers/uma2026_family_of_universal_models_for_atoms.md</code> ·
+      <code>db/properties/mlip_bench_li3ps4_uma.json</code>
+    </p>
+  </div>
+
+  {# ══ 우리 파이프라인이 놓친 세 단계 (2026-08-25) ═══════════════════════
+     출처는 DEM 축 문헌(양수영 세미나), 적용 대상은 이 DFT 축 cascade.
+     화학은 안 겹치고 **절차만** 이전한다. 근거: kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md #}
+  <div class="card" style="border-left:4px solid #0284c7">
+    <h3>🔍 우리가 안 한 세 단계 <span class="lv lv-a">심화</span>
+      <span class="muted" style="font-weight:400;font-size:.8rem">
+      — 같은 문제를 먼저 푼 사례에서 절차만 이전</span></h3>
+    <p style="font-size:.88rem;background:rgba(2,132,199,.07);padding:8px 11px;
+       border-radius:8px;margin:6px 0"><b>한 줄로:</b> 같은 종류의 ML 설계를 먼저 한
+      사례와 비교해 보니, 우리는 <b>설계공간을 다 안 쓰고 · 표본을 스스로 정하지 않았고 ·
+      목적들이 서로 충돌하는지 본 적이 없다.</b> 셋 다 계산을 더 돌리지 않고 고칠 수 있다.</p>
+    <p style="font-size:.9rem;margin:6px 0">
+      비교 대상은 <b>양수영(BML) 방사형 NCM 미세구조 ML</b>. <b>화학은 하나도 안 겹친다</b>
+      (액체계 NCM 입자 형상 ↔ 황화물 도핑 조성). 베낄 것은 R² 가 아니라
+      <b>그 앞의 세 단계</b>다.
+    </p>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>단계</th><th>저쪽</th><th>우리</th><th>지금</th></tr></thead><tbody>
+      <tr><td><b>① 설계공간</b></td>
+          <td>연속 5축 · LHS 1911점</td>
+          <td><b style="color:#be123c">차원 하나가 상수</b> — <code>concentration</code> 3,615행 전부 0.25</td>
+          <td><span class="badge warn">미착수</span> A4(비용&gt;0)</td></tr>
+      <tr><td><b>② 표본 설계</b></td>
+          <td>사람이 균등하게 깖 → 함정 회피</td>
+          <td><b style="color:#be123c">화학이 표본을 정함</b> — 후보 15~150(10배),
+              후보 수↔챔피언 r=+0.321 = best-of-N 인공물</td>
+          <td><span class="badge ok">도구 준비</span> <code>--fixed_n</code></td></tr>
+      <tr><td><b>③ 목적 상관</b></td>
+          <td>Pareto <b>전에</b> 목적쌍 산점도 → σ↔Q_CC 가 좁은 띠라 σ 는 −2.9 %,
+              독립축 Damage 만 −64.5 %</td>
+          <td><b style="color:#be123c">한 번도 안 봄</b> — 가중합으로 충돌을 뭉갬</td>
+          <td><span class="badge ok">측정함</span> ↓</td></tr>
+    </tbody></table></div>
+
+    <p style="font-size:.9rem;margin:10px 0 4px"><b>③ 실측 (2026-08-25,
+      <code>tools/doping/axis_corr_csv.py</code>)</b> — 우리 축은 저쪽과 <b>반대</b>다:</p>
+    <pre style="font-size:.8rem;margin:4px 0">공선성(|ρ|≥0.85)  0건        최대 |ρ|  0.326
+상충 1건  안정성(ΔE) ↔ |ΔV/V0|   ρ = −0.326</pre>
+    <p style="font-size:.86rem;margin:4px 0">
+      ⇒ 저쪽은 축이 붙어서 Pareto 가 할 일이 없었는데 <b>우리는 축이 거의 독립이라
+      Pareto 가 실제로 선택지를 준다.</b> 가중합으로 뭉개면 그만큼 잃는다.</p>
+
+    <p style="font-size:.9rem;margin:10px 0 4px"><b>④ 검증 — 부러워할 숫자가 아니다</b></p>
+    <p style="font-size:.86rem;margin:4px 0">
+      저쪽 <code>R² 0.99</code> 는 <b>랜덤 폴드 + 노이즈 0 인 결정론적 시뮬레이터</b>다 —
+      매끄러운 함수의 보간이라 높은 R² 는 성취가 아니라 기대값이고, <b>실험 검증은 0건</b>이다.
+      우리 <code>LODO −0.1805</code> 는 <b>처음 보는 도펀트</b>를 맞히는 훨씬 어려운 시험이다.
+      <b>0.99 와 −0.18 의 차이는 모델이 아니라 CV 설계와 라벨 노이즈다.</b></p>
+
+    <p class="muted" style="font-size:.76rem;margin-top:8px">
+      근거 —
+      <a href="/literature">litdb <code>talks/yang2026_ncm_radial_microstructure_ml</code></a> (DEM 축) ·
+      <code>kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md</code> (이전 카드) ·
+      <code>db/properties/cascade_audit_ml_validation.csv</code> (우리 CV) ·
+      <a href="/fairchem">Fair-Chem·UMA</a> (엔진 한계)
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>축별 완성도 <span class="lv lv-a">심화</span> <span class="muted" style="font-weight:400;font-size:.8rem">파생물마다 완성도가 다르다 — 하나로 뭉뚱그리지 않는다</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>축</th><th>등급</th><th>내용</th></tr></thead><tbody>
+    {% set _axl = {'raw':'원자료 (champions · litransport)','oxidation':'grand-potential ESW',
+                   'ranked':'합성점수 랭킹','funnel':'게이트 깔때기','figures':'그림 재생성'} %}
+    {% for ax in casc.audit_axes %}{% if ax in VS %}{% set g, txt = VS[ax] %}
+      <tr><td><b>{{ _axl.get(ax, ax) }}</b></td>
+          <td><span class="badge {{ 'ok' if g == 'complete' else 'warn' }}">{{ g }}</span></td>
+          <td style="font-size:.86em">{{ txt|bold }}</td></tr>
+    {% endif %}{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.75rem;margin-top:6px">
+      complete = 90종 전수 · partial/incomplete = 그 축은 90종 최종판이 <b>아니다</b>.</div>
+  </div>
+
+  {# ── G3 네 층 + matched 2×2 + 사다리 (17d9a373 최종 핸드오프) ── #}
+  {% if g3state %}
+  <div class="card">
+    <h3>G3 상태 <span class="muted" style="font-weight:400;font-size:.8rem">
+      네 층을 한 숫자로 합치지 않는다</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><tbody>
+      <tr><td>phase-set comparability</td>
+          <td class="num"><b>{{ g3state.phase_set_comparable }}</b></td>
+          <td><span class="badge ok">닫힘</span></td></tr>
+      <tr><td>operational factorial coverage</td>
+          <td class="num"><b>{{ g3state.operational_factorial_coverage }}</b></td>
+          <td><span class="badge warn">식 수준</span></td></tr>
+      <tr><td>structural realization validated</td>
+          <td class="num"><b>{{ g3state.structural_realization_validated }}</b></td>
+          <td><span class="badge err">열림</span></td></tr>
+      <tr><td>approved current ranking</td>
+          <td class="num"><b>{{ g3state.approved_current_ranking }}</b>종</td>
+          <td><span class="badge err">0</span></td></tr>
+    </tbody></table></div>
+    {# data-forbidden-list: 여기 안의 문구는 **하지 말라는 예시**다. 회귀 테스트가 이 블록을
+       걷어내고 나머지에서 같은 문구를 찾는다 — 안 그러면 경고문 자체가 위반으로 잡힌다. #}
+    <div class="callout cal-danger" style="margin-top:8px;font-size:.82rem">
+      <!--FORBIDDEN-->⛔ 이렇게 말하면 안 된다: {% for f in g3state.forbidden %}<span class="mono">{{ f }}</span>{% if not loop.last %} · {% endif %}{% endfor %}<!--/FORBIDDEN-->
+    </div>
+  </div>
+
+  {% if enrich %}
+  <div class="card">
+    <h3>host 초과 비율 <span class="muted" style="font-weight:400;font-size:.8rem">
+      <b>{{ enrich.label }}</b> — 인과 아님</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>분모</th><th>plain</th><th>chain</th><th>비</th><th>분모 주의</th></tr></thead><tbody>
+      <tr><td>전체 챔피언</td><td class="mono">{{ enrich.full_pool.plain }}</td>
+          <td class="mono">{{ enrich.full_pool.chain }}</td>
+          <td class="num"><b>{{ enrich.full_pool.ratio }}배</b></td>
+          <td style="font-size:.82em">{{ enrich.full_pool.denominator_note }}</td></tr>
+      <tr><td>chain-eligible 33 슬롯</td><td class="mono">{{ enrich.eligible_slots.plain }}</td>
+          <td class="mono">{{ enrich.eligible_slots.chain }}</td>
+          <td class="num"><b>{{ enrich.eligible_slots.ratio }}배</b></td>
+          <td style="font-size:.82em">{{ enrich.eligible_slots.denominator_note }}</td></tr>
+    </tbody></table></div>
+    <div class="callout cal-warning" style="margin-top:8px;font-size:.82rem">
+      {{ enrich.why_not_causal|bold }}<br>
+      <!--FORBIDDEN-->⛔ 이렇게 부르지 않는다: {% for n in enrich.never_call_it %}<span class="mono">{{ n }}</span>{% if not loop.last %} · {% endif %}{% endfor %}<!--/FORBIDDEN-->
+    </div>
+  </div>
+  {% endif %}
+
+  {% if fac and fac.included %}
+  <div class="card">
+    <h3>matched 2×2 operational contrast
+      <span class="muted" style="font-weight:400;font-size:.8rem">
+        {{ facc.cells.H_plain }} · {{ facc.cells.H_Cl }} · {{ facc.cells.D_plain }} · {{ facc.cells.D_Cl }}</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>종</th><th>H_plain</th><th>H_Cl</th><th>D_plain</th><th>D_Cl</th>
+      <th>baseline</th><th>plain-dopant</th><th>conditional</th><th>interaction</th>
+      <th>LiS4 제외 conditional</th></tr></thead><tbody>
+    {% for sp, v in fac.included.decomposition|dictsort %}
+      {% set ex = (fac.excluded.decomposition[sp] if fac.excluded and sp in fac.excluded.decomposition else None) %}
+      <tr><td><b>{{ sp }}</b></td>
+        <td class="num">{{ v.H_plain_V }}</td><td class="num">{{ v.H_Cl_V }}</td>
+        <td class="num">{{ v.D_plain_V }}</td><td class="num">{{ v.D_Cl_V }}</td>
+        <td class="num">{{ '%+.3f'|format(v.baseline_cl_recipe_contrast_V) }}</td>
+        <td class="num">{{ '%+.3f'|format(v.plain_dopant_recipe_contrast_V) }}</td>
+        <td class="num"><b>{{ '%+.3f'|format(v.conditional_cl_recipe_contrast_V) }}</b></td>
+        <td class="num">{{ '%+.3f'|format(v.recipe_interaction_V) }}</td>
+        <td class="num" style="color:var(--red)">{% if ex %}{{ '%+.3f'|format(ex.conditional_cl_recipe_contrast_V) }}{% else %}—{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="callout cal-danger" style="margin-top:8px;font-size:.82rem">
+      <b>마지막 열은 다른 phase set 이다</b> (LiS4 제외 · host 2.256 vs 2.140) — 절대 onset 을 섞지 말 것.
+      conditional contrast 가 roster 에 의존한다: WO₃ +0.216 → 0.000 · Al₂O₃ +0.214 → +0.098.
+      <ul style="margin:6px 0 0;padding-left:18px">
+        {% for c in facc.caveats %}<li>{{ c|bold }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {% if fac.included.ladder %}
+  <div class="card">
+    <h3>host Li/Cl ladder
+      <span class="badge err">MECHANISM HYPOTHESIS · APPENDIX ONLY</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>계단</th><th>조성</th><th>onset (V)</th><th>onset 반응식</th></tr></thead><tbody>
+    {% for r in fac.included.ladder %}
+      <tr><td class="mono">{{ r.cell }}</td><td class="mono">{{ r.formula }}</td>
+          <td class="num"><b>{{ r.ox_V }}</b></td>
+          <td class="mono" style="font-size:.78em">{{ r.rxn }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="callout cal-warning" style="margin-top:8px;font-size:.82rem">
+      ✅ 허용: <b>S17 → S16</b> 에서 branch transition 이 일부 doped recipe 와 함께 관찰됨<br>
+      ⛔ 금지: LiS₄ 소멸 기전 · 보편적 Cl 기전 · 구조 검증됐다는 주장<br>
+      <b>ladder4 에도 0.5 LiS₄ 가 남는다</b> — 순수 host 사다리가 "LiS₄ 소멸" 을 반증한다.
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {% if stages %}
+  <div class="card">
+    <h3>20-stage workflow — 비용을 어디에 쓰는가
+      <span class="muted" style="font-weight:400;font-size:.8rem">
+        stage_status 와 gate_status 는 <b>다른 체계</b>다</span></h3>
+    {% for g in stages %}
+    <div style="border-left:3px solid var(--muted);padding:6px 0 6px 10px;margin-bottom:10px">
+      <div><b class="mono">{{ g.id }}</b> · <b>{{ g.name }}</b>
+        <span class="muted" style="font-size:.8rem">— {{ g.cost_class }}</span></div>
+      <div style="font-size:.84rem;margin-top:3px"><b>묻는 것</b> {{ g.question }}</div>
+      <div style="font-size:.82rem" class="muted"><b>입출력</b> {{ g.input_output }}</div>
+      <div style="font-size:.82rem" class="muted"><b>왜 이 순서</b> {{ g.why_before_next|bold }}</div>
+      <div style="font-size:.82rem;color:var(--red)"><b>주장 못 함</b> {{ g.cannot_claim }}</div>
+      <ul style="margin:4px 0 0;padding-left:18px;font-size:.8rem">
+        {% for w in g.warnings %}<li>{{ w|bold }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>게이트</th><th>스테이지 매핑</th></tr></thead><tbody>
+    {% for gate, mapping in stagemap %}
+      <tr><td class="mono"><b>{{ gate }}</b></td><td style="font-size:.84em">{{ mapping|bold }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {# ── 게이트 분모 계약 (Round-3) — record_present ≠ method_valid ── #}
+  {% set GD = (casc.v2 or {}).gate_denominators %}
+  {% if GD and GD.data %}
+  <div class="card">
+    <h3>게이트 분모 계약 <span class="muted" style="font-weight:400;font-size:.8rem">
+      <b>기록이 있다 ≠ 비교 가능하다</b> · 결측을 탈락으로 세지 않는다</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>gate</th><th>기록 있는 종</th><th>method 유효 (전 라벨)</th><th>부분</th><th>결측</th>
+      <th>legacy 집계로 사용 가능</th><th>승인</th><th>status</th></tr></thead><tbody>
+    {% for r in GD.data %}
+      <tr>
+        <td><b>{{ r.gate }}</b></td>
+        <td class="num">{{ r.record_present_species }}</td>
+        <td class="num"><b{% if r.all_label_method_valid_species == 0 %} style="color:var(--red)"{% endif %}>{{ r.all_label_method_valid_species }}</b></td>
+        <td class="mono" style="font-size:.84em">{{ r.partial_species or '—' }}</td>
+        <td class="mono" style="font-size:.84em">{{ r.dropped_species or '—' }}</td>
+        <td class="num">{{ r.legacy_usable_species }}</td>
+        <td class="num"><span class="badge err">{{ r.approved_current_species }}</span></td>
+        <td><span class="badge {{ 'err' if 'blocked' in (r.status|string) else 'warn' }}">{{ r.status }}</span></td>
+      </tr>
+      <tr><td></td><td colspan="7" class="muted" style="font-size:.78rem;padding-top:0">{{ r.note }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="callout cal-warn" style="margin-top:10px;font-size:.82rem">
+      <b>G3 는 닫혔다 (2026-08-16)</b> — <span class="mono">phase_set_id</span> 를 싣고 host 를
+      <b>후보와 같은 실행·같은 chemsys 안에서</b> 재면서 method 유효가 <b>0 → 90종</b>
+      (270/270 쌍) 이 됐다. host onset 은 84개 phase set 전부에서 <b>2.140 V</b> 로 예외가 없다.
+      회수 270 반응 중 <b>124건</b>에 LiS4 가 들어 있고, LiS4 를 빼면 host onset 이
+      2.140 → 2.256 V 로 움직인다 — 그건 그대로 남아 있는 민감도다.
+      <div style="margin-top:6px"><b>남은 것: 효과 귀속(attribution).</b> 챔피언 슬롯을
+        <span class="mono">combined_score</span> 최대값이 가져가는데 풀에 두 generator 변형
+        (<span class="mono">compound_set</span> / <span class="mono">compound_set_chain</span>)이
+        같이 있어 <b>270 중 17 슬롯이 chain recipe 조성</b>이다.
+        <b>⛔ 이 17행이 하나의 S→Cl 치환군이 아니다</b> — plain 형제와 정확히
+        ΔLi=−1·ΔS=−1·ΔCl=+1 인 건 <b>10행</b>뿐이고, 나머지 <b>7행</b>(B₂O₃×3·MoO₃×2·WO₃×2)은
+        치환 자리(<span class="mono">P_4b</span> → <span class="mono">Li_24g</span>)와 Li/P
+        화학량론까지 함께 다르다. host 초과율은 plain 17/253 vs chain 11/17 (<b>9.63배</b>)이고,
+        chain 후보가 실제 있던 33슬롯만 보면 plain 4/16 vs chain 11/17 (<b>2.59배</b>)로 줄어든다 —
+        <b>둘 다 사후 기술통계이지 인과 효과가 아니다</b>(챔피언은 사후 선택, 농도 라벨은 독립 반복 아님).
+        <b>B₂O₃ 는 plain 챔피언 자체가 없다.</b>
+        <span class="mono">Li58P8S41Cl16B2O3</span>(DFT-deep, 2.03 V)와
+        <span class="mono">Li17B2P4S16Cl5O3</span>(cascade, 2.317 V)은 <b>다른 조성</b>이고,
+        legacy 쪽에 <span class="mono">phase_set_id</span>가 없어 부호 반전의 원인을 조성 하나로
+        확정할 수 없다. 분해하려면 H=Li₂₄P₄S₂₀Cl₄ · C=Li₂₃P₄S₁₉Cl₅ · D_plain · D_Cl 네 칸을
+        같은 phase set 에서 재야 한다 — 아직 없다.</div>
+      <div style="margin-top:6px"><b>G5</b> 는 <b>method 유효 86</b> 이다 — presence 로 세면 88 이지만
+      비물리 탄성(B_hill·G_hill ≤ 0)을 거르면 AlBr₃·MgI₂·Na₂S 가 부분으로 내려간다.</div>
+    </div>
+    <div class="muted" style="font-size:.76rem;margin-top:6px">
+      출처: <span class="mono">db/properties/cascade_seminar_gate_denominators_round3.csv</span></div>
+  </div>
+  {% endif %}
+
+  {% if VA %}
+  <div class="card">
+    <h3>gate 입력 ingestion 감사 <span class="muted" style="font-weight:400;font-size:.8rem">{{ VA.audited }} · 위 게이트별 표가 더 정확하다</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>구분</th><th>종</th><th>의미</th></tr></thead><tbody>
+      <tr><td><span class="badge ok">complete</span></td><td class="mono">{{ VA.n_complete }}</td>
+          <td style="font-size:.86em">모든 농도 라벨에서 gate 입력이 다 있음</td></tr>
+      <tr><td><span class="badge warn">partial</span></td><td class="mono">{{ VA.partial|length }}</td>
+          <td style="font-size:.86em">일부 라벨 결측 → <b>남은 라벨 평균</b>으로 평가됨:
+            {% for sp, why in VA.partial.items() %}<b class="mono">{{ sp }}</b> — {{ why|bold }}{% endfor %}</td></tr>
+      <tr><td><span class="badge err">dropped</span></td><td class="mono">{{ VA.dropped|length }}</td>
+          <td style="font-size:.86em">{% for sp, why in VA.dropped.items() %}<b class="mono">{{ sp }}</b> — {{ why|bold }}{% endfor %}</td></tr>
+    </tbody></table></div>
+    <div class="callout cal-warning" style="margin-top:10px;font-size:.82rem">
+      <b>⚠ 판정이 아닌 이유로 통과한 종</b> — waterfall 끝단에 남지만 물성 판정이 아니다.
+      <ul style="margin:6px 0 0;padding-left:18px">
+      {% for sp, why in ((casc.v2.meta or {}).artifacts or {}).items() %}<li><b class="mono">{{ sp }}</b> — {{ why|bold }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+  {% set RF = ((casc.v2 or {}).meta or {}).recovered_facts %}
+  {% if RF %}
+  <div class="card">
+    <h3>회수로 <b>뒤집힌 서술</b> <span class="muted" style="font-weight:400;font-size:.8rem">47종 문안을 그대로 뒀으면 계속 틀린 채 남았을 것들</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>대상</th><th>정정</th></tr></thead><tbody>
+    {% for what, txt in RF %}<tr><td><b>{{ what }}</b></td><td style="font-size:.86em">{{ txt|bold }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+  {% endif %}
+
+  {# ── 5개 audit 패널 — 계약상 기본 공개가 허용된 유일한 그림 ── #}
+  {% set AF = (casc.v2 or {}).audit_figures %}
+  {% if AF %}
+  <div class="card">
+    <h3>감사 패널 <span class="muted" style="font-weight:400;font-size:.8rem">
+      기본 공개가 허용된 유일한 그림 5종 · 고정 소스 <span class="mono">9abe5105</span></span></h3>
+    <div class="muted" style="font-size:.78rem;margin-bottom:10px">
+      리더보드·Pareto·수송 순위·pair 예측 그림은 <b>현재 릴리스에 포함하지 않는다</b>.
+      각 패널의 Origin-ready CSV 를 같이 내려받을 수 있다.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px">
+      {% for png, csvp, title in AF %}
+      <figure style="margin:0">
+        <img src="/api/file/{{ png }}" alt="{{ title }}"
+             style="width:100%;height:auto;border:1px solid var(--border);border-radius:6px">
+        <figcaption class="muted" style="font-size:.78rem;margin-top:5px">
+          <b>{{ title }}</b> · <a class="mono" href="/api/file/{{ csvp }}?dl=1">⬇ CSV</a>
+        </figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% set SB = ((casc.v2 or {}).meta or {}).score_blockers %}
+  {% if SB %}
+  <div class="card">
+    <h3>90종 랭킹이 왜 확정이 아닌가 <span class="muted" style="font-weight:400;font-size:.8rem">막고 있는 건 결측이 아니다</span></h3>
+    <div class="callout cal-warning" style="margin:0 0 10px;font-size:.83rem">
+      <b>완결성은 사실상 해결됐다</b> — 완전 88 · 부분 1(MgI₂) · 전면결측 1(AlI₃).
+      89종 랭킹은 <span class="mono">cascade_v23_ranked_v2.csv</span> 로 <b>지금 내려받을 수 있다</b>.
+      확정을 막는 건 아래 <b>점수·게이트의 타당성</b>이다.
+    </div>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>blocker</th><th>내용</th></tr></thead><tbody>
+    {% for what, why in SB %}<tr><td><b>{{ what }}</b></td><td style="font-size:.86em">{{ why|bold }}</td></tr>{% endfor %}
+    </tbody></table></div>
+    {% if ((casc.v2 or {}).meta or {}).ali3_fallback %}
+    <div class="muted" style="font-size:.78rem;margin-top:8px">
+      <b>90번째(AlI₃)를 넣는 유일한 경로</b> — {{ casc.v2.meta.ali3_fallback|bold }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if casc.g4.circularity %}
+  <div class="card">
+    <h3>⛔ G4 는 독립 두 신호의 AND 가 아니다 <span class="muted" style="font-weight:400;font-size:.8rem">build_screening_funnel.py:139–142</span></h3>
+    <pre class="mono" style="font-size:.76rem;background:var(--bg);padding:10px;border-radius:6px;overflow-x:auto">{{ casc.g4.circularity.code }}</pre>
+    <div style="font-size:.85rem;margin-top:6px">{{ casc.g4.circularity.why_it_matters|bold }}</div>
+    <div class="muted" style="font-size:.78rem;margin-top:4px">{{ casc.g4.circularity.consequence }}</div>
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h3>그래서 지금 인용할 수 있는 것 / 없는 것</h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>대상</th><th>지위</th><th>쓸 수 있나</th></tr></thead><tbody>
+      <tr><td>원자료 90종 · 270 champion</td><td><span class="badge ok">complete</span></td>
+          <td>✅ 내려받아 그대로 쓸 수 있다 (UMA 상대값 단서는 유지)</td></tr>
+      <tr><td>grand-potential ESW 90종</td><td><span class="badge ok">complete</span></td>
+          <td>✅ 옛 141건과 ox_V 차이 0 — 드리프트 없음</td></tr>
+      <tr><td>47종 리더보드 · Pareto</td><td><span class="badge err">superseded</span></td>
+          <td>⛔ 결과로 인용 금지. 계산이 덜 끝난 시점의 <b>취합 경계</b>였다</td></tr>
+      <tr><td>89종 재랭킹 · 깔때기</td><td><span class="badge warn">diagnostic</span></td>
+          <td>⛔ 미검증 진단물. G3 효과 귀속 0/17 (phase-set 비교는 270/270 닫힘) · G4 순환 · G5 로스터 상대</td></tr>
+      <tr><td>DFT 심층검증</td><td><span class="badge ok">{{ deep_map|length }}건</span></td>
+          <td>✅ {{ deep_map.keys()|join(' · ') }} — 조성 페이지의 DFT 값만이 실제 신뢰선</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+{# 🗄 superseded — 47종 시대 리더보드. 결과가 아니라 기록으로만 남긴다 #}
+<div class="tab-panel" id="tab-board">
+  <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+    <b>🗄 이 탭은 superseded 보관함이다 — 결과로 인용하지 말 것.</b>
+    아래 {{ gnum(stats.dopants) }}종 리더보드 · Pareto {{ gnum(stats.pareto) }}건 · champion {{ gnum(stats.champions) }}행은
+    <b>2026-06-29 에 멈춘 취합 경계</b>의 산물이다. 계산은 2026-07-11 에 270/273 으로 끝나 있었고,
+    빠져 있던 43종도 STAGE_12 까지 완주해 있었다. 현행 상태는 <b>📋 현황·감사</b> 탭.
+  </div>
+  <div class="card">
+    <h3>설계공간 — Young's modulus vs 산화 onset <span class="muted" style="font-weight:400;font-size:.8rem">색=score · Pareto는 링 · <b>superseded</b></span></h3>
+    <div class="chart" id="scatter"></div>
+    <div class="muted" style="font-size:.74rem;margin-top:4px">낮은 E(연질) + 높은 ox_V(넓은 창)이 <b>설계 목표축</b>. ⚠ 단조 규칙은 아니다 — bucci2017은 compliant SE(E≈15 GPa)가 오히려 micro-cracking에 <b>취약</b>하다고 보고(비선형 운동학 효과). UMA 상대값.</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">합성 스코어 리더보드</h3>
+      <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('board-tbl',this.value)">
+      <span class="muted" style="font-size:.74rem">헤더 클릭 = 정렬 · <span class="pareto-y">✓ DFT검증</span> = 심층검증됨</span>
+    </div>
+    <div class="callout cal-warning" style="margin:0 0 12px">
+      <div class="cal-b" style="font-size:.8rem">⚠ 스크리닝 순위는 <b>UMA 상대 프록시</b>야 — 절대 E(GPa)·ox_V는 실험 대비 부풀어 있고(상대비교만), 점수 가중치는 수작업이고,
+      <b>ox_V는 47개 중 19개가 2.14로 축퇴</b>(호스트가 pin)라 변별력이 약해. <b>score 차 ~0.02 이내는 사실상 동점</b>.
+      실제 신뢰는 <b>✓검증</b> 행(Nd2O3·B2O3)의 조성 페이지 DFT값만.<br>또 score 의 soft+ductile 가중 0.35 는 <b>'연질일수록 좋다'는 단조 가정</b>인데, bucci2017은 compliant SE(E≈15 GPa)가 micro-cracking에 더 취약하다고 반증한다 — 순위를 물성 최적점으로 읽지 말 것.</div>
+    </div>
+    {# ⛔ 2026-09-09 (P0-11) — 이 안내는 예전에 `<tbody>` 안 `<tr colspan=10>` 이었다.
+       데이터 행과 섞여서 딥링크 JS 의 `r.cells[1]` 이 undefined 로 죽었고, 그 한 줄이
+       같은 script 블록의 THEMES/TDOP 를 통째로 미할당으로 만들었다. 표 **밖**으로 뺀다. #}
+    {% if casc.ranked.archive_gated %}
+    <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+      <b>🗄 보관함 — 기본 화면에서 내보내지 않는다</b>
+      <div class="muted" style="font-size:.9em;margin:6px 0 8px">
+        역사 47종 rank·score 는 <span class="mono">archive_only</span> 산출물이다.
+        승인된 current ranking 은 <b>0종</b> — 이 표는 결과가 아니라 2026-06-29 취합 경계의 기록이다.</div>
+      <a class="btn" href="/cascade?archive=1#board">보관함 열기 (superseded 47종) →</a>
+    </div>
+    {% endif %}
+    <div class="tbl-scroll"><table class="data-table sortable" id="board-tbl"><thead><tr>
+      <th onclick="sortT(this,0)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">rank</th><th onclick="sortT(this,1)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">dopant</th>
+      <th onclick="sortT(this,2)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">group</th><th onclick="sortT(this,3)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">score</th>
+      <th onclick="sortT(this,4)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Δe</th><th onclick="sortT(this,5)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">ox_V</th>
+      <th onclick="sortT(this,6)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">red_V</th><th onclick="sortT(this,7)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">E (GPa)</th>
+      <th onclick="sortT(this,8)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Pugh B/G</th><th onclick="sortT(this,9)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Pareto</th></tr></thead><tbody>
+    {% for r in (casc.ranked.data or []) %}
+    <tr>
+      <td class="num">{{ r.rank|int }}</td>
+      <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }}</a> <span class="pareto-y" style="font-size:.66rem">✓검증</span>{% if r.dopant in mo_db %} <span class="mo-badge mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ r.dopant }}')" onkeydown="_kbd(event)">⚛ MO</span>{% endif %}{% elif r.dopant in mo_db %}<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ r.dopant }}')" onkeydown="_kbd(event)">{{ r.dopant }}</span>{% else %}{{ r.dopant }}{% endif %}</td>
+      <td><span class="grp-pill" style="--_g:{{ gcol.get(r.group,'var(--muted)') }}">{{ r.group }}</span></td>
+      <td class="num" style="font-weight:700">{{ sf(r.score,3) }}</td>
+      <td class="num">{{ sf(r.de,3) }}</td>
+      <td class="num">{{ sf(r.ox_V,3) }}</td>
+      <td class="num">{{ sf(r.red_V,3) }}</td>
+      <td class="num">{{ sf(r.E_GPa,1) }}</td>
+      <td class="num">{{ sf(r.pugh,2) }}</td>
+      <td class="num">{% if r.pareto and r.pareto|string|upper=='Y' %}<span class="pareto-y">◆ Y</span>{% endif %}</td>
+    </tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- 🔻 깔때기 — 문헌 표준 게이트로 재표현한 뷰 (발견 깔때기 아님) -->
+{% if casc.funnel %}
+{% set F = casc.funnel %}
+{% set PV = F.pool_provenance or {} %}
+{% set POOL = PV.pool_size or (F.pool_names|length) or 47 %}
+{% set GM = {} %}{% for g in (F.gates or []) %}{% set _ = GM.update({g.id: g}) %}{% endfor %}
+{% set PERMS = (F.order_sensitivity or {}).permutations or [] %}
+{% set P0 = (PERMS|selectattr('key','equalto','P0_literature_order')|list|first) or (PERMS|first) %}
+{% macro fwidth(n) %}{{ [ (n / POOL * 100), 16 ]|max|round(1) }}{% endmacro %}
+<div class="tab-panel" id="tab-funnel">
+
+  <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+    <b>🗄 superseded — 이 깔때기는 {{ POOL }}종판이다.</b>
+    90종 회수 후 waterfall 은 <span class="mono">89–89–84–45–28–1</span> 로 바뀌었고(정본 47종판은
+    <span class="mono">47–47–43–25–11–1</span>), 그마저 <b>미검증 진단물</b>이다 — 게이트 정의가 안 닫혔다.
+    <b>⛔ 그리고 게이트 정의 자체가 미해결이다</b> — 아래 순서민감도 논증은 "순서를 바꾸면 중간 수가
+    달라진다"는 사실만 보이는 것이고, 게이트가 옳다는 뜻이 아니다:
+    <b>G3</b> 는 경쟁상 phase set(mp-ID·MP 스냅샷)이 기록돼 있지 않고,
+    <b>G4</b> 는 blocking 이 BVS 를 덮어쓰는 순환 합성값이며,
+    <b>G5</b> 는 median 컷이라 <b>풀이 바뀌면 문턱이 같이 움직인다</b>(47종↔89종 비교 불가).
+    현행 상태는 <b>📋 현황·감사</b>, 90종 waterfall 은 <b>🔁 90종 회수분</b> 탭.
+  </div>
+
+  <!-- ❗ 최상단 정직성 callout — 이 탭의 필수 요건 -->
+  <div class="callout cal-danger" style="margin:0 0 16px">
+    <div class="cal-t">❗ 이건 <b>발견 깔때기가 아니다</b> — 큐레이션된 {{ POOL }}종의 재표현 뷰</div>
+    <div class="cal-b" style="font-size:.84rem;line-height:1.65">
+      {{ (F.honesty_header or PV.not_a_discovery_funnel)|bold }}
+      {% if PV.what_it_is %}<div style="margin-top:8px">{{ PV.what_it_is|bold }}</div>{% endif %}
+      {% if PV.literature_pool_comparison %}
+      {% set LP = PV.literature_pool_comparison %}
+      <div class="pool-cmp">
+        <div class="pc-col pc-not">
+          <div class="pc-h">우리가 <b>아닌</b> 것 — 발견 깔때기</div>
+          {% for k, v in (LP.discovery_funnels_we_are_NOT or {}).items() %}
+          <div class="pc-row">{{ plink(k) }} <span>{{ v }}</span></div>{% endfor %}
+        </div>
+        <div class="pc-col pc-like">
+          <div class="pc-h">우리와 <b>같은</b> 체급 — 조성족 스캔</div>
+          {% for k, v in (LP.family_scans_we_ARE_LIKE or {}).items() %}
+          <div class="pc-row">{{ plink(k) }} <span>{{ v }}</span></div>{% endfor %}
+          <div class="pc-row pc-us"><span class="lit-chip us">우리</span> <span>{{ POOL }} (큐레이션 도펀트 후보군)</span></div>
+        </div>
+      </div>
+      {% if LP.verdict %}<div class="pc-verdict">{{ LP.verdict|bold }}</div>{% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>풀 출처 <span class="muted" style="font-weight:400;font-size:.8rem">{{ POOL }}종이 어떻게 이 목록이 됐나</span></h3>
+    <ol class="prov-hist">{% for h in (PV.selection_history or []) %}<li>{{ h|bold }}</li>{% endfor %}</ol>
+    {% if PV.attrition_is_not_screening %}
+    <div class="callout cal-warning" style="margin:12px 0 0"><div class="cal-b" style="font-size:.8rem">{{ PV.attrition_is_not_screening|bold }}</div></div>
+    {% endif %}
+    {% if PV.related_but_different_funnel %}
+    <div class="muted" style="font-size:.74rem;margin-top:8px">{{ PV.related_but_different_funnel|bold }}</div>{% endif %}
+  </div>
+
+  <!-- 세로 깔때기 -->
+  <div class="card">
+    <h3>게이트 깔때기 <span class="muted" style="font-weight:400;font-size:.8rem">대표 순서 {{ (F.representative_order or [])|join(' → ') }} · 회색 점선 = vacuous</span></h3>
+    <div class="funnel">
+      <div class="fn-node fn-pool" style="width:100%">
+        <span class="fn-n">{{ POOL }}</span><span class="fn-nl">pool — 큐레이션 후보군 (걸러서 남은 수가 아님)</span>
+      </div>
+      {% for st in (P0.steps or []) %}
+      {% set g = GM.get(st.gate, {}) %}
+      {% set la = g.literature_analog or {} %}
+      <div class="fn-gate{% if st.vacuous %} vac{% endif %}{% if g.arbitrariness_flag %} arb{% endif %}">
+        <div class="fn-g-head">
+          <span class="fn-g-id">{{ g.id or st.gate }}</span>
+          <b>{{ g.label or g.name }}</b>
+          {% if st.vacuous %}<span class="fn-badge b-vac" title="우리 풀이 이미 이 조건으로 큐레이션됨 — 우리가 걸러낸 게 아니다">💤 vacuous ({{ st.n_pass }}/{{ st.n_in }})</span>{% endif %}
+          {% if g.arbitrariness_flag %}<span class="fn-badge b-arb" title="host 앵커가 없는 로스터 내부 상대 컷 — 유일하게 자의적인 게이트">🎲 자의적 컷</span>{% endif %}
+          {% if la.papers %}{% for p in la.papers %}{{ plink(p) }}{% endfor %}
+          {% else %}<span class="fn-badge b-noan" title="{{ la.mapping|plain }}">📚 문헌 대응 없음 (우리 추가 축)</span>{% endif %}
+          <span class="fn-g-cnt">{{ st.n_in }} → <b>{{ st.n_pass }}</b>{% if st.n_fail %} <span class="fn-drop">−{{ st.n_fail }}</span>{% endif %}</span>
+        </div>
+        <div class="fn-g-body">
+          <div><span class="fn-l">지표</span><span class="mono">{{ g.metric|mdlite }}</span></div>
+          <div><span class="fn-l">임계값</span><code>{{ g.threshold }}</code></div>
+          <div><span class="fn-l">근거</span>{{ g.threshold_basis|bold }}</div>
+          {% if g.engine %}<div><span class="fn-l">엔진</span>{{ g.engine|bold }}</div>{% endif %}
+          {% if la.their_threshold %}<div><span class="fn-l">문헌 문턱</span>{{ la.their_threshold|bold }}</div>{% endif %}
+          {% if la.mapping %}<div><span class="fn-l">대응</span>{{ la.mapping|bold }}</div>{% endif %}
+          {% if st.vacuous and g.vacuous_interpretation %}
+          <div class="fn-vac-note">{{ g.vacuous_interpretation|bold }}</div>{% endif %}
+          {% set elim = (g.in_representative_order or {}).eliminated_here or [] %}
+          {% if elim %}
+          <details class="fn-elim"><summary>여기서 탈락 {{ elim|length }}종 — 펼치기</summary>
+            <div class="fn-chips">{% for d in elim %}<a class="fn-chip" href="/cascade#{{ d }}" title="리더보드에서 보기">{{ d }}</a>{% endfor %}</div>
+          </details>
+          {% endif %}
+          {% set sa = g.standalone or {} %}
+          {% if sa.n_fail is not none %}
+          <div class="muted" style="font-size:.72rem;margin-top:6px">단독 적용 시(순서 무관): {{ POOL }} → {{ sa.n_pass }} (−{{ sa.n_fail }})</div>{% endif %}
+        </div>
+      </div>
+      <div class="fn-node{% if st.vacuous %} vac{% endif %}" style="width:{{ fwidth(st.n_pass) }}%">
+        <span class="fn-n">{{ st.n_pass }}</span><span class="fn-nl">{{ st.gate }} 통과</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if F.literature_comparable_endpoint %}
+    {% set LE = F.literature_comparable_endpoint %}
+    <div class="callout cal-important" style="margin:16px 0 0">
+      <div class="cal-t">📏 문헌과 나란히 인용할 수 있는 지점 = {{ LE.gate }} ({{ LE.n }}종)</div>
+      <div class="cal-b" style="font-size:.82rem">{{ LE.why|bold }}
+        <div class="fn-chips" style="margin-top:8px">{% for d in LE.survivors %}<span class="fn-chip ok">{{ d }}</span>{% endfor %}</div>
+      </div>
+    </div>
+    {% endif %}
+    {% if F.final_survivors_warning %}
+    <div class="callout cal-warning" style="margin:12px 0 0">
+      <div class="cal-t">⚠ 최종 생존자 {{ (F.final_survivors or [])|join('·') }} 를 "정답"으로 읽지 말 것</div>
+      <div class="cal-b" style="font-size:.82rem">{{ F.final_survivors_warning|bold }}</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- 게이트 선택압 -->
+  {% if F.gate_power %}
+  <div class="card">
+    <h3>게이트 선택압 <span class="muted" style="font-weight:400;font-size:.8rem">unique_kill = 0 이면 다른 게이트에 완전히 포섭된 중복 게이트</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>gate</th><th>name</th><th>단독 제거</th><th>대표순서 한계 제거</th><th>unique kill</th><th>없으면 살아 돌아오는 종</th><th>판정</th>
+    </tr></thead><tbody>
+      {% for r in F.gate_power.rows %}
+      <tr class="{% if r.redundant_given_others %}row-dim{% endif %}">
+        <td><b>{{ r.gate }}</b></td><td class="mono" style="font-size:.74rem">{{ r.name }}</td>
+        <td class="num">{{ r.standalone_kill }}</td><td class="num">{{ r.marginal_kill_in_P0 }}</td>
+        <td class="num"><b>{{ r.unique_kill }}</b></td>
+        <td style="font-size:.74rem">{{ (r.unique_kill_list or [])|join(', ') or '—' }}</td>
+        <td>{% if r.redundant_given_others %}<span class="fn-badge b-vac">중복</span>{% else %}<span class="fn-badge b-ok">고유</span>{% endif %}</td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">{{ F.gate_power.reading|bold }}</div>
+  </div>
+  {% endif %}
+
+  <!-- 순서 민감도 -->
+  {% if F.order_sensitivity %}
+  {% set OS = F.order_sensitivity %}
+  <div class="card">
+    <h3>순서 민감도 <span class="muted" style="font-weight:400;font-size:.8rem">게이트 순서를 바꾸면 그림이 바뀌는가</span></h3>
+    <div class="callout {{ 'cal-tip' if OS.final_sets_identical else 'cal-warning' }}" style="margin:0 0 14px">
+      <div class="cal-t">{{ '✅ 최종 생존자 집합은 순서 불변' if OS.final_sets_identical else '⚠ 순서에 따라 최종 집합이 달라짐' }}
+        — 교집합 {{ (OS.intersection or [])|join('·') }}{% if OS.symmetric_difference %} · 차집합 {{ OS.symmetric_difference|join('·') }}{% endif %}</div>
+      <div class="cal-b" style="font-size:.82rem">{{ OS.why|bold }}</div>
+    </div>
+    <div class="perm-grid">
+      {% for p in PERMS %}
+      <div class="perm{% if p.key == P0.key %} perm-p0{% endif %}">
+        <div class="perm-h">{{ p.key }}{% if p.key == P0.key %} <span class="fn-badge b-ok">대표</span>{% endif %}</div>
+        <div class="perm-o mono">{{ (p.order or [])|join(' → ') }}</div>
+        <div class="perm-r">{{ p.rationale }}</div>
+        <div class="perm-wf">
+          {% for st in (p.steps or []) %}
+          <div class="pw-row">
+            <span class="pw-g">{{ st.gate }}</span>
+            <span class="pw-bar{% if st.vacuous %} vac{% endif %}" style="width:{{ fwidth(st.n_pass) }}%">{{ st.n_pass }}</span>
+            {% if st.vacuous %}<span class="pw-vac" title="우리 풀이 이미 이 조건으로 큐레이션됨">💤</span>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        <div class="perm-f">최종 {{ (p.final_survivors or [])|join('·') }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% if OS.sendek_analog_verdict %}
+    <div class="callout cal-note" style="margin:14px 0 0">
+      <div class="cal-t">{{ plink('sendek2017_ml_screening_12k_conductors','Sendek 2017') }} 명제와의 대조</div>
+      <div class="cal-b" style="font-size:.82rem">{{ OS.sendek_analog_verdict|bold }}</div>
+    </div>{% endif %}
+  </div>
+  {% endif %}
+
+  <!-- 임계값 민감도 -->
+  {% if F.threshold_sensitivity %}
+  {% set TS = F.threshold_sensitivity %}
+  <div class="card">
+    <h3>임계값 민감도 <span class="muted" style="font-weight:400;font-size:.8rem">컷을 흔들면 생존자가 어떻게 움직이나</span></h3>
+    <div class="muted" style="font-size:.78rem;margin-bottom:10px">{{ TS.how_to_read|bold }}</div>
+    {% for key, sw in [('G3_oxidation_onset', TS.G3_oxidation_onset), ('G4_li_transport', TS.G4_li_transport), ('G5_mechanical', TS.G5_mechanical)] %}
+    {% if sw %}
+    <div class="sw-block">
+      <div class="sw-h">{{ key }}</div>
+      <div class="tbl-scroll"><table class="data-table"><thead><tr>
+        {% for c in (sw.sweep[0].keys()|list) %}{% if c != 'core_survivors' and c != 'survivors' %}<th>{{ c }}</th>{% endif %}{% endfor %}<th>생존자</th>
+      </tr></thead><tbody>
+        {% for r in sw.sweep %}
+        <tr>{% for c in (sw.sweep[0].keys()|list) %}{% if c != 'core_survivors' and c != 'survivors' %}<td class="num">{{ r[c] }}</td>{% endif %}{% endfor %}
+          <td style="font-size:.72rem">{{ (r.core_survivors if r.core_survivors is defined else r.survivors)|join(', ') or '— (empty)' }}</td></tr>
+        {% endfor %}
+      </tbody></table></div>
+      {% if sw.note %}<div class="muted" style="font-size:.74rem;margin-top:6px">{{ sw.note|bold }}</div>{% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 문헌 절대 문턱 이식 실험 -->
+  {% if F.literature_absolute_variants %}
+  <div class="card">
+    <h3>문헌 절대 문턱을 그대로 이식하면? <span class="muted" style="font-weight:400;font-size:.8rem">우리가 상대 좌표를 쓰는 이유의 정량 근거</span></h3>
+    {% for v in F.literature_absolute_variants %}
+    <div class="lav{% if v.n_pass_standalone == 0 %} lav-empty{% endif %}">
+      <div class="lav-h"><span class="fn-g-id">{{ v.gate }}</span><span class="mono">{{ v.variant }}</span>
+        <span class="lav-n">{{ '생존 ' ~ v.n_pass_standalone ~ '종' if v.n_pass_standalone is not none else '계산 불가' }}</span></div>
+      <div class="lav-t"><code>{{ v.threshold }}</code></div>
+      <div class="lav-v">{{ v.verdict|bold }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 문헌 대비표 -->
+  {% if F.literature_comparison_table %}
+  <div class="card">
+    <h3>문헌 대비표 <span class="muted" style="font-weight:400;font-size:.8rem">축별로 무엇이 같고 무엇이 다른가</span></h3>
+    <div class="tbl-scroll"><table class="data-table lit-cmp"><thead><tr>
+      <th style="width:14%">축</th><th style="width:30%">문헌</th><th style="width:22%">우리</th><th>차이의 이유</th>
+    </tr></thead><tbody>
+      {% for r in F.literature_comparison_table %}
+      <tr><td><b>{{ r.axis }}</b></td><td>{{ r.literature|bold }}</td><td>{{ r.ours|bold }}</td><td>{{ r.difference_reason|bold }}</td></tr>
+      {% endfor %}
+    </tbody></table></div>
+  </div>
+  {% endif %}
+
+  <!-- 전자 절연 진단 (게이트 아님) -->
+  {% if F.electronic_insulation_diagnostic %}
+  {% set EI = F.electronic_insulation_diagnostic %}
+  <div class="card">
+    <h3>전자 절연 — <span class="fn-badge b-diag">진단만, 게이트 아님</span></h3>
+    <div class="muted" style="font-size:.8rem">{{ EI.why_not_a_gate|bold }}</div>
+    <div class="fn-chips" style="margin-top:10px">
+      {% for r in (EI.core_survivors_gap_lit_eV or []) %}
+      <span class="fn-chip {{ 'warn' if r.gap_lit_eV < 3 else 'ok' }}" title="문헌 큐레이션 gap (우리 계산값 아님)">{{ r.dopant }} · {{ r.gap_lit_eV }} eV</span>
+      {% endfor %}
+    </div>
+    {% if EI.if_applied %}<div class="callout cal-warning" style="margin:12px 0 0"><div class="cal-b" style="font-size:.8rem">{{ EI.if_applied.verdict|bold }}</div></div>{% endif %}
+  </div>
+  {% endif %}
+
+  <!-- 핵심 발견 + 주의 -->
+  <div class="grid grid-2 fn-final">
+    {% if F.key_findings %}
+    <div class="card"><h3>🔑 핵심 발견</h3>
+      <ul class="fn-ul">{% for k in F.key_findings %}<li>{{ k|bold }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    {% if F.caveats %}
+    <div class="card insight-card" style="border-left-color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))">
+      <div class="ic-tag" style="color:var(--amber)">⚠ 주의 — 인용 전에 반드시</div>
+      <ul class="fn-ul">{% for c in F.caveats %}<li>{{ c|bold }}</li>{% endfor %}</ul></div>
+    {% endif %}
+  </div>
+
+  <div class="muted" style="font-size:.72rem;margin-top:10px">
+    소스: {% for s in (F.source_files or []) %}<span class="mono">{{ s }}</span>{{ ' · ' if not loop.last }}{% endfor %}
+    · 문헌: {% for s in (F.literature_sources or []) %}{{ plink(s.split('/')[-1].replace('.md','')) }}{% endfor %}
+    {% if F.date %}· 생성 {{ F.date }}{% endif %}
+  </div>
+</div>
+{% endif %}
+
+
+<!-- 🛡 T9-T11 안정성 3축 — M6 의 vacuous 판정을 뒤집은 데이터 -->
+{% if casc.stability %}
+{% set S = casc.stability %}
+<div class="tab-panel" id="tab-stab">
+  {{ tabstate("unvalidated", "cascade_stability_axes_verdict.json (47종 위 후처리)", "T9–T11 은 **47종 풀 위에서 돌린 후처리 축**이다. 90종 회수분으로는 다시 안 돌렸다. 게이트 후보(G6/G7)로 제안된 단계이지 채택된 게이트가 아니다.") }}
+  <div class="callout cal-danger">
+    <b>이 탭의 데이터가 우리 자신의 판정 하나를 뒤집었다.</b>
+    2026-07-28 M6 에서 <b>양극 상대만</b> 계산하고 "89/94 통과, unique_kill 0 → vacuous 게이트"라고
+    판정했는데, SE·Li 축을 추가하니 정반대였다. 전말은
+    <a href="/benchmarks">Benchmarks → 판정 정정 이력 V1</a>.
+    {% for h in S.honesty_header %}<div style="margin-top:6px">{{ h|bold }}</div>{% endfor %}
+  </div>
+
+  <h3 style="margin-top:22px;font-size:.95rem">축별 위력 — 같은 컷(100 meV)인데 결과가 극단적으로 다르다</h3>
+  <div class="tbl-scroll" style="margin-top:8px"><table class="data-table">
+    <thead><tr><th>축</th><th>통과</th><th>탈락</th><th>중앙값 (meV/atom)</th><th>최악</th><th>코어 11종 중 킬</th></tr></thead>
+    <tbody>
+    {% for k, g in S.T9_interface_axes.gates.items() %}
+      <tr {% if k in ('SE_LPSCl','Li_anode') %}class="row-warn"{% endif %}>
+        <td class="mono">{{ k }}</td>
+        <td>{{ g.pass }}/{{ g.n }}</td>
+        <td {% if g.kill > 10 %}style="font-weight:700;color:#dc2626"{% endif %}>{{ g.kill }}</td>
+        <td class="mono">{{ g.median }}</td><td class="mono muted">{{ g.worst }}</td>
+        <td style="font-size:.76rem">{{ g.unique_kill_vs_core|join(', ') or '—' }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+
+  <div class="callout" style="margin-top:12px">{{ S.T9_interface_axes.verdict_overturns_M6|bold }}</div>
+
+  <div class="grid grid-2" style="margin-top:14px">
+    <div class="card" style="padding:14px 18px">
+      <div style="font-weight:600;font-size:.88rem">코어 생존자 변화</div>
+      <div style="font-size:.82rem;margin-top:8px">
+        <div><span class="muted">G1–G4 통과 (기존)</span> —
+          <span class="mono">{{ S.T9_interface_axes.core_survivors_before|join(' · ') }}</span></div>
+        <div style="margin-top:6px;color:#dc2626"><b>SE·Li 축에서 탈락</b> —
+          <span class="mono">{{ S.T9_interface_axes.core_killed_by_SE_or_Li|join(' · ') }}</span></div>
+        <div style="margin-top:6px;color:#047857"><b>전 축 통과</b> —
+          <span class="mono" style="font-size:1rem">{{ S.T9_interface_axes.core_survivors_after|join(' · ') }}</span></div>
+      </div>
+      <div class="callout cal-warn" style="margin-top:10px;font-size:.78rem">{{ S.T9_interface_axes.note_survivors|bold }}</div>
+    </div>
+
+    <div class="card" style="padding:14px 18px;border-left:3px solid #f59e0b">
+      <div style="font-weight:600;font-size:.88rem">T10 — 예측이 빗나간 기록 <span class="tbadge"
+        style="background:#fef3c7;color:#92400e;margin-left:4px">음성 결과</span></div>
+      <div style="font-size:.8rem;margin-top:6px" class="mono">{{ S.T10_hull_synthesizability.gate }}</div>
+      <div style="font-size:.82rem;margin-top:6px">탈락 <b>{{ S.T10_hull_synthesizability.n_fail }}종</b> ·
+        최대값: {% for v, c in S.T10_hull_synthesizability.max %}{{ c }} {{ '%.0f'|format(v) }}{% if not loop.last %}, {% endif %}{% endfor %} meV</div>
+      <div class="callout cal-warn" style="margin-top:10px;font-size:.79rem">{{ S.T10_hull_synthesizability['⚠_negative_result']|bold }}</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:22px;font-size:.95rem">T11 — 가수분해 열역학 구동력</h3>
+  <div class="muted" style="font-size:.8rem;margin-top:4px">{{ S.T11_hydrolysis.gate }}</div>
+  <div class="tbl-scroll" style="margin-top:8px"><table class="data-table">
+    <thead><tr><th>코팅</th><th>ΔE<sub>H₂S</sub> (meV/atom)</th></tr></thead>
+    <tbody>{% for r in S.T11_hydrolysis.worst_10 %}
+      <tr><td class="mono">{{ r.coating }}</td><td class="mono">{{ r.dE_H2S_meV }}</td></tr>{% endfor %}</tbody></table></div>
+  <div class="callout" style="margin-top:10px">{{ S.T11_hydrolysis.chemistry|bold }}<br>{{ S.T11_hydrolysis.cross_axis|bold }}</div>
+  <div class="callout cal-warn" style="margin-top:8px">{{ S.T11_hydrolysis['⚠_missing']|bold }}<br>{{ S.T11_hydrolysis['⚠_not_the_same_as']|bold }}</div>
+
+  <h3 style="margin-top:22px;font-size:.95rem">다음</h3>
+  <ul style="margin-top:6px">{% for n in S.next %}<li style="font-size:.83rem">{{ n|bold }}</li>{% endfor %}</ul>
+  <div class="muted mono" style="font-size:.72rem;margin-top:12px">{{ S.method }}<br>{{ S.source_csv }}</div>
+</div>
+{% endif %}
+
+<!-- 🎯 테마 — 테마별 재구성 + 조합(기하평균) UI -->
+{% if casc.themes %}
+<div class="tab-panel" id="tab-theme">
+  {{ tabstate("superseded", "cascade_v23_themes.json (47종)", "테마 norm 은 **47종 min–max 정규화**라 풀이 바뀌면 값이 통째로 바뀐다. 90종판은 cascade_v23_themes_v2.json 에 있고 아직 화면에 연결하지 않았다. 그리고 ionic_transport 테마는 G4 와 같은 순환(blocking 이 BVS 를 덮어씀)을 물려받는다.") }}
+  <div class="callout cal-warning" style="margin:0 0 12px">
+    <div class="cal-t">⚠ 큐레이션 값 포함</div>
+    <div class="cal-b" style="font-size:.8rem">{{ casc.themes.curation_disclaimer }}</div>
+  </div>
+  {% if casc.themes.literature_disclaimer %}
+  {% set LD = casc.themes.literature_disclaimer %}
+  <div class="callout cal-warn" style="margin:0 0 12px">
+    <div class="cal-t">💧 문헌 소환값 축 (<span class="mono">dG_hyd_*_lit*</span> · 테마 «공기/수분 내성 (문헌 ΔG_hyd)»)</div>
+    <div class="cal-b" style="font-size:.8rem;line-height:1.65">
+      {{ LD['_']|bold }}<br>
+      <span class="muted">출처</span> {{ LD.source }}<br>
+      <span class="muted">계산 수준</span> {{ LD.level }}<br>
+      <span class="muted">조건</span> {{ LD.conditions }}<br>
+      <span class="muted">매칭</span> {{ LD.matching }}<br>
+      <span class="muted">커버리지</span> {{ LD.coverage|bold }}<br>
+      {{ LD.chloride_convention_warning|bold }}<br>
+      {{ LD.proxy_caveat|bold }}
+    </div>
+  </div>
+  {% endif %}
+  <div class="card" style="margin-bottom:14px">
+    <h3>🎯 테마 선택 <span class="muted" style="font-weight:400;font-size:.8rem">카드 체크 = 조합에 넣기 (2개 이상 권장) · 칩 클릭 = 분자오비탈</span></h3>
+    <div class="muted" style="font-size:.78rem;line-height:1.6">조합 규칙: <span class="mono">{{ casc.themes.combine_rule }}</span></div>
+  </div>
+  <div class="theme-grid">
+  {% for tid, th in casc.themes.themes.items() %}
+    <div class="card theme-card" id="tc-{{ tid }}">
+      <label class="tc-head">
+        <input type="checkbox" id="tchk-{{ tid }}" onchange="tgThemeSel('{{ tid }}')">
+        <span class="tc-icon">{{ th.icon }}</span><span class="tc-label">{{ th.label }}</span>
+      </label>
+      <div class="tc-q">{{ th.question }}</div>
+      <div class="tc-metric mono">{{ th.metric|mdlite }}</div>
+      <div class="tc-top">
+        {% for dp in th.top[:5] %}
+          {% if dp in mo_db %}<button type="button" class="th-chip mo-chip" title="클릭 → 분자오비탈" onclick="openMO('{{ dp }}')">{{ dp }} ⚛</button>
+          {% else %}<span class="th-chip">{{ dp }}</span>{% endif %}
+        {% endfor %}
+      </div>
+      <div class="tc-caveat">⚠ {{ th.caveat|bold }}</div>
+    </div>
+  {% endfor %}
+  </div>
+  <div class="card">
+    <h3>⚗️ 조합 랭킹 <span class="muted" style="font-weight:400;font-size:.8rem">선택 테마 norm의 기하평균 · 전 {{ gnum(none if casc.themes.diagnostic_gated else casc.themes.dopants|length) }}개 도펀트 · 헤더 클릭 = 정렬</span></h3>
+    {% if casc.themes.diagnostic_gated %}
+    <div class="callout cal-danger" style="font-size:.84rem">
+      <b>🔒 acquisition 전용 — 기본 화면에서 내보내지 않는다</b><br>
+      90종 조합 랭킹은 <span class="mono">diagnostic_only</span> 다 (도펀트명 + norm 점수 + BVS 열).
+      승인된 current ranking 은 <b>0종</b>이고, 이 표는 다음 계산을 고르기 위한 진단물이다.
+      <div style="margin-top:8px"><a class="btn" href="/cascade?view=diagnostic#theme">진단 화면 열기 →</a></div>
+    </div>
+    {% endif %}
+    <div id="combine-hint" class="muted" style="font-size:.84rem;padding:10px 0">위에서 테마를 골라줘 — <b>2개 이상</b>이면 조합 랭킹 테이블, <b>정확히 2개</b>면 산점도(X·Y=각 테마 norm, 점 크기=combined, Pareto=링)까지 떠.</div>
+    <div class="chart" id="theme-scatter" hidden></div>
+    <div id="combine-tbl-wrap"></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">norm∈[0,1] (1=좋음, 방향보정) · <b>게이트 탈락 도펀트는 norm=0.05 바닥값</b> 처리 — 기하평균(AND 의미)이라 한 테마라도 바닥이면 combined도 바닥. cost/gap/HSAB 테마는 큐레이션 값 기반(위 면책 참조).</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Champions -->
+<div class="tab-panel" id="tab-champ">
+  {{ tabstate("superseded", "cascade_v23_champions.csv (141행 · 47종)", "90종판은 cascade_v23_champions_v2.csv (270행) 이고 🔁 탭에서 내려받을 수 있다. 이 표는 대조용으로 남긴 옛 판이다.") }}
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">상위 후보 정밀화 (champions) — EOS · 탄성 · anneal</h3>
+      <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('champ-tbl',this.value)">
+    </div>
+    {% if casc.champions.archive_gated %}{{ archive_box('47종 champions 141행 — EOS·탄성·anneal 정밀화 표.', 'champ') }}{% endif %}
+    <div class="tbl-scroll"><table class="data-table sortable" id="champ-tbl"><thead><tr>
+      {% set cc = ['dopant','concentration','rerank_de_post_anneal','anneal_dV_pct','eos_B0_GPa','elastic_E_young_GPa','elastic_B_hill_GPa','elastic_G_hill_GPa','elastic_pugh_GoverB','combined_score'] %}
+      {% for c in cc %}<th onclick="sortT(this,{{ loop.index0 }})" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">{{ c.replace('elastic_','').replace('_GPa','').replace('rerank_','') }}</th>{% endfor %}
+    </tr></thead><tbody>
+    {% for row in (casc.champions.data or []) %}<tr>{% for c in cc %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">Δe_post_anneal &lt; 0 = 무도핑 baseline보다 안정. EOS B0 ≠ elastic B_hill(=B_VRH).</div>
+  </div>
+</div>
+
+<!-- Li transport -->
+{# ⛔ 이 탭의 옛 이름은 "Li transport" 였다. 전도도를 잰 것처럼 읽혀서 이름을 버리고
+     G4 의 실제 입력 두 개를 분해해 보여준다 (2026-08-14). #}
+<div class="tab-panel" id="tab-ion">
+  {% set G = casc.g4 %}
+  <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+    <b>이 축의 옛 이름 “{{ G.old_name }}” 은 폐기했다.</b> {{ G.why_renamed|bold }}
+    <div style="margin-top:6px">잰 적 없는 것: {% for m in G.not_measured %}<span class="badge err" style="margin-right:4px">{{ m }}</span>{% endfor %}</div>
+  </div>
+  <div class="card">
+    <h3>G4 게이트의 실제 정의 <span class="mono muted" style="font-weight:400;font-size:.8rem">{{ G.gate }}</span></h3>
+    {% for inp in G.inputs %}
+    <div class="callout cal-warning" style="margin:0 0 10px;font-size:.83rem">
+      <b>{{ loop.index }}. {{ inp.name }}</b> <span class="mono muted">{{ inp.col }}</span><br>
+      {{ inp.what|bold }}<br><span style="display:inline-block;margin-top:4px">{{ inp.warn|bold }}</span>
+    </div>
+    {% endfor %}
+    <div class="muted" style="font-size:.75rem">
+      두 값 모두 <b>어닐 기하 위의 정적 프록시</b>다 — 빠른 스크리닝용이고, 이동장벽·확산계수는
+      DFT/MD 심층검증에서만 나온다. G4 를 “이온전도가 좋다/나쁘다”로 읽지 말 것.</div>
+  </div>
+  <div class="card">
+    <h3>원자료 <span class="muted" style="font-weight:400;font-size:.8rem">위 두 열이 G4 입력 · 나머지는 참고 열</span></h3>
+    {% if casc.litransport.archive_gated %}{{ archive_box('47종 litransport 원자료 — BVSE 프록시·이동 부피분율 표.', 'ion') }}
+    {% else %}{{ gtable(casc.litransport, ['_dir','bvs_li_proxy_score','migration_volume_fraction','tier2_dopant_blocking_fraction','tier2_li_li_disorder_std','cation_site','anion_site']) }}{% endif %}
+    <div class="muted" style="font-size:.74rem;margin-top:6px">⚠ 이 표는 47종판이다. 90종 전수는
+      <b>🔁 90종 회수분</b> 탭의 <span class="mono">cascade_v23_litransport_v2.csv</span> 로 내려받을 것.</div>
+  </div>
+</div>
+
+<!-- Oxidation ESW -->
+{# ⛔ 2026-08-14 (Codex 리뷰 P0-2) — 탭 배지는 90종인데 표는 47종 파일을 읽고 있었다.
+     v2 가 있으면 v2 를 쓰고, 없을 때만 v1 로 내려간다. 어느 쪽인지 화면에 적는다. #}
+<div class="tab-panel" id="tab-esw">
+  {% set ESW = (casc.v2.oxidation if (casc.v2 and casc.v2.present and casc.v2.oxidation) else casc.oxidation) %}
+  {% set ESW_IS_V2 = (casc.v2 and casc.v2.present and casc.v2.oxidation) %}
+  <div class="callout {{ 'cal-warning' if ESW_IS_V2 else 'cal-danger' }}" style="margin:0 0 12px;font-size:.83rem">
+    {% if ESW_IS_V2 %}<b>✅ 90종 전수 (oxidation_stability_cascade_v2.csv · {{ (ESW.data or [])|length }}행).</b>
+      옛 141건과 ox_V 차이 0 — 드리프트 없음.
+    {% else %}<b>⚠ v2 파일이 없어 47종판을 표시 중이다.</b>{% endif %}
+    <div style="margin-top:6px"><b>⛔ 재현성 한계 (v1·v2 공통)</b> — {{ casc.v2.meta.esw_limits|bold }}</div>
+  </div>
+  <div class="card">
+    <h3>Grand-potential 전기화학 안정성창(ESW) <span class="muted" style="font-weight:400;font-size:.8rem">도펀트명 클릭 = 분자오비탈</span></h3>
+    {{ gtable(ESW, ['dopant','anion','valence','group','ox_V','red_V','ocv_V','window_V','clrich_ox_V','note'], mo_col='dopant', modb=mo_db) }}
+    <div class="muted" style="font-size:.74rem;margin-top:6px">MP-hull(GGA/GGA+U) 기반 → elastic/EOS 재계산과 무관. collapse(window&lt;0.05V)=후기전이금속 회피. <b>clrich_ox_V</b> = Cl-rich <b>변형 조성</b>의 grand-potential onset(3종만 산출) — 우리 canonical 호스트 축(comp1 Cl1.0 vs modelc Cl1.6)에서는 onset이 2.14 V로 <b>동일</b>하다(S²⁻-pin, oxidation_stability.json). 축을 명시하지 않고 'Cl-rich가 더/덜 산화안정'이라고 쓰지 말 것.</div>
+  </div>
+</div>
+
+<!-- Synergy (v1 휴리스틱 + ML v2 교호작용) -->
+<div class="tab-panel" id="tab-syn">
+  {{ tabstate("unvalidated", "cascade_v23_synergy_pairs.csv (v1 휴리스틱) + codoping_ml_v2", "⛔ **explicit pair 라벨이 0개다** — 실제로 두 도펀트를 함께 넣고 계산한 셀이 하나도 없다. 전부 단일 도펀트 프록시에서 만든 **가설**이고 교호작용은 모델 외삽이다. 그리고 47종 풀 위의 1,081 pair 다 — 90종이면 C(90,2)=4,005 로 바뀐다.") }}
+  <div class="card">
+    <h3>공동도핑 시너지 — v1 휴리스틱 <span class="muted" style="font-weight:400;font-size:.8rem">단일도펀트 프록시 기반 가설 — 미검증</span></h3>
+    {% if casc.synergy.archive_gated %}{{ archive_box('47종 풀 위의 1,081 pair 휴리스틱 순위표 — explicit pair 라벨 0개.', 'syn') }}
+    {% else %}{{ gtable(casc.synergy, ['rank','pairA','pairB','synergy','joint_window_V','gain_vs_best_single','radius_match','avg_stab','tags']) }}{% endif %}
+  </div>
+  {% if casc.codoping_v2 %}
+  <div class="card">
+    <h3>ML v2 (교호작용) <span class="muted" style="font-weight:400;font-size:.8rem">codoping_ml_v2.csv — pair 교호작용 항 포함 모델, v1과 별도</span></h3>
+    <div class="callout cal-warning" style="margin:0 0 12px">
+      <div class="cal-b" style="font-size:.8rem">⚠ <b>NOT validated</b> — 단일도펀트 프록시로 학습한 모델의 <b>pair 외삽 가설</b>이야.
+      LOOCV R²·v1 상관은 내부 일관성 지표일 뿐 검증이 아니고, DFT/실험 확인 전까지 <b>탐색 순위 참고용</b> — 절대값·순위 인용 금지.</div>
+    </div>
+    {% if casc.codoping_v2_meta %}
+    {% set m = casc.codoping_v2_meta %}
+    {% set s1 = m.stage1_single_dopant_ridge or {} %}
+    {% set v1c = m.vs_v1 or {} %}
+    {% set SD = m.sendek2017_small_sample_defenses or {} %}
+    {% if m.status %}<div class="cm-grid" style="margin-bottom:10px"><div class="cm-warn"><span class="cm-l">상태</span>{{ m.status }}</div></div>{% endif %}
+
+    {# 🤖 소표본 ML 방어 — Sendek 화법: 'R² 몇' 이 아니라 'base rate 대비 N배 농축' 이 대표 지표 #}
+    {% if SD %}
+    {% set HL = SD.headline or {} %}
+    {% set S3 = SD.stage3_interaction_distillation or {} %}
+    <div class="ml-def">
+      <div class="ml-def-h">🛡️ 소표본 ML 방어 절차 — {{ plink('sendek2017_ml_screening_12k_conductors','Sendek 2017') }} §4d 계승
+        <span class="muted" style="font-weight:400;font-size:.74rem">절차만 이식 · 수치·특징 이식 금지</span></div>
+      <div class="ml-tiles">
+        <div class="mlt mlt-good">
+          <div class="mlt-v">{{ HL.stage3_ordering_enrichment_x }}×</div>
+          <div class="mlt-l"><b>순서</b> 농축 — 이미 알려진 40쌍 안에서의 순위<br>
+            <span class="muted">랜덤(라벨셔플) 대비{% if S3.label_shuffle_p_value_spearman is defined %} · p={{ '%.3f'|format(S3.label_shuffle_p_value_spearman) }}{% endif %}</span></div>
+        </div>
+        <div class="mlt mlt-bad">
+          <div class="mlt-v">{{ HL.stage3_discovery_enrichment_x }}×</div>
+          <div class="mlt-l"><b>발굴</b> 농축 — 1081쌍에서 그 40쌍을 top-40 으로<br>
+            <span class="muted">랜덤과 <b>구별 불가</b>{% if S3.label_shuffle_p_value_precision is defined %} · p={{ '%.2f'|format(S3.label_shuffle_p_value_precision) }}{% endif %}</span></div>
+        </div>
+        <div class="mlt mlt-bad">
+          <div class="mlt-v">{{ HL.stage3_cRp2 }}</div>
+          <div class="mlt-l">cR²_p — QSAR 관례 문턱 <b>0.5 미달</b><br><span class="muted">Sendek 최적모델 0.59</span></div>
+        </div>
+        <div class="mlt mlt-bad">
+          <div class="mlt-v">+{{ HL.pairCV_minus_L2DO_weighted_r2 }}</div>
+          <div class="mlt-l">pair-CV 낙관 편의 (ΔR² vs L2DO)<br><span class="muted">독립 폴드에선 R² &lt; 0</span></div>
+        </div>
+        <div class="mlt">
+          <div class="mlt-v">{{ HL.n_pairs_outside_applicability_domain }}<span style="font-size:.5em">/{{ (m.stage3_interaction_distillation or {}).n_pairs or 1081 }}</span></div>
+          <div class="mlt-l">적용영역(AD) 밖 = 외삽<br><span class="muted">top-40 안에는 {{ (SD.applicability_domain or {}).n_outside_in_top40 }}개</span></div>
+        </div>
+      </div>
+      {% if HL.one_line %}<div class="ml-oneline">{{ HL.one_line|bold }}</div>{% endif %}
+      {% if SD.honesty_framing %}
+      <ul class="fn-ul ml-honest">{% for h in SD.honesty_framing %}<li>{{ h|bold }}</li>{% endfor %}</ul>
+      {% endif %}
+
+      {% set LK = SD.cv_leakage_leave_one_dopant_out or {} %}
+      {% if LK.pair_LOOCV %}
+      <details class="ml-det"><summary>🔬 LODO — 도펀트 누수 교차검증 (pair-CV 수치 단독 인용 금지)</summary>
+        <div class="tbl-scroll"><table class="data-table"><thead><tr>
+          <th>폴드 구성</th><th>가중 R²</th><th>Spearman (v1 수록 40쌍)</th></tr></thead><tbody>
+          <tr><td>pair-LOOCV <span class="muted">(누수 있음)</span></td><td class="num">{{ LK.pair_LOOCV.weighted_r2 }}</td><td class="num">{{ LK.pair_LOOCV.spearman_on_listed }}</td></tr>
+          <tr><td>leave-one-dopant-out</td><td class="num">{{ LK.leave_one_dopant_out.weighted_r2 }}</td><td class="num">{{ LK.leave_one_dopant_out.spearman_on_listed }}</td></tr>
+          <tr><td>leave-both-dopants-out</td><td class="num">{{ LK.leave_both_dopants_out.weighted_r2 }}</td><td class="num">{{ LK.leave_both_dopants_out.spearman_on_listed }}</td></tr>
+        </tbody></table></div>
+        <div class="muted" style="font-size:.78rem;margin-top:8px">{{ LK.verdict|bold }}</div>
+        {% if LK.lambda_leak_note %}<div class="muted" style="font-size:.72rem;margin-top:6px">{{ LK.lambda_leak_note|bold }}</div>{% endif %}
+      </details>
+      {% endif %}
+
+      {% set AD = SD.applicability_domain or {} %}
+      {% if AD.definition %}
+      <details class="ml-det"><summary>📐 적용영역(AD) — 표의 <span class="mono">ad_d</span>/<span class="mono">ad_eps</span>/<span class="mono">ad_A</span> 열 읽는 법</summary>
+        <div style="font-size:.8rem;line-height:1.6">{{ AD.definition|bold }}</div>
+        <div class="cm-grid" style="margin-top:10px">
+          <div><span class="cm-l">문턱</span>d ≤ {{ AD.d_threshold }} 이면 내삽(ad_A=1)</div>
+          <div><span class="cm-l">외삽</span>{{ AD.n_outside_domain }}/{{ AD.n_pairs }}쌍 ({{ (AD.frac_outside_domain*100)|round(1) }}%) · top-40 안 {{ AD.n_outside_in_top40 }}개 · top-10 안 {{ AD.n_outside_in_top10 }}개</div>
+        </div>
+        {% if AD.finding %}<div class="muted" style="font-size:.78rem;margin-top:8px">{{ AD.finding|bold }}</div>{% endif %}
+        {% if AD.use %}<div class="callout cal-warning" style="margin:10px 0 0"><div class="cal-b" style="font-size:.78rem">{{ AD.use|bold }}</div></div>{% endif %}
+      </details>
+      {% endif %}
+
+      {% if SD.determinism %}<div class="muted" style="font-size:.72rem;margin-top:8px">결정론: seed {{ SD.determinism.seed }} · 순열 {{ SD.determinism.n_permutations }}회 — {{ SD.determinism.note }}</div>{% endif %}
+    </div>
+    {% endif %}
+
+    <details class="ml-det" style="margin-bottom:10px"><summary>내부 일관성 지표 (검증 아님) — LOOCV R² · v1 상관</summary>
+      <div class="cm-grid">
+        {% if s1.loocv_r2 is defined %}<div><span class="cm-l">LOOCV R²</span>{{ s1.loocv_r2 }} <span class="muted">(단일도펀트 ridge{% if s1.n is defined %}, n={{ s1.n }}{% endif %} — 타깃이 특징의 선형합성이라 '항등식 복원'이지 예측력이 아님)</span></div>{% endif %}
+        {% if v1c.spearman_on_v1_top40_pairs is defined %}<div><span class="cm-l">v1 상관</span>Spearman {{ v1c.spearman_on_v1_top40_pairs }} (v1 top40 기준){% if v1c.top10_overlap_count is defined %} · top10 겹침 {{ v1c.top10_overlap_count }}/10{% endif %}</div>{% endif %}
+        {% if (SD.stage1_score_regression or {}).interpretation %}<div class="cm-warn"><span class="cm-l">⚠ 읽는 법</span>{{ SD.stage1_score_regression.interpretation|bold }}</div>{% endif %}
+      </div>
+    </details>
+    {% endif %}
+    {# 회신 BG ② — 이 표의 숫자는 캐스케이드 스크리닝 양(ml_score·window_gain V 등)이지
+       MD 활성화에너지가 아니다. `window_gain 0.199` 이 b2o3 MD Ea 0.199 eV 와 **글자만**
+       같아 결속 검사에 걸린다. 결속하면 거짓 선언이므로 **부인**한다 (id 를 이름으로 댄다).
+       ⛔ 2026-09-08 (Codex BI) — 부인을 표 전체 담요에서 **열 단위**로 좁혔다.
+       ⚠ 원자료 1081행에는 같은 글자가 13칸 더 있다(window_gain 5 · uncertainty 4 ·
+         ad_eps 1 · ml_score 1 …). 지금 `[:40]` 이라 안 보일 뿐이고, 표를 늘리거나
+         정렬을 바꾸면 하나씩 나온다 — 그때마다 열을 여기 등록해야 한다. #}
+    {{ gtable({'data': casc.codoping_v2.data[:40]}, casc.codoping_v2.columns,
+              not_map={'window_gain': 'MD_Ea_eV@b2o3', 'uncertainty': 'MD_Ea_eV@b2o3',
+                       'ad_eps': 'MD_Ea_eV@b2o3', 'ml_score': 'MD_Ea_eV@b2o3'},
+              not_src_ds='codoping_ml_v2') }}
+    <div class="muted" style="font-size:.74rem;margin-top:6px">상위 40쌍만 표시 (전체 {{ casc.codoping_v2.n }}쌍 → <a href="/api/csv/properties/codoping_ml_v2.csv">CSV 원본</a>) ·
+      ml_score ± uncertainty = 모델 예측 ± 내부 LOOCV-잔차 전파 불확실도 · joint_window = pair 합동 ESW 창 · top_interaction = 기여 최대 교호작용 항.</div>
+  </div>
+  {% endif %}
+</div>
+
+{% if casc.v2 and casc.v2.present %}
+{% set V = casc.v2 %}{% set VM = V.meta %}
+<div class="tab-panel" id="tab-v2">
+  <div class="card">
+    <h3>회수분 — 완주한 전체 90종 · 270 champion
+      <span class="badge warn" style="vertical-align:middle;margin-left:6px">Recovered · unvalidated diagnostic</span>
+      <span class="muted" style="font-weight:400;font-size:.8rem">회수 {{ VM.recovered_on }}</span></h3>
+    <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+      <b>이 탭의 랭킹·깔때기는 결과가 아니라 진단물이다.</b> 아직 검증 절차를 거치지 않았고
+      게이트 정의가 안 닫혔다 — <b>원고·발표에 순위로 인용하지 말 것.</b>
+      원자료(270 champion)와 ESW 는 <b>record-complete 90</b> 이고 ESW 의 <b>phase-set 비교는 270/270 닫혔다</b>(phase_set_id 기록). 다만 <b>효과 귀속은 0/17</b> 이다 — chain generator 17행 중 10행만 plain 형제와 정확 대응이고 7행은 치환 자리까지 다르다. 내려받아 쓰되 <b>'그대로 사용 가능' 이 아니다.</b>
+    </div>
+    <div class="callout cal-warning" style="margin:0 0 12px">
+      <div class="cal-b" style="font-size:.82rem">
+        <b style="font-size:1.05em">{{ VM.headline }}</b><br>
+        <b>범위</b> — {{ VM.scope }}<br>
+        <b>왜</b> — {{ VM.why|bold }}<br>
+        <b>{{ VM.caveat|bold }}</b><br>
+        {{ VM.inherited_text_warning|bold }}
+      </div>
+    </div>
+
+    {% if V.audit %}{% set A = V.audit %}
+    <h4 style="margin:14px 0 6px">완결성 감사 <span class="muted" style="font-weight:400;font-size:.8rem">{{ A.audited }} · {{ A['⛔_do_not_say'] }}</span></h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>구분</th><th>종</th><th>의미</th></tr></thead><tbody>
+      <tr><td><span class="badge ok">complete</span></td><td class="mono">{{ A.n_complete }}</td>
+          <td style="font-size:.86em">모든 농도 라벨에서 gate 입력이 다 있음</td></tr>
+      <tr><td><span class="badge warn">partial</span></td><td class="mono">{{ A.partial|length }}</td>
+          <td style="font-size:.86em">일부 라벨 결측 — 남은 라벨 평균으로 평가됨:
+            <span class="mono">{{ A.partial.keys()|sort|join(' ') }}</span></td></tr>
+      <tr><td><span class="badge warn">dropped</span></td><td class="mono">{{ A.dropped|length }}</td>
+          <td style="font-size:.86em">gate 입력 전면 결측 → ESW 만 있고 <b>평가 불가</b>:
+            {% for sp, why in A.dropped.items() %}<span class="mono">{{ sp }}</span> — {{ why|bold }}{% endfor %}</td></tr>
+    </tbody></table></div>
+    {% endif %}
+
+    <h4 style="margin:14px 0 6px">축별 완성도</h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>축</th><th>상태</th><th>설명</th></tr></thead><tbody>
+      {% for k, (st, desc) in VM.status.items() %}
+      <tr>
+        <td class="mono">{{ k }}</td>
+        <td><span class="badge {{ 'ok' if st in ('complete','recovered') else 'warn' }}">{{ st }}</span></td>
+        <td style="font-size:.86em">{{ desc|bold }}</td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+
+    {% if VM.funnel_v2 %}{% set F2 = VM.funnel_v2 %}
+    <h4 style="margin:16px 0 6px">깔때기 — 90종 vs 정본 47종</h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>풀</th><th>pool</th><th>G1 구조</th><th>G2 창</th><th>G3 산화</th>
+      <th>G4 Li경로</th><th>G5 역학*</th></tr></thead><tbody>
+      <tr><td><b>90종 회수분</b></td>{% for n in F2.waterfall %}<td class="mono"><b>{{ n }}</b></td>{% endfor %}</tr>
+      <tr class="muted"><td>정본 47종</td>{% for n in F2.canonical %}<td class="mono">{{ n }}</td>{% endfor %}</tr>
+    </tbody></table></div>
+    <div class="muted" style="font-size:.78rem;margin-top:6px">
+      * G5 는 roster 상대 순위라 물리 탈락 게이트가 아니다 — 최종 1종을 결론으로 인용하지 말 것.
+      비교 endpoint 는 <b>G4</b> 다. {{ F2.note }}
+    </div>
+
+    {# ⛔ 2026-08-14 (Codex 재감사) — 승인 랭킹이 0종인데 후보 **이름**을 기본 화면에
+       늘어놓으면 그게 곧 shortlist 로 읽힌다. 수는 보이되 명단은 opt-in 으로 연다. #}
+    <h4 style="margin:16px 0 6px">G4 endpoint — {{ F2.endpoint_n }}종
+      <span class="muted" style="font-weight:400;font-size:.8rem">(정본 47종판은 11종)</span></h4>
+    <div class="callout cal-danger" style="margin:0 0 8px;font-size:.82rem">
+      <b>이 {{ F2.endpoint_n }}종은 shortlist 가 아니다.</b> G4 는 blocking 이 BVS 를 덮어쓰는
+      순환 합성값이고, min–max 정규화라 풀이 바뀌면 통과선이 같이 움직인다
+      (같은 6종의 blocking-free 점수가 47종 풀 대비 89종 풀에서 최대 +0.09 이동).
+      후보명은 <b>다음 계산 대상 선정용</b>이지 결과가 아니다.
+    </div>
+    {# ⛔ 2026-08-14 (Codex Round-3 P1) — <details> 는 후보명을 초기 DOM 에 다 싣는다.
+       "숨김" 이 아니라 접어둔 것뿐이라 public fail-closed 가 아니다. 서버 라우트로 옮긴다. #}
+    <a class="btn" href="/cascade/diagnostic?view=diagnostic#endpoint">후보명 열기 (acquisition 전용 화면) →</a>
+    {% if VM.artifacts %}
+    <div class="callout cal-warning" style="margin:10px 0 0">
+      <div class="cal-b" style="font-size:.8rem"><b>⚠ 판정이 아닌 통과</b> —
+        {% for d, why in VM.artifacts.items() %}<b>{{ d }}</b>: {{ why|bold }}{% if not loop.last %} · {% endif %}{% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <h4 style="margin:16px 0 6px">내려받기</h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>파일</th><th>내용</th></tr></thead><tbody>
+      {% for rel, label, optin in V.downloads %}
+      <tr>
+        <td><a class="mono" href="/api/file/{{ rel }}?dl=1&amp;{{ optin }}">⬇ {{ rel.split('/')[-1] }}</a></td>
+        <td style="font-size:.86em">{{ label }}
+          <span class="badge {{ 'warn' if 'diagnostic' in optin else 'err' }}" style="margin-left:5px">{{ optin }}</span></td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.78rem;margin-top:6px">
+      근거: <span class="mono">kb/methodology/cascade_pipeline_anatomy_2026_08_13.md</span>
+    </div>
+  </div>
+
+  {% if V.ranked and V.ranked.data %}
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">89종 진단 랭킹 <span class="badge err">recovered_unvalidated — 결과 아님</span></h3>
+      <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('v2-tbl',this.value)">
+    </div>
+    <div class="callout cal-danger" style="margin:0 0 10px;font-size:.82rem">
+      <b>이 표를 리더보드로 읽지 말 것.</b> 점수 = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile
+      + 0.10·window 는 <b>손으로 정한 가중치</b>이고, 입력 중 G4 는 순환이며 G5 는 로스터 상대다.
+      승인된 랭킹은 <b>0종</b>. 아래는 다음 계산을 고르기 위한 진단물이다.
+    </div>
+    <a class="btn" href="/cascade/diagnostic?view=diagnostic#ranking">89행 표 열기 (acquisition 전용 화면) →</a>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if casc.trivalent and casc.trivalent.site_rule %}
+<div class="card insight-card">
+  <div class="ic-tag">🧩 Site rule (trivalent M³⁺)</div>
+  <div>{{ casc.trivalent.site_rule }}</div>
+</div>
+{% endif %}
+
+{% include "_mo_modal.html" %}
+
+<!-- 📄 litdb digest 뷰어 — /api/paper/<slug> 재사용 (literature.html 과 같은 API). JS 없으면 링크가 /literature?open= 로 폴백 -->
+<div class="modal" id="litmodal" role="dialog" aria-modal="true" aria-labelledby="littitle"
+     onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-body" style="max-width:840px;width:100%">
+    <div class="modal-head"><h3 id="littitle" class="mono" style="font-size:.85rem"></h3>
+      <button class="btn sm" onclick="document.getElementById('litmodal').classList.remove('open')">✕ 닫기</button></div>
+    <div class="doc" id="litbody" style="border:none;box-shadow:none;border-radius:0"></div>
+  </div>
+</div>
+
+<script>window.MO_DB={{ mo_db|tojson }};</script>
+<script src="{{ url_for('static', filename='js/mo.js') }}?v={{ asset_version }}"></script>
+<script>
+var RANKED = {{ (casc.ranked.data or [])|tojson }};   // ?archive=1 없으면 []
+var GCOL = {{ gcol|tojson }};
+
+// 📄 litdb digest 모달 — 실패하면 false 를 안 돌려서 <a href="/literature?open=..."> 폴백이 살아난다
+function openPaperM(slug, ev){
+  if(!/^[a-z0-9_]+$/i.test(slug)) return true;
+  var mo=document.getElementById('litmodal'), bd=document.getElementById('litbody');
+  if(!mo||!bd||!window.fetch) return true;
+  if(ev) ev.preventDefault();
+  document.getElementById('littitle').textContent=slug;
+  bd.innerHTML='<span class="muted">로딩...</span>';
+  mo.classList.add('open');
+  fetch('/api/paper/'+encodeURIComponent(slug)).then(function(r){return r.json();})
+    .then(function(d){bd.innerHTML=d.html||'<span class="muted">본문 없음</span>';})
+    .catch(function(){bd.innerHTML='<span class="muted">digest 로드 실패 — <a href="/literature?open='+slug+'">문헌 페이지에서 열기</a></span>';});
+  return false;
+}
+document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){
+  document.querySelectorAll('#tabs button').forEach(function(x){x.classList.remove('active')});
+  document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('active')});
+  b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+  if(b.dataset.tab==='board'&&window.Plotly)Plotly.Plots.resize('scatter');
+  if(b.dataset.tab==='theme'&&window.Plotly&&_tsDrawn)Plotly.Plots.resize('theme-scatter');
+};});
+
+// scatter: E vs ox_V, color=score, pareto=ring
+(function(){
+  var reg = RANKED.filter(function(r){return r.pareto!=='Y'&&r.pareto!=='y';});
+  var par = RANKED.filter(function(r){return r.pareto==='Y'||r.pareto==='y';});
+  function tr(rows, ring){return {
+    x:rows.map(function(r){return r.E_GPa;}), y:rows.map(function(r){return r.ox_V;}),
+    text:rows.map(function(r){return r.dopant+' (#'+r.rank+', '+r.group+')';}),
+    mode:'markers', type:'scatter', name: ring?'Pareto':'others',
+    marker:{ size:rows.map(function(r){return 8+r.score*22;}),
+      color:rows.map(function(r){return r.score;}), colorscale:'Viridis',
+      cmin:0.15, cmax:0.85, showscale:!ring,
+      colorbar:{title:'score',thickness:12,len:.7},
+      line: ring?{color:'#2563eb',width:2.5}:{color:'rgba(0,0,0,.15)',width:.5}},
+    hovertemplate:'%{text}<br>E=%{x:.1f} GPa · ox=%{y:.2f} V<extra></extra>'};}
+  function drawScatter(){Plotly.newPlot('scatter',[tr(reg,false),tr(par,true)],
+    Object.assign({margin:{t:10,r:14,b:46,l:52},font:plotlyFont(),
+     xaxis:{title:"Young's modulus E (GPa, UMA)"},yaxis:{title:'oxidation onset (V vs Li)'},
+     legend:{orientation:'h',y:-0.22},hovermode:'closest'},plotlyBG()),
+    {responsive:true,displaylogo:false});}
+  // ⚠ 가드 필수 — 여기서 ReferenceError 가 나면 이 <script> 블록이 통째로 중단돼
+  //   아래 THEMES/TDOP/selThemes 가 미할당으로 남고 🎯 테마 탭 + #딥링크가 전부 죽는다.
+  //   (같은 파일 213·214·288행은 이미 window.Plotly 가드를 쓴다 — 여기만 빠져 있었음)
+  if(window.Plotly){
+    drawScatter();
+    window.addEventListener('themechange',drawScatter);
+  }else{
+    var _sc=document.getElementById('scatter');
+    if(_sc)_sc.innerHTML='<span class="muted" style="padding:24px;display:block">Plotly 로드 실패 — 표는 정상 동작해요. tools/vendor_libs.sh 로 로컬화 가능.</span>';
+  }
+})();
+
+function sortT(th, idx){
+  var tb=th.closest('table'), rows=Array.prototype.slice.call(tb.tBodies[0].rows);
+  var asc=!(th._asc); th._asc=asc;
+  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');x.setAttribute('aria-sort','none');});
+  th.setAttribute('data-sort',asc?'▲':'▼');th.setAttribute('aria-sort',asc?'ascending':'descending');
+  rows.sort(function(a,b){
+    var x=a.cells[idx].innerText.trim(), y=b.cells[idx].innerText.trim();
+    var nx=parseFloat(x), ny=parseFloat(y);
+    if(!isNaN(nx)&&!isNaN(ny))return asc?nx-ny:ny-nx;
+    return asc?x.localeCompare(y):y.localeCompare(x);
+  });
+  rows.forEach(function(r){tb.tBodies[0].appendChild(r);});
+}
+function filtRows(tid,q){q=q.toLowerCase();var n=0;
+  document.querySelectorAll('#'+tid+' tbody tr').forEach(function(r){
+    var show=r.innerText.toLowerCase().indexOf(q)>=0;r.style.display=show?'':'none';if(show)n++;});
+  var tb=document.getElementById(tid);
+  if(tb){var e=tb.parentNode.querySelector('.filt-empty');
+    if(!e){e=document.createElement('div');e.className='filt-empty muted';
+      e.style.cssText='padding:22px;text-align:center';tb.parentNode.appendChild(e);}
+    e.textContent=n?'':'검색 결과 없음 — 검색어를 지워보세요.';e.style.display=n?'none':'';}
+}
+// 딥링크(#Nd2O3) 도착 시 해당 행 하이라이트
+// ⛔⛔ 2026-09-09 (P0-11) — 여기가 **테마 탭 전체를 죽이고 있었다.** 기본 화면과
+//   ?view=diagnostic 에서는 #board-tbl 의 tbody 가 보관함 안내 행 하나(colspan)뿐이라
+//   `r.cells[1]` 이 undefined → TypeError 로 이 <script> 블록이 통째로 중단됐고,
+//   바로 아래 THEMES/TDOP 할당이 미실행으로 남아 🎯 테마 탭이 안 돌았다. 페이지가
+//   스스로 뿌리는 딥링크 칩 48개가 전부 그리로 간다. 바로 위 주석이 같은 실패 모드를
+//   이미 적어 뒀는데(Plotly 가드) 이 줄만 빠져 있었다.
+//   ⇒ ① cells 길이 가드 ② try/catch 로 블록 격리. 안내 행은 tbody 밖으로 뺐다.
+try{
+  if(location.hash){var d=decodeURIComponent(location.hash.slice(1)).toLowerCase();
+    document.querySelectorAll('#board-tbl tbody tr').forEach(function(r){
+      if(r.cells.length>1 && r.cells[1].innerText.toLowerCase().indexOf(d)>=0){
+        r.classList.add('row-hi');r.scrollIntoView({block:'center'});}});}
+}catch(e){/* 딥링크 하이라이트 실패가 아래 테마 탭 배선을 죽이면 안 된다 */}
+
+// ── 🎯 테마 조합 — 선택 테마 norm 기하평균 랭킹 + (정확히 2개) 산점도 ──
+var THEMES={{ (casc.themes.themes if casc.themes else {})|tojson }};
+var TDOP={{ (casc.themes.dopants if casc.themes else [])|tojson }};
+//: 빈 TDOP 가 "없다" 인지 "가려졌다" 인지 JS 가 구분할 수 있게 플래그를 같이 내린다.
+var THEME_GATED={{ ((casc.themes.diagnostic_gated if casc.themes else false)|default(false, true))|tojson }};
+var selThemes=[], _tsDrawn=false;
+function tgThemeSel(tid){
+  var i=selThemes.indexOf(tid);
+  if(i>=0)selThemes.splice(i,1);else selThemes.push(tid);
+  var card=document.getElementById('tc-'+tid),chk=document.getElementById('tchk-'+tid);
+  if(card)card.classList.toggle('sel',i<0);
+  if(chk)chk.checked=(i<0);
+  renderCombine();
+}
+function _fmt(v,nd){return (v==null||isNaN(v))?'—':(+v).toFixed(nd==null?3:nd);}
+function combineRows(){ // combined = (∏ norm)^(1/n) — themes.json combine_rule 그대로
+  // ⚠ norm 이 null 인 축(= 그 도펀트에 대한 **판정 없음**)은 0 으로 깔면 안 된다.
+  //   0 은 "가장 나쁨" 이라 기하평균에서 그 도펀트를 말살하는데, 데이터가 없는 것은 나쁜 것이 아니다.
+  //   (air_stability_lit 은 [Zhu20] 표에 같은 산화수가 없는 12종이 null 이다.)
+  //   → 선택된 축 중 하나라도 null 이면 랭킹에서 **제외**하고, 몇 종이 왜 빠졌는지 표시한다.
+  var kept=[],dropped=[];
+  TDOP.forEach(function(d){
+    var miss=selThemes.filter(function(t){return !(d.norm&&d.norm[t]!=null);});
+    if(miss.length){dropped.push({dopant:d.dopant,miss:miss});return;}
+    var p=1;
+    selThemes.forEach(function(t){p*=Math.max(d.norm[t],0);});
+    kept.push({d:d,combined:Math.pow(p,1/selThemes.length)});
+  });
+  kept.sort(function(a,b){return b.combined-a.combined;});
+  return {rows:kept,dropped:dropped};
+}
+function renderCombine(){
+  var hint=document.getElementById('combine-hint'),wrap=document.getElementById('combine-tbl-wrap'),
+      sc=document.getElementById('theme-scatter');
+  if(!wrap)return;
+  if(!selThemes.length){hint.hidden=false;wrap.innerHTML='';sc.hidden=true;_tsDrawn=false;return;}
+  hint.hidden=true;
+  var cr=combineRows(),rows=cr.rows,dropped=cr.dropped;
+  if(selThemes.length===2&&window.Plotly&&rows.length){sc.hidden=false;drawThemeScatter(rows);}
+  else{sc.hidden=true;_tsDrawn=false;}
+  var head='<th onclick="sortT(this,0)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">#</th><th onclick="sortT(this,1)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">dopant</th>'+
+    '<th onclick="sortT(this,2)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">group</th><th onclick="sortT(this,3)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">combined</th>'+
+    selThemes.map(function(t,i){return '<th onclick="sortT(this,'+(4+i)+')" title="'+_esc(THEMES[t].metric)+'">'+_esc(THEMES[t].icon+' '+THEMES[t].label)+'</th>';}).join('');
+  var body=rows.map(function(r,i){var d=r.d;
+    var name=(window.MO_DB&&window.MO_DB[d.dopant])?
+      '<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO(\''+d.dopant+'\')" onkeydown="_kbd(event)">'+_esc(d.dopant)+'</span>':_esc(d.dopant);
+    return '<tr><td class="num">'+(i+1)+'</td><td>'+name+(d.pareto==='Y'?' <span class="pareto-y" style="font-size:.66rem">◆</span>':'')+'</td>'+
+      '<td><span class="grp-pill" style="--_g:'+(GCOL[d.group]||'var(--muted)')+'">'+_esc(d.group)+'</span></td>'+
+      '<td class="num" style="font-weight:700">'+_fmt(r.combined)+'</td>'+
+      selThemes.map(function(t){var raw=d[THEMES[t].metric_key];
+        return '<td class="num" title="원값 '+_esc(THEMES[t].metric_key)+' = '+_fmt(raw)+'">'+_fmt(d.norm?d.norm[t]:null)+'</td>';}).join('')+'</tr>';
+  }).join('');
+  // 판정 없음으로 빠진 도펀트를 **반드시 눈에 보이게** 적는다 (조용한 절단 금지).
+  var note='';
+  if(dropped.length){
+    var byTheme={};
+    dropped.forEach(function(x){x.miss.forEach(function(t){(byTheme[t]=byTheme[t]||[]).push(x.dopant);});});
+    note='<p class="fig-note" style="margin:.5rem 0 0"><strong>⚠ 랭킹에서 제외 '+dropped.length+'종</strong>'+
+      ' — 선택한 축에 <strong>데이터가 없는</strong> 도펀트다. '+
+      '<em>데이터 없음 ≠ 나쁨</em> 이라 0 으로 깔지 않고 빼 둔다.<br>'+
+      Object.keys(byTheme).map(function(t){
+        return '<span style="color:var(--muted)">'+_esc(THEMES[t]?THEMES[t].icon+' '+THEMES[t].label:t)+
+          ' 결측 ('+byTheme[t].length+'): </span>'+_esc(byTheme[t].join(', '));
+      }).join('<br>')+'</p>';
+  }
+  if(!rows.length){
+    // ⛔ 2026-09-09 — 게이트로 TDOP 가 비었을 때도 "데이터가 없다" 고 단정했다.
+    //   데이터는 있고 **이 응답에서 뺀 것**이다 — 없는 것과 가려진 것을 같은 말로 쓰지 않는다.
+    wrap.innerHTML='<p class="fig-note">'+(THEME_GATED
+      ? '🔒 90종 조합 랭킹은 이 화면에서 <b>가려져 있다</b>(diagnostic_only) — 데이터가 없는 것이 아니다. '
+        + '<a href="/cascade?view=diagnostic#theme">진단 화면 열기 →</a>'
+      : '선택한 축 조합에 데이터가 모두 있는 도펀트가 없다.')+'</p>'+note;return;
+  }
+  wrap.innerHTML='<div class="tbl-scroll"><table class="data-table sortable" id="combine-tbl"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>'+note;
+}
+function drawThemeScatter(rows){
+  var t1=selThemes[0],t2=selThemes[1],m1=THEMES[t1],m2=THEMES[t2];
+  function tr(rs,ring){return {
+    x:rs.map(function(r){return r.d.norm[t1];}),y:rs.map(function(r){return r.d.norm[t2];}),
+    text:rs.map(function(r){return r.d.dopant+'<br>'+m1.metric_key+'='+_fmt(r.d[m1.metric_key])+' · '+m2.metric_key+'='+_fmt(r.d[m2.metric_key])+'<br>combined='+_fmt(r.combined);}),
+    mode:'markers',type:'scatter',name:ring?'Pareto':'others',
+    marker:{size:rs.map(function(r){return 7+r.combined*22;}),
+      color:rs.map(function(r){return r.combined;}),colorscale:'Viridis',cmin:0,cmax:1,showscale:!ring,
+      colorbar:{title:'combined',thickness:12,len:.7},
+      line:ring?{color:'#2563eb',width:2.5}:{color:'rgba(0,0,0,.15)',width:.5}},
+    hovertemplate:'%{text}<extra></extra>'};}
+  var reg=rows.filter(function(r){return r.d.pareto!=='Y';}),par=rows.filter(function(r){return r.d.pareto==='Y';});
+  Plotly.newPlot('theme-scatter',[tr(reg,false),tr(par,true)],
+    Object.assign({margin:{t:10,r:14,b:46,l:56},font:plotlyFont(),
+      xaxis:{title:m1.icon+' '+m1.label+' (norm)',range:[-0.04,1.06]},
+      yaxis:{title:m2.icon+' '+m2.label+' (norm)',range:[-0.04,1.06]},
+      legend:{orientation:'h',y:-0.22},hovermode:'closest'},plotlyBG()),
+    {responsive:true,displaylogo:false});
+  _tsDrawn=true;
+}
+window.addEventListener('themechange',function(){if(_tsDrawn&&selThemes.length===2)drawThemeScatter(combineRows());});
+</script>
+{% endblock %}

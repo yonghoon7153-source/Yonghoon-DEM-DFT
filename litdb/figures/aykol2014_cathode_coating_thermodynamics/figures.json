@@ -1,0 +1,214 @@
+{
+ "slug": "aykol2014_cathode_coating_thermodynamics",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-11",
+ "sources": [
+  "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+  "106. Sup) Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Comparison of HF-scavenging reaction enthalpies of simple metal oxides (MxO1/2 where M is an alkali or alkaline-earth metal, Al or Zn) calculated by DFT (Equation (5)) with the experimental enthalpies calculated using available thermochemical data (Equation (6)). Using DFT energies for HF and H2O results in an excellent agreement with experiment, obviating the need for energy corrections for molecules. The error-bars show combined standard uncertainties (CSU) in experimental values. The dashed-lines show the enthalpy limit dH_s-HF[Li2O], below which voltage of MxF is always higher than the corresponding MxO1/2. The dotted-line represents perfect agreement with experiment.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    392,
+    295,
+    614
+   ],
+   "w": 1047,
+   "h": 926,
+   "dpi": 300,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": null,
+   "note": "manual crop (auto geometric check dropped it: vector-only plot)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparison of HF-scavenging reaction enthalpies of p- and d-block metal oxides calculated by DFT (Equation (5)) with the experimental enthalpies calculated using available thermochemical data (Equation (6)). The error-bars show combined standard uncertainties (CSU) in experimental values. The superscript 'a' denotes values listed in thermochemical tables, 'b' denotes ref. [78,79] and 'c' denotes ref. [80,81]. M2.67+ corresponds to M3O4 reacting with HF to produce MF2 and MF3. BeO is also included in this plot. The dashed-line represents perfect agreement with experiment.",
+   "rotated_deg": 0,
+   "bbox": [
+    300,
+    70,
+    550,
+    266
+   ],
+   "w": 1042,
+   "h": 818,
+   "dpi": 300,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": null,
+   "note": "manual crop (auto geometric check dropped it: vector-only plot)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Calculated average voltages for oxides and ﬂ uorides versus voltages estimated from experimental formation enthalpies. Voltages for oxides and ﬂ uorides correspond to conversion reactions M O Li M 1/2Li O 1/2 2 x x + → + and M F Li M LiF x x + → + , respectively, and they are calculated as described in Equations ( 9–13) . The error-bars show combined standard uncertainties (CSU) in experimental values.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.9,
+    66.0,
+    550.9,
+    272.1
+   ],
+   "w": 2126,
+   "h": 859,
+   "dpi": 300,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": 0.949
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. DFT average lithiation voltages of s-, p- and d-block metal oxides and ﬂ uorides, via the conversion reactions of the form x x M O Li M 1/2Li O 1/2 2 + → + and M F Li M LiF x x + → + , respectively. The dashed-line is an arbitrary discharge cutoff voltage (i.e., the lowest voltage attained during the discharge) of 3.0 V for a sample cathode to be coated. If a prospective coating for this sample cathode has a lithiation voltage lower than the discharge cutoff of the cathode (i.e., the components of the coating lie in the window enclosed by the dashed-lines), the coating will not tend to absorb lithium.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.7,
+    457.9,
+    296.0,
+    631.8
+   ],
+   "w": 1065,
+   "h": 725,
+   "dpi": 300,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": 0.954
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The design chart for comparing HF-scavenging tendencies of oxides ( s HF H −Δ −), lithiation voltages of their corresponding ﬂ uorides relative to an arbitrary discharge cutoff of 3.0 V ( 3.0 M F V x − ), Ω V and Ω G of 81 metal-oxide coating candidates for Li-ion battery cathodes. Compounds are labeled with their cations for simplicity. Sample property rectangles are drawn for Al 3+ and Mg 2+ . Such a rectangle for a material shows that it is thermodynami- cally a better coating than materials that remain inside.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.4,
+    65.1,
+    554.5,
+    437.9
+   ],
+   "w": 2127,
+   "h": 1554,
+   "dpi": 300,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": 0.899
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Coating candidates that pass the applied screens versus their normalized HF-scavenging capacities. Averages of the normalized scav- enging capacities are also shown. Compounds are labeled with their cations for simplicity.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.4,
+    65.2,
+    299.3,
+    246.3
+   ],
+   "w": 1064,
+   "h": 756,
+   "dpi": 300,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": 0.922
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. The mean combined standard uncertainty (mean-CSU) in experimental values and mean absolute error (MAE) of DFT values relative to experiment for HF-scavenging enthalpies and voltages of oxides and ﬂ uorides.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.4,
+    11.9,
+    588.0,
+    772.7
+   ],
+   "w": 2134,
+   "h": 2992,
+   "dpi": 283,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": 0.885
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2. Enthalpies of reactions of common cathode materials with HF. For all cathodes, we assumed a reaction form analogous to Equation ( 4) . Products of the reactions are determined via the grand canonical linear programming (GCLP) method [ 55,83–85 ] as the ground state phases at the given composition in the corresponding chemical space.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    11.9,
+    588.0,
+    772.7
+   ],
+   "w": 2147,
+   "h": 2992,
+   "dpi": 283,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": 0.878
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "Table 3. LiF-scavenging reactions and enthalpies calculated with DFT. In Li-Cs-F system, we only list two reactions and do not further list those for LiCs 2 F 3 , Li 2 CsF 3 , Li 3 CsF 4 and Li 3 Cs 2 F 5 since none of them are stable with respect to CsF and LiF. Reaction s LiF H Δ − Reaction s LiF H Δ − [eV LiF −1 ] [eV LiF −1 ] AlF 3 + 3LiF → Li 3 AlF 6 –0.118 MnF 3 + LiF → LiMnF 4 –0.096 AsF 5 + LiF → LiAsF 6 –0.938 LiMnF 4 + LiF → Li 2 MnF 5 –0.009 AuF 3 + LiF → LiAuF 4 –0.524 MnF 4 + 2LiF → Li 2 MnF 6 –0.395 AuF 5 + LiF → LiAuF 6 –1.050 NbF 4 + 2LiF → Li 2 NbF 6 –0.147 BaF 2 + LiF → LiBaF 3 0.118 NbF 5 + LiF → LiNbF 6 –0.736 BeF 2 + 2LiF → Li 2 BeF 4 –0.125 PdF 4 + 2LiF → Li2PdF 6 –0.609 BiF 3 + LiF → LiBiF 4 –0.142 PtF 4 + 2LiF → Li 2 PtF 6 –0.665 BiF 5 + LiF → LiBiF 6 –0.856 RbF + LiF → LiRbF 2 –0.070 CoF 3 + LiF → LiCoF 4 –0.083 RuF 4 + 2LiF → Li 2 RuF 6 –0.143 CrF 3 + 3LiF → Li ",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    11.9,
+    588.0,
+    772.7
+   ],
+   "w": 2147,
+   "h": 2992,
+   "dpi": 283,
+   "src": "106. Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.PDF",
+   "blank": 0.891
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. HF-scavenging enthalpies of oxides, lithiation voltages of corresponding fluorides, and HF-scavenging capacities. is the HF-scavenging enthalpy (Units: eV HF-1), is the average lithiation voltage of the fluoride (Units: Volts), ΩG is the gravimetric HF- scavenging capacity of the oxide (Units: moles-HF g-1) and ΩV is the volumetric HF- scavenging capacity of the oxide (Units: moles-HF cm-3). s-block compounds Compound ΩG ΩV BaO 1.88 0.09 0.013 0.075 BeO 0.69 1.01 0.080 0.236 CaO 1.50 -0.03 0.036 0.118 Cs2O 2.37 0.61 0.007 0.028 K2O 2.41 0.50 0.021 0.099 Li2O 1.70 0.00 0.067 0.131 MgO 1.15 0.56 0.050 0.175 Na2O 2.18 0.45 0.032 0.076 Rb2O 2.42 0.66 0.011 0.041 SrO 1.73 -0.02 0.019 0.094 p-block compounds Compound ΩG ΩV Al2O3 0.76 1.18 0.059 0.228 As2O3 0.40 3.05 0.030 0.116 As2O5 0.22 3.48 0.044 0.183 B2O3 0.28 2.19 0.086 0.206 Bi2O3 0.78 2.64 0.013 0.058 Br2O3 -0.06 4.69 0.029 0",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    67.2,
+    527.9,
+    811.4
+   ],
+   "w": 1862,
+   "h": 2998,
+   "dpi": 290,
+   "src": "106. Sup) Aykol2014_Thermodynamic_Aspects_of_Cathode_Coatings_LIB.pdf",
+   "blank": 0.941
+  }
+ ]
+}

@@ -1,0 +1,513 @@
+{
+ "slug": "kang2026_site_specific_customized_se_dendrite_tolerant_li_metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-06",
+ "sources": [
+  "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+  "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic illustration of the dendrite-tolerant fast-kinetics design for ASSLMBs via site-specific customized SEs. 3",
+   "rotated_deg": 0,
+   "bbox": [
+    81.6,
+    393.2,
+    513.6,
+    730.8
+   ],
+   "w": 1802,
+   "h": 1407,
+   "dpi": 300,
+   "src": "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.348
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) XRD spectra for Li6PS5–xOxCl (x = 0, 0.5, 1, 1.75) SEs. (b) Enlarged view of the XRD spectra in (a) from 29.5◦to 32.0◦. (c) Crystal structure of O- substituted LPSOC. (d) Ionic conductivity of Li6PS5–xOxCl measured from 20 to 60 ◦C, plotted as ln(σ) versus (1000/T). (e) Ionic conductivity, (f) activation energy, and (g) tender XAS spectra at K-edge for the Li6PS5–xOxCl series. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    307.4,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1686,
+   "dpi": 300,
+   "src": "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Voltage profiles of the NCM || Li–In cells with different catholytes for the initial cycle at 0.1C. (b) Cycling performances at 0.5C. (c) Ionic, (d) interfacial, and (e) Warburg resistances (Ω cm2) obtained at the initial and 100th cycles at the charged state. XPS spectra for S 2p and P 2p core levels obtained from the composite cathodes employing (f) LPSC and (g) LPSOC. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    324.9,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1613,
+   "dpi": 300,
+   "src": "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Rate performances of NCM || Li–In cells using LPSC, LPSOC, and LPSC1.6 as the separator. (b) Comparison of discharge capacities at 1C and 2C rates. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    610.6,
+    562.6,
+    730.8
+   ],
+   "w": 2209,
+   "h": 501,
+   "dpi": 300,
+   "src": "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Nyquist plots of Li | SE | Li symmetric cells before and after aging at RT before cycling. (b) DRT analyses of Nyquist plots in (a). (c) Galvanostatic cycling of Li | SE | Li symmetric cells with a current density of 0.5 mA cm−2 and 2.0 mA cm−2 at 45 ◦C. Galvanostatic intermittent cycling of the symmetric cells at step- increased current density at (d) 45 ◦C and (e) RT. (e) Comparison of C-rate and cathode loading for ASSLMBs cycled over 100 times at RT. pore filling dominate the overall electrochemical response. image processing, wherein grayscale images were converted into binary maps to extract the void fraction [59]. The resulting void ratios were 0.148 for LPSC, 0.125 for LPSC1.6, and significantly reduced to 0.070 for M-SE, clearly confirming the formation of a denser microstructure in the M-SE system. To provide a more in-depth assessment, we performed surface topograp",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    630.7
+   ],
+   "w": 2228,
+   "h": 2422,
+   "dpi": 300,
+   "src": "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Surface SEM images (top) of pelletized LPSC, LPSC1.6, and M-SE and the corresponding pore maps with pores highlighted in red (bottom). (b) Surface topography images and (c) force–distance curves and elastic modulus mapping of LPSC, LPSOC, and LPSC1.6 pellets. The black squares in the modulus mapping images indicate the selected regions used to extract the modulus values. surface features of each SE. As depicted in Fig. 6b, the Li-facing surface of the SE pellet after fabrication is noticeably smoother and more ho­ mogeneous than those of LPSC and LPSC1.6. This indicates that, as observed in the earlier SEM images, the 1 μm-sized LPSOC effectively fills the pores between the 3 μm-sized LPSC1.6 particles, thereby mini­ mizing the available pathways for Li dendrite penetration. This struc­ tural densification homogenizes Li+ flux by eliminating localized current hotspots that ca",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    518.5
+   ],
+   "w": 2228,
+   "h": 1956,
+   "dpi": 300,
+   "src": "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.518
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Cell configuration, voltage profiles, and cycling performances of (a) NCM–LPSC | LPSC | Li, (b) NCM–LPSOC | LPSC1.6 | Li, and (c) NCM–LPSOC | LPSC1.6 | M- SE | Li cells at 45 ◦C. (d) Cycling performances of NCM–LPSC | LPSC1.6 | Li and NCM–LPSOC | LPSC1.6 | M-SE | Li cells at RT. (e) Comparison of C-rate and cathode loading for ASSLMBs operated over 100 cycles at RT. 9",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    249.2,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1928,
+   "dpi": 300,
+   "src": "78401219-12._Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.791
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. SEM images of synthesized Li6PS5–xOxCl (x = 0, 0.5, 1, 1.75) SEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    529.2,
+    159.0
+   ],
+   "w": 1936,
+   "h": 393,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.189
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. XRD spectra and Rietveld refinement results of LPSC and LPSOC SEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    98.2,
+    64.9,
+    500.3,
+    227.5
+   ],
+   "w": 1676,
+   "h": 678,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Nyquist plots of SUS | SE | SUS symmetric cells measured at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    64.8,
+    530.7,
+    183.3
+   ],
+   "w": 1941,
+   "h": 494,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. SEM images of synthesized Li5.4PS4.4Cl1.6 (LPSC1.6) SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    135.2,
+    64.8,
+    463.3,
+    182.5
+   ],
+   "w": 1368,
+   "h": 491,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Nyquist plots of the SUS | LPSC1.6 | SUS symmetric cell measured at different temperatures, and the quantified ionic conductivity values of LPSC1.6.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.4,
+    242.0
+   ],
+   "w": 1953,
+   "h": 739,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Nyquist plots of NCM || Li-In cells employing Li6PS5–xOxCl (x = 0, 0.5, 1) catholytes before and after cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    85.5,
+    533.5,
+    272.8
+   ],
+   "w": 1953,
+   "h": 781,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. The equivalent circuit model used to fit the Nyquist plots of the composite cathodes. The TLM was formulated using a network of distributed impedance elements, enabling simultaneous representation of Li+ transport through the composite cathode, interfacial reactions at the NCM/SE interface, and solid-state diffusion within NCM particles. rion represents the resistance per unit length for Li+ transport, while the interfacial impedance consists of rint, cpeint, and zw, which account for the interfacial resistance, constant-phase element, and Warburg impedance, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.6,
+    242.6
+   ],
+   "w": 1954,
+   "h": 742,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. XPS spectra of composite cathodes before cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    529.9,
+    183.5
+   ],
+   "w": 1938,
+   "h": 495,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. CV results of LPSC (x = 0) and LPSOC (x = 1) electrolytes measured over the voltage range of 2–4.5 V vs. Li/Li+.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.5,
+    273.0
+   ],
+   "w": 1953,
+   "h": 868,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. XRD spectra of NCM–LPSOC composite cathodes before and after cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    64.8,
+    513.7,
+    267.5
+   ],
+   "w": 1789,
+   "h": 845,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 13,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. Nyquist plots of Li symmetric cells as a function of the LPSC1.6 : LPSOC mixing mass ratio.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    85.6,
+    533.5,
+    288.1
+   ],
+   "w": 1954,
+   "h": 845,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. Galvanostatic cycling of Li | SE | Li symmetric cells as a function of the LPSC1.6 : LPSOC mixing mass ratio with a current density of 0.5 mA cm−2 at 45 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.6,
+    274.9
+   ],
+   "w": 1954,
+   "h": 876,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.791
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 15,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. Raman spectra of the SE/Li interface before and after the galvanostatic cycling of Li | SE | Li symmetric cells under 0.5 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    85.6,
+    533.3,
+    316.5
+   ],
+   "w": 1953,
+   "h": 963,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 16,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14. P 2p XPS spectra collected from the Li/SE interface after prolonged physical contact (24 h) and subsequent electrochemical cycling for five cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    85.5,
+    533.2,
+    241.3
+   ],
+   "w": 1952,
+   "h": 650,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 17,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15. Histograms of E derived from AFM-based force spectroscopy measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    283.8,
+    523.9,
+    409.4
+   ],
+   "w": 1886,
+   "h": 524,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.808
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16. Force–distance curve, elastic modulus mapping and histogram of M-SE derived from AFM-based force spectroscopy measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    487.1,
+    533.5,
+    654.2
+   ],
+   "w": 1953,
+   "h": 697,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 18,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17. Cross-sectional morphology of the Li/M-SE interface after extended cycling (500 cycles) at 1C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.4,
+    175.2
+   ],
+   "w": 1953,
+   "h": 461,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.176
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Fitted parameters of the EIS spectra obtained from the cathodes of NCM || Li-In full cells with different catholytes before and after cycling using the TML-based equivalent circuit. CPEint Cycle ROhmic Rion Rint Rw Catholyte C η (Ω cm2) (Ω cm2) (Ω cm2) (Ω cm2) number (mF sη−1cm−2) (−)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.4,
+    532.6,
+    420.0
+   ],
+   "w": 1946,
+   "h": 1475,
+   "dpi": 300,
+   "src": "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf",
+   "blank": 0.956
+  }
+ ],
+ "missing_labels": []
+}

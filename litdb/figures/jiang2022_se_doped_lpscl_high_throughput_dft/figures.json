@@ -1,0 +1,473 @@
+{
+ "slug": "jiang2022_se_doped_lpscl_high_throughput_dft",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+  "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Schematic view of (a) Li6PS5Cl and (b) Li5.5PS4.5Cl1.5 obtained from the Supercell code and DFT calculations. Band structure of (c) Li6PS5Cl and (d) Li5.5PS4.5Cl1.5. The Fermi level is set to be 0 eV. The blue, yellow, orange and watchet spheres represent the Li, S, Cl and P atoms, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    43.8,
+    558.8,
+    234.2
+   ],
+   "w": 1091,
+   "h": 794,
+   "dpi": 300,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.548
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Volume and formation energy of (a) Li6PS5\u0002xSexCl (x = 0–4) and (b) Li5.5PS4.5\u0002xSexCl1.5 (x = 0–3).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    557.1,
+    484.0,
+    706.3
+   ],
+   "w": 1865,
+   "h": 623,
+   "dpi": 300,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Deduced Li+ ionic conductivity and activation energy of (a) Li6PS5-xSexCl (x = 0-4) and (b) Li5.5PS4.5-xSexCl1.5 (x = 0-3).",
+   "rotated_deg": 0,
+   "bbox": [
+    53.0,
+    360.0,
+    282.0,
+    696.0
+   ],
+   "w": 955,
+   "h": 1400,
+   "dpi": 300,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "note": "manual_render 2026-09-09 - extract_figures.py 가 캡션 앵커로 못 잡아 쪽 좌표로 직접 렌더했다"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Density of states (DOS) for (a) Li6PS5Cl, (b) Li6PS3Se2Cl and (c) Li6PSSe4Cl. (d) Contribution of Li atoms to the DOS of Li6PS5Cl, Li6PS3Se2Cl and Li6PSSe4Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    348.8
+   ],
+   "w": 2177,
+   "h": 1272,
+   "dpi": 300,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Density of states (DOS) for (a) Li5.5PS4.5Cl1.5, (b) Li5.5PS3.5SeCl1.5 and (c) Li5.5PS1.5Se3Cl1.5. (d) Contribution of Li atoms to the DOS of Li5.5PS4.5Cl1.5, Li5.5PS3.5SeCl1.5 and Li5.5PS1.5Se3Cl1.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    371.0,
+    558.8,
+    696.6
+   ],
+   "w": 2177,
+   "h": 1358,
+   "dpi": 300,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Reaction energies (dED) between Li6PS5-xSexCl (Li5.5PS4.5-xSexCl1.5) and LiCoO2, Li0.5CoO2, LiFePO4 and FePO4.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.0,
+    527.0,
+    282.0,
+    696.0
+   ],
+   "w": 955,
+   "h": 705,
+   "dpi": 300,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "note": "manual_render 2026-09-09 - extract_figures.py 가 캡션 앵커로 못 잡아 쪽 좌표로 직접 렌더했다"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 13,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Crystal structure of (a) - (d) Li6PS5-xSexCl (x = 1 ~ 4) and (e) - (g) Li5.5PS4.5- xSexCl1.5 (x = 1 ~ 3). The blue, yellow, orange, watchet and purple spheres represent the Li, S, Cl, P and Se atoms, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    142.6,
+    514.3,
+    360.2
+   ],
+   "w": 1793,
+   "h": 907,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.624
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 14,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The mean square displacement (MSD) of Li+ ions in (a) Li6PS5Cl, (b) Li6PS4SeCl, (c) Li6PS3Se2Cl, (d) Li6PS2Se3Cl and (e) Li6PSSe4Cl during 120 ps simulation time. (f) Diffusivity and activation energy of Li6PS5-xSexCl (x = 0 ~ 4) deduced from AIMD simulations at elevated temperatures ranging from 500 to 1000 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    162.8,
+    514.3,
+    403.5
+   ],
+   "w": 1793,
+   "h": 1004,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 15,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The mean square displacement (MSD) of Li+ ions in (a) Li5.5PS4.5Cl1.5, (b) Li5.5PS3.5SeCl1.5, (c) Li5.5PS2.5Se2Cl1.5 and (d) Li5.5PS1.5Se3Cl1.5 during 120 ps simulation time. (e) Diffusivity and activation energy of Li5.5PS4.5-xSexCl1.5 (x = 0 ~ 3) deduced from AIMD simulations at elevated temperatures ranging from 500 to 1000 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    162.8,
+    514.3,
+    402.8
+   ],
+   "w": 1793,
+   "h": 1001,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 16,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The Li+ migration pathway of (a) Li6PS5Cl and (b) Li5.5PS4.5Cl1.5 at 500 K. The blue, green, yellow and red spheres represent the Li, P, S and Cl atoms, respectively. The blue line represents the Li+ migration pathway during 120 ps simulation time.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    162.8,
+    514.3,
+    309.9
+   ],
+   "w": 1793,
+   "h": 614,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.222
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Formation energy (Ef), band gap (Eg), and mechanical properties of Li6PS5Cl and Li5.5PS4.5Cl1.5. B: bulk modulus; G: shear modulus; E: Young’s modulus",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.8,
+    760.8
+   ],
+   "w": 2104,
+   "h": 2991,
+   "dpi": 291,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Average magnitude of the Bader charge (Q) of Li atoms of Se- doped Li6PS5Cl and Li5.5PS4.5Cl1.5 Materials Q (|e|) Materials Q (|e|) Li6PS5Cl \u00020.856 Li5.5PS4.5Cl1.5 \u00020.864 Li6PS3Se2Cl \u00020.854 Li5.5PS3.5Se1Cl1.5 \u00020.861 Li6PSSe4Cl \u00020.853 Li5.5PS1.5Se3Cl1.5 \u00020.859",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.9,
+    760.8
+   ],
+   "w": 2104,
+   "h": 2991,
+   "dpi": 291,
+   "src": "c57b2ffb-100._Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Atomic occupancy in Li6PS5Cl and Li5.5PS4.5Cl1.5. Atom Wyckoff Position Occupancy (Li6PS5Cl) Occupancy (Li5.5PS4.5Cl1.5) Li1 48h 0.456 0.440 P1 4b 1.000 1.000 Cl1 4a 0.615 0.370 S1 4a 0.385 0.630 Cl2 4d 0.834 0.630 S2 4d 0.166 0.370 S3 16e 0.618 1.000",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    487.6,
+    226.3
+   ],
+   "w": 1678,
+   "h": 642,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Total energy and lattice parameter of Li6PS5Cl obtained from DFT calculations. The most stable structure is indicated in bold. Lattice constant (Å) Degree (°) Structure ID. Total energy (eV) a b c α β γ",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.3,
+    434.5
+   ],
+   "w": 1785,
+   "h": 1510,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 4,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Total energy and lattice parameter of Li5.5PS4.5Cl1.5 obtained from DFT calculations. The most stable structure is indicated in bold.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.3,
+    434.9
+   ],
+   "w": 1785,
+   "h": 1512,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 5,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Total energy of Li6PS5-xSexCl (x = 1 ~ 4) obtained from DFT calculations. The most stable structure for each Se-doped Li6PS5Cl is indicated in bold. Total energy (eV) Structure ID. Li6PS4SeCl Li6PS3Se2Cl Li6PS2Se3Cl Li6PS4SeCl 1 -212.56 -208.15 -204.96 -201.27 2 -212.94 -208.99 -204.98 -201.15 3 -212.73 -208.66 -204.91 -201.09 4 212.76 -208.53 -204.95 -200.89 5 -212.83 -208.96 -205.05 -201.09 6 -212.28 -208.59 -204.82 -201.29 7 -212.87 -208.90 -204.88 -201.08 8 -212.82 -208.84 -204.91 -201.12 9 -213.09 -209.05 -205.27 -201.09 10 -212.80 -208.88 -204.92 -201.22",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.2,
+    338.6
+   ],
+   "w": 1785,
+   "h": 1111,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 6,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Total energy of Li5.5PS4.5-xSexCl1.5 (x=1 ~ 3) obtained from DFT calculations. The most stable structure for each Se-doped Li5.5PS4.5Cl1.5 is indicated in bold. Total energy (eV) Structure ID. Li6PS3.5SeCl Li6PS2.5Se2Cl Li6PS1.5Se3Cl 1 -199.77 -195.97 -192.61 2 -200.18 -196.63 -192.61 3 -200.26 -196.33 -192.55 4 -200.01 -196.28 -192.36 5 -199.92 -196.12 -192.11 6 -200.02 -196.42 -192.51 7 -199.75 -196.33 -192.17 8 -199.74 -196.12 -192.36 9 -199.76 -196.22 -192.66 10 -199.73 -195.81 -191.88",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.2,
+    338.6
+   ],
+   "w": 1785,
+   "h": 1111,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 7,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Lattice parameter of the most stable Li6PS5-xSexCl (x = 1 ~ 4) structures. Li6PS4SeCl Li6PS3Se2Cl Li6PS2Se3Cl Li6PSSe4Cl a (Å) 10.20 10.32 10.67 10.68 b (Å) 10.22 10.66 10.05 10.25 c (Å) 10.27 10.11 10.70 10.92 α (°) 90.14 90.21 92.13 90.30 β (°) 88.18 86.90 90.00 90.30 γ (°) 92.09 90.57 90.00 92.64 V (Å3) 1069.09 1110.71 1146.05 1193.13",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    492.5,
+    242.7
+   ],
+   "w": 1699,
+   "h": 711,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 8,
+   "file": "tab_S7.png",
+   "caption": "Table S7. The lattice parameter of the most stable Li5.5PS4.5-xSexCl1.5 (x = 1 ~ 3) structure. Li5.5PS3.5SeCl1.5 Li5.5PS2.5Se2Cl1.5 Li5.5PS1.5Se3Cl1.5 a (Å) 9.90 9.97 10.11 b (Å) 10.14 10.27 10.34 c (Å) 10.08 10.22 10.39 α (°) 89.95 90.01 89.79 β (°) 89.66 89.62 89.67 γ (°) 90.22 90.24 89.41 V (Å3) 1012.06 1045.94 1085.29",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.3,
+    297.0
+   ],
+   "w": 1785,
+   "h": 937,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 9,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Phase equilibria and reaction energy (ΔED) of Li6PS5-xSexCl (x = 0 ~ 4) at the interface with LiCoO2 and Li0.5CoO2. CSSE Celectrode xm Phase equilibria at xm ΔED (meV/atom) LiCoO2 0.53 LiCl, Li3PO4, Co9S8, Li2SO4, Li2S -302.12 Li6PS5Cl Li0.5CoO2 0.51 Li2SO4, Co9S8, Li3PO4, LiCl, Li2S -434.98 LiCoO2 0.57 Li2S, Co9S8, LiCl, Li2SO4, CoSe2, Li3PO4 -302.24 Li6PS4SeCl Li0.5CoO2 0.51 Co9S8, Li3PO4, LiCl, Li2SO4, Li2S, Li2Se -434.98 LiCoO2 0.61 Co9S8, Li2S, Li3PO4, CoSe2, LiCl, Li2SO4 -310.77 Li6PS3Se2Cl Li0.5CoO2 0.53 Li2SO4, Li3PO4, Co9S8, LiCl, Co3Se4, Li2Se -434.87 LiCoO2 0.62 Li2S, Co9S8, Li2Se, Li3PO4, CoSe2, LiCl -319.45 Li6PS2Se3Cl Li0.5CoO2 0.55 LiCl, Co9S8, Co3Se4, Li2Se, Li2SO4, Li3PO4 -433.68 LiCoO2 0.62 CoSe2, Li2S, LiCl, Li2Se, Co9S8, Li3PO4 -328.28 Li6PSSe4Cl Li0.5CoO2 0.51 Li2SO4, Li3PO4, Co9S8, Co9Se8, LiCl, Li2Se -432.70",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.3,
+    377.4
+   ],
+   "w": 1785,
+   "h": 1272,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 10,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Phase equilibria and reaction energy (ΔED) of Li5.5PS4.5-xSexCl1.5 (x = 0 ~ 3) at the interface with LiCoO2 and Li0.5CoO2. CSSE Celectrode xm Phase equilibria at xm ΔED (meV/atom) LiCoO2 0.52 LiCl, Li2S, Li2SO4, Co9S8, Li3PO4 -308.41 Li5.5PS4.5Cl1.5 Li0.5CoO2 0.50 Li3PO4, Co9S8, Li2S, LiCl, Li2SO4 -443.75 LiCoO2 0.56 CoSe2, Co9S8, Li2SO4, Li2S, LiCl, Li3PO4 -312.97 Li5.5PS3.5SeCl1.5 Li0.5CoO2 0.52 CoSe2, Li3PO4, Li2Se, Li2SO4, Co9S8, LiCl -444.35 LiCoO2 0.60 CoSe2, LiCl, Li2SO4, Co9S8, Li2S, Li3PO4 -322.69 Li5.5PS2.5Se2Cl1.5 Li0.5CoO2 0.55 LiCl, Li3PO4, CoSe2, Li2SO4, Li2Se, Co9S8 -443.70 LiCoO2 0.61 CoSe2, Li3PO4, Li2Se, Li2S, LiCl, Co9S8 -332.08 Li5.5PS1.5Se3Cl1.5 Li0.5CoO2 0.59 Co9S8, LiCl, CoSe2, Li2SO4, Li2Se -443.10",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.3,
+    786.8
+   ],
+   "w": 1785,
+   "h": 2978,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 11,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Phase equilibria and reaction energy (ΔED) of Li6PS5-xSexCl (x = 0 ~ 4) at the interface with LiFePO4 and FePO4. CSSE Celectrode xm Phase equilibria at xm ΔED (meV/atom) LiFePO4 0.39 Li3PO4, FePS, Li4P2O7, LiCl, FeS2 -99.75 Li6PS5Cl FePO4 0.45 LiCl, FeS2, Li4P2O7, FePS, LiPO3 -196.86 LiFePO4 0.43 FePS, Se, FeSe2, Li3PO4, FeS2, LiCl -101.73 Li6PS4SeCl FePO4 0.45 FeSe2, LiCl, LiPO3, FeS2, FePS, Li4P2O7 -196.53 LiFePO4 0.43 FeS2, FePS, FeSe2, LiCl, Li3PO4, Se -107.28 Li6PS3Se2Cl FePO4 0.45 FeS2, FeSe2, Li4P2O7, FePS, LiCl, LiPO3 -202.34 LiFePO4 0.43 LiCl, FeS2, FePS, FeSe2, Se, Li3PO4 -112.83 Li6PS2Se3Cl FePO4 0.50 FeS2, Se, FeSe2, LiCl, Li4P2O7, FePS -208.47 LiFePO4 0.43 FeSe2, Li3PO4, Se, LiCl, FePS -118.59 Li6PSSe4Cl FePO4 0.50 FePS, FeS2, LiCl, FeSe2, Li4P2O7, Se -215.19",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.3,
+    320.0
+   ],
+   "w": 1785,
+   "h": 1033,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 12,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Phase equilibria and reaction energy (ΔED) of Li5.5PS4.5-xSexCl1.5 (x = 0 ~ 3) at the interface with LiFePO4 and FePO4. CSSE Celectrode xm Phase equilibria at xm ΔED (meV/atom) LiFePO4 0.40 Li4P2O7, Li3PO4, FeS2, LiCl, FePS -87.52 Li5.5PS4.5Cl1.5 FePO4 0.46 LiPO3, LiCl, FePS, FeS2, Li4P2O7 -177.68 LiFePO4 0.45 Se, FePS, LiCl, Li4P2O7, FeS2, Li3PO4 -91.61 Li5.5PS3.5SeCl1.5 FePO4 0.46 FeSe2, FeS2, LiPO3, Li4P2O7, FePS, LiCl -180.63 LiFePO4 0.47 FeS2, LiCl, FePS, FeSe2, Se, Li3PO4 -98.99 Li5.5PS2.5Se2Cl1.5 FePO4 0.46 FePS, Li4P2O7, LiCl, LiPO3, FeSe2, FeS2 -187.01 LiFePO4 0.47 Li3PO4, FePS, FeSe2, Se, LiCl, FeS2 -105.62 Li5.5PS1.5Se3Cl1.5 FePO4 0.46 FeS2, FeSe2, FePS, Li4P2O7, LiPO3, LiCl -193.51",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    513.3,
+    786.8
+   ],
+   "w": 1785,
+   "h": 2978,
+   "dpi": 300,
+   "src": "b669285a-100._Sup_Sedoped_Li6PS5Cl_and_Li5.5PS4.5Cl1.5_with_improved_ionic_conductivity_and_interfacial_compatibility_a_highthroughput_DFT_study.pdf",
+   "blank": 0.976
+  }
+ ],
+ "manual_additions": "fig_3.png, fig_6.png 는 extract_figures.py 가 캡션 앵커로 못 잡아 쪽 좌표로 직접 렌더했다 (2026-09-09)"
+}

@@ -1,0 +1,81 @@
+{
+  "symbol": "Ir",
+  "name": "Iridium",
+  "Z": 77,
+  "role": "77번 5d 백금족 귀금속(Group 9, Co/Rh 동족). SSB 앵커 없음 — 백과사전/촉매·전극 관점. +3/+4가 흔하고 +1(Vaska 착물)~+6(IrF₆)까지. IrO₂는 금속성 루타일 산화물로 산성 물분해(PEM 수전해)의 표준 OER 전기촉매 — 전기화학에서 매우 중요하나 SSB 아님. Ir(ppy)₃ 등 인광 OLED 발광체, 고온 도가니(내식·고융점)도 용도.",
+  "oxidation_states": [
+    "+3",
+    "+4",
+    "+1"
+  ],
+  "electronegativity": 2.2,
+  "ionic_radius_A": {
+    "Ir3+_VI": 0.68,
+    "Ir4+_VI": 0.625,
+    "Ir5+_VI": 0.57,
+    "_note": "Shannon 1976: Ir³⁺(d⁶) 팔면체 VI 0.68 Å, Ir⁴⁺(d⁵, IrO₂) VI 0.625 Å, Ir⁵⁺ VI 0.57 Å. 5d라 4d Rh와 크기 근접(란탄족 수축). 귀금속이라 SSB 격자 치환 대상 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "IrO2",
+      "context": "금속성 루타일 산화물(+4)",
+      "battery_role": "SSB 무관 — 산성 물분해(PEM 수전해) 표준 OER 전기촉매; DSA 전극",
+      "note": "루타일형 금속성 전도체; Ir 4f7/2 ~61.9 eV(Ir⁴⁺). Raman Eg ~560 cm⁻¹(약함)"
+    },
+    {
+      "formula": "IrCl3 / H2IrCl6",
+      "context": "가용성 전구체",
+      "battery_role": "SSB 무관 — Ir 촉매·박막·나노입자 합성 출발물",
+      "note": "IrCl₃는 층상; H₂IrCl₆는 촉매·도금 전구체"
+    },
+    {
+      "formula": "Ir(ppy)3 · Vaska 착물",
+      "context": "배위·발광 화합물",
+      "battery_role": "SSB 무관 — Ir(ppy)₃ 인광 OLED 발광체, Vaska Ir(CO)Cl(PPh₃)₂는 산화적 부가 모델",
+      "note": "강한 스핀–궤도 결합이 인광 효율의 근원(5d)"
+    },
+    {
+      "formula": "Ir 도가니 · Ir 촉매",
+      "context": "금속/촉매",
+      "battery_role": "SSB 무관 — 산화물 단결정 인상용 고온 도가니, 수소화·C–H 활성화 촉매",
+      "note": "고융점(2446°C)·내식성 활용"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 전기화학 접점(IrO₂ OER·PEM 수전해 양극)은 수계 산화물 전극 맥락이지 황화물 SE 계면과 별개. 귀금속이라 Li 금속 계면 도펀트로도 안 씀. Group 9 동족 Rh와 촉매/전극 금속으로 묶임.",
+  "xps": [
+    {
+      "core": "Ir 4f7/2",
+      "BE_eV": 60.8,
+      "assignment": "Ir metal / Ir⁰ (4f5/2 ~+3.0 eV 더블릿; 보고 ~60.8 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Ir 4f7/2",
+      "BE_eV": 61.9,
+      "assignment": "IrO2 / Ir⁴⁺ (보고 ~61.6-62.2 eV)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 560,
+      "assignment": "IrO2 루타일 Eg 모드(약함 — 금속성이라 1차 라만 신호 미약)",
+      "ref": "IrO2 rutile Raman 참조"
+    }
+  ],
+  "dos_character": "5d⁷6s² 귀금속 — 금속 Ir는 5d 밴드가 E_F에 걸친 fcc 금속. IrO₂는 Ir 5d–O 2p 혼성 t2g 밴드가 E_F 통과하는 금속성 산화물(그래서 OER 전극) → 절연 wide-gap과 정반대. Ir³⁺(d⁶ 저스핀)는 닫힘. 강한 5d 스핀–궤도 결합이 인광·위상물성에도 관여. SSB 절연 밴드갭과 무관.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — 백금족(Ir/Rh) 화학",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ir⁴⁺ VI 0.625 Å)",
+    "Reier, Oezaslan, Strasser, ACS Catal. 2, 1765 (2012) — IrO2/RuO2 OER 전기촉매 비교"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d⁷ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d⁷ 6s²",
+    "valence_orbitals": "5d⁷ 6s² (4f¹⁴ 채움) — 규칙적(Rh=4d⁸5s¹ 예외와 달리 Ir는 정상 d⁷s²). Ir⁴⁺면 5d⁵, Ir³⁺면 5d⁶(저스핀)",
+    "band_character": "금속 Ir는 5d 밴드가 E_F 걸친 fcc 금속; IrO₂는 5d–O 2p t2g 밴드가 E_F 통과하는 금속성 산화물(OER 전극, 절연 wide-gap과 정반대). 강한 SOC로 인광·위상물성 관여. SSB 밴드엣지와 무관",
+    "bonding": "Ir–O 공유(IrO₂ 금속성)·Ir–C/Ir–P 배위(Ir(ppy)₃·Vaska), 금속상 fcc 결합. 백금족 촉매·전기촉매"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

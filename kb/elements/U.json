@@ -1,0 +1,44 @@
+{
+  "symbol": "U",
+  "name": "Uranium",
+  "Z": 92,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 5f³6d¹7s². 핵연료(UO₂)·농축(UF₆)·핵분열(U-235)의 핵심 원소로 악티나이드 중 산업·연구 데이터가 가장 풍부. 주 산화수 +4(UO₂)·+6(우라닐 UO₂²⁺); 강상관 5f 물리의 대표계(UO₂는 Mott 절연체). 전지와는 무관하나 5f 전자구조 참조로 유용.",
+  "oxidation_states": ["+6", "+5", "+4", "+3"],
+  "electronegativity": 1.38,
+  "ionic_radius_A": {
+    "U4+_VI": 0.89,
+    "U4+_VIII": 1.00,
+    "U5+_VI": 0.76,
+    "U6+_VI": 0.73,
+    "U3+_VI": 1.025,
+    "_note": "Shannon 1976: U3+ VI 1.025, U4+ VI 0.89 / VIII 1.00, U5+ VI 0.76, U6+ VI 0.73 A. 산화수↑ → 반경↓. 우라닐 UO₂²⁺는 선형 O=U=O로 유효반경 개념이 달라짐."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f³ 6d¹ 7s²",
+    "electron_config": "[Rn] 5f³ 6d¹ 7s²",
+    "valence_orbitals": "5f³ 6d¹ 7s² — U⁴⁺면 5f², U⁶⁺(우라닐)면 5f⁰. 5f가 원가 화학을 지배",
+    "band_character": "5f³ — 금속 U에선 5f가 편재(itinerant, 좁은 밴드)에 가깝지만, UO₂에선 5f가 국재해 Mott-Hubbard 절연체(갭 ~2.1 eV)가 됨 → DFT+U(U_eff~4 eV)·스핀분극·noncollinear가 정성 재현에 필수. 악티나이드 5f 편재↔국재 경계의 핵심 사례.",
+    "bonding": "U–O 이온성+상당한 5f/6d 공유성(UO₂ fluorite); 우라닐 UO₂²⁺는 축방향 O=U=O 강한 공유 다중결합(5f/6d 참여)."
+  },
+  "representative_compounds": [
+    {"formula": "UO2", "context": "핵연료 대표 산화물(+4)", "battery_role": "해당 없음(방사성)", "note": "fluorite형; Mott-Hubbard 절연체(갭 ~2.1 eV), 반강자성. U 4f7/2 ~380.0 eV"},
+    {"formula": "U3O8", "context": "안정 혼합가 산화물", "battery_role": "해당 없음", "note": "U 정광(yellowcake 하소물)의 최종 산화형"},
+    {"formula": "UF6", "context": "농축용 6가 불화물", "battery_role": "해당 없음", "note": "휘발성(승화 ~56°C) — 원심분리 농축의 작동유체"},
+    {"formula": "UO2(NO3)2", "context": "우라닐 질산염(+6)", "battery_role": "해당 없음", "note": "선형 우라닐 UO₂²⁺; 용액·추출 화학의 전형. U 4f7/2 ~382 eV(U⁶⁺)"},
+    {"formula": "UCl3", "context": "3가 염화물", "battery_role": "해당 없음", "note": "용융염로(MSR) 맥락"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [
+    {"core": "U 4f7/2", "BE_eV": 380.0, "assignment": "U4+ in UO2 (U 금속 ~377.3; U6+/우라닐 ~381.8-382.1; 4f5/2 ~390.8, split ~10.8 eV; 위성구조로 산화수 판별)", "ref": "NIST XPS DB / UO2·UO3 XPS lit"}
+  ],
+  "raman": [],
+  "dos_character": "5f³ — U 금속에선 5f가 좁은 밴드로 편재(itinerant, 결합 참여)하지만 UO₂에선 5f 전자가 국재해 Mott-Hubbard 절연체(갭 ~2.1 eV)를 만듦. LDA/PBE는 UO₂를 금속으로 잘못 내므로 DFT+U(Dudarev U_eff~4 eV)+스핀분극(반강자성 1k/3k 정렬)이 밴드갭·자성 재현에 필수. VB 상단은 O 2p와 U 5f 혼성, 갭 위/아래에 국재 5f. 악티나이드 5f 국재화 전환의 대표 벤치마크계.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (U3+/U4+/U5+/U6+)",
+    "Dudarev et al., PRB 1998 — DFT+U (UO2 5f 국재·Mott 절연체 재현 표준)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — U 화학",
+    "NIST XPS DB — U 4f (UO2 ~380.0 eV, 위성구조로 산화수 판별)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · NIST XPS DB · DFT+U 표준문헌 · CRC/Greenwood) — 우리 db 절대값과 분리."
+}

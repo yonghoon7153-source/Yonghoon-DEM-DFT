@@ -1,0 +1,17 @@
+species_or_site,b2o3_Bader_net,LPSCl16_Bader_net,delta,role_for_mechanics
+Li,+0.881,+0.883,-0.002,Li+ carrier state UNCHANGED by doping
+P,+4.691,+4.340,+0.351,P slightly MORE oxidized in b2o3 (P-O bonds pull charge; O more electronegative than S) = phosphate character
+S_avg,-1.80,-1.736,-0.06,S sublattice essentially unchanged
+Cl,-0.914,-0.918,+0.004,UNCHANGED
+B,+3.0,,,NEW: full formal charge -> strong charge transfer into B-S covalent-polar bonds (with ELF 0.959 = polar-covalent)
+O,-1.918,,,NEW: near O2- -> P-O strongly polarized (with ELF 0.930)
+free-S,-1.692,,,b2o3 site-resolved (S sites below)
+B-S(BS3),-1.872,,,S bonded to B: most charge-rich S = strong B->S transfer
+PS4-S,-1.823,,,host thiophosphate S: matches LPSCl1.6 S within ~0.09
+# ===== Bader net charges (e). b2o3 = site-resolved (b2o3_charge_xps.csv, Henkelman on QE density) ; LPSCl1.6 = modelC_v2 element-avg (electronic.json bader_full_matrix). =====
+# MECHANICS STORY: host charges (Li/S/Cl) UNCHANGED -> doping does not ionically soften the framework;
+#   B(+3.0)/O(-1.9) show large charge transfer INTO the new B-S / P-O bonds -> polar-COVALENT (pair with ELF B-S 0.959 / P-O 0.930)
+#   -> stiff directional cross-links added to the anion framework = microscopic origin of B0 +13%.
+# CAVEATS: (a) b2o3 Bader on USPP valence density (B appears as bare +3 core; oxstate-level, trend-reliable);
+#   (b) S-site ORDERING within b2o3 better read from Lowdin (see reliable_for col in b2o3_charge_xps.csv);
+#   (c) modelc value = element average (site-resolved not run for modelc); cross-code deltas <0.1e except P (+0.35, real P-O chemistry).

@@ -1,0 +1,38 @@
+figure,group,marker,pressure_MPa,pellet_density_pct,label_in_figure,matched_SI_xlsx_rows (Sr No · material · technique · pressure as typed · final density as typed),note
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",10.8,99.51,,8 · Li6.375La3Zr1.375Nb0.625O12 · HIP · 10 MPa · 99.5,
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",43.9,85.0,,24 · Li6.25Al0.25La3Zr2O12 · CIP · 44 MPa · 0.85,
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",131.6,99.0,,5 · Li7La3Zr2O12 · HIP · 132 MPa · >99%,
+Fig. S3,pellet density vs isostatic pressure,"open square, gold",199.9,98.2,,11 · Na3.4Mg0.1Zr1.9Si2.2P0.8O12 · CIP · 200 MPa · 98.17,upper of two stacked gold squares
+Fig. S3,pellet density vs isostatic pressure,"open square, gold",199.9,97.99,,14 · Na1.67Mg0.67Al10.33O17 · CIP · 200 MPa · 0.98 ; 33 (second) · NZSP · CIP · 200 MPa · 0.98,lower of two stacked gold squares; two spreadsheet rows coincide
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",199.4,96.0,,2 · Li3/8Sr7/16-3x/2LaxZr1/4Ta3/4O3 · CIP · 200 MPa · 0.96 ; 13 · Li6.4La3Zr1.4Ta0.6O12 · CIP · 200 MPa · 0.96,left of two merged pink squares; two rows coincide
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",220.8,96.0,,38 (second) · LLZO · CIP · 220 MPa · 96,right of two merged pink squares
+Fig. S3,pellet density vs isostatic pressure,"open square, green",199.9,94.0,,7 · Li1.4Al0.4Ti1.6(PO4)3 · CIP · 200 MPa · 0.94 ; 9 · Sr-LLZ · CIP · 200 MPa · 94,one visible marker (green); the second row would lie underneath
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",199.9,93.01,,30 (second) · Ga-LLZO · CIP · 1000 kN · 0.93,row typed as a force (1000 kN) — drawn at 200 MPa
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",199.9,87.0,,26 · c-Li6.25Al0.25La3Zr2O12 · CIP · 1000 kN · 0.87 ; 29 · LLZO · CIP · 1000 KN · 0.87 ; 34 · LLZO · CIP · 1000 KN · 0.87,rows typed as a force (1000 kN) — drawn at 200 MPa; three rows coincide
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",199.9,84.0,,31 · LLZO · CIP · 1000 KN · 84%%,row typed as a force (1000 kN) — drawn at 200 MPa; below the '85 to 100%' of the article text
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",249.8,96.0,,19 · Li6.10+2yGa0.30La3−yRbyZr2O12 · CIP · 250 MPa · 96,
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",299.8,93.01,,30 (first) · LLZTO · CIP · 300 MPa · 0.93,
+Fig. S3,pellet density vs isostatic pressure,"open square, pink",299.8,92.01,,36 · Ba-LLZO · CIP · 300 MPa · 0.92,
+Fig. S3,pellet density vs isostatic pressure,"open square, gold",299.8,85.0,,39 (first) · Na2Zn2TeO6 · CIP · 300 MPa · 0.85 ; 4 · Li7La3Zr2O12-Li3BO3 · CIP · 300 MPa · 0.85 ; 42 (first) · LBO-LLZO · CIP · 300 MPa · 85,one visible marker (gold); two garnet rows would lie underneath
+Fig. S3,pellet density vs isostatic pressure,"open square, green",503.7,95.01,,21 · Li1.3Al0.3Ti1.7(PO4)3 · CIP · 504 MPa · 0.95,
+Fig. S3,pellet density vs isostatic pressure,"open square, green",503.7,90.0,,33 (first) · LATP · CIP · 504 MPa · 0.9,
+Fig. 3a,Solid Electrolyte,"open diamond, pink ×2 (side by side)",506,,,21 · LATP · CIP · 504 MPa ; 33 (first) · LATP · CIP · 504 MPa,row ≈63.3
+Fig. 3a,Solid Electrolyte,"open diamond, pink",397,,,3 · Li6BaLa2Ta2O12 · CIP · 400 MPa,row ≈80
+Fig. 3a,Solid Electrolyte,"open diamonds, pink (cluster)",300,,,"seven rows typed 300 MPa (4, 30 first, 36, 37, 38 first, 39 first, 42 first)",row ≈99; markers overlap — count not resolvable
+Fig. 3a,Solid Electrolyte,"open diamond, pink",250,,,19 · Ga/Rb-LLZO · CIP · 250 MPa,row ≈112
+Fig. 3a,Solid Electrolyte,"open diamond, pink",219,,,38 (second) · LLZO · CIP · 220 MPa,row ≈121
+Fig. 3a,Solid Electrolyte,"open diamonds: pink (several), gold ×2, orange, green",199,,,twelve rows typed 200 MPa + five rows typed 1000 kN,row ≈127.5; the densest cluster; the green marker has no sulfide pellet row in the spreadsheet (LATP 200 MPa is the Li-NASICON row)
+Fig. 3a,Solid Electrolyte,"open diamond, pink",151,,,23 · Al-LLZO + ionic liquid · CIP · 150 MPa,row ≈146.7
+Fig. 3a,Solid Electrolyte,"shaded circle (pink outline, blue fill)",132,,HIP 1180 °C,5 · Li7La3Zr2O12 · HIP · 132 MPa · 1180 C,row ≈155.8
+Fig. 3a,Solid Electrolyte,"shaded square (pink outline, blue fill) + open diamond, pink",127,,HIP 1158 °C,16 · Li4SiO4-added LLZO · HIP · 127 MPa · 1158 C ; 17 · same composition · HIP · 127 MPa · 1158 C,rows ≈158–159
+Fig. 3a,Solid Electrolyte,"open diamond, pink",43.9,,,24 · Li6.25Al0.25La3Zr2O12 · CIP · 44 MPa,row ≈231.5
+Fig. 3a,Solid Electrolyte,"shaded triangle (pink outline, blue fill)",10.2,,HIP 1150 °C,8 · Li6.375La3Zr1.375Nb0.625O12 · HIP · 10 MPa · 1150 C,row ≈331–333
+Fig. 3a,Solid Electrolyte,(not drawn),,,,12 · Li7−2xLa3Zr2−xMoxO12 · CIP · 2400 MPa,"outside the axis range (top = 10^3 MPa) — value as typed in the spreadsheet, not checked against the source paper"
+Fig. 3a,Symmetric/Full Cells,"shaded diamond (teal outline, yellow fill)",490,,WIP,10 · LPSCl full pouch cell (LZO-NMC) · WIP · 490 MPa ; 40 · LPSCl full cell (NMC | Ag-C) · WIP · 490 MPa,row ≈65.5; a second shaded marker may lie underneath
+Fig. 3a,Symmetric/Full Cells,"open diamond, green",501,,,22 · LATP full cell (Li3V2(PO4)3) · CIP · 504 MPa (?),row ≈64; colour does not follow the caption (green = sulfides) if this is the LATP cell
+Fig. 3a,Symmetric/Full Cells,"open diamond, teal",403,,,32 · LGPS full cell (LCO | In) · CIP · 4000 bar,row ≈79; 4000 bar = 400 MPa
+Fig. 3a,Symmetric/Full Cells,"shaded diamond (grey outline, yellow fill)",199,,WIP 70 °C,28 · polymer composite full cell (NMC/LTO) · WIP · 200 Bar · 70 C · 10 min,row ≈127.5; the spreadsheet types '200 Bar' (= 20 MPa) — drawn at 200 MPa
+Fig. 3a,Symmetric/Full Cells,"open diamond, pink ×2 (overlapping)",200,,,"three full-cell rows typed 1000 kN (LTO/Li ×2, Sb)",row ≈127; force rows drawn at 200 MPa as in Fig. S3
+Fig. 3a,Symmetric/Full Cells,"open diamonds: pink ×2, teal, orange",79.6,,,"five rows typed 80 MPa (6 Li3BN2 sym., 18 LPS / LPS-LiI sym., 25 Li2.9B0.8S0.1O3.1 sym., 27 Li2O–LiI sym., 41 LPSCl full cell)",row ≈190.5; four markers visible
+Fig. 3a,Symmetric/Full Cells,"open diamond, gold",50.0,,,11 (second line) · Na full cell (FeS2 | NVPF) · CIP · 50 MPa,row ≈222.5
+Fig. 3a,Symmetric/Full Cells,"open diamond, pink",19.9,,,"(no row matches both value and colour; the only 20 MPa entry is row 28 '200 Bar', a WIP / hybrid row)",row ≈286

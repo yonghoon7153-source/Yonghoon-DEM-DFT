@@ -1,0 +1,1737 @@
+{
+ "slug": "koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+  "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Schematic of the different experiments related to volume changes in electrode materials. (a) Measurement of the lattice parameters (a–c) of crystalline active materials by in or ex situ X-ray diffraction as function of SOC (state of charge), i.e. of lithium concentration. (b) Measurement of the OCV (E) as function of pressure p and evaluation of the reaction volume ΔrVm of the cell reaction, with n being the number of transferred electrons and F denoting the Faraday constant. (c) Monitoring the pressure change Δp of an operating cell, which in a first approximation can be described by the product of volumetric strain εvol and the bulk modulus K for small values of the strain.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    498.1,
+    511.0,
+    665.5
+   ],
+   "w": 1779,
+   "h": 698,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.724,
+   "recrop": "2026-11-12 다시 자름 — tool crop carried the journal's grey figure rule above the image and a wide uneven margin; embedded raster xref 94 (87.3–508.0 × 501.1–662.5 pt) + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) The unit cell volume obtained from crystallographic data versus the state of lithiation of positive electrode materials.35,37 (b) Survey of available data for the partial molar volume V̄m(Li) of Li in homogeneous storage phases or the apparent partial molar volume V̄′m(Li) in two-phase electrode materials. All data for NCM materials, LCO and graphite were obtained from crystallographic data [LCO in this work, others see ref. 35–37]. Additional data were extracted from the respective literature cited in the text. Please note that the x-axis shows in the direction of decreasing lithium content in a material LixM, i.e. in the direction of delithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    114.4,
+    46.8,
+    481.0,
+    199.1
+   ],
+   "w": 1529,
+   "h": 635,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.913,
+   "recrop": "2026-11-12 다시 자름 — tool crop spanned the full page width (blank 0.94, wide side margins); embedded raster xref 279 (117.4–478.0 × 49.8–196.1 pt) + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 4,
+   "file": "fig_2a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    114.4,
+    46.8,
+    296.0,
+    199.1
+   ],
+   "w": 758,
+   "h": 635,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.925,
+   "caption": "Fig. 2(a) — unit-cell volume change ΔV/V0 (%) vs x(Li) in LixM (delithiation to the right) for LCO, NCM-111, NCM-523, NCM-622, NCA, NCM-811 (crystallographic data, refs 35, 37; LCO this work)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — left half of raster xref 279 (split at x = 296.0 pt, gap between panels)",
+   "panel_of": "f2",
+   "viewed": true
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 4,
+   "file": "fig_2b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    296.0,
+    46.8,
+    481.0,
+    199.1
+   ],
+   "w": 772,
+   "h": 635,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.902,
+   "caption": "Fig. 2(b) — partial molar volume V̄m(Li) / apparent V̄′m(Li) (cm³ mol⁻¹) vs x(Li): LCO, NCA, NCM-811, NCM-622, NCM-523, NCM-111, graphite; constant lines Lithium 12.97, LFP 11.62, a-Si 8.85, Indium 7.89, LTO ≈0",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — right half of raster xref 279 (split at x = 296.0 pt)",
+   "panel_of": "f2",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Partial molar volume of Li in LixCoO2 as function of x, evaluated from pressure dependent OCV measurements of In/LCO cells. In agreement with crystallographic data the partial molar volume of lithium in LCO is negative in the lithiated state and then turns positive upon delithiation. While the general trend agrees with the crystallographic data, diffraction data suggests the sign reversal at a lower lithium content of x(Li) = 0.6.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.1,
+    514.2,
+    266.6,
+    655.5
+   ],
+   "w": 828,
+   "h": 590,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.96,
+   "recrop": "2026-11-12 다시 자름 — tool crop carried the journal's grey figure rule above the image; embedded raster xref 124 (71.1–263.6 × 517.2–652.5 pt) + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Galvanostatically induced change of the net stress σ11 for all-solid-state cells with different electrode configurations. (a) LTO/SE|SE|LCO/SE (data from ref. 11), (b) LTO/SE|SE|NCM-811/SE, (c) Li|SE|NCM-811/SE cell (d) LiC6|SE|NCM-811/SE. The stress data were corrected by an individual drift to extract the volume expansion of the electrode materials used (left column). From an individual cycle, the stress change can be correlated to the degree of lithiation of the cathode material (right column). Respective data from (a and b) were smoothed by a Savitzky–Golay filter as a guide to the eye. The solid lines represent the charging curve and the dashed lines the discharge process. The cycling rate is 0.1C cycle 1 to 5, 0.25C in cycle 6 to 10 and again 0.1C in the following cycles. Additional stress measurements for a InLi|SE|NCM/SE cell and a LTO|SE|NCA-801505/SE cell are provided in the ESI. [card note: σ11 axes are in 10^5 Pa = bar]",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    46.8,
+    511.0,
+    622.1
+   ],
+   "w": 1779,
+   "h": 2398,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.867,
+   "recrop": "2026-11-12 다시 자름 — tool crop spanned the full page width; embedded raster xref 359 (87.3–508.0 × 49.8–619.1 pt) + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 9,
+   "file": "fig_4a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    46.8,
+    511.0,
+    188.4
+   ],
+   "w": 1779,
+   "h": 590,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.848,
+   "caption": "Fig. 4(a) — LTO/SE|SE|LCO/SE (data from ref. 11): voltage and net σ11 (10^5 Pa) vs time (0–100 h, shaded = 0.25C) · right: σ11 vs x(Li) 0.95→0.65 (solid = charge, dashed = discharge)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — row of raster xref 359, y 46.8–188.4 pt (row split in the white band between the x-axis title and the next row label)",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 9,
+   "file": "fig_4b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    188.4,
+    511.0,
+    331.6
+   ],
+   "w": 1779,
+   "h": 597,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.847,
+   "caption": "Fig. 4(b) — LTO/SE|SE|NCM-811/SE: voltage and net σ11 (10^5 Pa) vs time (0–76 h) · right: σ11 vs x(Li) 0.85→0.53",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — row of raster xref 359, y 188.4–331.6 pt (row split in the white band between the x-axis title and the next row label)",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 9,
+   "file": "fig_4c.png",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    331.6,
+    511.0,
+    476.0
+   ],
+   "w": 1779,
+   "h": 603,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.884,
+   "caption": "Fig. 4(c) — Li|SE|NCM-811/SE: voltage and net σ11 (10^5 Pa, 0 to +20) vs time (0–88 h) · right: σ11 vs x(Li) 0.88→0.49",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — row of raster xref 359, y 331.6–476.0 pt (row split in the white band between the x-axis title and the next row label)",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f4d",
+   "kind": "figure",
+   "label": "4d",
+   "page": 9,
+   "file": "fig_4d.png",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    476.0,
+    511.0,
+    622.1
+   ],
+   "w": 1779,
+   "h": 610,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.888,
+   "caption": "Fig. 4(d) — C6/SE|SE|NCM-811/SE: voltage and net σ11 (10^5 Pa, 0 to +8) vs time (0–85 h) · right: σ11 vs x(Li) 0.85→0.44",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — row of raster xref 359, y 476.0–622.1 pt (row split in the white band between the x-axis title and the next row label)",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Approach of stress mitigation by cathode active materials balancing. Designing a composite cathode out of a stoichiometric blend of one expanding and one contracting material upon delithiation, will result in stress compensation. Comparison of the stress response of LTO/SE|SE|CAM/SE using (a) LCO, (b) NCM-811 and (c) a blend of 55 : 45 wt% NCM-811 : LCO cathode composite. The cell using LCO exhibits a positive volume expansion, the cell containing NCM-811 shows a negative stress response. However, the cell using the blend shows an overall lower nominal stress. The pressure profile thereby combines the individual profiles of the single cathode materials. [card note: σ11 axis in 10^5 Pa = bar]",
+   "rotated_deg": 0,
+   "bbox": [
+    114.3,
+    46.8,
+    481.2,
+    224.9
+   ],
+   "w": 1529,
+   "h": 743,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.878,
+   "recrop": "2026-11-12 다시 자름 — tool crop spanned the full page width; embedded raster xref 72 (117.3–478.2 × 49.8–221.9 pt) + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure S1: a) The open cell voltage of an InLi | LGPS | LTO/LGPS after 6 and 8 hours charge at 0.1 C (90 µA) as a function of the ramped up stress and corresponding linear regression. As expected, no change in the slope is observed. b) The open cell voltages of an InLi | LGPS | LCO/LGPS cell upon pressure for different states of charge x(Li). For a material like LCO, the reaction volume is related to the lithiation state.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.6,
+    102.3,
+    508.8,
+    463.5
+   ],
+   "w": 1755,
+   "h": 1506,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.963,
+   "recrop": "2026-11-12 다시 자름 — tool crop ended at 450.5 pt and cut panel b's x-axis title (raster xref 23 runs to 461.9 pt); raster 90.6–505.8 × 105.3–461.9 pt + 3 pt (bottom limited by the caption at 465.5)",
+   "viewed": true
+  },
+  {
+   "key": "fS1a",
+   "kind": "figure",
+   "label": "S1a",
+   "page": 2,
+   "file": "fig_S1a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    87.6,
+    102.3,
+    275.0,
+    292.0
+   ],
+   "w": 781,
+   "h": 791,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.95,
+   "caption": "SI Fig. S1(a) — OCV of InLi | LGPS | LTO/LGPS after 6 h and 8 h charge (0.1C) vs pressure p / 10^5 Pa (≈500–2400 bar) with linear fits",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — left panel of raster xref 23",
+   "panel_of": "fS1",
+   "viewed": true
+  },
+  {
+   "key": "fS1b",
+   "kind": "figure",
+   "label": "S1b",
+   "page": 2,
+   "file": "fig_S1b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    275.0,
+    102.3,
+    508.8,
+    463.5
+   ],
+   "w": 975,
+   "h": 1506,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.957,
+   "caption": "SI Fig. S1(b) — OCV of InLi | LGPS | LCO/LGPS vs pressure for x(Li) = 0.65, 0.75, 0.80, 0.86, 0.94 (broken y-axis) with linear fits",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — right panel of raster xref 23",
+   "panel_of": "fS1",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure S2: Experimental setup of the operando stress measurement of battery cells. The previously described cell casing is implemented in an outer frame which holds a force sensor. By allowing one of the steel pistons to move, the uniaxial strain of the cell can be monitored during electrochemical experiments.",
+   "rotated_deg": 0,
+   "bbox": [
+    165.5,
+    320.8,
+    430.4,
+    607.5
+   ],
+   "w": 1105,
+   "h": 1196,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.674,
+   "recrop": "2026-11-12 다시 자름 — tool crop merged Table S2 above the drawing and cut the drawing's bottom (raster xref 35 runs to 604.5 pt); raster 168.5–427.4 × 323.8–604.5 pt + 3 pt (Table S2 is tab_S2.png)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure S3: a) Cross section through a simplified (cylindrical) 3D model of a single electrode cell for estimation of the hydrostatic pressure. The cell has the dimensions 1000 µm (diameter) x 500 µm (height) and the cathode layer has a thickness of 50 µm. In the cathode layer, the volume fraction of the CAM is similar to the SE fraction. The cell is fully confined, except for the top side on which the stress component σ11 is measured. After homogenization of the cathode (b), the final homogenized model assumes that the cell is composed of a single material (c) with effective elastic moduli and experiences an effective eigenstrain. [card note: the drawing labels the width '1 cm' and Table S3 uses r = 0.5 cm — the caption's '1000 µm' disagrees]",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    90.5,
+    510.0,
+    246.0
+   ],
+   "w": 1759,
+   "h": 648,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.694,
+   "recrop": "2026-11-12 다시 자름 — vector drawing; tool crop ended at 230.7 pt and cut the '1' direction arrow (drawings reach 242.1 pt) → 88–510 × 90.5–246 pt",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure S4: a) Unit cell of the Cathode with CAM phase and SE phase. b) 1D. Idealization by two springs in serial. c) Homogeneous material of the cathode with effective Young’s modulus and effective eigenstrain. In the first step, we replace the two-phase CAM/SE cathode by an effective material using a 1D Reuss homogenization within a unit cell (volume V = 1, see Figure S3a) consisting of the volume fractions VSE and VCAM. We idealize the CAM phase and the SE phase as two linear elastic springs in series with Young’s moduli ESE and ECAM, see Figure S3b. The lengths of the two springs are proportional to the corresponding volume fractions VSE and VCAM so that the effective Young’s modulus can be computed directly by Reuss approximation as - æ ö = + ç ÷ è ø 1 V V E E E eff SE CAM Cathode . (S8) SE CAM Moreover, the CAM-phase includes a volumetric eigenstrain ε#,kl) due ",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    75.7,
+    517.6,
+    163.4
+   ],
+   "w": 1805,
+   "h": 366,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.896,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — vector drawing (SI p.6) complete with labels a)–c) and margins; caption from the tool"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure S5: Uncorrected stress profile (orange) of a cell composed of InLi | SE | NCM-811/SE and corresponding cycling data (blue). The grey curve represents the mechanical drift of an empty cell casing due to the plastic insulators.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.0,
+    324.9,
+    472.5,
+    523.8
+   ],
+   "w": 1453,
+   "h": 830,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.913,
+   "recrop": "2026-11-12 다시 자름 — tool crop merged Table S4 above the plot and cut the x axis (raster xref 84 runs to 520.8 pt); raster 127.0–469.5 × 327.9–520.8 pt + 3 pt (Table S4 is tab_S4.png). (x-axis title 'time / h' included)",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure S6: Galvanostatically induced change of the net stress for solid-state batteries in the configurations a) LTO/SE | SE | NCA-801505/SE and b) InLi | SE | NCM-811/SE. [card note: σ11 axes in 10^5 Pa = bar]",
+   "rotated_deg": 0,
+   "bbox": [
+    87.6,
+    72.9,
+    508.9,
+    353.5
+   ],
+   "w": 1756,
+   "h": 1170,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.865,
+   "recrop": "2026-11-12 다시 자름 — tool crop ended at 340.1 pt and cut panel b's bottom (rasters xref 91 · 93 run to 350.9 pt); 90.6–505.9 × 75.9–350.9 pt + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "fS6a",
+   "kind": "figure",
+   "label": "S6a",
+   "page": 8,
+   "file": "fig_S6a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    87.6,
+    72.9,
+    508.3,
+    213.3
+   ],
+   "w": 1753,
+   "h": 586,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.838,
+   "caption": "SI Fig. S6(a) — LTO/SE | SE | NCA-801505/SE: voltage and net σ11 (10^5 Pa) vs time (0–82 h) · right: σ11 vs x(Li) 0.85→0.51",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — raster xref 91",
+   "panel_of": "fS6",
+   "viewed": true
+  },
+  {
+   "key": "fS6b",
+   "kind": "figure",
+   "label": "S6b",
+   "page": 8,
+   "file": "fig_S6b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    87.6,
+    213.3,
+    508.9,
+    353.5
+   ],
+   "w": 1756,
+   "h": 585,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.892,
+   "caption": "SI Fig. S6(b) — InLi | SE | NCM-811/SE: voltage and net σ11 (10^5 Pa, 0 to +12) vs time (0–71 h) · right: σ11 vs x(Li) 0.85→0.48",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — raster xref 93",
+   "panel_of": "fS6",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure S7: Scanning electron images of the LTO/ β-Li3PS4 | β-Li3PS4 | 55:45 NCM-811/LCO LTO/SE | SE | LCO/SE cell after cycling. EDX scans support the assignment of the cathode materials LCO and NCM. The magnification of the contact area between the CAMs and the SE shows an intimate connection between the materials after cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    126.3,
+    72.7,
+    470.2,
+    401.2
+   ],
+   "w": 1434,
+   "h": 1370,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.251,
+   "recrop": "2026-11-12 다시 자름 — tool crop ended at 387.2 pt (raster xref 110 runs to 398.2 pt); raster 129.3–467.2 × 75.7–398.2 pt + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure S8: Scanning electron micrographs of the cathode of a InLi | β-Li3PS4 | NCM-811 / β-Li3PS4 battery after cycling. The NCM particles contract during delithiation and lose contact with the SE. Reprinted with permission from [ref 3 = Koerver et al., Chem. Mater. 2017, 29, 5574]. Copyright 2017 American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    102.5,
+    496.3,
+    494.0,
+    648.4
+   ],
+   "w": 1632,
+   "h": 635,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.195,
+   "recrop": "2026-11-12 다시 자름 — tool crop ended at 633.7 pt and cut the scale bars (raster xref 112 runs to 645.4 pt); raster 105.5–491.0 × 499.3–645.4 pt + 3 pt",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Elastic constants of selected SE and electrode materials (Young's modulus E/GPa · Poisson's ratio ν · shear modulus G/GPa · bulk modulus K/GPa · Ref.). Footnotes: a Theoretical prediction. b Complementary results of calculation based on eq. a1. c Thin film measurement. Accuracy of the data is given in the references.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    412.7,
+    557.7,
+    718.0
+   ],
+   "w": 2168,
+   "h": 1273,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.939,
+   "recrop": "2026-11-12 다시 자름 — tool crop stopped above the table footnotes (a · b · c); extended to 718 pt",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    571.5,
+    510.0,
+    630.0
+   ],
+   "w": 1759,
+   "h": 244,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.929,
+   "caption": "Table S1: Slope and reaction volume of InLi obtained from linear regression of Figure S1a. — InLi: m = 1.22 E-5 V (10^5 Pa)⁻¹ = 0.122 mV MPa⁻¹ · −F(∂E/∂p)_T = 11.81 cm³ mol⁻¹ · −V̄′m(Li, InLi/In) = 11.81 cm³ mol⁻¹",
+   "manual_crop": "2026-11-12 수동 표 크롭 — tool reported a numbering gap (tS1 not extracted: the caption sits above a borderless table); caption + table 571.5–630 pt",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Slopes and partial molar volume of Li in LixCoO2 at different SOCs. x(Li) calculated using the crystallographic reaction volume of Indium and the value obtained from the above OCV experiment in Figure S1a. — columns: x in LixCoO2 · m / V (10^5 Pa)⁻¹ · Δm · −F(∂E/∂p)_T / cm³ mol⁻¹ · V̄m(LixCoO2) from OCV · V̄m(LixCoO2) from V̄′m(InLi) cryst.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.5,
+    70.5,
+    513.5,
+    231.2
+   ],
+   "w": 1784,
+   "h": 671,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.934,
+   "caption_fixed": "2026-11-12 caption text re-typed from the PDF (tool caption carried the table's garbled math glyphs)",
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 5,
+   "file": "tab_S3.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    353.0,
+    510.0,
+    462.0
+   ],
+   "w": 1759,
+   "h": 455,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.833,
+   "caption": "Table S3: Theoretical estimation of the linear strain and stress (pressure) for the cell configurations shown in Figure S3, respectively, assuming a completely constrained cell casing having the dimension of a cylinder with r = 0.5 cm and h = 500 µm. — LiCoO2: m(CAM) 0.0084 g · ρ 4.75 g cm⁻³ · ΔVcryst(charge) +1.4 % · p +14.39 MPa / +143.9 bar; LiNi0.8Co0.1Mn0.1O2: 0.0084 g · 4.64 g cm⁻³ · −6.0 % · −65.97 MPa / −659.7 bar",
+   "manual_crop": "2026-11-12 수동 표 크롭 — tool flagged the body-text reference 'Table S3 sums up…' as a near miss and extracted 0; the real caption is at 356.3 pt",
+   "viewed": true
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 7,
+   "file": "tab_S4.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    103.5,
+    510.0,
+    278.0
+   ],
+   "w": 1759,
+   "h": 728,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.948,
+   "caption": "Table S4: Three-dimensional strain tensors and resulting hydrostatic pressure after Reuss (pR) inside of the SSB based on the volume change of LiCoO2 and NCM-811 and the linear approximation (pL). — LiCoO2: σ11 = −0.06 MPa exp. · σ22 = σ33 = −14.94 MPa calc. · pR +9.98 MPa / +99.8 bar · pL +143.9 bar; NCM-811: σ11 = +0.05 MPa exp. · σ22 = σ33 = −63.96 MPa calc. (as printed) · pR −42.66 MPa / −426.6 bar · pL −655.6 bar",
+   "manual_crop": "2026-11-12 수동 표 크롭 — not extracted by the tool (the tool's fS5 crop had merged it above Fig. S5); caption + table 103.5–278 pt",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_partial_molar_volume_definition.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    551.5,
+    292.0,
+    588.0
+   ],
+   "w": 1051,
+   "h": 153,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.973,
+   "caption": "Eqn (1), printed p.2145 left (PDF p.4): definition of the partial molar volume of lithium V̄m(Li) ≡ (∂V/∂n(Li))_{T,p,ni≠nLi}",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 4,
+   "file": "eq_02_volume_change_integral.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    682.5,
+    292.0,
+    718.0
+   ],
+   "w": 1051,
+   "h": 149,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.974,
+   "caption": "Eqn (2), p.2145 left: ΔV = ∫ V̄m(Li) dn(Li) from n(Li)1 to n(Li)2 — absolute volume change upon lithiation",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 5,
+   "file": "eq_03_ocv_pressure_reaction_volume.png",
+   "rotated_deg": 0,
+   "bbox": [
+    302.0,
+    292.2,
+    556.0,
+    326.5
+   ],
+   "w": 1059,
+   "h": 144,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.974,
+   "caption": "Eqn (3), p.2146 right (PDF p.5): (∂Eoc/∂p)_{T,ni} = −(1/nF) ΔrVm — pressure dependence of the open-circuit voltage is governed by the reaction volume",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 5,
+   "file": "eq_04_cell_reaction.png",
+   "rotated_deg": 0,
+   "bbox": [
+    302.0,
+    454.5,
+    556.0,
+    470.0
+   ],
+   "w": 1059,
+   "h": 66,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.937,
+   "caption": "Eqn (4), p.2146 right: cell reaction LimAn + LirCat → Lim−xAn + Lir+xCat",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 5,
+   "file": "eq_05_discharge_reaction_volume.png",
+   "rotated_deg": 0,
+   "bbox": [
+    302.0,
+    489.5,
+    556.0,
+    528.0
+   ],
+   "w": 1059,
+   "h": 161,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.957,
+   "caption": "Eqn (5), p.2146 right: ΔrVm(discharge) = ΔrV/x = V̄m(Li, LirCat) − V̄m(Li, LimAn)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 5,
+   "file": "eq_06_in_lto_reaction_volume.png",
+   "rotated_deg": 0,
+   "bbox": [
+    302.0,
+    691.5,
+    556.0,
+    719.0
+   ],
+   "w": 1059,
+   "h": 115,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.93,
+   "caption": "Eqn (6), p.2146 right: ΔrVm(discharge, In/LTO) ≅ −V̄m(Li, LimAn) = −V̄′m(Li, In/InLi) (LTO volume change neglected)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 6,
+   "file": "eq_07_indium_partial_molar_volume_11p81.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    73.5,
+    292.0,
+    125.0
+   ],
+   "w": 1051,
+   "h": 215,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.952,
+   "caption": "Eqn (7), p.2147 left (PDF p.6): V̄′m(Li, In/InLi) ≅ −ΔrVm(discharge, In/LTO) = F(∂Eoc/∂p)_T ≅ +11.81 cm³ mol⁻¹ (from the slope +0.122 mV MPa⁻¹)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 6,
+   "file": "eq_08_in_lco_reaction_volume.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    287.5,
+    292.0,
+    338.5
+   ],
+   "w": 1051,
+   "h": 214,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.955,
+   "caption": "Eqn (8), p.2147 left: ΔrVm(discharge, In/LCO) = V̄m(Li, LCO) − V̄′m(Li, In/InLi) = −F(∂Eoc/∂p)_T",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 6,
+   "file": "eq_09_lco_partial_molar_volume.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    356.0,
+    292.0,
+    388.5
+   ],
+   "w": 1051,
+   "h": 136,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.956,
+   "caption": "Eqn (9), p.2147 left: V̄m(Li, LCO) = V̄′m(Li, In/InLi) − F(∂Eoc/∂p)_T",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 6,
+   "file": "eq_10_li080coo2_example.png",
+   "rotated_deg": 0,
+   "bbox": [
+    301.0,
+    75.0,
+    556.0,
+    109.0
+   ],
+   "w": 1063,
+   "h": 143,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.942,
+   "caption": "Eqn (10), p.2147 right: V̄m(Li, Li0.80CoO2) = 7.89 cm³ mol⁻¹ − 9.84 cm³ mol⁻¹ = −1.95 cm³ mol⁻¹ (slope 0.102 mV MPa⁻¹; crystallographic In/InLi value used)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 8,
+   "file": "eq_11_pressure_from_volumetric_strain.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    565.5,
+    292.0,
+    584.0
+   ],
+   "w": 1051,
+   "h": 78,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.978,
+   "caption": "Eqn (11), p.2149 left (PDF p.8): Δp = −εvol·K — first estimate of the pressure in a fully constrained cell (linear elastic; εvol of the active material, K of the SE)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 10,
+   "file": "eq_12_hydrostatic_pressure_eigenstrain.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    74.0,
+    292.0,
+    104.0
+   ],
+   "w": 1051,
+   "h": 126,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.97,
+   "caption": "Eqn (12), p.2151 left (PDF p.10): p = −(1/3)(σ11 + σ22 + σ33) = E/(1 − 2ν) ε0 — hydrostatic pressure from the effective eigenstrain (homogenised cell, Reuss)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation ±2 pt (column width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS01",
+   "kind": "equation",
+   "label": "eqS1",
+   "page": 4,
+   "file": "eq_S01_isothermal_compressibility.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    542.0,
+    510.0,
+    572.0
+   ],
+   "w": 1759,
+   "h": 126,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.982,
+   "caption": "Eqn (S1), ESI p.S4: isothermal compressibility κT = 1/K = 3(1 − 2ν)/E",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS02",
+   "kind": "equation",
+   "label": "eqS2",
+   "page": 4,
+   "file": "eq_S02_hencky_integration.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    620.0,
+    510.0,
+    648.5
+   ],
+   "w": 1759,
+   "h": 120,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.976,
+   "caption": "Eqn (S2), ESI p.S4: ∫ dV/V (V0→V) = −∫ κT dp (p0→p) — Hencky logarithmic strain",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS03",
+   "kind": "equation",
+   "label": "eqS3",
+   "page": 4,
+   "file": "eq_S03_pressure_log_strain.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    667.0,
+    510.0,
+    695.5
+   ],
+   "w": 1759,
+   "h": 119,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.978,
+   "caption": "Eqn (S3), ESI p.S4: Δp = −ln(V/V0) · (1/κT)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS04",
+   "kind": "equation",
+   "label": "eqS4",
+   "page": 4,
+   "file": "eq_S04_pressure_volumetric_strain_log.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    714.0,
+    510.0,
+    744.0
+   ],
+   "w": 1759,
+   "h": 125,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.962,
+   "caption": "Eqn (S4), ESI p.S4: Δp = −ln(1 + ΔV/V0)(1/κT) = −ln(1 + εvol)(1/κT)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS05",
+   "kind": "equation",
+   "label": "eqS5",
+   "page": 5,
+   "file": "eq_S05_linearised_pressure.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    120.0,
+    510.0,
+    150.5
+   ],
+   "w": 1759,
+   "h": 128,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.966,
+   "caption": "Eqn (S5), ESI p.S5: linearised Δp ≈ −(ΔV/V0)(1/κT) = −εvol/κT, or Δp = −εvol K",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS06",
+   "kind": "equation",
+   "label": "eqS6",
+   "page": 5,
+   "file": "eq_S06_constrained_stress.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    230.0,
+    510.0,
+    256.5
+   ],
+   "w": 1759,
+   "h": 111,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.967,
+   "caption": "Eqn (S6), ESI p.S5: fully constrained cell σ11 = σ22 = σ33 = −E/(1 − 2ν) ε0 = −3Kε0",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS07",
+   "kind": "equation",
+   "label": "eqS7",
+   "page": 5,
+   "file": "eq_S07_hydrostatic_pressure.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    277.5,
+    510.0,
+    304.0
+   ],
+   "w": 1759,
+   "h": 111,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.958,
+   "caption": "Eqn (S7), ESI p.S5: p = −(1/3)(σ11 + σ22 + σ33) = −K εvol with εvol = −3ε0 (as printed)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS08",
+   "kind": "equation",
+   "label": "eqS8",
+   "page": 6,
+   "file": "eq_S08_reuss_effective_modulus.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    369.0,
+    510.0,
+    415.0
+   ],
+   "w": 1759,
+   "h": 193,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.977,
+   "caption": "Eqn (S8), ESI p.S6: Reuss (two springs in series) effective modulus E_Cathode^eff = (V_SE/E_SE + V_CAM/E_CAM)^−1",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS09",
+   "kind": "equation",
+   "label": "eqS9",
+   "page": 6,
+   "file": "eq_S09_effective_eigenstrain.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    481.0,
+    510.0,
+    505.5
+   ],
+   "w": 1759,
+   "h": 103,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.974,
+   "caption": "Eqn (S9), ESI p.S6: effective eigenstrain ε0,Cathode^eff = ε0,CAM · V_CAM",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS10",
+   "kind": "equation",
+   "label": "eqS10",
+   "page": 6,
+   "file": "eq_S10_axial_stress_lateral_confinement.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    619.0,
+    510.0,
+    649.0
+   ],
+   "w": 1759,
+   "h": 126,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.97,
+   "caption": "Eqn (S10), ESI p.S6: laterally confined cell σ11 = 3K_Cell^eff((1 − ν_eff)/(1 + ν_eff) ε11 − ε0)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "eS11",
+   "kind": "equation",
+   "label": "eqS11",
+   "page": 6,
+   "file": "eq_S11_lateral_stress_lateral_confinement.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    666.5,
+    510.0,
+    695.5
+   ],
+   "w": 1759,
+   "h": 121,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.966,
+   "caption": "Eqn (S11), ESI p.S6: σ22 = σ33 = 3K_Cell^eff(ν_eff/(1 + ν_eff) ε11 − ε0)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ESI text-layer line boxes of the display equation ±2 pt (full text width, equation number included)",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1_abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "rotated_deg": 0,
+   "bbox": [
+    169.5,
+    247.5,
+    555.5,
+    451.0
+   ],
+   "w": 1609,
+   "h": 849,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.864,
+   "caption": "PDF p.1 (printed 2142) abstract: volume changes of electrode materials; OCV changes 'in the order of 1 mV/100 MPa'; pressure changes approximated under incompressibility (constant cell volume); 'mechanical' blending toward 'zero-strain' electrodes",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3_ssb_boundary_elastic_plastic",
+   "page": 3,
+   "file": "txt_p3_ssb_boundary_elastic_plastic.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    693.7,
+    294.0,
+    719.0
+   ],
+   "w": 1057,
+   "h": 625,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.854,
+   "parts": [
+    [
+     3,
+     40.5,
+     693.7,
+     294.0,
+     719.0
+    ],
+    [
+     3,
+     301.3,
+     48.2,
+     554.8,
+     168.7
+    ]
+   ],
+   "caption": "PDF p.3 (printed 2144): in SSBs the SE does not turn local volume changes into a homogeneous pressure but 'will itself suffer from the resulting local stress due to elastic and plastic deformation'; cracks between SE and active materials",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3_ncm_volume_contraction",
+   "page": 3,
+   "file": "txt_p3_ncm_volume_contraction.png",
+   "rotated_deg": 0,
+   "bbox": [
+    301.3,
+    394.8,
+    554.8,
+    586.5
+   ],
+   "w": 1057,
+   "h": 799,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.84,
+   "caption": "PDF p.3 right: unit-cell volume of NCM decreases (anisotropic) over the whole composition range; Ni-rich more severe; NCM-111 lower volume change than NCM-811; similar for NCA",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4_lto_lfp_two_phase",
+   "page": 4,
+   "file": "txt_p4_lto_lfp_two_phase.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    275.3,
+    294.0,
+    372.0
+   ],
+   "w": 1057,
+   "h": 403,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.855,
+   "caption": "PDF p.4 (printed 2145) left: two-phase systems strictly linear; LTO 'zero-strain' 0.2 % upon delithiation; LiFePO4 → FePO4 ≈7 %",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6_ocv_nonideal_uniaxial_plastic",
+   "page": 6,
+   "file": "txt_p6_ocv_nonideal_uniaxial_plastic.png",
+   "rotated_deg": 0,
+   "bbox": [
+    301.3,
+    114.2,
+    554.8,
+    306.5
+   ],
+   "w": 1057,
+   "h": 803,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.846,
+   "caption": "PDF p.6 (printed 2147) right: V̄m(Li, LCO) from OCV ranges −2 to +6 cm³ mol⁻¹; difference blamed on the non-ideal (uniaxial, not uniform) pressure experiment; 'non-isochoric plastic deformation as well as the porosity of the SE may influence the OCV measurement under pressure'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7_stress_coupling_delamination",
+   "page": 7,
+   "file": "txt_p7_stress_coupling_delamination.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    143.8,
+    294.0,
+    300.2
+   ],
+   "w": 1057,
+   "h": 652,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.846,
+   "caption": "PDF p.7 (printed 2148) left: chemically induced local stress couples with the external pressure; without a fluid or elastic compound, volume changes can cause delamination and crack nucleation; particle and electrolyte cracking",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7_mechanical_properties",
+   "page": 7,
+   "file": "txt_p7_mechanical_properties.png",
+   "rotated_deg": 0,
+   "bbox": [
+    301.3,
+    48.2,
+    554.8,
+    387.8
+   ],
+   "w": 1057,
+   "h": 1416,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.832,
+   "caption": "PDF p.7 right: 'stress release of the active materials can partly be compensated by elastic deformation of the SE'; E, G (Monroe–Newman G > 8.5 GPa), K, ν definitions; Table 1 data from nano-indentation, ultrasound or first principles",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8_thiophosphate_elastic_matrix",
+   "page": 8,
+   "file": "txt_p8_thiophosphate_elastic_matrix.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    48.2,
+    294.0,
+    300.2
+   ],
+   "w": 1057,
+   "h": 1051,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.844,
+   "caption": "PDF p.8 (printed 2149) left: thiophosphate SEs E ~20 GPa, 'quite elastic (K/G > 1.75)'; oxides ≥150 GPa; CAMs need 'a more elastic matrix' to buffer volume changes; elastic constants depend on lithiation (graphite E ×3)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8_stress_formal_setup",
+   "page": 8,
+   "file": "txt_p8_stress_formal_setup.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    390.9,
+    294.0,
+    719.0
+   ],
+   "w": 1057,
+   "h": 2137,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.854,
+   "parts": [
+    [
+     8,
+     40.5,
+     390.9,
+     294.0,
+     719.0
+    ],
+    [
+     8,
+     301.3,
+     48.2,
+     554.8,
+     228.5
+    ]
+   ],
+   "caption": "PDF p.8 left → right: formal treatment of operando stress — elasticity 'and plasticity; here ignored in the estimates'; Δp = −εvol K → 144 bar (LCO/LTO) and 659 bar (NCM/LTO); PEEK cylinder + steel pistons + force sensor; 'stress is corrected by the materials mechanical relaxation'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x8c",
+   "kind": "text",
+   "label": "p8_stress_results",
+   "page": 8,
+   "file": "txt_p8_stress_results.png",
+   "rotated_deg": 0,
+   "bbox": [
+    301.3,
+    235.5,
+    554.8,
+    635.0
+   ],
+   "w": 1057,
+   "h": 1665,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.849,
+   "caption": "PDF p.8 right: experimental results — periodic stress with SOC; 'net stress of σ11(LCO/LTO) = +0.6 MPa' (the figure axis reads +0.6 × 10^5 Pa); NCM-811 negative of similar magnitude; metal or graphite anode 'ten- to twenty-fold increase'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10_reuss_hydrostatic_pressure",
+   "page": 10,
+   "file": "txt_p10_reuss_hydrostatic_pressure.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    48.2,
+    294.0,
+    359.0
+   ],
+   "w": 1057,
+   "h": 1296,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.856,
+   "caption": "PDF p.10 (printed 2151) left: hydrostatic pressure by Reuss homogenisation; ν_eff = ν(β-Li3PS4); p(LCO/LTO) = 100 bar compressive (ΔVcryst +1.4 %), p(NCM/LTO) = 427 bar tensile (ΔVcryst −6 %); agrees with the linear-strain estimate",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x10b",
+   "kind": "text",
+   "label": "p10_plastic_retightening_min_porosity",
+   "page": 10,
+   "file": "txt_p10_plastic_retightening_min_porosity.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    358.5,
+    294.0,
+    670.0
+   ],
+   "w": 1057,
+   "h": 1299,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.829,
+   "caption": "PDF p.10 left: 'plastic effects will consume some of the locally developed stress'; external pressure cannot fully compensate delamination; Tian et al.: re-tightening is not sufficient to recover capacity fade from contact loss; 'minimum porosity'; 'plastic deformation is slow and perhaps not effective enough. Therefore, stress changes will always occur.'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x10c",
+   "kind": "text",
+   "label": "p10_chemo_mechanical_balancing",
+   "page": 10,
+   "file": "txt_p10_chemo_mechanical_balancing.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    677.9,
+    294.0,
+    719.0
+   ],
+   "w": 1057,
+   "h": 2983,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.844,
+   "parts": [
+    [
+     10,
+     40.5,
+     677.9,
+     294.0,
+     719.0
+    ],
+    [
+     10,
+     301.3,
+     48.2,
+     554.8,
+     718.7
+    ]
+   ],
+   "caption": "PDF p.10 left → right: chemo-mechanical balancing — part of the volume change goes into pore filling, part into strain; particle size, nano-sizing, flexible components / binder; blending NCM-811 : LCO 55 : 45 wt% (negative + positive V̄m) lowers nominal stress; contact preserved after cycling (Fig. S7) vs delamination of single-CAM cathodes (Fig. S8)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11_conclusion_plasticity_reversibility",
+   "page": 11,
+   "file": "txt_p11_conclusion_plasticity_reversibility.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    299.1,
+    294.0,
+    719.0
+   ],
+   "w": 1057,
+   "h": 2319,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.846,
+   "parts": [
+    [
+     11,
+     40.5,
+     299.1,
+     294.0,
+     719.0
+    ],
+    [
+     11,
+     301.3,
+     303.2,
+     554.8,
+     435.7
+    ]
+   ],
+   "caption": "PDF p.11 (printed 2152) conclusion: operando XRD neglects plasticity; 'plasticity of the solid–electrolyte has to be considered in future studies'; 'reversibility of the deformation to avoid dead space'; stress response unique to SE/electrode combination, microstructure, processing; call for computational models",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x11b",
+   "kind": "text",
+   "label": "p11_p12_cell_assembly_pressures",
+   "page": 11,
+   "file": "txt_p11_p12_cell_assembly_pressures.png",
+   "rotated_deg": 0,
+   "bbox": [
+    301.3,
+    454.6,
+    554.8,
+    719.0
+   ],
+   "w": 1057,
+   "h": 2169,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.848,
+   "parts": [
+    [
+     11,
+     301.3,
+     454.6,
+     554.8,
+     719.0
+    ],
+    [
+     12,
+     40.5,
+     48.2,
+     294.0,
+     300.2
+    ]
+   ],
+   "caption": "PDF p.11 right → p.12 left: materials (β-Li3PS4, NCM-811, NCA-801505, graphite, LTO from BASF; LCO coated LiNb0.5Ta0.5O3; LGPS); composites 70 : 30 (CAM : SE), blend 38 : 32 : 30 wt%; LTO 35 : 65, graphite 50 : 50; 12 mg cathode, 60 mg SE ≈400 µm; compressed at 35 kN (≈445 MPa); ≈70 MPa during electrochemistry",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12_stress_monitoring_protocol",
+   "page": 12,
+   "file": "txt_p12_stress_monitoring_protocol.png",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    402.9,
+    294.0,
+    719.0
+   ],
+   "w": 1057,
+   "h": 2236,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.844,
+   "parts": [
+    [
+     12,
+     40.5,
+     402.9,
+     294.0,
+     719.0
+    ],
+    [
+     12,
+     301.3,
+     48.2,
+     554.8,
+     264.4
+    ]
+   ],
+   "caption": "PDF p.12 (printed 2153): force sensor KMT 55 under the bottom piston; frame tightened with 10 Nm torque ≈ 60 ± 8 MPa; 25 °C; cells kept at OCV 20 h to minimise casing drift; nominal stress = minus a manually drawn baseline; Savitzky–Golay smoothing",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x12b",
+   "kind": "text",
+   "label": "p12_pressure_ocv_protocol",
+   "page": 12,
+   "file": "txt_p12_pressure_ocv_protocol.png",
+   "rotated_deg": 0,
+   "bbox": [
+    301.3,
+    273.0,
+    554.8,
+    457.2
+   ],
+   "w": 1057,
+   "h": 768,
+   "dpi": 300,
+   "src": "b7a27d60-9._Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.846,
+   "caption": "PDF p.12 right: pressure-dependent OCV tests at 25 °C; uniaxial stress monitored by a pressure gauge; charged at 0.1C; pressure 0.5 t during charge; OCV at 5 pressures '0.5t–1.2t–1.7t–2.2t–2.8t (55 MPa–94 MPa–143 MPa–192 MPa)' (five loads, four MPa values as printed)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xS4a",
+   "kind": "text",
+   "label": "SI_p4_linear_strain_fluid_assumption",
+   "page": 4,
+   "file": "txt_SI_p4_linear_strain_fluid_assumption.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    400.6,
+    510.0,
+    541.4
+   ],
+   "w": 1759,
+   "h": 587,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.87,
+   "caption": "ESI p.S4: approximation via linear strain — single material with β-Li3PS4 properties; 'due to the sufficient elasticity of the solid electrolyte it behaves like a fluid in a system, which is constrained on all sides'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xS5a",
+   "kind": "text",
+   "label": "SI_p5_reuss_inputs",
+   "page": 5,
+   "file": "txt_SI_p5_reuss_inputs.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    510.3,
+    510.0,
+    697.9
+   ],
+   "w": 1759,
+   "h": 782,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.883,
+   "caption": "ESI p.S5: Reuss approximation inputs — only σ11 measured; CAM : SE = 1 : 1 by volume in the 50 µm cathode layer; E_SE (β-Li3PS4) 28.9 GPa; E_CAM 191 GPa (LCO) and 198 GPa (NCM); LCO +1.4 % on delithiation; NCM-811 contraction ≈6 % when charging to 4.3 V vs Li (ref de Biasi 2017)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xS6a",
+   "kind": "text",
+   "label": "SI_p6_reuss_values",
+   "page": 6,
+   "file": "txt_SI_p6_reuss_values.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    508.8,
+    510.0,
+    619.4
+   ],
+   "w": 1759,
+   "h": 461,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.87,
+   "caption": "ESI p.S6: E_Cathode^eff = 50.4 GPa; cell level V_Cathode/V_Cell = 0.1 → E_Cell^eff = 30.2 GPa; K_Cell^eff = 21.8 GPa; ν_eff = ν(β-Li3PS4) = 0.27",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xS8a",
+   "kind": "text",
+   "label": "SI_p8_s6_text_indium_10bar",
+   "page": 8,
+   "file": "txt_SI_p8_s6_text_indium_10bar.png",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    401.1,
+    510.0,
+    509.7
+   ],
+   "w": 1759,
+   "h": 453,
+   "dpi": 300,
+   "src": "35a618f5-9._Sup_Chemo-mechanical_expansion_of_lithium_electrode_materials_on_the_route_to_mechanically_optimized_all-solid-state_batteries.pdf",
+   "blank": 0.876,
+   "caption": "ESI p.S8: NCA negative compressive nominal stress on charge, same order as NCM-811; InLi|SE|NCM-811: compressive stress increase 'of up to 10 bar'; smaller than with Li metal",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes ±2 pt (column width) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "tS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS3",
+   "why": "캡션 모양 후보가 규칙에 떨어졌고 추출 0 — 본문 참조일 수도 있다 (확인)",
+   "skipped": [],
+   "near_miss": [
+    {
+     "page": 5,
+     "text": "Table S3 sums up the maximum strain resulting from the volume change of the electrode mate"
+    }
+   ]
+  }
+ ],
+ "missing_labels_resolved": [
+  {
+   "key": "tS1",
+   "how": "2026-11-12 manual crop tab_S1.png (SI p.2, caption + borderless table 571.5-630 pt) — the tool skipped it (numbering gap)"
+  },
+  {
+   "key": "tS3",
+   "how": "2026-11-12 manual crop tab_S3.png (SI p.5, real caption at 356.3 pt; the tool's near miss was the body-text reference 'Table S3 sums up…')"
+  },
+  {
+   "key": "tS4",
+   "how": "2026-11-12 manual crop tab_S4.png (SI p.7) — not flagged by the tool because its fS5 crop had swallowed the table"
+  }
+ ],
+ "note_manual": "2026-11-12 — published version (Energy Environ. Sci. 11, 2142–2158, 2018; 17 PDF pages, printed page = 2141 + PDF page) + ESI (10 PDF pages: Figs. S1–S8, Tables S1–S4, Eqs. S1–S11). Tool crops 15: 13 re-cut (f1 · f3 grey figure rule; f2 · f4 · f5 full-page-width crops → embedded raster + 3 pt; fS1 panel-b x-axis title cut; fS2 merged Table S2 + bottom cut; fS3 direction arrow cut (vector); fS5 merged Table S4 + x axis cut; fS6 · fS7 · fS8 bottom cut (soft-masked rasters); t1 footnotes missing), 1 caption fixed (tS2), 1 kept (fS4). Hand crops 57: panels 10 (2a 2b · 4a–4d · S1a S1b · S6a S6b) · tables 3 (S1 · S3 · S4) · equations 23 (main (1)–(12), ESI (S1)–(S11), one file per number) · evidence paragraphs 21 (main 17, ESI 4). Re-rendered after viewing: txt_p1_abstract (right edge clipped) · txt_p11_conclusion part 2 (had caught the lower half of Fig. 5 + its caption; right-column text starts at 303 pt). All 72 crops opened with Read. Main-text figures are single 300-dpi rasters; ESI S1 · S2 · S5–S8 are 279–686 dpi rasters (S1 · S6 · S7 · S8 with soft masks); S3 · S4 are vector. Captions of the main figures re-typed from the PDF (text layer turns Δ/ε/σ into D/e/s and drops minus signs).",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of) · fS1a/fS1b · fS6a/fS6b = SI panels · tS1/tS3/tS4 = SI tables · e01–e12 = main-text equations (1)–(12) · eS01–eS11 = ESI equations (S1)–(S11) · x<PDF page><letter> / xS<SI page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1], stacked top→bottom with a 16 px gap); page = PDF page (main printed page = 2141 + PDF page; ESI page n = S n)"
+}

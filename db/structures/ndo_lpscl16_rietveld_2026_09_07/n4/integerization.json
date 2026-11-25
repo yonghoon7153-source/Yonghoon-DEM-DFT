@@ -1,0 +1,45 @@
+{
+ "n_fu": 4,
+ "sites": {
+  "4b": 4,
+  "16e": 16,
+  "free_anion": 8,
+  "48h": 48
+ },
+ "free_anion_rounding": [
+  {
+   "tag": 3,
+   "n_sites": 4,
+   "occ_halide": 0.85,
+   "raw": 3.4,
+   "int": 3,
+   "dev": -0.4
+  },
+  {
+   "tag": 5,
+   "n_sites": 4,
+   "occ_halide": 0.75,
+   "raw": 3.0,
+   "int": 3,
+   "dev": 0.0
+  }
+ ],
+ "target": {
+  "Li": 26,
+  "P": 2,
+  "dopant": 2,
+  "S": 15,
+  "Cl": 6,
+  "O": 3
+ },
+ "n_atoms": 54,
+ "charge": 0,
+ "cell_A": [
+  9.7977,
+  9.7977,
+  9.7977,
+  90.0,
+  90.0,
+  90.0
+ ]
+}

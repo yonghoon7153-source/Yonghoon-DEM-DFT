@@ -1,0 +1,520 @@
+{
+ "schema": "wad_se_pairs_collect/v1",
+ "run_dir": "db/raw/wad_se_pairs_uma_2026_10_01",
+ "n_samples": 8,
+ "G1_pass": 8,
+ "G2_pass": 8,
+ "G3": {
+  "P1": {
+   "sample": "P1_s_outer_A",
+   "abs_dW_J_m2": 0.008274133326336863,
+   "tol_J_m2": 0.01,
+   "status": "PASS",
+   "label": null
+  },
+  "P2": {
+   "sample": "P2_s_outer_A",
+   "abs_dW_J_m2": 0.004814051905158434,
+   "tol_J_m2": 0.01,
+   "status": "PASS",
+   "label": null
+  }
+ },
+ "registry": {
+  "P1_li_outer": {
+   "kind": "P1",
+   "ads_element": "Ag",
+   "n_contact": 28,
+   "contact_tol_A": 0.5,
+   "lattice_basis_A": [
+    [
+     0.0,
+     2.87288
+    ],
+    [
+     2.51377,
+     1.43644
+    ]
+   ],
+   "lattice_check_A": {
+    "b1": 0.0,
+    "b2": 0.0,
+    "half_b1": 1.43644
+   },
+   "init_A": 1.0774,
+   "final_A": 1.1394,
+   "final_vec_A": [
+    -0.2149,
+    -1.119
+   ],
+   "spread_init_A": 0.0,
+   "spread_final_A": 0.0633,
+   "drift_contact_xy_A": {
+    "A": [
+     -0.0978,
+     0.007
+    ],
+    "B": [
+     -0.3127,
+     -0.0346
+    ]
+   },
+   "merge_tol_A": 0.2,
+   "merged": false
+  },
+  "P1_s_outer": {
+   "kind": "P1",
+   "ads_element": "Ag",
+   "n_contact": 28,
+   "contact_tol_A": 0.5,
+   "lattice_basis_A": [
+    [
+     0.0,
+     2.87288
+    ],
+    [
+     2.51377,
+     1.43644
+    ]
+   ],
+   "lattice_check_A": {
+    "b1": 0.0,
+    "b2": 0.0,
+    "half_b1": 1.43644
+   },
+   "init_A": 1.0775,
+   "final_A": 1.0775,
+   "final_vec_A": [
+    -0.0034,
+    -1.0775
+   ],
+   "spread_init_A": 0.0,
+   "spread_final_A": 0.0802,
+   "drift_contact_xy_A": {
+    "A": [
+     0.0328,
+     -0.008
+    ],
+    "B": [
+     0.0295,
+     -0.0081
+    ]
+   },
+   "merge_tol_A": 0.2,
+   "merged": false
+  },
+  "P2_li_outer": {
+   "kind": "P2",
+   "ads_element": "C",
+   "n_contact": 112,
+   "contact_tol_A": 0.5,
+   "lattice_basis_A": [
+    [
+     2.51377,
+     0.0
+    ],
+    [
+     1.25689,
+     2.15466
+    ]
+   ],
+   "lattice_check_A": {
+    "b1": 0.0,
+    "b2": 0.0,
+    "half_b1": 0.71822
+   },
+   "init_A": 1.3072,
+   "final_A": 1.307,
+   "final_vec_A": [
+    1.2567,
+    -0.3589
+   ],
+   "spread_init_A": 0.0,
+   "spread_final_A": 0.003,
+   "drift_contact_xy_A": {
+    "A": [
+     -0.0007,
+     0.0027
+    ],
+    "B": [
+     -0.0009,
+     0.003
+    ]
+   },
+   "merge_tol_A": 0.2,
+   "merged": false
+  },
+  "P2_s_outer": {
+   "kind": "P2",
+   "ads_element": "C",
+   "n_contact": 112,
+   "contact_tol_A": 0.5,
+   "lattice_basis_A": [
+    [
+     2.51377,
+     0.0
+    ],
+    [
+     1.25689,
+     2.15466
+    ]
+   ],
+   "lattice_check_A": {
+    "b1": 0.0,
+    "b2": 0.0,
+    "half_b1": 0.71822
+   },
+   "init_A": 1.3072,
+   "final_A": 1.3071,
+   "final_vec_A": [
+    -1.2568,
+    -0.3593
+   ],
+   "spread_init_A": 0.0,
+   "spread_final_A": 0.0054,
+   "drift_contact_xy_A": {
+    "A": [
+     -0.003,
+     0.0049
+    ],
+    "B": [
+     -0.0029,
+     0.0048
+    ]
+   },
+   "merge_tol_A": 0.2,
+   "merged": false
+  }
+ },
+ "headline_by_term": {
+  "P1_li_outer": {
+   "n_registry_valid": 2,
+   "INCOMPLETE": [],
+   "G3_label": null,
+   "W2_10_mean_J_m2": 0.7604267228941275,
+   "W2_10_min_max_J_m2": [
+    0.7486807275362152,
+    0.7721727182520399
+   ],
+   "dW_ATM_10_mean_J_m2": -0.10415893311604837,
+   "W2_12_mean_J_m2_info": 0.7692106674791284,
+   "by_registry_W2_10_J_m2": {
+    "A": 0.7486807275362152,
+    "B": 0.7721727182520399
+   },
+   "registry_merged": false,
+   "n_registry_distinct": 2,
+   "note": "두 registry 따로 — 평균 · [min, max]"
+  },
+  "P1_s_outer": {
+   "n_registry_valid": 2,
+   "INCOMPLETE": [],
+   "G3_label": null,
+   "W2_10_mean_J_m2": 0.890632510146171,
+   "W2_10_min_max_J_m2": [
+    0.8889118547065297,
+    0.8923531655858122
+   ],
+   "dW_ATM_10_mean_J_m2": -0.0904190307531884,
+   "W2_12_mean_J_m2_info": 0.898936700830157,
+   "by_registry_W2_10_J_m2": {
+    "A": 0.8889118547065297,
+    "B": 0.8923531655858122
+   },
+   "registry_merged": false,
+   "n_registry_distinct": 2,
+   "note": "두 registry 따로 — 평균 · [min, max]"
+  },
+  "P2_li_outer": {
+   "n_registry_valid": 2,
+   "INCOMPLETE": [],
+   "G3_label": null,
+   "W2_10_mean_J_m2": 0.14203606444323602,
+   "W2_10_min_max_J_m2": [
+    0.14203428806956464,
+    0.14203784081690743
+   ],
+   "dW_ATM_10_mean_J_m2": -0.03702193856320947,
+   "W2_12_mean_J_m2_info": 0.14701104503733592,
+   "by_registry_W2_10_J_m2": {
+    "A": 0.14203784081690743,
+    "B": 0.14203428806956464
+   },
+   "registry_merged": false,
+   "n_registry_distinct": 2,
+   "note": "두 registry 따로 — 평균 · [min, max]"
+  },
+  "P2_s_outer": {
+   "n_registry_valid": 2,
+   "INCOMPLETE": [],
+   "G3_label": null,
+   "W2_10_mean_J_m2": 0.2128999798471803,
+   "W2_10_min_max_J_m2": [
+    0.21278883802692247,
+    0.2130111216674381
+   ],
+   "dW_ATM_10_mean_J_m2": -0.038515396934017294,
+   "W2_12_mean_J_m2_info": 0.21771602858514438,
+   "by_registry_W2_10_J_m2": {
+    "A": 0.21278883802692247,
+    "B": 0.2130111216674381
+   },
+   "registry_merged": false,
+   "n_registry_distinct": 2,
+   "note": "두 registry 따로 — 평균 · [min, max]"
+  }
+ },
+ "samples": [
+  {
+   "model": "P1",
+   "term": "li_outer",
+   "registry": "A",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 359,
+   "fmax_final_eV_A": 0.01993,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.7486807275362152,
+   "dW_ATM_10_J_m2": -0.102347370197318,
+   "W2_12_J_m2": 0.7574582785477716,
+   "dW_ATM_12_J_m2": -0.10590351921994028,
+   "G3_abs_dW_J_m2": 0.008777551011556417,
+   "E_bound_10_eV": -1199.5304194694756,
+   "E_far_10_eV": -1190.0813581609664,
+   "area_A2": 202.20989648748122,
+   "n_atoms": 308,
+   "n_ads": 112,
+   "wall_s": 108.0,
+   "peak_mem": {
+    "max_reserved_MiB": 2662,
+    "max_allocated_MiB": 1572
+   },
+   "sha256": {
+    "bound": "dab9615e1c50569c6d7dba4c88f03651637fbba780171ab4ad3d9ec720b3b514",
+    "relaxed": "53cb3b0b152555f3def34bc3061a031b4d6d73bb62f50aea561956066c0b04a9"
+   }
+  },
+  {
+   "model": "P1",
+   "term": "li_outer",
+   "registry": "B",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 521,
+   "fmax_final_eV_A": 0.01492,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.7721727182520399,
+   "dW_ATM_10_J_m2": -0.10597049603477875,
+   "W2_12_J_m2": 0.780963056410485,
+   "dW_ATM_12_J_m2": -0.10953729505666568,
+   "G3_abs_dW_J_m2": 0.008790338158445099,
+   "E_bound_10_eV": -1199.9267791808568,
+   "E_far_10_eV": -1190.181226654705,
+   "area_A2": 202.20989648748122,
+   "n_atoms": 308,
+   "n_ads": 112,
+   "wall_s": 157.2,
+   "peak_mem": {
+    "max_reserved_MiB": 2662,
+    "max_allocated_MiB": 1575
+   },
+   "sha256": {
+    "bound": "57960e31b3cc1331d6e22df3851d89f729879bbf328d145e06f3abb8cd174461",
+    "relaxed": "a53c91999afa639cf68359f50beb1f8cc3682c95d8ebc6291af4e6466063c447"
+   }
+  },
+  {
+   "model": "P1",
+   "term": "s_outer",
+   "registry": "A",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 123,
+   "fmax_final_eV_A": 0.01494,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.8889118547065297,
+   "dW_ATM_10_J_m2": -0.09003207208730417,
+   "W2_12_J_m2": 0.8971859880328665,
+   "dW_ATM_12_J_m2": -0.09329015335276397,
+   "G3_abs_dW_J_m2": 0.008274133326336863,
+   "E_bound_10_eV": -1296.856299692621,
+   "E_far_10_eV": -1285.6373884744523,
+   "area_A2": 202.20989648748122,
+   "n_atoms": 332,
+   "n_ads": 112,
+   "wall_s": 42.1,
+   "peak_mem": {
+    "max_reserved_MiB": 2418,
+    "max_allocated_MiB": 1624
+   },
+   "sha256": {
+    "bound": "f074a32a7ffcbff6ae549006198f3c898e7f0d940ebac37206e62966f55fc3ef",
+    "relaxed": "faef47f0086188af4a96d7734089ef1848b35e6c18b831b86a77db7d40f84490"
+   }
+  },
+  {
+   "model": "P1",
+   "term": "s_outer",
+   "registry": "B",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 140,
+   "fmax_final_eV_A": 0.0186,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.8923531655858122,
+   "dW_ATM_10_J_m2": -0.09080598941907263,
+   "W2_12_J_m2": 0.9006874136274473,
+   "dW_ATM_12_J_m2": -0.09409436968696624,
+   "G3_abs_dW_J_m2": 0.008334248041635073,
+   "E_bound_10_eV": -1296.9466117634424,
+   "E_far_10_eV": -1285.68426793604,
+   "area_A2": 202.20989648748122,
+   "n_atoms": 332,
+   "n_ads": 112,
+   "wall_s": 47.0,
+   "peak_mem": {
+    "max_reserved_MiB": 2418,
+    "max_allocated_MiB": 1626
+   },
+   "sha256": {
+    "bound": "443ff7eccd236e73321e23bffafa88f2204617eaf5fa524e79e11d1b31a25b68",
+    "relaxed": "f7cde15f3267dc0fa9c12e3ed240a8d98f4e813eed92b7258bf95fea9c8854eb"
+   }
+  },
+  {
+   "model": "P2",
+   "term": "li_outer",
+   "registry": "A",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 124,
+   "fmax_final_eV_A": 0.01969,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.14203784081690743,
+   "dW_ATM_10_J_m2": -0.03702423030284428,
+   "W2_12_J_m2": 0.14700910189082872,
+   "dW_ATM_12_J_m2": -0.03979697252956251,
+   "G3_abs_dW_J_m2": 0.00497126107392129,
+   "E_bound_10_eV": -4416.324460991526,
+   "E_far_10_eV": -4413.635482465746,
+   "area_A2": 303.31484473122185,
+   "n_atoms": 630,
+   "n_ads": 336,
+   "wall_s": 99.1,
+   "peak_mem": {
+    "max_reserved_MiB": 5094,
+    "max_allocated_MiB": 3300
+   },
+   "sha256": {
+    "bound": "2b7acb0878cbd9b84e0d49c87b9eb896fccf9cc1b5e019451c88e6d3196e0e1e",
+    "relaxed": "73389ff4f374b5904407ef21b4e0afa6bdcdc115ee3de2f384fc48fe98e8f8f0"
+   }
+  },
+  {
+   "model": "P2",
+   "term": "li_outer",
+   "registry": "B",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 124,
+   "fmax_final_eV_A": 0.02,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.14203428806956464,
+   "dW_ATM_10_J_m2": -0.03701964682357466,
+   "W2_12_J_m2": 0.14701298818384312,
+   "dW_ATM_12_J_m2": -0.039792415138361265,
+   "G3_abs_dW_J_m2": 0.004978700114278478,
+   "E_bound_10_eV": -4416.3250696320665,
+   "E_far_10_eV": -4413.63615836485,
+   "area_A2": 303.31484473122185,
+   "n_atoms": 630,
+   "n_ads": 336,
+   "wall_s": 98.9,
+   "peak_mem": {
+    "max_reserved_MiB": 5106,
+    "max_allocated_MiB": 3305
+   },
+   "sha256": {
+    "bound": "8e7fdda456084e60b4b474255c06fa177fa8d9edcc8512cab84087d927819b01",
+    "relaxed": "02e8f067da68f8122a4d6b92551a2c656fd3fdfc22db16d512088096434801b6"
+   }
+  },
+  {
+   "model": "P2",
+   "term": "s_outer",
+   "registry": "A",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 557,
+   "fmax_final_eV_A": 0.01997,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.21278883802692247,
+   "dW_ATM_10_J_m2": -0.03849957560677764,
+   "W2_12_J_m2": 0.2176028899320809,
+   "dW_ATM_12_J_m2": -0.041123745561413266,
+   "G3_abs_dW_J_m2": 0.004814051905158434,
+   "E_bound_10_eV": -4561.269832456376,
+   "E_far_10_eV": -4557.241436835256,
+   "area_A2": 303.31484473122185,
+   "n_atoms": 666,
+   "n_ads": 336,
+   "wall_s": 466.3,
+   "peak_mem": {
+    "max_reserved_MiB": 7416,
+    "max_allocated_MiB": 3433
+   },
+   "sha256": {
+    "bound": "0e02e89e440bd87b858241f2b5085241ec561cd8c39f30979de3229a998eb938",
+    "relaxed": "0ceb9b537659882fa2dd735032ca7649b479a2bc5b462376e8e4a1d9bce3b9ed"
+   }
+  },
+  {
+   "model": "P2",
+   "term": "s_outer",
+   "registry": "B",
+   "G1": true,
+   "G2": true,
+   "valid": true,
+   "steps": 580,
+   "fmax_final_eV_A": 0.01991,
+   "interface_check_flags": [],
+   "W2_10_J_m2": 0.2130111216674381,
+   "dW_ATM_10_J_m2": -0.038531218261256946,
+   "W2_12_J_m2": 0.21782916723820786,
+   "dW_ATM_12_J_m2": -0.04115515365044315,
+   "G3_abs_dW_J_m2": 0.004818045570769758,
+   "E_bound_10_eV": -4561.275115291738,
+   "E_far_10_eV": -4557.242511524869,
+   "area_A2": 303.31484473122185,
+   "n_atoms": 666,
+   "n_ads": 336,
+   "wall_s": 485.3,
+   "peak_mem": {
+    "max_reserved_MiB": 7416,
+    "max_allocated_MiB": 3434
+   },
+   "sha256": {
+    "bound": "5d77a24a66326b31b10d0e5e4cb8ac04255ce11447ee6c458a23800d67b6f0f0",
+    "relaxed": "94f2b6b6a1fc2a264cd97fc593cad92dede649d5b7065f87b266a1f001a0d8e0"
+   }
+  }
+ ],
+ "rules": {
+  "fmax_eV_A": 0.02,
+  "max_steps": 3000,
+  "G3_tol_J_m2": 0.01,
+  "G3_reps": {
+   "P1": "s_outer_A",
+   "P2": "s_outer_A"
+  },
+  "merge_tol_A": 0.2,
+  "headline": "종결별 · 유효 registry 평균 · [min, max] · 2체 D3 · 10 Å · ATM 열 따로 (카드 §1·§5)"
+ }
+}

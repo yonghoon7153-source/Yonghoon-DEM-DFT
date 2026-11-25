@@ -1,0 +1,354 @@
+{
+ "slug": "kim2025_csp_metastable_edge_sharing_sse",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이상욱 교수님/4. Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+  "이상욱 교수님/4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Workflow of CSP with MTP and active learning. The process begins with the generation of initial structures, including amorphous and random structures, corresponding to a target composition AxByCz. The CSP loop iteratively updates the MTP model by fitting to newly selected query structures derived from active learning, ensuring accuracy between DFT and MTP predictions. The predicted structures are validated through energy comparisons and radial distribution function (RDF) analysis against reference structures to assess prediction accuracy.",
+   "bbox": [
+    45.5,
+    109.9,
+    297.5,
+    334.5
+   ],
+   "w": 1051,
+   "h": 936,
+   "dpi": 300,
+   "src": "4. Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.728
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Energy difference (ΔE) between most stable predicted and experimental structures calculated using PBE and SCAN functionals. Blue circles represent results obtained from PBE functional, and green triangles represent those obtained from SCAN. Red crosses indicate cases where PBE failed to identify the correct ground-state structure. (b) Classification of 12 experimentally known structures based on prediction outcomes. Blue and red regions indicate cases where the predicted structure is more stable than the experimental reference and cases where the predicted and experimental structures match, respectively. The overlapping region represents structures for which both the predicted and reference phases were successfully identified.",
+   "bbox": [
+    309.4,
+    54.4,
+    561.5,
+    277.1
+   ],
+   "w": 1051,
+   "h": 929,
+   "dpi": 300,
+   "src": "4. Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.628
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Classification of predicted crystal structures based on polyhedral connectivity: corner-sharing (left, blue), edge-sharing (middle, orange), and mixed corner/edge-sharing (right, green). Li-ion diffusivity (D600 K), obtained from AIMD simulations over 60 ps at 600 K, and relative potential energy (Erel) of predicted 10 most stable structures for (b) Li2SiS3, (c) Li2GeS3, (d) Li4SiGeS6, and (e) Li4SiSnS6. The shape and color of scatter points indicate the polyhedral connectivity types: corner-sharing (blue circles), edge-sharing (orange circles), and mixed corner/ edge-sharing (green triangles). The purple bars represent Erel with respect to the most stable predicted structures. The x-axis represents the relative stability ranking, ordered from most stable to least stable. The insects depict representative crystal structures with their corresponding polyhedral connectivity. ",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    370.3
+   ],
+   "w": 2151,
+   "h": 1317,
+   "dpi": 300,
+   "src": "4. Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Isosurface of Li-ion probability density distribution and self-part of van Hove correlation function for different polyhedral topologies in Li2SiS3 and Li4SiGeS6: (a) corner-sharing and (b) edge-sharing topologies. (c) Enlarged view of Li-ion pathways in edge-sharing topologies. (d) Schematic illustration of dead volume formation in corner-sharing topologies. (e) Comparison of center-to-center distances between adjacent polyhedra in corner- (dc) and edge-sharing (de) topologies. (f) Distribution of polyhedron volume in corner- and edge-sharing topologies. The blue and red shaded regions represent the polyhedron volume and dead volume, respectively. sharing structures remain thermodynamically more stable than the edge-sharing structures for all compositions, indicating that the stability trend obtained from 0 K DFT potential energies remains valid at room temperature, as detaile",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    465.6
+   ],
+   "w": 2151,
+   "h": 1714,
+   "dpi": 300,
+   "src": "4. Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.664
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Analysis of 10 most stable predicted structures for (a) Li2SiS3 and (b) Li4SiGeS6 compositions in terms of the packing ratio (green bars), average Li−S4 polyhedron volume (height of circles), and CSM (circle color). Data are extracted from AIMD simulations at 600 K over 60 ps. The packing ratio (α) quantifies the nonconductive volume fraction, while CSM reflects the degree of distortion in the Li−S4 polyhedron. The shape of the base markers represents polyhedral connectivity: blue circles (corner-sharing), orange squares (edge-sharing), and green triangles (corner/edge-sharing).",
+   "bbox": [
+    309.4,
+    54.4,
+    561.5,
+    295.6
+   ],
+   "w": 1051,
+   "h": 1006,
+   "dpi": 300,
+   "src": "4. Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.695
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 8,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. 14 crystal structures, along with their space groups, were predicted and referenced as part of the CSP shown in Figure 2.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    505.3
+   ],
+   "w": 2013,
+   "h": 1831,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.746
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 9,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Phase diagrams of Li-Si-S-[Ge, Sn] systems obtained from the materials project database, highlighting newly predicted Li4SiGeS6 and Li4SiSnS6 compositions (marked with star). Green regions indicate phase stability domains, and red lines represent selected compositional pathways.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    254.9
+   ],
+   "w": 2013,
+   "h": 788,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Correlation between DFT and MTP energies for four compositions. The top plot shows the correlation results for all training sets and validation sets, while the bottom plot represents the structures obtained at each iterative evolutionary step. Each color means a specific evolutionary step. 𝑀𝐴𝐸- and 𝑀𝐴𝐸. represent the MAE for all training sets and for those filtered within 0.2 eV/atom for each composition, respectively.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    277.2
+   ],
+   "w": 2013,
+   "h": 880,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.808
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 11,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Predicted crystal structures of Li2SiS3 composition; the 10 most thermodynamically stable structures are shown along with their MSD results. Each ordinal number indicates the structural stability ranking.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    569.4
+   ],
+   "w": 2013,
+   "h": 2098,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 12,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Predicted crystal structures of Li2GeS3 composition; the 10 most thermodynamically stable structures are shown along with their mean square displacement (MSD) results. Each ordinal number indicates the structural stability ranking.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    569.5
+   ],
+   "w": 2013,
+   "h": 2098,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 13,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Predicted crystal structures of Li4SiGeS6 composition; the 10 most thermodynamically stable structures are shown along with their mean square displacement (MSD) results. Each ordinal number indicates the structural stability ranking.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    569.5
+   ],
+   "w": 2013,
+   "h": 2098,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 14,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Predicted crystal structures of Li4SiSnS6 composition; the 10 most thermodynamically stable structures are shown along with their mean square displacement (MSD) results. Each ordinal number indicates the structural stability ranking.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    569.5
+   ],
+   "w": 2013,
+   "h": 2098,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Temperature dependence of the Gibbs free energy for (a) Li2SiS3, (b) Li2GeS3, (c) Li4SiGeS6, and (d) Li4SiSnS6 compositions in the representative corner- and edge-sharing configurations according to their stability.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    426.2
+   ],
+   "w": 2013,
+   "h": 1501,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Radial distribution function (RDF) analysis of Li2SiS3 system, comparing reported structures and predicted structures for each atom pair.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    306.8
+   ],
+   "w": 2013,
+   "h": 1004,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Volume distribution in representative Li2SiS3 and Li4SiGeS6 structures. The blue and red shaded regions represent the polyhedron volume and dead volume, respectively. Corner- sharing and edge-sharing topologies are denoted by blue circles and orange squares, respectively.",
+   "bbox": [
+    66.0,
+    66.0,
+    551.2,
+    270.7
+   ],
+   "w": 2022,
+   "h": 853,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.56
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Illustration of Li–S4 polyhedra, highlighting effects of (a) electrostatic forces and (b) structural distortions.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    260.0
+   ],
+   "w": 2013,
+   "h": 809,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Analysis of 10 most stable predicted structures for (a) Li₂GeS₃ and (b) Li₄SiSnS₆ compositions in terms of packing ratio (green bars), average Li-S₄ polyhedron volume (height of circles), and continuous symmetry measure (CSM; circle color). Data were extracted from AIMD simulations at 600 K over 60 ps. The packing ratio (α) quantifies the non-conductive volume fraction, while CSM reflects the degree of distortion in the Li–S₄ polyhedron. The shape of the base markers represents polyhedral connectivity: blue circles (corner-sharing), orange squares (edge-sharing), and green triangles (corner/edge-sharing).",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    394.5
+   ],
+   "w": 2013,
+   "h": 1369,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.785
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 20,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Reference crystal structures used in the CSP along with their database source, space groups, 𝑍 values, MAE for all training sets, and MAE for filtered training sets.",
+   "bbox": [
+    67.0,
+    67.6,
+    598.5,
+    700.0
+   ],
+   "w": 2215,
+   "h": 2636,
+   "dpi": 300,
+   "src": "4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "blank": 0.964
+  }
+ ]
+}

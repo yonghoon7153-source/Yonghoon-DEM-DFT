@@ -1,0 +1,290 @@
+{
+  "slug": "ziegel2010_surface_area_measure_digitizations",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-11-03",
+  "sources": [
+    "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 5,
+      "file": "fig_1.png",
+      "caption": "Fig. 1. Support of conﬁguration of type three.",
+      "rotated_deg": 0,
+      "bbox": [
+        381.1,
+        631.4,
+        473.4,
+        742.5
+      ],
+      "w": 385,
+      "h": 464,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.952,
+      "viewed": true
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 6,
+      "file": "fig_2.png",
+      "caption": "Fig. 2. Support of conﬁgurations of type one, three and ﬁve.",
+      "rotated_deg": 0,
+      "bbox": [
+        80.4,
+        64.3,
+        255.7,
+        224.5
+      ],
+      "w": 731,
+      "h": 669,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.762,
+      "viewed": true
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 6,
+      "file": "fig_3.png",
+      "caption": "Fig. 3. Conﬁgurations of type three used in the proof of Proposition 4.2.",
+      "rotated_deg": 0,
+      "bbox": [
+        95.0,
+        255.4,
+        241.1,
+        296.9
+      ],
+      "w": 609,
+      "h": 174,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.896,
+      "viewed": true
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 6,
+      "file": "fig_4.png",
+      "caption": "Fig. 4. Proposition 4.2.",
+      "rotated_deg": 0,
+      "bbox": [
+        108.7,
+        626.4,
+        227.4,
+        742.5
+      ],
+      "w": 495,
+      "h": 485,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.926,
+      "viewed": true
+    },
+    {
+      "key": "f5",
+      "kind": "figure",
+      "label": "5",
+      "page": 6,
+      "file": "fig_5.png",
+      "caption": "Fig. 5. Support of conﬁgurations of type one, two and four.",
+      "rotated_deg": 0,
+      "bbox": [
+        363.5,
+        64.3,
+        510.3,
+        165.4
+      ],
+      "w": 612,
+      "h": 423,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.816,
+      "viewed": true
+    },
+    {
+      "key": "f6",
+      "kind": "figure",
+      "label": "6",
+      "file": "fig_6.png",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "page": 7,
+      "bbox": [
+        112.9,
+        650.7,
+        203.6,
+        741.5
+      ],
+      "w": 379,
+      "h": 379,
+      "manual_crop": "tool found no region (caption merged with right-column body text); hand crop = vector drawing above the Fig. 6 caption, PDF p.7 = printed 70 (2026-11-03)",
+      "caption": "Fig. 6. Support triangles and corresponding configurations.",
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "viewed": true,
+      "blank": 0.43
+    },
+    {
+      "key": "f7",
+      "kind": "figure",
+      "label": "7",
+      "file": "fig_7.png",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "page": 9,
+      "bbox": [
+        24.0,
+        58.0,
+        566.0,
+        674.0
+      ],
+      "w": 2259,
+      "h": 2568,
+      "manual_crop": "tool dropped it ('영역 없음'); hand crop = all six panels (vector) above the Fig. 7 caption, PDF p.9 = printed 72 (2026-11-03)",
+      "caption": "Fig. 7. Estimation of surface area of a unit ball from a random digitization with lattice spacing 0.1. The surface area estimator is based on the weights λ̄i(r,s) with r = 0, r = 0.5 and r = 1 as a function of s in the graphs on the left. Then s = 1.6631, 1.7036, 1.7452 are fixed and the results for all r ∈ [0,1] are displayed. The second value chosen for s is simply the mean of the upper and lower boundary of the interval. The horizontal black line shows the true value of surface area 4π. Note that maximal relative errors observed in 10 simulations for the different graphs are 0.9%, 1.2%, 1.5%, 1.0%, 1.2%, 1.5%, respectively.",
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "viewed": true
+    },
+    {
+      "key": "f8",
+      "kind": "figure",
+      "label": "8",
+      "page": 10,
+      "file": "fig_8.png",
+      "caption": "Fig. 8. Estimation of surface area of a cylinder with radius 1 and height 2 (not aligned with any coordinate direction) from a random digitization with lattice spacing 0.055. As above, the surface area estimator is based on the weights kiðr; sÞ and the results are displayed for different ﬁxed values of r and s. Again the horizontal black line shows the true value of surface area 6p. The maximal relative errors observed in 10 simulations were 0.4%, 0.3%, 0.2%, 0.4%, 0.3%, 0.2%, respectively.",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        61.9,
+        568.6,
+        683.6
+      ],
+      "w": 2218,
+      "h": 2592,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.956,
+      "viewed": true
+    },
+    {
+      "key": "f9",
+      "kind": "figure",
+      "label": "9",
+      "file": "fig_9.png",
+      "rotated_deg": 0,
+      "dpi": 300,
+      "page": 12,
+      "bbox": [
+        96.9,
+        599.5,
+        238.9,
+        741.5
+      ],
+      "w": 592,
+      "h": 592,
+      "manual_crop": "tool found no region (caption merged with body text); hand crop = vector drawing above the Fig. 9 caption, PDF p.12 = printed 75 (2026-11-03)",
+      "caption": "Fig. 9. Sublevel sets {T̄j} and partition {Tj}.",
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "viewed": true,
+      "blank": 0.505
+    },
+    {
+      "key": "f10",
+      "kind": "figure",
+      "label": "10",
+      "page": 13,
+      "file": "fig_10.png",
+      "caption": "Fig. 10. Surface area measure estimates of an oblate spheroid (left) and a unit sphere (right) based on the model of a piecewise constant density. The spheroid has half axis a ¼ 0:9; b ¼ c ¼ 1:1. It is not aligned with the coordinate axis. The lighter the color the larger the value of the coefﬁcient estimated for the corresponding spherical triangle or quadrangle.",
+      "rotated_deg": 0,
+      "bbox": [
+        73.0,
+        495.2,
+        512.5,
+        729.5
+      ],
+      "w": 1832,
+      "h": 977,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.695,
+      "viewed": true
+    },
+    {
+      "key": "t1",
+      "kind": "table",
+      "label": "1",
+      "page": 5,
+      "file": "tab_1.png",
+      "caption": "Table 1 Support and maxima of the h-functions for a typical example of each conﬁguration type. A type of conﬁgurations has the covering property (CP) if the union of all supports of the h-functions of this type covers S2. In the column labeled Number we give the number of conﬁgurations of each type identifying twins.",
+      "rotated_deg": 0,
+      "bbox": [
+        30.0,
+        485.0,
+        288.0,
+        752.0
+      ],
+      "w": 1075,
+      "h": 1114,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.751,
+      "recrop": "auto crop was the whole page; hand crop = Table 1 title + body incl. configuration sketches (left column), PDF p.5 = printed 68 (2026-11-03)",
+      "viewed": true
+    },
+    {
+      "key": "t2",
+      "kind": "table",
+      "label": "2",
+      "page": 8,
+      "file": "tab_2.png",
+      "caption": "Table 2 Weights for surface area estimator that minimize the asymptotic relative worst case error. The two parameters obey 0 6 r 6 1 and 1:6631 6 s 6 1:7452. The asymptotic relative error does not depend on the choice of r, but it may depend on s. However, its worst case bound is independent of s. Type of conﬁguration Weight",
+      "rotated_deg": 0,
+      "bbox": [
+        309.0,
+        64.0,
+        566.0,
+        172.0
+      ],
+      "w": 1072,
+      "h": 451,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.847,
+      "recrop": "auto crop was the whole page; hand crop = Table 2 title + rules (right column), PDF p.8 = printed 71 (2026-11-03)",
+      "viewed": true
+    },
+    {
+      "key": "t3",
+      "kind": "table",
+      "label": "3",
+      "page": 11,
+      "file": "tab_3.png",
+      "caption": "Table 3 Comparison of weights for surface area estimator suggested in [11,15,12]. i 1 2 3 4 5 r s ki sr 1.358 2:352 \u0003 sr 0.960 sð1 \u0003 rÞ [0,1] [1.663,1.745] ki L 1:272 ¼ sr 1.338 1:108 ¼ 2:380 \u0003 sr 0.927 0:421 ¼ sð1 \u0003 rÞ 0.751 1.693 ki S 0:752 ¼ sr 1.318 1:678 ¼ 2:430 \u0003 sr 0.927 0:914 ¼ sð1 \u0003 rÞ 0.451 1.666 C\u00031 N ki N 0:399 ¼ sr 1.300 2:114 ¼ 2:513 \u0003 sr 0.919 1:194 ¼ sð1 \u0003 rÞ 0.251 1.593",
+      "rotated_deg": 0,
+      "bbox": [
+        30.0,
+        64.0,
+        566.0,
+        136.0
+      ],
+      "w": 2234,
+      "h": 301,
+      "dpi": 300,
+      "src": "8._Estimation_of_surface_area_and_surface_area_measure_of_three-dimensional_sets_from_digitizations.pdf",
+      "blank": 0.813,
+      "recrop": "auto crop was the whole page; hand crop = Table 3 title + rules, PDF p.11 = printed 74 (2026-11-03)",
+      "viewed": true
+    }
+  ],
+  "missing_labels": []
+}

@@ -1,0 +1,90 @@
+# Nd2O3-doped LPSCl1.6 — intrinsic grand-potential ESW staircase
+# gabia (kserver116-27) run, 2026-06-24, (uma) env, MP_API_KEY set.
+# Command:
+#   python3 esw_grand_potential.py \
+#     --target "Li4.8Nd0.2P1S4.1O0.3Cl1.6:nd_Nd2O3_doped" "Li5.4P1S4.4Cl1.6:modelc_sameHull" \
+#     --elements Li Nd P S O Cl --out esw_nd.json
+# Method: PhaseDiagram.get_element_profile (Mo/Ong/Ceder); MP GGA_GGA+U hull, Li opened.
+# Composition = DFT-relaxed 120-atom cell Li48Nd2P10O3S41Cl16 / 10 (net charge 0).
+# modelc re-run on the SAME 6-element (Cl-Li-Nd-O-P-S) hull = apples-to-apples control.
+
+[mp_api] 321 entries in Cl-Li-Nd-O-P-S (GGA_GGA+U hull)
+mu_Li(metal) reference = -1.9089 eV/atom
+
+=== nd_Nd2O3_doped  Li4.8Nd0.2P1S4.1O0.3Cl1.6  ===
+  nominal Li content n_Li = 4.800
+  OCV self-decomposition (no Li flux) @ 1.72 V -> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl
+  reduction (cathodic) limit ~ 1.52 V -> + 4.625 Li -> 0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P
+  oxidation (anodic)   limit ~ 1.92 V -> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li
+  full profile (21 breakpoints):
+    V= 0.00  Li=  8.000  + 8 Li -> 0.3 Li2O + 0.8 Li3P + 4.1 Li2S + 0.2 NdP + 1.6 LiCl
+    V= 0.69  Li=  7.400  + 7.4 Li -> 0.725 Li3P + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl
+    V= 0.87  Li=  5.950  + 5.95 Li -> 0.725 LiP + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl
+    V= 0.93  Li=  5.536  + 5.536 Li -> 0.1036 Li3P7 + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl
+    V= 1.11  Li=  5.225  + 5.225 Li -> 4.1 Li2S + 0.1812 NdP5 + 0.01875 NdP + 0.075 Li3PO4 + 1.6 LiCl
+    V= 1.21  Li=  5.188  + 5.188 Li -> 0.01875 NdPS + 4.081 Li2S + 0.1813 NdP5 + 0.075 Li3PO4 + 1.6 LiCl
+    V= 1.28  Li=  4.825  + 4.825 Li -> 0.2 NdPS + 3.9 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.725 P
+    V= 1.52  Li=  4.625  + 4.625 Li -> 0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P
+    V= 1.72  Li= -0.000  -> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl
+    V= 1.92  Li= -0.160  -> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li
+    V= 2.00  Li= -0.200  -> 0.925 Li3PS4 + 0.2 NdS2 + 0.075 Li3PO4 + 1.6 LiCl + 0.2 Li
+    V= 2.30  Li= -0.700  -> 0.1 Li9Nd2(PS4)5 + 0.425 Li3PS4 + 0.1 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 0.7 Li
+    V= 2.36  Li= -1.922  -> 0.1 Li9Nd2(PS4)5 + 0.2125 P2S7 + 0.1531 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 1.922 Li
+    V= 2.36  Li= -2.784  -> 0.3625 P2S7 + 0.2 NdPS4 + 0.1906 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 2.784 Li
+    V= 2.45  Li= -3.000  -> 0.075 NdPO4 + 0.4 P2S7 + 0.125 NdPS4 + 0.2 LiS4 + 1.6 LiCl + 3 Li
+    V= 2.62  Li= -3.359  -> 0.075 NdPO4 + 0.4625 P2S7 + 0.2156 LiS4 + 0.125 NdCl3 + 1.225 LiCl + 3.359 Li
+    V= 3.06  Li= -3.575  -> 0.075 NdPO4 + 0.4625 P2S7 + 0.125 NdCl3 + 1.225 LiCl + 0.8625 S + 3.575 Li
+    V= 3.08  Li= -3.700  -> 0.45 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 1.075 LiCl + 0.95 S + 3.7 Li
+    V= 3.33  Li= -4.650  -> 0.95 SCl + 0.45 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 0.125 LiCl + 4.65 Li
+    V= 3.39  Li= -4.775  -> 1.001 SCl + 0.01471 PCl5 + 0.4426 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 4.775 Li
+    V= 3.66  Li= -4.800  -> 1.012 SCl + 0.01765 PCl5 + 0.03333 Nd(PO3)3 + 0.4412 P2S7 + 0.1667 NdCl3 + 4.8 Li
+
+=== modelc_sameHull  Li5.4P1S4.4Cl1.6  ===  (control; reproduces 4-element-hull modelc EXACTLY)
+  nominal Li content n_Li = 5.400
+  OCV self-decomposition (no Li flux) @ 1.72 V -> Li3PS4 + 0.4 Li2S + 1.6 LiCl
+  reduction (cathodic) limit ~ 1.24 V -> + 5 Li -> 4.4 Li2S + 1.6 LiCl + P
+  oxidation (anodic)   limit ~ 2.14 V -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li
+  full profile (11 breakpoints):
+    V= 0.00  Li=  8.000  + 8 Li -> Li3P + 4.4 Li2S + 1.6 LiCl
+    V= 0.87  Li=  6.000  + 6 Li -> LiP + 4.4 Li2S + 1.6 LiCl
+    V= 0.93  Li=  5.429  + 5.429 Li -> 0.1429 Li3P7 + 4.4 Li2S + 1.6 LiCl
+    V= 1.18  Li=  5.143  + 5.143 Li -> 0.1429 LiP7 + 4.4 Li2S + 1.6 LiCl
+    V= 1.24  Li=  5.000  + 5 Li -> 4.4 Li2S + 1.6 LiCl + P
+    V= 1.72  Li= -0.000  -> Li3PS4 + 0.4 Li2S + 1.6 LiCl
+    V= 2.14  Li= -0.700  -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li
+    V= 2.36  Li= -3.575  -> 0.5 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.575 Li
+    V= 3.06  Li= -3.800  -> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li
+    V= 3.33  Li= -4.700  -> 0.9 SCl + 0.5 P2S7 + 0.7 LiCl + 4.7 Li
+    V= 3.39  Li= -5.400  -> 1.188 SCl + 0.08235 PCl5 + 0.4588 P2S7 + 5.4 Li
+
+# ============================== INTERPRETATION ==============================
+# CONTROL VALID: modelc on the 6-element (Cl-Li-Nd-O-P-S) hull == modelc on the
+#   4-element hull, breakpoint-for-breakpoint (OCV 1.72 -> Li3PS4+0.4Li2S+1.6LiCl;
+#   ox 2.14 -> +0.1 LiS4; 2.36 P2S7; 3.33 SCl; 3.39 PCl5). So every nd-vs-modelc
+#   DIFFERENCE below is REAL chemistry (O/Nd in nd's composition), NOT a hull artifact.
+#
+# CONFIRMED (inference -> direct convex-hull proof):
+#  [anode, V=0]   O -> 0.3 Li2O (gap 5.24, wide) forms at the Li-metal contact.
+#  [bulk, all V]  0.075 Li3PO4 (gap 5.73, wide) persists across ~0.69-3.06 V.
+#  [cathode high V] NdPO4 @2.45 (5.55) ; NdCl3 @2.62 (4.30) ; LiNd(PO3)4 @3.08 ;
+#                   Nd(PO3)3 @3.66 -- all WIDE-GAP Nd/O phosphates+chlorides.
+#  [anode-bad / cathode-good split] Nd -> NdP / Nd2S3 (CONDUCTIVE) at low V;
+#                   Nd -> NdPO4 / NdCl3 (WIDE-GAP) only at high V. Exactly as claimed.
+#  vs modelc high V: P2S7 / LiS4 / S / SCl / PCl5 -- ALL conductive polysulfide/chloride.
+#
+# CORRECTIONS / HONEST NUANCE (new from this run):
+#  (1) nd intrinsic ESW is NARROWER, not wider: window 1.52-1.92 V (0.40 V) vs
+#      modelc 1.24-2.14 V (0.90 V). Nd-S/Nd-P/Nd-O redox is active INSIDE modelc's
+#      window -> nd is intrinsically LESS stable (reduced more easily AND oxidized
+#      more easily). The benefit is product ELECTRON-BLOCKING (kinetic passivation),
+#      NOT a wider thermodynamic window -- same logic as the bulk-gap story.
+#  (2) At x=0.2 O is too DILUTE to fully replace Li3P: V=0 gives 0.3 Li2O + 0.8 Li3P
+#      (Li3P still dominant). The wide-gap conversion is PARTIAL/ADDITIVE, scales with O.
+#  (3) nd does NOT remove the polysulfides; P2S7/SCl/PCl5 still form at high V, with
+#      NdPO4/NdCl3/Li3PO4 forming ALONGSIDE. It adds wide-gap phases, not replaces all.
+#  (4) nd oxidation ONSET (1.92 V) is via Nd-sulfide (Nd10S19/NdS2), BELOW modelc's
+#      2.14 V. Wide-gap NdPO4 does not appear until 2.45 V. So 1.92-2.45 V oxidizes
+#      to non-wide-gap products; the NdPO4/NdCl3 passivation is a >=2.45 V (cathode
+#      operating regime) effect.
+#  CAVEAT: Nd-bearing hull energies are GGA+U(4f) -> product IDENTITY robust,
+#      absolute voltages +/-. LiCl 1.6 stays inert across the whole window (both).

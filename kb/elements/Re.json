@@ -1,0 +1,83 @@
+{
+  "symbol": "Re",
+  "name": "Rhenium",
+  "Z": 75,
+  "role": "75번 5d 전이금속(Group 7, Mn/Tc 무거운 동족). SSB 앵커 없음 — 백과사전/합금·촉매 관점. +7(Re₂O₇, ReO₄⁻ 과레늄산)이 가장 안정, +4(ReO₂)·+6(ReO₃, 금속성 산화물)도 존재. 산업의 간판은 니켈基 초합금 첨가(제트엔진 터빈 블레이드)와 Pt–Re 리포밍 촉매. SSB 직접 무관.",
+  "oxidation_states": [
+    "+7",
+    "+4",
+    "+6",
+    "+5"
+  ],
+  "electronegativity": 1.9,
+  "ionic_radius_A": {
+    "Re4+_VI": 0.63,
+    "Re6+_VI": 0.55,
+    "Re7+_IV": 0.38,
+    "Re7+_VI": 0.53,
+    "_note": "Shannon 1976: Re⁴⁺(d³) 팔면체 VI 0.63 Å, Re⁶⁺ VI 0.55 Å; Re⁷⁺는 ReO₄⁻ 사면체 IV 0.38 Å 또는 팔면체 VI 0.53 Å. 과레늄산 ReO₄⁻는 과망간·과테크네튬산과 같은 tetraoxo 음이온. 5d라 4d Tc와 크기 근접(란탄족 수축)."
+  },
+  "representative_compounds": [
+    {
+      "formula": "KReO4 / NH4ReO4 (ReO4⁻)",
+      "context": "과레늄산염(가장 안정 상)",
+      "battery_role": "SSB 무관 — Re⁷⁺ tetraoxo 음이온; Re 회수·전구체",
+      "note": "Raman ν1(A1) ~971 cm⁻¹(MnO4⁻ 839 < TcO4⁻ 912 < ReO4⁻ 971). Re 4f7/2 ~46.5 eV(Re⁷⁺)"
+    },
+    {
+      "formula": "ReO3",
+      "context": "산화물(+6)",
+      "battery_role": "SSB 무관 — 금속성 산화물(전도도 ~Cu 급); ReO₃형 구조의 원형",
+      "note": "적색 금속광택; ReO₃ 결정구조는 페로브스카이트 A-자리 빠진 골격의 원형"
+    },
+    {
+      "formula": "ReS2",
+      "context": "층상 황화물(+4)",
+      "battery_role": "SSB 무관 — 왜곡 1T 층상 반도체(강한 이방성)",
+      "note": "약한 층간결합; 광전자 소재 연구용. 황화물이지만 SSB SE와 무관"
+    },
+    {
+      "formula": "Re 초합금 · Pt–Re 리포밍 촉매",
+      "context": "합금/촉매",
+      "battery_role": "SSB 무관 — Ni基 단결정 초합금(터빈 블레이드) 첨가, 석유 개질 Pt–Re 이금속 촉매",
+      "note": "Re 산업 소비의 대부분; SSB 접점 없음"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. ReS₂가 층상 황화물이라 물성 연구에서 등장하나 이는 2D 반도체 맥락이지 Li⁺ 전도 SE와 별개. Group 7 동족 Mn/Tc의 산화상태 화학(+7 과산소음이온 ↔ +4 산화물) 비교 참고. ReO₃가 금속성 산화물이라 SSB의 절연성 요구와는 정반대 성격.",
+  "xps": [
+    {
+      "core": "Re 4f7/2",
+      "BE_eV": 40.5,
+      "assignment": "Re metal / Re⁰ (4f5/2 ~+2.4 eV 더블릿; 보고 ~40.3-40.5 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Re 4f7/2",
+      "BE_eV": 46.5,
+      "assignment": "Re2O7 / ReO4⁻ / Re⁷⁺ (보고 ~46-47 eV); ReO₂(Re⁴⁺)는 ~42.9 eV 중간",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 971,
+      "assignment": "ReO4⁻ ν1(A1) 대칭 신축 — 과레늄산 지문(tetraoxo 계열 MnO4⁻ 839 / TcO4⁻ 912 / ReO4⁻ 971)",
+      "ref": "tetraoxo anion Raman 계열"
+    }
+  ],
+  "dos_character": "5d⁵6s² 전이금속 — 금속 Re는 넓은 5d 밴드가 E_F 가로지르는 금속(hcp, 융점 3186°C로 텅스텐 다음). ReO₃(Re⁶⁺ d¹)는 t2g 밴드가 E_F 통과하는 금속성 산화물, ReO₄⁻(d⁰)는 닫힌 배위. 다가 redox 폭이 넓음. SSB 절연 밴드갭 논의와 무관한 금속/합금 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — Group 7(Mn/Tc/Re) 화학",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Re⁴⁺ VI 0.63 Å)",
+    "Reed & Pond, Superalloys / Re-bearing single-crystal turbine alloys 종설"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d⁵ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d⁵ 6s²",
+    "valence_orbitals": "5d⁵ 6s² (4f¹⁴ 채움) — 규칙적(Mn/Tc처럼 d⁵s²). Re⁷⁺면 5d⁰, Re⁶⁺면 5d¹, Re⁴⁺면 5d³",
+    "band_character": "금속 Re는 5d 밴드가 E_F 가로지르는 고융점 금속; ReO₃(Re⁶⁺ 5d¹)는 t2g가 E_F 통과하는 금속성 산화물, ReO₄⁻(5d⁰)는 닫힘. 다가 redox 폭 넓음. SSB 밴드엣지와 무관",
+    "bonding": "Re–O 공유(Re₂O₇·ReO₄⁻ 말단 Re=O, ReO₃ 골격)·Re–S(ReS₂ 층상), 금속상 hcp 결합. 다중결합(Re≡Re) 화학도 유명"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

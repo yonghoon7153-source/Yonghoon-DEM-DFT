@@ -1,0 +1,271 @@
+{
+ "slug": "kurniawan2025_comparative_ensemble_uq_nnip",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Illustration of precision and accuracy using a dartboard metaphor. Each panel shows a different combination of prediction accuracy (closeness to the true value, indicated by the bullseye) and precision (spread of predictions). This illustration emphasizes that high precision does not necessarily imply high accuracy.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    52.4,
+    564.6,
+    234.4
+   ],
+   "w": 1858,
+   "h": 759,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Graph representation of a neural network interatomic potential. yl α is the α-th element of yl and wl α,β is the element of Wl on α-th row and β-th column. The NNIP architecture used in this study consists of three hidden layers, each with 128 nodes, and employs the hyperbolic tangent activation function to ensure smooth and differentiable outputs. Local atomic environments encoded using atom-centered symmetry functions [47] serve as inputs to the neural network model. Dropout with a rate of 0.1 is applied to all hidden layers as a regularization technique during training. In addition, dropout is also employed as one of the uncertainty quantification methods considered in this work, where it is used to generate an ensemble of predictions. Details on the implementation of dropout for both regularization and uncertainty estimation are provided in Sec. 2.3.2.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    473.7,
+    564.5,
+    634.5
+   ],
+   "w": 1858,
+   "h": 671,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.638
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4: Illustration of several crystal structures of carbon: (a) diamond, (b) monolayer graphene, and (c) graphite. In the diamond lattice, each carbon atom is tetrahedrally bonded to four other carbon atoms, forming a three-dimensional cubic structure with lattice parameter denoted by a. A single graphene sheet consists of carbon atoms arranged in a two-dimensional honeycomb lattice, with an in-plane lattice parameter denoted by a and an angle of 120◦between carbon-carbon bonds. Graphite is composed of stacked layers of graphene, with the layers arranged in a staggered ABAB pattern. The in-plane lattice parameter of graphite is denoted by a, while the interlayer spacing between adjacent graphene layers is denoted as c/2, with the layers held together by weak van der Waals forces.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    317.1,
+    564.6,
+    454.6
+   ],
+   "w": 1858,
+   "h": 574,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.794
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Parity plot comparing the residual (weighted absolute error) and the uncertainty (one standard deviation). Individual samples from the training (blue) and test (orange) sets are shown as semi-transparent markers, with kernel density estimates overlaid as contours in the corresponding colors to highlight the high-density regions. The columns represent different ensemble models, while the rows represent the crystal structures in the dataset. The grey region represents the undercon- fident region, where the uncertainty is larger than the residual. In an ideal condition, the sample distribution would lie around the diagonal, where the residual and uncertainty are correlated and approximately equal to each other.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    88.2,
+    564.6,
+    493.0
+   ],
+   "w": 1858,
+   "h": 1688,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.684
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 12,
+   "file": "fig_7.png",
+   "caption": "Figure 7: (a) Pearson correlation coefficients between the residual and the uncertainty in the test set. The columns represent different ensemble models, while the rows represent different structure types in the dataset, with the last row gives the correlation coefficient calculated using the entire data points. (b) The mean absolute error (MAE) and average uncertainty of the energy and forces in the test set.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    70.4,
+    564.6,
+    218.8
+   ],
+   "w": 1858,
+   "h": 619,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 13,
+   "file": "fig_8.png",
+   "caption": "Figure 8: Energy cold curve predictions for (top) graphene, (middle) graphite, and (bottom) diamond structures using different ensemble models. The ensemble-averaged predictions are shown as black curves, with the grey envelope representing the one-standard-deviation uncertainty. DFT ground truth values (red dots) are overlaid for comparison with the predicted values. For each structure, the lattice parameter is perturbed by ±10% relative to the reference equilibrium lattice constant from the Materials Project repository (red vertical dashed line in each panel). The predicted equilibrium lattice constant (black vertical dashed line) with its associated one-standard-deviation uncertainty is also shown in each panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    52.4,
+    564.6,
+    287.6
+   ],
+   "w": 1858,
+   "h": 981,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 14,
+   "file": "fig_9.png",
+   "caption": "Figure 9: PCA embedding of local atomic environments in the training data (clusters of points) and in the energy cold curve predictions (triangles), along with the singular values obtained from the SVD of the stacked descriptor matrix used in the PCA analysis. Different colors indicate different crystal structures (the bilayer graphene cluster is beneath the graphite and monolayer clusters). The embedding space shown is defined by the two most dominant principal components corresponding to the two largest singular values. These dominant components capture 98% of the variance in the training data, calculated as the fraction of variance explained by the sum of their squared singular values. This PCA embedding plot illustrates that the energy cold curve calculations involve extrapolation beyond the training data, particularly in the case of diamond.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    52.4,
+    564.6,
+    220.5
+   ],
+   "w": 1858,
+   "h": 701,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10.png",
+   "caption": "Figure 10: Energy cold curve predictions and associated uncertainties for diamond at varying dropout ratios. The lower part of each panel shows the prediction error relative to the DFT ground truth alongside the predicted uncertainty. This visualization highlights how uncertainty increases with higher dropout ratios, particularly in the tension regime, and how the prediction error correlates with uncertainty. Interestingly, in the compression regime, both the error and uncertainty remain largely unchanged. Additionally, at very high dropout ratios, the model produces nearly constant predictions with low variability, suggesting a loss of learning capacity.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    467.5,
+    564.6,
+    689.3
+   ],
+   "w": 1858,
+   "h": 925,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 15,
+   "file": "fig_11.png",
+   "caption": "Figure 11: Prediction errors (black curves) and associated uncertainty estimates (gray envelopes) for energy cold curve predictions. The blue-shaded regions indicate the interpolation domain, as deter- mined from the feature space analysis in Fig. 9. This figure highlights a counterintuitive uncertainty behavior, where the predictions uncertainties decrease as the ensemble models extrapolate beyond the training data.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    427.1,
+    564.6,
+    683.7
+   ],
+   "w": 1858,
+   "h": 1070,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.732
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 16,
+   "file": "fig_12.png",
+   "caption": "Figure 12: (a) PCA embedding of the graph representation of local atomic environments used by SchNet, comparing the training data coverage with the atomic environments sampled in the OOD energy cold curve predictions. (b) Prediction errors and associated uncertainty estimates for energy cold curve predictions of graphene, graphite, and diamond structures. These results show that over- confident and counterintuitive uncertainty behavior—such as decreasing or plateauing uncertainty under extreme extrapolation—is also observed in a modern graph neural network potential. This indicates that these issues are not specific to a particular model architecture and may occur across different NN models",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    171.9,
+    564.6,
+    286.0
+   ],
+   "w": 1858,
+   "h": 476,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.757
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 17,
+   "file": "fig_13.png",
+   "caption": "Figure 13: Energy uncertainty estimated from the bootstrap ensemble for graphene, along with the distributions of the final activation function outputs from the NN model evaluated at selected lattice parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    147.8,
+    564.6,
+    305.4
+   ],
+   "w": 1858,
+   "h": 658,
+   "dpi": 300,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1: Number of configurations in the carbon dataset.",
+   "rotated_deg": 0,
+   "bbox": [
+    3.0,
+    5.8,
+    563.6,
+    788.4
+   ],
+   "w": 2150,
+   "h": 3001,
+   "dpi": 276,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2: Energy and forces RMSE evaluated on the training and test sets for each UQ ensemble model.",
+   "rotated_deg": 0,
+   "bbox": [
+    3.0,
+    5.8,
+    565.2,
+    822.3
+   ],
+   "w": 2062,
+   "h": 2995,
+   "dpi": 264,
+   "src": "3501d83b-80._Comparative_study_of_ensemblebased_uncertainty_quantification_methods_for_neural_network_interatomic_potentials.pdf",
+   "blank": 0.891
+  }
+ ]
+}

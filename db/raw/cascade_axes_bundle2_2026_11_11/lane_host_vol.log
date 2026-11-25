@@ -1,0 +1,12 @@
+종 1개 x 상대 3개 = 3 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/838 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 838/838 [00:00<00:00, 11755273.42it/s]
+[mp_api] 838 entries in Cl-Li-Ni-O-P-S
+[1/1] HOST       vs LNO_half -0.6194 (0 V)  (10s)
+Retrieving ThermoDoc documents:   0%|          | 0/838 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 838/838 [00:00<00:00, 11158180.17it/s]
+[mp_api] 838 entries in Cl-Li-Ni-O-P-S
+[1/1] HOST       vs LNO_full -0.4252 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 107/107 [00:00<00:00, 2858538.39it/s]
+[mp_api] 107 entries in Cl-Li-P-S
+[1/1] HOST       vs Li       -0.5415 (0 V)  (1s)
+
+→ /data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_11/host_vol.jsonl

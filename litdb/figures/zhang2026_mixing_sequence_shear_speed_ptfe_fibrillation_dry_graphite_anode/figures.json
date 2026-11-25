@@ -1,0 +1,1306 @@
+{
+ "slug": "zhang2026_mixing_sequence_shear_speed_ptfe_fibrillation_dry_graphite_anode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+  "559ad740-Sup_Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 9,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Schematic illustration of the preparation process for dry-processed graphite electrodes; (b) TSM process; (c) OSM process.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    77.6,
+    507.5,
+    424.4
+   ],
+   "w": 1745,
+   "h": 1450,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.704,
+   "recrop": "tool crop started at the page top and carried the grey 'Journal Pre-proof' page-header band — re-rendered at 300 dpi from the embedded raster's placement rectangle (+2 pt) → ink trim → uniform 6 pt margin; caption excluded (tool convention); the faint diagonal pre-proof watermark is part of the page and stays (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "공정 그림: 건식 혼합 → 80 °C 롤 압착 (자립막) → 100 °C 열 라미네이트 · (b) TSM = 흑연 + Super P 먼저 → PTFE 추가 → 고속 전단 · (c) OSM = 셋 한꺼번에 예비 혼합 → 고속 전단 · 5000 / 10000 / 15000 rpm (그림 안 범례 'Super P').",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 13,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. SEM images and EDS mappings of the mixed powders: (a–c) TSM-5000, TSM-10000, and TSM-15000; (d–f) OSM-5000, OSM-10000, and OSM-15000, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    75.8,
+    507.4,
+    505.0
+   ],
+   "w": 1698,
+   "h": 1784,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.334,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed body text or lost the part printed on the next page (Fig. 7 '(b) Voltage-capacity curves.' is on PDF p.25) (2026-11-23, litdb-curator)",
+   "recrop": "tool crop started at the page top and carried the grey 'Journal Pre-proof' page-header band — re-rendered at 300 dpi from the embedded raster's placement rectangle (+2 pt) → ink trim → uniform 6 pt margin; caption excluded (tool convention); the faint diagonal pre-proof watermark is part of the page and stays (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "혼합 분말 SEM (눈금 100 µm) + F Kα1,2 EDS 지도 — F 덩어리: TSM 모든 속도 · OSM-5000 · OSM-15000 · 고른 F = OSM-10000 (정성 · 정량 지표 없음).",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 15,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Surfaces of the graphite electrodes and its high-magnification SEM images: (a–c) and (d–f) for TSM-5000, TSM-10000, TSM-15000; (g–i) and (j–l) for OSM-5000, OSM-10000, OSM-15000, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    74.8,
+    507.4,
+    474.3
+   ],
+   "w": 1737,
+   "h": 1676,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.372,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed body text or lost the part printed on the next page (Fig. 7 '(b) Voltage-capacity curves.' is on PDF p.25) (2026-11-23, litdb-curator)",
+   "recrop": "tool crop started at the page top and carried the grey 'Journal Pre-proof' page-header band — re-rendered at 300 dpi from the embedded raster's placement rectangle (+2 pt) → ink trim → uniform 6 pt margin; caption excluded (tool convention); the faint diagonal pre-proof watermark is part of the page and stays (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "압연 자립막 윗면 SEM (50 µm · 5 µm) — 섬유화 판정은 그림 위 화살표 글자 ('Insufficient fibrillation' · 'Agglomerate' · 'PTFE nanofiber') 뿐 · 섬유 지름 · 길이 숫자 없음.",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 17,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Contact angle for dry graphite electrodes: (a) TSM electrodes, (b) OSM electrodes; Macroscopic surface morphology of the dry-processed electrodes by AFM tests (c) TSM electrodes, (d) OSM electrodes, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    74.7,
+    508.1,
+    426.6
+   ],
+   "w": 1758,
+   "h": 1478,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.704,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed body text or lost the part printed on the next page (Fig. 7 '(b) Voltage-capacity curves.' is on PDF p.25) (2026-11-23, litdb-curator)",
+   "recrop": "tool crop started at the page top and carried the grey 'Journal Pre-proof' page-header band — re-rendered at 300 dpi from the embedded raster's placement rectangle (+2 pt) → ink trim → uniform 6 pt margin; caption excluded (tool convention); the faint diagonal pre-proof watermark is part of the page and stays (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "젖음각 (t = 0 · 1 s, 각 위 인쇄값) + AFM 20 × 20 µm 표면 (색 눈금 ±70 nm (OSM-10000) ~ ±0.6 µm (TSM-15000)).",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 19,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Electrical and mechanical analysis of the dry graphite electrodes: (a) Powder resistivity; (b) Electrode film resistivities; (c) Maximum tensile force.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    563.1,
+    511.4,
+    703.4
+   ],
+   "w": 1782,
+   "h": 585,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.915,
+   "mpm_note_ko": "(a) 분말 저항률 5–35 MPa (누른 채 · 15 s 유지) (b) 4 탐침 막 저항률 다섯 점 (c) 인장 힘–변위 (120 × 25 mm) — 수치 판독 = digitized.csv.",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 22,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Electrochemical performance of coin cells: (a) Rate performance; (b) Long-term cycling performance.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    490.5,
+    514.4,
+    684.4
+   ],
+   "w": 1795,
+   "h": 809,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.86,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed body text or lost the part printed on the next page (Fig. 7 '(b) Voltage-capacity curves.' is on PDF p.25) (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "코인 반쪽 셀 (Li 금속 · 1 M LiPF6 EC:DEC) — (a) 0.1 → 1 C 율속 (각 4 사이클) (b) 0.1 C 수명 · 셀마다 끝난 사이클이 26–83 으로 다르다 [판독].",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 24,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Electrochemical performance of pouch cells: (a) Long-term cycling performance at 0.2 C; (b) Voltage-capacity curves.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.9,
+    399.6,
+    510.1,
+    727.2
+   ],
+   "w": 1760,
+   "h": 1367,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.915,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed body text or lost the part printed on the next page (Fig. 7 '(b) Voltage-capacity curves.' is on PDF p.25) (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "건식 NCM811 ‖ OSM-10000 흑연 단층 파우치 (0.2 C · 3.0–4.3 V) — 200 사이클 84.9 % = 최대 (≈20 사이클 ≈191.5 mAh) 기준으로 맞는다 [판독] · (b) 세로축 'vs. Li/Li+' 표기는 전셀에 맞지 않는다.",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure S1 Electrode film folding experiment",
+   "rotated_deg": 0,
+   "bbox": [
+    83.9,
+    88.9,
+    511.4,
+    307.0
+   ],
+   "w": 1782,
+   "h": 909,
+   "dpi": 300,
+   "src": "559ad740-Sup_Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.59,
+   "mpm_note_ko": "막 접기 시험 사진 (접기 → 펼침) — OSM-10000 만 금 · 갈라짐 없이 펴짐 (정성).",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table S1 Surface roughness of electrodes prepared by TSM and OSM",
+   "rotated_deg": 0,
+   "bbox": [
+    86.0,
+    308.0,
+    509.0,
+    583.0
+   ],
+   "w": 1784,
+   "h": 1162,
+   "dpi": 300,
+   "src": "559ad740-Sup_Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.943,
+   "recrop": "tool crop ran on into the caption and first two rows of Table S2 — re-cut to Table S1 only (caption + rules, SI p.2 y 308–583 pt) at 300 dpi → ink trim → 6 pt margin (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "AFM 표면 높이 표준편차 (= Rq 꼴) · 최대 · 최소 (nm) — OSM-10000 35.292 nm 가 가장 낮다.",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table S2 Average sheet resistance and variance by TSM and OSM",
+   "rotated_deg": 0,
+   "bbox": [
+    86.0,
+    605.0,
+    509.0,
+    760.0
+   ],
+   "w": 1779,
+   "h": 1200,
+   "dpi": 300,
+   "src": "559ad740-Sup_Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "blank": 0.942,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      86.0,
+      605.0,
+      509.0,
+      760.0
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      86.0,
+      74.5,
+      509.0,
+      204.0
+     ]
+    }
+   ],
+   "recrop": "tool crop held Table S1 + only the first two rows of Table S2 — Table S2 is split over SI p.2 (caption, header, OSM-5000/10000) and SI p.3 (OSM-15000, TSM-5000/10000/15000): both parts re-cut at 300 dpi and stacked; the thick rule between OSM-10000 and OSM-15000 is the printed page-break rule of p.2 (p.3 top rule dropped) (2026-11-23, litdb-curator)",
+   "mpm_note_ko": "막 저항률 평균 · 분산 (모분산 ÷n) — ⚠ TSM-10000 ↔ TSM-15000 행 값이 본문 · 그림 5b 와 뒤바뀜 · OSM-10000 분산 0.1631 = OSM-5000 과 같은 값 (그림 5b 판독 ≈0.022) · OSM-10000 평균 3.4254 ↔ 본문 3.46 · 그림 ≈3.46.",
+   "viewed": true
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 9,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1(a) — dry electrode preparation: dry mixing → lamination & roll pressing (heated rolls) → thermal lamination onto foil (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    92.5,
+    87.8,
+    502.5,
+    243.2
+   ],
+   "w": 1745,
+   "h": 689,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "공정 세 단계 그림 (롤 온도 · 속도 숫자는 본문: 80 °C · 0.5 / 0.8 m/min · 100 °C · 0.4 m/min)."
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 9,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1(b) — two-step mixing (TSM): pre-mix Gr+SP → add PTFE → high-speed shearing; sketches at 5000/10000/15000 rpm (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    97.7,
+    247.1,
+    492.7,
+    334.1
+   ],
+   "w": 1680,
+   "h": 405,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "TSM 순서도 — 예비 혼합에 PTFE 없음 · 그림 원 안은 개념 스케치 (측정 아님)."
+  },
+  {
+   "key": "f1c",
+   "kind": "figure",
+   "label": "1c",
+   "page": 9,
+   "file": "fig_1c.png",
+   "caption": "Fig. 1(c) — one-step mixing (OSM): pre-mix Gr+PTFE+SP → high-speed shearing; sketches at 5000/10000/15000 rpm (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    97.7,
+    338.0,
+    492.7,
+    422.4
+   ],
+   "w": 1680,
+   "h": 402,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "OSM 순서도 — 10000 rpm 원 안의 섬유망은 개념 스케치."
+  },
+  {
+   "key": "f3d",
+   "kind": "figure",
+   "label": "3d",
+   "page": 15,
+   "file": "fig_3d.png",
+   "caption": "Fig. 3(d) — TSM-5000 film surface, 5 µm bar, arrow 'Agglomerate' (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    98.7,
+    187.5,
+    227.4,
+    279.1
+   ],
+   "w": 578,
+   "h": 421,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "TSM-5000 고배율: 덩어리 + 굵은 PTFE 다발 (정성)."
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 15,
+   "file": "fig_3e.png",
+   "caption": "Fig. 3(e) — TSM-10000 film surface, 5 µm bar, arrow 'Insufficient fibrillation' (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    237.5,
+    187.5,
+    366.6,
+    279.1
+   ],
+   "w": 578,
+   "h": 421,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "TSM-10000: 섬유 다발은 보이나 PTFE 덩어리 남음 (본문 인쇄 p.13)."
+  },
+  {
+   "key": "f3f",
+   "kind": "figure",
+   "label": "3f",
+   "page": 15,
+   "file": "fig_3f.png",
+   "caption": "Fig. 3(f) — TSM-15000 film surface, 5 µm bar, arrows 'Agglomerate' / 'Insufficient fibrillation' (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    376.1,
+    187.5,
+    505.4,
+    279.1
+   ],
+   "w": 581,
+   "h": 433,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "TSM-15000: 덩어리 · 섬유화 부족 (정성)."
+  },
+  {
+   "key": "f3j",
+   "kind": "figure",
+   "label": "3j",
+   "page": 15,
+   "file": "fig_3j.png",
+   "caption": "Fig. 3(j) — OSM-5000 film surface, 5 µm bar, arrows 'Insufficient fibrillation' / 'Agglomerate' (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    99.3,
+    379.3,
+    226.4,
+    472.3
+   ],
+   "w": 574,
+   "h": 438,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "OSM-5000: 짧은 섬유 조금 · 도전재 덩어리 (본문 인쇄 p.13)."
+  },
+  {
+   "key": "f3k",
+   "kind": "figure",
+   "label": "3k",
+   "page": 15,
+   "file": "fig_3k.png",
+   "caption": "Fig. 3(k) — OSM-10000 film surface, 5 µm bar, arrow 'PTFE nanofiber' (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    236.6,
+    379.3,
+    366.2,
+    472.3
+   ],
+   "w": 586,
+   "h": 437,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ OSM-10000 섬유망 — 판독: 5 µm = 133 원래 화소 (37.6 nm/px) · 섬유 밝기 반치폭 중앙 ≈65 nm (해상도 한계 · 상한 감각) · 보이는 섬유 토막 ≥ ≈8 µm (시야 밖으로 이어짐) — 원문 숫자 없음."
+  },
+  {
+   "key": "f3l",
+   "kind": "figure",
+   "label": "3l",
+   "page": 15,
+   "file": "fig_3l.png",
+   "caption": "Fig. 3(l) — OSM-15000 film surface, 5 µm bar, arrow 'Agglomerate' (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    376.1,
+    379.3,
+    505.4,
+    472.3
+   ],
+   "w": 578,
+   "h": 430,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "OSM-15000: 덩어리 재출현 · SP 가 PTFE 입자를 덮음 (본문 인쇄 p.14) — 재응집 기전은 저자도 추측이라 적음."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 17,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — contact angle of TSM electrodes at t = 0 s and 1 s (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    94.4,
+    83.3,
+    300.0,
+    234.6
+   ],
+   "w": 900,
+   "h": 666,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "TSM 젖음각 36.95 → 34.70° · 37.04 → 33.07° · 41.96 → 34.87° (그림 안 인쇄 = 본문 인쇄 p.15)."
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 17,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — contact angle of OSM electrodes at t = 0 s and 1 s (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    83.3,
+    506.1,
+    234.6
+   ],
+   "w": 907,
+   "h": 667,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "OSM 젖음각 36.95 → 36.50° · 25.11 → 20.76° · 30.93 → 28.01° — OSM-5000 첫 값이 TSM-5000 과 같은 36.95° (좌우 각 판독 35.9 · 38.0 ↔ 38.1 · 35.8 — 우연 일치인지 [미확인])."
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 17,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — AFM 3D surface maps (20 × 20 µm) of TSM-5000/10000/15000 (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    95.7,
+    237.9,
+    504.8,
+    320.7
+   ],
+   "w": 1721,
+   "h": 390,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "TSM AFM 높이 색 눈금 ±420 nm · ±350 nm · ±0.6 µm."
+  },
+  {
+   "key": "f4d",
+   "kind": "figure",
+   "label": "4d",
+   "page": 17,
+   "file": "fig_4d.png",
+   "caption": "Fig. 4(d) — AFM 3D surface maps (20 × 20 µm) of OSM-5000/10000/15000 (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    95.7,
+    324.0,
+    504.8,
+    417.4
+   ],
+   "w": 1717,
+   "h": 440,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "OSM AFM 높이 색 눈금 ±485 nm · ±70 nm · ±255 nm — 표 S1 Rq 와 같은 순서."
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 19,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) — powder resistance/resistivity (Ω·cm) of the mixed powders vs applied pressure 5–35 MPa (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    99.0,
+    574.0,
+    228.7,
+    696.8
+   ],
+   "w": 583,
+   "h": 537,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 분말 저항률 (누른 채 · 15 s 유지) 판독: 5 MPa 에서 OSM-10000 ≈24 · OSM-15000 ≈41 · OSM-5000 ≈45 · TSM-10000 ≈61 · TSM-5000 ≈92 · TSM-15000 ≈165 Ω·cm → 20 MPa ≈6–24 → 35 MPa ≈0–6 (축 이름 'resistance' · 단위 Ω·cm)."
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 19,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — in-plane four-probe resistivity (Ω·cm) of the electrode films at five sample points; broken y-axis (≈9.8–13) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    228.7,
+    574.0,
+    355.8,
+    696.8
+   ],
+   "w": 579,
+   "h": 533,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 막 저항률 다섯 점 판독 → 평균 · 모분산이 표 S2 와 맞는지 대조 (digitized.csv): TSM-10000 ≈14.04 · TSM-15000 ≈15.95 (표 S2 와 이름 뒤바뀜) · OSM-10000 ≈3.46 · 분산 ≈0.022."
+  },
+  {
+   "key": "f5c",
+   "kind": "figure",
+   "label": "5c",
+   "page": 19,
+   "file": "fig_5c.png",
+   "caption": "Fig. 5(c) — tensile force (N) vs displacement (mm) of the free-standing films (120 mm × 25 mm) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    355.8,
+    574.0,
+    486.1,
+    696.8
+   ],
+   "w": 589,
+   "h": 539,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 인장 최대 힘 (인쇄) 0.644 · 0.869 · 0.647 (TSM) · 0.798 · 1.112 · 0.94 N (OSM) · 판독 봉우리 변위 ≈5.1–5.9 mm (TSM-5000 ≈3.7–3.9 mm) — 힘만 · 응력 · 변형률 없음 (게이지 길이 · 두께 미인쇄)."
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 22,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — rate performance of Li-metal half cells, 0.1/0.2/0.5/1/0.2 C (4 cycles each after cycle 1) (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    101.3,
+    502.3,
+    288.0,
+    675.8
+   ],
+   "w": 821,
+   "h": 761,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f6",
+   "manual_crop": "panel of Fig. 6 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 율속 판독: OSM-10000 0.1 C ≈355 (평평) · 0.5 C 236 → 212 (평균 ≈225 = 인쇄 225.88) · 1 C ≈80 (인쇄 80.16) · 다른 셀 0.1 C ≈322–331 · TSM-15000 1 C ≈27–30 mAh/g."
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 22,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6(b) — long-term cycling at 0.1 C: specific capacity (left, 200–500 mAh/g) and Coulomb efficiency (right) (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    288.0,
+    502.3,
+    504.1,
+    675.8
+   ],
+   "w": 943,
+   "h": 766,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f6",
+   "manual_crop": "panel of Fig. 6 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 0.1 C 수명 판독: OSM-10000 ≈355 평평 (≈68 사이클) → 83 사이클 ≈277 (= 77.96 %) · TSM-15000 26 사이클 ≈263 (= 78.6 %) · 나머지 ≈65–74 사이클에서 끝 · 세로축 200 부터 (차이 과장)."
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 24,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(a) — pouch full cell (dry NCM811 ‖ OSM-10000 graphite) discharge capacity (mAh) and Coulombic efficiency vs cycle, CC-CV/CC, 3.0–4.3 V, 0.2 C (x-axis title 'Cycle number' left out — it shares a row with the '(b)' label of 7b; tick labels kept) (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    146.1,
+    407.2,
+    461.9,
+    538.0
+   ],
+   "w": 1346,
+   "h": 569,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f7",
+   "manual_crop": "panel of Fig. 7 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 파우치 판독: 1 사이클 ≈179 → 최대 ≈191.5 (≈20) → 200 사이클 ≈162.7 mAh · 162.7/191.5 = 0.850 (인쇄 84.9 %) · 첫 사이클 대비 0.909 · 첫 CE ≈78 %."
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 24,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — voltage–capacity curves of the pouch cell at cycles 2, 20, 50, 80, 110, 140, 170, 200 (panel label '(b)' left out — it shares a row with the x-title of 7a) (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    167.4,
+    549.8,
+    461.9,
+    720.2
+   ],
+   "w": 1129,
+   "h": 743,
+   "dpi": 300,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "panel_of": "f7",
+   "manual_crop": "panel of Fig. 7 — box measured on the embedded raster in native pixels (white gaps between panels) → mapped to page points through the image placement rectangle → rendered at 300 dpi → ink trim → uniform 6 pt margin; panel label kept unless stated, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전압–용량 곡선 2 → 200 사이클 ≈192 → ≈163 mAh · 세로축 'vs. Li/Li+' 는 전셀 표기 오류."
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-fabrication",
+   "page": 8,
+   "file": "txt_p6_fabrication.png",
+   "caption": "PDF p.8 (printed p.6) §2.1 fabrication: graphite : conductive agent : PTFE = 95:3:2; TSM pre-mix 2000 rpm 10 min, PTFE then 2 min at 5000/10000/15000 rpm; OSM all three together, same procedure; calender 80 °C, rolls 0.5 / 0.8 m/min; thermal lamination on carbon-coated Cu at 100 °C, 0.4 m/min; 15.4 mg cm-2 active, 90 µm.",
+   "rotated_deg": 0,
+   "w": 2391,
+   "h": 2088,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    142.4,
+    513.5,
+    509.9
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 조성 95 : 3 : 2 · 혼합 순서 · 속도 · 시간 · 압연 · 라미네이트 · 부하 · 두께의 근거 (§2.1 전문)."
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-powder-methods",
+   "page": 9,
+   "file": "txt_p7_powder_methods.png",
+   "caption": "PDF p.9 (printed p.7) §2.2 powder characterization: sampling at four locations (top, bottom, left, right) of the mixer chamber; SEM-EDS 20 kV / 20 µA; powder resistivity tester 5–35 MPa, 15 s hold per point, 'to simulate the progressive densification … from a loose to a highly compacted state'.",
+   "rotated_deg": 0,
+   "w": 2376,
+   "h": 2539,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    516.9,
+    510.6,
+    767.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin; parts from two PDF pages stacked (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "분말 표본 네 자리 · SEM-EDS 조건 · 분말 저항률 5–35 MPa · 15 s 유지 (누른 채 측정) 의 근거.",
+   "parts": [
+    {
+     "page": 9,
+     "bbox": [
+      87.9,
+      516.9,
+      510.6,
+      767.2
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      87.9,
+      75.8,
+      510.5,
+      255.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-electrode-methods",
+   "page": 10,
+   "file": "txt_p8_electrode_methods.png",
+   "caption": "PDF p.10 (printed p.8) §2.3 electrode characterization: SEM 5 kV / 10 µA for fibrillation degree; AFM 20 × 20 µm; four-probe sheet resistance; dynamic contact angle; universal testing machine tensile tests on 120 mm × 25 mm film samples, repeated three times.",
+   "rotated_deg": 0,
+   "w": 2376,
+   "h": 1579,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    298.4,
+    510.5,
+    572.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "섬유화 '정도' 는 SEM 관찰로만 · AFM · 4 탐침 · 젖음각 · 인장 시료 120 × 25 mm · 3 회 반복의 근거."
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-cells",
+   "page": 10,
+   "file": "txt_p8_cells.png",
+   "caption": "PDF p.10 (printed p.8) §2.4 cells: Ø12 mm disks, CR2032, Ar glovebox (H2O, O2 < 0.1 ppm), Li metal counter electrode, 1 M LiPF6 in EC:DEC 1:1 (v/v); single-layer pouch full cell with dry-processed NCM811 cathode, dry room −45 °C dew point (stacking, tab welding, vacuum drying, filling, formation, degassing, grading).",
+   "rotated_deg": 0,
+   "w": 2378,
+   "h": 1730,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    614.7,
+    510.5,
+    748.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin; parts from two PDF pages stacked (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "셀 꼴 (코인 반쪽 셀 · 액체 전해질 · 파우치 전셀 = 건식 NCM811 양극) 의 근거 — 분리막 · 전해액 양 · N/P · 면적 없음.",
+   "parts": [
+    {
+     "page": 10,
+     "bbox": [
+      87.9,
+      614.7,
+      510.5,
+      748.0
+     ]
+    },
+    {
+     "page": 11,
+     "bbox": [
+      87.9,
+      75.8,
+      510.6,
+      232.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-protocol",
+   "page": 11,
+   "file": "txt_p9_protocol.png",
+   "caption": "PDF p.11 (printed p.9) §2.5 testing: 25 °C, NEWARE CT-4000; coin cells rest 24 h; cycling 0.1 C; rate 0.1, 0.2, 0.5, 1 C; 0.01–1.5 V; pouch 0.2 C, 3.0–4.3 V, CC/CV with 0.05 C cut-off.",
+   "rotated_deg": 0,
+   "w": 2383,
+   "h": 1579,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    275.0,
+    510.6,
+    548.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전기화학 시험 조건의 근거 (온도 · 장비 · 율 · 전압 창)."
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-powder-sem",
+   "page": 13,
+   "file": "txt_p11_powder_sem.png",
+   "caption": "PDF p.13 (printed p.11) Fig. 2 discussion: TSM 5000 a few agglomerates, 10000 improved but not uniform, 15000 agglomerates concentrated; OSM 5000 F-rich agglomerates ('shear force insufficient to overcome cohesive forces'), 10000 uniform F distribution, 15000 agglomerates reappear — attributed (may be) to local temperature rise or higher particle surface energy.",
+   "rotated_deg": 0,
+   "w": 2390,
+   "h": 2908,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    606.3,
+    513.5,
+    763.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin; parts from two PDF pages stacked (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "분말 SEM-EDS 의 속도별 판정 (정성) + 고속 재응집 가설의 첫 진술.",
+   "parts": [
+    {
+     "page": 13,
+     "bbox": [
+      87.9,
+      606.3,
+      513.5,
+      763.0
+     ]
+    },
+    {
+     "page": 14,
+     "bbox": [
+      87.9,
+      75.8,
+      513.6,
+      419.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x13a",
+   "kind": "text",
+   "label": "p13-fig3-tsm-osm5000",
+   "page": 15,
+   "file": "txt_p13_fig3_tsm_osm5000.png",
+   "caption": "PDF p.15 (printed p.13) Fig. 3 discussion: TSM-10000 shows a nanoscale PTFE fibrous network but many isolated PTFE agglomerates and local conductive-agent aggregation; OSM-5000 only a small number of short fibrils (insufficient fibrillation), conductive agent as agglomerates on graphite.",
+   "rotated_deg": 0,
+   "w": 2390,
+   "h": 1168,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    551.7,
+    513.5,
+    755.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "섬유화 판정 문장 (TSM-10000 · OSM-5000) — 정량 지표 없음."
+  },
+  {
+   "key": "x14a",
+   "kind": "text",
+   "label": "p14-osm10000-decoupling",
+   "page": 16,
+   "file": "txt_p14_osm10000_decoupling.png",
+   "caption": "PDF p.16 (printed p.14) OSM-10000 (Fig. 3k): uniform dense PTFE nanofibrous network, no large PTFE-SP agglomerates; OSM-15000 (Fig. 3l): SP wraps PTFE particles, much PTFE still particulate; 'superiority … stems from the decoupling of spatial dispersion and mechanical fibrillation' — 10 min at 2000 rpm 'insufficient to induce PTFE fibrillation'.",
+   "rotated_deg": 0,
+   "w": 2377,
+   "h": 2858,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    75.8,
+    510.6,
+    583.6
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 저자 기전 = '분산 (2000 rpm 10 분) 과 섬유화 (고속 2 분) 의 분리' — 2000 rpm 에서 섬유화가 없다는 것은 주장 (예비 혼합만 한 시료 SEM 없음)."
+  },
+  {
+   "key": "x14b",
+   "kind": "text",
+   "label": "p14-reagglomeration-speculative",
+   "page": 16,
+   "file": "txt_p14_reagglomeration_speculative.png",
+   "caption": "PDF p.16 (printed p.14) High-speed re-agglomeration 'currently speculated' to be associated with excessive shear (local temperature rise / surface energy); mixer chamber cannot be monitored in real time; 'requires further experimental validation … using advanced in situ characterization'.",
+   "rotated_deg": 0,
+   "w": 2377,
+   "h": 1038,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    566.6,
+    510.5,
+    747.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "고속 재응집 기전 = 저자 스스로 추측 · 온도 측정 없음."
+  },
+  {
+   "key": "x16a",
+   "kind": "text",
+   "label": "p16-osm10000-wetting",
+   "page": 18,
+   "file": "txt_p16_osm10000_wetting.png",
+   "caption": "PDF p.18 (printed p.16) OSM-10000 contact angle 25.11° → 20.76° within 1 s; decay 'mainly driven by bulk liquid absorption'; combined with rate data this 'suggests' a continuous internal capillary network.",
+   "rotated_deg": 0,
+   "w": 2375,
+   "h": 1826,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    122.6,
+    510.6,
+    443.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "젖음각 감소 → 내부 모세관망 '시사' (추론 · 기공 측정 없음)."
+  },
+  {
+   "key": "x18a",
+   "kind": "text",
+   "label": "p18-powder-resistivity",
+   "page": 20,
+   "file": "txt_p18_powder_resistivity.png",
+   "caption": "PDF p.20 (printed p.18) Powder resistivity (Fig. 5a), four sampling locations: TSM-10000 lowest initial value in TSM; OSM group lower overall; OSM-10000 lowest initial value and small change with pressure — attributed to in-situ PTFE elongation anchoring SP.",
+   "rotated_deg": 0,
+   "w": 2376,
+   "h": 2858,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    75.8,
+    510.6,
+    583.6
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "분말 저항률 해석 (전자망 연속성 주장) — 네 자리 값을 어떻게 합쳤는지 없음 · 오차 막대 없음."
+  },
+  {
+   "key": "x18b",
+   "kind": "text",
+   "label": "p18-sheet-resistivity",
+   "page": 20,
+   "file": "txt_p18_sheet_resistivity.png",
+   "caption": "PDF p.20 (printed p.18) Four-probe sheet resistivity at five equally spaced points (Fig. 5b): TSM-15000 15.96, TSM-5000 8.02, TSM-10000 14.05 Ω·cm; OSM-5000 6.19, OSM-10000 3.46, OSM-15000 7.18 Ω·cm.",
+   "rotated_deg": 0,
+   "w": 2376,
+   "h": 1211,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    590.7,
+    510.5,
+    747.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin; parts from two PDF pages stacked (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 막 저항률 인쇄값 (본문) — 표 S2 와 TSM 두 행 이름이 뒤바뀌어 있다 · OSM-10000 3.46 ↔ 표 S2 3.4254.",
+   "parts": [
+    {
+     "page": 20,
+     "bbox": [
+      87.9,
+      590.7,
+      510.5,
+      747.5
+     ]
+    },
+    {
+     "page": 21,
+     "bbox": [
+      87.9,
+      75.8,
+      510.5,
+      115.6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x19a",
+   "kind": "text",
+   "label": "p19-variance-claim",
+   "page": 21,
+   "file": "txt_p19_variance_claim.png",
+   "caption": "PDF p.21 (printed p.19) 'OSM-10000 not only had the lowest average resistance but also exhibited the smallest data fluctuation (variance) in the five-point test … (Table S2)'.",
+   "rotated_deg": 0,
+   "w": 2374,
+   "h": 396,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    239.6,
+    510.5,
+    302.7
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "분산 최소 주장 — 표 S2 에는 OSM-5000 과 같은 0.1631 (그림 판독 ≈0.022 이 주장과 맞다)."
+  },
+  {
+   "key": "x19b",
+   "kind": "text",
+   "label": "p19-tensile-tsm",
+   "page": 21,
+   "file": "txt_p19_tensile_tsm.png",
+   "caption": "PDF p.21 (printed p.19) TSM films brittle (TSM-5000/15000 fractured during handling; TSM-10000 creases and cracks, Fig. S1); maximum tensile force TSM-5000/10000/15000 = 0.644, 0.869, 0.647 N; 'cohesion of the PTFE fibrous network itself was the limiting factor'.",
+   "rotated_deg": 0,
+   "w": 2382,
+   "h": 1080,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    637.5,
+    510.6,
+    747.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin; parts from two PDF pages stacked (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ TSM 인장 최대 힘 인쇄값 (N · 응력 아님).",
+   "parts": [
+    {
+     "page": 21,
+     "bbox": [
+      87.9,
+      637.5,
+      510.6,
+      747.4
+     ]
+    },
+    {
+     "page": 22,
+     "bbox": [
+      87.9,
+      75.8,
+      510.4,
+      138.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x20a",
+   "kind": "text",
+   "label": "p20-tensile-osm",
+   "page": 22,
+   "file": "txt_p20_tensile_osm.png",
+   "caption": "PDF p.22 (printed p.20) OSM films: OSM-5000/15000 brittle with irreversible cracking in folding; OSM-10000 intact after extreme bending; maximum tensile force 0.798, 1.112, 0.94 N; OSM-10000 +27.96 % vs TSM-10000.",
+   "rotated_deg": 0,
+   "w": 2377,
+   "h": 1566,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    146.0,
+    510.6,
+    419.7
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ OSM 인장 최대 힘 인쇄값 · +27.96 % = 1.112/0.869 [카드 산술 일치]."
+  },
+  {
+   "key": "x21a",
+   "kind": "text",
+   "label": "p21-tsm-inference",
+   "page": 23,
+   "file": "txt_p21_tsm_inference.png",
+   "caption": "PDF p.23 (printed p.21) Rate test: TSM-10000 highest among TSM at 0.1/0.2 C and 1 C (51.58 mAh g-1); TSM-15000 retention 78.6 % after only 26 cycles at 0.1 C; 'we infer' SP coats graphite after pre-mixing and later-added PTFE binds preferentially to high-surface-energy carbon black → PTFE-SP agglomerates hard to stretch.",
+   "rotated_deg": 0,
+   "w": 2383,
+   "h": 2338,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    122.6,
+    510.5,
+    536.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ TSM 실패 기전 = 저자 추론 ('we infer') · PTFE–SP 덩어리."
+  },
+  {
+   "key": "x21b",
+   "kind": "text",
+   "label": "p21-osm-rate-cycle",
+   "page": 23,
+   "file": "txt_p21_osm_rate_cycle.png",
+   "caption": "PDF p.23 (printed p.21) OSM-10000 best at all rates; 0.5 C 225.88 and 1 C 80.16 mAh g-1 (+34.3 % and +55.4 % vs TSM-10000); recovers at 0.2 C; 0.1 C cycling 77.96 % after 83 cycles.",
+   "rotated_deg": 0,
+   "w": 2376,
+   "h": 1738,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    637.5,
+    510.5,
+    747.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin; parts from two PDF pages stacked (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ OSM-10000 율속 · 수명 인쇄값 (반쪽 셀).",
+   "parts": [
+    {
+     "page": 23,
+     "bbox": [
+      87.9,
+      637.5,
+      510.5,
+      747.4
+     ]
+    },
+    {
+     "page": 24,
+     "bbox": [
+      87.9,
+      75.8,
+      510.6,
+      255.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x23a",
+   "kind": "text",
+   "label": "p23-pouch-retention",
+   "page": 25,
+   "file": "txt_p23_pouch_retention.png",
+   "caption": "PDF p.25 (printed p.23) Pouch full cell (Fig. 7a), 0.2 C: 84.9 % capacity retention after 200 cycles; Coulombic efficiency climbs after the first cycle and stays at 99.9 %.",
+   "rotated_deg": 0,
+   "w": 2376,
+   "h": 937,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    356.6,
+    510.6,
+    513.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 파우치 200 사이클 84.9 % · CE 99.9 % — 기준 사이클 미서술 (판독상 최대 ≈20 사이클 기준)."
+  },
+  {
+   "key": "x24a",
+   "kind": "text",
+   "label": "p24-limitations",
+   "page": 26,
+   "file": "txt_p24_limitations.png",
+   "caption": "PDF p.26 (printed p.24) Conclusions — limitations: re-agglomeration mechanism speculative (closed mixer cannot be monitored); no quantitative peel strength between dry film and current collector; future: in situ characterization and multiscale simulation of coupled thermal, mechanical and fibrillation behaviour; extend to high-Ni cathodes, Si anodes and solid-state systems, pilot scale.",
+   "rotated_deg": 0,
+   "w": 2377,
+   "h": 1580,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    380.5,
+    510.6,
+    654.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "저자 한계 (재응집 추측 · 박리 강도 없음) · 앞으로 다중 척도 모사 · 고체 전지 확장 — 모두 '해야 한다' 진술."
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-gap-claim",
+   "page": 7,
+   "file": "txt_p5_gap_claim.png",
+   "caption": "PDF p.7 (printed p.5) Introduction gap: dry electrodes improved via binder, additive, component and fibril-morphology work, but 'the deep understandings of dry mixing process of multicomponent powders are still lacking, including the feeding sequence and shear energy input'.",
+   "rotated_deg": 0,
+   "w": 2376,
+   "h": 669,
+   "dpi": 400,
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "bbox": [
+    87.9,
+    426.9,
+    510.6,
+    536.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — rectangle = union of the text-layer row boxes from the first to the last wanted row (+2 pt x · +1.5 pt y, no neighbour rows) → ink trim → uniform 6 pt white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "논문의 새로움 주장 = 투입 순서 · 전단 에너지 입력."
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "1d23ea47-Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "559ad740-Sup_Unveiling_the_Effect_of_Mixing_Sequence_and_Shear_Speed_on_PTFE_Fibrillation_of_Dry-Processed_Graphite_Anodes.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-23) found all 7 main figures + SI Fig. S1 + SI Tables S1–S2 (10 crops). All opened: fig_1–fig_4 carried the grey 'Journal Pre-proof' header band (re-cut from the image rectangle), tab_S1 ran into Table S2 and tab_S2 held Table S1 + half of S2 (re-cut; S2 stacked from SI p.2 + p.3); captions of Fig. 2, 3, 4, 6 had swallowed body text and Fig. 7 lost its second line (cleaned). Hand crops added: 20 panels (1a–c · 3d–f · 3j–l · 4a–d · 5a–c · 6a–b · 7a–b) + 20 evidence paragraphs (400 dpi). The paper has no numbered or inline equations → 0 equation crops.",
+ "note_manual": "Printed inconsistencies visible in the crops: SI Table S2 rows TSM-10000 (15.962 · 0.1950) and TSM-15000 (14.048 · 0.4693) are swapped relative to the main text (TSM-15000 15.96, TSM-10000 14.05 Ω·cm) and to Fig. 5b (digitized means 15.95 grey · 14.04 blue); Table S2 OSM-10000 variance 0.1631 repeats OSM-5000's value (Fig. 5b population variance ≈0.022) and its mean 3.4254 differs from text 3.46 / digitized 3.46; Table S2 'variance' = population variance (÷5) — TSM-5000 digitized 0.718 vs printed 0.7188; unit Ω·cm called 'sheet resistance'/'sheet resistivity'; Fig. 5a axis 'Powder resistance (Ω·cm)'; Fig. 7b y-axis 'Voltage (/V) vs. Li/Li+' for a full cell; OSM-5000 initial contact angle 36.95° equals TSM-5000's (side angles differ); Fig. 6b cells stop at different cycle numbers (26–83) without explanation.",
+ "key_note": "manual keys: f<N> = whole figure · f<N><panel> = panel crop (panel_of) · x<printed page><letter> = evidence paragraph (kind 'text'; file txt_p<printed page>_*.png; two-page ones list 'parts' with PDF page numbers) · tS1/tS2 = SI tables · 'page' fields are PDF page numbers (printed manuscript page = PDF page − 2 in the main PDF; SI pages as in the SI PDF)",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 118,
+  "method": "embedded rasters (≈220 dpi, Origin exports) read at native pixel scale: axes from frame/tick pixels, series by legend colour; Fig. 5b broken axis on both segments; Fig. 3k fibril apparent width from row intensity profiles. Checks: printed tensile peaks 0.869 · 0.647 · 0.798 · 1.112 · 0.94 N ↔ read 0.871 · 0.646 · 0.802 · 1.113 · 0.940; TSM-5000 resistivity mean/variance 8.0206/0.7188 ↔ read 8.02/0.72; OSM-10000 0.5 C / 1 C 225.88 / 80.16 ↔ read ≈225 / ≈80.5 mAh g-1."
+ }
+}

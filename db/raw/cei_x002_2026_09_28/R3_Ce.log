@@ -1,0 +1,58 @@
+chemsys = ['Ce', 'Cl', 'Co', 'Li', 'Mn', 'Ni', 'O', 'P', 'S']
+Retrieving ThermoDoc documents:   0%|          | 0/5024 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  40%|███▉      | 2000/5024 [00:03<00:05, 574.85it/s]Retrieving ThermoDoc documents:  60%|█████▉    | 3000/5024 [00:07<00:05, 379.08it/s]Retrieving ThermoDoc documents:  80%|███████▉  | 4000/5024 [00:11<00:03, 306.38it/s]Retrieving ThermoDoc documents: 100%|█████████▉| 5000/5024 [00:15<00:00, 277.39it/s]Retrieving ThermoDoc documents: 100%|██████████| 5024/5024 [00:16<00:00, 305.49it/s]
+[mp_api] 5024 entries in Ce-Cl-Co-Li-Mn-Ni-O-P-S
+mu_Li(metal) = -1.9089 eV/atom
+
+######## cathode LiCoO2 (LiCoO2) ########
+  V=2.50  base     : -0.6238 eV/atom   0.6835 LiCoO2 + 0.3165 Li5.4P1S4.4Cl1.6 -> 0.8861 Li + 0.6835 CoS2 + 0.3165 Li3PO4 + 0.02532 Li2SO4 + 0.5063 LiCl
+  V=2.50  Ce_x002  : -0.6227 eV/atom   0.3161 Li5.34Ce0.02P1S4.4Cl1.6 + 0.6839 LiCoO2 -> 0.8723 Li + 0.6839 CoS2 + 0.3161 Li3PO4 + 0.02276 Li2SO4 + 0.006321 CeO2 + 0.5057 LiCl
+  V=3.50  base     : -0.8859 eV/atom   0.6732 LiCoO2 + 0.3268 Li5.4P1S4.4Cl1.6 -> 1.405 Li + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.3268 LiPO3 + 0.5229 LiCl
+  V=3.50  Ce_x002  : -0.8835 eV/atom   0.3268 Li5.34Ce0.02P1S4.4Cl1.6 + 0.6732 LiCoO2 -> 1.412 Li + 0.006536 Ce(PO3)4 + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.3007 LiPO3 + 0.5229 LiCl
+  V=4.30  base     : -1.3459 eV/atom   0.5789 LiCoO2 + 0.4211 Li5.4P1S4.4Cl1.6 -> 2.853 Li + 0.1053 CoP4O11 + 0.6737 SCl + 0.4737 CoS2 + 0.2316 S
+  V=4.30  Ce_x002  : -1.3396 eV/atom   0.4193 Li5.34Ce0.02P1S4.4Cl1.6 + 0.5807 LiCoO2 -> 2.82 Li + 0.09644 CoP4O11 + 0.6709 SCl + 0.008386 Ce(PO3)4 + 0.4843 CoS2 + 0.2055 S
+  V=4.50  base     : -1.4677 eV/atom   0.5789 LiCoO2 + 0.4211 Li5.4P1S4.4Cl1.6 -> 2.853 Li + 0.1053 CoP4O11 + 0.6737 SCl + 0.4737 CoS2 + 0.2316 S
+  V=4.50  Ce_x002  : -1.4600 eV/atom   0.4193 Li5.34Ce0.02P1S4.4Cl1.6 + 0.5807 LiCoO2 -> 2.82 Li + 0.008386 Ce(PO3)4 + 0.09644 CoP4O11 + 0.6709 SCl + 0.4843 CoS2 + 0.2055 S
+
+######## cathode NMC811 (LiNi0.8Co0.1Mn0.1O2) ########
+  V=2.50  base     : -0.7098 eV/atom   0.7397 Li1Mn0.1Co0.1Ni0.8O2 + 0.2603 Li5.4P1S4.4Cl1.6 -> 0.7288 Li + 0.07397 Co(NiS2)2 + 0.2603 Li3PO4 + 0.1096 Li2SO4 + 0.1479 Ni3S4 + 0.07397 MnS2 + 0.4164 LiCl
+  V=2.50  Ce_x002  : -0.7089 eV/atom   0.7401 Li1Mn0.1Co0.1Ni0.8O2 + 0.2599 Li5.34Ce0.02P1S4.4Cl1.6 -> 0.7174 Li + 0.07401 Co(NiS2)2 + 0.2599 Li3PO4 + 0.1075 Li2SO4 + 0.148 Ni3S4 + 0.005198 CeO2 + 0.07401 MnS2 + 0.4159 LiCl
+  V=3.50  base     : -0.9853 eV/atom   0.7561 Li1Mn0.1Co0.1Ni0.8O2 + 0.2439 Li5.4P1S4.4Cl1.6 -> 1.683 Li + 0.3634 NiS2 + 0.1951 NiCl2 + 0.07561 CoS2 + 0.04634 Ni(PO3)2 + 0.1951 Li2SO4 + 0.07561 Mn(PO3)2
+  V=3.50  Ce_x002  : -0.9830 eV/atom   0.7553 Li1Mn0.1Co0.1Ni0.8O2 + 0.2447 Li5.34Ce0.02P1S4.4Cl1.6 -> 1.676 Li + 0.004895 CeP2O7 + 0.3665 NiS2 + 0.1958 NiCl2 + 0.07553 CoS2 + 0.04195 Ni(PO3)2 + 0.1929 Li2SO4 + 0.07553 Mn(PO3)2
+  V=4.30  base     : -1.4147 eV/atom   0.6199 Li1Mn0.1Co0.1Ni0.8O2 + 0.3801 Li5.4P1S4.4Cl1.6 -> 2.673 Li + 0.06608 Ni(PO3)2 + 0.06199 MnP4O11 + 0.4298 NiS2 + 0.6082 SCl + 0.0807 SO2 + 0.06199 CoS2
+  V=4.30  Ce_x002  : -1.4080 eV/atom   0.6163 Li1Mn0.1Co0.1Ni0.8O2 + 0.3837 Li5.34Ce0.02P1S4.4Cl1.6 -> 2.665 Li + 0.05325 Ni(PO3)2 + 0.06163 MnP4O11 + 0.4398 NiS2 + 0.6139 SCl + 0.007674 Ce(PO3)4 + 0.07155 SO2 + 0.06163 CoS2
+  V=4.50  base     : -1.5330 eV/atom   0.6091 Li1Mn0.1Co0.1Ni0.8O2 + 0.3909 Li5.4P1S4.4Cl1.6 -> 2.72 Li + 0.03681 NiP4O11 + 0.06091 MnP4O11 + 0.4505 NiS2 + 0.6254 SCl + 0.07166 SO2 + 0.06091 CoS2
+  V=4.50  Ce_x002  : -1.5254 eV/atom   0.6163 Li1Mn0.1Co0.1Ni0.8O2 + 0.3837 Li5.34Ce0.02P1S4.4Cl1.6 -> 2.665 Li + 0.007674 Ce(PO3)4 + 0.06163 MnP4O11 + 0.05325 Ni(PO3)2 + 0.4398 NiS2 + 0.6139 SCl + 0.07155 SO2 + 0.06163 CoS2
+
+══ 산물 인구조사 — 갭(§C) 대상 후보 21 종 ══
+  CoS2              14 회   처음 나온 곳 LiCoO2@2.50V/Ce_x002
+  Li2SO4             8 회   처음 나온 곳 LiCoO2@2.50V/Ce_x002
+  SCl                8 회   처음 나온 곳 LiCoO2@4.30V/Ce_x002
+  LiCl               6 회   처음 나온 곳 LiCoO2@2.50V/Ce_x002
+  NiS2               6 회   처음 나온 곳 NMC811@3.50V/Ce_x002
+  Ce(PO3)4           5 회   처음 나온 곳 LiCoO2@3.50V/Ce_x002
+  Ni(PO3)2           5 회   처음 나온 곳 NMC811@3.50V/Ce_x002
+  Li3PO4             4 회   처음 나온 곳 LiCoO2@2.50V/Ce_x002
+  CoP4O11            4 회   처음 나온 곳 LiCoO2@4.30V/Ce_x002
+  S                  4 회   처음 나온 곳 LiCoO2@4.30V/Ce_x002
+  MnP4O11            4 회   처음 나온 곳 NMC811@4.30V/Ce_x002
+  SO2                4 회   처음 나온 곳 NMC811@4.30V/Ce_x002
+  CeO2               2 회   처음 나온 곳 LiCoO2@2.50V/Ce_x002
+  LiPO3              2 회   처음 나온 곳 LiCoO2@3.50V/Ce_x002
+  Co(NiS2)2          2 회   처음 나온 곳 NMC811@2.50V/Ce_x002
+  Ni3S4              2 회   처음 나온 곳 NMC811@2.50V/Ce_x002
+  MnS2               2 회   처음 나온 곳 NMC811@2.50V/Ce_x002
+  NiCl2              2 회   처음 나온 곳 NMC811@3.50V/Ce_x002
+  Mn(PO3)2           2 회   처음 나온 곳 NMC811@3.50V/Ce_x002
+  CeP2O7             1 회   처음 나온 곳 NMC811@3.50V/Ce_x002
+  NiP4O11            1 회   처음 나온 곳 NMC811@4.50V/base
+  (저장소 회계로 제외: {'Li': 16} — 상이 아니라 전기화학 장부다)
+  ⛔ 이 목록은 **최소 kink 산물**만이다. 다른 kink 의 상은 여기 없다 (카드 G2).
+  ⚠ 기체·홑원소(S·SO₂·PCl₅)는 **안 걸렀다** — 갭 대상인지는 카드·사람이 정한다.
+
+══ 재현 대조 vs db/properties/dopant_iface_Ce_2026_09_16.json ══
+  REPRODUCED · 겹친 칸 8 · 문턱 0.002 eV/atom
+  최대 차 0.000000  (LiCoO2 2.50 V base: -0.62382 → -0.62382)
+  이번에 새로 들어간 조성: Ce_x002
+  ⚠ 옛 파일에만 있는 조성: Ce
+
+→ db/properties/dopant_iface_Ce_x002_2026_09_28.json

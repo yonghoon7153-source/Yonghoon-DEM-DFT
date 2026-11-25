@@ -1,0 +1,92 @@
+{
+ "model_dir": "/data/work/runs/wad_se_pairs_uma_2026_10_01/models/P1_s_outer/B",
+ "model": "P1",
+ "registry": "B",
+ "term": "s_outer",
+ "init_sha256": "443ff7eccd236e73321e23bffafa88f2204617eaf5fa524e79e11d1b31a25b68",
+ "n_atoms": 332,
+ "fixed_n": 108,
+ "lateral_n": 0,
+ "preflight": {
+  "flags": [],
+  "mask_matches_policy": true
+ },
+ "ase": "3.28.0",
+ "fmax_target_eV_A": 0.02,
+ "max_steps": 3000,
+ "optimizer": "fire",
+ "cell_fixed": true,
+ "gpu_guard": {
+  "vram_cap_MiB": 16000.0,
+  "gpu_kill_total_MiB": 45500,
+  "gpu_start_max_MiB": 12000,
+  "start_gate": {
+   "ok": true,
+   "last_MiB": 2052,
+   "waited_s": 0.0,
+   "reason": "합계 2052 ≤ 12000"
+  },
+  "watchdog": "on (합계 > 45500 MiB 면 이 프로세스만 종료 3)"
+ },
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "vram_cap": {
+   "cap_MiB": 16000.0,
+   "device_total_MiB": 48539,
+   "fraction": 0.3296,
+   "⚠": "CUDA 컨텍스트(수백 MiB)는 이 상한 밖이다"
+  },
+  "fairchem.core": "2.19.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/root/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ],
+  "d3": {
+   "impl": "simple-dftd3 (python)",
+   "version": "1.6.0",
+   "method": "PBE",
+   "damping": "d3bj (2체)",
+   "params_expected": {
+    "functional": "PBE",
+    "damping": "BJ",
+    "s6": 1.0,
+    "s8": 0.7875,
+    "a1": 0.4289,
+    "a2": 4.4407,
+    "three_body": false
+   }
+  }
+ },
+ "peak_mem": {
+  "max_reserved_MiB": 2418,
+  "max_allocated_MiB": 1626
+ },
+ "calculator_pbc": [
+  true,
+  true,
+  true
+ ],
+ "calculator_pbc_why": "UMA 는 균일 pbc 만 받는다 · z 영상 간격 ≥ 8 Å > UMA 컷오프 6 Å · QE 와 같은 3축 관례",
+ "steps_taken": 140,
+ "converged_fmax": true,
+ "fmax_free_final_eV_A": 0.0186,
+ "wall_s": 47.0,
+ "relaxed_sha256": "f7cde15f3267dc0fa9c12e3ed240a8d98f4e813eed92b7258bf95fea9c8854eb",
+ "disp_max_A": 1.225,
+ "disp_rms_A": 0.415,
+ "interface_check_flags": [],
+ "energies_raw_log_only": {
+  "E_init_eV": -1293.8158027484076,
+  "E_final_eV": -1296.9466917462787,
+  "⛔": "원출력 기록용 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 (카드 v5 S3 전 예외 규칙)"
+ }
+}

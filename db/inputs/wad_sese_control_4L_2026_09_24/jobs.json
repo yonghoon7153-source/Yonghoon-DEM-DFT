@@ -1,0 +1,103 @@
+{
+ "decisions": [
+  "D-2026-09-23-wad-se-termination-symmetric",
+  "D-2026-09-23-wad-d3-twobody-atm-separate",
+  "D-2026-09-23-wad-sese-alarm-band-v2",
+  "D-2026-09-23-wad-a-prime-scope"
+ ],
+ "structures_manifest_sha256": "2ac898716761be791dce0b013da894f94e225f49f767126cea0df98864e42aa9",
+ "settings": {
+  "n_layers": 4,
+  "vacuum_total_A": 15.0,
+  "k_and_vacuum_status": "출발값 — 수렴 판정이 아니다 (Codex BW Q5). 벌크 k 는 슬랩 면내 밀도와 맞춘다",
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF"
+  },
+  "ecutwfc_Ry": 52.0,
+  "ecutrho_Ry": 520.0,
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655"
+  },
+  "smearing": "gaussian 0.005 Ry",
+  "k_slab": [
+   3,
+   3,
+   1
+  ],
+  "k_bulk": [
+   3,
+   3,
+   3
+  ],
+  "d3": "scf: grimme-d3 · dftd3_version=4 (BJ) · dftd3_threebody=.false. (2체) · relax: vdw_corr='none' (PBE — Pustorino 조건)",
+  "why_52_520": "comp1_V0_k444 구조를 낸 정본 설정 (computational_methods_canonical.md 472행)"
+ },
+ "jobs": [
+  {
+   "dir": "01_bulk_scf",
+   "kind": "bulk",
+   "calc": "scf",
+   "nat": 52,
+   "kpts": [
+    3,
+    3,
+    3
+   ],
+   "pw_in_sha256": "6c0432e684608146d47b4664c406666baad2e7e651b83d45ae0eecbddf76ff43"
+  },
+  {
+   "dir": "02_s_outer_scf",
+   "kind": "slab",
+   "calc": "scf",
+   "nat": 110,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "pw_in_sha256": "33762e26e8042eb3c1c57fc7752123782b4cd4a5e73be1a2788fc3b21d669b47"
+  },
+  {
+   "dir": "02_li_outer_scf",
+   "kind": "slab",
+   "calc": "scf",
+   "nat": 98,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "pw_in_sha256": "cae903c8a6ff421a48a569c13078fab0ed612e4234724f34571c0f2a270fc821"
+  },
+  {
+   "dir": "03_s_outer_relax_pbe",
+   "kind": "slab",
+   "calc": "relax",
+   "nat": 110,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "pw_in_sha256": "2f4fba1cc618e0a842c62c1e28bc356ef7c2df4c2ff97aff3b7f8ebce29ced45"
+  },
+  {
+   "dir": "03_li_outer_relax_pbe",
+   "kind": "slab",
+   "calc": "relax",
+   "nat": 98,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "pw_in_sha256": "667007461eddd40427bfa35ec5e26afb4220f0ae7acd771b567c392460a6eb4d"
+  }
+ ]
+}

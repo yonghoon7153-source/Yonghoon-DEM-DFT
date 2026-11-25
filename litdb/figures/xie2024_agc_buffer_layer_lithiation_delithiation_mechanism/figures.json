@@ -1,0 +1,697 @@
+{
+ "slug": "xie2024_agc_buffer_layer_lithiation_delithiation_mechanism",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+  "xie2024_agc_buffer_lithiation_mechanism_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Experimental temperature–composition phase diagram of the Ag–Li system, redrawn from the data of Freeth and Raynor.[29] b) Crystal structure of phases in the Ag–Li system at room temperature, including (Ag), β-AgLi, γ-brass phases, and (Li). c)The γ-brass structure and its relationship to the BCC structure. The left subplot shows a 3*3*3 supercell containing 54 atoms, scaled from the conventional BCC cubic cell. Atoms located at the body centers of the conventional cube are marked as type 1 (squares), whereas atoms located at the body corners are marked as type 2 (circles). The middle subplot shows the supercell with 52 atoms remaining after removing two atoms at the center and corners of the supercell (red cross). The remaining sites are grouped into four sub-lattices: type A (orange), type B (purple), type C (blue), and type D (green). For visibility, only the relaxing direction of the A2, B2, C1, and D1 atoms are marked in red arrows. The relaxing direction of the other atoms can be found by applying symmetry in the I-43m space group. The right subplot shows the resulting γ-brass structure after relaxation. Polygon clusters formed by atoms on different sub-lattices are marked and shaded with the corresponding colors of their sub-lattices.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    547.0
+   ],
+   "w": 2118,
+   "h": 1987,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.831,
+   "caption_raw": "Figure 1. a) Experimental temperature–composition phase diagram of the Ag–Li system, redrawn from the data of Freeth and Raynor.[29] b) Crystal structure of phases in the Ag–Li system at room temperature, including (Ag), 𝛽-AgLi, 𝛾-brass phases, and (Li). c)The 𝛾-brass structure and its relationship to the BCC structure. The left subplot shows a 3*3*3 supercell containing 54 atoms, scaled from the conventional BCC cubic cell. Atoms located at the body centers of the conventional cube are marked as type 1 (squares), whereas atoms located at the body corners are marked as type 2 (circles). The middle subplot shows the supercell with 52 atoms remaining after removing two atoms at the center and corners of the supercell (red cross). The remaining sites are grouped into four sub-lattices: type A (orange), type B (purple), type C (blue), and type D (green). For visibility, only the relaxing dir",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. DFT computed zero-K formation energy of Ag–Li structures in BCC (red triangles), FCC (green circles), Cu5Zn8 γ-brass (blue diamonds), and other γprototypes (black squares). Convex hulls are shown for all compounds within a structural type, with structures on the convex hulls marked by solid markers. The formation energy of the FCC I41/amd struc- ture, BCC Pm-3m structure at xLi = 0.5, and BCC D03 structure at xLi = 0.75 are marked with arrows.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.1,
+    473.8,
+    550.1,
+    653.6
+   ],
+   "w": 1055,
+   "h": 750,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.897,
+   "caption_raw": "Figure 2. DFT computed zero-K formation energy of Ag–Li structures in BCC (red triangles), FCC (green circles), Cu5Zn8 𝛾-brass (blue diamonds), and other 𝛾prototypes (black squares). Convex hulls are shown for all compounds within a structural type, with structures on the convex hulls marked by solid markers. The formation energy of the FCC I41/amd struc- ture, BCC Pm3m structure at xLi = 0.5, and BCC D03 structure at xLi = 0.75 are marked with arrows.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Formation free energy of Ag–Li BCC (red), FCC (green), and γ(blue) phases as a function of Li content (xLi) at T=200 K (a–b) and 300 K (c–d). (a,c) show free energy functions in the range of xLi = 0 −−1. (b,d) show free energy functions in the range of xLi = 0.6 −−0.7. Predicted phase boundaries are marked with black dashed lines, and the intersections between the free energy curves are marked with black solid lines.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.2,
+    552.9,
+    375.3
+   ],
+   "w": 2118,
+   "h": 1268,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.923,
+   "caption_raw": "Figure 3. Formation free energy of Ag–Li BCC (red), FCC (green), and 𝛾(blue) phases as a function of Li content (xLi) at T=200 K (a–b) and 300 K (c–d). (a,c) show free energy functions in the range of xLi = 0 −−1. (b,d) show free energy functions in the range of xLi = 0.6 −−0.7. Predicted phase boundaries are marked with black dashed lines, and the intersections between the free energy curves are marked with black solid lines.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a)The path of metal-Li free energy (F) during lithiation when undergoing an equilibrium (green arrow) or over-saturation (purple arrow) transformation from the αphase (red curve) to the βphase (blue curve). xα, xβ, and xI represent the solubility limits of α, β, and the intersecting composition of αand βfree energy, respectively. b) Microscopic mechanism for both the equilibrium and over-saturation transformation. c) Free-energy paths assuming that the free energy of phase αwill increase more rapidly when the composition deviates from the minimum free-energy composition, with a sharper free-energy curve (α′, red dashed curve). d) Lithiation potential when comparing the original phase αand the narrowed phase α′. The overpotential of α′ drops below 0 V at the intersecting composition x′_I.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.0,
+    550.1,
+    336.7
+   ],
+   "w": 2118,
+   "h": 1109,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.921,
+   "caption_raw": "Figure 4. a)The path of metal-Li free energy (F) during lithiation when undergoing an equilibrium (green arrow) or over-saturation (purple arrow) transformation from the 𝛼phase (red curve) to the 𝛽phase (blue curve). x𝛼, x𝛽, and xI represent the solubility limits of 𝛼, 𝛽, and the intersecting composition of 𝛼and 𝛽free energy, respectively. b) Microscopic mechanism for both the equilibrium and over-saturation transformation. c) Free-energy paths assuming that the free energy of phase 𝛼will increase more rapidly when the composition deviates from the minimum free-energy composition, with a sharper free-energy curve (𝛼′, red dashed curve). d) Lithiation potential when comparing the original phase 𝛼and the narrowed phase 𝛼′. The overpotential of 𝛼′ drops below 0 V at the intersecting composition x′ I.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Computed lithiation potentials of Ag from equilibrium (blue solid) and over-saturation (black dashed) paths as functions of y in formula AgLiy, calculated at a,b) T=200 K and c,d) T=300 K. (a,c) show the lithiation potentials in y = 0 −5, and (b,d) show the lithiation potentials in y = 5 −25.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    386.7
+   ],
+   "w": 2118,
+   "h": 1318,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.945,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Continuum simulation results of a single particle in the BL under symmetric (ASR(BL/SE) = ASR(BL/CC) = 20 Ω*cm2) and asymmetric interface ASRs (ASR(BL/SE) = 20 Ω*cm2, ASR(BL/CC) = 2 Ω*cm2). a) Simulation setup. A silver particle (green) of diameter d = 40 nm was placed within a BL (grey) of thickness H = 10 μm, and the system was lithiated under a constant current density it = 0.68 mA*cm-2. The Li-ion conductivity of the BL is estimated to be 1 mS*cm-1. b) Simulated electrochemical potential of the Ag particle (black dashed) and the equilibrium bulk potential (blue solid) as functions of lithiation time. c,d) Ratio of Li current flowing into the Ag particle, depositing on the BL/CC and BL/SE interfaces as functions of lithiation time, assuming (c) equal ASRs on the BL/CC and BL/SE interfaces and (d) lower ASR on the BL/CC interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.0,
+    373.5
+   ],
+   "w": 2118,
+   "h": 1264,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.862,
+   "caption_raw": "Figure 6. Continuum simulation results of a single particle in the BL under symmetric (ASR(BL/SE) = ASR(BL/CC) = 20 Ω*cm2) and asymmetric interface ASRs (ASR(BL/SE) = 20 Ω*cm2, ASR(BL/CC) = 2 Ω*cm2). a) Simulation setup. A silver particle (green) of diameter d = 40 nm was placed within a BL (grey) of thickness H = 10 μm, and the system was lithiated under a constant current density it = 0.68 mA*cm-2. The Li-ion conductivity of the BL is estimated to be 1 mS*cm-1. b) Simulated electrochemical potential of the Ag particle (black dashed) and the equilibrium bulk potential (blue solid) as functions of lithiation time. c,d) Ratio of Li current ﬂowing into the Ag particle, depositing on the BL/CC and BL/SE interfaces as functions of lithiation time, assuming (c) equal ASRs on the BL/CC and BL/SE interfaces and (d) lower ASR on the BL/CC interface.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) Volume percentage of Ag–Li alloy in the BL as a function of lithiation time, assuming the same experimental conditions as those in the work of Lee et al.[21] The volume of Ag–Li alloy at varied compositions is estimated from the DFT computations in 2a. b) The mechanism for interface separation between the BL and SE. When the adhesion on the SE side is weaker than that on the CC side, the BL/SE interface separates first and the solid-solution extrudes toward the SE. When the adhesion on the SE side is stronger than that on the CC side, the BL/CC interface separates first and the solid-solution extrudes toward the CC. c) Calculated internal stress as a function of lithiation time in an anode-free setup using LLZO as the SE. d) Calculated evolution of deposited Li layer thickness as a function of the lithiation time on BL/SE and BL/CC interfaces combining electrochemical and mechanical effects.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    403.7
+   ],
+   "w": 2118,
+   "h": 1389,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.772,
+   "caption_raw": "Figure 7. a) Volume percentage of Ag–Li alloy in the BL as a function of lithiation time, assuming the same experimental conditions as those in the work of Lee et al.[21] The volume of Ag–Li alloy at varied compositions is estimated from the DFT computations in 2a. b) The mechanism for interface separation between the BL and SE. When the adhesion on the SE side is weaker than that on the CC side, the BL/SE interface separates ﬁrst and the solid-solution extrudes toward the SE. When the adhesion on the SE side is stronger than that on the CC side, the BL/CC interface separates ﬁrst and the solid-solution extrudes toward the CC. c) Calculated internal stress as a function of lithiation time in an anode-free setup using LLZO as the SE. d) Calculated evolution of deposited Li layer thickness as a function of the lithiation time on BL/SE and BL/CC interfaces combining electrochemical and mech",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a) Schematics of a model interface between the BL and CC with a single 2μm * 2μm tip defect on the CC. The x-axis measures the horizontal distance from the tip center. b)Simulated distribution of voltage (blue, upper panel) and Li current (red, lower panel) on the defected interface. The BL ionic conductivity is set to 1 mS*cm-1 and the ASR is set to 2Ω*cm2. c)Simulated distribution of Li current on the defected interface at varied BL ionic conductivity: 0.1 mS*cm-1(blue), 1 mS*cm-1(black), and 10 mS*cm-1(red). The interfacial ASR is fixed to 2Ω*cm2. d)Simulated distribution of Li current on the defected interface at varied interfacial ASR: 200Ω*cm2 (blue), 20Ω*cm2 (black), and 2Ω*cm2 (red). The ionic conductivity of the BL is fixed to 0.1 mS*cm-1.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.0,
+    406.7
+   ],
+   "w": 2118,
+   "h": 1402,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.877,
+   "caption_raw": "Figure 8. a) Schematics of a model interface between the BL and CC with a single 2μm * 2μm tip defect on the CC. The x-axis measures the horizontal distance from the tip center. b)Simulated distribution of voltage (blue, upper panel) and Li current (red, lower panel) on the defected interface. The BL ionic conductivity is set to 1 mS*cm-1 and the ASR is set to 2Ω*cm2. c)Simulated distribution of Li current on the defected interface at varied BL ionic conductivity: 0.1 mS*cm-1(blue), 1 mS*cm-1(black), and 10 mS*cm-1(red). The interfacial ASR is ﬁxed to 2Ω*cm2. d)Simulated distribution of Li current on the defected interface at varied interfacial ASR: 200Ω*cm2 (blue), 20Ω*cm2 (black), and 2Ω*cm2 (red). The ionic conductivity of the BL is ﬁxed to 0.1 mS*cm-1.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Effect of Ag particles on Li current distribution on a defective BL/CC interface. Simulations were performed imposing a constant average current it=0.68 mA*cm-2 at the top surface. The BL ionic conductivity is fixed at 1 mS*cm-1 and the ASR is fixed at 2 Ω*cm2. a) Schematics of a BL/CC interface having three 2 μm * 2 μm tip defects on the CC with a 50μm distance between peaks. No Ag particles are included. The x-axis measures the horizontal distance from the central tip. b) Simulated current distribution on the x-axis by using the schematics described in (a). c) Schematics of a BL/CC with three tip defects, as described in (a), and two additional 2 μm * 2 μm Ag particles at x = −25 μm and x = 25 μm. d) Simulated current distribution on the x-axis for the geometry in (c). A lithiation driving force of 1 mV (blue) and 2 mV (red) is added to the regions where a Ag particle is present. e) Schematics of a BL/CC with three tip defects, as described in (a), and four additional 1 μm * 1 μm Ag particles at x = −33.3 μm, x = −16.7 μm, x = 16.7 μm, and x = 33.3 μm. f) Simulated current distribution on the x-axis by using the schematics described in (e). A lithiation driving force of 1 mV (blue) and 2 mV (red) is added to the regions where a Ag particle is present.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.2,
+    552.9,
+    447.7
+   ],
+   "w": 2118,
+   "h": 1570,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.75,
+   "caption_raw": "Figure 9. Eﬀect of Ag particles on Li current distribution on a defective BL/CC interface. Simulations were performed imposing a constant average current it=0.68 mA*cm-2 at the top surface. The BL ionic conductivity is ﬁxed at 1 mS*cm-1 and the ASR is ﬁxed at 2 Ω*cm2. a) Schematics of a BL/CC interface having three 2 μm * 2 μm tip defects on the CC with a 50μm distance between peaks. No Ag particles are included. The x-axis measures the horizontal distance from the central tip. b) Simulated current distribution on the x-axis by using the schematics described in (a). c) Schematics of a BL/CC with three tip defects, as described in (a), and two additional 2 μm * 2 μm Ag particles at x = −25 μm and x = 25 μm. d) Simulated current distribution on the x-axis for the geometry in (c). A lithiation driving force of 1 mV (blue) and 2 mV (red) is added to the regions where a Ag particle is present",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 12,
+   "file": "fig_10.png",
+   "caption": "Figure 10. a)Composition–temperature phase diagram of the Zn–Li system, redrawn from Pelton.[63] b)Lithiation potential of Zn as a function of y in formula ZnLiy at T=300 K, computed from a CALPHAD model. Both the equilibrium (blue solid) and over-saturation potentials (black dashed) are plotted. The sub-figure shows the Zn–Li alloy being unable to absorb more Li because of the negative overpotential. c)Composition-temperature phase diagram of the Mg–Li system reproduced from Nayeb et al.[66] d)Lithiation potential of Mg as a function of y in the formula MgLiy at T=300 K computed from a CALPHAD model.[67] Both the equilibrium potential (blue solid) and over-saturation potential (black dashed) are plotted.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.1,
+    372.0
+   ],
+   "w": 2118,
+   "h": 1254,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.934,
+   "caption_raw": "Figure 10. a)Composition–temperature phase diagram of the Zn–Li system, redrawn from Pelton.[63] b)Lithiation potential of Zn as a function of y in formula ZnLiy at T=300 K, computed from a CALPHAD model. Both the equilibrium (blue solid) and over-saturation potentials (black dashed) are plotted. The sub-ﬁgure shows the Zn–Li alloy being unable to absorb more Li because of the negative overpotential. c)Composition-temperature phase diagram of the Mg–Li system reproduced from Nayeb et al.[66] d)Lithiation potential of Mg as a function of y in the formula MgLiy at T=300 K computed from a CALPHAD model.[67] Both the equilibrium potential (blue solid) and over-saturation potential (black dashed) are plotted.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 14,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Proposed microscopic lithiation–delithiation mechanism of Ag/C BL during the first few cycles in the Ag/C BL. Amorphous carbon particles are shown as black and gray circles before and after saturating with Li, respectively Ag-metal particles are drawn as red circles. Ag-rich phases in the Ag–Li mixture are marked as purple circles while the Li-rich solid-solution is colored in pink.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.3,
+    550.1,
+    424.7
+   ],
+   "w": 2118,
+   "h": 1478,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.469,
+   "caption_raw": "Figure 11. Proposed microscopic lithiation–delithiation mechanism of Ag/C BL during the ﬁrst few cycles in the Ag/C BL. Amorphous carbon particles are shown as black and gray circles before and after saturating with Li, respectively Ag-metal particles are drawn as red circles. Ag-rich phases in the Ag–Li mixture are marked as purple circles while the Li-rich solid-solution is colored in pink.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 15,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Primitive structures used for cluster expansions in the BCC, FCC, and the γphase. Ag and Li are allowed to mix on all sites in BCC and FCC, whereas γallows Ag to occur on OT(B) and OH(C) sites only. For visibility, only half of the sites in γare shown. Other sites can be obtained by applying the I-43m symmetry.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    249.3
+   ],
+   "w": 2118,
+   "h": 744,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.869,
+   "caption_raw": "Figure 12. Primitive structures used for cluster expansions in the BCC, FCC, and the 𝛾phase. Ag and Li are allowed to mix on all sites in BCC and FCC, whereas 𝛾allows Ag to occur on OT(B) and OH(C) sites only. For visibility, only half of the sites in 𝛾are shown. Other sites can be obtained by applying the I43m symmetry.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "FIG. S1. (a) Formation energy of structures used to fit CEs (DFT electronic energy only). (b)–(d) The ECIs in the (b) BCC, (c) FCC, (d) γ-Cu5Zn8 prototype cluster expansions. The symbols S, D, T, and Q represent point, pair, triplet and quadruplet clusters, respectively. The zero-point terms (i.e. , the intercept) are shown in the figure legends.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    228.9,
+    544.3,
+    639.7
+   ],
+   "w": 1994,
+   "h": 1713,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.913,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 8,
+   "file": "fig_S2.png",
+   "caption": "FIG. S2. Intermediate ground-state structures used to calculate vibrational free energy. (a) BCC β-AgLi structure at x=0.5 in B2(CsCl-like) ordering; (b) BCC structure at x=0.75 with D03(BiF3- like) ordering; (c) The FCC I41/amd structure at x=0.5; (d) FCC AgLi3 structure in D022 ordering at x=0.75; (e) γ-brass structure with all B(OT) sites occupied by Ag and all other sites occupied by Li at x=11/13.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    207.2,
+    544.3,
+    581.2
+   ],
+   "w": 1993,
+   "h": 1559,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.769,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3.png",
+   "caption": "FIG. S3. Vibrational free energy of BCC, FCC and γ-brass configurations interpolated as functions of Li content (xLi) at T=300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    321.8
+   ],
+   "w": 1993,
+   "h": 1066,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.957,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "FIG. S4. Hypothetical Ag–Li γ-brass structure in Fe4Zn9 ordering structurally relaxes to Cu5Zn8 ordering. Ag atoms originally on IT(A) sites move away to OT(B) sites, and Li atoms on OT(B) sites move inward to IT(A) sites",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    260.1
+   ],
+   "w": 1993,
+   "h": 809,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.781,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "FIG. S5. Total free energy difference between BCC and γ (F(BCC) −F(γ)) at increasing tem- peratures with (blue) and without (green) phonon correction, at (a)xLi = 8/13 and (b)xLi = 0.75.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    355.0,
+    544.2,
+    556.1
+   ],
+   "w": 1993,
+   "h": 839,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.909,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "FIG. S6. Li content (xLi) as a function of Li chemical potential (∆µLi) at varied temperatures, plotted from MC simulation results in a semi-grand ensemble on BCC lattice. The D03 structure corresponding to the plateau at xLi = 0.75 is provided in the figure.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    340.1
+   ],
+   "w": 1993,
+   "h": 1143,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.919,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "FIG. S7. Simulated X-ray powder diffraction (XRD) patterns computed from the BCC (red) and γ-brass (blue) snapshot structures taken from MC simulations at xLi = 0.75, T=300 K. Possibly overlapping peaks are marked with their corresponding 2θ values in both phases.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    386.0
+   ],
+   "w": 1994,
+   "h": 1335,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.947,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (full-resolution PNG)"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Experimentally observed prototypes of γ-brass structures, extracted from the Materials Project and the ICSD database. F&R represents Freeth and Raynor.[29]",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    70.4,
+    549.1,
+    193.9
+   ],
+   "w": 2109,
+   "h": 515,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.932,
+   "caption_raw": "Table 1. Experimentally observed prototypes of 𝛾-brass structures, extracted from the Materials Project and the ICSD database. F&R represents Freeth and Raynor.[29]",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet; values taken from the PDF text layer)"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 13,
+   "file": "tab_2.png",
+   "caption": "Table 2. Ratio (R) of volume expansion in various metals at the maximum- Li-content phase, measured at room temperature and 1 atm. Molar vol- umes of the metal–Li alloys and the pure metal were computed from XRD data, as referenced. The data of Pt is marked with “?” as the phase PtLi5 has not been confirmed.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    70.8,
+    296.8,
+    340.3
+   ],
+   "w": 1047,
+   "h": 1124,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.937,
+   "caption_raw": "Table 2. Ratio (R) of volume expansion in various metals at the maximum- Li-content phase, measured at room temperature and 1 atm. Molar vol- umes of the metal–Li alloys and the pure metal were computed from XRD data, as referenced. The data of Pt is marked with “?” as the phase PtLi5 has not been conﬁrmed.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet; values taken from the PDF text layer)"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 15,
+   "file": "tab_3.png",
+   "caption": "Table 3. Detailed information of CE models, including cluster cutoffdiameters, number of fitted clusters (Nc), number of training structures (Ns), RMSE and CV for BCC, FCC, and γ.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    631.9,
+    551.9,
+    719.1
+   ],
+   "w": 2110,
+   "h": 364,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "blank": 0.921,
+   "caption_raw": "Table 3. Detailed information of CE models, including cluster cutoﬀdiameters, number of ﬁtted clusters (Nc), number of training structures (Ns), RMSE and CV for BCC, FCC, and 𝛾. Model Cluster cutoﬀs [Å] Nc Ns 𝛼 RMSE [meV*at.−1] CV [meV*at.−1] BCC 8.0(pair); 7.0(triplet); 4.5(quadruplet) 25 64 3.8 × 10−6 3.3 4.8 FCC 8.0(pair); 7.0(triplet); 4.5(quadruplet) 32 134 9.5 × 10−7 1.5 2.5 𝛾 8.0(pair); 7.0(triplet) 38 96 6.1 × 10−5 0.5 0.6",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet; values taken from the PDF text layer)"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "TABLE S1: Detailed information of clusters in BCC cluster expansion. The shape of a cluster is expressed as the clus- ter diameter(the longest distance between sites), the second longest distance between sites, and the second longest dis- tance between sites.",
+   "rotated_deg": 0,
+   "bbox": [
+    118,
+    78,
+    492,
+    650
+   ],
+   "w": 1559,
+   "h": 2859,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.95,
+   "auto_bbox": [
+    124.0,
+    83.6,
+    484.6,
+    733.8
+   ],
+   "auto_page": 5,
+   "recrop_regions": [
+    {
+     "page": 4,
+     "bbox": [
+      118,
+      78,
+      492,
+      650
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      150,
+      82,
+      456,
+      190
+     ]
+    }
+   ],
+   "recrop": "2026-11-24 litdb-curator: BCC table rows 0-24 sit on SI p.4 with no caption; caption is at top of p.5. Auto crop (p.5) showed the S1 caption above FCC rows 0-22 (J0 -2.705 = FCC). Recrop = p.4 table + p.5 caption.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet of recropped table)"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "TABLE S2: Detailed information of clusters in FCC cluster expansion. The shape of a cluster is expressed as the clus- ter diameter(the longest distance between sites), the second longest distance between sites, and the second longest dis- tance between sites.",
+   "rotated_deg": 0,
+   "bbox": [
+    118,
+    210,
+    492,
+    734
+   ],
+   "w": 1342,
+   "h": 3000,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.955,
+   "auto_bbox": [
+    124.0,
+    74.8,
+    484.6,
+    376.6
+   ],
+   "auto_page": 6,
+   "recrop_regions": [
+    {
+     "page": 5,
+     "bbox": [
+      118,
+      210,
+      492,
+      734
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      118,
+      70,
+      492,
+      376
+     ]
+    }
+   ],
+   "recrop": "2026-11-24 litdb-curator: FCC table spans SI p.5 (rows 0-22) and p.6 (rows 23-31 + caption). Auto crop kept only p.6 rows 23-31. Recrop = p.5 table part + p.6 rows 23-31 + caption.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet of recropped table)"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "TABLE S3: Detailed information of clusters in γ cluster ex- pansion. The shape of a cluster is expressed as the clus- ter diameter(the longest distance between sites), the second longest distance between sites, and the second longest dis- tance between sites. Sub-lattice of cluster sites can be either B(OT), or C(OH).",
+   "rotated_deg": 0,
+   "bbox": [
+    90,
+    400,
+    520,
+    730
+   ],
+   "w": 1308,
+   "h": 3000,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.948,
+   "auto_bbox": [
+    93.0,
+    74.7,
+    507.8,
+    723.3
+   ],
+   "auto_page": 7,
+   "recrop_regions": [
+    {
+     "page": 6,
+     "bbox": [
+      90,
+      400,
+      520,
+      730
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      90,
+      70,
+      520,
+      720
+     ]
+    }
+   ],
+   "recrop": "2026-11-24 litdb-curator: Gamma table spans SI p.6 (rows 0-13, below S2 caption) and p.7 (rows 14-37 + caption). Auto crop kept only p.7. Recrop = p.6 rows 0-13 + p.7 rows 14-37 + caption.",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet of recropped table)"
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 13,
+   "file": "tab_S4.png",
+   "caption": "TABLE S4. Parameter values used in our continuum simulations and their corresponding experi- mental references.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.2,
+    543.3,
+    575.8
+   ],
+   "w": 1985,
+   "h": 2121,
+   "dpi": 300,
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "blank": 0.956,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (downscaled contact sheet; values taken from the PDF text layer)"
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "xie2024_agc_buffer_lithiation_mechanism_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 3,
+   "caption_below": false
+  },
+  {
+   "src": "xie2024_agc_buffer_lithiation_mechanism_SI.pdf",
+   "above_adjacent": 3,
+   "below_adjacent": 0,
+   "caption_below": true
+  }
+ ]
+}

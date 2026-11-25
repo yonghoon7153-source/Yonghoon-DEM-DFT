@@ -1,0 +1,439 @@
+{
+ "schema": "wad_round2_a4_result/v1",
+ "job": "V5_s_outer_A_G4_e70_far_a4",
+ "package_manifest_sha256": "714324cca0d0f05e39966543e3ffa76956fe51109e13f192cad6dc7f8e04cfed",
+ "registry_sha256": "999aa2dae0b137eab7934723d76effecb53bf7d2ddeb8fe687857e467f9ff1b4",
+ "common_environment_failure": null,
+ "result": {
+  "dir": "run/V5_s_outer_A_G4_e70_far_a4_a4",
+  "rung": "a4B",
+  "env": {
+   "versions": [
+    "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex"
+   ],
+   "potcar_species_sha256": {
+    "Li_sv": [
+     "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895"
+    ],
+    "P": [
+     "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88"
+    ],
+    "S": [
+     "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132"
+    ],
+    "Cl": [
+     "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931"
+    ],
+    "Ag": [
+     "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+    ]
+   },
+   "kernel_sha256": null,
+   "kernel_state": null,
+   "kernel_line": null,
+   "unreadable": []
+  },
+  "run_id": "20261024T202701-43487-29762",
+  "rc": 0,
+  "wall_s": 118347,
+  "attempt_json_sha256": "dfd54e6f47c14bd64827465cbaabde711d316812130117021df4edd23e1fd888",
+  "outcar_sha256": "417d1c85583f55b5e1628f1909b2a201e7ec35ae62a9b9aba3a1e3d7e7d5c427",
+  "kernel_sha256": null,
+  "n_runs": 1,
+  "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+  "terminated": true,
+  "converged": true,
+  "incar_echo_lines_excluded": 0,
+  "TOTEN_eV": -731.23522202,
+  "E_sigma0_eV": -731.2455281,
+  "E_noentropy_eV": -731.26614028,
+  "Edisp_eV": -56.49428,
+  "outcar_titel": [
+   "PAW_PBE Li_sv 10Sep2004",
+   "PAW_PBE P 06Sep2000",
+   "PAW_PBE S 06Sep2000",
+   "PAW_PBE Cl 06Sep2000",
+   "PAW_PBE Ag 02Apr2005"
+  ],
+  "NGZF": 540,
+  "dipole_min_pos": 473,
+  "settings": {
+   "NIONS": 200,
+   "NELECT": 1452.0,
+   "ENCUT": 650.0,
+   "ISMEAR": 1,
+   "SIGMA": 0.14,
+   "ISPIN": 1,
+   "IVDW": 12,
+   "LDIPOL": "T",
+   "IDIPOL": 3,
+   "DIPOL_z": null,
+   "EFIELD": null,
+   "VDW_S6": 1.0,
+   "VDW_S8": 0.7875,
+   "VDW_A1": 0.4289,
+   "VDW_A2": 4.4407,
+   "VDW_RADIUS": 50.2,
+   "VDW_CNRADIUS": 21.17
+  },
+  "potcar_species_sha256": {
+   "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+   "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+   "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+   "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+   "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+  },
+  "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+  "judge": {
+   "status": "SCF_NOT_CONVERGED",
+   "n_elec_steps": 300,
+   "dE": "-0.17136E-02",
+   "d_eps": "0.86777E-05",
+   "why": "-"
+  },
+  "restart": {
+   "record": {
+    "src_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+    "copied_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+    "end_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+    "istart": "1",
+    "icharg": "0",
+    "not_read_phrase": 0,
+    "positive_regex_match": "NA",
+    "honoured": 1
+   },
+   "outcar_istart": "1",
+   "outcar_icharg": "0",
+   "not_read_phrase": false,
+   "a_wavecar_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+   "positive_regex": "the WAVECAR file was read successfully",
+   "positive_regex_match": true
+  },
+  "status": "SCF_NOT_CONVERGED",
+  "why": "판정 계약 - (행 300 · dE -0.17136E-02 · d eps 0.86777E-05)",
+  "history": {
+   "a4A": "SCF_NOT_CONVERGED",
+   "a4B": "SCF_NOT_CONVERGED"
+  },
+  "stageA": {
+   "dir": "V5_s_outer_A_G4_e70_far_a4_a4/stageA",
+   "rung": "a4A",
+   "env": {
+    "versions": [
+     "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex"
+    ],
+    "potcar_species_sha256": {
+     "Li_sv": [
+      "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895"
+     ],
+     "P": [
+      "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88"
+     ],
+     "S": [
+      "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132"
+     ],
+     "Cl": [
+      "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931"
+     ],
+     "Ag": [
+      "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+     ]
+    },
+    "kernel_sha256": null,
+    "kernel_state": null,
+    "kernel_line": null,
+    "unreadable": []
+   },
+   "run_id": "20261023T225018-43487-16384",
+   "rc": 0,
+   "wall_s": 77758,
+   "attempt_json_sha256": "4686986a737f087bafbc51f44f81c1eaefdb16712fe89dd0a4c9b289c3660667",
+   "outcar_sha256": "e1c6e94e59e482f7af64033525a031e62f245d0a23dd3103c241cf9c33237f09",
+   "kernel_sha256": null,
+   "n_runs": 1,
+   "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+   "terminated": true,
+   "converged": true,
+   "incar_echo_lines_excluded": 0,
+   "TOTEN_eV": -731.14801446,
+   "E_sigma0_eV": -731.16892191,
+   "E_noentropy_eV": -731.2107368,
+   "Edisp_eV": -56.49428,
+   "outcar_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "NGZF": 540,
+   "dipole_min_pos": 473,
+   "settings": {
+    "NIONS": 200,
+    "NELECT": 1452.0,
+    "ENCUT": 650.0,
+    "ISMEAR": 1,
+    "SIGMA": 0.14,
+    "ISPIN": 1,
+    "IVDW": 12,
+    "LDIPOL": "F",
+    "IDIPOL": 3,
+    "DIPOL_z": null,
+    "EFIELD": null,
+    "VDW_S6": 1.0,
+    "VDW_S8": 0.7875,
+    "VDW_A1": 0.4289,
+    "VDW_A2": 4.4407,
+    "VDW_RADIUS": 50.2,
+    "VDW_CNRADIUS": 21.17
+   },
+   "potcar_species_sha256": {
+    "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+    "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+    "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+    "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+    "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+   },
+   "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+   "judge": {
+    "status": "SCF_NOT_CONVERGED",
+    "n_elec_steps": 200,
+    "dE": "-0.55333E-04",
+    "d_eps": "-0.71133E-05",
+    "why": "-"
+   },
+   "wavecar": {
+    "sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+    "size": 6820958848,
+    "head": "1952192 1 45200 4 872 650 ",
+    "outcar": {
+     "NKPTS": "4",
+     "NBANDS": "872",
+     "ENCUT": "650.0"
+    }
+   },
+   "outcar_dims": {
+    "NKPTS": "4",
+    "NBANDS": "872",
+    "ENCUT": "650.0"
+   },
+   "status": "SCF_NOT_CONVERGED",
+   "why": "판정 계약 - (행 200 · dE -0.55333E-04 · d eps -0.71133E-05)"
+  },
+  "attempts": {
+   "a4A": {
+    "dir": "V5_s_outer_A_G4_e70_far_a4_a4/stageA",
+    "rung": "a4A",
+    "env": {
+     "versions": [
+      "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex"
+     ],
+     "potcar_species_sha256": {
+      "Li_sv": [
+       "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895"
+      ],
+      "P": [
+       "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88"
+      ],
+      "S": [
+       "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132"
+      ],
+      "Cl": [
+       "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931"
+      ],
+      "Ag": [
+       "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+      ]
+     },
+     "kernel_sha256": null,
+     "kernel_state": null,
+     "kernel_line": null,
+     "unreadable": []
+    },
+    "run_id": "20261023T225018-43487-16384",
+    "rc": 0,
+    "wall_s": 77758,
+    "attempt_json_sha256": "4686986a737f087bafbc51f44f81c1eaefdb16712fe89dd0a4c9b289c3660667",
+    "outcar_sha256": "e1c6e94e59e482f7af64033525a031e62f245d0a23dd3103c241cf9c33237f09",
+    "kernel_sha256": null,
+    "n_runs": 1,
+    "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+    "terminated": true,
+    "converged": true,
+    "incar_echo_lines_excluded": 0,
+    "TOTEN_eV": -731.14801446,
+    "E_sigma0_eV": -731.16892191,
+    "E_noentropy_eV": -731.2107368,
+    "Edisp_eV": -56.49428,
+    "outcar_titel": [
+     "PAW_PBE Li_sv 10Sep2004",
+     "PAW_PBE P 06Sep2000",
+     "PAW_PBE S 06Sep2000",
+     "PAW_PBE Cl 06Sep2000",
+     "PAW_PBE Ag 02Apr2005"
+    ],
+    "NGZF": 540,
+    "dipole_min_pos": 473,
+    "settings": {
+     "NIONS": 200,
+     "NELECT": 1452.0,
+     "ENCUT": 650.0,
+     "ISMEAR": 1,
+     "SIGMA": 0.14,
+     "ISPIN": 1,
+     "IVDW": 12,
+     "LDIPOL": "F",
+     "IDIPOL": 3,
+     "DIPOL_z": null,
+     "EFIELD": null,
+     "VDW_S6": 1.0,
+     "VDW_S8": 0.7875,
+     "VDW_A1": 0.4289,
+     "VDW_A2": 4.4407,
+     "VDW_RADIUS": 50.2,
+     "VDW_CNRADIUS": 21.17
+    },
+    "potcar_species_sha256": {
+     "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+     "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+     "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+     "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+     "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+    },
+    "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+    "judge": {
+     "status": "SCF_NOT_CONVERGED",
+     "n_elec_steps": 200,
+     "dE": "-0.55333E-04",
+     "d_eps": "-0.71133E-05",
+     "why": "-"
+    },
+    "wavecar": {
+     "sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+     "size": 6820958848,
+     "head": "1952192 1 45200 4 872 650 ",
+     "outcar": {
+      "NKPTS": "4",
+      "NBANDS": "872",
+      "ENCUT": "650.0"
+     }
+    },
+    "outcar_dims": {
+     "NKPTS": "4",
+     "NBANDS": "872",
+     "ENCUT": "650.0"
+    },
+    "status": "SCF_NOT_CONVERGED",
+    "why": "판정 계약 - (행 200 · dE -0.55333E-04 · d eps -0.71133E-05)"
+   },
+   "a4B": {
+    "dir": "run/V5_s_outer_A_G4_e70_far_a4_a4",
+    "rung": "a4B",
+    "env": {
+     "versions": [
+      "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex"
+     ],
+     "potcar_species_sha256": {
+      "Li_sv": [
+       "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895"
+      ],
+      "P": [
+       "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88"
+      ],
+      "S": [
+       "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132"
+      ],
+      "Cl": [
+       "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931"
+      ],
+      "Ag": [
+       "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+      ]
+     },
+     "kernel_sha256": null,
+     "kernel_state": null,
+     "kernel_line": null,
+     "unreadable": []
+    },
+    "run_id": "20261024T202701-43487-29762",
+    "rc": 0,
+    "wall_s": 118347,
+    "attempt_json_sha256": "dfd54e6f47c14bd64827465cbaabde711d316812130117021df4edd23e1fd888",
+    "outcar_sha256": "417d1c85583f55b5e1628f1909b2a201e7ec35ae62a9b9aba3a1e3d7e7d5c427",
+    "kernel_sha256": null,
+    "n_runs": 1,
+    "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+    "terminated": true,
+    "converged": true,
+    "incar_echo_lines_excluded": 0,
+    "TOTEN_eV": -731.23522202,
+    "E_sigma0_eV": -731.2455281,
+    "E_noentropy_eV": -731.26614028,
+    "Edisp_eV": -56.49428,
+    "outcar_titel": [
+     "PAW_PBE Li_sv 10Sep2004",
+     "PAW_PBE P 06Sep2000",
+     "PAW_PBE S 06Sep2000",
+     "PAW_PBE Cl 06Sep2000",
+     "PAW_PBE Ag 02Apr2005"
+    ],
+    "NGZF": 540,
+    "dipole_min_pos": 473,
+    "settings": {
+     "NIONS": 200,
+     "NELECT": 1452.0,
+     "ENCUT": 650.0,
+     "ISMEAR": 1,
+     "SIGMA": 0.14,
+     "ISPIN": 1,
+     "IVDW": 12,
+     "LDIPOL": "T",
+     "IDIPOL": 3,
+     "DIPOL_z": null,
+     "EFIELD": null,
+     "VDW_S6": 1.0,
+     "VDW_S8": 0.7875,
+     "VDW_A1": 0.4289,
+     "VDW_A2": 4.4407,
+     "VDW_RADIUS": 50.2,
+     "VDW_CNRADIUS": 21.17
+    },
+    "potcar_species_sha256": {
+     "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+     "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+     "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+     "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+     "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+    },
+    "potcar_sha256": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5",
+    "judge": {
+     "status": "SCF_NOT_CONVERGED",
+     "n_elec_steps": 300,
+     "dE": "-0.17136E-02",
+     "d_eps": "0.86777E-05",
+     "why": "-"
+    },
+    "restart": {
+     "record": {
+      "src_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+      "copied_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+      "end_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+      "istart": "1",
+      "icharg": "0",
+      "not_read_phrase": 0,
+      "positive_regex_match": "NA",
+      "honoured": 1
+     },
+     "outcar_istart": "1",
+     "outcar_icharg": "0",
+     "not_read_phrase": false,
+     "a_wavecar_sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+     "positive_regex": "the WAVECAR file was read successfully",
+     "positive_regex_match": true
+    },
+    "status": "SCF_NOT_CONVERGED",
+    "why": "판정 계약 - (행 300 · dE -0.17136E-02 · d eps 0.86777E-05)"
+   }
+  }
+ }
+}

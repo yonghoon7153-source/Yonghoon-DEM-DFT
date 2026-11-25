@@ -1,0 +1,23 @@
+{
+ "system": "A",
+ "seed": 1,
+ "n_atoms": 400,
+ "composition": {
+  "Cl": 40,
+  "Li": 160,
+  "P": 40,
+  "S": 160
+ },
+ "start_density_g_cm3": 1.2,
+ "T_melt_K": 1200.0,
+ "T_final_K": 300.0,
+ "melt_ps": 100.0,
+ "quench_rate_K_s": 1000000000000.0,
+ "quench_ps": 900.0,
+ "hold_ps": 50.0,
+ "dt_fs": 2.0,
+ "save_ps": 1.0,
+ "G2_declared_before_results": true,
+ "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json",
+ "uma_inference_mode": "turbo"
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "property_record_v1",
+  "kind": "artifact_provenance",
+  "date": "2026-09-13",
+  "status": "proposed",
+  "citable": false,
+  "제목": "UMA 체크포인트 출처 앵커 — 우리 MLIP 결과 전부가 이 파일에서 나왔다",
+  "왜": "우리 MD·완화 결과는 전부 `uma-s-1p1` 산이다. 그런데 그 이름이 가리키는 **파일**이 무엇인지 원장에 없었다. 이름은 같고 가중치가 다를 수 있다 — pseudo 에서 이미 겪었다(QE 웹의 `P.pbe-n-rrkjus_psl.1.0.0.UPF` 가 우리 것과 같은 이름·다른 격자, 2026-09-13). 이름이 아니라 **해시**가 근거다.",
+
+  "기준_체크포인트": {
+    "모델명": "uma-s-1p1",
+    "task_name": "omat",
+    "repo_id": "facebook/UMA",
+    "snapshot": "be2896459a03fcde05e20d2fcefd11f450601fce",
+    "파일": "checkpoints/uma-s-1p1.pt",
+    "bytes": 1173759575,
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "mtime": "2026-04-23T11:35 (gabia 파일시스템)",
+    "기계": "gabia (kserver116-27) · 경로 /root/.cache/fairchem/models--facebook--UMA/snapshots/be2896.../checkpoints/uma-s-1p1.pt",
+    "측정": "nice -n 19 ionice -c3 sha256sum — 2026-09-13, el 실행 중이라 우선순위 낮춰서"
+  },
+
+  "⚠_fairchem_캐시는_HF_캐시가_아니다": {
+    "무엇": "fairchem 의 `CACHE_DIR` 기본값은 **`~/.cache/fairchem`** 이다. `~/.cache/huggingface` 가 아니다.",
+    "어떻게_드러났나": "V100 에 UMA 를 새로 깔면서 HF 토큰을 찾으려고 gabia 의 `~/.cache/huggingface` 를 봤는데 **4.0K 로 비어 있었다.** 토큰도 없었다. 그런데 gabia 의 UMA 는 잘 돈다 — 체크포인트가 `~/.cache/fairchem` 에 있었기 때문이다(1.1 GB).",
+    "교훈": "`hf_hub_download` 를 쓴다고 해서 캐시가 HF 기본 경로에 있는 것이 아니다. **캐시 경로는 호출자가 정한다.** 토큰이 없다고 '인증 없이 받았다' 고 읽으면 틀린다 — 받을 때는 있었고 지금은 오프라인인 것이다."
+  },
+
+  "gabia_는_오프라인_고정이다": {
+    "설정": "`HF_HUB_OFFLINE=1` 이 `/root/.bashrc` 에 **3번** 들어 있다 (122·123·171행 — 중복)",
+    "뜻": "gabia 는 2026-04-23 에 한 번 받은 뒤 **네트워크를 안 탄다.** 그래서 upstream 이 바뀌어도 gabia 결과는 흔들리지 않는다 — 재현성 쪽으로는 좋은 상태다.",
+    "⚠": "중복 3줄은 누군가 같은 export 를 세 번 붙여넣은 것이다. 지금 해는 없지만, 나중에 끄려면 **세 줄 다** 지워야 한다."
+  },
+
+  "V100_에_새로_까는_경우_규율": [
+    "새로 받은 `uma-s-1p1.pt` 의 sha256 을 **위 기준값과 대조한다.**",
+    "같으면: 두 기계 결과를 나란히 놓아도 된다 (같은 가중치)",
+    "다르면: ⛔ **두 기계 결과를 한 표에 놓지 않는다.** upstream 이 갱신된 것이고, 그건 방법이 바뀐 것이다. gabia 파일을 복사해 맞추거나, 기계별로 체크포인트 해시를 명시해 분리 보고한다",
+    "⛔ 해시를 안 보고 '같은 uma-s-1p1 이니 같다' 고 읽지 않는다 — 이 기록이 존재하는 이유가 그것이다"
+  ],
+
+  "이_기록이_하지_않는_것": [
+    "이 체크포인트가 **최신인지** 판단하지 않는다 (2026-04-23 판이라는 사실만 적는다)",
+    "가중치의 **내용**을 검증하지 않는다 — 바이트 동일성만 본다",
+    "UMA 의 물리적 정확도와 무관하다. 그건 static_pair 쪽 이야기다"
+  ],
+
+  "출처": [
+    "gabia 실측 2026-09-13 (ls -la + sha256sum)",
+    "tools/ionic/mlip_committee.py:94 · tools/ionic/md_temperature_feasibility.py:110 — `get_predict_unit(\"uma-s-1p1\")` 호출부",
+    "CLAUDE.md: UMA-s-1p1(omat) 이 LPSCl 계열 MD 의 검증된 표준"
+  ]
+}

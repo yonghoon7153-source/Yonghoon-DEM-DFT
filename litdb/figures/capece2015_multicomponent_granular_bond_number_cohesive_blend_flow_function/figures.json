@@ -1,0 +1,1284 @@
+{
+ "slug": "capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Particle size distributions for materials listed in Table 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    548.9,
+    295.3,
+    731.6
+   ],
+   "w": 1413,
+   "h": 1014,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "tool did not extract it ('번호 공백' — the caption text block on PDF p.3 is merged with the right-column §3.7 paragraph into one text block (x 81–562 pt), so the caption anchor was never recognised) → hand-cut: the embedded raster (xref 48, 2703×1907 px 1-bit ≈800 dpi native) rendered from the page at 400 dpi, trimmed to the ink bounding box (min RGB < 240) + uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Granular Bond numbers and flow function coefficients determined experimentally for as-received materials (solid markers) and materials surface modified with R972 silica (open markers). Standard error shown as error bars. Model fitting of Eq. (6) with α = 15.7 and β = 0.27 is shown as a solid line with the 95% confidence interval shown as dotted lines. Starch 1500 was not included in the fitting. Additional details listed in Table 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    137.7,
+    47.6,
+    466.5,
+    287.7
+   ],
+   "w": 1826,
+   "h": 1333,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop kept the full text width / column with blank margins (blank fraction 0.63-0.96) → re-cut by hand from the page at 400 dpi (tool default 300): render the embedded raster area (xref 111, 3529×2545 px 1-bit ≈800 dpi native), trim to the ink bounding box (min RGB < 240) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Flow function coefficients determined experimentally for binary mixtures of as-received APAP and various grades of as-received Avicel (solid markers). Standard error shown as error bars. Model prediction of Eq. (7) with α = 15.7 and β = 0.27 shown as solid lines with the 95% prediction interval shown as dotted lines.",
+   "rotated_deg": 0,
+   "bbox": [
+    115.4,
+    370.9,
+    471.4,
+    723.1
+   ],
+   "w": 1977,
+   "h": 1956,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop kept the full text width / column with blank margins (blank fraction 0.63-0.96) → re-cut by hand from the page at 400 dpi (tool default 300): render the embedded raster area (xref 129, 3832×3790 px 1-bit ≈800 dpi native), trim to the ink bounding box (min RGB < 240) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Flow function coefficients determined experimentally for binary mixtures of surface modified APAP and various grades of surface modified Avicel (solid markers). Standard error shown as error bars. Model prediction of Eq. (7) with α = 15.7 and β = 0.27 shown as solid lines with the 95% prediction interval shown as dotted lines. The flow function coefficient for mixtures with granular Bond numbers less than 1 is not included.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.6,
+    361.3,
+    479.9,
+    714.6
+   ],
+   "w": 1973,
+   "h": 1962,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop kept the full text width / column with blank margins (blank fraction 0.63-0.96) → re-cut by hand from the page at 400 dpi (tool default 300): render the embedded raster area (xref 149, 3824×3803 px 1-bit ≈800 dpi native), trim to the ink bounding box (min RGB < 240) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Flow function coefficients determined experimentally for ternary mixtures of as-received or surface modified APAP and various grades of as-received or surface modified Avicel (solid markers). Model prediction of Eq. (7) with α = 15.7 and β = 0.27 shown as colors. Additional details listed in Tables 2 and 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.8,
+    47.2,
+    526.9,
+    490.2
+   ],
+   "w": 1946,
+   "h": 1846,
+   "dpi": 300,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop kept the full text width / column with blank margins (blank fraction 0.63-0.96) → re-cut by hand from the page at 300 dpi (tool default 300): render the embedded raster area (xref 161, 1267×1198 px DeviceRGB JPEG ≈200 dpi native), trim to the ink bounding box (min RGB < 245) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Flow function coefficients determined experimentally for binary mixtures of as- received APAP and as-received Starch 1500 (solid markers). Standard error shown as error bars. Model prediction of Eq. (7) with α = 15.7 and β = 0.27 shown as solid lines with the 95% prediction interval shown as dotted lines.",
+   "rotated_deg": 0,
+   "bbox": [
+    343.6,
+    518.0,
+    528.5,
+    705.8
+   ],
+   "w": 1541,
+   "h": 1565,
+   "dpi": 600,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop kept the full text width / column with blank margins (blank fraction 0.63-0.96) → re-cut by hand from the page at 600 dpi (tool default 300): render the embedded raster area (xref 191, 1936×1968 px 1-bit ≈800 dpi native · small figure → 600 dpi), trim to the ink bounding box (min RGB < 240) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Flow function coefficients determined experimentally for ternary mixtures of as- received APAP, as-received Avicel PH 101, and as-received Starch 1500 (solid markers). Model prediction of Eq. (7) with α = 15.7 and β = 0.27 shown as colors. Additional details listed in Table 4.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.4,
+    47.2,
+    285.8,
+    311.9
+   ],
+   "w": 1056,
+   "h": 1103,
+   "dpi": 300,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop kept the full text width / column with blank margins (blank fraction 0.63-0.96) → re-cut by hand from the page at 300 dpi (tool default 300): render the embedded raster area (xref 205, 672×702 px DeviceRGB JPEG ≈200 dpi native), trim to the ink bounding box (min RGB < 245) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Particle properties, granular Bond numbers, and flow function coefficients for as-received and surface modified (SM) materials. Material Sauter mean diameter, d32 (μm) True density, ρ (kg/m3) Asperity diameter, dasp (nm)a",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    51.9,
+    559.1,
+    230.9
+   ],
+   "w": 2951,
+   "h": 994,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop was the whole page (bbox ≈ 29-558 × 33-751 pt) → re-cut by hand from the page at 400 dpi (tool default 300): caption line to the last footnote, trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (8 pt table type → 400 dpi) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Granular Bond numbers and flow function coefficients for ternary mixtures of as-received APAP and various grades of as-received Avicel. Component (1/2/3) Mass fraction Fractional surface area Bog,12 Bog,13 Bog,23 Bog,Mix Flow function coefficient, ffc Predicted Experimentala APAP/101/200 0.333/0.333/0.333 0.779/0.175/0.046 2.73 × 103 2.84 × 103 5.42 × 101 5.29 × 102 2.84 3.27 (0.20) 0.166/0.417/0.417 0.584/0.329/0.087 1.66 × 102 3.89 4.53 (0.14) 0.417/0.166/0.417 0.870/0.078/0.052 5.74 × 102 2.78 2.69 (0.16) 0.417/0.417/0.166 0.801/0.180/0.019 1.14 × 103 2.30 2.45 (0.32) APAP/101/102 0.333/0.333/0.333 0.746/0.168/0.086 2.73 × 103 3.10 × 103 6.57 × 101 7.24 × 102 2.61 3.01 (0.02) 0.166/0.417/0.417 0.541/0.304/0.155 2.54 × 102 3.47 4.15 (0.11) 0.417/0.166/0.417 0.830/0.075/0.095 9.77 × 102 2.40 2.13 (0.17) 0.417/0.417/0.166 0.787/0.177/0.036 1.21 × 103 2.27 2.18 (0.08) a Flow function",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    610.4,
+    559.1,
+    751.1
+   ],
+   "w": 2951,
+   "h": 781,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop was the whole page (bbox ≈ 29-558 × 33-751 pt) → re-cut by hand from the page at 400 dpi (tool default 300): caption line to the last footnote, trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (8 pt table type → 400 dpi) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 9,
+   "file": "tab_3.png",
+   "caption": "Table 3 Granular Bond numbers and flow function coefficients for ternary mixtures of surface modified APAP and various grades of surface modified Avicel. Component (1/2/3) Mass fraction Fractional surface area Bog,12 Bog,13 Bog,23 Bog,Mix Flow function coefficient, ffc Predicted Experimentala APAP/101/200 (surface modified) 0.333/0.333/0.333 0.779/0.175/0.046 3.31 × 101 3.25 × 101 5.53 × 10−1 5.41 9.92 7.29 (0.71) 0.166/0.417/0.417 0.584/0.329/0.087 1.66 13.7 11.16 (0.18) 0.417/0.166/0.417 0.870/0.078/0.052 5.78 9.74 8.93 (0.03) 0.417/0.417/0.166 0.801/0.180/0.019 1.25 × 101 7.89 7.25 (0.28) APAP/101/102 (surface modified) 0.333/0.333/0.333 0.746/0.168/0.086 3.31 × 101 3.26 × 101 6.15 × 10−1 6.95 9.26 11.3 (0.42) 0.166/0.417/0.417 0.541/0.304/0.155 2.35 12.4 13.0 (1.02) 0.417/0.166/0.417 0.830/0.075/0.095 9.06 8.62 9.05 (0.46) 0.417/0.417/0.166 0.787/0.177/0.036 1.27 × 101 7.84 9.09 (0.33) a Fl",
+   "rotated_deg": 0,
+   "bbox": [
+    36.3,
+    51.9,
+    567.6,
+    192.6
+   ],
+   "w": 2951,
+   "h": 781,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop was the whole page (bbox ≈ 29-558 × 33-751 pt) → re-cut by hand from the page at 400 dpi (tool default 300): caption line to the last footnote, trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (8 pt table type → 400 dpi) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 10,
+   "file": "tab_4.png",
+   "caption": "Table 4 Granular Bond numbers and flow function coefficients for ternary mixtures of as-received APAP, as-received Avicel PH 101, and as-received Starch 1500. Component (1/2/3) Mass fraction Fractional surface area Bog,12 Bog,13 Bog,23 Bog,Mix Flow function coefficient, ffc Predicted Experimentala APAP/Avicel/Starch 0.333/0.333/0.333 0.684/0.154/0.162 2.73 × 103 2.42 × 103 9.32 × 101 7.43 × 102 2.59 2.48 (0.09) 0.166/0.417/0.417 0.464/0.261/0.275 2.99 × 102 3.32 3.32 (0.07) 0.417/0.166/0.417 0.753/0.068/0.179 1.06 × 103 2.35 2.39 (0.11) 0.417/0.417/0.166 0.758/0.170/0.072 1.15 × 103 2.30 2.12 (0.08) 0.100/0.800/0.100 0.329/0.592/0.079 2.11 × 102 3.65 3.86 (0.05) 0.100/0.100/0.800 0.320/0.072/0.608 1.82 × 102 3.80 3.94 (0.90) 0.800/0.100/0.100 0.945/0.027/0.028 3.84 × 103 1.65 1.45 (0.16) a Flow function coefficient determined using 1 kPa pre-consolidation stress. Standard error in parenthese",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    619.1,
+    559.1,
+    751.1
+   ],
+   "w": 2951,
+   "h": 733,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop was the whole page (bbox ≈ 29-558 × 33-751 pt) → re-cut by hand from the page at 400 dpi (tool default 300): caption line to the last footnote, trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (8 pt table type → 400 dpi) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 10,
+   "file": "tab_5.png",
+   "caption": "Table 5 Granular Bond number and flow function coefficient for a 5 component mixture of as- received APAP, Avicel PH 102, Avicel PH 101, Avicel PH 105, and Starch 1500. Component Mass fraction APAP 0.100 Avicel 102 0.225 Avicel 101 0.225 Avicel 105 0.225 Starch 1500 0.225 Bog,Mix 4.58 × 102 Flow function coefficient, ffc Predicted 2.95 Experimental 2.57 (0.01)",
+   "rotated_deg": 0,
+   "bbox": [
+    295.5,
+    51.9,
+    558.8,
+    178.2
+   ],
+   "w": 1462,
+   "h": 701,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "recrop": "tool crop was the whole page (bbox ≈ 29-558 × 33-751 pt) → re-cut by hand from the page at 400 dpi (tool default 300): caption line to the last footnote, trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (8 pt table type → 400 dpi) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_multi_asperity_cohesion_force_rumpf.png",
+   "caption": "Eq. (1), PDF p.2 left: F_cohesion = A/(12 z0²) · ( d_p / (2 (H0/z0)²) + 3 d_asp d_p / (d_asp + d_p) ) — 'multi-asperity' modification of the Rumpf model: 1st term = non-contact force between the two particles at separation H0, 2nd term = particle–asperity contact force.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.6,
+    575.8,
+    290.1,
+    611.8
+   ],
+   "w": 1452,
+   "h": 199,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_separation_distance_h0.png",
+   "caption": "Eq. (2), PDF p.2 right: H0 = z0 + d_asp/2 (asperities taken as half-spheres; z0 = 0.4 nm).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    91.8,
+    558.1,
+    112.4
+   ],
+   "w": 1457,
+   "h": 114,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 2,
+   "file": "eq_03_granular_bond_number_definition.png",
+   "caption": "Eq. (3), PDF p.2 right: Bo_g = F_cohesion / W_g — granular Bond number = cohesion (or adhesion) force ÷ particle weight; Bo_g > 1 cohesive, < 1 non-cohesive.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    353.1,
+    558.1,
+    384.4
+   ],
+   "w": 1457,
+   "h": 173,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_hamaker_from_dispersive_surface_energy.png",
+   "caption": "Eq. (4), PDF p.4 left: A = 24 π D0² γ_d — Frenkel relation, Hamaker constant from the IGC dispersive surface energy (D0 = 0.165 nm cut-off distance [34]).",
+   "rotated_deg": 0,
+   "bbox": [
+    27.4,
+    481.0,
+    290.1,
+    503.0
+   ],
+   "w": 1459,
+   "h": 122,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_coated_asperity_contact_force.png",
+   "caption": "Eq. (5), PDF p.4 left: F_cohesion = A d_asp / (24 z0²) — surface-modified (R972-coated) particles: only asperity–asperity contact (A, d_asp = 16 nm of R972).",
+   "rotated_deg": 0,
+   "bbox": [
+    28.6,
+    643.9,
+    290.1,
+    676.4
+   ],
+   "w": 1452,
+   "h": 180,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 5,
+   "file": "eq_06_ffc_power_law_bond_number.png",
+   "caption": "Eq. (6), PDF p.5 left: ff_c = α (Bo_g)^(−β) — empirical power law; fitted α = 15.7, β = 0.27 on the Bo_g > 1 single-component data of Fig. 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.4,
+    398.8,
+    298.9,
+    422.5
+   ],
+   "w": 1458,
+   "h": 131,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 6,
+   "file": "eq_07_mixture_ffc_power_law.png",
+   "caption": "Eq. (7), PDF p.6 left: ff_c,Mix = α (Bo_g,Mix)^(−β) — same α, β applied to a blend.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.5,
+    183.0,
+    290.1,
+    206.7
+   ],
+   "w": 1458,
+   "h": 131,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 6,
+   "file": "eq_08_mixture_bond_number_weighted_harmonic_mean.png",
+   "caption": "Eq. (8), PDF p.6 right: Bo_g,Mix = ( Σ_i Σ_j w_ij / Bo_g,ij )^(−1) — weighted harmonic mean over all N(N+1)/2 interaction types.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    81.9,
+    558.1,
+    124.0
+   ],
+   "w": 1457,
+   "h": 233,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 6,
+   "file": "eq_09_pair_bond_number_adhesion_over_weight.png",
+   "caption": "Eq. (9), PDF p.6 right: Bo_g,ij = F_ad,ij / W_ij — pair Bond number (adhesion force from Eq. (1) or (5) with the mean properties of Eqs. (10)–(12)).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    187.9,
+    558.1,
+    219.8
+   ],
+   "w": 1457,
+   "h": 177,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 6,
+   "file": "eq_10_hamaker_geometric_mean.png",
+   "caption": "Eq. (10), PDF p.6 right: A = √(A_i A_j) — geometric-mean combining rule for the Hamaker constant (∝ √(γ_d,i γ_d,j) via Eq. (4)).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.2,
+    273.8,
+    558.1,
+    300.2
+   ],
+   "w": 1460,
+   "h": 146,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 6,
+   "file": "eq_11_particle_diameter_harmonic_mean.png",
+   "caption": "Eq. (11), PDF p.6 right: d_p = 2 d_p,i d_p,j / (d_p,i + d_p,j) — harmonic-mean particle diameter (= 4 R*).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.9,
+    301.0,
+    558.1,
+    333.3
+   ],
+   "w": 1456,
+   "h": 179,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 6,
+   "file": "eq_12_asperity_diameter_harmonic_mean.png",
+   "caption": "Eq. (12), PDF p.6 right: d_asp = 2 d_asp,i d_asp,j / (d_asp,i + d_asp,j) — harmonic-mean asperity diameter.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.9,
+    335.1,
+    558.1,
+    367.5
+   ],
+   "w": 1456,
+   "h": 179,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 7,
+   "file": "eq_13_pair_weight_harmonic_mean.png",
+   "caption": "Eq. (13), PDF p.7 left: W_ij = 2 W_i W_j / (W_i + W_j) — harmonic-mean pair weight (→ 2 × the lighter weight when the masses differ greatly).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.1,
+    91.5,
+    298.9,
+    123.3
+   ],
+   "w": 1454,
+   "h": 176,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 7,
+   "file": "eq_14_weighting_fractional_surface_area_product.png",
+   "caption": "Eq. (14), PDF p.7 left: w_ij = f_SA,i f_SA,j — weight = product of fractional surface areas (contact likelihood); restriction Σ_i Σ_j w_ij = 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    206.5,
+    298.9,
+    228.0
+   ],
+   "w": 1457,
+   "h": 119,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 7,
+   "file": "eq_15_binary_mixture_bond_number.png",
+   "caption": "Eq. (15), PDF p.7 right: Bo_g,Binary = ( f²_SA,1/Bo_g,11 + 2 f_SA,1 f_SA,2/Bo_g,12 + f²_SA,2/Bo_g,22 )^(−1) (Bo_g,12 = Bo_g,21).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    143.0,
+    566.9,
+    176.6
+   ],
+   "w": 1457,
+   "h": 186,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp1-abstract",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "PDF p.1 abstract: granular Bond number (cohesion ÷ weight) correlates with ff_c; cohesion force from the 'multi-asperity' modification of the Rumpf equation; 'As a major novelty, a granular Bond number is defined for multi-component mixtures (i.e. powder blends)' — binary, ternary, quinary blends of APAP + MCC + pregelatinized starch; dry-coating used to alter the inter-particle force; 'the flow function coefficient alone is not a stringent prediction of powder flow'.",
+   "rotated_deg": 0,
+   "bbox": [
+    207.1,
+    286.5,
+    562.6,
+    427.8
+   ],
+   "w": 2041,
+   "h": 851,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-vdw-only",
+   "kind": "text",
+   "label": "p2-vdw-only",
+   "page": 2,
+   "file": "txt_p2_vdw_only_capillary_irrelevant_electrostatic_10x_weaker.png",
+   "caption": "PDF p.2 left: capillary forces irrelevant without condensed moisture; electrostatic 'about 10 times weaker than the vdW force under typical experimental conditions [18]' → discussion restricted to the vdW force (fine, dry, uncharged powders).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    340.0,
+    285.5,
+    431.8
+   ],
+   "w": 1465,
+   "h": 576,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-eq1-terms",
+   "kind": "text",
+   "label": "p2-eq1-terms",
+   "page": 2,
+   "file": "txt_p2_eq1_terms_noncontact_20nm_z0_04nm_hamaker.png",
+   "caption": "PDF p.2 left → right: meaning of the two terms of Eq. (1) (non-contact at H0 · particle–asperity contact); non-contact part 'typically small … unless separation distance is about 20 nm or less'; A from surface energy; z0 = 0.4 nm; H0 from Eq. (2) for half-sphere asperities.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    622.3,
+    284.8,
+    745.5
+   ],
+   "w": 1461,
+   "h": 933,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 2,
+     "bbox_pt": [
+      33.7,
+      622.3,
+      284.8,
+      745.5
+     ]
+    },
+    {
+     "page": 2,
+     "bbox_pt": [
+      302.0,
+      57.5,
+      552.9,
+      86.5
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-bond-number",
+   "kind": "text",
+   "label": "p2-bond-number",
+   "page": 2,
+   "file": "txt_p2_bond_number_ratio_bo_gt1_cohesive.png",
+   "caption": "PDF p.2 right: Bo = cohesion force (or adhesion force for dissimilar particles) ÷ particle weight due to gravity; Bo_g > 1 cohesive, Bo_g < 1 non-cohesive; why coarse particles can have a higher cohesive force yet flow well.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.8,
+    392.3,
+    552.9,
+    473.5
+   ],
+   "w": 1461,
+   "h": 517,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-single-component",
+   "kind": "text",
+   "label": "p2-single-component",
+   "page": 2,
+   "file": "txt_p2_single_component_only_two_questions.png",
+   "caption": "PDF p.2 right: Bo strictly quantifies inter-particle cohesion; previous Bo–bulk correlations (fluidization [22], bulk density [23,24], angle of repose [25], ff_c [26]); 'Since all previous investigations [22–26] … have restricted study to single component powders' → two questions: can Bo explain blends, how is the Bo of a blend calculated.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.0,
+    475.8,
+    553.6,
+    745.4
+   ],
+   "w": 1464,
+   "h": 1564,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp3-mixing-coating",
+   "kind": "text",
+   "label": "p3-mixing-coating",
+   "page": 3,
+   "file": "txt_p3_labram_mixing_75g_60hz_and_r972_nano_dry_coating_1pct.png",
+   "caption": "PDF p.3 §3.2 + §3.3: blends mixed in a LabRAM resonant acoustic mixer (glass jar H 10 cm, ID 9 cm, 350 g jar, 50 g powder, 10 min at 75 g and 60 Hz); nano-dry-coating with Aerosil R972 (16 nm) at the same conditions, 1 % w/w in all cases; coated blends prepared in one mixing+coating step and 'It was assumed that the R972 was equally distributed to all materials during mixing'.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.4,
+    475.8,
+    293.7,
+    536.3
+   ],
+   "w": 1466,
+   "h": 1747,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 3,
+     "bbox_pt": [
+      42.4,
+      475.8,
+      293.7,
+      536.3
+     ]
+    },
+    {
+     "page": 3,
+     "bbox_pt": [
+      310.4,
+      57.4,
+      562.4,
+      295.6
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp3-ring-shear",
+   "kind": "text",
+   "label": "p3-ring-shear",
+   "page": 3,
+   "file": "txt_p3_ring_shear_1kpa_250_390_600pa_33rh.png",
+   "caption": "PDF p.3 §3.4: Schulze RST-XS ring shear cell (H 13 mm, ID 32 mm, OD 64 mm, 16 vanes 3 mm); pre-consolidation 1 kPa; shear to failure at 250, 390, 600 Pa; ff_c = consolidation stress ÷ unconfined yield strength; samples stored 3 days at 33 % RH; triplicate.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.4,
+    308.3,
+    561.7,
+    525.8
+   ],
+   "w": 1462,
+   "h": 1274,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-igc",
+   "kind": "text",
+   "label": "p4-igc",
+   "page": 3,
+   "file": "txt_p4_igc_schultz_30c_32rh_hamaker_d0.png",
+   "caption": "PDF p.3 §3.7 → p.4: IGC-SEA (FID) dispersive surface energy — columns 300 × 4 mm, 0.25 m² total surface area from BET (APAP 0.291, Avicel PH 200 1.18, Starch 1500 0.694 m²/g; others from Huang et al. [26]); 2 h at 30 °C, 32 % RH; Schultz method with C6–C10 alkanes; duplicate; 5 % probe coverage; A by the Frenkel relation Eq. (4), D0 = 0.165 nm [34].",
+   "rotated_deg": 0,
+   "bbox": [
+    310.4,
+    706.0,
+    561.5,
+    745.4
+   ],
+   "w": 1461,
+   "h": 1573,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 3,
+     "bbox_pt": [
+      310.4,
+      706.0,
+      561.5,
+      745.4
+     ]
+    },
+    {
+     "page": 4,
+     "bbox_pt": [
+      34.0,
+      245.8,
+      284.9,
+      473.7
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-bo-calc",
+   "kind": "text",
+   "label": "p4-bo-calc",
+   "page": 4,
+   "file": "txt_p4_bond_number_calc_asperity_200nm_eq5_d32_spherical.png",
+   "caption": "PDF p.4 §3.8: Bo from Eq. (1) with measured size, true density, surface energy; asperity size ASSUMED 200 nm in all cases ('natural surface roughness' [35–39]); coated materials use Eq. (5) (dense R972 coatings → force from R972 properties only); Sauter mean d32 as the characteristic size; particles assumed spherical.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.8,
+    514.3,
+    285.6,
+    745.5
+   ],
+   "w": 1465,
+   "h": 1475,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 4,
+     "bbox_pt": [
+      33.8,
+      514.3,
+      285.6,
+      745.5
+     ]
+    },
+    {
+     "page": 4,
+     "bbox_pt": [
+      302.0,
+      245.7,
+      552.7,
+      264.2
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-plateau",
+   "kind": "text",
+   "label": "p4-plateau",
+   "page": 4,
+   "file": "txt_p4_ffc_plateau_below_bo1_and_sm_lower_bo.png",
+   "caption": "PDF p.4 §4.1: ff_c rises as Bo falls up to the cohesive–non-cohesive boundary (Bo_g = 1), then 'attains a maximum and remains invariant for Bond numbers less than one'; surface-modified materials have lower Bo and better flow (low surface energy and small size of R972 asperities).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.8,
+    298.0,
+    552.9,
+    599.1
+   ],
+   "w": 1461,
+   "h": 1739,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-noncohesive",
+   "kind": "text",
+   "label": "p4-noncohesive",
+   "page": 4,
+   "file": "txt_p4_vdw_dominates_noncohesive_not_predicted.png",
+   "caption": "PDF p.4 → p.5: vdW force appears to dominate ff_c of cohesive powders; Bo is NOT expected to predict non-cohesive powders (shape / PSD more relevant [6–12]); the modelling is focused on Bo_g > 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.2,
+    601.4,
+    553.6,
+    746.3
+   ],
+   "w": 1463,
+   "h": 996,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 4,
+     "bbox_pt": [
+      302.2,
+      601.4,
+      553.6,
+      746.3
+     ]
+    },
+    {
+     "page": 5,
+     "bbox_pt": [
+      42.6,
+      340.0,
+      293.4,
+      358.5
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp5-fit",
+   "kind": "text",
+   "label": "p5-fit",
+   "page": 5,
+   "file": "txt_p5_fit_bo_gt1_alpha_157_beta_027_and_deviation_sources.png",
+   "caption": "PDF p.5: power law Eq. (6) (also seen for angle of repose [25], ff_c [26], porosity [23,24]); fitted only to Bo_g > 1 materials by linear regression on the linearised form → α = 15.7, β = 0.27 with 95 % CI over four decades of Bo; Eq. (6) over-estimates SM PH 101, SM PH 102, SM PH 200 (all Bo < 1 powders have ff_c > 10); deviations attributed to shape, PSD, moisture sensitivity, mechanical properties not in Eq. (1).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    434.0,
+    293.9,
+    745.4
+   ],
+   "w": 1462,
+   "h": 2095,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 5,
+     "bbox_pt": [
+      42.6,
+      434.0,
+      293.9,
+      745.4
+     ]
+    },
+    {
+     "page": 5,
+     "bbox_pt": [
+      310.8,
+      340.0,
+      561.5,
+      389.8
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp5-material-independent",
+   "kind": "text",
+   "label": "p5-material-independent",
+   "page": 5,
+   "file": "txt_p5_alpha_beta_material_independent_bulk_density_caveat.png",
+   "caption": "PDF p.5 right → p.6: 'the model parameters α and β are expected to be material independent since the Bond number takes into account all relevant material properties … This should be confirmed only after a wider range of materials have been examined'; deformation-aware cohesion models could add consolidation stress; ff_c omits bulk density → 'cannot be used as a stringent prediction of flowability'.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.6,
+    392.1,
+    561.7,
+    745.4
+   ],
+   "w": 1461,
+   "h": 2154,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 5,
+     "bbox_pt": [
+      310.6,
+      392.1,
+      561.7,
+      745.4
+     ]
+    },
+    {
+     "page": 6,
+     "bbox_pt": [
+      34.2,
+      57.4,
+      284.5,
+      76.0
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6-mixture-definition",
+   "kind": "text",
+   "label": "p6-mixture-definition",
+   "page": 6,
+   "file": "txt_p6_mixture_bond_number_definition_absent_from_literature.png",
+   "caption": "PDF p.6: the Bond number of a mixture is 'absent from literature to the authors' knowledge'; all interactions between particles of each material must be counted (binary 3, ternary 6, N(N+1)/2) and weighted by composition → Eq. (8) = weighted harmonic mean; pair Bo by Eq. (9); Eq. (1) or (5) with the mean Hamaker constant, diameter and asperity size of Eqs. (10)–(12).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    219.3,
+    285.1,
+    363.5
+   ],
+   "w": 1461,
+   "h": 1524,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 6,
+     "bbox_pt": [
+      34.0,
+      219.3,
+      285.1,
+      363.5
+     ]
+    },
+    {
+     "page": 6,
+     "bbox_pt": [
+      302.0,
+      57.4,
+      552.7,
+      76.0
+     ]
+    },
+    {
+     "page": 6,
+     "bbox_pt": [
+      301.8,
+      132.2,
+      552.9,
+      182.2
+     ]
+    },
+    {
+     "page": 6,
+     "bbox_pt": [
+      302.2,
+      228.2,
+      552.9,
+      266.0
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7-combining-weighting",
+   "kind": "text",
+   "label": "p7-combining-weighting",
+   "page": 7,
+   "file": "txt_p7_combining_rules_weighting_fsa_coordination_number.png",
+   "caption": "PDF p.7: geometric mean for the Hamaker constant, harmonic means for particle size [18] and particle weight (Eq. (13)); restriction Σ Σ w_ij = 1; fractional surface area as contact probability (Eq. (14)) — 'Using the actual number of contacts (i.e. coordination number) between the various components may offer a superior formulation' but is hard to determine; f_SA from d32; fine A + coarse B → A–A most likely, then A–B, then B–B; Eq. (15) for binaries.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    57.5,
+    294.4,
+    348.0
+   ],
+   "w": 1465,
+   "h": 2158,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 7,
+     "bbox_pt": [
+      42.6,
+      57.5,
+      294.4,
+      348.0
+     ]
+    },
+    {
+     "page": 7,
+     "bbox_pt": [
+      310.6,
+      57.5,
+      561.7,
+      139.6
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7-binary-040",
+   "kind": "text",
+   "label": "p7-binary-040",
+   "page": 7,
+   "file": "txt_p7_p8_binary_prediction_aad_040_disparate_sizes.png",
+   "caption": "PDF p.7 → p.8: 'the powder flow performance can be theoretically determined for any mixture based on the particle properties alone'; binary APAP–Avicel blends (Fig. 3) predicted with the pre-determined α = 15.7, β = 0.27 — average absolute deviation 0.40; the dramatic ff_c drop for disparate sizes (APAP d32 9 µm + PH 200 123 µm) is captured through the surface-area weighting.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.6,
+    183.0,
+    561.7,
+    273.2
+   ],
+   "w": 1461,
+   "h": 1640,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 7,
+     "bbox_pt": [
+      310.6,
+      183.0,
+      561.7,
+      273.2
+     ]
+    },
+    {
+     "page": 7,
+     "bbox_pt": [
+      310.6,
+      287.6,
+      561.5,
+      348.1
+     ]
+    },
+    {
+     "page": 8,
+     "bbox_pt": [
+      34.2,
+      538.6,
+      284.7,
+      599.1
+     ]
+    },
+    {
+     "page": 8,
+     "bbox_pt": [
+      301.8,
+      538.6,
+      552.7,
+      598.9
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp9-sm-binary-ternary",
+   "kind": "text",
+   "label": "p9-sm-binary-ternary",
+   "page": 9,
+   "file": "txt_p9_sm_binary_aad_099_ternary_034_101_no_mixed_coating.png",
+   "caption": "PDF p.9 left: SM binaries (Fig. 4, Bo < 1 cases excluded) — 'within the 95 % prediction interval', AAD 0.99; only major deviation SM APAP + SM PH 105 (PH 105 itself deviates from Eq. (6) 'as seen in Fig. 1' [sic — Fig. 2]); ternaries — mixed as-received + SM blends NOT prepared (R972 would transfer); AAD 0.34 (as-received, Table 2) and 1.01 (SM, Table 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    214.5,
+    293.7,
+    672.3
+   ],
+   "w": 1461,
+   "h": 2609,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp9-starch",
+   "kind": "text",
+   "label": "p9-starch",
+   "page": 9,
+   "file": "txt_p9_starch_bo_861_ffc_466_aad_016_013.png",
+   "caption": "PDF p.9 right → p.10: Starch 1500 (not in the α, β fit) — Bo 8.61 × 10¹ → predicted ff_c 4.66 vs measured 5.35; APAP–starch binaries (Fig. 6) AAD 0.16; APAP/PH 101/starch ternaries (Fig. 7 · Table 4) AAD 0.13; the 5-component blend (Table 5) 'well predicted'.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.6,
+    340.0,
+    562.4,
+    505.0
+   ],
+   "w": 1465,
+   "h": 1215,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 9,
+     "bbox_pt": [
+      310.6,
+      340.0,
+      562.4,
+      505.0
+     ]
+    },
+    {
+     "page": 10,
+     "bbox_pt": [
+      33.8,
+      381.6,
+      285.1,
+      419.4
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp10-conclusions",
+   "kind": "text",
+   "label": "p10-conclusions",
+   "page": 10,
+   "file": "txt_p10_conclusions_scope_bo_gt1_and_limitations.png",
+   "caption": "PDF p.10 right: conclusions — most applicable to fine cohesive powders dominated by vdW (~100 µm and smaller, Bo > 1); not accounted for: consolidation stress/time history, humidity, equipment geometry/material, particle shape, mechanical properties (elasticity, hardness), agglomeration (may affect the Bo [26]); asperity size 200 nm assumed 'may not be suitable for the wide variety of materials'.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.8,
+    235.3,
+    553.6,
+    609.6
+   ],
+   "w": 1465,
+   "h": 2145,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp10-intended-use",
+   "kind": "text",
+   "label": "p10-intended-use",
+   "page": 10,
+   "file": "txt_p10_intended_use_phase_map_huang41.png",
+   "caption": "PDF p.10 left → right: intended use — guide manufacturing/formulation, extendable to any N-component mixture; 'the flow function coefficient alone is not a stringent prediction of flowability'; a phase map of acceptable bulk density and ff_c for direct compression (Huang et al. [41]) would be most useful in combination.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    423.7,
+    285.1,
+    609.6
+   ],
+   "w": 1461,
+   "h": 1224,
+   "dpi": 400,
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "pieces": [
+    {
+     "page": 10,
+     "bbox_pt": [
+      34.0,
+      423.7,
+      285.1,
+      609.6
+     ]
+    },
+    {
+     "page": 10,
+     "bbox_pt": [
+      301.8,
+      201.3,
+      552.9,
+      219.9
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "note_manual": "2026-11-24 — 11-page Elsevier article (Powder Technol. 286 (2015) 561–571), no SI. The tool cut 11 regions (Figs. 2–7, Tables 1–5) and missed Fig. 1 (its caption block is merged with the right-column text on p.3). None were kept as-is: Figs. 2–7 came out column/page-wide with blank margins and the five tables as whole pages (Tables 4 and 5 as the same p.10 page). All re-cut by hand (400 dpi for the ≈800 dpi 1-bit line rasters, 600 dpi for the small Fig. 6, 300 dpi for the ≈200 dpi colour ternary maps Figs. 5 · 7, 400 dpi for the 8 pt tables) and Fig. 1 hand-cut (manual_crop), plus the 15 numbered equations (400 dpi) and 20 evidence paragraphs (400 dpi, ≤ 20 rule; 9 of them stack consecutive pieces across columns/pages). No page_* images. 47 crops in total, all opened with Read. Read-outs of Figs. 3, 4, 6 (55 markers) with the card's model re-computation are in digitized.csv; the pure-component markers reproduce the printed Table 1 ff_c within 0.00–0.04."
+}

@@ -1,0 +1,35 @@
+{
+  "symbol": "Kr",
+  "name": "Krypton",
+  "Z": 36,
+  "role": "SSB 캠페인과 직접 무관 - 무거운 비활성기체([Ar]3d¹⁰4s²4p⁶). 강산화 불화물 KrF2 등 극소수 화합물만; 조명·이중창 단열가스.",
+  "oxidation_states": ["0", "+2"],
+  "electronegativity": 3.00,
+  "ionic_radius_A": {
+    "_note": "비활성기체 - Shannon 반경 없음. 참고 van der Waals 반경 ~2.02 Å (Bondi 1964)."
+  },
+  "representative_compounds": [
+    {"formula": "KrF2", "context": "강산화 불화물", "battery_role": "없음", "note": "linear 분자, 매우 강한 산화·불안정 F 공여체. Kr의 유일한 실질 화합물류(Kr +2)."},
+    {"formula": "Kr (원소 기체)", "context": "조명·단열가스", "battery_role": "없음", "note": "고효율 조명·이중창 충전(단열). 화학적으로 거의 불활성."}
+  ],
+  "sei_relevance": "SSB 계면 특이 역할 없음 - 사실상 불활성.",
+  "xps": [
+    {"core": "Kr 3d5/2", "BE_eV": 88.6, "assignment": "implanted Kr (matrix ~87-89)", "ref": "Handbook of XPS (Moulder)"}
+  ],
+  "raman": [],
+  "dos_character": "닫힌 4p⁶ 껍질 - 원자가 상태 없이 불활성. 강산화 F와만 KrF2 형성.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶",
+    "electron_config": "[Ar] 3d¹⁰ 4s² 4p⁶",
+    "valence_orbitals": "4s² 4p⁶ - 닫힌 4p⁶; 강산화제 F와만 KrF2(+2) 형성",
+    "band_character": "(앵커 없음) 닫힌 4p⁶ - argyrodite 무관.",
+    "bonding": "거의 없음(비활성). KrF2에서만 약한 Kr-F(불안정, F 공여체)."
+  },
+  "key_references": [
+    "CRC Handbook of Chemistry and Physics",
+    "Bondi 1964 - van der Waals radii",
+    "Handbook of X-ray Photoelectron Spectroscopy (Moulder 1992) - implanted Kr 3d"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: CRC handbook · Bondi vdW · Moulder XPS); SSB 앵커 없음(비캠페인 비활성기체)."
+}

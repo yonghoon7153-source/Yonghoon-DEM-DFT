@@ -1,0 +1,62 @@
+{
+ "schema": "property_record_v1",
+ "kind": "code_policy_gap",
+ "date": "2026-09-13",
+ "status": "ratified",
+ "제목": "셀 정책 불일치 3건 — 문서의 '고정셀' 과 실제 코드 경로가 다르다 (회신 BP 지적, 우리가 실물 확인)",
+ "출처": "kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md §Q4③",
+ "확인방법": "리뷰어 지적을 받아 적지 않고 repo 실물에서 직접 재확인했다. 아래 각 항목의 근거는 우리가 읽은 줄이다.",
+ "발견": [
+  {
+   "id": "GAP-1",
+   "무엇": "'NO vc-relax, DFT = fixed-cell only' 는 **DFT 에만** 걸린 정책이다",
+   "근거": "db/structures/lpsocl_candidates/README.md:24 다음 줄(25–26)이 '1. Stage 2a (kgy/gabia GPU): **UMA full relax** of the 4 candidates -> energy ranking'",
+   "함의": "우리가 회신 BP 에서 이 줄을 '파이프라인이 vc-relax 를 안 쓴다' 의 근거 넷 중 하나로 인용했는데, 그 인용은 **DFT 경로에 대해서만** 맞다. UMA 경로는 같은 문서가 full relax 로 적고 있다.",
+   "상태": "확인됨"
+  },
+  {
+   "id": "GAP-2",
+   "무엇": "UMA 완화 기본 경로가 **형상 무제한** CellFilter 다",
+   "근거": "tools/doping/run_uma_screening.py:56 `target = CellFilter(atoms)` (FrechetCellFilter → ExpCellFilter → UnitCellFilter 폴백). tools/doping/run_mlip_postproc.py:293 `FIRE(CellFilter(atoms))` · tools/doping/b2o3_o_distribution.py:127 도 같다.",
+   "함의": "DFT 쪽 고정셀 규율이 UMA 쪽에 **적용돼 있지 않다.** 두 방법의 셀 정책이 다르므로 '같은 기하' 라는 말이 성립하는 범위를 좁혀 써야 한다.",
+   "상태": "확인됨"
+  },
+  {
+   "id": "GAP-3",
+   "무엇": "⭐ EOS 가 낸 V₀ 가 **후속 탄성 계산에 전달되지 않는다**",
+   "근거": "tools/doping/run_mlip_postproc.py — `eos_sweep(atoms_ref, ...)` 가 점마다 `atoms = atoms_ref.copy()` 로만 작업해 **atoms_ref 를 바꾸지 않는다**(88행). process_one 은 `record['eos'] = eos_sweep(atoms, ...)`(314행) 으로 V₀ 를 **기록만** 하고, 그 다음 `elastic_finite_strain(atoms, ...)`(323행) 에 넘기는 `atoms` 는 여전히 **2단계 post-anneal 구조**다.",
+   "함의": "이 경로로 낸 MLIP 탄성은 **보고된 V₀ 가 아닌 부피에서 계산된 값**이다. 두 양이 같은 구조를 가리킨다고 읽으면 틀린다.",
+   "⚠_이미_원장에서_치웠다": "CLAUDE.md/methods 이력의 'MLIP-elastic 삭제'(elastic.json 4섹션 + 13키 + _index 152 data_points 제거)로 **이 경로의 산출물은 정본에 없다**. 그러나 **코드 경로는 남아 있고 새 파일럿이 그것을 쓴다** — 그래서 지금 문제다.",
+   "상태": "확인됨"
+  }
+ ],
+ "파일럿_선결조건_회신BP": [
+  "H0·P1·P2 에 **같은 형상 정책**을 적용한다",
+  "각자의 V₀ 를 **실제로 적용**한다 (기록만 하지 않는다 — GAP-3)",
+  "그 V₀ 에서 **고정셀 원자 완화**",
+  "**실제 응력을 기록**한다 (목표 평균압 0 GPa 과 별개로 잔류 평균압·편차응력을 따로)",
+  "위 넷이 **후속 계산까지 연결되는지** 확인한다",
+  "⛔ 회신 BP: \"'0 GPa' 라는 문구만 바꾸면 충분하지 않다\""
+ ],
+ "정확한_표현_회신BP": "셀 각도와 길이비를 고정하고 등방 E(V) 경로에서 부피를 최적화한다. 목표 평균압은 0 GPa 이며, 실제 잔류 평균압과 편차응력을 별도로 보고한다. ⛔ '전체 응력 0'·'자유 영응력 평형' 과 다르고, BM 적합의 최소라고 실제 출력 압력이 정확히 0 이 되지도 않는다.",
+ "⛔_하지_않은_것": [
+  "GAP-1~3 을 아직 **고치지 않았다.** 코드 수정은 파일럿 카드 v4 와 함께 간다 — 지금 고치면 회신이 요구한 '문서·실제 경로 일치' 를 증명할 방법이 사라진다(고친 뒤의 코드로는 불일치를 보일 수 없다).",
+  "GAP-3 이 과거 어떤 값을 오염시켰는지 **소급 조사하지 않았다.** MLIP-elastic 은 이미 정본에서 제거됐으므로 급하지 않다고 보지만, 그 판단 자체는 확인되지 않았다."
+ ],
+ "다음": [
+  "카드 v4 — 보고량 재정의 + 셀 정책 선결조건 5 + Q6 운영 판정 기록",
+  "GAP-1~3 이행 (코드) + selftest",
+  "1저자 비준"
+ ],
+ "ratification": {
+  "state": "ratified",
+  "actor_id": "yonghoon",
+  "role": "scientific_owner",
+  "timestamp": "2026-09-12T23:50:56Z",
+  "commit": "13ece6e97f5c025af5b8b28089b6518d1e858503",
+  "decision_ref": "D-2026-09-13-cascade-pilot-estimand-v4",
+  "_note": "1저자 비준 2026-09-13, 세션 중 구두 일괄 지시(\"비준 ㄱㄱ\"). ⚠ **일괄이었고 1저자가 각 문서를 축자 검토했다는 기록은 없다** — 그 사실을 여기 적어 둔다. 선행: agent 제안(claude) + 외부 리뷰 3라운드(BN NO-GO → BO 조건부 GO → BP 조건1 이행 인정). 앞의 둘은 독립 승인 두 표가 아니다.",
+  "⛔_승인_범위": "UMA 내부 진단 한정 (최대 30런 + 정적대조 2 SCF). 실물 효과·DFT 정확도·족 일반화는 포함되지 않는다.",
+  "status_before": "proposed"
+ }
+}

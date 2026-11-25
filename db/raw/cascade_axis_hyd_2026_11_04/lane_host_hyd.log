@@ -1,0 +1,6 @@
+종 1개 x 상대 1개 = 1 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/373 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 373/373 [00:00<00:00, 7379600.91it/s]
+[mp_api] 373 entries in Cl-H-Li-O-P-S
+[1/1] HOST       vs H2O      -0.0455 (0 V)  (7s)
+
+→ /data/work/repo/db/raw/cascade_axis_hyd_2026_11_04/host_hyd.jsonl

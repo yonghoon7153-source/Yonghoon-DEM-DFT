@@ -1,0 +1,84 @@
+{
+ "F_minus_I": [
+  [
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.05866,
+   -0.01742
+  ]
+ ],
+ "internal_residual_A": {
+  "P": {
+   "max": 0.039,
+   "rms": 0.039
+  },
+  "S": {
+   "max": 0.065,
+   "rms": 0.058
+  },
+  "Cl": {
+   "max": 0.011,
+   "rms": 0.011
+  },
+  "Li": {
+   "max": 0.057,
+   "rms": 0.046
+  }
+ },
+ "slab_mid_after_bulk_affine": {
+  "s_outer": {
+   "P": {
+    "raw_max": 0.291,
+    "after_bulk_affine_max": 0.231,
+    "after_bulk_affine_rms": 0.23
+   },
+   "S": {
+    "raw_max": 0.26,
+    "after_bulk_affine_max": 0.216,
+    "after_bulk_affine_rms": 0.187
+   },
+   "Cl": {
+    "raw_max": 0.456,
+    "after_bulk_affine_max": 0.372,
+    "after_bulk_affine_rms": 0.371
+   },
+   "Li": {
+    "raw_max": 1.241,
+    "after_bulk_affine_max": 1.334,
+    "after_bulk_affine_rms": 0.674
+   }
+  },
+  "li_outer": {
+   "P": {
+    "raw_max": 0.23,
+    "after_bulk_affine_max": 0.138,
+    "after_bulk_affine_rms": 0.138
+   },
+   "S": {
+    "raw_max": 0.207,
+    "after_bulk_affine_max": 0.148,
+    "after_bulk_affine_rms": 0.136
+   },
+   "Cl": {
+    "raw_max": 0.112,
+    "after_bulk_affine_max": 0.189,
+    "after_bulk_affine_rms": 0.189
+   },
+   "Li": {
+    "raw_max": 0.302,
+    "after_bulk_affine_max": 0.316,
+    "after_bulk_affine_rms": 0.234
+   }
+  }
+ },
+ "⛔": "사후 진단 (Codex BX Q2 권고 '균일 전단·수축으로 설명되는 변위와 Li 추가 이동을 나눈다') — 판정 아님 · 에너지 분해 아님"
+}

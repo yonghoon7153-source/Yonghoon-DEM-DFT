@@ -1,0 +1,131 @@
+{
+ "slug": "liang2026_interface_bottleneck_solid_state_batteries",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "103._Battery_Energy__2026__Liang__Overcoming_the_Interface_Bottleneck_in_Solid_State_Batteries__Electrolyte_Design__Interface.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 | Schematic diagram of the crystal structure of (a) Li7La3Zr2O12 [9], (b) Li6PS5X [11], and (c) Li3MX6 [12]. X represents Cl, Br, and I. Reproduced from [9] with permission from John Wiley and Sons, Copyright 2020. Reproduced from [11] with permission from John Wiley and Sons, Copyright 2008. Reproduced from [12] with permission from American Chemical Society, Copyright 2020.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    28.0,
+    557.8,
+    299.0
+   ],
+   "w": 2162,
+   "h": 1130,
+   "dpi": 300,
+   "src": "103._Battery_Energy__2026__Liang__Overcoming_the_Interface_Bottleneck_in_Solid_State_Batteries__Electrolyte_Design__Interface.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 | (a) Cross‐section SEM pictures of LICGC. Surface of the 5 nm sample (A) and 10 nm sample (B). Interlayers are on the left side of the sample edge (a very small visible indication for the 10 nm sample only). The darker regions are the newly formed phase, which grows into the bulk electrolyte LICGC (brighter areas to the right). Close‐ups of the interfaces between the original electrolyte structure and the new phase for 5 nm (C) and for 10 nm interlayers (D) [51]. (b) Conductivity plot of pristine LPO (deposition temperature of 275°C and 300°C each) and heat‐treated LPO (H/T 600 is a heat‐treated sample of ALD 300 at 600°C) [50]. Reproduced from [50] with permission from American Society of Chemistry, Copyright 2024. (c) The dQ‧dV−1 profiles of charge and discharge curves of the LNO and LNO‐4.5PO cathodes at different cycles [52]. Reproduced from [52] with permission from Elsevi",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    397.4,
+    557.6,
+    663.4
+   ],
+   "w": 2161,
+   "h": 1109,
+   "dpi": 300,
+   "src": "103._Battery_Energy__2026__Liang__Overcoming_the_Interface_Bottleneck_in_Solid_State_Batteries__Electrolyte_Design__Interface.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 | (a) Sequence from pristine to after several strippings and platings of Li metal: voids form on stripping; lateral growth of a thin Li film across the electrolyte surface (nucleating where void edges meet the electrolyte) on subsequent plating results in low plating polarization and formation of occluded voids. Some voids are eliminated on plating, but the occluded voids reopen on subsequent stripping, leading to accumulation of voiding and increasing loss of contact with cycling. This increases stripping polarization and results in dendrites on plating [59]. Reproduced from [59] with permission from Springer Nature, Copyright 2019. (b) Cl 2p XPS spectra of the cathode before and after cycling: HE‐LIC cell and LIC cell [36]. Reproduced from [36] with permission from Springer Nature, Copyright 2024.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    430.5,
+    557.8,
+    665.5
+   ],
+   "w": 2162,
+   "h": 980,
+   "dpi": 300,
+   "src": "103._Battery_Energy__2026__Liang__Overcoming_the_Interface_Bottleneck_in_Solid_State_Batteries__Electrolyte_Design__Interface.pdf",
+   "blank": 0.759
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 | (a) CCD measurements of Li symmetric cell with pristine, ALO5, ALO10 and ALO20 SSE in the step of the current density of 0.05 mA cm−2 [18]. Reproduced from [18] with permission from Elsevier, Copyright 2024. (b) Cycling life between pristine, surface‐modified, and surface/grain boundary‐fluorinated LLZO and Schematic illustrations of Li dendrite formation at the surface/grain boundary‐fluorinated LLZO/Li interface [74]. Reproduced from [74] with permission from John Wiley and Sons, Copyright 2024.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    439.7,
+    557.8,
+    686.3
+   ],
+   "w": 2162,
+   "h": 1028,
+   "dpi": 300,
+   "src": "103._Battery_Energy__2026__Liang__Overcoming_the_Interface_Bottleneck_in_Solid_State_Batteries__Electrolyte_Design__Interface.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 | (a) The stratification of the interphase was realized by the conversion reaction between the MgF2 modification layer and Na metal [78]. (b) Arrhenius plots of the total ionic conductivity of different SSE pellets [18]. Reproduced from [18] with permission from Elsevier, Copyright 2024.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    28.0,
+    557.7,
+    172.7
+   ],
+   "w": 2161,
+   "h": 604,
+   "dpi": 300,
+   "src": "103._Battery_Energy__2026__Liang__Overcoming_the_Interface_Bottleneck_in_Solid_State_Batteries__Electrolyte_Design__Interface.pdf",
+   "blank": 0.69
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 | Theoretical investigation of LiPOF as a solid‐state coating using DFT calculations. (a) Electrochemical stability range of LiPOF. (b) Thermodynamic evaluation of interfacial reactivity between Li6PS5Cl and LiPOF without applied potential and at (c) 2.8 V and (d) 4.3 V vs Li+/Li. (e) Thermodynamic evaluation of interfacial reactivity between NCM and LiPOF at (e) 2.8 and (f) 4.3 V vs Li+/Li [91]. Reproduced from [91] with permission from John Wiley and Sons, Copyright 2025. (g and i) Normalized concentration surface species as a function of time. (h and j) normalized electron binding energy shift as a function of time for the NZSP| NaxPOy and NZSPpolished systems. Dots are the experimental data, and the lines are the fits from the simulation [92]. Reproduced from [92] with permission from American Society of Chemistry, Copyright 2023. (k) Discovered stable crystals correspond to",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    369.4,
+    557.7,
+    640.1
+   ],
+   "w": 2161,
+   "h": 1128,
+   "dpi": 300,
+   "src": "103._Battery_Energy__2026__Liang__Overcoming_the_Interface_Bottleneck_in_Solid_State_Batteries__Electrolyte_Design__Interface.pdf",
+   "blank": 0.838
+  }
+ ]
+}

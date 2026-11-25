@@ -1,0 +1,106 @@
+{
+ "slug": "jun2026_ppma_econductive_binder_si_lowpressure_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "건식전극 논문/10. PPMA low P si anode ASSB.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Design of e−-conductive binders PPMA (PEDOT:P(SSx-co-MAy)). a Schematic highlighting the advantages of e−-conductive binders in Si electrodes in ASSBs. b, c Reaction scheme (b) and photographs of the synthesis from P(SSx-co-MAy) to PPMA by three steps (c).",
+   "bbox": [
+    33.7,
+    66.6,
+    561.2,
+    357.0
+   ],
+   "w": 2199,
+   "h": 1211,
+   "dpi": 300,
+   "src": "10. PPMA low P si anode ASSB.pdf",
+   "blank": 0.637
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | PPand PPMA with varying ratios ofPSS and PMA. a, b Molecular structure and 1H-NMR spectra (a), and FTIR spectra of P(SSx-co-MAy) (b). c, d 2D GIWAX patterns of PP and PPMAs ﬁlms (c) and their corresponding out-of-plane intensity proﬁles (d). e Cyclic voltammograms between 0.01 and 1.00 V (vs. Li/Li+) at",
+   "bbox": [
+    33.7,
+    66.4,
+    481.5,
+    653.9
+   ],
+   "w": 1867,
+   "h": 2449,
+   "dpi": 300,
+   "src": "10. PPMA low P si anode ASSB.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Si electrodes operating at 5 MPa, utilizing PPMA (PPMA11) vs. PVDF binders in (Li-In) || Si half cells in the potential range of 0.01–1.00 V (vs Li/Li+) at 30 °C. a, b Initial lithiation–delithiation voltage proﬁles (a) and corresponding cycling performance at 0.2 C (1 C = 3500 mA g-1) (b). c Schematic of the ex situ e−",
+   "bbox": [
+    33.7,
+    66.4,
+    524.7,
+    603.8
+   ],
+   "w": 2047,
+   "h": 2241,
+   "dpi": 300,
+   "src": "10. PPMA low P si anode ASSB.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Si electrodes employing PP or PPMA at 0.2 C (1 C = 3500 mA g−1), 30 °C, and 5 MPa in (Li-In) || Si half cells. a, b Initial lithiation–delithiation voltage proﬁles (a) and corresponding cycling performances (b) in the potential range of 0.01–1.00 V (vs Li/Li+). c, d Nyquist plots after ﬁrst and 50th cycles (c) and",
+   "bbox": [
+    33.7,
+    73.0,
+    377.6,
+    533.7
+   ],
+   "w": 1434,
+   "h": 1920,
+   "dpi": 300,
+   "src": "10. PPMA low P si anode ASSB.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Si || NCM full cells at 30 °C and 5 MPa. a–c Initial charge–discharge voltage proﬁles at 0.05 C (1 C = 196 mA g−1) for using PVDF or PPMA11 between 2.0 and 4.29 V (a), corresponding cycling performances (b) and rate capability (c). d, Discharge capacities at 70 MPa and 5 MPa at 0.5 C (1 C = 196 mA g-1). e Initial charge–discharge voltage proﬁles of prelithiated Si electrodes (PreLi-Si) using PPMA11 between 2.0 and 4.25 V compared with those of pristine Si electrodes using PPMA11. f Cycling performance of PreLi-Si/PPMA11 electrodes at 5 MPa compared",
+   "bbox": [
+    33.7,
+    45.2,
+    545.7,
+    540.4
+   ],
+   "w": 2134,
+   "h": 2064,
+   "dpi": 300,
+   "src": "10. PPMA low P si anode ASSB.pdf",
+   "blank": 0.805
+  }
+ ]
+}

@@ -1,0 +1,316 @@
+{
+ "slug": "pouraghajan2018_tortuosity_polarization_interrupt_vs_blocking_electrolyte",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Representation of tortuous pathways.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    624.0,
+    527.7,
+    741.1
+   ],
+   "w": 966,
+   "h": 489,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.481
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Schematic of (a) a typical polarization-interrupt cell (b) cell used for measuring relatively low tortuosity ﬁlms.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.5,
+    491.0,
+    211.9
+   ],
+   "w": 1922,
+   "h": 627,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.375
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic of blocking-electrolyte cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    475.3,
+    525.8,
+    718.7
+   ],
+   "w": 954,
+   "h": 1015,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.767
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Example of Nyquist impedance plot with reference to key char- acteristics and (b) the difference in simple tortuosity approximation methods, showing the effect on calculated tortuosity values.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    299.7,
+    585.0,
+    442.6
+   ],
+   "w": 2317,
+   "h": 596,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Diagram of the transmission-line model (Equation 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    89.6,
+    50.6,
+    585.0,
+    171.7
+   ],
+   "w": 2065,
+   "h": 506,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.601
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Example of Nyquist impedance plot of a pristine intact uncalen- dered cathode with relatively large contact resistance that obscures the high- frequency region, along with model ﬁt using Equation 15.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    321.8,
+    556.1,
+    524.1
+   ],
+   "w": 1080,
+   "h": 844,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Delamination process of a (2.5 × 2.5) cm2 Anode using nitric acid.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    485.0,
+    478.2,
+    739.6
+   ],
+   "w": 1872,
+   "h": 1062,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.236
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Comparison of tortuosity values for polarization-interrupt and blocking-electrolyte methods for (a) commercial quality transition metal ox- ide cathodes and (b) a commercial quality graphite anode. 95% conﬁdence intervals are shown, except in the case of blocking electrolyte (delaminated ﬁlm).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    62.4,
+    556.0,
+    201.7
+   ],
+   "w": 1080,
+   "h": 582,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.784
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Example of Nyquist impedance plot of blocking electrolyte exper- iment with model ﬁt for a cathode sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    62.4,
+    288.2,
+    335.5
+   ],
+   "w": 1080,
+   "h": 1140,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Example of cell potential during polarization-Interrupt experi- ment. The black dashed line shows part of the data taken to be the linear diffusive region.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.9,
+    66.9,
+    548.4,
+    239.8
+   ],
+   "w": 1019,
+   "h": 722,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.964,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = right column strip between the last body-text block and the caption top on PDF p.8 (printed A(2642+n)), white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Nyquist impedance plot of blocking electrolyte method for cycled anode. The inset shows behavior at high frequencies.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.9,
+    289.0,
+    251.6
+   ],
+   "w": 1081,
+   "h": 792,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Example of Nyquist impedance plot of a cathode, using elec- trolytes with different conductivities, showing the effect of lower conductivity electrolyte in de-convoluting ionic from electronic contact resistances.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    521.0,
+    289.0,
+    722.6
+   ],
+   "w": 1081,
+   "h": 841,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Photographs of delaminated (a) intact ﬁlm and (b) ﬁlm damaged by delamination.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.8,
+    556.0,
+    191.1
+   ],
+   "w": 1080,
+   "h": 544,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.231
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 10,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Nyquist plot of the blocking-electrolyte test for (a) intact cathode exhibiting large contact resistance and (b) delaminated cathode with copper as a current collector resulting in small contact resistance. Fitted tor- tuosity valuesand 95% conﬁdence intervalsareindicated on the plots.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.5,
+    68.0,
+    361.7,
+    236.5
+   ],
+   "w": 1365,
+   "h": 703,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.947,
+   "manual_crop": "auto extractor found no graphic (side caption: panels a·b sit at the top of PDF p.10 = printed A2652, LEFT of the caption block x 372–549); clip = page region left of the caption, white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 10,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Nyquist plot of the blocking-electrolyte test for cathode 1: (a) intact and (b) delaminated with copper as a current collector. Fitted tortuosity values and 95% conﬁdence intervals are also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    50.6,
+    585.0,
+    463.8
+   ],
+   "w": 2317,
+   "h": 1723,
+   "dpi": 300,
+   "src": "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf",
+   "blank": 0.937
+  }
+ ],
+ "missing_labels": []
+}

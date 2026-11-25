@@ -1,0 +1,399 @@
+#!/usr/bin/env bash
+# =============================================================================
+# watch_qe_relax.sh — QE relax / NEB 잡이 **진짜 살아 있는지** 본다.
+#
+# ⛔⛔ 왜 만들었나 (2026-09-03) — 감시가 사람을 두 번 속였다.
+#   ① gabia `/root/w/li3nd.sh` 가 r1·r2 를 `run` 으로 찍고 있었다. 실제로는 둘 다
+#      죽어 있었다 (r1 26시간, r2 는 GPU OOM 으로 재시작 몇 분 만에 사망).
+#      그 화면은 **파일만** 보고 프로세스를 안 봤다 — 파일은 죽어도 남는다.
+#   ② 같은 날 ORCA gs2 는 반대였다. 프로세스는 살아 있는데 `.out` 이 76시간
+#      안 컸다 (MPI 랭크 유실). 프로세스만 보면 그건 `run` 이다.
+#   ⇒ **'프로세스가 있다' 와 '진전이 있다' 는 서로 다른 사실이다.** 둘 다 봐야
+#     하고, 어긋나면 그 어긋남 자체를 화면에 내야 한다. 하나만 보는 감시는
+#     반드시 둘 중 한 방향으로 거짓말한다.
+#
+# ⛔ 왜 watch_gabia.py 에 안 붙였나
+#   그건 SEI **NEB 결과 판정**(끝점 대칭·Ea 인용 자격) 도구다. 여기는 판정을
+#   안 하고 **생사만** 본다 — 기계도 가린다(gabia·kgy 둘 다). 성격이 다르고
+#   kgy 에서 python 의존 없이 돌아야 해서 갈랐다.
+#
+# ⛔ 이 도구가 **못 하는 것**
+#   · 물리 판정을 하지 않는다. `수렴` 은 QE 가 `bfgs converged` 를 찍었다는
+#     뜻일 뿐, 그 상태가 **바닥상태인지 아닌지는 모른다**
+#     (li3nd r0 실측: |F|=1.6e-5 로 "수렴" 했지만 대칭보호 정류점이었고
+#      r2 가 1.19 eV 아래를 찾았다 — 이 표는 그걸 구분 못 한다).
+#   · 죽은 잡을 되살리거나 다시 걸지 않는다. lock 도 건드리지 않는다.
+#   · 남은 시간을 예측하지 않는다 (스텝 시간이 계마다 몇 배씩 다르다).
+#   · GPU 여유가 다음 잡에 충분한지 계산하지 않는다 — 지금 누가 물고 있는지만 본다.
+#
+#   bash tools/sei/watch_qe_relax.sh [루트 ...]
+#   watch -n 60 "bash ~/work/Yonghoon-DEM-DFT/tools/sei/watch_qe_relax.sh"
+#   STALL_MIN=30 bash tools/sei/watch_qe_relax.sh /data/work/runs/sei_control
+#   bash tools/sei/watch_qe_relax.sh --selftest
+#
+#   환경변수
+#     QE_WATCH_ROOTS  기본 루트 (공백 구분). 인자를 주면 인자가 이긴다.
+#     STALL_MIN       살아있는데 이만큼 .out 이 안 크면 '정체' (기본 45분)
+#     QE_PROC_NAMES   생사를 볼 실행파일 이름 (기본 "pw.x neb.x ph.x")
+#     DEPTH           루트 아래 몇 단계까지 훑나 (기본 3)
+# =============================================================================
+set -uo pipefail; set +H
+
+STALL_MIN=${STALL_MIN:-45}
+QE_PROC_NAMES=${QE_PROC_NAMES:-"pw.x neb.x ph.x"}
+DEPTH=${DEPTH:-3}
+
+# ── 살아있는 QE 프로세스의 cwd 지도 ─────────────────────────────────────────
+#   근거는 **커널의 cwd** 다. lock 파일도, 출력 파일도 죽은 뒤에 남는다.
+_alive_pids=""
+_scan_procs() {
+  local n p c
+  _alive_pids=""
+  for n in $QE_PROC_NAMES; do
+    for p in $(pgrep -x "$n" 2>/dev/null); do
+      c=$(readlink "/proc/$p/cwd" 2>/dev/null) || continue
+      _alive_pids="$_alive_pids$p|$c
+"
+    done
+  done
+}
+_pid_for_dir() {                       # $1=dir → "pid" 또는 빈 문자열
+  printf '%s' "$_alive_pids" | awk -F'|' -v d="$1" '$2==d {print $1; exit}'
+}
+
+# ── GPU 를 실제로 물고 있는 pid ─────────────────────────────────────────────
+#   ⛔ 2026-10-18 kgy 실물: 프로세스별 정보가 막힌 기계는 표 대신 'Process-level GPU information is restricted.'
+#     한 줄을 준다. 예전엔 그 줄을 프로세스 하나로 세서 'GPU 점유 프로세스 1개' 를 찍었다 — cascade MD 가 EOS pw.x
+#     옆에서 돌고 있었는데 '혼자 돈다' 로 읽혔다. ⇒ 숫자 행 (pid,MiB) 만 세고, 막혔으면 막혔다고 말한다.
+_gpu_map=""; _gpu_restricted=0
+_scan_gpu() {
+  command -v nvidia-smi >/dev/null 2>&1 || return 0
+  local raw
+  raw=$(nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits 2>&1)
+  printf '%s' "$raw" | grep -qiE 'restricted|insufficient permission' && _gpu_restricted=1
+  _gpu_map=$(printf '%s\n' "$raw" | tr -d ' ' | grep -E '^[0-9]+,[0-9]+$')
+}
+_gpu_for_pid() { printf '%s' "$_gpu_map" | awk -F, -v p="$1" '$1==p {print $2; exit}'; }
+
+# ── 한 출력파일을 읽는다 ────────────────────────────────────────────────────
+#   상태 우선순위: 종료마커 > 생사 > 정체.
+#   ⚠ `JOB DONE` 을 완주로 읽지 않는다 — nstep 을 다 써도 QE 는 JOB DONE 을 찍는다
+#     (li3nd r2 실측: step=50, |F|=0.041 인데 JOB DONE). 그래서 두 마커를 가른다:
+#       'bfgs converged in'                      → 진짜 수렴
+#       'The maximum number of steps has been'   → nstep 소진 (미수렴)
+_read_out() {
+  local f="$1" now mt _nneb _ef _eb
+  ST=""; NOTE=""; AGE="-"; STEP="-"; FRC="-"; ENE="-"
+  now=$(date +%s); mt=$(stat -c %Y "$f" 2>/dev/null || echo "$now")
+  AGE=$(( (now - mt) / 60 ))
+  STEP=$(grep -ac "^!    total energy" "$f" 2>/dev/null); [ -n "$STEP" ] || STEP=0
+  ENE=$(grep -a "^!    total energy" "$f" 2>/dev/null | tail -1 | awk '{print $5}')
+  FRC=$(grep -a "Total force =" "$f" 2>/dev/null | tail -1 | awk '{print $4}')
+  [ -n "$ENE" ] || ENE="-"; [ -n "$FRC" ] || FRC="-"
+  # ── NEB (neb.x) — 스텝은 'activation energy (->)' 줄 수, 에너지 칸엔 정방향 Ea[eV] ──
+  #   ⚠ neb.out 에는 '!    total energy' 도 'bfgs converged' 도 없다. 이 분기가 없으면
+  #     끝난 NEB 가 "죽음" 으로 찍힌다 (2026-09-03 kgy li_metal 에서 미리 잡음).
+  _nneb=$(grep -ac "activation energy (->)" "$f" 2>/dev/null); [ -n "$_nneb" ] || _nneb=0
+  if [ "$_nneb" -gt 0 ]; then
+    STEP=$_nneb
+    _ef=$(grep -a "activation energy (->)" "$f" | tail -1 | awk '{print $(NF-1)}')
+    _eb=$(grep -a "activation energy (<-)" "$f" | tail -1 | awk '{print $(NF-1)}')
+    ENE="Ea→${_ef}"
+    NOTE="Ea ← ${_eb:-?} eV (대칭 끝점이면 →/← 가 같아야 한다)"
+  fi
+
+  if grep -aq "neb: convergence achieved" "$f" 2>/dev/null; then
+    ST="✅ 수렴(NEB)"
+    NOTE="${NOTE:+$NOTE · }경로 수렴 — Ea 인용은 collect_neb.py 판정을 따른다"
+  elif grep -aq "neb: reached the maximum number of steps" "$f" 2>/dev/null; then
+    ST="⛔ nstep소진(NEB)"
+    NOTE="${NOTE:+$NOTE · }nstep_path 소진 **미수렴** — nstep_path 늘려 restart_mode='restart' 로 이어야 한다"
+  elif grep -aq "bfgs converged in" "$f" 2>/dev/null; then
+    # ⛔ 2026-09-03 kgy 실물 — 이 주의문이 **모든** 수렴 잡에 "li3nd r0" 을 붙이고 있었다.
+    #   ep_final·ep_initial·li_metal_bcc/01_vcrelax 는 li3nd 가 아니다. 화면이 거짓 출처를
+    #   대는 건 값이 틀린 것과 같은 등급이다 (회신 Z-2 의 `_PSU` 거짓 표시와 같은 부류).
+    #   일반 문구는 유지하고(수렴은 정류점이지 바닥상태가 아니다), **실측 근거는 그 계에만** 붙인다.
+    ST="✅ 수렴"
+    NOTE="⚠ 수렴 = 정류점 · 바닥상태 보장 아님"
+    case "$f" in
+      *li3nd*|*li3n_*) NOTE="$NOTE (대칭보호 정류점 실측 — li3nd r0: |F|=1.6e-5 인데 정류점)" ;;
+    esac
+  elif grep -aq "The maximum number of steps has been" "$f" 2>/dev/null; then
+    ST="⛔ nstep소진"
+    NOTE="JOB DONE 이지만 **미수렴** — nstep 늘려 restart_mode='restart' 로 이어야 한다"
+  elif grep -aqE "Program stopped by user request|Maximum CPU time exceeded" "$f" 2>/dev/null; then
+    # ⛔ 2026-10-11 — EXIT 로 세운 relax 도 JOB DONE 을 찍는다. 아래 JOB DONE → '✅ 종료' 로 떨어지면
+    #   세운 잡이 완주처럼 보인다 (restart_qe_relax.sh 는 같은 자리에서 '수렴' 이라 했다 · li3nd r2·r3).
+    ST="⏸ 세움(EXIT)"
+    NOTE="사람이 세운 relax — 미수렴 · restart_mode='restart' 로 이어야 한다 (restart_qe_relax.sh --run)"
+  elif grep -aqi "CUDA_ERROR_OUT_OF_MEMORY\|Accelerator Fatal Error" "$f" 2>/dev/null; then
+    ST="☠ GPU OOM"
+    NOTE="다른 잡이 GPU 를 물고 있을 때 붙으면 이렇게 죽는다 — 한 번에 하나만"
+  elif grep -aq "Error in routine" "$f" 2>/dev/null; then
+    ST="☠ QE 오류"
+    NOTE=$(grep -a -A1 "Error in routine" "$f" 2>/dev/null | tail -1 | cut -c1-60)
+  elif grep -aq "JOB DONE" "$f" 2>/dev/null; then
+    # ⛔ 2026-09-03 kgy 실물 — scf·nscf·dos 류 **단발 계산**은 relax 마커가 없다.
+    #   li_metal_bcc 의 02_scf/03_nscf/… 네 개가 전부 '☠ 죽음' 으로 찍혔다 (거짓 사망).
+    #   위 분기(수렴·nstep소진·오류)에 안 걸리고 JOB DONE 이 있으면 정상 종료다.
+    ST="✅ 종료"
+    NOTE="relax/NEB 마커 없음 — scf·nscf·dos 류 단발 계산 완주"
+  fi
+}
+
+# ── 잡 폴더인가 ─────────────────────────────────────────────────────────────
+# ⛔ 2026-09-06 실물 — `_control_structures`(구조 보관 폴더)에 옛 `.out` 이 하나 남아 있어서
+#   매 화면마다 "☠ QE 오류 · opening input file" 로 찍히고 **죽음/오류 개수에까지 들어갔다**
+#   (12477분 = 8.7일째). 늑대가 왔다고 매번 외치면 진짜 죽은 잡이 그 옆에 묻힌다.
+#   `restart_qe_relax.sh` 에 같은 처방을 이미 했는데 **watch 쪽을 안 고쳤다** — 같은 병을
+#   두 도구가 나눠 갖고 있었다.
+# ⚠ 숨기지는 않는다. 안 보이면 "이게 잡이었는데 사라진 건가" 를 다시 물어야 한다.
+#   행은 남기되 `· 잡 아님` 으로 갈라 **개수에서 뺀다.**
+# ⚠ `ls "$d"/*.in` 로 쓰면 안 된다 — `shopt -s nullglob` 이면 매치가 없을 때 glob 이
+#   **사라지고** `ls` 가 인자 없이 현재 디렉터리를 찍으며 **성공**한다 (restart 쪽 selftest 가 잡은 실물).
+qe_is_job_dir() {   # $1 = 폴더 → 0 이면 잡 폴더다
+  [ -n "$(find "$1" -maxdepth 1 \( -name '*.in' -o -name '*.neb' -o -name '*.path' \) \
+          -type f 2>/dev/null | head -1)" ]
+}
+
+# ── selftest ────────────────────────────────────────────────────────────────
+if [ "${1:-}" = "--selftest" ]; then
+  T=$(mktemp -d); ok=0; bad=0
+  chk(){ if [ "$1" = "1" ]; then echo "  ⭕ $2"; ok=$((ok+1)); else echo "  ⛔ $2"; bad=$((bad+1)); fi; }
+  R="$T/runs"; mkdir -p "$R"/{dead,live,stall,exhaust,conv,oom}
+  _mk(){ printf '     Total force =     %s     Total SCF correction = 0.0\n!    total energy = %s Ry\n' \
+           "$2" "$3" > "$1/00_control_relax.out"; }
+  _mk "$R/dead"    0.012 -14652.03; _mk "$R/live" 0.012 -14652.03
+  _mk "$R/stall"   0.012 -14652.03; _mk "$R/exhaust" 0.041 -14652.12
+  _mk "$R/conv"    0.0001 -14652.20; _mk "$R/oom" 0.9 -14650.0
+  # nstep 소진은 JOB DONE 을 **찍는다** — 이걸 완주로 읽으면 안 된다 (li3nd r2)
+  printf '     The maximum number of steps has been reached.\n     JOB DONE.\n' >> "$R/exhaust/00_control_relax.out"
+  printf '     bfgs converged in  120 scf cycles and 40 bfgs steps\n     JOB DONE.\n' >> "$R/conv/00_control_relax.out"
+  printf 'Accelerator Fatal Error: cuMemAlloc returned error 2 (CUDA_ERROR_OUT_OF_MEMORY)\n' >> "$R/oom/00_control_relax.out"
+  touch -d '300 minutes ago' "$R/stall/00_control_relax.out"
+  touch -d '300 minutes ago' "$R/dead/00_control_relax.out"
+  # NEB 출력 — relax 마커가 하나도 없다. 이 분기가 없으면 끝난 NEB 가 '죽음' 이 된다.
+  mkdir -p "$R/nebconv" "$R/nebmax"
+  printf '     activation energy (->) =   0.251000 eV\n     activation energy (<-) =   0.251000 eV\n     activation energy (->) =   0.229000 eV\n     activation energy (<-) =   0.229000 eV\n     neb: convergence achieved in   2 iterations\n     JOB DONE.\n' > "$R/nebconv/neb.out"
+  printf '     activation energy (->) =   0.400000 eV\n     activation energy (<-) =   0.380000 eV\n     neb: reached the maximum number of steps\n     JOB DONE.\n' > "$R/nebmax/neb.out"
+  # 한 폴더에 여러 .out — vc-relax(수렴) + scf(단발, relax 마커 없음). 둘째가 '죽음' 이면 거짓 사망.
+  mkdir -p "$R/multi"
+  printf '     Total force =     0.000000     Total SCF correction = 0.0\n!    total energy = -28.94 Ry\n     bfgs converged in   8 scf cycles and   6 bfgs steps\n     JOB DONE.\n' > "$R/multi/01_vcrelax.out"
+  printf '!    total energy = -28.94439973 Ry\n     JOB DONE.\n' > "$R/multi/02_scf.out"
+  printf '     End of band structure calculation\n     JOB DONE.\n' > "$R/multi/03_nscf.out"
+  # ⛔ 2026-09-03 kgy 실물 — 수렴 주의문이 li3nd 아닌 잡에도 "li3nd r0" 을 붙였다.
+  #   li3nd 인 잡(양성)과 아닌 잡(음성)을 같이 둬서 출처가 계를 따라가는지 본다.
+  mkdir -p "$R/li3nd_r0" "$R/ep_final"
+  printf '     Total force =     0.000016     Total SCF correction = 0.0\n!    total energy = -14652.03 Ry\n     bfgs converged in  40 scf cycles and  1 bfgs steps\n     JOB DONE.\n' > "$R/li3nd_r0/00_relax.out"
+  printf '     Total force =     0.002819     Total SCF correction = 0.0\n!    total energy = -766.97 Ry\n     bfgs converged in  90 scf cycles and 18 bfgs steps\n     JOB DONE.\n' > "$R/ep_final/00_relax.out"
+
+  # ⛔ 2026-09-03 kgy 실물 — restart: 옛 .out 에 수렴 마커가 남은 채 새 프로세스가 돈다.
+  #   NEB 판(neb: convergence achieved)과 relax 판(bfgs converged) 둘 다 만든다.
+  mkdir -p "$R/restart_neb" "$R/restart_relax"
+  printf '     activation energy (->) =   0.080578 eV\n     activation energy (<-) =   0.080600 eV\n     neb: convergence achieved in  12 iterations\n     JOB DONE.\n' > "$R/restart_neb/neb.out"
+  printf '     Total force =     0.000016     Total SCF correction = 0.0\n!    total energy = -14652.03 Ry\n     bfgs converged in  40 scf cycles and  1 bfgs steps\n     JOB DONE.\n' > "$R/restart_relax/00_relax.out"
+  touch -d '200 minutes ago' "$R/restart_neb/neb.out" "$R/restart_relax/00_relax.out"
+  # ⚠ 2026-09-06 — 여기까지의 픽스처엔 **입력 파일이 없었다.** 실물 잡 폴더엔 항상 있다.
+  #   픽스처가 실물과 다르면 없는 버그를 쫓거나(반대로) 있는 버그를 놓친다.
+  for _jd in "$R"/*/; do touch "${_jd}pw.in"; done
+  # ⛔ 실물(2026-09-06): 구조 보관 폴더. 입력이 없고 옛 .out 만 있다 — 8.7일째 "☠ QE 오류" 로
+  #   찍히며 죽음/오류 개수를 부풀리고 있었다. **잡이 아니면 잡이 아니라고 말한다.**
+  mkdir -p "$R/_control_structures"
+  printf '     Error in routine  read_input_file (1):\n     opening input file\n' \
+      > "$R/_control_structures/00_relax.out"
+
+  # 가짜 QE 프로세스 — cwd 가 근거이므로 그 폴더에서 띄운다
+  cp /bin/sleep "$T/qefake" && chmod +x "$T/qefake"
+  ( cd "$R/live"  && exec "$T/qefake" 300 ) & _p1=$!
+  ( cd "$R/stall" && exec "$T/qefake" 300 ) & _p2=$!
+  ( cd "$R/restart_neb"   && exec "$T/qefake" 300 ) & _p3=$!
+  ( cd "$R/restart_relax" && exec "$T/qefake" 300 ) & _p4=$!
+  sleep 1
+  OUT=$(QE_PROC_NAMES=qefake STALL_MIN=45 bash "$0" "$R" 2>&1)
+  kill "$_p1" "$_p2" "$_p3" "$_p4" 2>/dev/null
+
+  chk "$(echo "$OUT" | grep -E '^  _control_structures' | grep -q '잡 아님' && echo 1 || echo 0)" \
+      "⓪ ⛔음성(실물 8.7일): 입력 없는 보관 폴더를 '☠ QE 오류' 로 안 읽는다"
+  chk "$(echo "$OUT" | grep -E '^  _control_structures' | grep -q '☠' && echo 0 || echo 1)" \
+      "⓪-b ⛔음성: 그 행이 죽음/오류 표시를 달지 않는다 (개수가 부풀면 진짜 죽은 잡이 묻힌다)"
+  chk "$(echo "$OUT" | grep -q '_control_structures' && echo 1 || echo 0)" \
+      "⓪-c ⛔음성: 그렇다고 **숨기지도 않는다** — 안 보이면 사라진 건지 다시 물어야 한다"
+  chk "$(qe_is_job_dir "$R/live" && echo 1 || echo 0)" "⓪-d .in 이 있으면 잡 폴더다"
+  chk "$(qe_is_job_dir "$R/_control_structures" && echo 0 || echo 1)" \
+      "⓪-e ⛔음성: nullglob 함정 — .in 이 없으면 **거짓**이어야 한다 (ls 로 쓰면 성공해 버린다)"
+  chk "$(echo "$OUT" | grep -E '^  live' | grep -qE 'run' && echo 1 || echo 0)" \
+      "① 양성: 프로세스가 살아있고 .out 이 최근이면 run"
+  chk "$(echo "$OUT" | grep -E '^  dead' | grep -q '죽음' && echo 1 || echo 0)" \
+      "② ⛔음성(li3nd r1·r2 실측): **프로세스가 없으면 죽음**이다 — 파일이 있다고 run 으로 찍지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  stall' | grep -q '정체' && echo 1 || echo 0)" \
+      "③ ⛔음성(gs2 76시간): 프로세스는 살아있어도 .out 이 문턱 넘게 조용하면 정체"
+  chk "$(echo "$OUT" | grep -E '^  exhaust' | grep -q 'nstep소진' && echo 1 || echo 0)" \
+      "④ ⛔음성(li3nd r2 실측): **JOB DONE 을 완주로 읽지 않는다** — nstep 소진을 가른다"
+  chk "$(echo "$OUT" | grep -E '^  exhaust' | grep -q '수렴$' && echo 0 || echo 1)" \
+      "④-b ⛔음성: nstep 소진을 '수렴' 으로 세지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  conv' | grep -q '수렴' && echo 1 || echo 0)" \
+      "⑤ 양성: bfgs converged 는 수렴이다"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb' | grep -qE 'run|정체' && echo 1 || echo 0)" \
+      "⑭ ⛔음성(kgy CI 실물): 옛 .out 에 'neb: convergence achieved' 가 남아 있어도 **살아있는 프로세스가 있으면 run** 이다 — 수렴으로 찍지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb +✅' && echo 0 || echo 1)" \
+      "⑭-b 상태 칸이 '✅ 수렴' 이 아니다 (비고에 '이전 실행(수렴)' 을 적는 건 맞다 — 상태만 본다)"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb' | grep -q 'restart\|이전 실행' && echo 1 || echo 0)" \
+      "⑭-c 비고에 '.out 은 이전 실행 파일' 이라고 적는다 — 왜 run 인데 스텝이 옛 값인지 사람이 알 수 있게"
+  chk "$(echo "$OUT" | grep -E '^  restart_relax' | grep -qE 'run|정체' && echo 1 || echo 0)" \
+      "⑭-d relax 판도 같다: 'bfgs converged' 옛 파일 + 살아있는 pw.x → run"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb' | grep -q '정체' && echo 0 || echo 1)" \
+      "⑭-e restart 직후 .out 이 옛 파일이라 조용m 이 커도 **정체로 찍지 않는다** (아직 안 덧썼을 뿐)"
+  chk "$(echo "$OUT" | grep -E '^  conv' | grep -q '바닥상태' && echo 1 || echo 0)" \
+      "⑤-b 수렴이 바닥상태 보장이 **아니라는** 것을 같이 말한다 (li3nd r0 대칭보호)"
+  chk "$(echo "$OUT" | grep -E '^  ep_final' | grep -q 'li3nd' && echo 0 || echo 1)" \
+      "⑬ ⛔음성(kgy 실물): li3nd 가 **아닌** 수렴 잡에 'li3nd' 출처를 붙이지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  ep_final' | grep -q '바닥상태 보장 아님' && echo 1 || echo 0)" \
+      "⑬-b 그래도 일반 주의(정류점 ≠ 바닥상태)는 모든 수렴 잡에 남는다"
+  chk "$(echo "$OUT" | grep -E '^  li3nd_r0' | grep -q 'li3nd r0' && echo 1 || echo 0)" \
+      "⑬-c 양성: li3nd 잡에는 실측 근거를 그대로 붙인다"
+  chk "$(echo "$OUT" | grep -E '^  oom' | grep -q 'OOM' && echo 1 || echo 0)" \
+      "⑥ ⛔음성(li3nd r2 12:08 실측): GPU OOM 사망을 그냥 '죽음' 으로 뭉뚱그리지 않는다"
+  chk "$(echo "$OUT" | grep -qE '살아있음 *3' && echo 1 || echo 0)" \
+      "⑦ 합계에서 정체를 '살아있음' 으로 세지 않는다 (live 1 + restart 2 = 3 · stall 은 제외)"
+  chk "$(echo "$OUT" | grep -E '^  nebconv' | grep -q '수렴(NEB)' && echo 1 || echo 0)" \
+      "⑨ 양성(NEB): 'neb: convergence achieved' 는 수렴이다 — relax 마커가 없어도 죽음으로 찍지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  nebconv' | grep -q 'Ea→0.229000' && echo 1 || echo 0)" \
+      "⑨-b NEB 는 스텝을 'activation energy (->)' 줄로 세고 마지막 정방향 Ea 를 에너지 칸에 낸다"
+  chk "$(echo "$OUT" | grep -E '^  nebmax' | grep -q 'nstep소진(NEB)' && echo 1 || echo 0)" \
+      "⑩ ⛔음성(NEB): 'reached the maximum number of steps' 는 JOB DONE 이어도 **미수렴**이다"
+  chk "$(echo "$OUT" | grep -E '^  multi/02_scf' | grep -q '종료' && echo 1 || echo 0)" \
+      "⑪ ⛔음성(kgy 실물): relax 마커 없는 scf 단발 계산의 JOB DONE 은 **종료**다 — 죽음으로 찍지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  multi/03_nscf' | grep -q '죽음' && echo 0 || echo 1)" \
+      "⑪-b nscf(에너지 줄도 없음)도 죽음이 아니다"
+  chk "$(echo "$OUT" | grep -E '^  multi/01_vcrelax' | grep -q '수렴' && echo 1 || echo 0)" \
+      "⑫ 한 폴더에 .out 이 여럿이면 **파일명까지** 낸다 (폴더명 네 줄은 읽을 수 없다)"
+  chk "$(echo "$OUT" | grep -qE '단발종료 2' && echo 1 || echo 0)" \
+      "⑫-b 합계에 단발종료를 따로 센다 (죽음/오류에 섞지 않는다)"
+
+  # ⛔ 2026-10-18 kgy 실물 — 프로세스별 정보가 막힌 nvidia-smi. 가짜 nvidia-smi 둘 (막힘 · 프로세스 둘) 로 본다.
+  mkdir -p "$T/nsr" "$T/ns2"
+  printf '#!/bin/sh\ncase "$*" in *query-compute-apps*) echo "Process-level GPU information is restricted.";; *) echo "12613 MiB, 24576 MiB, 98 %%";; esac\n' > "$T/nsr/nvidia-smi"
+  printf '#!/bin/sh\ncase "$*" in *query-compute-apps*) printf "1225986, 10200\\n244770, 2300\\n";; *) echo "12853 MiB, 24576 MiB, 98 %%";; esac\n' > "$T/ns2/nvidia-smi"
+  chmod +x "$T/nsr/nvidia-smi" "$T/ns2/nvidia-smi"
+  OUTR=$(PATH="$T/nsr:$PATH" QE_PROC_NAMES=qefake bash "$0" "$R" 2>&1)
+  OUTG=$(PATH="$T/ns2:$PATH" QE_PROC_NAMES=qefake bash "$0" "$R" 2>&1)
+  chk "$(echo "$OUTR" | grep -q 'GPU 점유 프로세스' && echo 0 || echo 1)" \
+      "⑮ ⛔음성(kgy 10-18 실물): 'information is restricted' 한 줄을 프로세스 1 개로 세지 않는다"
+  chk "$(echo "$OUTR" | grep -q '프로세스별 정보 막힘' && echo 1 || echo 0)" \
+      "⑮-b 막혔으면 막혔다고 말한다 (몇 개인지 모른다 · 합계는 낸다)"
+  chk "$(echo "$OUTG" | grep -q 'GPU 점유 프로세스 2개' && echo 1 || echo 0)" \
+      "⑮-c 양성: 숫자 행 둘이면 2 개로 센다 (+ 나눠 쓴다는 경고)"
+  chk "$(echo "$OUTG" | grep -q '둘 이상이 나눠 쓴다' && echo 1 || echo 0)" \
+      "⑮-d 양성: 둘 이상이면 공유 경고를 낸다"
+
+  OUT2=$(bash "$0" "$T/nonexistent" 2>&1); _rc=$?
+  chk "$([ $_rc -ne 0 ] && echo 1 || echo 0)" "⑧ ⛔음성: 루트가 없으면 0 이 아닌 코드로 끝난다"
+  chk "$(echo "$OUT2" | grep -qi '없' && echo 1 || echo 0)" "⑧-b ⛔음성: 없다고 말한다 (빈 표를 정상처럼 그리지 않는다)"
+
+  rm -rf "$T"
+  echo "selftest: $ok 통과 / $bad 실패"
+  [ "$bad" = 0 ] || exit 1
+  exit 0
+fi
+
+# ── 본체 ────────────────────────────────────────────────────────────────────
+if [ "$#" -gt 0 ]; then ROOTS="$*"; else
+  ROOTS=${QE_WATCH_ROOTS:-"/data/work/runs/sei_control /data/work/runs/sei_neb /data/work/runs/sei_dft"}
+fi
+_have=0
+for r in $ROOTS; do [ -d "$r" ] && _have=$((_have+1)); done
+if [ "$_have" = 0 ]; then
+  echo "⛔ 루트가 하나도 없습니다: $ROOTS"
+  echo "   (인자로 주거나 QE_WATCH_ROOTS 로 지정한다 — 기계마다 다르다)"
+  exit 2
+fi
+
+_scan_procs; _scan_gpu
+
+echo "════════ QE relax/NEB 생사 · $(hostname -s) · $(date '+%m-%d %H:%M:%S') ════════"
+if [ "$_gpu_restricted" = 1 ]; then
+  printf "  GPU 프로세스별 정보 막힘 (이 기계 nvidia-smi · 몇 개가 나눠 쓰는지 못 본다 — 합계만)"
+  command -v nvidia-smi >/dev/null && \
+    printf " · %s" "$(nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader | head -1)"
+  echo
+elif [ -n "$_gpu_map" ]; then
+  _ngpu=$(printf '%s' "$_gpu_map" | grep -c . )
+  printf "  GPU 점유 프로세스 %s개" "$_ngpu"
+  command -v nvidia-smi >/dev/null && \
+    printf " · %s" "$(nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader | head -1)"
+  echo
+  [ "${_ngpu:-0}" -gt 1 ] && \
+    echo "  ⚠ GPU 를 둘 이상이 나눠 쓴다 — QE 는 이럴 때 cuMemAlloc 으로 즉사한다 (li3nd r2 실측)"
+fi
+
+printf "\n  %-40s %-14s %6s %5s %9s %-16s %s\n" 폴더/파일 상태 조용m step "|F|" E_Ry 비고
+_nlive=0; _ndead=0; _nhang=0; _nconv=0; _nfin=0
+for r in $ROOTS; do
+  [ -d "$r" ] || continue
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    d=$(dirname "$f")
+    # 한 폴더에 .out 이 여럿(01_vcrelax·02_scf·03_nscf…)이면 파일명까지 낸다 —
+    # 폴더명만 네 줄 찍으면 어느 줄이 뭔지 알 수 없다 (2026-09-03 kgy 실물).
+    _nout=$(find "$d" -maxdepth 1 -name '*.out' -not -name '*_run.out' 2>/dev/null | wc -l)
+    label=$(basename "$d")
+    if [ "${_nout:-1}" -gt 1 ]; then _fb=$(basename "$f"); label="$label/${_fb%.out}"; fi
+    if ! qe_is_job_dir "$d"; then
+      printf "  %-40s %-14s %6s %5s %9s %-16s %s\n" "$label" "· 잡 아님" "-" "-" "-" "-" \
+        "입력(.in/.neb/.path)이 없다 — 구조/보관 폴더다. 남은 .out 은 옛 실행 흔적이라 세지 않는다"
+      continue
+    fi
+    _read_out "$f"
+    pid=$(_pid_for_dir "$d")
+    # ⛔ 2026-09-03 kgy 실물 — **restart 를 감지하지 못했다.** li_metal CI 2단계가 돌고 있는데
+    #   .out 은 아직 1단계 파일(수렴 마커 포함)이라 "✅ 수렴(NEB) · 조용m 194" 로 찍혔다. 같은
+    #   화면이 두 번 거짓을 말했다. 규칙: **그 폴더에 살아있는 QE 프로세스가 있으면 그것이
+    #   정본이다** — 파일 마커는 이전 실행의 것일 수 있다. 마커는 프로세스가 없을 때만 믿는다.
+    if [ -n "$pid" ] && [ -n "$ST" ]; then
+      _old_st="$ST"; ST=""
+      NOTE="⚠ .out 은 이전 실행(${_old_st}) 파일 — 지금 pid $pid 가 돌고 있다 (restart 중, 아직 안 덧썼다)"
+    fi
+    if [ -z "$ST" ]; then                       # 종료마커 없음(또는 살아있음) → 생사로 가른다
+      if [ -n "$pid" ]; then
+        if [ "$AGE" -ge "$STALL_MIN" ] && [ -z "$NOTE" ]; then
+          ST="⛔ 정체"; _nhang=$((_nhang+1))
+          NOTE="pid $pid 는 살아있는데 ${AGE}분째 .out 이 안 큰다 — %CPU 를 볼 것"
+        elif [ "$AGE" -ge "$STALL_MIN" ]; then
+          # restart 직후엔 .out 이 옛 파일이라 AGE 가 크다 — 정체가 아니라 "아직 안 덧썼다" 다
+          ST="run"; _nlive=$((_nlive+1))
+        else
+          ST="run"; _nlive=$((_nlive+1))
+        fi
+      else
+        ST="☠ 죽음"; _ndead=$((_ndead+1))
+        NOTE="프로세스 없음 — 마지막 갱신 ${AGE}분 전. 꼬리를 보고 원인부터"
+      fi
+    else
+      case "$ST" in
+        "✅ 수렴"*) _nconv=$((_nconv+1)) ;;      # 수렴(NEB) 도 여기 (글롭이어야 한다)
+        "✅ 종료")  _nfin=$((_nfin+1)) ;;
+        *) _ndead=$((_ndead+1)) ;;
+      esac
+    fi
+    # 살아있는 잡이면 CPU·GPU 를 붙인다 (숫자가 0.0 이면 그게 죽음의 증거다)
+    if [ -n "$pid" ]; then
+      _cpu=$(ps -o pcpu= -p "$pid" 2>/dev/null | tr -d ' ')
+      _gm=$(_gpu_for_pid "$pid")
+      ST="$ST[$pid]"
+      NOTE="${NOTE:+$NOTE · }CPU ${_cpu:-?}%${_gm:+ · GPU ${_gm}MiB}"
+    fi
+    printf "  %-40s %-14s %6s %5s %9s %-16s %s\n" \
+           "$label" "$ST" "$AGE" "$STEP" "$FRC" "$ENE" "$NOTE"
+  done <<EOF
+$(find "$r" -maxdepth "$DEPTH" -name '*.out' -not -name '*_run.out' 2>/dev/null | sort)
+EOF
+done
+
+printf "\n  살아있음 %d · 수렴 %d · 단발종료 %d · 죽음/오류 %d" "$_nlive" "$_nconv" "$_nfin" "$_ndead"
+[ "$_nhang" -gt 0 ] && printf " · ⛔ 정체 %d" "$_nhang"
+echo
+[ "$_nhang" -gt 0 ] && \
+  echo "  ⛔ 정체: 프로세스는 있는데 진전이 없다. ps -o pid,pcpu,etime -p <pid> 로 %CPU 를 볼 것 (gs2 76시간)"
+[ "$_ndead" -gt 0 ] && \
+  echo "  ☠ 죽은 잡은 **다시 걸어야** 사라진다 — 화면에서 저절로 없어지지 않는다"
+exit 0

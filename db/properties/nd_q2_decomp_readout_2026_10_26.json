@@ -1,0 +1,79 @@
+{
+ "schema": "nd_q2_readout/v1",
+ "id": "nd_q2_decomp_readout_2026_10_26",
+ "제목": "Nd Q2 판독 — Nd₂O₃@LPSCl1.6 (Nd@Li · 10 f.u.) 대 LPSCl1.6 닫힌계 분해 구동력 차 Y",
+ "card": "db/properties/nd_q2_decomp_estimand_2026_10_23.json (active · 개정 11)",
+ "decision": "D-2026-10-23-nd-q2-decomp-card (active · 사용자 비준 10-23)",
+ "트랙": "CEI (1저자 = 실험 쪽 · 결정은 사용자 · 1저자 통지는 사용자를 통해)",
+ "게이트(카드_§4·결과_전)": {
+  "G0_골격": "✅ 10-23 (네 기준 충족 · runlog ✅_블록_①)",
+  "G5_기저_닫힘": "✅ 10-23 봉인 — 5 상 · 계수 음 아님 · rank 5/5 · 잔차 ≤ 6e-14 · host = {Li₃PS₄, Li₂S, LiCl}",
+  "G_F_도핑_힘": "✅ 9 월 탐침 최대 |F| 0.0251 eV/Å ≤ 0.05",
+  "G_상_이완(Pulay)": "✅ 최대 Li₃PO₄ 0.273 meV/원자 ≤ 0.5 (QE 7.4.1 문구 결함 고친 파서 · 40f3a984a)",
+  "G_V": "✅ |P| 도핑 0.003 · host 0.034 GPa ≤ 2 · 셀 간 보정 차 ≤ 0.0032 meV/atom (B 21.7–32.5) ≤ 1 → EOS 안 함",
+  "G_k_탐침": "✅ 상 |ΔE| ≤ 0.014 · host 0.279 meV/원자 ≤ 1 → 본 값 · Y 에 k 한계 없음 (kprobe_kgy/kprobe_decision.json)",
+  "분해능": "|Y| 22.3 > 2 meV/atom → 크다/작다를 쓴다"
+ },
+ "Y_meV_per_atom": {
+  "보정_전": -22.257,
+  "보정_B25": -22.259,
+  "B_범위": {
+   "25.0": -22.259,
+   "21.7": -22.26,
+   "32.5": -22.259
+  },
+  "부호_뜻": "Y < 0 → 도핑 셀의 분해 구동력이 더 크다 (카드 §2)"
+ },
+ "두_ΔE_decomp_meV_per_atom(카드_§2_동반·⛔_절대값_인용_금지)": {
+  "도핑": -43.888,
+  "host": -21.632,
+  "⛔": "카드 §5 — MP · 문헌 값과 같은 축에 놓지 않는다 · '안정/불안정' 으로 읽지 않는다 · 1저자 인용정책 (상대 차만)"
+ },
+ "계수(G5)": {
+  "doped": {
+   "coeffs": {
+    "Li3PS4": 9.25,
+    "Li2S": 1.0,
+    "LiCl": 16.0,
+    "Li3PO4": 0.75,
+    "Nd2S3": 1.0
+   }
+  },
+  "host": {
+   "coeffs": {
+    "Li3PS4": 5.0,
+    "Li2S": 2.0,
+    "LiCl": 8.0,
+    "Li3PO4": 0.0,
+    "Nd2S3": 0.0
+   }
+  },
+  "rank": "5 / 5 (해 하나)",
+  "residual_max_atoms": "≤ 6e-14",
+  "음_아닌_계수": true,
+  "G5a_정상성": "host = 알려진 답 {Li₃PS₄, Li₂S, LiCl} ✓ · 두 조성 다 원소상 없음 ✓"
+ },
+ "상_에너지_eV_per_fu": {
+  "Li3PS4": -4985.05223,
+  "Li2S": -1315.398376,
+  "LiCl": -1287.750467,
+  "Li3PO4": -3648.690806,
+  "Nd2S3": -16303.355406
+ },
+ "상_Z": {
+  "Li3PS4": 4,
+  "Li2S": 1,
+  "LiCl": 2,
+  "Li3PO4": 2,
+  "Nd2S3": 4
+ },
+ "독립_검산": "별도 스크립트 (정규식 '!' 줄 · ATOMIC_POSITIONS 원소 수 · 같은 계수 · 원소 수지 assert) → Y −22.257 meV/atom = 도구 −22.2566 (보정 전)",
+ "허용_문장(카드_§5·구조_결정_①)": "우리 스크리닝 최저 모델 (Nd@Li) 에서 — MP hull 이 고른 같은 상 기저 · 닫힌계 · 0 K · frozen-4f PBE · Nd₂O₃@LPSCl1.6 (Nd@Li · 10 f.u. 셀 · 배치 하나 · Nd/(Nd+P) 0.2 명목) 에서 도핑 셀의 분해 구동력이 도핑 전 LPSCl1.6 보다 22 meV/atom 크다.",
+ "금지(카드_§5)": "E_above_hull · '열역학적으로 안정/불안정' · 전기화학 (전압 · 계면 반응) · x = 0.02 로 크기 옮기기 · Rietveld 4b 모델 분해 · '분해된다/안 된다' · Q3 (Bader · ELF) 와 인과 · ΔE_decomp 절대값을 MP/문헌과 같은 축 · Q1 (SSSP · 52/520) 값과 같은 표",
+ "도구": "tools/doping/dft_decomp_check.py sha256 6b15bffc2b382519… (40f3a984a) · --collect --basis db/inputs/nd_q2_decomp_2026_10_23/basis.json --bulk_modulus_GPa 25 --bulk_modulus_range 21.7 32.5 --pair doped host (분해능 기본 2.0) · 한 번",
+ "원본": "db/raw/nd_q2_decomp_2026_10_23/collect_2026_10_26/ (decomp_result.json · collect.log · COLLECT_INPUTS.json — 입력 14 파일 sha256 = 저장소 파일)",
+ "⚠_도구_출력_한_줄": "collect.log 의 '★ 더 안정: host' 는 Y 자리선호 시절 고정 문구다 — 이 카드에서는 '안정' 표현을 안 쓴다 (금지 목록) · 허용 문장만 옮긴다",
+ "1저자_메시지_초안": "kb/projects/nd_q2_message_send_2026_10_26.md — 발송은 사용자",
+ "재개_조건(카드_§8)": "G0 · G5 · G_F · G_V · G_k 갈래 (전부 통과) · Q1 판정이 바뀌면 — ⛔ '배치를 하나 더 봤다' · '더 촘촘하면 더 정확하다' 는 재개 사유가 아니다",
+ "by": "agent · 2026-10-26"
+}

@@ -1,0 +1,252 @@
+{
+ "slug": "jain2026_ml_pipelines_solid_state_electrolyte_design",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+  "4b4d549e-77._Sup_Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Overview of a machine learning pipeline for the design and discovery of SSEs. (a) The pipeline begins with data resources such as the Materials Project, ICSD, and JARVIS, which provide structural and property data for a wide range of inorganic materials. (b) These data are transformed into meaningful descriptors: composition-based, structural, and electronic, using tools such as Matminer and pymatgen. (c) Machine learning models, organized by learning paradigm (supervised, unsuper- vised, deep learning), are then trained on these descriptors. Classical models (e.g., random forests, SVMs) and deep learning architectures (e.g., CGCNN, MEGNet, CrabNet) are (d) employed to predict key proper- ties such as ionic conductivity, electrochemical stability, and mechanical robustness. These models also enable applications including ML-based interatomic potentials and high-throughput virtual ",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    429.3,
+    558.8,
+    576.9
+   ],
+   "w": 1091,
+   "h": 616,
+   "dpi": 300,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.807
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 10,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Schematic overview of representative deep learning architectures for SSE property prediction. (a) FFN or MLP, which maps a fixed-length vector of engineered features to a target property. (b) GNN architectures that operate on graph representations of crystal structures. (i) The CGCNN updates atom features (vi) by aggregating information from its local atomic neighborhood. (ii) The MEGNet framework, which iteratively updates atom (vi), bond (ek), and global state (u) attributes to learn a comprehensive representation of the material. (c) The CrabNet architecture, a transformer-based model that uses a self-attention mechanism on elemental composition to predict properties and quantify aleatoric uncertainty.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    231.0
+   ],
+   "w": 1090,
+   "h": 781,
+   "dpi": 300,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.323
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 14,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Schematic illustration of a HTVS workflow for the discovery and evaluation of SSEs. (a) The chemical space is generated via systematic elemental substitutions and defect engineering within known crystal structure prototypes. (b) ML models trained on precomputed datasets are employed to rapidly predict key properties such as ionic conductivity, formation energy, and shear modulus. (c) Candidate materials are filtered through a sequential funnel based on physical criteria including thermo- dynamic, electronic, electrochemical, and mechanical stability, followed by ionic conductivity thresholds. The most promising candidates undergo final validation using first-principles calculations (DFT and/or AIMD).",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    221.1
+   ],
+   "w": 1091,
+   "h": 740,
+   "dpi": 300,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 15,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 A schematic of the machine learning interatomic potential (MLIP) driven workflow for accelerated discovery of solid-state electrolytes (SSEs). (a) The process begins with generating a dataset of energies and forces from ab initio calculations (e.g., DFT). (b) This data is used to train a machine learning model, such as a neural network, to create an MLIP. (c) The trained MLIP rapidly predicts the potential energy surface (PES), enabling large-scale and long-timescale molecular dynamics simulations. These simulations allow for (d) the systematic exploration of the vast SSE design space, which is constructed by varying elemental compositions, introducing dopants, and considering diverse crystalline and amorphous structures. (e) From these simulations, promising candidates are identified through a screening funnel. (f) The most promising materials are then validated with targeted, hi",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    43.8,
+    558.8,
+    182.0
+   ],
+   "w": 1091,
+   "h": 577,
+   "dpi": 300,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.602
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 18,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Key machine learning strategies to accelerate solid-state electro- lyte (SSE) discovery. This figure illustrates five classes of ML methods used to address critical challenges in SSE research, from data scarcity to de novo design. (a) Data scarcity: to combat data scarcity, (i) active learning based iterative loops are used to intelligently guide expensive data acquisition, (ii) transfer learning mitigates the need for a large dataset in a target domain by leveraging knowledge gained from a related, data-rich source domain and (iii) unsupervised learning to identify patterns and promising candi- dates in unlabeled data. (b) Multi-objective optimization (MOO): to recon- cile competing material properties, techniques like (i) evolutionary algorithms and (ii) Bayesian Optimization navigate design trade-oﬀs (e.g., ionic conductivity vs. stability) to identify Pareto-optimal materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    342.9
+   ],
+   "w": 1090,
+   "h": 1247,
+   "dpi": 300,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1 Common descriptors used in machine learning for solid-state electrolytes Descriptor category Specific descriptor example Information encoded Generation method Pros/cons Compositional Average electronegativity Elemental chemical bonding tendency Formula-based Simple; ignores structure Elemental fractions Stoichiometry Formula-based Simple; basic composition info Structural Volume per atom Packing density, free volume Structure analysis (CIF) Relates to ion mobility/stiﬀness; Requires structure Space group number Crystal symmetry Structure analysis (CIF) Captures overall symmetry; coarse descriptor Radial distribution func- tion (RDF) Average local atomic density around a central atom Structure analysis (CIF) Detailed local structure; compu- tationally more intensive Coordination number Number of nearest neighbours Structure analysis (CIF) Local bonding environment: defi- nition ca",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.8,
+    760.8
+   ],
+   "w": 2104,
+   "h": 2991,
+   "dpi": 291,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 17,
+   "file": "tab_2.png",
+   "caption": "Table 2 Seminal contributions of ML interatomic potentials to understanding ion dynamics in SSEs Study/MLIP development (primary citation) MLIP type/focus SSE system(s) investigated Key insights into ion dynamics/ mechanisms Significance/impact HDNNPs using atom- centered symmetry functions Bulk silicon (as proof- of-concept for general condensed matter systems) Behler and Parrinello (2007)162 Decomposes total energy into local atomic contributions, enabling simula- tions of arbitrarily sized systems with DFT accuracy by learning the potential energy surface (PES) Foundational theoretical and methodo- logical work that established the modern framework for atomistic MLIPs, making large-scale, long-timescale simulations of SSEs feasible Guo et al. (2022)167 ANN potential com- bined with a genetic algorithm (GA) for AI- aided sampling Discovered that local Li environments similar to the sup",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.8,
+    760.8
+   ],
+   "w": 2104,
+   "h": 2991,
+   "dpi": 291,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 19,
+   "file": "tab_3.png",
+   "caption": "Table 3 Summary of data challenges in ML for SSEs and mitigation strategies",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.8,
+    760.8
+   ],
+   "w": 2104,
+   "h": 2991,
+   "dpi": 291,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 24,
+   "file": "tab_4.png",
+   "caption": "Table 4 Comparison of generative model approaches for novel SSE discovery Generative model type Core working principle Strengths for SSE design",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.8,
+    760.8
+   ],
+   "w": 2104,
+   "h": 2991,
+   "dpi": 291,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1 (SI), highlighting their primary applications, advan- tages, limitations, and typical system sizes for SSE design.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.8,
+    760.8
+   ],
+   "w": 2104,
+   "h": 2991,
+   "dpi": 291,
+   "src": "386c01ae-77._Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Prominent Datasets for Machine Learning in Solid-State Electrolyte Research A. Primary Databases for SSE Discovery and Design Dataset Name Primary Data Source Key Field for SSE filtering SSE Screening Application Accessibility Reference (s) Link(s) Initial candidate identification; thermodynamic stability screening; electronic insulation verification; structural prototype search Materials Project (MP) Open (API, Web) 28 https://next- gen.materialsproject.o rg/ DFT Formation Energy, Ehull, Band Gap, Elastic Moduli, Li/Na- containing flags Crystal Structure, Space Group, Lattice Parameters, Composition Crystallographic starting points for DFT; structural descriptor generation; experimental validation of predicted structures ICSD Experim ental (XRD, etc.) 29 https://icsd.products.f iz-karlsruhe.de/ Subscription (API, Web) High-throughput stability screening; mechanical property as",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    148.2,
+    540.5,
+    667.0
+   ],
+   "w": 1974,
+   "h": 2163,
+   "dpi": 300,
+   "src": "4b4d549e-77._Sup_Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3: System-Specific Challenges and Requirements for Solid-State Electrolyte Design Aspect Li-ion Systems Na-ion Systems Mg-ion Systems Al-ion Systems Transport Mechanism Direct hopping between tetrahedral sites High charge density effects; requires framework accommodation Activation Energy Moderate (baseline) Moderate to high Significantly higher due to stronger Coulombic interactions Similar to Li⁺ but with larger ionic radius effects Concerted structural relaxation; temporary coordination changes required Very high due to trivalent charge Coulombic Interactions Moderate cation-anion binding Moderate cation-anion binding Strong lattice interactions; sluggish diffusion kinetics Strongest interactions; most sluggish kinetics Dendrite Formation CRITICAL CONCERN - requires mechanical strength and suppression strategies Moderate concern LOWER CONCERN - divalent nature naturally suppres",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    66.2,
+    537.7,
+    681.4
+   ],
+   "w": 1962,
+   "h": 2565,
+   "dpi": 300,
+   "src": "4b4d549e-77._Sup_Machine_learning_pipelines_for_the_design_of_solidstate_electrolytes.pdf",
+   "blank": 0.898
+  }
+ ]
+}

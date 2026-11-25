@@ -1,0 +1,230 @@
+{
+ "schema": "aprime_stage_record/v1",
+ "stage": "S2 → S3 후보",
+ "date": "2026-09-25",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+ "card_content_digest": "126aa58ebdc4803b9615efe165619162fb087dccc201dd699f9c0a09a90e09b1",
+ "citable": false,
+ "results_seen": "UMA 이완 결과(구조·변위·후검 깃발)만 — **에너지·W 는 안 봤다** (relax 로그의 E 는 원출력 · 결과표에 안 씀)",
+ "S2_실행": {
+  "기계": "gabia uma env (b2o3 s4 UMA MD 와 공존 · 11 GB/48) · 12 모델 순차 · 09-25 22:27–22:40 · 러너 relax_uma_d3.py (e472bef31) · MixedPBCError 1회 실패 뒤 3축 pbc 로 재실행 (실패 폴더 보존 `…_fail1_mixedpbc`)",
+  "결박": {
+   "UMA": "uma-s-1p1 sha 07068e9c76702ca1 · fairchem.core 2.19.0 · torch 2.8.0+cu128 · **default** · omat · cuda",
+   "D3": "simple-dftd3 (python) 1.6.0 · PBE · d3bj · 2체 · 3축 pbc",
+   "제약": "FixAtoms(far_half) + FixedLine z (V2 그래핀) · 셀 고정 · FIRE fmax 0.02 · 최대 3000"
+  },
+  "산출물": "db/raw/wad_aprime_s2_relax_2026_09_25 (relaxed.extxyz · relax_meta · interface_check · opt.log · status.log · gabia 커밋 30e1e90eb)"
+ },
+ "모델별": {
+  "V2_bridge": {
+   "status": "S3_CANDIDATE",
+   "steps": 9,
+   "converged": true,
+   "fmax_free": 0.01512,
+   "disp_max_A": 0.018,
+   "flags": [],
+   "relaxed_sha256_16": "832f9fe2e68a9bd3",
+   "wall_s": 2.8
+  },
+  "V2_hollow_fcc": {
+   "status": "S3_CANDIDATE",
+   "steps": 9,
+   "converged": true,
+   "fmax_free": 0.01618,
+   "disp_max_A": 0.014,
+   "flags": [],
+   "relaxed_sha256_16": "e7c8e1b969e65132",
+   "wall_s": 3.1
+  },
+  "V2_top_fcc": {
+   "status": "S3_CANDIDATE",
+   "steps": 9,
+   "converged": true,
+   "fmax_free": 0.01512,
+   "disp_max_A": 0.018,
+   "flags": [],
+   "relaxed_sha256_16": "c38d6be18f920a29",
+   "wall_s": 3.7
+  },
+  "V2_top_hcp": {
+   "status": "S3_CANDIDATE",
+   "steps": 9,
+   "converged": true,
+   "fmax_free": 0.018,
+   "disp_max_A": 0.015,
+   "flags": [],
+   "relaxed_sha256_16": "41bf8693ff34ebf2",
+   "wall_s": 3.0
+  },
+  "V3_li_outer_A": {
+   "status": "INCOMPLETE",
+   "steps": 100,
+   "converged": true,
+   "fmax_free": 0.01942,
+   "disp_max_A": 1.54,
+   "flags": [
+    "결합 2/6 개가 초기 변형 구조 대비 ±15 % 밖 (예 {'i': 98, 'j': 99, 'pair': 'Ag-Ag', 'r0_A': 2.89, 'r1_A': 3.345, 'dev_pct': 15.7})"
+   ],
+   "relaxed_sha256_16": "82819607b005f652",
+   "wall_s": 24.3
+  },
+  "V3_s_outer_A": {
+   "status": "INCOMPLETE",
+   "steps": 144,
+   "converged": true,
+   "fmax_free": 0.01857,
+   "disp_max_A": 2.299,
+   "flags": [
+    "결합 2/6 개가 초기 변형 구조 대비 ±15 % 밖 (예 {'i': 110, 'j': 111, 'pair': 'Ag-Ag', 'r0_A': 2.89, 'r1_A': 3.384, 'dev_pct': 17.1})"
+   ],
+   "relaxed_sha256_16": "499a42dedd31970f",
+   "wall_s": 34.9
+  },
+  "V4_li_outer_A": {
+   "status": "INCOMPLETE",
+   "steps": 921,
+   "converged": true,
+   "fmax_free": 0.01947,
+   "disp_max_A": 2.151,
+   "flags": [
+    "비혼합 기하 범위 벗어남 — 기판 원자 [89, 90] 가 첫 흡착층 평면 아래 1.5 Å 안 (최대 p -1.458 Å · 구조 경보 · 반응 판정 아님)"
+   ],
+   "relaxed_sha256_16": "cd9ad6ef501809d9",
+   "wall_s": 216.1
+  },
+  "V4_s_outer_A": {
+   "status": "S3_CANDIDATE",
+   "steps": 141,
+   "converged": true,
+   "fmax_free": 0.01996,
+   "disp_max_A": 0.524,
+   "flags": [],
+   "relaxed_sha256_16": "e97066ae6171400e",
+   "wall_s": 34.6
+  },
+  "V5_li_outer_A": {
+   "status": "S3_CANDIDATE",
+   "steps": 167,
+   "converged": true,
+   "fmax_free": 0.0148,
+   "disp_max_A": 1.855,
+   "flags": [],
+   "relaxed_sha256_16": "4d28922b61dedb8b",
+   "wall_s": 44.2
+  },
+  "V5_li_outer_B": {
+   "status": "S3_CANDIDATE",
+   "steps": 192,
+   "converged": true,
+   "fmax_free": 0.01926,
+   "disp_max_A": 1.729,
+   "flags": [],
+   "relaxed_sha256_16": "a66420b3e1c5b3e7",
+   "wall_s": 50.9
+  },
+  "V5_s_outer_A": {
+   "status": "S3_CANDIDATE",
+   "steps": 379,
+   "converged": true,
+   "fmax_free": 0.01262,
+   "disp_max_A": 2.446,
+   "flags": [],
+   "relaxed_sha256_16": "62faa5329290fcf9",
+   "wall_s": 102.2
+  },
+  "V5_s_outer_B": {
+   "status": "S3_CANDIDATE",
+   "steps": 366,
+   "converged": true,
+   "fmax_free": 0.01995,
+   "disp_max_A": 2.459,
+   "flags": [],
+   "relaxed_sha256_16": "a0d39e8d1e686749",
+   "wall_s": 98.8
+  }
+ },
+ "판정_카드_G2_그대로": {
+  "S3_후보_9": [
+   "V2_bridge",
+   "V2_hollow_fcc",
+   "V2_top_fcc",
+   "V2_top_hcp",
+   "V4_s_outer_A",
+   "V5_li_outer_A",
+   "V5_li_outer_B",
+   "V5_s_outer_A",
+   "V5_s_outer_B"
+  ],
+  "INCOMPLETE_3": {
+   "V3_li_outer_A": {
+    "flags": [
+     "결합 2/6 개가 초기 변형 구조 대비 ±15 % 밖 (예 {'i': 98, 'j': 99, 'pair': 'Ag-Ag', 'r0_A': 2.89, 'r1_A': 3.345, 'dev_pct': 15.7})"
+    ],
+    "converged": true,
+    "disp_max_A": 1.54,
+    "소견": "Ag₄ 사면체가 표면에서 열림 (Ag–Ag 결합 목록 ±15 % 밖)",
+    "처리": "세고 제외 · 교체 없음 · S4 입력 만들지 않음 (카드 G2)",
+    "lineage": {
+     "relaxed_sha256": "82819607b005f652f14736bb85c210c92729a037bb235f2c3664dfbbd517cfc9",
+     "relax_meta_sha256": "d82d9c3292f5aac707190d8c409478929b69047e91f7a38f0b31b5f7adf011cc",
+     "interface_check_sha256": "6ac23a152f3df20b8e70980a7ce944a398f5fbff8803b42e6bb02936d72dfc6c",
+     "init_sha256": "1eac3d1af0c1ed7b63d1c01c1fde4f04e4f87e0662f15a655c351948199703b1"
+    }
+   },
+   "V3_s_outer_A": {
+    "flags": [
+     "결합 2/6 개가 초기 변형 구조 대비 ±15 % 밖 (예 {'i': 110, 'j': 111, 'pair': 'Ag-Ag', 'r0_A': 2.89, 'r1_A': 3.384, 'dev_pct': 17.1})"
+    ],
+    "converged": true,
+    "disp_max_A": 2.299,
+    "소견": "Ag₄ 사면체가 표면에서 열림 (Ag–Ag 결합 목록 ±15 % 밖)",
+    "처리": "세고 제외 · 교체 없음 · S4 입력 만들지 않음 (카드 G2)",
+    "lineage": {
+     "relaxed_sha256": "499a42dedd31970f56732637a4906e90629a04a11aa705b1cad41be0a1e412ad",
+     "relax_meta_sha256": "48a1c53ef37b68b42cf6c09e4dec4283b6d57169c8d5a7f8c8979f311a4d9fd4",
+     "interface_check_sha256": "b6b3ffa019498aa2874210c70ddb02a987d246f7070de505a63630e770ddc97b",
+     "init_sha256": "f38f11700be97315051a753184ec00203ab7737154715651b9110daee1366f26"
+    }
+   },
+   "V4_li_outer_A": {
+    "flags": [
+     "비혼합 기하 범위 벗어남 — 기판 원자 [89, 90] 가 첫 흡착층 평면 아래 1.5 Å 안 (최대 p -1.458 Å · 구조 경보 · 반응 판정 아님)"
+    ],
+    "converged": true,
+    "disp_max_A": 2.151,
+    "소견": "기판 원자가 첫 흡착층 평면 아래 1.5 Å 안 (비혼합 범위 이탈)",
+    "처리": "세고 제외 · 교체 없음 · S4 입력 만들지 않음 (카드 G2)",
+    "lineage": {
+     "relaxed_sha256": "cd9ad6ef501809d9127eb0ed37397088cf414fc21024afe0df358d46aeb25b3f",
+     "relax_meta_sha256": "d0dab3fd05e4245707896af0780cf541fc47c4b50836362518eb846385e446d6",
+     "interface_check_sha256": "537d04a6c931041f8d148dd495cbfc3ecfce518d50b9af17d5357ab3fa753bd6",
+     "init_sha256": "1c4c5367da94004770a657f7b276941d887f0539e92c41b4869bfa03b2ddde12"
+    }
+   }
+  },
+  "⛔": "문턱 불변 · 교체 없음 · INCOMPLETE 는 세고 제외 (진단 소견으로 기록)"
+ },
+ "진단_소견_판정_아님": {
+  "V3": "Ag₄ 사면체가 **두 종결 모두**에서 열린다 (Ag–Ag 2.89 → 3.35–3.38 Å · +15.7/+17.1 %) — UMA 는 작은 Ag 덩이가 LPSCl 표면(특히 S 종결)에서 재배열한다고 예측. eV/조각 진단 · 반응 판정 아님.",
+  "V4_li_outer": "벤젠이 Li 종결에 접근하며 Li 두 개가 벤젠 평면 아래 1.46 Å 까지 상승 (문턱 1.5 Å · 921 스텝) — 비혼합 범위 이탈. V4 S 종결은 깨끗 (변위 0.52).",
+  "V5": "네 표본 모두 깃발 0 · 변위 1.7–2.5 Å (Ag 첫 층·SE 표면 재배열) · Ag–SE 수직 간격 1.9–2.05 Å (화학흡착 급) — DFT 는 자원 프로브가 정한다",
+  "V2": "9 스텝 수렴 · 그래핀 높이 3.30 Å 유지 — UMA+D3 최소가 초기값 근처"
+ },
+ "D3_결박_검사": {
+  "외부": "simple-dftd3 1.6.0 · V2 top_fcc 초기 bound (sha 19207c1f…) · 3축 pbc · **−0.5037974 Ry** (2축 −0.5030796 · z 영상 몫 0.7 mRy)",
+  "QE쪽": "입력 db/inputs/wad_aprime_d3check_2026_09_25 (V100 · S3 전 예외 ②) · |Δ| ≤ 1e-5 Ry 면 통과"
+ },
+ "S3_패키지": {
+  "경로": "db/inputs/wad_aprime_s3_2026_09_25",
+  "s3_manifest_sha256": "2a0e9a9b5f5fef4a6d81ed8a34e53fbdb08d9723d48e3663ff378ec2e11576c1",
+  "잡": {
+   "relax": 4,
+   "scf": 11,
+   "probe": 5,
+   "g3": 6,
+   "g4": 12
+  },
+  "내용": "후보 9 의 bound/far 재구성 (직접 8 · 영상 9 Å) · 표본 ⑤ (V5 S·A +0.5 Å · far 는 ① 과 동일 파일) · G3 셀 (V4_s_outer_A · V5_s_outer_A · (i) 8/11 (ii) 10/9) · G4 (e70 · k+1 · smearing ½) · V2 는 QE relax(if_pos 제약) 1단계 + `--v2_ed` 2단계 규칙 · 프로브 5 (far · 70 Ry · scf · electron_maxstep 2)",
+  "봉인": "⏳ 1저자 비준 → `wad_aprime_s3_seal_2026_09_25.json` (manifest sha · 계보) — 그 전 S4 잡 0 · 프로브(예외 ③)·D3 결박(예외 ②)은 가능"
+ }
+}

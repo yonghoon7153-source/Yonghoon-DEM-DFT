@@ -1,0 +1,16 @@
+formula,group,E_f_eV_per_atom,E_f_eV_per_P,n_P,e_above_hull_eV_per_atom,entry_id
+NdPO4,Nd phosphate,-3.45019,-20.70114,4.0,0.0,mp-aaaaafhw-GGA
+Nd(PO3)3,Nd phosphate,-2.98792,-12.94765,6.0,0.0,mp-aaaaaktk-GGA
+NdP5O14,Nd phosphate,-2.82383,-11.29533,20.0,0.0,mp-aaabfxkr-GGA
+LiNd(PO3)4,Nd phosphate,-2.92627,-13.16823,8.0,0.0,mp-aaaabbrr-GGA
+Li3PO4,Li phosphate,-2.7535,-22.02798,2.0,0.0,mp-aaaaauhx-GGA
+Li4P2O7,Li phosphate,-2.74386,-17.83507,4.0,0.0,mp-aaaabqcg-GGA
+LiPO3,Li phosphate,-2.70316,-13.51581,12.0,0.0,mp-aaaabrex-GGA
+P2O5,Li phosphate,-2.43886,-8.53601,4.0,0.0,mp-aaaaadqi-GGA
+Li3PS4,thiophosphate,-1.18252,-9.46015,4.0,0.0,mp-aaacebzb-GGA
+P2S7,thiophosphate,-0.51201,-2.30406,8.0,0.0,mp-aaacqhbm-GGA
+P2S5,thiophosphate,-0.5193,-1.81755,8.0,0.0,mp-aaabevma-GGA
+Nd2O3,Nd non-phosphate,-3.78155,,0.0,0.0,mp-aaaaabof-GGA
+NdCl3,Nd non-phosphate,-2.74794,,0.0,0.0,mp-aaaabihr-GGA
+Nd2S3,Nd non-phosphate,-2.36113,,0.0,0.0,mp-aaaaaaqw-GGA
+NdOCl,Nd non-phosphate,-3.26653,,0.0,0.05563,mp-aaaabicw-GGA

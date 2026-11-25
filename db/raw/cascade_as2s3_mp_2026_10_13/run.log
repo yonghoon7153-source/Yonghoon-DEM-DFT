@@ -1,0 +1,1149 @@
+[2026-10-14 02:05:55] == cascade As₂S₃ 보충 · 실행 · repo 38670f5eb · /data/work/wt_cascade_as2s3_1013
+[2026-10-14 02:05:56] selftest 셋 ✓
+  안정창 대상 (rank 1): As2S3_x020_cP4baS4a_s03, As2S3_x050_cP4baCl4d_s01, As2S3_x100_cP4baS16e_s03
+  계면 조성식 As2S3:As2Cl4Li28P2S20 (종당 rank 1 첫 행 규칙)
+  JSONL 에 이미 있는 As2S3 행: cascade_interface_90.jsonl 0 · cascade_interface_li.jsonl 0 · cascade_interface_carbon.jsonl 0
+[2026-10-14 02:05:56] 계획 ① 안정창 → db/properties/oxidation_stability_cascade_as2s3_addendum_2026_10_13.json · ② 계면 LCO·LNO·LMO / Li / C → JSONL 셋에 이어 붙임 · ③ 산물 밴드갭 → db/properties/cascade_product_gaps.json 덮어씀
+[2026-10-14 02:06:04] MP 데이터베이스 판 = 2026.04.13 (v3_pinned 90 종 = 2026.04.13)
+[2026-10-14 02:06:04] ① 안정창
+3 champions with composition
+host Li24P4S20Cl4 를 chemsys 2개 안에서 함께 잰다 (같은 phase set 안의 후보-host 차를 만들기 위해)
+Retrieving ThermoDoc documents:   0%|          | 0/148 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 148/148 [00:00<00:00, 3651511.72it/s]
+  [As-Cl-Li-P-S] 148 entries -> 4 champ
+Retrieving ThermoDoc documents:   0%|          | 0/107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 107/107 [00:00<00:00, 2840446.38it/s]
+  [Cl-Li-P-S] 107 entries -> 1 champ
+
+-> db/properties/oxidation_stability_cascade_as2s3_addendum_2026_10_13.json
+   조성족 {'plain': 3} · Cl-rich 에서만 개선 [] · plain 챔피언 없음 []
+   phase_set 2개 · entry 총 255 · MP db ['2026.04.13']
+   ★ method-comparable 3/3  (같은 phase set 안에서 host 와 뺀 건수)
+   host Li24P4S20Cl4: ox 2.14 V (phase_set b3f58eeb3a3fcdfd)
+   ⚠ 후보와 host 의 phase_set_id 가 다르면 (chemsys 가 다르므로 보통 다르다) onset 차를 '후보 고유 효과' 로 읽지 말 것 — 같은 집합 안에서만 비교된다.
+
+champion             ox_V  red_V  ocv_V  win_V
+As2S3_x020_cP4baS4a_s03   2.14  1.843  1.843  0.297
+As2S3_x050_cP4baCl4d_s01   2.14   None   None   None
+As2S3_x100_cP4baS16e_s03   2.14  1.843  1.843  0.297
+__HOST__             2.14  1.717  1.717  0.423
+__HOST__@As-Cl-Li-P-S   2.14  1.717  1.717  0.423
+[2026-10-14 02:06:13] ② 계면 — 양극 셋 (grand potential · 2.5–4.3 V)
+[resume] 이미 끝난 (종,상대) 쌍 286개는 건너뛴다
+종 1개 x 상대 3개 = 3 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/1118 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1118/1118 [00:00<00:00, 1351.50it/s]Retrieving ThermoDoc documents: 100%|██████████| 1118/1118 [00:00<00:00, 1351.17it/s]
+[mp_api] 1118 entries in As-Cl-Co-Li-O-P-S
+[1/1] As2S3      vs LCO      -1.8929  ⛔끝점 2/5 — 계면량 아님(자체분해)  (13s)
+Retrieving ThermoDoc documents:   0%|          | 0/939 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 939/939 [00:00<00:00, 12828832.10it/s]
+[mp_api] 939 entries in As-Cl-Li-Ni-O-P-S
+[1/1] As2S3      vs LNO      -1.8929  ⛔끝점 1/5 — 계면량 아님(자체분해)  (8s)
+Retrieving ThermoDoc documents:   0%|          | 0/1576 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1576/1576 [00:02<00:00, 589.59it/s]Retrieving ThermoDoc documents: 100%|██████████| 1576/1576 [00:02<00:00, 589.55it/s]
+[mp_api] 1576 entries in As-Cl-Li-Mn-O-P-S
+[1/1] As2S3      vs LMO      -1.8929  ⛔끝점 3/5 — 계면량 아님(자체분해)  (14s)
+
+→ db/properties/cascade_interface_90.jsonl
+[2026-10-14 02:06:50] ② 계면 — Li 금속 (닫힌계)
+[resume] 이미 끝난 (종,상대) 쌍 90개는 건너뛴다
+종 1개 x 상대 1개 = 1 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/148 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 148/148 [00:00<00:00, 3487398.83it/s]
+[mp_api] 148 entries in As-Cl-Li-P-S
+[1/1] As2S3      vs Li_metal -0.4702 (0 V)  (6s)
+
+→ db/properties/cascade_interface_li.jsonl
+[2026-10-14 02:06:57] ② 계면 — 탄소 (닫힌계)
+[resume] 이미 끝난 (종,상대) 쌍 90개는 건너뛴다
+종 1개 x 상대 1개 = 1 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/250 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 250/250 [00:00<00:00, 5548021.16it/s]
+[mp_api] 250 entries in As-C-Cl-Li-P-S
+[1/1] As2S3      vs carbon   +0.0000 (0 V)  [끝점 = 반응없음]  (6s)
+
+→ db/properties/cascade_interface_carbon.jsonl
+[2026-10-14 02:07:05] ③ 계면 산물 밴드갭 (고친 도구로 다시 만듦)
+[db/properties/cascade_stability_axes.csv] 반응식 445개
+[db/properties/cascade_interface_90.jsonl] 반응식 1385개
+[db/properties/cascade_interface_li.jsonl] 반응식 91개
+고유 산물 조성 540개 → MP 조회
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 69711.42it/s]
+  Sc2O3       Sc2O3         Ia-3       gap_MP= 3.81 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 23967.45it/s]
+  Li3Sc2(PO4)3  Li3Sc2(PO4)3  P2_1/c     gap_MP= 4.74 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12787.51it/s]
+  LiScS2      LiScS2        R-3m       gap_MP= 1.48 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 21454.24it/s]
+  Li3PO4      Li3PO4        Pmn2_1     gap_MP= 5.82 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 25420.02it/s]
+  LiCl        LiCl          P6_3mc     gap_MP= 6.65 eV  E_hull=0.004  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13273.11it/s]
+  LiScO2      LiScO2        I4_1/amd   gap_MP= 3.90 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 140985.01it/s]
+  Sc          Sc            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11522.81it/s]
+  Cr2CoO4     Cr2CoO4       Fd-3m      gap_MP= 2.75 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 73326.99it/s]
+  LiCrO2      LiCrO2        R-3m       gap_MP= 3.12 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 75437.12it/s]
+  Li2CrO4     Li2CrO4       R-3        gap_MP= 2.60 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/24 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 24/24 [00:00<00:00, 355700.69it/s]
+  CrO2        CrO2          P4_2/mnm   gap_MP= 0.00 eV  E_hull=0.000  다형 24개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  LiCrS2      LiCrS2        P-3m1      gap_MP= 0.65 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 58867.42it/s]
+  Cr2S3       Cr2S3         R-3        gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 92862.82it/s]
+  Li2O        Li2O          Fm-3m      gap_MP= 4.90 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 91180.52it/s]
+  Cr          Cr            Im-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 168736.37it/s]
+  Cr2O3       Cr2O3         R-3c       gap_MP= 0.00 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 72565.81it/s]
+  Gd2O3       Gd2O3         Ia-3       gap_MP= 2.94 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 74631.74it/s]
+  Li2S        Li2S          Fm-3m      gap_MP= 3.39 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14768.68it/s]
+  Gd2SO2      Gd2SO2        P-3m1      gap_MP= 2.04 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29852.70it/s]
+  Li3NbO4     Li3NbO4       I-43m      gap_MP= 3.78 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12826.62it/s]
+  GdNbO4      GdNbO4        C2/c       gap_MP= 0.20 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/9 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 9/9 [00:00<00:00, 115793.67it/s]
+  In2O3       In2O3         Ia-3       gap_MP= 0.93 eV  E_hull=0.000  다형 9개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  LiInS2      LiInS2        Pna2_1     gap_MP= 2.20 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 74104.31it/s]
+  In2S3       In2S3         I4_1/amd   gap_MP= 0.83 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 105993.24it/s]
+  In          In            Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 200410.43it/s]
+  Y2O3        Y2O3          Ia-3       gap_MP= 4.10 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11214.72it/s]
+  Y2SO2       Y2SO2         P-3m1      gap_MP= 3.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30615.36it/s]
+  YNbO4       YNbO4         C2/c       gap_MP= 3.50 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 122016.12it/s]
+  LiO8        LiO8          Cm         gap_MP= 0.00 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  Li3B7O12    Li3B7O12      P-1        gap_MP= 5.60 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  Co3(BO3)2   Co3(BO3)2     Pnnm       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/28 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 28/28 [00:00<00:00, 400820.86it/s]
+  O2          O2            C2/m       gap_MP= 2.71 eV  E_hull=0.000  다형 28개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45100.04it/s]
+  Li3PS4      Li3PS4        Pnma       gap_MP= 2.81 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14513.16it/s]
+  Li5B7S13    Li5B7S13      Cc         gap_MP= 3.55 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29433.71it/s]
+  LiB3        LiB3          P4/mbm     gap_MP= 0.06 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 21399.51it/s]
+  Li3BO3      Li3BO3        P2_1/c     gap_MP= 5.15 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14873.42it/s]
+  NbBO4       NbBO4         I4_1/amd   gap_MP= 2.46 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 49539.02it/s]
+  Li2WO4      Li2WO4        C2/c       gap_MP= 3.97 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/21 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 21/21 [00:00<00:00, 310142.20it/s]
+  Li(CoO2)2   Li(CoO2)2     P2_1       gap_MP= 0.67 eV  E_hull=0.000  다형 21개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 50994.58it/s]
+  Co3O4       Co3O4         R-3m       gap_MP= 1.47 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 107546.26it/s]
+  WS2         WS2           P6_3/mmc   gap_MP= 1.57 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 91180.52it/s]
+  Li2SO4      Li2SO4        P2_1/c     gap_MP= 6.02 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 62601.55it/s]
+  Li4WO5      Li4WO5        P-1        gap_MP= 3.89 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 122461.43it/s]
+  W           W             Im-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/41 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 41/41 [00:00<00:00, 826761.85it/s]
+  WO3         WO3           Pbcn       gap_MP= 1.35 eV  E_hull=0.000  다형 41개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30174.85it/s]
+  LiGa5O8     LiGa5O8       P4_332     gap_MP= 2.52 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45425.68it/s]
+  Ga2CoO4     Ga2CoO4       Fd-3m      gap_MP= 1.79 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/10 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 10/10 [00:00<00:00, 162569.92it/s]
+  Ga2O3       Ga2O3         C2/m       gap_MP= 2.02 eV  E_hull=0.000  다형 10개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 85163.53it/s]
+  Ga2S3       Ga2S3         Cc         gap_MP= 1.71 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13443.28it/s]
+  LiGaS2      LiGaS2        Pna2_1     gap_MP= 2.96 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14665.40it/s]
+  Li2Ga7      Li2Ga7        Cm         gap_MP= 0.15 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  NbGaO4      NbGaO4        C2/m       gap_MP= 3.40 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12409.18it/s]
+  LiAl5O8     LiAl5O8       P4_332     gap_MP= 5.25 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 103746.04it/s]
+  Al2CoO4     Al2CoO4       P3m1       gap_MP= 0.00 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/89 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 89/89 [00:00<00:00, 1847985.43it/s]
+  Al2O3       Al2O3         R-3c       gap_MP= 5.87 eV  E_hull=0.000  다형 89개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14563.56it/s]
+  LiAlS2      LiAlS2        Pna2_1     gap_MP= 4.80 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45100.04it/s]
+  LiAl        LiAl          Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 46603.38it/s]
+  LiAlO2      LiAlO2        R-3m       gap_MP= 6.12 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 135300.13it/s]
+  NbAlO4      NbAlO4        C2/m       gap_MP= 3.38 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 172960.99it/s]
+  LiNbO3      LiNbO3        R3c        gap_MP= 3.34 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/11 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 11/11 [00:00<00:00, 189865.61it/s]
+  Nb2O5       Nb2O5         P2         gap_MP= 1.67 eV  E_hull=0.000  다형 11개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22919.69it/s]
+  Li5(NbS2)7  Li5(NbS2)7    C2/c       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31184.42it/s]
+  NbS3        NbS3          P2_1/m     gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  LiNbO2      LiNbO2        P6_3/mmc   gap_MP= 1.58 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14513.16it/s]
+  LiNb3O8     LiNb3O8       P2_1/c     gap_MP= 2.97 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 74898.29it/s]
+  LiTaO3      LiTaO3        R3c        gap_MP= 3.70 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/24 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 24/24 [00:00<00:00, 344737.32it/s]
+  Ta2O5       Ta2O5         C2/c       gap_MP= 3.07 eV  E_hull=0.000  다형 24개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  Li2(TaS2)3  Li2(TaS2)3    P6_322     gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 33420.75it/s]
+  TaS3        TaS3          P2_1/m     gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30504.03it/s]
+  Li5TaO5     Li5TaO5       C2/m       gap_MP= 3.71 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/10 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 10/10 [00:00<00:00, 146653.99it/s]
+  Ta          Ta            P4_2/mnm   gap_MP= 0.00 eV  E_hull=0.000  다형 10개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45923.04it/s]
+  LiCr3O8     LiCr3O8       Pnnm       gap_MP= 1.86 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/37 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 37/37 [00:00<00:00, 674735.86it/s]
+  CoO2        CoO2          I4/m       gap_MP= 0.59 eV  E_hull=0.000  다형 37개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 203889.78it/s]
+  CrPO4       CrPO4         Imma       gap_MP= 2.65 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 114598.47it/s]
+  CrCl3       CrCl3         R-3        gap_MP= 0.21 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 25191.02it/s]
+  Cr2(SO4)3   Cr2(SO4)3     R-3        gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30840.47it/s]
+  Li2MoO4     Li2MoO4       R-3        gap_MP= 4.12 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 182361.04it/s]
+  MoS2        MoS2          R3m        gap_MP= 1.38 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 61008.06it/s]
+  Li4MoO5     Li4MoO5       P-1        gap_MP= 3.17 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 119837.26it/s]
+  Mo          Mo            Im-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 76538.39it/s]
+  Sm2O3       Sm2O3         Ia-3       gap_MP= 3.78 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 17924.38it/s]
+  Sm2SO2      Sm2SO2        P-3m1      gap_MP= 2.98 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15363.75it/s]
+  SmNbO4      SmNbO4        C2/c       gap_MP= 3.58 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 46091.25it/s]
+  ScOF        ScOF          P2_1/c     gap_MP= 4.48 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 32346.82it/s]
+  LiF         LiF           Fm-3m      gap_MP= 8.72 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11459.85it/s]
+  ScNbO4      ScNbO4        P2/c       gap_MP= 3.30 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/20 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 20/20 [00:00<00:00, 220752.84it/s]
+  Mg(CoO2)2   Mg(CoO2)2     Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 20개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 34568.44it/s]
+  MgS         MgS           Fm-3m      gap_MP= 2.76 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 10979.85it/s]
+  LiMg149     LiMg149       P-6m2      gap_MP= 0.00 eV  E_hull=0.008  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 9754.20it/s]
+  MgNb2O6     MgNb2O6       Pbcn       gap_MP= 3.41 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 88768.34it/s]
+  CaO         CaO           Fm-3m      gap_MP= 3.64 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/9 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 9/9 [00:00<00:00, 93206.76it/s]
+  LiCoO2      LiCoO2        R-3m       gap_MP= 0.66 eV  E_hull=0.000  다형 9개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 20213.51it/s]
+  Ca2Co3O8    Ca2Co3O8      C2/m       gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14266.34it/s]
+  CaS         CaS           Fm-3m      gap_MP= 2.38 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 43351.98it/s]
+  Ca4Nb2O9    Ca4Nb2O9      P2_1/c     gap_MP= 3.26 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11096.04it/s]
+  Co(SbO3)2   Co(SbO3)2     P4_2/mnm   gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 45590.26it/s]
+  LiSbO3      LiSbO3        Pnna       gap_MP= 2.14 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13797.05it/s]
+  LiSb3O8     LiSb3O8       P2_1/c     gap_MP= 0.97 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 22075.28it/s]
+  LiSbO2      LiSbO2        P2_1/c     gap_MP= 3.63 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 22250.95it/s]
+  Sb2S3       Sb2S3         Pnma       gap_MP= 1.29 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 154526.99it/s]
+  Sb          Sb            R-3m       gap_MP= 0.00 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 24314.81it/s]
+  Co23O32     Co23O32       P1         gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 35049.89it/s]
+  Li3AlF6     Li3AlF6       C2/c       gap_MP= 7.69 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/10 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 10/10 [00:00<00:00, 113975.65it/s]
+  Al          Al            Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 10개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 91428.97it/s]
+  LaF3        LaF3          P-3c1      gap_MP= 6.02 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 27060.03it/s]
+  LaPS4       LaPS4         I4_1/acd   gap_MP= 2.43 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14820.86it/s]
+  LaSF        LaSF          P4/nmm     gap_MP= 1.49 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 43690.67it/s]
+  La          La            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29127.11it/s]
+  LaNbO4      LaNbO4        C2/c       gap_MP= 3.80 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44620.26it/s]
+  LiYF4       LiYF4         I4_1/a     gap_MP= 7.83 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 89717.73it/s]
+  YOF         YOF           R-3m       gap_MP= 4.93 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44779.05it/s]
+  LiYS2       LiYS2         R-3m       gap_MP= 1.92 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22075.28it/s]
+  YPS4        YPS4          I4_1/acd   gap_MP= 2.13 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 60349.70it/s]
+  Y           Y             P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/15 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 15/15 [00:00<00:00, 219214.49it/s]
+  HfO2        HfO2          P2_1/c     gap_MP= 4.02 eV  E_hull=0.000  다형 15개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 60567.57it/s]
+  Li2HfO3     Li2HfO3       Cmmm       gap_MP= 4.06 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 92182.51it/s]
+  Hf          Hf            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 106377.28it/s]
+  V2CoO6      V2CoO6        C2/c       gap_MP= 2.09 eV  E_hull=0.033  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 90851.35it/s]
+  LiVO3       LiVO3         C2/c       gap_MP= 3.03 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/58 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 58/58 [00:00<00:00, 1105771.05it/s]
+  V2O5        V2O5          Pmmn       gap_MP= 2.29 eV  E_hull=0.000  다형 58개
+Retrieving SummaryDoc documents:   0%|          | 0/13 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 13/13 [00:00<00:00, 158967.79it/s]
+  VS2         VS2           P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 13개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 22610.80it/s]
+  Li3VO4      Li3VO4        Pmn2_1     gap_MP= 4.03 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/13 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 13/13 [00:00<00:00, 165230.16it/s]
+  LiVO2       LiVO2         R-3m       gap_MP= 1.78 eV  E_hull=0.000  다형 13개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 44150.57it/s]
+  NbVO5       NbVO5         Pnma       gap_MP= 1.89 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 64362.72it/s]
+  Nd2O3       Nd2O3         Ia-3       gap_MP= 3.71 eV  E_hull=0.000  다형 6개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11008.67it/s]
+  Nd2SO2      Nd2SO2        P-3m1      gap_MP= 2.87 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13066.37it/s]
+  NdNbO4      NdNbO4        C2/c       gap_MP= 3.66 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/322 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 322/322 [00:00<00:00, 6431266.13it/s]
+  SiO2        SiO2          P3_121     gap_MP= 5.68 eV  E_hull=0.000  다형 322개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 63167.23it/s]
+  Li4SiO4     Li4SiO4       P-1        gap_MP= 4.78 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/43 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 43/43 [00:00<00:00, 621914.04it/s]
+  Si          Si            Fd-3m      gap_MP= 0.61 eV  E_hull=0.000  다형 43개
+Retrieving SummaryDoc documents:   0%|          | 0/15 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 15/15 [00:00<00:00, 160496.33it/s]
+  Li2CoO3     Li2CoO3       C2/m       gap_MP= 0.27 eV  E_hull=0.000  다형 15개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 42153.81it/s]
+  CaF2        CaF2          Fm-3m      gap_MP= 7.12 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 24036.13it/s]
+  Li2Ca       Li2Ca         P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11491.24it/s]
+  CaNb2O6     CaNb2O6       Pbcn       gap_MP= 3.61 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 55007.27it/s]
+  NdF3        NdF3          P-3c1      gap_MP= 7.62 eV  E_hull=0.000  다형 4개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11305.40it/s]
+  NdSF        NdSF          P4/nmm     gap_MP= 1.24 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 44267.06it/s]
+  Nd          Nd            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 4개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 125829.12it/s]
+  ZnO         ZnO           P6_3mc     gap_MP= 0.73 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/146 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 146/146 [00:00<00:00, 2674097.75it/s]
+  ZnS         ZnS           P3m1       gap_MP= 2.02 eV  E_hull=0.000  다형 146개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 43092.16it/s]
+  LiZn3       LiZn3         Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/30 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 30/30 [00:00<00:00, 439961.96it/s]
+  SnO2        SnO2          P4_2/mnm   gap_MP= 0.66 eV  E_hull=0.000  다형 30개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16320.25it/s]
+  Li4SnS4     Li4SnS4       Pnma       gap_MP= 2.90 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 61230.72it/s]
+  SnS2        SnS2          P-3m1      gap_MP= 1.56 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/9 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 9/9 [00:00<00:00, 142987.64it/s]
+  Sn          Sn            Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 9개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44779.05it/s]
+  Li2ZrF6     Li2ZrF6       P2_1/c     gap_MP= 6.08 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/20 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 20/20 [00:00<00:00, 297468.37it/s]
+  ZrO2        ZrO2          P2_1/c     gap_MP= 3.53 eV  E_hull=0.000  다형 20개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  Li4ZrF8     Li4ZrF8       Pnma       gap_MP= 5.96 eV  E_hull=0.001  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16578.28it/s]
+  ZrS2        ZrS2          P-3m1      gap_MP= 1.04 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  Zr(PS3)2    Zr(PS3)2      P4_2/m     gap_MP= 1.54 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  ZrS3        ZrS3          P2_1/m     gap_MP= 1.10 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 93553.25it/s]
+  Zr          Zr            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/24 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 24/24 [00:00<00:00, 447392.43it/s]
+  LiMnO2      LiMnO2        C2/m       gap_MP= 1.19 eV  E_hull=0.000  다형 24개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 119410.79it/s]
+  CoO         CoO           F-43m      gap_MP= 0.58 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30066.70it/s]
+  Mn2CoO4     Mn2CoO4       I4_1/amd   gap_MP= 0.70 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16710.37it/s]
+  Li6MnS4     Li6MnS4       P4_2/nmc   gap_MP= 1.85 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 32640.50it/s]
+  Mn2P        Mn2P          Amm2       gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 43464.29it/s]
+  Li(MnS2)2   Li(MnS2)2     Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 104857.60it/s]
+  Mn          Mn            I-43m      gap_MP= 0.00 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30727.50it/s]
+  Mn4Nb2O9    Mn4Nb2O9      P-3c1      gap_MP= 0.02 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 90524.55it/s]
+  La2O3       La2O3         P-3m1      gap_MP= 3.83 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 17924.38it/s]
+  La2SO2      La2SO2        P-3m1      gap_MP= 3.06 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 65536.00it/s]
+  Ag2O        Ag2O          Pn-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 59283.45it/s]
+  CoAgO2      CoAgO2        P6_3/mmc   gap_MP= 1.33 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 115591.06it/s]
+  AgO         AgO           P4_2/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/19 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 19/19 [00:00<00:00, 305332.48it/s]
+  Ag2S        Ag2S          Cmcm       gap_MP= 1.61 eV  E_hull=0.000  다형 19개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 105916.77it/s]
+  Ag          Ag            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15420.24it/s]
+  Li2CoGe3O8  Li2CoGe3O8    P2_13      gap_MP= 2.47 eV  E_hull=0.013  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/9 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 9/9 [00:00<00:00, 130618.46it/s]
+  GeO2        GeO2          P4_2/mnm   gap_MP= 1.24 eV  E_hull=0.000  다형 9개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 96420.78it/s]
+  GeS2        GeS2          P2_1/c     gap_MP= 2.26 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 54471.48it/s]
+  Li4GeS4     Li4GeS4       P2_12_12_1 gap_MP= 2.97 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/17 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 17/17 [00:00<00:00, 247580.44it/s]
+  Ge          Ge            Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 17개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14873.42it/s]
+  LiNbGeO5    LiNbGeO5      Pnma       gap_MP= 3.38 eV  E_hull=0.006  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 55188.21it/s]
+  SrO         SrO           Fm-3m      gap_MP= 3.28 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 21509.25it/s]
+  Sr6(CoO3)5  Sr6(CoO3)5    R32        gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29852.70it/s]
+  SrS         SrS           Fm-3m      gap_MP= 2.50 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/11 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 11/11 [00:00<00:00, 158547.57it/s]
+  Sr          Sr            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 11개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 157006.03it/s]
+  Sr4Nb2O9    Sr4Nb2O9      P6_3/m     gap_MP= 4.16 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 211477.51it/s]
+  BaO         BaO           Fm-3m      gap_MP= 2.09 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30954.27it/s]
+  Ba2CoO4     Ba2CoO4       P2_1/c     gap_MP= 0.32 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 38362.54it/s]
+  BaCl2       BaCl2         Fm-3m      gap_MP= 5.43 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22192.08it/s]
+  BaS         BaS           Fm-3m      gap_MP= 2.15 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/11 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 11/11 [00:00<00:00, 163029.48it/s]
+  Ba          Ba            Im-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 11개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 35848.75it/s]
+  Ba4LiNb3O12  Ba4LiNb3O12   P6_3mc     gap_MP= 2.58 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22795.13it/s]
+  Li8Nb2O9    Li8Nb2O9      P-1        gap_MP= 3.21 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22919.69it/s]
+  Li2TiF6     Li2TiF6       P4_2/mnm   gap_MP= 4.37 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/46 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 46/46 [00:00<00:00, 923148.25it/s]
+  TiO2        TiO2          I4_1/amd   gap_MP= 2.06 eV  E_hull=0.000  다형 46개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16320.25it/s]
+  CoF2        CoF2          P4_2/mnm   gap_MP= 2.27 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29959.31it/s]
+  Ti(PS3)2    Ti(PS3)2      Fdd2       gap_MP= 1.42 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/18 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 18/18 [00:00<00:00, 263977.17it/s]
+  TiS2        TiS2          P-3m1      gap_MP= 0.00 eV  E_hull=0.000  다형 18개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 32140.26it/s]
+  TiS3        TiS3          P2_1/m     gap_MP= 0.23 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/10 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 10/10 [00:00<00:00, 148208.62it/s]
+  Ti          Ti            P6/mmm     gap_MP= 0.00 eV  E_hull=0.000  다형 10개
+Retrieving SummaryDoc documents:   0%|          | 0/23 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 23/23 [00:00<00:00, 343306.02it/s]
+  MgO         MgO           Fm-3m      gap_MP= 4.43 eV  E_hull=0.000  다형 23개
+Retrieving SummaryDoc documents:   0%|          | 0/21 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 21/21 [00:00<00:00, 336184.67it/s]
+  LiMg        LiMg          Imma       gap_MP= 0.00 eV  E_hull=0.000  다형 21개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  Mg4Nb2O9    Mg4Nb2O9      P-3c1      gap_MP= 3.43 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31184.42it/s]
+  Li(TiS2)2   Li(TiS2)2     C2/m       gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 77101.18it/s]
+  Li4TiS4     Li4TiS4       Pnma       gap_MP= 2.37 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 108741.21it/s]
+  Ti2O        Ti2O          P-3m1      gap_MP= 0.00 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 52648.17it/s]
+  Li4TiO4     Li4TiO4       Cmcm       gap_MP= 4.56 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 196608.00it/s]
+  Na3CoO3     Na3CoO3       P-1        gap_MP= 0.84 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/18 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 18/18 [00:00<00:00, 261236.93it/s]
+  Na2CoO3     Na2CoO3       Cmc2_1     gap_MP= 0.00 eV  E_hull=0.000  다형 18개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44779.05it/s]
+  NaCl        NaCl          Fm-3m      gap_MP= 5.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15650.39it/s]
+  NaLiS       NaLiS         P4/nmm     gap_MP= 2.26 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 55924.05it/s]
+  Na2S        Na2S          Fm-3m      gap_MP= 2.44 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/17 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 17/17 [00:00<00:00, 247580.44it/s]
+  Na          Na            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 17개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15420.24it/s]
+  Na3NbO4     Na3NbO4       C2/m       gap_MP= 3.76 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/26 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 26/26 [00:00<00:00, 462084.34it/s]
+  Fe2O3       Fe2O3         R-3c       gap_MP= 0.00 eV  E_hull=0.000  다형 26개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 89240.51it/s]
+  FeS         FeS           P4/nmm     gap_MP= 0.00 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 123361.88it/s]
+  FeS2        FeS2          Pnnm       gap_MP= 0.88 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/10 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 10/10 [00:00<00:00, 149796.57it/s]
+  Fe          Fe            Im-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 10개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 43842.90it/s]
+  Zr3O        Zr3O          R-3c       gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  Li6Zr2O7    Li6Zr2O7      C2/c       gap_MP= 3.94 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  Co9S8       Co9S8         Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 119410.79it/s]
+  Co          Co            Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29959.31it/s]
+  NiO         NiO           Fm-3m      gap_MP= 2.39 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 58254.22it/s]
+  Ni3S2       Ni3S2         R32        gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 91512.09it/s]
+  Ni          Ni            Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13981.01it/s]
+  Cu2O        Cu2O          Pn-3m      gap_MP= 0.51 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13797.05it/s]
+  Co21Cu3O32  Co21Cu3O32    R3m        gap_MP= 0.02 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/9 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 9/9 [00:00<00:00, 131528.70it/s]
+  CuO         CuO           P4_2/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 9개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 105993.24it/s]
+  Li3CuS2     Li3CuS2       Ibam       gap_MP= 2.30 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14820.86it/s]
+  Cu7S4       Cu7S4         Pnma       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 121135.13it/s]
+  Cu          Cu            Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 77101.18it/s]
+  CoS2        CoS2          Pa-3       gap_MP= 0.00 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15709.00it/s]
+  Co3S4       Co3S4         Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 92182.51it/s]
+  AlPS4       AlPS4         P-42c      gap_MP= 2.83 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  LiN3        LiN3          C2/m       gap_MP= 3.64 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 60133.39it/s]
+  CoN         CoN           F-43m      gap_MP= 0.00 eV  E_hull=0.103  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  Ca2PN3      Ca2PN3        Cmce       gap_MP= 2.60 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  LiCaN       LiCaN         Pnma       gap_MP= 1.38 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12945.38it/s]
+  Ca2N        Ca2N          R-3m       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15477.14it/s]
+  LiNbN2      LiNbN2        Pnma       gap_MP= 1.14 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 64198.53it/s]
+  LiGaO2      LiGaO2        Pna2_1     gap_MP= 3.20 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  GaPS4       GaPS4         P2_1/c     gap_MP= 2.33 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  Co2N        Co2N          Pnnm       gap_MP= 0.00 eV  E_hull=0.178  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  Mg2PN3      Mg2PN3        Cmc2_1     gap_MP= 3.54 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30615.36it/s]
+  LiMgN       LiMgN         F-43m      gap_MP= 2.27 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15592.21it/s]
+  LiClO4      LiClO4        Pnma       gap_MP= 5.74 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31068.92it/s]
+  P4S9        P4S9          P2_1/c     gap_MP= 2.70 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45590.26it/s]
+  Cr5S8       Cr5S8         C2/m       gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15534.46it/s]
+  P2S5        P2S5          P-1        gap_MP= 2.55 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30066.70it/s]
+  LiBr        LiBr          P6_3mc     gap_MP= 4.94 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 105993.24it/s]
+  Br          Br            Cmce       gap_MP= 1.35 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15420.24it/s]
+  MgPS3       MgPS3         C2/m       gap_MP= 2.80 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31184.42it/s]
+  P2S7        P2S7          P2_1/c     gap_MP= 2.41 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30727.50it/s]
+  CaBr2       CaBr2         Pnnm       gap_MP= 4.53 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 179755.89it/s]
+  Ca          Ca            Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/17 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 17/17 [00:00<00:00, 297096.53it/s]
+  N2          N2            P2_13      gap_MP= 7.38 eV  E_hull=0.000  다형 17개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15650.39it/s]
+  LiPN2       LiPN2         I-42d      gap_MP= 3.80 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15534.46it/s]
+  Li3Ga2      Li3Ga2        R-3m       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  Li3GaN2     Li3GaN2       Ia-3       gap_MP= 2.38 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15420.24it/s]
+  ScPS4       ScPS4         P-1        gap_MP= 1.95 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44779.05it/s]
+  Sc2S3       Sc2S3         Fddd       gap_MP= 1.03 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14926.35it/s]
+  Mg5Co19O32  Mg5Co19O32    R3m        gap_MP= 0.02 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 47934.90it/s]
+  CoCl2       CoCl2         R-3m       gap_MP= 0.08 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 72565.81it/s]
+  CaCl2       CaCl2         Pbcn       gap_MP= 5.60 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15363.75it/s]
+  ClO2        ClO2          Pbca       gap_MP= 0.96 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29228.60it/s]
+  NbCl5       NbCl5         C2/m       gap_MP= 2.22 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  YCl3        YCl3          C2/m       gap_MP= 4.93 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44462.59it/s]
+  Y2S3        Y2S3          P2_1/m     gap_MP= 1.60 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14873.42it/s]
+  Nb5N6       Nb5N6         P6_3/mcm   gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 76538.39it/s]
+  I           I             Cmce       gap_MP= 1.01 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 46091.25it/s]
+  LiI         LiI           P6_3mc     gap_MP= 4.38 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15592.21it/s]
+  CoI2        CoI2          P-3m1      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15363.75it/s]
+  Li6CoO4     Li6CoO4       P4_2/nmc   gap_MP= 2.40 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15650.39it/s]
+  SrCl2       SrCl2         Fm-3m      gap_MP= 5.23 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  SrPS3       SrPS3         P2_1/c     gap_MP= 3.12 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  SrS3        SrS3          Aea2       gap_MP= 1.09 eV  E_hull=0.032  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  SrNb2O6     SrNb2O6       P2_1/c     gap_MP= 3.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44620.26it/s]
+  NaIO3       NaIO3         Pnma       gap_MP= 3.71 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30393.51it/s]
+  Hf(PS3)2    Hf(PS3)2      Fdd2       gap_MP= 2.30 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14873.42it/s]
+  HfS3        HfS3          P2_1/m     gap_MP= 1.12 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  HfS2        HfS2          P-3m1      gap_MP= 1.23 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30174.85it/s]
+  Ba3(PS4)2   Ba3(PS4)2     P2_1/c     gap_MP= 2.15 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  Li4Ge5O12   Li4Ge5O12     P-1        gap_MP= 2.93 eV  E_hull=0.027  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  Li2GeO3     Li2GeO3       Cmc2_1     gap_MP= 3.57 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30283.78it/s]
+  Li2Ge7O15   Li2Ge7O15     Pbcn       gap_MP= 3.77 eV  E_hull=0.050  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15363.75it/s]
+  Li2SiO3     Li2SiO3       Cmc2_1     gap_MP= 5.08 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30174.85it/s]
+  Li2Si2O5    Li2Si2O5      Ccc2       gap_MP= 5.15 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12264.05it/s]
+  Li2SiS3     Li2SiS3       Cmc2_1     gap_MP= 3.59 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 28926.23it/s]
+  Li2SnO3     Li2SnO3       C2/c       gap_MP= 3.13 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30727.50it/s]
+  SmCoO3      SmCoO3        Pnma       gap_MP= 1.32 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12710.01it/s]
+  SmPS4       SmPS4         I4_1/acd   gap_MP= 2.21 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31418.01it/s]
+  Sm2S3       Sm2S3         Pnma       gap_MP= 0.81 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 60567.57it/s]
+  Sm          Sm            P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  LaCl3       LaCl3         P6_3/m     gap_MP= 3.67 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30615.36it/s]
+  La2S3       La2S3         Pnma       gap_MP= 1.04 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  NdPS4       NdPS4         I4_1/acd   gap_MP= 2.25 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30504.03it/s]
+  Nd2S3       Nd2S3         Pnma       gap_MP= 0.76 eV  E_hull=0.000  다형 2개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 89558.09it/s]
+  Na2SO4      Na2SO4        Fddd       gap_MP= 4.99 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30615.36it/s]
+  Na3PS4      Na3PS4        P-42_1c    gap_MP= 2.29 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12633.45it/s]
+  Na2(NbS2)3  Na2(NbS2)3    R32        gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14614.30it/s]
+  NaS2        NaS2          I-42d      gap_MP= 2.02 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/20 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 20/20 [00:00<00:00, 293307.97it/s]
+  NaNbO3      NaNbO3        R3c        gap_MP= 2.78 eV  E_hull=0.000  다형 20개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  CoBr2       CoBr2         P-3m1      gap_MP= 0.11 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45425.68it/s]
+  NbBr5       NbBr5         Pnma       gap_MP= 1.56 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14768.68it/s]
+  TaPS6       TaPS6         I4_1/acd   gap_MP= 0.87 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/10 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 10/10 [00:00<00:00, 148208.62it/s]
+  TaS2        TaS2          R3m        gap_MP= 0.00 eV  E_hull=0.000  다형 10개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30174.85it/s]
+  P4S3        P4S3          Pnma       gap_MP= 2.87 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  LiFeCl4     LiFeCl4       P2_1/c     gap_MP= 1.97 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14873.42it/s]
+  P4S7        P4S7          P2_1/c     gap_MP= 2.76 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  FePS        FePS          P2_1/c     gap_MP= 0.51 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 123817.09it/s]
+  NbFeO4      NbFeO4        C2/m       gap_MP= 1.83 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/13 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 13/13 [00:00<00:00, 174204.32it/s]
+  NbS2        NbS2          P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 13개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29959.31it/s]
+  Nb(PS4)2    Nb(PS4)2      Cmce       gap_MP= 1.28 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 90851.35it/s]
+  Nb          Nb            Im-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 91180.52it/s]
+  Sb2O3       Sb2O3         Pccn       gap_MP= 2.23 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 61680.94it/s]
+  LiSbS2      LiSbS2        C2/c       gap_MP= 0.09 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15363.75it/s]
+  LiGaCl4     LiGaCl4       P2_1/c     gap_MP= 4.49 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/8 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 8/8 [00:00<00:00, 118149.41it/s]
+  Ga          Ga            Cmce       gap_MP= 0.00 eV  E_hull=0.000  다형 8개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 76538.39it/s]
+  AgCl        AgCl          Fm-3m      gap_MP= 0.95 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 61230.72it/s]
+  Li4P2O7     Li4P2O7       P-1        gap_MP= 5.61 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  Ag2Cl3      Ag2Cl3        R-3c       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  SCl         SCl           Fdd2       gap_MP= 2.88 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44462.59it/s]
+  LiPO3       LiPO3         P2_1/c     gap_MP= 5.56 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 27962.03it/s]
+  SO2         SO2           Aea2       gap_MP= 3.15 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45756.04it/s]
+  CoP4O11     CoP4O11       P2_1/c     gap_MP= 1.79 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/32 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 32/32 [00:00<00:00, 512281.40it/s]
+  S           S             Fddd       gap_MP= 2.58 eV  E_hull=0.000  다형 32개
+Retrieving SummaryDoc documents:   0%|          | 0/79 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 79/79 [00:00<00:00, 1562971.77it/s]
+  LiMnPO4     LiMnPO4       Pnma       gap_MP= 3.41 eV  E_hull=0.000  다형 79개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 61908.55it/s]
+  Co(NiS2)2   Co(NiS2)2     Imma       gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  Ni3S4       Ni3S4         Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16384.00it/s]
+  Ni(PO3)2    Ni(PO3)2      C2/c       gap_MP= 1.49 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22795.13it/s]
+  NiCl2       NiCl2         R-3m       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 225847.14it/s]
+  NiS2        NiS2          P2_1/c     gap_MP= 0.24 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  Mn(PO3)2    Mn(PO3)2      C2/c       gap_MP= 2.16 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 91180.52it/s]
+  MnP4O11     MnP4O11       P2_1/c     gap_MP= 3.61 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/45 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 45/45 [00:00<00:00, 723155.86it/s]
+  AlPO4       AlPO4         P3_121     gap_MP= 5.62 eV  E_hull=0.000  다형 45개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 66313.11it/s]
+  Al(PO3)3    Al(PO3)3      P2_1/c     gap_MP= 5.82 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30066.70it/s]
+  Al2(SO4)3   Al2(SO4)3     R-3        gap_MP= 6.04 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  MnAl2O4     MnAl2O4       Fd-3m      gap_MP= 2.66 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31068.92it/s]
+  Li2Mn(SO4)2  Li2Mn(SO4)2   P2_1/c     gap_MP= 3.58 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 18078.90it/s]
+  NiSO4       NiSO4         Cmcm       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 18396.07it/s]
+  MnSO4       MnSO4         Cmcm       gap_MP= 2.81 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 98689.51it/s]
+  MnS2        MnS2          R-3m       gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/25 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 25/25 [00:00<00:00, 595781.82it/s]
+  Li2MnP2O7   Li2MnP2O7     P2_1/c     gap_MP= 4.37 eV  E_hull=0.000  다형 25개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16777.22it/s]
+  SBr         SBr           Aea2       gap_MP= 2.25 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30615.36it/s]
+  PCl5        PCl5          C2/m       gap_MP= 1.75 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12633.45it/s]
+  LiPF6       LiPF6         R-3        gap_MP= 7.54 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14768.68it/s]
+  LiSO3F      LiSO3F        C2/m       gap_MP= 5.79 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14926.35it/s]
+  P2O3F4      P2O3F4        Pcca       gap_MP= 5.79 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12710.01it/s]
+  PF5         PF5           P6_3/mmc   gap_MP= 7.11 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 41120.63it/s]
+  ICl         ICl           P2_1/c     gap_MP= 1.84 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 66052.03it/s]
+  LiCo(PO3)3  LiCo(PO3)3    P-1        gap_MP= 3.26 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31068.92it/s]
+  BPO4        BPO4          I-4        gap_MP= 7.26 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45756.04it/s]
+  Mn2P2O7     Mn2P2O7       C2/m       gap_MP= 2.29 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30283.78it/s]
+  AlCl3       AlCl3         C2/m       gap_MP= 5.27 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30174.85it/s]
+  NiBr2       NiBr2         R-3m       gap_MP= 0.37 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16578.28it/s]
+  MnCl2       MnCl2         R-3m       gap_MP= 1.79 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16070.13it/s]
+  AlSCl7      AlSCl7        Pc         gap_MP= 2.50 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  PBr7        PBr7          Pnma       gap_MP= 1.22 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 211223.94it/s]
+  AlF3        AlF3          R-3c       gap_MP= 7.59 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  NiI2        NiI2          R-3m       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/13 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 13/13 [00:00<00:00, 273999.76it/s]
+  LiNi(PO3)3  LiNi(PO3)3    P2_12_12_1 gap_MP= 4.74 eV  E_hull=0.000  다형 13개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 88768.34it/s]
+  NiP4O11     NiP4O11       P2_1/c     gap_MP= 1.22 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14873.42it/s]
+  AlPI8       AlPI8         Pna2_1     gap_MP= 1.43 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 32768.00it/s]
+  MnB4O7      MnB4O7        Pbca       gap_MP= 4.72 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 65536.00it/s]
+  BaP4O11     BaP4O11       P2_1/c     gap_MP= 5.23 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 66576.25it/s]
+  BaSO4       BaSO4         Pnma       gap_MP= 5.96 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 61141.46it/s]
+  CaSO4       CaSO4         Cmcm       gap_MP= 5.95 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 62788.98it/s]
+  Ca3(PO4)2   Ca3(PO4)2     P2_1/c     gap_MP= 4.91 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 20815.40it/s]
+  Ca2P2O7     Ca2P2O7       P2_1/c     gap_MP= 5.51 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12787.51it/s]
+  Ca2P6O17    Ca2P6O17      P2_1       gap_MP= 5.37 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14768.68it/s]
+  CaNi(PO3)4  CaNi(PO3)4    C2/c       gap_MP= 4.30 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29852.70it/s]
+  CaP4O11     CaP4O11       P2_1/c     gap_MP= 5.34 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  CaMn(PO3)4  CaMn(PO3)4    C2/c       gap_MP= 4.39 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 60349.70it/s]
+  MnF2        MnF2          Pbcn       gap_MP= 2.36 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/23 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 23/23 [00:00<00:00, 333802.74it/s]
+  LiCrP2O7    LiCrP2O7      P2_1       gap_MP= 2.73 eV  E_hull=0.000  다형 23개
+Retrieving SummaryDoc documents:   0%|          | 0/9 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 9/9 [00:00<00:00, 134337.14it/s]
+  Cr(PO3)3    Cr(PO3)3      P2_1/c     gap_MP= 3.33 eV  E_hull=0.000  다형 9개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  MnCr2O4     MnCr2O4       Fd-3m      gap_MP= 2.20 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 72315.59it/s]
+  Mn3(PO4)2   Mn3(PO4)2     P2_1/c     gap_MP= 2.95 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 80401.99it/s]
+  CrS2        CrS2          P-3m1      gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13273.11it/s]
+  Li9Cr3P8O29  Li9Cr3P8O29   P-3c1      gap_MP= 3.26 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13107.20it/s]
+  Co2CuS4     Co2CuS4       Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 50533.78it/s]
+  CuCl2       CuCl2         C2/m       gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 19418.07it/s]
+  CoCuS4      CoCuS4        P2_1/c     gap_MP= 0.00 eV  E_hull=0.033  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 79387.46it/s]
+  CuS         CuS           Cmcm       gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 75437.12it/s]
+  CuS2        CuS2          Pnnm       gap_MP= 0.00 eV  E_hull=0.005  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/22 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 22/22 [00:00<00:00, 490822.81it/s]
+  LiFe(PO3)4  LiFe(PO3)4    Pbcn       gap_MP= 2.94 eV  E_hull=0.000  다형 22개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 104113.93it/s]
+  Fe(PO3)3    Fe(PO3)3      Cc         gap_MP= 2.79 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 26379.27it/s]
+  FeSCl7      FeSCl7        P2_1/c     gap_MP= 1.38 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13357.66it/s]
+  Fe(PO3)2    Fe(PO3)2      C2/c       gap_MP= 2.38 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13189.64it/s]
+  FeNi35S32   FeNi35S32     I222       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/70 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 70/70 [00:00<00:00, 1116354.68it/s]
+  LiFePO4     LiFePO4       Pnma       gap_MP= 3.92 eV  E_hull=0.000  다형 70개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 26462.49it/s]
+  FeSO4       FeSO4         Pnma       gap_MP= 2.77 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 39199.10it/s]
+  GaPO4       GaPO4         P3_121     gap_MP= 4.45 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  LiGa(PO3)4  LiGa(PO3)4    Pbcn       gap_MP= 5.07 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 21399.51it/s]
+  Ga(PO3)3    Ga(PO3)3      Cc         gap_MP= 4.89 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 65196.44it/s]
+  GaCl3       GaCl3         C2/m       gap_MP= 4.18 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29026.33it/s]
+  Ni9S8       Ni9S8         C222       gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29852.70it/s]
+  GdPO4       GdPO4         I4_1/amd   gap_MP= 3.29 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 27503.63it/s]
+  Gd(PO3)3    Gd(PO3)3      C2/c       gap_MP= 3.45 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13231.24it/s]
+  GdCl3       GdCl3         P6_3/m     gap_MP= 2.05 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 63550.06it/s]
+  Gd2P4O13    Gd2P4O13      C222_1     gap_MP= 3.30 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16131.94it/s]
+  GeCl4       GeCl4         P2_1/c     gap_MP= 4.15 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/12 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 12/12 [00:00<00:00, 189930.75it/s]
+  P2O5        P2O5          Pnma       gap_MP= 4.85 eV  E_hull=0.000  다형 12개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 43996.20it/s]
+  HfP2O7      HfP2O7        P2_1/c     gap_MP= 5.46 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12710.01it/s]
+  HfCl4       HfCl4         P2/c       gap_MP= 4.17 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13443.28it/s]
+  LiInP2O7    LiInP2O7      P2_1       gap_MP= 3.97 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30283.78it/s]
+  Li3InCl6    Li3InCl6      C2         gap_MP= 3.37 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 13357.66it/s]
+  InCl3       InCl3         P6_3/mmc   gap_MP= 3.02 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 40590.04it/s]
+  In(PO3)3    In(PO3)3      Cc         gap_MP= 4.40 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 59283.45it/s]
+  LaPO4       LaPO4         P2_1/c     gap_MP= 4.48 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12865.96it/s]
+  LiLa(PO3)4  LiLa(PO3)4    C2/c       gap_MP= 5.21 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  La2(SO4)3   La2(SO4)3     R-3c       gap_MP= 4.72 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  La(PO3)3    La(PO3)3      C222_1     gap_MP= 4.66 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30954.27it/s]
+  LaP5O14     LaP5O14       Pmna       gap_MP= 4.86 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30393.51it/s]
+  ICl3        ICl3          P-1        gap_MP= 1.99 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14873.42it/s]
+  LiMgPO4     LiMgPO4       Pnma       gap_MP= 5.43 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14027.77it/s]
+  LiMg3P3O11  LiMg3P3O11    Pnma       gap_MP= 5.31 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15477.14it/s]
+  Mg(PO3)2    Mg(PO3)2      C2/c       gap_MP= 5.53 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  Li2Mg2(SO4)3  Li2Mg2(SO4)3  Pbcn       gap_MP= 5.63 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 90524.55it/s]
+  MgCl2       MgCl2         R-3m       gap_MP= 5.62 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 46260.71it/s]
+  MgSO4       MgSO4         Cmcm       gap_MP= 5.49 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  MgNi(PO3)4  MgNi(PO3)4    C2/c       gap_MP= 4.45 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  MgS2O7      MgS2O7        P-1        gap_MP= 5.52 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 62368.83it/s]
+  Mg3(PO4)2   Mg3(PO4)2     P2_1/c     gap_MP= 5.11 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15477.14it/s]
+  MgP4O11     MgP4O11       P2_1/c     gap_MP= 5.11 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 103017.99it/s]
+  MgF2        MgF2          P4_2/mnm   gap_MP= 6.82 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/18 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 18/18 [00:00<00:00, 274536.26it/s]
+  LiMn(PO3)3  LiMn(PO3)3    P-1        gap_MP= 4.16 eV  E_hull=0.000  다형 18개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12336.19it/s]
+  MoS2Cl3     MoS2Cl3       P2_1/c     gap_MP= 1.44 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 90200.09it/s]
+  NaPO3       NaPO3         P-1        gap_MP= 5.13 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  Na2S2O7     Na2S2O7       P-1        gap_MP= 5.10 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  Na6MnCl8    Na6MnCl8      Fm-3m      gap_MP= 2.56 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12710.01it/s]
+  NaNi(PO3)3  NaNi(PO3)3    Pcca       gap_MP= 4.75 eV  E_hull=0.002  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45425.68it/s]
+  NaI         NaI           Fm-3m      gap_MP= 3.57 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 105233.43it/s]
+  NbPO5       NbPO5         Pna2_1     gap_MP= 2.26 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29641.72it/s]
+  Nb5P7O30    Nb5P7O30      C2/c       gap_MP= 2.57 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  Nb4P2S21    Nb4P2S21      C2         gap_MP= 1.61 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14820.86it/s]
+  MnNb2O6     MnNb2O6       Pbcn       gap_MP= 1.95 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  Nb(SCl)2    Nb(SCl)2      C2/m       gap_MP= 1.52 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44779.05it/s]
+  NdPO4       NdPO4         P2_1/c     gap_MP= 5.68 eV  E_hull=0.000  다형 3개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29959.31it/s]
+  LiNd(PO3)4  LiNd(PO3)4    C2/c       gap_MP= 5.98 eV  E_hull=0.000  다형 2개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  NdCl3       NdCl3         P6_3/m     gap_MP= 4.30 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  Nd2(SO4)3   Nd2(SO4)3     C2/c       gap_MP= 5.43 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 17697.49it/s]
+  Nd(PO3)3    Nd(PO3)3      C222_1     gap_MP= 5.49 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30393.51it/s]
+  NdP5O14     NdP5O14       Pmna       gap_MP= 6.34 eV  E_hull=0.000  다형 2개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14926.35it/s]
+  Co2NiS4     Co2NiS4       Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44779.05it/s]
+  SbPO4       SbPO4         P2_1/m     gap_MP= 4.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12710.01it/s]
+  SbS8Cl3     SbS8Cl3       P-1        gap_MP= 2.86 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/19 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 19/19 [00:00<00:00, 307690.25it/s]
+  LiSb(PO3)4  LiSb(PO3)4    C2/c       gap_MP= 4.66 eV  E_hull=0.000  다형 19개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15534.46it/s]
+  SbCl3       SbCl3         Pnma       gap_MP= 3.75 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30393.51it/s]
+  LiS4        LiS4          P1         gap_MP= 2.16 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15534.46it/s]
+  LiScP2O7    LiScP2O7      P2_1       gap_MP= 4.77 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30504.03it/s]
+  Sc(PO3)3    Sc(PO3)3      I-43d      gap_MP= 5.16 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15363.75it/s]
+  Sc2(SO4)3   Sc2(SO4)3     R-3c       gap_MP= 4.36 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  ScCl3       ScCl3         R-3        gap_MP= 3.91 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  ScPO4       ScPO4         I4_1/amd   gap_MP= 4.49 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 91180.52it/s]
+  ScF3        ScF3          R-3c       gap_MP= 6.11 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 82891.38it/s]
+  SiP2O7      SiP2O7        P2_1/c     gap_MP= 5.79 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14926.35it/s]
+  SiCl4       SiCl4         P2_1/c     gap_MP= 5.57 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  Si5P6O25    Si5P6O25      R-3        gap_MP= 5.60 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 60567.57it/s]
+  SiS2        SiS2          Ibam       gap_MP= 3.08 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45425.68it/s]
+  SmPO4       SmPO4         I4_1/amd   gap_MP= 5.81 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  LiSm(PO3)4  LiSm(PO3)4    C2/c       gap_MP= 6.01 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  Sm2(SO4)3   Sm2(SO4)3     C2/c       gap_MP= 6.26 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11491.24it/s]
+  Sm(PO3)3    Sm(PO3)3      C222_1     gap_MP= 5.73 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15534.46it/s]
+  SCl4        SCl4          P-43n      gap_MP= 2.76 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14266.34it/s]
+  SmCl3       SmCl3         P6_3/mmc   gap_MP= 3.59 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15087.42it/s]
+  SmP5O14     SmP5O14       P2_1/c     gap_MP= 5.38 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  SnCl4       SnCl4         P2_1/c     gap_MP= 3.56 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  Sr2P6O17    Sr2P6O17      P2_1       gap_MP= 5.33 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44462.59it/s]
+  SrSO4       SrSO4         Pnma       gap_MP= 5.92 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 85598.04it/s]
+  Sr(PO3)2    Sr(PO3)2      P2_1/c     gap_MP= 5.46 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 50533.78it/s]
+  TaPO5       TaPO5         P2_1/m     gap_MP= 2.97 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 11715.93it/s]
+  TaCl5       TaCl5         C2/m       gap_MP= 2.82 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14820.86it/s]
+  Ta4P4S29    Ta4P4S29      P4_32_12   gap_MP= 1.04 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  TaPCl10     TaPCl10       P-1        gap_MP= 2.34 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 208227.86it/s]
+  LiTi2(PO4)3  LiTi2(PO4)3   R-3c       gap_MP= 2.44 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 91512.09it/s]
+  TiP2O7      TiP2O7        P2_1/c     gap_MP= 2.59 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14463.12it/s]
+  TiCl4       TiCl4         P2_1/c     gap_MP= 3.46 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  Ti4S24Cl6O  Ti4S24Cl6O    Pbcn       gap_MP= 1.08 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 10538.45it/s]
+  Ti2PCl13    Ti2PCl13      Pnma       gap_MP= 2.33 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  TiPCl9      TiPCl9        P-1        gap_MP= 2.17 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30727.50it/s]
+  TiF4        TiF4          Pnma       gap_MP= 4.17 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/17 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 17/17 [00:00<00:00, 250186.55it/s]
+  Li2V3CoO8   Li2V3CoO8     P1         gap_MP= 0.00 eV  E_hull=0.000  다형 17개
+Retrieving SummaryDoc documents:   0%|          | 0/17 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 17/17 [00:00<00:00, 253747.93it/s]
+  Li3V2(PO4)3  Li3V2(PO4)3   P2_1/c     gap_MP= 1.97 eV  E_hull=0.000  다형 17개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 57852.47it/s]
+  VCl4        VCl4          P2_1/c     gap_MP= 0.00 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 74631.74it/s]
+  V(PO3)3     V(PO3)3       Cc         gap_MP= 0.88 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  VS4         VS4           C2/c       gap_MP= 0.92 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/14 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 14/14 [00:00<00:00, 208227.86it/s]
+  V2O3        V2O3          Ia-3       gap_MP= 0.00 eV  E_hull=0.000  다형 14개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30393.51it/s]
+  V2(SO4)3    V2(SO4)3      P2_1/c     gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  WS9Cl4      WS9Cl4        P-42_1c    gap_MP= 1.26 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  W(S4Cl3)2   W(S4Cl3)2     P-1        gap_MP= 0.65 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/64 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 64/64 [00:00<00:00, 897777.44it/s]
+  LiNiPO4     LiNiPO4       Pnma       gap_MP= 3.96 eV  E_hull=0.000  다형 64개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 43996.20it/s]
+  Ni2P2O7     Ni2P2O7       P2_1/c     gap_MP= 1.54 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45425.68it/s]
+  P3(WO6)2    P3(WO6)2      R-3        gap_MP= 2.06 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30615.36it/s]
+  WCl6        WCl6          R-3        gap_MP= 1.79 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29959.31it/s]
+  YPO4        YPO4          I4_1/amd   gap_MP= 5.81 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/5 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 5/5 [00:00<00:00, 82891.38it/s]
+  Y(PO3)3     Y(PO3)3       R-3        gap_MP= 5.69 eV  E_hull=0.000  다형 5개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29026.33it/s]
+  Y2(SO4)3    Y2(SO4)3      Pbcn       gap_MP= 5.70 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 25731.93it/s]
+  YP5O14      YP5O14        C2/c       gap_MP= 5.25 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 45100.04it/s]
+  YF3         YF3           Pnma       gap_MP= 7.55 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 59074.70it/s]
+  ZnCl2       ZnCl2         I-42d      gap_MP= 4.06 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30283.78it/s]
+  ZnP4O11     ZnP4O11       P2_1/c     gap_MP= 4.76 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/7 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 7/7 [00:00<00:00, 105993.24it/s]
+  LiZr2(PO4)3  LiZr2(PO4)3   P2_1/c     gap_MP= 4.24 eV  E_hull=0.000  다형 7개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30504.03it/s]
+  ZrP2O7      ZrP2O7        Pa-3       gap_MP= 4.47 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15592.21it/s]
+  ZrBr4       ZrBr4         Pa-3       gap_MP= 3.78 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 26296.58it/s]
+  Zr(PO3)4    Zr(PO3)4      Pca2_1     gap_MP= 4.11 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15947.92it/s]
+  ZrCl4       ZrCl4         P2/c       gap_MP= 3.61 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 62601.55it/s]
+  ZrF4        ZrF4          P2_1/c     gap_MP= 5.35 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/6 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 6/6 [00:00<00:00, 93553.25it/s]
+  CoAsS       CoAsS         Pmn2_1     gap_MP= 0.00 eV  E_hull=0.000  다형 6개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15363.75it/s]
+  AsCl3       AsCl3         P2_12_12_1 gap_MP= 4.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15768.06it/s]
+  AsS2        AsS2          P2_1       gap_MP= 1.29 eV  E_hull=0.027  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30283.78it/s]
+  Li3AsO4     Li3AsO4       Pmn2_1     gap_MP= 4.13 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29746.84it/s]
+  As2S3       As2S3         P-1        gap_MP= 1.99 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15420.24it/s]
+  Li3P        Li3P          P6_3/mmc   gap_MP= 0.70 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44306.03it/s]
+  LiAg3       LiAg3         I4/mmm     gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44462.59it/s]
+  AlP         AlP           F-43m      gap_MP= 1.63 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/4 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 4/4 [00:00<00:00, 60133.39it/s]
+  AlN         AlN           P6_3mc     gap_MP= 4.05 eV  E_hull=0.000  다형 4개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 23172.95it/s]
+  B6P         B6P           R-3m       gap_MP= 2.48 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22310.13it/s]
+  Li7PN4      Li7PN4        P-43n      gap_MP= 3.47 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15196.75it/s]
+  LiCaP       LiCaP         Pnma       gap_MP= 1.73 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  Li2Co12P7   Li2Co12P7     P-6        gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15592.21it/s]
+  Cr3P        Cr3P          I-4        gap_MP= 0.00 eV  E_hull=0.124  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31068.92it/s]
+  Li2CuP      Li2CuP        P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 49344.75it/s]
+  LiFeP       LiFeP         P4/nmm     gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15420.24it/s]
+  LiGa        LiGa          Fd-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 53773.13it/s]
+  LiGdO2      LiGdO2        Pnma       gap_MP= 3.28 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15033.35it/s]
+  GdP         GdP           Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 29641.72it/s]
+  LiGe        LiGe          I4_1/a     gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15420.24it/s]
+  HfP         HfP           P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 12520.31it/s]
+  Li3LaP2     Li3LaP2       P-3m1      gap_MP= 0.61 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 54236.69it/s]
+  LiMgP       LiMgP         F-43m      gap_MP= 1.54 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30954.27it/s]
+  Mo3P        Mo3P          I-42m      gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15768.06it/s]
+  Nb7P4       Nb7P4         C2/m       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15252.01it/s]
+  Nb5P3       Nb5P3         Pnma       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 16320.25it/s]
+  NdP         NdP           Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개  (Nd: LOWER BOUND)
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15141.89it/s]
+  Li5Ni9P7    Li5Ni9P7      P-6        gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 33288.13it/s]
+  Li3Sb       Li3Sb         P6_3/mmc   gap_MP= 0.48 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 46260.71it/s]
+  ScP         ScP           Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 15307.68it/s]
+  SmP         SmP           Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 19152.07it/s]
+  Li5Sn2      Li5Sn2        R-3m       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30393.51it/s]
+  LiSn        LiSn          P2/m       gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14768.68it/s]
+  Ta2P        Ta2P          Pnnm       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/3 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 3/3 [00:00<00:00, 44620.26it/s]
+  TaP         TaP           I4_1md     gap_MP= 0.00 eV  E_hull=0.000  다형 3개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 21845.33it/s]
+  Ti7P4       Ti7P4         C2/m       gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30615.36it/s]
+  TiP         TiP           P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 1/1 [00:00<00:00, 14979.66it/s]
+  V12P7       V12P7         P-6        gap_MP= 0.00 eV  E_hull=0.000  다형 1개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 31068.92it/s]
+  YP          YP            Fm-3m      gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30840.47it/s]
+  ZrP         ZrP           P6_3/mmc   gap_MP= 0.00 eV  E_hull=0.000  다형 2개
+Retrieving SummaryDoc documents:   0%|          | 0/2 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 2/2 [00:00<00:00, 30727.50it/s]
+  Li3As       Li3As         P6_3/mmc   gap_MP= 0.64 eV  E_hull=0.000  다형 2개
+
+반응 1832개 · 금속 산물을 포함하는 반응 **1172개** (64 %)
+
+-> db/properties/cascade_product_gaps.json
+{"mp_db_version": "2026.04.13", "seconds": 322, "interface_rows_added": {"db/properties/cascade_interface_90.jsonl": 3, "db/properties/cascade_interface_li.jsonl": 1, "db/properties/cascade_interface_carbon.jsonl": 1}, "product_gaps": {"file": "db/properties/cascade_product_gaps.json", "n_formulas": 540, "n_e_above_hull_gt_0": 16, "sha16": "ec5defffde85ac75"}}
+[2026-10-14 02:11:18] 끝 ✅ — 올릴 파일: db/properties/oxidation_stability_cascade_as2s3_addendum_2026_10_13.json · db/properties/cascade_interface_90.jsonl · db/properties/cascade_interface_li.jsonl · db/properties/cascade_interface_carbon.jsonl · db/properties/cascade_product_gaps.json · db/raw/cascade_as2s3_mp_2026_10_13/

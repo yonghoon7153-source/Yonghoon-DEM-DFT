@@ -1,0 +1,52 @@
+&CONTROL
+    calculation     = 'scf'
+    prefix          = 'Ni3S4_mp-aaaaabok'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/cei_gap_1027/pseudo'
+    tprnfor         = .true.
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 14
+    ntyp            = 2
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    nspin           = 2
+    starting_magnetization(1) = 0.1111
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+
+ATOMIC_SPECIES
+  Ni    58.693  ni_pbe_v1.4.uspp.F.UPF
+  S     32.060  S.pbe-nl-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+   5.798753775   0.000004279   3.347906401
+   1.932921735   5.467117375   3.347906401
+   0.000000000  -0.000000000   6.695812801
+
+ATOMIC_POSITIONS angstrom
+Ni               2.8993768873        0.0000021396        5.0218596008
+Ni               0.9664608673        2.7335586877        5.0218596008
+Ni               3.8658377547        2.7335608273        3.3479064005
+Ni               3.8658377547        2.7335608273        6.6958128010
+Ni               0.9664613063        0.6833907280        1.6739532003
+Ni               6.7652142029        4.7837309266       11.7176724018
+S                5.7322366585        4.0533085655        9.9285049465
+S                1.9994388509        1.4138130891        6.5806119375
+S                2.8993840723        3.9592358795        5.0218696445
+S                4.6992705190        1.4138134086        5.0218696445
+S                4.8322914371        1.5078857751        8.3697559576
+S                3.0324049904        4.0533082460        8.3697559576
+S                1.9994388509        1.4138130891        3.4631206556
+S                5.7322366585        4.0533085655        6.8110136645
+
+K_POINTS automatic
+  4 4 4 0 0 0

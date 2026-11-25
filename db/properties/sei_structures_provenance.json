@@ -1,0 +1,119 @@
+{
+  "Li2O": {
+    "material_id": "mp-1960",
+    "spacegroup": "Fm-3m",
+    "energy_above_hull_eV_per_atom": 0.0,
+    "theoretical": false,
+    "nsites": 3,
+    "files": [
+      "db/structures/sei_li2o_mp-1960.vasp",
+      "db/structures/sei_li2o_mp-1960.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "Li2S": {
+    "material_id": "mp-1153",
+    "spacegroup": "Fm-3m",
+    "energy_above_hull_eV_per_atom": 0.0,
+    "theoretical": false,
+    "nsites": 3,
+    "files": [
+      "db/structures/sei_li2s_mp-1153.vasp",
+      "db/structures/sei_li2s_mp-1153.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "LiCl": {
+    "material_id": "mp-22905",
+    "spacegroup": "Fm-3m",
+    "energy_above_hull_eV_per_atom": 0.02431463874999995,
+    "theoretical": false,
+    "nsites": 8,
+    "files": [
+      "db/structures/sei_licl_mp-22905.vasp",
+      "db/structures/sei_licl_mp-22905.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "Li3P": {
+    "material_id": "mp-736",
+    "spacegroup": "P6_3/mmc",
+    "energy_above_hull_eV_per_atom": 0.0,
+    "theoretical": false,
+    "nsites": 8,
+    "files": [
+      "db/structures/sei_li3p_mp-736.vasp",
+      "db/structures/sei_li3p_mp-736.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "Li3PO4": {
+    "material_id": "mp-13725",
+    "spacegroup": "Pmn2_1",
+    "energy_above_hull_eV_per_atom": 0.0,
+    "theoretical": false,
+    "nsites": 16,
+    "files": [
+      "db/structures/sei_li3po4_mp-13725.vasp",
+      "db/structures/sei_li3po4_mp-13725.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "Li3PO4g": {
+    "material_id": "mp-2878",
+    "spacegroup": "Pnma",
+    "energy_above_hull_eV_per_atom": 0.0024853862500000545,
+    "theoretical": false,
+    "nsites": 32,
+    "files": [
+      "db/structures/sei_li3po4g_mp-2878.vasp",
+      "db/structures/sei_li3po4g_mp-2878.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "LiNdO2": {
+    "material_id": "mp-1222355",
+    "spacegroup": "P2_1/c",
+    "energy_above_hull_eV_per_atom": 0.008336155312497873,
+    "theoretical": true,
+    "nsites": 16,
+    "files": [
+      "db/structures/sei_lindo2_mp-1222355.vasp",
+      "db/structures/sei_lindo2_mp-1222355.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "Nd2O3": {
+    "material_id": "mp-2763",
+    "spacegroup": "P-3m1",
+    "energy_above_hull_eV_per_atom": 0.005659960499999173,
+    "theoretical": false,
+    "nsites": 5,
+    "files": [
+      "db/structures/sei_nd2o3_mp-2763.vasp",
+      "db/structures/sei_nd2o3_mp-2763.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  },
+  "Nd2S3": {
+    "material_id": "mp-438",
+    "spacegroup": "Pnma",
+    "energy_above_hull_eV_per_atom": 0.0,
+    "theoretical": false,
+    "nsites": 20,
+    "files": [
+      "db/structures/sei_nd2s3_mp-438.vasp",
+      "db/structures/sei_nd2s3_mp-438.cif"
+    ],
+    "source": "Materials Project (mp_api)",
+    "fetched": "2026-08-06"
+  }
+}

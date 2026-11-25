@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% block title %}Property Explorer{% endblock %}
+{% block content %}
+{% from "_legend.html" import status_legend, unknown_legend %}
+{# ⚠ metric 목록을 여기 하드코딩하면 레지스트리에 metric 이 늘어도 화면이 안 따라온다
+   (2026-08-07 Codex 5라운드: ordered/disorder 두 metric 이 explorer 에 아예 안 나왔다).
+   data.metric_meta() 가 레지스트리에서 만들어 준다. #}
+{# ── v3 묶음 C: 열을 **세 갈래**로 가른다. 손 목록이 아니라 원장 파생이다.
+     · props    — 고체 조성 축
+     · molprops — 분자계(SDCP_*) 축. 값이 sdcp 한 행에만 있어 13행을 TODO 로 채웠다.
+                  지우지 않고 **접는다** (열 그룹 토글).
+     · noncite  — 축 전체가 비인용(citable:false). 본 표에서 빼고 아래 절에 사유와 함께.
+                  ⛔ TODO(아직 안 함)와 비인용(했는데 못 씀)을 같은 기호로 쓰지 않는다. #}
+{% set props = [] %}{% set molprops = [] %}
+{% for k, mm in MM.items() %}
+  {%- if k in noncite %}
+  {%- elif k.startswith('SDCP_') %}{% set _ = molprops.append((k, mm.label, mm.unit)) %}
+  {%- else %}{% set _ = props.append((k, mm.label, mm.unit)) %}{% endif %}
+{%- endfor %}
+{# 표는 한 줄기로 그린다 — 같은 셀 마크업이 두 벌이 되면 결속·배지가 갈린다 #}
+{% set cols = [] %}
+{% for k,l,u in props %}{% set _ = cols.append((k,l,u,'')) %}{% endfor %}
+{% for k,l,u in molprops %}{% set _ = cols.append((k,l,u,'mcol')) %}{% endfor %}
+{# 세부 분석 열 — canonical 앵커와 **다른 그룹**이다. 빈칸은 TODO 가 아니라 '—'
+   (그 계에 그 분석을 안 했거나 정의가 다르다는 뜻). #}
+{% set xprops = [
+  ('ELF_PS','ELF P–S','central-min'),
+  ('BADER_P','Bader P','e')] %}
+<div class="page-header">
+  <div><h1>Property Explorer</h1>
+    <div class="sub"><b>정본 값 진입점</b> — 조성 × canonical 물성. 값마다 <b>method provenance</b> ·
+      클릭하면 인용 복사 (철회·비인용 칸은 복사 버튼이 없다)</div></div>
+</div>
+
+{# ── 방법 검증 앵커 — 표 **위**로 (v3). 표의 숫자를 믿을지 말지 정하는 정보다.
+     ⚠ 조성 물성 표와 **의도적으로 분리**한다. registry 는 "이 물질의 값이 얼마냐" 이고
+     여기는 "우리 계산기가 얼마나 맞나" 다. 섞으면 'UMA 힘 오차' 가 comp1 의 물성처럼 읽힌다. #}
+{% if anchors %}
+<details class="card v3-fold" style="margin-bottom:18px;border-left:4px solid #0d9488" open>
+  <summary style="padding:14px 16px 10px">
+    <h2 style="margin:0;font-size:1.02rem;display:inline">🔬 방법 검증 앵커 <span class="badge"
+        style="background:#ccfbf1;color:#0f766e;font-weight:400">조성 물성 아님</span></h2>
+    <span class="muted" style="font-size:.8rem">— 아래 표를 믿을지 말지 정하는 정보 {{ anchors|length }}건</span>
+  </summary>
+  <div class="muted" style="font-size:.84rem;padding:0 16px 8px;line-height:1.6">
+    위 제목 아래 표는 <b>이 물질의 값이 얼마냐</b>이고, 여기는 <b>우리 계산기가 얼마나 맞나</b>다 — 축이 달라서 따로 둔다.
+    <b>재료 비교에 쓰는 수치가 아니다.</b> 각 항목의 <b>한계</b>를 같이 읽을 것.
+  </div>
+  <div class="tbl-scroll">
+  <table class="data-table" style="margin:0">
+    <thead><tr><th>항목</th><th>값</th><th>판정</th><th>읽는 법</th><th>⚠ 한계</th><th>출처</th></tr></thead>
+    <tbody>
+    {% for a in anchors %}
+      <tr>
+        <td style="white-space:nowrap"><b>{{ a.title }}</b></td>
+        <td style="white-space:nowrap;font-variant-numeric:tabular-nums">{{ a.value }}</td>
+        <td style="white-space:nowrap">{{ a.verdict }}</td>
+        <td style="font-size:.85rem;line-height:1.6;max-width:34em">{{ a.note|mdlite }}</td>
+        <td style="font-size:.82rem;line-height:1.6;max-width:28em;color:#9a3412">{{ a.limit|mdlite }}</td>
+        <td style="font-size:.78rem"><code>{{ a.src.split('/')[-1] }}</code></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</details>
+{% endif %}
+
+<div class="exp-controls">
+  <input class="search" placeholder="조성 검색 (label · formula)…" oninput="expFilt()" id="exp-q" aria-label="조성 검색">
+  <div class="chip-bar" role="group" aria-label="family 필터">
+    <button class="chip active" data-fam="" onclick="expFam(this)">전체</button>
+    {% for fam in FAMILY_ORDER %}<button class="chip" data-fam="{{ fam }}" onclick="expFam(this)">{{ fam }}</button>{% endfor %}
+  </div>
+  <label class="cc-chk" style="font-size:.82rem"><input type="checkbox" id="exp-hasval" checked onchange="expApply()"> 값 있는 조성만</label>
+  {% if molprops %}
+  <label class="cc-chk" style="font-size:.82rem" title="SDCP_* {{ (molprops|length)|plain }}열은 분자계(sdcp) 한 행에만 값이 있다. 지우지 않고 접어 둔다.">
+    <input type="checkbox" id="exp-mol" onchange="expMol()"> 분자계 열 {{ molprops|length }}개 펼치기</label>
+  {% endif %}
+</div>
+
+{# ── 배지 범례 (v3) — 손으로 쓰지 않는다. _STATUS_BADGE 에서 nav.status_legend() 가 뽑는다 ── #}
+{{ status_legend(NAVMOD) }}
+{{ unknown_legend(NAVMOD) }}
+
+<div class="muted card" id="exp-empty" style="display:none;text-align:center;padding:34px;line-height:1.7">
+  조건에 맞는 조성이 없어요.<br><span style="font-size:.85em">검색어를 지우거나 family 필터를 '전체'로, 또는 '값 있는 조성만'을 꺼보세요.</span>
+</div>
+<div class="card" style="padding:0;overflow:hidden">
+<div class="tbl-scroll">
+<table class="data-table exp-table" id="exp-table">
+  <thead>
+    <tr>
+      <th onclick="expSort(0)" class="sortable-h" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">조성</th>
+      <th onclick="expSort(1)" class="sortable-h" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">family</th>
+      {% for key,label,unit,cl in cols %}
+      <th onclick="expSort({{ loop.index+1 }})" class="sortable-h num {{ cl }}" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ (canonical_meta.get(key,'') or key)|plain }}">
+        {{ label }} <span class="th-unit">{{ unit }}</span>
+        <span class="th-prov" aria-hidden="true">ⓘ</span>
+      </th>
+      {% endfor %}
+      {% for key,label,unit in xprops %}
+      <th onclick="expSort({{ cols|length + loop.index + 1 }})" class="sortable-h num xcol" tabindex="0"
+          role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ extra_meta.get(key,'')|plain }}">
+        {{ label }} <span class="th-unit">{{ unit }}</span>
+        <span class="th-prov" aria-hidden="true">ⓘ</span>
+      </th>
+      {% endfor %}
+      <th class="acol">보유 분석 <span class="th-unit">db 실물 기준</span></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for cid,c in COMPS.items() %}
+    {% set has = namespace(v=false) %}{% for key,label,unit,cl in cols %}{% if canonical.get(key,{}).get(cid) is not none %}{% set has.v = true %}{% endif %}{% endfor %}
+    {%- for key,label,unit in xprops %}{% if extra.get(key,{}).get(cid) is not none %}{% set has.v = true %}{% endif %}{% endfor %}
+    {#- ⛔ v3: '보유 분석' 도 자료다. 종전엔 canonical 값만 봐서 vgcf_hbn(NEB·Binding·Drag)
+        과 li3n(NEB·Drag) 이 자료를 갖고도 첫 화면에서 숨었고, family 칩을 눌러도
+        AND 필터라 "조건에 맞는 조성이 없어요" 만 떴다 — 있는데 없다고 말한 것이다. -#}
+    {%- if amatrix.get(cid) %}{% set has.v = true %}{% endif %}
+    <tr data-fam="{{ c.family }}" data-hasval="{{ 1 if has.v else 0 }}" data-s="{{ c.label|lower }} {{ c.formula|lower }} {{ cid }}">
+      <td><a href="/composition/{{ cid }}" class="exp-comp"><span class="dot" style="background:{{ c.color }}"></span>{{ c.label }}</a>
+        <div class="exp-formula mono">{{ c.formula }}</div></td>
+      <td><span class="badge b-fam">{{ c.family }}</span></td>
+      {% for key,label,unit,cl in cols %}
+        {% set v = canonical.get(key,{}).get(cid) %}
+        {% set prov = canonical_provisional.get((key, cid)) %}
+        <td class="num {{ cl }}">
+          {% if v is not none %}
+          {# method는 data-* 속성으로 전달 — onclick 속성 안 tojson은 쌍따옴표가 속성을 조기 종료시킴 #}
+          {#- 회신 BG ② — 이 버튼이 그리는 값은 정확히 레지스트리 (metric, system) 한 쌍이다.
+              그러니 결속은 **파생**이면 된다: 손 목록 없이 모든 셀이 자기 이름을 댄다. -#}
+          {#- ⛔ Codex BI (2026-09-08) — 철회·비인용 칸은 **인용 복사 버튼을 주지 않는다.**
+              `data-claim` 은 "이게 그 주장이다" 라고 말할 뿐 복사를 막지 못한다. 여기가
+              마감된 축의 값이 원고로 들어가는 실제 경로였다(0.199 원클릭 복사). -#}
+          {%- set _cl = claims.get((key, cid)) %}
+          {%- if _cl %}
+          <span class="cell-blocked" data-claim="{{ key }}@{{ cid }}"
+                title="{{ ('⛔ 철회 — 인용 금지' if _cl.state == 'retracted' else '⛔ 비인용')|plain }}&#10;{{ (_cl.why)|plain }}{% if _cl.instead %}&#10;대신: {{ (_cl.instead if _cl.instead is string else '대체값 없음 — 인용 가능한 수 0개 (' ~ _cl.instead.decision ~ ')')|plain }}{% endif %}"
+                >{{ v }}<span class="claim-mark">[{{ '⛔철회·인용금지' if _cl.state == 'retracted' else '⛔비인용' }}]</span></span>
+          {%- else %}
+          <button class="cell-cite" data-claim="{{ key }}@{{ cid }}"
+                  data-method="{{ canonical_meta.get(key,'') }}{% if prov %} · ⚠ {{ prov }}{% endif %}"
+                  onclick="citeVal('{{ c.label }}','{{ label }}','{{ v }}','{{ unit }}',this.dataset.method)"
+                  title="클릭 → 인용 복사&#10;{{ (canonical_meta.get(key,''))|plain }}{% if prov %}&#10;⚠ {{ (prov)|plain }}{% endif %}">{{ v }}</button>
+          {%- endif %}
+          {#- ★ 상태 배지는 **하나만** (2026-08-07 Codex 4라운드). 레지스트리 status 와
+              옛 CANONICAL_PROVISIONAL 이 겹쳐 '잠정' 이 두 번 찍혔다. 레지스트리 우선. -#}
+          {%- set st = canonical_status.get((key, cid)) %}
+          {%- if st %} <span class="badge" style="color:{{ st.fg }};background:{{ st.bg }}"
+            title="{{ st.why|plain }}">{{ st.label }}</span>
+          {%- elif prov %} <span class="badge b-prov" title="{{ prov|plain }}">잠정</span>{% endif %}
+          {#- ★ provenance_open 은 **값이 틀렸다는 뜻이 아니다** — 그 값을 만든 실행을 파일로
+              재현할 수 없다는 뜻이다. status 를 안 내리므로 순위엔 남고, 표식만 붙인다. -#}
+          {%- set po = canonical_prov.get((key, cid)) %}
+          {%- if po %} <span class="badge" style="color:#0369a1;background:#e0f2fe"
+            title="출처 미확보: {{ (po.why)|plain }}">출처⚠</span>{% endif %}
+          {% else %}<span class="cell-todo">TODO</span>{% endif %}
+        </td>
+      {% endfor %}
+      {% for key,label,unit in xprops %}
+        {% set xv = extra.get(key,{}).get(cid) %}
+        <td class="num xcol">
+          {% if xv is not none %}
+          <button class="cell-cite" data-method="{{ extra_meta.get(key,'') }}"
+                  onclick="citeVal('{{ c.label }}','{{ label }}','{{ xv }}','{{ unit }}',this.dataset.method)"
+                  title="클릭 → 인용 복사&#10;{{ (extra_meta.get(key,''))|plain }}">{{ xv }}</button>
+          {% else %}<span class="muted">—</span>{% endif %}
+        </td>
+      {% endfor %}
+      <td class="acol">
+        {% set am = amatrix.get(cid, {}) %}
+        {% if am %}<span class="achips">
+          {% for tag, n in am|dictsort %}<span class="achip{% if tag=='BVSE' %} achip-warn{% endif %}"
+             title="{{ (awhy.get(tag, tag))|plain }}{% if n %} · CSV {{ (n)|plain }}개{% endif %}">{{ tag }}{% if n %}<i>{{ n }}</i>{% endif %}</span>{% endfor %}
+        </span>{% else %}<span class="muted">—</span>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+
+<div class="prov-legend">
+  <div class="section-title">Provenance — 각 열의 계산 방법</div>
+  <div class="grid grid-3">
+  {% for key,label,unit in props %}
+    <div class="prov-card">
+      <div class="pc-t">{{ label }} <span class="muted">({{ unit }})</span></div>
+      <div class="pc-m">{{ canonical_meta.get(key,'—') }}</div>
+    </div>
+  {% endfor %}
+  </div>
+  <p class="muted" style="font-size:.8rem;margin-top:12px">⚠ 서로 다른 pseudo/cell로 계산된 값은 직접 비교 금지 — comp1↔comp2(둘 다 cubic-52 USPP)만 완전비교쌍. MD Ea는 UMA(멀티시드 판정).</p>
+</div>
+
+<script>
+function citeVal(comp,prop,val,unit,method){
+  copyText(comp+' — '+prop+' = '+val+' '+unit+'  ['+method+']');
+}
+var expF={q:'',fam:''};
+function expFilt(){expF.q=document.getElementById('exp-q').value.toLowerCase().trim();expApply();}
+function expFam(b){expF.fam=b.dataset.fam;document.querySelectorAll('.exp-controls .chip').forEach(function(x){x.classList.remove('active')});b.classList.add('active');expApply();}
+function expApply(){var hv=document.getElementById('exp-hasval').checked;var n=0;
+  document.querySelectorAll('#exp-table tbody tr').forEach(function(r){
+    var okF=!expF.fam||r.dataset.fam===expF.fam;
+    var okQ=!expF.q||r.dataset.s.indexOf(expF.q)>=0;
+    var okV=!hv||r.dataset.hasval==='1';
+    var show=okF&&okQ&&okV; r.style.display=show?'':'none'; if(show)n++;});
+  var e=document.getElementById('exp-empty'); if(e)e.style.display=n?'none':'';}
+function expSort(idx){
+  var tb=document.getElementById('exp-table'),rows=Array.prototype.slice.call(tb.tBodies[0].rows);
+  var th=tb.tHead.rows[0].cells[idx];var asc=!(th._asc);
+  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');x._asc=false;x.setAttribute('aria-sort','none');});
+  th._asc=asc;th.setAttribute('data-sort',asc?'▲':'▼');th.setAttribute('aria-sort',asc?'ascending':'descending');
+  rows.sort(function(a,b){
+    var x=a.cells[idx].innerText.trim().replace('TODO','');
+    var y=b.cells[idx].innerText.trim().replace('TODO','');
+    var nx=parseFloat(x),ny=parseFloat(y);
+    var ex=isNaN(nx),ey=isNaN(ny);
+    if(ex&&ey)return x.localeCompare(y)*(asc?1:-1);
+    if(ex)return 1; if(ey)return -1;          // 빈값(TODO)은 항상 아래로
+    return (asc?nx-ny:ny-nx);
+  });
+  rows.forEach(function(r){tb.tBodies[0].appendChild(r);});
+}
+// 분자계(SDCP_*) 열 그룹 — 기본은 접힘. **지운 게 아니라 접은 것**이다.
+function expMol(){
+  var box=document.getElementById('exp-mol'), on=box?box.checked:false;
+  document.querySelectorAll('#exp-table .mcol').forEach(function(c){c.style.display=on?'':'none';});
+}
+expMol();
+expApply();  // 기본: '값 있는 조성만' 켜진 상태로 진입 (빈 행 숨김)
+</script>
+
+{# ── 비인용 축 (v3 묶음 C) ────────────────────────────────────────────────
+   ⛔ 이 축들은 본 표에서 **뺐다**. 종전에는 14행 전부 `TODO` 로 찍혀서
+      "아직 안 했다" 로 읽혔는데, 실제로는 **원자료가 인용을 금지**한 축이다.
+      값을 지우자는 게 아니라 TODO 와 같은 기호를 쓰지 말자는 것이다.
+   ⚠ 삭제가 아니라 접기 — 접힘 안 텍스트도 claim 스캐너가 그대로 읽는다. #}
+{% if noncite %}
+<details class="card v3-fold" style="margin-top:18px;padding:14px 16px">
+  <summary><b>⛔ 비인용 축 {{ noncite|length }}개</b>
+    <span class="muted" style="font-size:.82rem;font-weight:400">— 값은 있는데 못 쓴다 (TODO 가 아니다)</span></summary>
+  <div class="muted" style="font-size:.8rem;margin:8px 0 10px;line-height:1.6">
+    아래 축은 <b>계산이 끝났고 수도 나와 있다</b>. 그런데 원자료가 인용을 명시적으로 금지했거나
+    게이트가 미평가라 정본으로 옮기지 않는다. 위 표에 두면 미계산(TODO)과 구분이 안 되므로 여기로 뺐다.
+    <b>미평가는 실패가 아니다</b> — "평가한 적이 없다" 와 "평가해 봤더니 떨어졌다" 는 다른 말이다.
+  </div>
+  <div class="tbl-scroll">
+  <table class="data-table" style="margin:0">
+    <thead><tr><th>축</th><th>계</th><th>게이트</th><th>왜 못 쓰나</th><th>쓸 수 있는 문장</th></tr></thead>
+    <tbody>
+    {% for key, nc in noncite|dictsort %}
+      <tr data-claim="{% for s in nc.systems %}{{ key }}@{{ s }} {% endfor %}">
+        <td style="white-space:nowrap"><b>{{ MM.get(key,{}).get('label', key) }}</b>
+          <div class="muted mono" style="font-size:.66rem">{{ key }}</div></td>
+        <td style="font-size:.78rem">{% for s in nc.systems %}<span class="badge b-fam">{{ s }}</span> {% endfor %}
+          {% if nc.group %}<div class="muted mono" style="font-size:.64rem">{{ nc.group }}</div>{% endif %}</td>
+        <td style="font-size:.78rem;white-space:nowrap">
+          {% if nc.gate %}<span class="badge" style="color:#6b7280;background:#f3f4f6">◻ {{ nc.gate_outcome or 'unknown' }}</span>
+            <div class="muted mono" style="font-size:.64rem">{{ nc.gate }}</div>{% else %}<span class="muted">—</span>{% endif %}</td>
+        <td style="font-size:.78rem;line-height:1.6;max-width:34em">{{ nc.why|bold }}</td>
+        <td style="font-size:.78rem;line-height:1.6;max-width:26em">
+          {% if nc.allowed %}{{ nc.allowed|bold }}{% else %}<span class="muted">원장에 허용 문장이 없다 — 아무 문장도 쓰지 않는다.</span>{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="muted" style="font-size:.72rem;margin-top:8px">
+    출처: db/properties/canonical_registry.json 의 <span class="mono">citable:false</span> ·
+    <span class="mono">why_non_citable</span> · <span class="mono">allowed_sentence</span>
+  </div>
+</details>
+{% endif %}
+
+{% endblock %}

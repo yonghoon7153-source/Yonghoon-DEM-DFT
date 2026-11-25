@@ -1,0 +1,211 @@
+figure,series,x_name,x,y_name,y,note
+fig2e,thin electrode thickness — experiments [49] (open square),pressure_MPa,0,thickness_um,80.017,"native raster xref 75 (300 dpi); panel box [97,1237,926,1904] px; ticks: thickness y [1325.5,1464.5,1602.5,1740.5] px = [80,72,64,56] µm (fit resid 0.023); compression (red, right) y [1789,1647,1504,1362] px = [0,10,20,30] % (resid 0.021); x [216,414.5,612,810] px = [0,100,200,300] MPa; column runs at the tick x: open square centre = bottom outline edge − 11.5 px (24 px marker); filled square partly hidden under the open one → centre = top edge + 11.5 px; triangles centred on the centroid (apex + 2/3·25 px; checked: open triangle at 0 MPa → −0.05 %); grey = max RGB−min < 30 & R < 200, red = R>170,G<170,B<170"
+fig2e,thin electrode thickness — experiments [49] (open square),pressure_MPa,100,thickness_um,61.044,bottom 1665
+fig2e,thin electrode thickness — experiments [49] (open square),pressure_MPa,200,thickness_um,57.226,bottom 1731
+fig2e,thin electrode thickness — experiments [49] (open square),pressure_MPa,300,thickness_um,53.698,bottom 1792
+fig2e,thin electrode thickness — simulations (filled square),pressure_MPa,100,thickness_um,61.623,top 1632 (rest under the open square)
+fig2e,thin electrode thickness — simulations (filled square),pressure_MPa,200,thickness_um,57.4,top 1705
+fig2e,thin electrode thickness — simulations (filled square),pressure_MPa,300,thickness_um,54.161,top 1761
+fig2e,thin electrode compression rate — experiments [49] (open triangle),pressure_MPa,0,compression_rate_pct,-0.042,apex 1773 · base 1798
+fig2e,thin electrode compression rate — experiments [49] (open triangle),pressure_MPa,100,compression_rate_pct,23.694,apex 1435
+fig2e,thin electrode compression rate — experiments [49] (open triangle),pressure_MPa,200,compression_rate_pct,28.469,apex 1367
+fig2e,thin electrode compression rate — experiments [49] (open triangle),pressure_MPa,300,compression_rate_pct,32.226,apex 1313.5 · base 1338
+fig2e,thin electrode compression rate — simulations (filled triangle),pressure_MPa,100,compression_rate_pct,22.992,base 1470 (apex hidden)
+fig2e,thin electrode compression rate — simulations (filled triangle),pressure_MPa,200,compression_rate_pct,28.188,base 1396
+fig2e,thin electrode compression rate — simulations (filled triangle),pressure_MPa,300,compression_rate_pct,,hidden under the open triangle (same within the marker)
+fig2f,thick electrode thickness — experimental [49] (open square),pressure_MPa,0,thickness_um,183.077,"native raster xref 75; panel box [950,1237,1800,1904] px; ticks: thickness y [1334.5,1458,1581.5,1705] = [180,160,140,120] µm (resid 0.000); compression y [1790.5…1346.5] = [0…40] % (resid 0.000); x [1082,1280,1478,1675.5] = [0,100,200,300] MPa; same edge rules as fig2e"
+fig2f,thick electrode thickness — experimental [49] (open square),pressure_MPa,100,thickness_um,151.012,top 1502
+fig2f,thick electrode thickness — experimental [49] (open square),pressure_MPa,200,thickness_um,116.032,top 1718
+fig2f,thick electrode thickness — experimental [49] (open square),pressure_MPa,300,thickness_um,107.126,bottom 1796
+fig2f,thick electrode thickness — simulated (filled square),pressure_MPa,100,thickness_um,149.393,bottom 1535
+fig2f,thick electrode thickness — simulated (filled square),pressure_MPa,200,thickness_um,114.251,bottom 1752
+fig2f,thick electrode thickness — simulated (filled square),pressure_MPa,300,thickness_um,110.526,top 1752
+fig2f,thick electrode compression rate — experimental [49] (open triangle),pressure_MPa,0,compression_rate_pct,-0.018,apex 1774
+fig2f,thick electrode compression rate — experimental [49] (open triangle),pressure_MPa,100,compression_rate_pct,17.459,base 1605
+fig2f,thick electrode compression rate — experimental [49] (open triangle),pressure_MPa,200,compression_rate_pct,36.649,base 1392
+fig2f,thick electrode compression rate — experimental [49] (open triangle),pressure_MPa,300,compression_rate_pct,41.514,apex 1313
+fig2f,thick electrode compression rate — simulated (filled triangle),pressure_MPa,100,compression_rate_pct,18.36,apex 1570
+fig2f,thick electrode compression rate — simulated (filled triangle),pressure_MPa,200,compression_rate_pct,37.55,apex 1357
+fig2f,thick electrode compression rate — simulated (filled triangle),pressure_MPa,300,compression_rate_pct,39.532,base 1360
+fig3e,C1 thickness,pressure_MPa,0,thickness_um,150.0,"native raster xref 88; 3e panel box [0,1976,555,2471] px: thickness y [2050.5,2121.5,2192.5,2263.5,2334.5] px = [150,140,130,120,110] µm, x [119.5,201.5,283.5,365,447,528.5] = [0,50,100,150,200,250] MPa (20 MPa at 152.3); 3f box [556,1976,1129,2471]: y [2028.5,2140.5,2251.5,2363.5] = [30,20,10,0] %, x [668,749.5,831.5,913.5,995.5,1076.5] (20 MPa at 700.7); single-column runs at the tick x; marker sizes from the legend (square 17, circle 18, triangle 18, diamond 22 px); a run edge counts as hidden only if the neighbouring pixel belongs to a series drawn later (order grey→red→blue→green); centre = free edge ∓ (size−1)/2, triangles on the centroid (2/3 from the apex — confirmed by 3e↔3f agreement); cross-check (150 − t)/1.5 vs 3f within ±0.1 %p"
+fig3e,C1 thickness,pressure_MPa,20,thickness_um,145.0,bottom edge 2094 (hidden above)
+fig3e,C1 thickness,pressure_MPa,50,thickness_um,127.817,full
+fig3e,C1 thickness,pressure_MPa,100,thickness_um,119.085,full
+fig3e,C1 thickness,pressure_MPa,150,thickness_um,112.606,bottom-free
+fig3e,C1 thickness,pressure_MPa,200,thickness_um,109.507,bottom-free
+fig3e,C1 thickness,pressure_MPa,250,thickness_um,106.55,bottom edge 2367
+fig3e,C2 thickness,pressure_MPa,0,thickness_um,150.0,text
+fig3e,C2 thickness,pressure_MPa,20,thickness_um,146.479,bottom-free
+fig3e,C2 thickness,pressure_MPa,50,thickness_um,139.014,full
+fig3e,C2 thickness,pressure_MPa,100,thickness_um,124.08,bottom edge 2243
+fig3e,C2 thickness,pressure_MPa,150,thickness_um,114.648,bottom-free
+fig3e,C2 thickness,pressure_MPa,200,thickness_um,110.704,bottom-free
+fig3e,C2 thickness,pressure_MPa,250,thickness_um,107.75,bottom edge 2359
+fig3e,C3 thickness,pressure_MPa,0,thickness_um,150.0,text
+fig3e,C3 thickness,pressure_MPa,20,thickness_um,146.502,bottom-free
+fig3e,C3 thickness,pressure_MPa,50,thickness_um,141.432,full
+fig3e,C3 thickness,pressure_MPa,100,thickness_um,124.953,bottom-free
+fig3e,C3 thickness,pressure_MPa,150,thickness_um,115.798,bottom-free
+fig3e,C3 thickness,pressure_MPa,200,thickness_um,110.869,bottom-free
+fig3e,C3 thickness,pressure_MPa,250,thickness_um,108.756,bottom-free
+fig3e,C4 thickness,pressure_MPa,0,thickness_um,150.0,full
+fig3e,C4 thickness,pressure_MPa,20,thickness_um,147.887,full
+fig3e,C4 thickness,pressure_MPa,50,thickness_um,145.211,full
+fig3e,C4 thickness,pressure_MPa,100,thickness_um,126.62,full
+fig3e,C4 thickness,pressure_MPa,150,thickness_um,117.887,full
+fig3e,C4 thickness,pressure_MPa,200,thickness_um,113.662,full
+fig3e,C4 thickness,pressure_MPa,250,thickness_um,111.127,full
+fig3f,C1 compression rate,pressure_MPa,20,compression_rate_pct,3.358,top edge 2318 (hidden below)
+fig3f,C1 compression rate,pressure_MPa,50,compression_rate_pct,14.821,full
+fig3f,C1 compression rate,pressure_MPa,100,compression_rate_pct,20.556,full
+fig3f,C1 compression rate,pressure_MPa,150,compression_rate_pct,24.946,top-free
+fig3f,C1 compression rate,pressure_MPa,200,compression_rate_pct,27.007,top-free
+fig3f,C1 compression rate,pressure_MPa,250,compression_rate_pct,29.068,top-free
+fig3f,C2 compression rate,pressure_MPa,50,compression_rate_pct,7.249,top-free
+fig3f,C2 compression rate,pressure_MPa,100,compression_rate_pct,17.285,top-free
+fig3f,C2 compression rate,pressure_MPa,150,compression_rate_pct,23.64,top edge 2091
+fig3f,C2 compression rate,pressure_MPa,200,compression_rate_pct,26.245,bottom-free
+fig3f,C2 compression rate,pressure_MPa,250,compression_rate_pct,28.306,top-free
+fig3f,C3 compression rate,pressure_MPa,0,compression_rate_pct,0.006,top-free
+fig3f,C3 compression rate,pressure_MPa,20,compression_rate_pct,2.336,top-free
+fig3f,C3 compression rate,pressure_MPa,50,compression_rate_pct,5.651,full
+fig3f,C3 compression rate,pressure_MPa,100,compression_rate_pct,16.762,top-free
+fig3f,C3 compression rate,pressure_MPa,150,compression_rate_pct,22.766,top-free
+fig3f,C3 compression rate,pressure_MPa,200,compression_rate_pct,26.171,full
+fig3f,C3 compression rate,pressure_MPa,250,compression_rate_pct,27.515,full
+fig3f,C4 compression rate,pressure_MPa,0,compression_rate_pct,-0.009,full
+fig3f,C4 compression rate,pressure_MPa,20,compression_rate_pct,1.425,full
+fig3f,C4 compression rate,pressure_MPa,50,compression_rate_pct,3.127,full
+fig3f,C4 compression rate,pressure_MPa,100,compression_rate_pct,15.582,full
+fig3f,C4 compression rate,pressure_MPa,150,compression_rate_pct,21.407,full
+fig3f,C4 compression rate,pressure_MPa,200,compression_rate_pct,24.274,full
+fig3f,C4 compression rate,pressure_MPa,250,compression_rate_pct,25.887,full
+fig3_rows,row (a) 3D render height 50 MPa ÷ uncalendered,row,(a),render_height_ratio,0.967,"card check of the row order: coloured-particle pixel extent per snapshot in the native raster (xref 88); compare Fig 3(e) 50 MPa thickness/150: C4 0.968, C1 0.852, C2 0.927, C3 0.943 [card arithmetic]"
+fig3_rows,row (b) 3D render height 50 MPa ÷ uncalendered,row,(b),render_height_ratio,0.842,
+fig3_rows,row (c) 3D render height 50 MPa ÷ uncalendered,row,(c),render_height_ratio,0.925,
+fig3_rows,row (d) 3D render height 50 MPa ÷ uncalendered,row,(d),render_height_ratio,0.938,
+fig4a,"top layer (small, C2)",pressure_MPa,0,porosity_pct,,"native raster xref 93; 4a box [0,0,835,551]: y [53.5,146,238.5,330.5,422.5,514.5] px = [50,45,40,35,30,25] %, x [280,384.5,488,592.5,696.5,800.5] = [0..250] MPa (20 MPa at 321.6); marker = colour component after hole filling + 9 px opening (bbox centre); hidden grey markers at 0/20 MPa from the free edge + legend size (square 20, circle 22 px)"
+fig4a,"top layer (small, C2)",pressure_MPa,20,porosity_pct,47.005,top-free edge
+fig4a,"top layer (small, C2)",pressure_MPa,50,porosity_pct,46.246,
+fig4a,"top layer (small, C2)",pressure_MPa,100,porosity_pct,42.503,
+fig4a,"top layer (small, C2)",pressure_MPa,150,porosity_pct,34.422,
+fig4a,"top layer (small, C2)",pressure_MPa,200,porosity_pct,30.734,
+fig4a,"top layer (small, C2)",pressure_MPa,250,porosity_pct,28.998,
+fig4a,"bottom layer (large, C2)",pressure_MPa,0,porosity_pct,48.009,
+fig4a,"bottom layer (large, C2)",pressure_MPa,20,porosity_pct,46.517,
+fig4a,"bottom layer (large, C2)",pressure_MPa,50,porosity_pct,43.561,
+fig4a,"bottom layer (large, C2)",pressure_MPa,100,porosity_pct,30.951,
+fig4a,"bottom layer (large, C2)",pressure_MPa,150,porosity_pct,28.808,
+fig4a,"bottom layer (large, C2)",pressure_MPa,200,porosity_pct,27.615,
+fig4a,"bottom layer (large, C2)",pressure_MPa,250,porosity_pct,27.317,
+fig4b,"top layer (large, C3)",pressure_MPa,0,porosity_pct,,hidden; text 48 %
+fig4b,"top layer (large, C3)",pressure_MPa,20,porosity_pct,46.41,bottom edge 129 (hidden above)
+fig4b,"top layer (large, C3)",pressure_MPa,50,porosity_pct,42.322,
+fig4b,"top layer (large, C3)",pressure_MPa,100,porosity_pct,33.474,
+fig4b,"top layer (large, C3)",pressure_MPa,150,porosity_pct,30.597,
+fig4b,"top layer (large, C3)",pressure_MPa,200,porosity_pct,27.938,
+fig4b,"top layer (large, C3)",pressure_MPa,250,porosity_pct,26.499,
+fig4b,"bottom layer (small, C3)",pressure_MPa,0,porosity_pct,48.048,
+fig4b,"bottom layer (small, C3)",pressure_MPa,20,porosity_pct,46.773,
+fig4b,"bottom layer (small, C3)",pressure_MPa,50,porosity_pct,45.117,
+fig4b,"bottom layer (small, C3)",pressure_MPa,100,porosity_pct,41.671,
+fig4b,"bottom layer (small, C3)",pressure_MPa,150,porosity_pct,33.013,
+fig4b,"bottom layer (small, C3)",pressure_MPa,200,porosity_pct,30.733,
+fig4b,"bottom layer (small, C3)",pressure_MPa,250,porosity_pct,28.779,
+fig4d,C2 AM coordination number,pressure_MPa,0,coordination_number_AM,0.13,"native raster xref 93; bar tops (strict red R>200,G<90,B<90, contiguous run ending at the axis, median of 5 columns); 4d y [630.5,764,897.5,1030] px = [3,2,1,0]; 4f y [1150.5,1284.5,1417.5,1551] = [3,2,1,0]; 1 px = 0.0075"
+fig4d,C2 AM coordination number,pressure_MPa,20,coordination_number_AM,0.986,
+fig4d,C2 AM coordination number,pressure_MPa,50,coordination_number_AM,1.226,
+fig4d,C2 AM coordination number,pressure_MPa,100,coordination_number_AM,1.676,
+fig4d,C2 AM coordination number,pressure_MPa,150,coordination_number_AM,2.337,
+fig4d,C2 AM coordination number,pressure_MPa,200,coordination_number_AM,2.532,
+fig4d,C2 AM coordination number,pressure_MPa,250,coordination_number_AM,2.697,
+fig4f,C3 AM coordination number,pressure_MPa,0,coordination_number_AM,0.113,
+fig4f,C3 AM coordination number,pressure_MPa,20,coordination_number_AM,0.952,
+fig4f,C3 AM coordination number,pressure_MPa,50,coordination_number_AM,1.259,
+fig4f,C3 AM coordination number,pressure_MPa,100,coordination_number_AM,1.656,
+fig4f,C3 AM coordination number,pressure_MPa,150,coordination_number_AM,2.241,
+fig4f,C3 AM coordination number,pressure_MPa,200,coordination_number_AM,2.556,
+fig4f,C3 AM coordination number,pressure_MPa,250,coordination_number_AM,2.713,
+fig5i,C2 (solid),C_rate,0.5C,capacity_at_2.8V_mAh_per_g,148.8,"native raster xref 111; x [125.5,221.5,317.5,413.5,509.5,605.5] px = [0,30,60,90,120,150] mAh/g; frame bottom y 1370 = 2.8 V; curve end = centre of the colour run in rows 3–10 px above the frame (solid = continuous, dash-dot = gap at the bottom rows)"
+fig5i,C2 (solid),C_rate,1C,capacity_at_2.8V_mAh_per_g,145.5,
+fig5i,C2 (solid),C_rate,3C,capacity_at_2.8V_mAh_per_g,127.3,
+fig5i,C2 (solid),C_rate,5C,capacity_at_2.8V_mAh_per_g,95.9,
+fig5i,C3 (dash-dot),C_rate,0.5C,capacity_at_2.8V_mAh_per_g,146.2,
+fig5i,C3 (dash-dot),C_rate,1C,capacity_at_2.8V_mAh_per_g,142.2,
+fig5i,C3 (dash-dot),C_rate,3C,capacity_at_2.8V_mAh_per_g,111.1,
+fig5i,C3 (dash-dot),C_rate,5C,capacity_at_2.8V_mAh_per_g,53.9,
+fig8i,gradient (solid),C_rate,0.5C,capacity_at_2.8V_mAh_per_g,148.5,"native raster xref 158; x [183.5,300.5,417.5,534.5,651.5] px = [0,40,80,120,160] mAh/g; frame bottom y 1319 = 2.8 V; uniform 5C curve drawn teal"
+fig8i,gradient (solid),C_rate,1C,capacity_at_2.8V_mAh_per_g,146.7,
+fig8i,gradient (solid),C_rate,3C,capacity_at_2.8V_mAh_per_g,139.8,
+fig8i,gradient (solid),C_rate,5C,capacity_at_2.8V_mAh_per_g,119.4,
+fig8i,uniform (dash-dot),C_rate,0.5C,capacity_at_2.8V_mAh_per_g,,overlaps the gradient curve end
+fig8i,uniform (dash-dot),C_rate,1C,capacity_at_2.8V_mAh_per_g,,overlaps the gradient curve end
+fig8i,uniform (dash-dot),C_rate,3C,capacity_at_2.8V_mAh_per_g,129.1,
+fig8i,uniform (dash-dot),C_rate,5C,capacity_at_2.8V_mAh_per_g,96.1,
+fig7b,top layer (new),pressure_MPa,0,porosity_pct,48.013,"native raster xref 148; 7b y [850,998.5,1147,1295.5] px = [50,45,40,35] %; 7c y [880,1028,1177,1325] = [75,70,65,60] µm; x 7b [159,343,527,711] / 7c [994.5,1179,1363,1547] = [0,50,100,150] MPa; marker = component bbox centre"
+fig7b,top layer (new),pressure_MPa,50,porosity_pct,46.212,
+fig7b,top layer (new),pressure_MPa,100,porosity_pct,44.074,
+fig7b,top layer (new),pressure_MPa,150,porosity_pct,41.616,
+fig7b,bottom layer (first-calendered),pressure_MPa,0,porosity_pct,39.394,
+fig7b,bottom layer (first-calendered),pressure_MPa,50,porosity_pct,38.384,
+fig7b,bottom layer (first-calendered),pressure_MPa,100,porosity_pct,36.869,
+fig7b,bottom layer (first-calendered),pressure_MPa,150,porosity_pct,35.168,
+fig7c,top layer (new),pressure_MPa,0,thickness_um,74.997,
+fig7c,top layer (new),pressure_MPa,50,thickness_um,72.537,
+fig7c,top layer (new),pressure_MPa,100,thickness_um,69.488,
+fig7c,top layer (new),pressure_MPa,150,thickness_um,66.439,
+fig7c,bottom layer (first-calendered),pressure_MPa,0,thickness_um,64.367,
+fig7c,bottom layer (first-calendered),pressure_MPa,50,thickness_um,63.305,
+fig7c,bottom layer (first-calendered),pressure_MPa,100,thickness_um,62.008,
+fig7c,bottom layer (first-calendered),pressure_MPa,150,thickness_um,60.509,
+fig6,(a) single-layer uncalendered,panel,(a),render_height_px,228.0,"native raster xref 145; height = top of the CC (gold) slab − topmost coloured particle pixel (perspective render, low confidence); scale with (c) = 64.4 µm (text): (a) 73.1 · (b) 52.9 · (d) 140.0 · (e) 125.3 µm; with (a) = 75 µm: (b) 54.3 · (c) 66.1 µm [card arithmetic]"
+fig6,(b) first calendering 250 MPa (plate down),panel,(b),render_height_px,165.0,
+fig6,(c) springback,panel,(c),render_height_px,201.0,
+fig6,(d) two-layer uncalendered,panel,(d),render_height_px,437.0,
+fig6,(e) second calendering,panel,(e),render_height_px,391.0,
+figD1b,simulated,C_rate,0.2C,capacity_mAh_per_g,166.97,"native raster xref 213; y [53,190,327,464.5,601.5] px = [180,150,120,90,60] mAh/g; x categorical [649,803,957,1111,1265] = 0.2/0.5/1.0/2.0/3.0 C; grey squares partly under red circles → top edge + 11.5 px (24 px)"
+figD1b,simulated,C_rate,0.5C,capacity_mAh_per_g,156.9,top-free edge
+figD1b,simulated,C_rate,1.0C,capacity_mAh_per_g,142.88,top-free edge
+figD1b,simulated,C_rate,2.0C,capacity_mAh_per_g,108.888,
+figD1b,simulated,C_rate,3.0C,capacity_mAh_per_g,64.922,
+figD1b,experimental [59],C_rate,0.2C,capacity_mAh_per_g,165.1,
+figD1b,experimental [59],C_rate,0.5C,capacity_mAh_per_g,152.964,
+figD1b,experimental [59],C_rate,1.0C,capacity_mAh_per_g,138.09,
+figD1b,experimental [59],C_rate,2.0C,capacity_mAh_per_g,103.092,
+figD1b,experimental [59],C_rate,3.0C,capacity_mAh_per_g,54.969,
+figE1b,top layer (small) — 142 GPa / 1.35e11,pressure_MPa,0,porosity_pct,,"native raster xref 216; E1b y [71,169,267,364,462,559.5] px = [50,45,40,35,30,25] %; E1c y [754,835,917,999,1081,1162,1243] = [50…20] %; E1d y [753,842,930.5,1020,1109,1198] = [50…25] %; x E1b/E1d [1035.5,1136,1237.5,1338.5,1440,1541], E1c [145,246,347,448,549,650.5] = [0,50,100,150,200,250] MPa; grey at 0 MPa hidden under the red circle (text: 48 %)"
+figE1b,top layer (small) — 142 GPa / 1.35e11,pressure_MPa,50,porosity_pct,46.25,
+figE1b,top layer (small) — 142 GPa / 1.35e11,pressure_MPa,100,porosity_pct,42.513,
+figE1b,top layer (small) — 142 GPa / 1.35e11,pressure_MPa,150,porosity_pct,34.424,
+figE1b,top layer (small) — 142 GPa / 1.35e11,pressure_MPa,200,porosity_pct,30.738,
+figE1b,top layer (small) — 142 GPa / 1.35e11,pressure_MPa,250,porosity_pct,29.023,
+figE1b,bottom layer (large) — 142 GPa / 1.35e11,pressure_MPa,0,porosity_pct,48.016,
+figE1b,bottom layer (large) — 142 GPa / 1.35e11,pressure_MPa,50,porosity_pct,43.511,
+figE1b,bottom layer (large) — 142 GPa / 1.35e11,pressure_MPa,100,porosity_pct,30.994,
+figE1b,bottom layer (large) — 142 GPa / 1.35e11,pressure_MPa,150,porosity_pct,28.793,
+figE1b,bottom layer (large) — 142 GPa / 1.35e11,pressure_MPa,200,porosity_pct,27.616,
+figE1b,bottom layer (large) — 142 GPa / 1.35e11,pressure_MPa,250,porosity_pct,27.309,
+figE1c,top layer (small) — 75 GPa / 1.35e11,pressure_MPa,0,porosity_pct,,hidden; text 48 %
+figE1c,top layer (small) — 75 GPa / 1.35e11,pressure_MPa,50,porosity_pct,43.101,
+figE1c,top layer (small) — 75 GPa / 1.35e11,pressure_MPa,100,porosity_pct,40.007,
+figE1c,top layer (small) — 75 GPa / 1.35e11,pressure_MPa,150,porosity_pct,32.409,
+figE1c,top layer (small) — 75 GPa / 1.35e11,pressure_MPa,200,porosity_pct,28.886,
+figE1c,top layer (small) — 75 GPa / 1.35e11,pressure_MPa,250,porosity_pct,26.19,
+figE1c,bottom layer (large) — 75 GPa / 1.35e11,pressure_MPa,0,porosity_pct,48.002,
+figE1c,bottom layer (large) — 75 GPa / 1.35e11,pressure_MPa,50,porosity_pct,40.19,
+figE1c,bottom layer (large) — 75 GPa / 1.35e11,pressure_MPa,100,porosity_pct,30.204,
+figE1c,bottom layer (large) — 75 GPa / 1.35e11,pressure_MPa,150,porosity_pct,26.313,
+figE1c,bottom layer (large) — 75 GPa / 1.35e11,pressure_MPa,200,porosity_pct,24.812,
+figE1c,bottom layer (large) — 75 GPa / 1.35e11,pressure_MPa,250,porosity_pct,24.107,
+figE1d,top layer (small) — 142 GPa / 0.8e11,pressure_MPa,0,porosity_pct,,hidden; text 48 %
+figE1d,top layer (small) — 142 GPa / 0.8e11,pressure_MPa,50,porosity_pct,40.079,
+figE1d,top layer (small) — 142 GPa / 0.8e11,pressure_MPa,100,porosity_pct,36.512,
+figE1d,top layer (small) — 142 GPa / 0.8e11,pressure_MPa,150,porosity_pct,31.794,
+figE1d,top layer (small) — 142 GPa / 0.8e11,pressure_MPa,200,porosity_pct,29.014,
+figE1d,top layer (small) — 142 GPa / 0.8e11,pressure_MPa,250,porosity_pct,27.722,
+figE1d,bottom layer (large) — 142 GPa / 0.8e11,pressure_MPa,0,porosity_pct,47.999,
+figE1d,bottom layer (large) — 142 GPa / 0.8e11,pressure_MPa,50,porosity_pct,36.597,
+figE1d,bottom layer (large) — 142 GPa / 0.8e11,pressure_MPa,100,porosity_pct,29.688,
+figE1d,bottom layer (large) — 142 GPa / 0.8e11,pressure_MPa,150,porosity_pct,27.216,
+figE1d,bottom layer (large) — 142 GPa / 0.8e11,pressure_MPa,200,porosity_pct,26.093,
+figE1d,bottom layer (large) — 142 GPa / 0.8e11,pressure_MPa,250,porosity_pct,25.419,

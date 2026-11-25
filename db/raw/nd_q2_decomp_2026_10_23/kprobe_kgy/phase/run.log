@@ -1,0 +1,22 @@
+[10-26 13:22:04] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-26 13:22:04] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-26 13:22:04]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-26 13:22:04]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-26 13:22:04] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-26 13:22:04] 설정 균일성 ✓ (5점 동일 · key e2a0f6d4)
+               occupations = 'smearing'
+               electron_maxstep = 100
+               mixing_mode  = 'plain'
+[10-26 13:22:04] 점 5개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-26 13:22:04]   VRAM 여유 21082 MiB (문턱 19181)
+[10-26 13:39:01] ✓ Li2S  16분
+[10-26 13:39:01]   VRAM 여유 21082 MiB (문턱 19181)
+[10-26 14:17:07] ✓ Li3PO4  38분
+[10-26 14:17:07]   VRAM 여유 21082 MiB (문턱 19181)
+[10-26 14:53:16] ✓ Li3PS4  36분
+[10-26 14:53:16]   VRAM 여유 21082 MiB (문턱 19181)
+[10-26 15:03:40] ✓ LiCl  10분
+[10-26 15:03:40]   VRAM 여유 21082 MiB (문턱 19181)
+[10-26 15:43:59] ✓ Nd2S3  40분
+[10-26 15:43:59] 끝 — 완료 5 · 건너뜀 0 · 실패 0 · 총 141분
+다음: UMA 힘 (같은 frame.xyz) → 분석

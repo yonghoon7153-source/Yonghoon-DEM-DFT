@@ -1,0 +1,504 @@
+# Fitzhugh 2021 Energy Environ. Sci. 14 4574 - figure readout + ESI table checks. FIGURE VALUES ARE DIGITIZED (not printed); rows marked OUR ARITHMETIC are derived by us. tools/litdb/fitzhugh2021_digitize.py
+figure,panel,series,x,x_unit,y,y_unit,note
+ESI Table 1,row 1,child A nominal charge sum,1,row,-0.149,e per atom,Kcrit 12.07 GPa · Li0.324O0.04F0.042P0.098S0.346Cl0.026I0.123
+ESI Table 1,row 1,child B nominal charge sum,1,row,-0.07,e per atom,Kcrit 6.89 GPa · Li0.306O0.014F0.090P0.093S0.324Cl0.002Br0.03Sb0.024I0.115
+ESI Table 1,row 1,child C nominal charge sum,1,row,-1.174,e per atom,Kcrit 2.05 GPa · Li0.141O0.375F0.282P0.01S0.14I0.053
+ESI Table 1,row 1,parent nominal charge sum,1,row,0.0,e per atom,Kcrit 16.07 GPa · sigma 1.7 [1] · Li0.364P0.110S0.388I0.138
+ESI Table 1,row 2,child A nominal charge sum,2,row,-0.133,e per atom,Kcrit 11.23 GPa · Li0.335B0.135O0.019F0.047S0.322Cl0.002I0.142
+ESI Table 1,row 2,child B nominal charge sum,2,row,-0.112,e per atom,Kcrit 5.46 GPa · Li0.322B0.069F0.102P0.015S0.275Br0.042Sb0.038I0.136
+ESI Table 1,row 2,child C nominal charge sum,2,row,-0.891,e per atom,Kcrit 1.9 GPa · Li0.113B0.010O0.323F0.282S0.138Cl0.010I0.048Bi0.076
+ESI Table 1,row 2,parent nominal charge sum,2,row,0.0,e per atom,Kcrit 15.7 GPa · sigma 0.2 [2] · Li0.338B0.169S0.351I0.143
+ESI Table 1,row 3,child A nominal charge sum,3,row,0.001,e per atom,Kcrit 12.45 GPa · Li0.369O0.033F0.041Si0.067P0.039S0.274Cl0.044I0.132
+ESI Table 1,row 3,child B nominal charge sum,3,row,-0.139,e per atom,Kcrit 5.49 GPa · Li0.406F0.103Si0.004P0.015S0.273Cl0.001Sb0.053I0.145
+ESI Table 1,row 3,child C nominal charge sum,3,row,-1.177,e per atom,Kcrit 2.19 GPa · Li0.149O0.336F0.321S0.140I0.053
+ESI Table 1,row 3,parent nominal charge sum,3,row,-0.001,e per atom,Kcrit 17.74 GPa · sigma 0.04 [3] · Li0.431Si0.092S0.323I0.154
+ESI Table 1,row 4,child A nominal charge sum,4,row,-0.327,e per atom,Kcrit 11.78 GPa · Li0.362O0.033F0.043Si0.068P0.003S0.394Cl0.046Br0.045Pb0.006
+ESI Table 1,row 4,child B nominal charge sum,4,row,-0.533,e per atom,Kcrit 7.51 GPa · Li0.376O0.093F0.082Si0.019P0.003S0.355Cl0.059K0.001Sb0.012
+ESI Table 1,row 4,child C nominal charge sum,4,row,-0.435,e per atom,Kcrit 2.11 GPa · Li0.123O0.288F0.281P0.001S0.149Cl0.008Ti0.150
+ESI Table 1,row 4,parent nominal charge sum,4,row,-0.002,e per atom,Kcrit 17.4 GPa · sigma 0.12 [4] · Li0.423O0.013Si0.118P0.003S0.443
+ESI Table 1,row 5,child A nominal charge sum,5,row,-0.132,e per atom,Kcrit 10.75 GPa · Li0.300O0.033F0.043S0.449Cl0.025Ge0.150
+ESI Table 1,row 5,child B nominal charge sum,5,row,-0.157,e per atom,Kcrit 5.93 GPa · Li0.312O0.002F0.090S0.398Cl0.008Ge0.111Br0.040Sb0.013I0.022Pb0.004
+ESI Table 1,row 5,child C nominal charge sum,5,row,-0.581,e per atom,Kcrit 1.56 GPa · Li0.078O0.348F0.285P0.017S0.117Ge0.009Bi0.145
+ESI Table 1,row 5,parent nominal charge sum,5,row,0.001,e per atom,"Kcrit 15.57 GPa · sigma 0.15-0.5 [5,6] · Li0.333S0.500Ge0.167"
+ESI Table 1,row 6,child A nominal charge sum,6,row,-0.074,e per atom,Kcrit 11.22 GPa · Li0.275O0.035F0.041Si0.140S0.413Cl0.042Br0.012Pb0.041
+ESI Table 1,row 6,child B nominal charge sum,6,row,-0.272,e per atom,Kcrit 8.66 GPa · Li0.266O0.065F0.068Si0.125S0.399Cl0.064Br0.005Sb0.009
+ESI Table 1,row 6,child C nominal charge sum,6,row,-1.217,e per atom,Kcrit 1.86 GPa · Li0.083O0.367F0.375P0.018S0.124Cl0.033
+ESI Table 1,row 6,parent nominal charge sum,6,row,0.001,e per atom,Kcrit 15.2 GPa · sigma 0.27 [4] · Li0.333Si0.167S0.500
+ESI Table 1,row 7,child A nominal charge sum,7,row,-0.085,e per atom,Kcrit 11.66 GPa · Li0.341O0.049F0.043Si0.133S0.398Cl0.025Br0.004Pb0.004
+ESI Table 1,row 7,child B nominal charge sum,7,row,-0.468,e per atom,Kcrit 9.49 GPa · Li0.338O0.065F0.072Si0.063S0.394Cl0.068
+ESI Table 1,row 7,child C nominal charge sum,7,row,-1.248,e per atom,Kcrit 2.21 GPa · Li0.147O0.365F0.301S0.177Cl0.010
+ESI Table 1,row 7,parent nominal charge sum,7,row,-0.002,e per atom,Kcrit 16.51 GPa · sigma 1.0 [7] · Li0.400Si0.133S0.467
+ESI Table 1,row 8,child A nominal charge sum,8,row,-0.389,e per atom,Kcrit 10.47 GPa · Li0.334O0.048F0.021Si0.081S0.415Cl0.100
+ESI Table 1,row 8,child B nominal charge sum,8,row,-0.101,e per atom,Kcrit 8.98 GPa · Li0.287O0.096F0.083Si0.132P0.011S0.305Cl0.086
+ESI Table 1,row 8,child C nominal charge sum,8,row,-0.998,e per atom,Kcrit 2.27 GPa · Li0.070O0.188F0.317Si0.025S0.074Cl0.021Br0.306
+ESI Table 1,row 8,parent nominal charge sum,8,row,0.001,e per atom,Kcrit 13.57 GPa · sigma 0.05 [8] · Li0.370Si0.130S0.389Cl0.111
+ESI Table 1,row 9,child A nominal charge sum,9,row,-0.114,e per atom,Kcrit 10.68 GPa · Li0.297O0.092F0.039Si0.125S0.349Cl0.037Br0.025Pb0.036
+ESI Table 1,row 9,child B nominal charge sum,9,row,-0.475,e per atom,Kcrit 8.86 GPa · Li0.332O0.093F0.069Si0.030S0.330Cl0.061K0.001Zn0.044Br0.040
+ESI Table 1,row 9,child C nominal charge sum,9,row,-0.466,e per atom,Kcrit 1.9 GPa · Li0.223O0.040F0.445Si0.070S0.222
+ESI Table 1,row 9,parent nominal charge sum,9,row,-0.002,e per atom,Kcrit 15.24 GPa · sigma 0.1 [1] · Li0.406O0.061Si0.130S0.403
+ESI Table 1,row 10,child A nominal charge sum,10,row,-0.11,e per atom,Kcrit 11.82 GPa · Li0.355O0.055F0.040Si0.127S0.399Cl0.025
+ESI Table 1,row 10,child B nominal charge sum,10,row,-0.613,e per atom,Kcrit 9.0 GPa · Li0.364O0.078F0.077Si0.023S0.378Cl0.080
+ESI Table 1,row 10,child C nominal charge sum,10,row,-1.352,e per atom,Kcrit 1.81 GPa · Li0.129N0.156O0.257F0.291Si0.006P0.010S0.131Cl0.020
+ESI Table 1,row 10,parent nominal charge sum,10,row,0.001,e per atom,Kcrit 16.62 GPa · sigma 0.3 [9] · Li0.425O0.013Si0.121S0.441
+ESI Table 2,row 1,child A nominal charge sum,1,row,-0.367,e per atom,Kcrit 7.6 GPa · Li0.280O0.021F0.042P0.085S0.417Cl0.048I0.106
+ESI Table 2,row 1,child B nominal charge sum,1,row,-0.673,e per atom,Kcrit 3.88 GPa · Li0.319O0.021F0.105P0.010S0.387Cl0.099K0.018I0.040
+ESI Table 2,row 1,child C nominal charge sum,1,row,-0.864,e per atom,Kcrit 1.36 GPa · Li0.128C0.011N0.115F0.508P0.022S0.137K0.030I0.049
+ESI Table 2,row 1,parent nominal charge sum,1,row,0.0,e per atom,Kcrit 13.31 GPa · sigma 1.7 [1] · Li0.364P0.110S0.388I0.138
+ESI Table 2,row 2,child A nominal charge sum,2,row,0.072,e per atom,Kcrit 9.23 GPa · Li0.345B0.119O0.008F0.037P0.037S0.308I0.146
+ESI Table 2,row 2,child B nominal charge sum,2,row,0.05,e per atom,Kcrit 6.89 GPa · Li0.316B0.177N0.008F0.092S0.274I0.133
+ESI Table 2,row 2,child C nominal charge sum,2,row,-0.788,e per atom,Kcrit 2.83 GPa · Li0.100B0.050O0.199F0.466S0.104Ni0.038I0.042
+ESI Table 2,row 2,parent nominal charge sum,2,row,0.0,e per atom,Kcrit 12.62 GPa · sigma 0.2 [2] · Li0.338B0.169S0.351I0.143
+ESI Table 2,row 3,child A nominal charge sum,3,row,0.149,e per atom,Kcrit 7.75 GPa · Li0.417O0.013F0.029Si0.120S0.272I0.149
+ESI Table 2,row 3,child B nominal charge sum,3,row,-0.249,e per atom,Kcrit 5.5 GPa · Li0.337N0.035O0.080F0.079P0.080S0.252I0.138
+ESI Table 2,row 3,child C nominal charge sum,3,row,-0.949,e per atom,Kcrit 2.13 GPa · Li0.137N0.010O0.220F0.461P0.020S0.103I0.049
+ESI Table 2,row 3,parent nominal charge sum,3,row,-0.001,e per atom,Kcrit 12.77 GPa · sigma 0.04 [3] · Li0.431Si0.092S0.323I0.154
+ESI Table 2,row 4,child A nominal charge sum,4,row,-0.127,e per atom,Kcrit 8.58 GPa · Li0.451O0.010F0.054Si0.078S0.408
+ESI Table 2,row 4,child B nominal charge sum,4,row,-0.798,e per atom,Kcrit 4.71 GPa · Li0.348N0.065F0.094S0.394Cl0.075K0.006
+ESI Table 2,row 4,child C nominal charge sum,4,row,-0.821,e per atom,Kcrit 2.1 GPa · Li0.117O0.247F0.453Si0.040P0.019S0.123
+ESI Table 2,row 4,parent nominal charge sum,4,row,-0.002,e per atom,Kcrit 13.35 GPa · sigma 0.12 [4] · Li0.423O0.013Si0.118P0.003S0.443
+ESI Table 2,row 5,child A nominal charge sum,5,row,-0.127,e per atom,Kcrit 9.25 GPa · Li0.272Ni0.034O0.030F0.042P0.021S0.444Cl0.042Ge0.115
+ESI Table 2,row 5,child B nominal charge sum,5,row,-0.045,e per atom,Kcrit 6.77 GPa · Li0.294O0.052F0.091P0.040S0.406Ge0.117
+ESI Table 2,row 5,child C nominal charge sum,5,row,-1.314,e per atom,Kcrit 2.05 GPa · Li0.051N0.267O0.520F0.054P0.098Ge0.010
+ESI Table 2,row 5,parent nominal charge sum,5,row,0.001,e per atom,"Kcrit 14.54 GPa · sigma 0.15-0.5 [5,6] · Li0.333S0.500Ge0.167"
+ESI Table 2,row 6,child A nominal charge sum,6,row,-0.122,e per atom,Kcrit 8.9 GPa · Li0.314O0.031F0.048Si0.148S0.459
+ESI Table 2,row 6,child B nominal charge sum,6,row,0.224,e per atom,Kcrit 6.02 GPa · Li0.299O0.001F0.091Si0.206S0.403
+ESI Table 2,row 6,child C nominal charge sum,6,row,-0.943,e per atom,Kcrit 2.09 GPa · Li0.088O0.257F0.453Si0.050S0.132
+ESI Table 2,row 6,parent nominal charge sum,6,row,0.001,e per atom,Kcrit 13.56 GPa · sigma 0.27 [4] · Li0.333Si0.167S0.500
+ESI Table 2,row 7,child A nominal charge sum,7,row,-0.045,e per atom,Kcrit 8.68 GPa · Li0.387O0.010F0.049Si0.083P0.035S0.435
+ESI Table 2,row 7,child B nominal charge sum,7,row,-0.029,e per atom,Kcrit 5.74 GPa · Li0.416O0.009F0.105Si0.103S0.367
+ESI Table 2,row 7,child C nominal charge sum,7,row,-0.85,e per atom,Kcrit 2.1 GPa · Li0.106O0.257F0.454Si0.040P0.020S0.124
+ESI Table 2,row 7,parent nominal charge sum,7,row,-0.002,e per atom,Kcrit 13.68 GPa · sigma 1.0 [7] · Li0.400Si0.133S0.467
+ESI Table 2,row 8,child A nominal charge sum,8,row,-0.002,e per atom,Kcrit 6.26 GPa · Li0.359O0.013F0.050Si0.089P0.033S0.349Cl0.108
+ESI Table 2,row 8,child B nominal charge sum,8,row,-0.013,e per atom,Kcrit 4.18 GPa · Li0.330O0.017F0.096Si0.115P0.016S0.327Cl0.099
+ESI Table 2,row 8,child C nominal charge sum,8,row,-0.663,e per atom,Kcrit 1.8 GPa · H0.011Li0.125N0.012O0.011F0.579P0.026S0.131Cl0.037Ni0.025Br0.043
+ESI Table 2,row 8,parent nominal charge sum,8,row,0.001,e per atom,Kcrit 9.61 GPa · sigma 0.05 [8] · Li0.370Si0.130S0.389Cl0.111
+ESI Table 2,row 9,child A nominal charge sum,9,row,-0.056,e per atom,Kcrit 7.63 GPa · Li0.376O0.068F0.051Si0.081P0.035S0.355Cl0.034
+ESI Table 2,row 9,child B nominal charge sum,9,row,0.664,e per atom,Kcrit 4.62 GPa · H0.003Li0.288O0.068F0.067Si0.180P0.078S0.219Cl0.096
+ESI Table 2,row 9,child C nominal charge sum,9,row,0.068,e per atom,Kcrit 1.04 GPa · Li0.329F0.516Si0.070P0.021S0.065
+ESI Table 2,row 9,parent nominal charge sum,9,row,-0.002,e per atom,Kcrit 13.45 GPa · sigma 0.1 [1] · Li0.406O0.061Si0.130S0.403
+ESI Table 2,row 10,child A nominal charge sum,10,row,-0.146,e per atom,Kcrit 8.59 GPa · Li0.458O0.010F0.054Si0.071S0.407
+ESI Table 2,row 10,child B nominal charge sum,10,row,-0.466,e per atom,Kcrit 4.15 GPa · Li0.390F0.103Si0.023S0.376Cl0.105Ge0.003
+ESI Table 2,row 10,child C nominal charge sum,10,row,-0.818,e per atom,Kcrit 2.1 GPa · Li0.118O0.247F0.453Si0.040P0.019S0.122
+ESI Table 2,row 10,parent nominal charge sum,10,row,0.001,e per atom,Kcrit 13.35 GPa · sigma 0.3 [9] · Li0.425O0.013Si0.121S0.441
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 0 GPa,0.0,modification %,0.4274,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 0 GPa,1.25,modification %,0.3814,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 0 GPa,2.5,modification %,0.3323,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 0 GPa,4.0,modification %,0.2862,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 0 GPa,5.0,modification %,0.2644,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 0 GPa,6.0,modification %,0.2836,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 5 GPa,0.0,modification %,0.267,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 5 GPa,1.25,modification %,0.2099,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 5 GPa,2.5,modification %,0.1489,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 5 GPa,4.0,modification %,0.1066,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 5 GPa,5.0,modification %,0.091,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 5 GPa,6.0,modification %,0.0901,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 10 GPa,0.0,modification %,0.1065,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 10 GPa,1.25,modification %,0.0371,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 15 GPa,0.0,modification %,0.0004,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 15 GPa,1.25,modification %,0.0005,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 15 GPa,2.5,modification %,0.0005,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 15 GPa,4.0,modification %,0.0006,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 15 GPa,5.0,modification %,-0.0,eV/atom,figure-read (marker centroid)
+5,a,interface decomposition energy at 4 V (LGPS | glass) · K_eff = 15 GPa,6.0,modification %,-0.0001,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 0 GPa,0.0,modification %,0.0554,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 0 GPa,1.25,modification %,0.0491,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 0 GPa,2.5,modification %,0.0461,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 0 GPa,4.0,modification %,0.0411,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 0 GPa,5.0,modification %,0.0399,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 0 GPa,6.0,modification %,0.0433,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 2 GPa,0.0,modification %,0.0313,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 2 GPa,1.25,modification %,0.0252,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 2 GPa,2.5,modification %,0.0231,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 2 GPa,4.0,modification %,0.0194,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 2 GPa,5.0,modification %,0.0187,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 2 GPa,6.0,modification %,0.0188,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 4 GPa,0.0,modification %,0.0071,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 6 GPa,0.0,modification %,-0.0,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 6 GPa,1.25,modification %,-0.0,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 6 GPa,2.5,modification %,-0.0,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 6 GPa,4.0,modification %,-0.0,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 6 GPa,5.0,modification %,-0.0,eV/atom,figure-read (marker centroid)
+S4,c,interface decomposition energy at 2 V (LGPS | glass) · K_eff = 6 GPa,6.0,modification %,0.0001,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 0 GPa,0.0,modification %,0.1823,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 0 GPa,1.25,modification %,0.1529,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 0 GPa,2.5,modification %,0.1185,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 0 GPa,4.0,modification %,0.122,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 0 GPa,5.0,modification %,0.1122,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 0 GPa,6.0,modification %,0.1011,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 3 GPa,0.0,modification %,0.1092,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 3 GPa,1.25,modification %,0.0902,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 3 GPa,2.5,modification %,0.067,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 3 GPa,4.0,modification %,0.0601,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 3 GPa,5.0,modification %,0.0486,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 3 GPa,6.0,modification %,0.0391,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 6 GPa,0.0,modification %,0.0358,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 6 GPa,1.25,modification %,0.0279,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 6 GPa,2.5,modification %,0.0151,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 8 GPa,0.0,modification %,-0.0003,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 8 GPa,1.25,modification %,-0.0003,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 8 GPa,2.5,modification %,-0.0003,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 8 GPa,4.0,modification %,-0.0003,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 8 GPa,5.0,modification %,-0.0003,eV/atom,figure-read (marker centroid)
+S4,d,interface decomposition energy at 3 V (LGPS | glass) · K_eff = 8 GPa,6.0,modification %,0.0001,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 0 GPa,0.0,modification %,0.3778,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 0 GPa,1.25,modification %,0.354,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 0 GPa,2.5,modification %,0.3479,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 0 GPa,4.0,modification %,0.3501,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 0 GPa,5.0,modification %,0.369,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 0 GPa,6.0,modification %,0.3308,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 3 GPa,0.0,modification %,0.0972,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 3 GPa,1.25,modification %,0.1604,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 3 GPa,2.5,modification %,0.1328,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 3 GPa,4.0,modification %,0.1422,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 3 GPa,5.0,modification %,0.1598,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 3 GPa,6.0,modification %,0.1365,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 5 GPa,1.25,modification %,0.0316,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 5 GPa,5.0,modification %,0.0205,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 6 GPa,0.0,modification %,-0.0005,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 6 GPa,1.25,modification %,-0.0006,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 6 GPa,2.5,modification %,-0.0006,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 6 GPa,4.0,modification %,-0.0006,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 6 GPa,5.0,modification %,-0.0006,eV/atom,figure-read (marker centroid)
+S6,right,self-decomposition energy of the glass at 3.5 V · K_eff = 6 GPa,6.0,modification %,0.0,eV/atom,figure-read (marker centroid)
+5,b,predicted interface K_crit at 4 V (LGPS | glass),0.0,modification %,13.331,GPa,figure-read · right axis
+5,b,predicted interface K_crit at 4 V (LGPS | glass),1.25,modification %,11.067,GPa,figure-read · right axis
+5,b,predicted interface K_crit at 4 V (LGPS | glass),2.5,modification %,9.066,GPa,figure-read · right axis
+5,b,predicted interface K_crit at 4 V (LGPS | glass),4.0,modification %,7.959,GPa,figure-read · right axis
+5,b,predicted interface K_crit at 4 V (LGPS | glass),5.0,modification %,7.604,GPa,figure-read · right axis
+5,b,predicted interface K_crit at 4 V (LGPS | glass),6.0,modification %,7.317,GPa,figure-read · right axis
+5,b,predicted self-decomposition energy at 3.5 V (K_eff = 0),1.25,modification %,0.3541,eV/atom,figure-read · left axis · 0 % marker hidden under the blue square (see S6 right)
+5,b,predicted self-decomposition energy at 3.5 V (K_eff = 0),2.5,modification %,0.348,eV/atom,figure-read · left axis · 0 % marker hidden under the blue square (see S6 right)
+5,b,predicted self-decomposition energy at 3.5 V (K_eff = 0),4.0,modification %,0.3501,eV/atom,figure-read · left axis · 0 % marker hidden under the blue square (see S6 right)
+5,b,predicted self-decomposition energy at 3.5 V (K_eff = 0),5.0,modification %,0.3689,eV/atom,figure-read · left axis · 0 % marker hidden under the blue square (see S6 right)
+5,b,predicted self-decomposition energy at 3.5 V (K_eff = 0),6.0,modification %,0.331,eV/atom,figure-read · left axis · 0 % marker hidden under the blue square (see S6 right)
+5,d,H_L pre-peak current (about 3 V),0.0,modification %,17.04,uA,figure-read
+5,d,H_L pre-peak current (about 3 V),1.25,modification %,9.8,uA,figure-read
+5,d,H_L pre-peak current (about 3 V),2.5,modification %,9.12,uA,figure-read
+5,d,H_L pre-peak current (about 3 V),4.0,modification %,8.24,uA,figure-read
+5,d,H_L pre-peak current (about 3 V),5.0,modification %,6.59,uA,figure-read
+5,d,H_L pre-peak current (about 3 V),6.0,modification %,6.14,uA,figure-read
+5,d,H_R broad-peak current (about 3.5 V),0.0,modification %,28.78,uA,figure-read
+5,d,H_R broad-peak current (about 3.5 V),1.25,modification %,11.92,uA,figure-read
+5,d,H_R broad-peak current (about 3.5 V),2.5,modification %,12.93,uA,figure-read
+5,d,H_R broad-peak current (about 3.5 V),4.0,modification %,19.6,uA,figure-read
+5,d,H_R broad-peak current (about 3.5 V),5.0,modification %,24.69,uA,figure-read
+5,d,H_R broad-peak current (about 3.5 V),6.0,modification %,19.94,uA,figure-read
+S4,a,predicted interface K_crit at 2 V (LGPS | glass),0.0,modification %,4.598,GPa,figure-read
+S4,a,predicted interface K_crit at 2 V (LGPS | glass),1.25,modification %,4.109,GPa,figure-read
+S4,a,predicted interface K_crit at 2 V (LGPS | glass),2.5,modification %,4.013,GPa,figure-read
+S4,a,predicted interface K_crit at 2 V (LGPS | glass),4.0,modification %,3.784,GPa,figure-read
+S4,a,predicted interface K_crit at 2 V (LGPS | glass),5.0,modification %,3.79,GPa,figure-read
+S4,a,predicted interface K_crit at 2 V (LGPS | glass),6.0,modification %,3.526,GPa,figure-read
+S4,b,predicted interface K_crit at 3 V (LGPS | glass),0.0,modification %,7.491,GPa,figure-read
+S4,b,predicted interface K_crit at 3 V (LGPS | glass),1.25,modification %,7.352,GPa,figure-read
+S4,b,predicted interface K_crit at 3 V (LGPS | glass),2.5,modification %,6.885,GPa,figure-read
+S4,b,predicted interface K_crit at 3 V (LGPS | glass),4.0,modification %,5.923,GPa,figure-read
+S4,b,predicted interface K_crit at 3 V (LGPS | glass),5.0,modification %,5.314,GPa,figure-read
+S4,b,predicted interface K_crit at 3 V (LGPS | glass),6.0,modification %,4.893,GPa,figure-read
+S6,left,predicted K_crit for self-decomposition at 3.5 V,0.0,modification %,4.041,GPa,figure-read
+S6,left,predicted K_crit for self-decomposition at 3.5 V,1.25,modification %,5.506,GPa,figure-read
+S6,left,predicted K_crit for self-decomposition at 3.5 V,2.5,modification %,4.863,GPa,figure-read
+S6,left,predicted K_crit for self-decomposition at 3.5 V,4.0,modification %,5.049,GPa,figure-read
+S6,left,predicted K_crit for self-decomposition at 3.5 V,5.0,modification %,5.299,GPa,figure-read
+S6,left,predicted K_crit for self-decomposition at 3.5 V,6.0,modification %,5.105,GPa,figure-read
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),1,"GPa (bin centre, 2 GPa bins)",464,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),3,"GPa (bin centre, 2 GPa bins)",559,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),5,"GPa (bin centre, 2 GPa bins)",733,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),7,"GPa (bin centre, 2 GPa bins)",1169,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),9,"GPa (bin centre, 2 GPa bins)",1914,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),11,"GPa (bin centre, 2 GPa bins)",2318,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),13,"GPa (bin centre, 2 GPa bins)",2001,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),15,"GPa (bin centre, 2 GPa bins)",2777,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),17,"GPa (bin centre, 2 GPa bins)",1724,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),19,"GPa (bin centre, 2 GPa bins)",1415,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),21,"GPa (bin centre, 2 GPa bins)",931,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),23,"GPa (bin centre, 2 GPa bins)",733,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),25,"GPa (bin centre, 2 GPa bins)",583,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),27,"GPa (bin centre, 2 GPa bins)",488,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),29,"GPa (bin centre, 2 GPa bins)",488,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),31,"GPa (bin centre, 2 GPa bins)",298,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),33,"GPa (bin centre, 2 GPa bins)",306,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),35,"GPa (bin centre, 2 GPa bins)",322,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),37,"GPa (bin centre, 2 GPa bins)",227,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),39,"GPa (bin centre, 2 GPa bins)",179,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),41,"GPa (bin centre, 2 GPa bins)",227,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),43,"GPa (bin centre, 2 GPa bins)",203,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),45,"GPa (bin centre, 2 GPa bins)",155,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),47,"GPa (bin centre, 2 GPa bins)",139,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),49,"GPa (bin centre, 2 GPa bins)",124,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),51,"GPa (bin centre, 2 GPa bins)",147,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),53,"GPa (bin centre, 2 GPa bins)",139,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),55,"GPa (bin centre, 2 GPa bins)",68,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),57,"GPa (bin centre, 2 GPa bins)",76,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),59,"GPa (bin centre, 2 GPa bins)",68,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),61,"GPa (bin centre, 2 GPa bins)",52,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),63,"GPa (bin centre, 2 GPa bins)",76,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),65,"GPa (bin centre, 2 GPa bins)",60,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),67,"GPa (bin centre, 2 GPa bins)",29,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),69,"GPa (bin centre, 2 GPa bins)",29,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),71,"GPa (bin centre, 2 GPa bins)",29,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),73,"GPa (bin centre, 2 GPa bins)",21,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),75,"GPa (bin centre, 2 GPa bins)",29,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),77,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+3,a,K_crit histogram at 4 V · LPS (Li7P3S11),79,"GPa (bin centre, 2 GPa bins)",21,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,1,"GPa (bin centre, 2 GPa bins)",334,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,3,"GPa (bin centre, 2 GPa bins)",265,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,5,"GPa (bin centre, 2 GPa bins)",404,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,7,"GPa (bin centre, 2 GPa bins)",578,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,9,"GPa (bin centre, 2 GPa bins)",1362,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,11,"GPa (bin centre, 2 GPa bins)",1849,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,13,"GPa (bin centre, 2 GPa bins)",2006,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,15,"GPa (bin centre, 2 GPa bins)",4165,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,17,"GPa (bin centre, 2 GPa bins)",1936,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,19,"GPa (bin centre, 2 GPa bins)",1484,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,21,"GPa (bin centre, 2 GPa bins)",1083,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,23,"GPa (bin centre, 2 GPa bins)",735,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,25,"GPa (bin centre, 2 GPa bins)",561,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,27,"GPa (bin centre, 2 GPa bins)",474,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,29,"GPa (bin centre, 2 GPa bins)",369,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,31,"GPa (bin centre, 2 GPa bins)",317,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,33,"GPa (bin centre, 2 GPa bins)",230,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,35,"GPa (bin centre, 2 GPa bins)",230,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,37,"GPa (bin centre, 2 GPa bins)",212,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,39,"GPa (bin centre, 2 GPa bins)",212,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,41,"GPa (bin centre, 2 GPa bins)",125,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,43,"GPa (bin centre, 2 GPa bins)",108,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,45,"GPa (bin centre, 2 GPa bins)",125,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,47,"GPa (bin centre, 2 GPa bins)",125,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,49,"GPa (bin centre, 2 GPa bins)",91,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,51,"GPa (bin centre, 2 GPa bins)",143,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,53,"GPa (bin centre, 2 GPa bins)",91,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,55,"GPa (bin centre, 2 GPa bins)",73,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,57,"GPa (bin centre, 2 GPa bins)",38,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,59,"GPa (bin centre, 2 GPa bins)",56,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,61,"GPa (bin centre, 2 GPa bins)",56,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,63,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,65,"GPa (bin centre, 2 GPa bins)",38,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,67,"GPa (bin centre, 2 GPa bins)",38,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,69,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,71,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,73,"GPa (bin centre, 2 GPa bins)",38,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,75,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,77,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,a,K_crit histogram at 4 V · LGPS,79,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,1,"GPa (bin centre, 2 GPa bins)",310,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,3,"GPa (bin centre, 2 GPa bins)",391,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,5,"GPa (bin centre, 2 GPa bins)",437,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,7,"GPa (bin centre, 2 GPa bins)",690,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,9,"GPa (bin centre, 2 GPa bins)",1207,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,11,"GPa (bin centre, 2 GPa bins)",1805,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,13,"GPa (bin centre, 2 GPa bins)",2195,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,15,"GPa (bin centre, 2 GPa bins)",2747,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,17,"GPa (bin centre, 2 GPa bins)",2023,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,19,"GPa (bin centre, 2 GPa bins)",1874,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,21,"GPa (bin centre, 2 GPa bins)",1253,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,23,"GPa (bin centre, 2 GPa bins)",793,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,25,"GPa (bin centre, 2 GPa bins)",609,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,27,"GPa (bin centre, 2 GPa bins)",529,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,29,"GPa (bin centre, 2 GPa bins)",448,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,31,"GPa (bin centre, 2 GPa bins)",322,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,33,"GPa (bin centre, 2 GPa bins)",345,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,35,"GPa (bin centre, 2 GPa bins)",322,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,37,"GPa (bin centre, 2 GPa bins)",218,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,39,"GPa (bin centre, 2 GPa bins)",184,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,41,"GPa (bin centre, 2 GPa bins)",184,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,43,"GPa (bin centre, 2 GPa bins)",126,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,45,"GPa (bin centre, 2 GPa bins)",103,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,47,"GPa (bin centre, 2 GPa bins)",115,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,49,"GPa (bin centre, 2 GPa bins)",115,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,51,"GPa (bin centre, 2 GPa bins)",126,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,53,"GPa (bin centre, 2 GPa bins)",69,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,55,"GPa (bin centre, 2 GPa bins)",103,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,57,"GPa (bin centre, 2 GPa bins)",46,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,59,"GPa (bin centre, 2 GPa bins)",46,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,61,"GPa (bin centre, 2 GPa bins)",57,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,63,"GPa (bin centre, 2 GPa bins)",34,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,65,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,67,"GPa (bin centre, 2 GPa bins)",23,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,69,"GPa (bin centre, 2 GPa bins)",23,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,71,"GPa (bin centre, 2 GPa bins)",23,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,73,"GPa (bin centre, 2 GPa bins)",23,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,75,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,77,"GPa (bin centre, 2 GPa bins)",23,count,figure-read (bar top)
+S1,b,K_crit histogram at 4 V · LSPS,79,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),1,"GPa (bin centre, 2 GPa bins)",111,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),3,"GPa (bin centre, 2 GPa bins)",845,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),5,"GPa (bin centre, 2 GPa bins)",1835,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),7,"GPa (bin centre, 2 GPa bins)",2416,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),9,"GPa (bin centre, 2 GPa bins)",4072,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),11,"GPa (bin centre, 2 GPa bins)",3338,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),13,"GPa (bin centre, 2 GPa bins)",2313,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),15,"GPa (bin centre, 2 GPa bins)",1545,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),17,"GPa (bin centre, 2 GPa bins)",1118,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),19,"GPa (bin centre, 2 GPa bins)",879,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),21,"GPa (bin centre, 2 GPa bins)",657,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),23,"GPa (bin centre, 2 GPa bins)",487,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),25,"GPa (bin centre, 2 GPa bins)",384,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),27,"GPa (bin centre, 2 GPa bins)",333,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),29,"GPa (bin centre, 2 GPa bins)",265,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),31,"GPa (bin centre, 2 GPa bins)",299,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),33,"GPa (bin centre, 2 GPa bins)",145,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),35,"GPa (bin centre, 2 GPa bins)",128,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),37,"GPa (bin centre, 2 GPa bins)",77,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),39,"GPa (bin centre, 2 GPa bins)",94,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),41,"GPa (bin centre, 2 GPa bins)",77,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),43,"GPa (bin centre, 2 GPa bins)",43,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),45,"GPa (bin centre, 2 GPa bins)",43,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),47,"GPa (bin centre, 2 GPa bins)",43,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),49,"GPa (bin centre, 2 GPa bins)",60,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),51,"GPa (bin centre, 2 GPa bins)",26,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),53,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),55,"GPa (bin centre, 2 GPa bins)",26,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),57,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),59,"GPa (bin centre, 2 GPa bins)",26,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),61,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),63,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),65,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),67,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),69,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),71,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),73,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),75,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),77,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,c,K_crit histogram at 4 V · NPS (Na7P3S11),79,"GPa (bin centre, 2 GPa bins)",0,count,figure-read (bar top)
+S1,d,K_crit distribution mean at 4 V,LGPS,SSE,19.01,GPa,figure-read (bar top)
+S1,d,K_crit distribution median at 4 V,LGPS,SSE,15.62,GPa,figure-read (bar top)
+S1,d,K_crit distribution std at 4 V,LGPS,SSE,11.97,GPa,figure-read (bar top)
+S1,d,K_crit distribution mean at 4 V,LSPS,SSE,19.35,GPa,figure-read (bar top)
+S1,d,K_crit distribution median at 4 V,LSPS,SSE,16.21,GPa,figure-read (bar top)
+S1,d,K_crit distribution std at 4 V,LSPS,SSE,12.23,GPa,figure-read (bar top)
+S1,d,K_crit distribution mean at 4 V,LPS (Li7P3S11),SSE,18.42,GPa,figure-read (bar top) · text 18.5/14.8/13.0
+S1,d,K_crit distribution median at 4 V,LPS (Li7P3S11),SSE,14.77,GPa,figure-read (bar top) · text 18.5/14.8/13.0
+S1,d,K_crit distribution std at 4 V,LPS (Li7P3S11),SSE,12.99,GPa,figure-read (bar top) · text 18.5/14.8/13.0
+S1,d,K_crit distribution mean at 4 V,NPS (Na7P3S11),SSE,13.67,GPa,figure-read (bar top)
+S1,d,K_crit distribution median at 4 V,NPS (Na7P3S11),SSE,10.87,GPa,figure-read (bar top)
+S1,d,K_crit distribution std at 4 V,NPS (Na7P3S11),SSE,9.69,GPa,figure-read (bar top)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),H,element,0.48,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Li,element,0.0,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.0)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Be,element,0.33,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),B,element,0.34,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.5)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),C,element,0.17,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),N,element,0.05,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.4)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),O,element,-0.13,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),F,element,-0.58,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Na,element,0.41,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Mg,element,0.48,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Al,element,0.17,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.5)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Si,element,0.11,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.2)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),P,element,-0.02,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.0)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),S,element,0.01,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.4)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Cl,element,-0.13,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.8)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),K,element,0.42,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.1)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ca,element,0.35,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.8)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Sc,element,0.19,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.1)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ti,element,0.11,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.5)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),V,element,-0.11,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.4)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Cr,element,0.09,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.8)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Mn,element,0.18,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Fe,element,0.09,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.1)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Co,element,0.01,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.2)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ni,element,0.07,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Cu,element,0.4,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Zn,element,0.27,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.1)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ga,element,0.24,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ge,element,0.05,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),As,element,0.52,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Se,element,0.49,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.5)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Br,element,-0.02,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Rb,element,0.42,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.0)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Sr,element,0.46,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Y,element,0.2,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Zr,element,0.24,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Nb,element,0.13,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.2)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Mo,element,-0.01,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.0)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ru,element,0.24,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Rh,element,0.45,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Pd,element,0.17,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ag,element,0.16,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Cd,element,0.31,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),In,element,0.45,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.0)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Sn,element,0.37,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Sb,element,0.56,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.4)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Te,element,0.51,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),I,element,0.41,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Cs,element,0.29,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ba,element,0.45,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Hf,element,0.04,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.0)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ta,element,-0.07,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.0)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),W,element,-0.15,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Re,element,0.09,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.4)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Pt,element,0.29,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.8)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Au,element,0.22,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.1)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Hg,element,0.07,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Tl,element,0.2,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.5)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Pb,element,0.05,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.5)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Bi,element,0.31,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.2)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),La,element,0.6,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.1)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ce,element,0.33,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Pr,element,0.51,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Nd,element,0.41,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.3)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Sm,element,0.44,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.6)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Eu,element,0.3,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Gd,element,0.35,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Tb,element,0.3,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Dy,element,0.35,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Ho,element,0.23,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.5)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Er,element,0.17,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.4)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Tm,element,0.2,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 1.9)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Yb,element,0.31,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Lu,element,0.28,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.4)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),Th,element,0.31,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 0.7)
+3,b,element fraction vs K_crit correlation (all four SSEs · 4 V),U,element,0.01,colour-bar value (-1..1),figure-read (cell colour -> colour bar LUT · distance 2.2)
+S5,Parent,cycle 1 pre-peak,2.827,V,15.45,uA,"figure-read (absolute current, not baseline-subtracted)"
+S5,Parent,cycle 1 broad peak,3.474,V,22.95,uA,figure-read
+S5,C6,cycle 1 pre-peak,2.695,V,8.13,uA,"figure-read (absolute current, not baseline-subtracted)"
+S5,C6,cycle 1 broad peak,3.42,V,17.95,uA,figure-read
+5,c,Parent pre-peak position,Parent,sample,2.85,V,figure-read · height above start 58 px (no current scale in this panel)
+5,c,Parent broad-peak position,Parent,sample,3.45,V,figure-read · height above start 89 px
+5,c,C1.25 pre-peak position,C1.25,sample,2.85,V,figure-read · height above start 32 px (no current scale in this panel)
+5,c,C1.25 broad-peak position,C1.25,sample,3.34,V,figure-read · height above start 36 px
+5,c,C2.5 pre-peak position,C2.5,sample,2.84,V,figure-read · height above start 33 px (no current scale in this panel)
+5,c,C2.5 broad-peak position,C2.5,sample,3.29,V,figure-read · height above start 38 px
+5,c,C4 pre-peak position,C4,sample,2.85,V,figure-read · height above start 28 px (no current scale in this panel)
+5,c,C4 broad-peak position,C4,sample,3.47,V,figure-read · height above start 60 px
+5,c,C5 pre-peak position,C5,sample,2.78,V,figure-read · height above start 24 px (no current scale in this panel)
+5,c,C5 broad-peak position,C5,sample,3.46,V,figure-read · height above start 76 px
+5,c,C6 pre-peak position,C6,sample,2.64,V,figure-read · height above start 21 px (no current scale in this panel)
+5,c,C6 broad-peak position,C6,sample,3.32,V,figure-read · height above start 61 px
+S2,-,"K_crit vs x, (1-x) LPS + x LCO: maximum",0.39,x,19.8,GPa,figure-read (curve centre)
+S2,-,"K_crit vs x, (1-x) LPS + x LCO: minimum",0.98,x,5.1,GPa,figure-read
+S2,-,"K_crit vs x, (1-x) LPS + x LNO: maximum",0.51,x,12.7,GPa,figure-read (curve centre)
+S2,-,"K_crit vs x, (1-x) LPS + x LNO: minimum",0.99,x,5.2,GPa,figure-read
+S2,-,"K_crit vs x, (1-x) LPS + x LTO: maximum",0.35,x,14.8,GPa,figure-read (curve centre)
+S2,-,"K_crit vs x, (1-x) LPS + x LTO: minimum",0.81,x,0.2,GPa,figure-read
+S2,-,"K_crit vs x, (1-x) LPS + x LFPO: maximum",0.01,x,14.7,GPa,figure-read (curve centre)
+S2,-,"K_crit vs x, (1-x) LPS + x LFPO: minimum",0.99,x,2.3,GPa,figure-read
+S2,-,K_crit at x -> 0 (pure LPS = Li7P3S11; four curves coincide),0.01,x,14.7,GPa,figure-read · text median of the LPS distribution is 14.8 GPa
+S1/3a,derived,LSPS histogram truncated at 25 GPa: mean,25,GPa cut,14.41,GPa,"OUR ARITHMETIC · N 16029 of 19943 · variance 27.89 · Fig. S3 root node prints value 14.416, mse 27.974"
+S1/3a,derived,LGPS histogram truncated at 25 GPa: mean,25,GPa cut,14.32,GPa,"OUR ARITHMETIC · N 16481 of 19952 · variance 24.77 · Fig. S3 root node prints value 14.416, mse 27.974"
+S1/3a,derived,LPS histogram truncated at 25 GPa: mean,25,GPa cut,13.16,GPa,"OUR ARITHMETIC · N 17030 of 21318 · variance 30.42 · Fig. S3 root node prints value 14.416, mse 27.974"
+S1/3a,derived,NPS histogram truncated at 25 GPa: mean,25,GPa cut,11.14,GPa,"OUR ARITHMETIC · N 19809 of 21683 · variance 24.92 · Fig. S3 root node prints value 14.416, mse 27.974"
+derived,계면 2 V,implied reaction volume eps_RXN*V0 = G0/K_crit,0.0,modification %,1.93,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 2 V,implied reaction volume eps_RXN*V0 = G0/K_crit,1.25,modification %,1.92,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 2 V,implied reaction volume eps_RXN*V0 = G0/K_crit,2.5,modification %,1.84,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 2 V,implied reaction volume eps_RXN*V0 = G0/K_crit,4.0,modification %,1.74,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 2 V,implied reaction volume eps_RXN*V0 = G0/K_crit,5.0,modification %,1.69,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 2 V,implied reaction volume eps_RXN*V0 = G0/K_crit,6.0,modification %,1.97,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 3 V,implied reaction volume eps_RXN*V0 = G0/K_crit,0.0,modification %,3.9,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 3 V,implied reaction volume eps_RXN*V0 = G0/K_crit,1.25,modification %,3.33,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 3 V,implied reaction volume eps_RXN*V0 = G0/K_crit,2.5,modification %,2.76,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 3 V,implied reaction volume eps_RXN*V0 = G0/K_crit,4.0,modification %,3.3,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 3 V,implied reaction volume eps_RXN*V0 = G0/K_crit,5.0,modification %,3.38,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 3 V,implied reaction volume eps_RXN*V0 = G0/K_crit,6.0,modification %,3.31,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 4 V,implied reaction volume eps_RXN*V0 = G0/K_crit,0.0,modification %,5.14,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 4 V,implied reaction volume eps_RXN*V0 = G0/K_crit,1.25,modification %,5.52,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 4 V,implied reaction volume eps_RXN*V0 = G0/K_crit,2.5,modification %,5.87,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 4 V,implied reaction volume eps_RXN*V0 = G0/K_crit,4.0,modification %,5.76,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 4 V,implied reaction volume eps_RXN*V0 = G0/K_crit,5.0,modification %,5.57,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,계면 4 V,implied reaction volume eps_RXN*V0 = G0/K_crit,6.0,modification %,6.21,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,자기분해 3.5 V,implied reaction volume eps_RXN*V0 = G0/K_crit,0.0,modification %,14.98,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,자기분해 3.5 V,implied reaction volume eps_RXN*V0 = G0/K_crit,1.25,modification %,10.3,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,자기분해 3.5 V,implied reaction volume eps_RXN*V0 = G0/K_crit,2.5,modification %,11.46,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,자기분해 3.5 V,implied reaction volume eps_RXN*V0 = G0/K_crit,4.0,modification %,11.11,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,자기분해 3.5 V,implied reaction volume eps_RXN*V0 = G0/K_crit,5.0,modification %,11.16,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)
+derived,자기분해 3.5 V,implied reaction volume eps_RXN*V0 = G0/K_crit,6.0,modification %,10.38,A^3 per atom,OUR ARITHMETIC from two figure-read values (not a value of the paper)

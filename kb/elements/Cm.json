@@ -1,0 +1,35 @@
+{
+  "symbol": "Cm",
+  "name": "Curium",
+  "Z": 96,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 5f⁷6d¹7s². 초우라늄이며 5f⁷ 반충만의 안정성 때문에 (란타나이드 Gd처럼) 6d 전자를 하나 유지 — 주 산화수 +3. 강한 α방사능으로 자체발광(붉은/보라 형광)하는 것으로 유명. 전지와 무관.",
+  "oxidation_states": ["+3", "+4"],
+  "electronegativity": 1.28,
+  "ionic_radius_A": {
+    "Cm3+_VI": 0.97,
+    "Cm4+_VI": 0.85,
+    "_note": "Shannon 1976: Cm3+ VI 0.97, Cm4+ VI 0.85 A. Am3+(0.975)와 거의 같음 — 국재 5f로 란타나이드형 완만한 수축."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f⁷ 6d¹ 7s²",
+    "electron_config": "[Rn] 5f⁷ 6d¹ 7s²",
+    "valence_orbitals": "5f⁷ 6d¹ 7s² — 5f⁷ 반충만이 안정해 6d¹ 유지(Gd 4f⁷5d¹의 악티나이드 판). Cm³⁺면 5f⁷",
+    "band_character": "5f⁷ 반충만 국재 — Gd(4f⁷)의 악티나이드 대응. 5f가 국재해 큰 국소모멘트(S=7/2 근처)를 갖고 화학은 +3 안정. DFT+U/스핀분극으로 국재 5f를 명시 투영해야 함. '5f 국재, 강상관'의 반충만 안정 사례.",
+    "bonding": "Cm–O 이온성(Cm₂O₃, CmO₂), 국재 5f⁷는 결합 관망, 6d/7s가 결합 — 란타나이드형."
+  },
+  "representative_compounds": [
+    {"formula": "Cm2O3", "context": "산화물(+3, 대표)", "battery_role": "해당 없음(방사성)", "note": "+3 안정; 5f⁷ 반충만"},
+    {"formula": "CmO2", "context": "산화물(+4)", "battery_role": "해당 없음", "note": "fluorite형"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "5f⁷(반충만) 국재 — 란타나이드 Gd의 악티나이드 대응. 5f가 국재해 큰 국소모멘트를 갖고 +3 화학이 안정, DFT+U/스핀분극 필요(Gd 프로토콜과 평행). 강한 방사능·자체발열로 실측 전자구조는 특수시설 한정.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Cm3+/Cm4+)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — Cm 화학(5f⁷ 반충만 안정)",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · CRC/Greenwood) — 우리 db 절대값과 분리."
+}

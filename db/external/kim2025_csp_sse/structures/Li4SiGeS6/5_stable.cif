@@ -1,0 +1,52 @@
+data_95_contcar_sym
+_audit_creation_date              2023-04-17
+_audit_creation_method            'Materials Studio'
+_symmetry_space_group_name_H-M    'CM'
+_symmetry_Int_Tables_number       8
+_symmetry_cell_setting            monoclinic
+loop_
+_symmetry_equiv_pos_as_xyz
+  x,y,z
+  x,-y,z
+  x+1/2,y+1/2,z
+  x+1/2,-y+1/2,z
+_cell_length_a                    6.7225
+_cell_length_b                    11.7258
+_cell_length_c                    6.5763
+_cell_angle_alpha                 90.0000
+_cell_angle_beta                  89.6640
+_cell_angle_gamma                 90.0000
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_adp_type
+_atom_site_occupancy
+Li0    Li   -0.66837   0.16160   0.32913   0.00000  Uiso   1.00
+Li2    Li   -0.37902   0.18569   0.83752   0.00000  Uiso   1.00
+S12    S    -0.71053  -0.15001   0.69870   0.00000  Uiso   1.00
+S14    S    -0.32974   0.16141   0.20635   0.00000  Uiso   1.00
+Si8    Si   -0.83985  -0.00000   0.81087   0.00000  Uiso   1.00
+Ge10   Ge   -0.18870   0.00000   0.12131   0.00000  Uiso   1.00
+S16    S    -0.84602   0.00000   0.14967   0.00000  Uiso   1.00
+S22    S    -1.16458  -0.00000   0.76713   0.00000  Uiso   1.00
+loop_
+_geom_bond_atom_site_label_1
+_geom_bond_atom_site_label_2
+_geom_bond_distance
+_geom_bond_site_symmetry_2
+_ccdc_geom_bond_type
+S12    Si8     2.094   .     S
+S14    Ge10    2.188   .     S
+Si8    S12     2.094   2     S
+Si8    S16     2.228   1_556 S
+Si8    S22     2.204   .     S
+Ge10   S14     2.188   2     S
+Ge10   S16     2.312   1_655 S
+Ge10   S22     2.334   1_654 S
+S16    Ge10    2.312   1_455 S
+S16    Si8     2.228   1_554 S
+S22    Ge10    2.334   1_456 S

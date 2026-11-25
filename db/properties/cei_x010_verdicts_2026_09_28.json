@@ -1,0 +1,68 @@
+{
+  "schema": "x010_verdicts/v2",
+  "prereg": "db/properties/cathode_cei_x010_curvature_prereg_2026_09_28.json",
+  "G0_reproduce": {
+    "verdict": "REPRODUCED",
+    "max_abs_delta": 0.0,
+    "n_compared": 120,
+    "tol": null
+  },
+  "missing_labels": [],
+  "GI_identity": {
+    "pass": true,
+    "n_pairs": 140,
+    "n_same_reaction": 23,
+    "max_abs_same": 0.000122,
+    "prefactor_same_median": 1.0,
+    "n_changed_reaction": 117,
+    "n_violations": 0,
+    "n_rho_decreasing": 0,
+    "n_unreadable": 0,
+    "violations": []
+  },
+  "GC_curvature": {
+    "Li": {
+      "labels": [
+        "nd_li_002",
+        "nd_li_010",
+        "nd_only"
+      ],
+      "n_cells": 23,
+      "delta_mean": [
+        0.004437,
+        0.02157,
+        0.042146
+      ],
+      "chord_at_x010": 0.021197,
+      "residual": 0.000373,
+      "tol": 0.005,
+      "pass": true,
+      "info_n_cells_over_tol": 1,
+      "info_max_abs_cell_residual": 0.005301,
+      "info_x010_minus_5x_x002": -0.000615
+    },
+    "P": {
+      "labels": [
+        "nd_p_002",
+        "nd_p_010",
+        "nd_p_020"
+      ],
+      "n_cells": 20,
+      "delta_mean": [
+        -0.006562,
+        -0.034394,
+        -0.070925
+      ],
+      "chord_at_x010": -0.035168,
+      "residual": 0.000774,
+      "tol": 0.005,
+      "pass": true,
+      "info_n_cells_over_tol": 1,
+      "info_max_abs_cell_residual": 0.005231,
+      "info_x010_minus_5x_x002": -0.001584
+    }
+  },
+  "source": {
+    "interface": "db/properties/cei_interface_V_x010_2026_09_28.json"
+  }
+}

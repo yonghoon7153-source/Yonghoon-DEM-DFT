@@ -1,0 +1,218 @@
+{
+ "schema": "runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-19",
+ "track": "CEI (1저자 = 실험 쪽 · 결정은 사용자)",
+ "card": "db/properties/nd_anion_removal_estimand_2026_10_19.json",
+ "decision": "D-2026-10-19-nd-anion-removal (active · 사용자 비준 10-19) · GPU 자리 D-2026-10-19-gabia-nd-removal-pause-li3nd (active)",
+ "results_seen": false,
+ "citable": false,
+ "✅_자리_대조_2026_10_19": "tools/electronic/nd_anion_removal.py --sites — 이미지 전수 최소상으로 다시 잰 범주 · Nd 최소거리가 Bader 표 (bader_summary_zval.py 반올림 최소상) 와 120 원자 중 0 개 어긋남 ⇒ Q3 Bader 의 옆/먼 분류 · 숫자는 그대로 유효 · 반올림이 실제로 틀리는 쌍 (Nd2–S45 반올림 5.234 · 실제 3.141 Å) 은 있으나 Bader 범주에는 영향 없음",
+ "✅_도구_결과_전_2026_10_19": "selftest 18/18 (NaCl 마델룽 입방 · 60° 원시 · 길고 기울어진 7 배 셀 · α 무관 · ⛔ 비중성 · ⛔ 실물 Nd2–S45 반올림 · 자리 = 카드 · 입력 줄 차이 · ⛔ ecut 바꿈 · ⛔ 원소 번호 · 갈래 · ⛔ 겹침 · ⛔ 미수렴 · ⛔ 전자 수) · 깨기 3/4 잡힘 — '면간 거리 대신 벡터 길이' 는 여유 (rcut + 변 길이 합) 때문에 시험이 못 가른다 (docstring 에 적음 · 계산은 맞다) · ⚠ 처음 쓴 기울어진 셀 최소상 시험은 손으로 만든 예가 반올림으로도 맞아 아무것도 못 쟀다 → 실물 쌍으로 바꿈 (CLAUDE.md '깨서 빨간불 확인' 이 잡은 것)",
+ "✅_점전하_예측_결과_전_2026_10_19": {
+  "도구": "--predict (차폐 없음 · 형식 전하 Li +1 Nd +3 P +5 S −2 Cl −1 O −2 / Bader 전하 중성 맞춤) · E_rm^pc = −q^형식 · φ",
+  "형식_전하": {
+   "S": {
+    "옆_eV": [
+     37.83,
+     42.87
+    ],
+    "먼_eV": [
+     35.72,
+     40.29
+    ],
+    "Δ_eV": 2.34
+   },
+   "Cl": {
+    "옆_eV": [
+     11.05,
+     11.82
+    ],
+    "먼_eV": [
+     8.15,
+     10.67
+    ],
+    "Δ_eV": 2.03
+   }
+  },
+  "Bader_전하": {
+   "S": {
+    "옆_eV": [
+     16.34,
+     45.99
+    ],
+    "먼_eV": [
+     34.95,
+     31.28
+    ],
+    "Δ_eV": -1.95
+   },
+   "Cl": {
+    "옆_eV": [
+     2.43,
+     16.81
+    ],
+    "먼_eV": [
+     9.1,
+     7.18
+    ],
+    "Δ_eV": 1.48
+   }
+  },
+  "읽기_결과_전": "형식 전하 모형은 두 원소 다 '옆이 더 든다' (S 는 옆 · 먼 값이 겹침 · Cl 은 분리) · Bader 전하 모형은 S 가 반대이고 자리마다 수십 eV 로 흔들린다 (PS₄ 분할 인공물 전하 P +3.2~+4.9 가 퍼텐셜을 오염) ⇒ 점전하는 모형 사이에서도 방향이 갈려 이 질문을 못 정한다 — DFT 가 정한다 · 차폐 (ε∞ 몇) 가 없어 크기는 수 배 과대",
+  "원자료": "db/raw/nd_anion_removal_2026_10_19/pointcharge_prediction.json"
+ },
+ "by": "agent · 2026-10-19",
+ "✅_비준_기계_2026_10_19": {
+  "사용자": "AskUserQuestion — 카드 '비준 (권고)' · 기계 'gabia · r2 잠깐 세움'",
+  "결정": "D-2026-10-19-nd-anion-removal active (decision_digest 지문) · 새 정지 결정 D-2026-10-19-gabia-nd-removal-pause-li3nd active — ELF 정지 결정은 'ELF SCF 한 번 끝나면 소멸' 이라 넘어오지 않는다",
+  "by": "agent · 2026-10-19"
+ },
+ "✅_러너_결과_전_2026_10_19": {
+  "러너": "tools/electronic/run_nd_elf_nc_gabia.sh JOB=removal (기존 ELF 러너 확장 — 입력 · 프로브 대상 · SCF 8 루프 · 후처리 건너뛰기 · 해시 목록만 갈라지고 GPU 자리 결정 · r2 정지/재개는 같은 코드)",
+  "입력": "러너가 gabia kprobe.in (sha256 adbd6f70…) 에서 nd_anion_removal.py --make_inputs --lineage --pseudo_dir 로 만든다 (계보 sha · 줄 차이 검사 · pseudo_dir 는 준 값일 때만 허용)",
+  "실패_규칙": "실패 점은 같은 입력으로 한 번 다시 · 두 번 실패면 남은 점을 멈추고 r2 재개 (끝 7)",
+  "selftest": "도구 20/20 · 러너 38/38 (ELF 31 그대로 + removal 7 — 혼자 · tot_charge · pseudo_dir · 후처리 없음 · 해시 · 정지/재개 · 두 번 실패 · PAW 빠짐)",
+  "by": "agent · 2026-10-19",
+  "깨기": "2/2 잡힘 (러너 전체 selftest 를 변이 사본으로 · 각 37/38) — '같은 입력으로 한 번 다시' 뺌 → 다시 기록 0 · 두 번 실패 뒤 r2 재개 빼고 exit 7 → 재개 0"
+ },
+ "✅_DRY_RUN_2026_10_19_2105": {
+  "worktree": "gabia /data/work/wt_ndrm_1019 @5007c2508",
+  "PAW_md5": "Li.pbe-sl-kjpaw_psl.1.0.0 4449e4b2 · Nd.pbe-spdn-kjpaw_psl.1.0.0 af9d8c60 · P.pbe-n-kjpaw_psl.1.0.0 06b8cad1 · O.pbe-n-kjpaw_psl.0.1 0234752a · S.pbe-nl-kjpaw_psl.1.0.0 a0db168f · Cl.pbe-nl-kjpaw_psl.1.0.0 daecd58d",
+  "입력": "8 (rm_Cl114 · Cl117 · Cl56 · Cl59 · S112 · S115 · S51 · S54) · 프로브 = rm_Cl114",
+  "프로브_검사용": "CPU pw.x 1 랭크 4 초 — Estimated max dynamical RAM 27.94 GB → need 38,217 MiB (×1.3 + 1024)",
+  "GPU": "총 49,140 · 사용 37,220 (r2 pw.x 4081873 하나) · 빔 11,920 MiB → 결정 pause (r2 를 세우면 혼자 들어간다)",
+  "⚠_로그_문구": "'결정: pause — … ELF 혼자 …' 와 '프로브: … (Nd 변환 UPF 포함)' 는 ELF 때 문구가 남은 것 — removal 에서도 같은 코드 경로이고 실제로는 떼어내기 SCF 8 · PAW Nd 다 (동작 차이 없음 · 다음 러너 손질 때 문구만 고친다)",
+  "메모리_어림_정정": "카드 §3 의 '≈ 14 GB' 는 ELF NC 80/320 값을 옮긴 것이었다 — PAW 70/560 전하 셀은 추정 27.9 GB (×1.3 + 1 GB = 38.2 GB) · SCF 시간도 32 분보다 길 수 있다",
+  "by": "agent · 2026-10-19"
+ },
+ "⏩_본_실행_2026_10_19_2112": {
+  "tmux": "gabia ndrm (21:12:51) · worktree /data/work/wt_ndrm_1019 @5007c2508",
+  "결정": "pause (빔 11,920 MiB < need 38,217) · GPU 런타임 ✓ ldd → nvhpc 24.11 hpcx-2.20 libmpi",
+  "r2_정지": "21:12:53 시작 — pw.x 4081873 · in 00_control_relax.restart.in · out 00_control_relax.out · BFGS 줄 3 개에서 다음 줄 기다림 (최대 14,400 s) · r2 는 17:33 재개 뒤 스텝당 ≈ 1 h",
+  "r2_정지_전_상태_사용자_실측": "BFGS 180 · 최근 15 스텝 max|F| 성분 0.0019–0.0039 Ry/bohr (문턱 1e-3 · QE 기본 · 입력에 문턱 없음) · 에너지는 166→180 에 −9.1 mRy (스텝마다 0.3–1.2 mRy) — 정체가 아니라 부드러운 방향으로 계속 내려가는 중 (권고: 그대로 둔다 · 결정은 사용자)",
+  "by": "agent · 2026-10-19"
+ },
+ "⏩_r2_정지_첫_SCF_2026_10_20_0025": {
+  "사용자_화면": "gabia run.log 끝 6 줄 · 2026-10-20 00:25:50",
+  "r2_정지": "22:12:39 — .bfgs 1f6ca47b (22:11:40) · 상태 stopped · 새 출력의 BFGS 줄 4 · 마지막 Total force 0.010631 · SCF correction 0.000034 · --no_runner (러너 안 얼림) · 재개 = 8 점 뒤 드라이버를 새로 띄움 (stopped + .bfgs → restart · BFGS 이력 승계)",
+  "첫_점": "22:13:09 ▶ SCF rm_Cl114 (GPU · pause) · 00:25 에 끝난 점 0/8 (2 h 12 m 째) · GPU 35,078 MiB · 100 % — r2 가 서 있으니 이 SCF 하나",
+  "⚠_문구": "'GPU 빔 × 2 — ELF SCF 혼자 간다' 는 ELF 때 문구가 남은 것 (위 DRY_RUN 항목과 같은 건 · 동작 차이 없음)",
+  "시간_기준": "ELF SCF (NC 80/320 · 592 전자 · k 5 · 무작위 시작) = 16 반복 31m52s (반복당 ≈ 2 분) · 이번은 PAW 70/560 (밀도 격자 ≈ (560/320)^1.5 = 2.3 배 · PAW 증강 계산 추가) · 전하 셀 · 무작위 시작 ⇒ 반복당 시간·반복 수 둘 다 늘 수 있어 2 h 넘은 것만으로 이상이라 못 한다 — scf.out 의 반복 수 · estimated scf accuracy 추이로 가른다 (사용자에게 감시 블록 줌)",
+  "by": "agent · 2026-10-20"
+ },
+ "⛔_첫_점_미수렴_진단_2026_10_20": {
+  "사용자_붙여넣기": "gabia ≈ 01:46 (run.log 끝 14 줄 · scf.in 줄 · 두 scf.out 의 반복별 E · accuracy)",
+  "첫_시도": "22:13:09 → 00:57:28 · 'convergence NOT achieved after 100 iterations: stopping' (FORTRAN STOP · rc 0 · 러너는 수렴/JOB DONE 없음으로 실패 처리 ✓) · cpu 9,853 s (반복당 ≈ 98.5 s) · accuracy 6.7 → 1,252 (2) → 0.98 (6) → 0.35 (20) → 0.21 (30) → 0.054 (50) → 0.12 (60) → 0.048 (70) → 0.55 (90) → 0.038–0.044 (96–100) Ry — 0.04 Ry 근처 정체 + 튐 (기준 conv_thr 1e-9)",
+  "확인": "number of electrons 584.00 ✓ · starting charge 584.725 → 584 · scf.in nat 119 · tot_charge +1.0 · mixing_beta 0.3 (계보 그대로)",
+  "재시도": "00:57:28 같은 입력 · 반복 1–10 · 20 의 E · accuracy 가 첫 시도와 끝자리까지 같다 (결정론 — 같은 시작 · 같은 길) · 23–27 에 다시 튐 (44 · 26 · 229 · 32 · 5.4 Ry) ⇒ 같은 입력 '한 번 다시' 는 이 실패에 쓸모없다",
+  "대조": "계보 중성 SCF (kprobe_k331 · 같은 셀 · 같은 설정) 는 15 반복에 1e-9 수렴 (frozen4f result enforcement ④) ⇒ 차이는 셀 전하 (+1 · +2)",
+  "진단_셀_모양": "계보 셀은 바늘 꼴 — |a1| 7.00 · |a2| 6.92 Å (argyrodite FCC 원시 벡터 길이) · a1×a2 면적 42.1 Å² · 그 면 사이 높이 56.90 Å (P10 → 원시 셀 ≈ 10 개를 한 줄로 쌓은 꼴) ⇒ 결함 이미지가 면 안에서 7 Å 마다 반복 = 전하 판 · 판 사이 57 Å 에 균일 배경 (QE 가 G = 0 을 빼서 까는 jellium)",
+  "진단_수치": "Ewald (diagnosis/jellium_bend.py · 단위 전하 + 배경 · α 바꿔 7e-15 V 일치) — 결함 면에서 6.5–8.5 Å 와 > 22.8 Å 자리의 평균 전위차 = 15.9 V (Cl114) · 17.1 V (S51) per e (가림 없음) · 해석 판 모형 (σ/2ε₀ × 8.09 Å = 17.4 V) 과 맞음 · 전자 가림 ε∞ 4–5 (가정) → Cl (+1) 3.2–4.0 eV · S (+2) 6.8–8.5 eV — 띠틈 ≈ 2 eV (modelc 2.1 · Nd 셀 미측정) 보다 크다",
+  "진단_뜻": "먼 쪽 가전자대 꼭대기가 결함 쪽 전도대 바닥보다 위로 간다 → 전자가 먼 쪽에서 결함 쪽으로 넘어가는 전하 분리 금속 → 57 Å 길이로 전하가 출렁인다 (sloshing) — 0.04 Ry 정체 · 튐과 맞다 · ⛔ mixing 으로 수렴시켜도 그 상태는 '이온 하나를 깨끗이 뺀 닫힌 껍질 셀' 이 아니고, 넘어간 전자가 Nd 옆이면 Nd 5d 로 · 먼 데면 다른 상태로 갈 수 있어 옆/먼 비교에 바로 섞인다 ⇒ 카드 보고량 (전하 떼어내기 ΔE_rm) 은 이 셀에서 정의되지 않는다",
+  "⚠_agent_실수": "카드 §(점전하 예측) 의 '같은 셀 · 같은 전하라 이미지 항이 상쇄' 는 가림이 선형일 때만 맞다 — 카드를 쓸 때 배경 전하가 만드는 띠 휨 크기를 띠틈과 대 보지 않았다 (계보 셀이 바늘 꼴인 것도 안 봤다)",
+  "results_seen": "false 그대로 — 떼어낸 셀 에너지 0 (수렴한 SCF 없음)",
+  "다음": "재시도는 결정론이라 끄기 권고 (러너가 '두 번 실패' 로 남은 7 점을 멈추고 r2 를 restart — 결정에 박힌 경로) · 방향 (중성 떼어내기 카드 v2 / 닫기) 은 사용자 결정",
+  "by": "agent · 2026-10-20"
+ },
+ "✅_v2_결과_전_2026_10_20": {
+  "사용자": "AskUserQuestion 'Nd 떼어내기를 어떻게 이어갈까요?' → 'S 넷 중성으로 (권고)' (선택지: S 넷 중성 · S·Cl 여덟 중성 · 여기서 닫기)",
+  "카드": "db/properties/nd_s_vacancy_neutral_estimand_2026_10_20.json (결정 D-2026-10-20-nd-s-vacancy-neutral proposed · supersedes v1 은 비준 때 적용)",
+  "도구": "nd_anion_removal.py — 기본 카드 v2 · --card · make_inputs (모드 neutral 만 · v1 거부 · 옆 → 먼 순서 MANIFEST) · read_out 이 점유 (verbosity high) · gap 을 읽음 (점유 블록 없으면 죽음 — '없음' 을 0 으로 안 읽는다) · readout 상태 규칙 (일부만 부분 점유 → 구분 안 됨) · 문턱 0.3 eV · selftest 30/30 · 깨기 5/5 (문턱 · 상태 규칙 · v1 거부 · 점유 없음 · 붙은 음수 끊기)",
+  "러너": "run_nd_elf_nc_gabia.sh JOB=removal — RM_CARD (기본 v2) · OUT 기본 /data/work/runs/nd_s_vacancy_2026_10_20 · 실행 순서 = MANIFEST · MANIFEST 밖 rm_* 면 멈춤 · 'convergence NOT achieved' = 끝 8 → 다시 안 돌리고 멈춤 + r2 재개 (v1 첫 점이 같은 입력으로 비트 동일하게 다시 돈 것의 교정) · ELF 문구 남은 것 정리 (SCF 혼자 · SCF 를 안 돌린다) · selftest 42/42 · 깨기 4/4 (다시 안 돌림 · 옛 입력 섞임 · 카드 전달 · 미수렴 감지)",
+  "GPU_자리": "결정 D-2026-10-20-gabia-nd-svac-pause-li3nd proposed — v1 정지 결정은 그 러너가 끝나며 소멸 (항목은 안 건드림 · 선례대로)",
+  "by": "agent · 2026-10-20"
+ },
+ "✅_v2_비준_기계_2026_10_20": {
+  "사용자": "AskUserQuestion — 카드 v2 '비준 (권고)' · 기계 'gabia · r2 잠깐 세움 (권고)'",
+  "결정": "D-2026-10-20-nd-s-vacancy-neutral active · D-2026-10-20-gabia-nd-svac-pause-li3nd active (decision_digest 지문 · 결속 커밋 e1ba8cba) · v1 D-2026-10-19-nd-anion-removal superseded (승인 내용 그대로 · 지문만 다시 냄)",
+  "다음": "① gabia 옛 ndrm 재시도 끄기 (r2 재개) ② worktree wt_svac_1020 + DRY_RUN (검사용) ③ tmux ndsvac ④ 회수 → --readout",
+  "by": "agent · 2026-10-20"
+ },
+ "✅_v1_러너_끝_r2_재개_2026_10_20_0342": {
+  "사용자_화면": "gabia run.log 끝 6 줄 + tmux ls (≈ 03:43)",
+  "끝": "재시도도 100 반복 미수렴 (03:11 기준 반복 82 · accuracy 0.07–0.10 Ry · 반복당 ≈ 97 s) → 03:42:48 '⛔ rm_Cl114 두 번 실패 — 남은 점을 멈춘다' (사용자는 끄지 않고 끝까지 둠 · 남은 7 점 안 돌림) ⇒ v1 정지 결정 D-2026-10-19-gabia-nd-removal-pause-li3nd 소멸 (항목은 안 건드림)",
+  "r2": "03:42:48 판정 '사람이 세움 → restart (BFGS 이력 승계)' · 03:42:53 ✅ 재개 tmux li3nd_r2_res_10200342 (restart_qe_relax.sh --run --nstep 200 · 로그 /data/work/runs/nd_anion_removal_2026_10_19/r2_resume.log) · ndrm 세션 없음 (러너 끝)",
+  "⚠_worktree": "r2 재개 드라이버가 /data/work/wt_ndrm_1019/tools/sei/restart_qe_relax.sh 로 돈다 (러너의 RESTART_TOOL = 그 worktree) ⇒ wt_ndrm_1019 를 지우거나 pull 하지 않는다 — v2 러너가 r2 를 세웠다가 자기 worktree (wt_svac_1020) 의 드라이버로 다시 걸면 풀린다",
+  "v1_원자료": "gabia /data/work/runs/nd_anion_removal_2026_10_19 (run.log · MANIFEST.json · rm_*/scf.in · rm_Cl114/scf.out.1020005728 (첫 시도) · rm_Cl114/scf.out (재시도) · probe/) — v2 회수 때 같이 저장소로 (진단 증거)",
+  "by": "agent · 2026-10-20"
+ },
+ "✅_v2_DRY_RUN_2026_10_20_0911": {
+  "worktree": "gabia /data/work/wt_svac_1020 @d0521b38e (detached · FETCH_HEAD)",
+  "PAW_md5": "v1 과 같다 — Li 4449e4b2 · Nd af9d8c60 · P 06b8cad1 · O 0234752a · S a0db168f · Cl daecd58d",
+  "입력": "4 (neutral · 전자 586) · 순서 rm_S51 rm_S112 rm_S54 rm_S115 (MANIFEST = 실행 순서 · 프로브 = rm_S51)",
+  "프로브_검사용": "CPU pw.x 1 랭크 ≈ 4 초 — Estimated max dynamical RAM 27.97 GB → need 38,257 MiB (×1.3 + 1024)",
+  "GPU": "총 49,140 · 사용 37,204 (r2 pw.x 205682 하나 · 다른 잡 없음) · 빔 11,936 MiB → 결정 pause (r2 를 다음 BFGS 줄 직후 EXIT · SCF 혼자 · 끝나면 r2 restart)",
+  "by": "agent · 2026-10-20"
+ },
+ "⏩_v2_본_실행_2026_10_20_0921": {
+  "tmux": "gabia ndsvac (≈ 09:21) · worktree /data/work/wt_svac_1020 @d0521b38e · OUT /data/work/runs/nd_s_vacancy_2026_10_20",
+  "결정": "pause · GPU 런타임 ✓ ldd → nvhpc 24.11 hpcx-2.20 libmpi · OMP 1",
+  "r2_정지": "09:21:02 시작 — pw.x 205682 · in 00_control_relax.restart.in · out 00_control_relax.out · --no_runner · 새 출력의 BFGS 줄 4 개에서 다음 줄 기다림 (최대 14,400 s · 03:42 재개 뒤 4 스텝 ≈ 1.4 h/스텝)",
+  "by": "agent · 2026-10-20"
+ },
+ "✅_v2_러너_끝_r2_재개_2026_10_20_1234": {
+  "사용자_화면": "gabia ndsvac run.log 끝 5 줄 (watch · 15:21 KST 캡처)",
+  "SCF": "넷 다 ✓ — rm_S51 22 반복 · rm_S112 16 · rm_S54 20 · rm_S115 16 (전부 100 안 · 카드 §4 재개 규칙 발동 없음) · 각 35–44 분",
+  "r2": "12:34:10 판정 '사람이 세움 → restart (BFGS 이력 승계)' · 12:34:15 ✅ 재개 tmux li3nd_r2_res_10201234 (러너 worktree wt_svac_1020 의 restart_qe_relax.sh · 로그 /data/work/runs/nd_s_vacancy_2026_10_20/r2_resume.log) · 사용자 r2 감시 15:21 = QE 484861 살아 있음 · BFGS 188 · |F| 0.011233 · GPU 37,208 MiB",
+  "끝": "12:34:15 '■ 끝 · 끝 코드 0 · 결정 pause' ⇒ r2 정지 결정 D-2026-10-20-gabia-nd-svac-pause-li3nd 소멸 (자기 조건대로 · 항목은 안 건드림)",
+  "⚠_worktree": "wt_ndrm_1019 (옛 r2 드라이버) 는 ps -o args 로 지금 r2 드라이버가 wt_svac_1020 쪽인지 확인한 뒤에만 지운다 · wt_svac_1020 은 지금 r2 드라이버가 읽는다 — 지우지 않는다",
+  "by": "agent (본 세션) · 2026-10-20"
+ },
+ "✅_v2_회수_2026_10_20": {
+  "커밋": "ec303b1ae (사용자 gabia 회수 블록 ④ · 새 worktree wt_rec_svac → push 뒤 제거)",
+  "SHA": "러너 SHA256SUMS 대조 ✓ (자라는 r2_resume.log 만 뺌) · v1 증거는 db/raw/nd_anion_removal_2026_10_19/v1_runs + SHA256SUMS_recovered (회수 때 새로 잼)",
+  "by": "agent (본 세션) · 2026-10-20"
+ },
+ "✅_v2_판독_2026_10_20": {
+  "명령": "python3 tools/electronic/nd_anion_removal.py --readout --runs db/raw/nd_s_vacancy_2026_10_20 --card db/properties/nd_s_vacancy_neutral_estimand_2026_10_20.json",
+  "확인": "넷 다 'convergence has been achieved' · 전자 586.00 · 원자 119 · JOB DONE · ! total energy 가 판독값과 같다 (Ry × 13.6057)",
+  "E_셀_eV": {
+   "옆": {
+    "rm_S51": -86159.4466,
+    "rm_S112": -86159.1888
+   },
+   "먼": {
+    "rm_S54": -86159.2202,
+    "rm_S115": -86159.1982
+   }
+  },
+  "ΔE_vac_옆_빼기_먼_eV": -0.1085,
+  "흩어짐_eV": {
+   "옆": 0.258,
+   "먼": 0.022
+  },
+  "점유": {
+   "rm_S51": {
+    "반복": 22,
+    "WALL": "43m59s",
+    "부분_점유_상태_수": 4,
+    "gap_eV": 0.034
+   },
+   "rm_S112": {
+    "반복": 16,
+    "WALL": "34m59s",
+    "부분_점유_상태_수": 1,
+    "gap_eV": 0.286
+   },
+   "rm_S54": {
+    "반복": 20,
+    "WALL": "42m38s",
+    "부분_점유_상태_수": 3,
+    "gap_eV": 0.129
+   },
+   "rm_S115": {
+    "반복": 16,
+    "WALL": "35m33s",
+    "부분_점유_상태_수": 1,
+    "gap_eV": 0.407
+   }
+  },
+  "상태_규칙": "넷 다 부분 점유 (0.02 < f < 0.98 인 상태가 셀마다 1–4 개) → 카드 §2 '넷 다 부분 점유면 갈래는 그대로 내고 문장에 부분 점유 (금속성) 단서'",
+  "갈래": "구분 안 됨 — 옆 두 값 (−86159.447 · −86159.189) 이 먼 두 값 (−86159.220 · −86159.198) 을 사이에 둔다 (겹침) · |ΔE| 0.11 < 문턱 0.3 eV",
+  "문장(카드_§1a_구분_안_됨)": "같은 셀 · 얼린 격자 · 중성 (닫힌 껍질) 에서 Nd 옆 · 먼 자유 S 의 빈자리 에너지는 이 표본 (n 2 대 2) 으로 구분되지 않는다 (차 −0.11 eV · 넷 다 부분 점유 (금속성)).",
+  "읽는_법": "ΔE 의 부호 (−) 만 보고 '옆이 덜 (빠지기 쉽다)' 로 읽지 않는다 — 갈래 조건 (겹치지 않음 · |ΔE| ≥ 0.3) 을 못 채웠다 · 옆 두 자리 사이 차 (0.26 eV) 가 옆–먼 평균 차 (0.11 eV) 보다 크다",
+  "다음": "카드 §6 '4 개 판독으로 닫는다' → 마감 기록 db/properties/nd_s_vacancy_closed_2026_10_20.json · 결정 D-2026-10-20-nd-s-vacancy-closed (proposed · 사용자 비준 대기) · 결과를 실험 쪽 1저자에게 보낼지는 사용자 결정 (CEI)",
+  "by": "agent (본 세션) · 2026-10-20"
+ }
+}

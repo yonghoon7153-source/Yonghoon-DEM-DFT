@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'li3po4_mp-13725'
+  outdir = './tmp'
+  filpdos = 'li3po4_mp-13725'
+  degauss = 0.007
+  ngauss = 0
+/

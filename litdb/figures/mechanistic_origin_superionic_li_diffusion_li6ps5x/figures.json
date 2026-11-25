@@ -1,0 +1,372 @@
+{
+ "slug": "mechanistic_origin_superionic_li_diffusion_li6ps5x",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+  "9. Sup) Mechanistic_origin_superionic_Li6PS5X_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Top panel: the MgCu2 structure with Mg (blue) occupying 8a sites and Cu (yellow) occupying 16d sites. The center of each 16d tetrahedra is a vacant 8b site. Bottom panel: the cubic argyrodite aristotype. Half of the Fd3̅m 8b sites are occupied by P, becoming 4b sites in the reduced-symmetry F4̅3m space group, while the Fd3̅m 8a sites are split into symmetry inequivalent F4̅3m 4a and 4c sites.35,36 upper panel). In Li6PS5X, the phosphorus atoms occupy only half of the “Cu” tetrahedra, reducing the crystal symmetry from Fd3̅m to F4̅3m. The “Cu” sites (now denoted 16e) are fully occupied by S, forming a face-centered cubic array of PS4 tetrahedra, and the “Mg” sites (now split into 4a and 4c) are occupied by an equal ratio of S and X anions (Figure 1, lower panel).35,36 In Li6PS5I, the anions are ordered, with I atoms fully occupying the 4a sites and S atoms fully occupying the 4c",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    374.3,
+    570.5,
+    578.8
+   ],
+   "w": 1052,
+   "h": 853,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (Top) The centers of the 28 tetrahedral sites surrounding each 4c position. These deﬁne a truncated triakis tetrahedron,40 centered inside a cube of neighboring 4a and 4c sites. (Bottom) Each 4a site is coordinated by a topologically identical set of sites, centered inside a cube of 4a and 4b sites. The lithium-site coordination polyhedra around neighboring 4a and 4c sites are linked by shared hexagonal faces consisting of type 2 and type 5 positions. can diﬀuse through the structure. Some computational evidence for the role of nontype 5 tetrahedra in lithium diﬀusion in Li6PS5X argyrodites comes from previous bond-valence calculations, which predict three distinct lithium sites.26,27,29",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    394.1
+   ],
+   "w": 1052,
+   "h": 1380,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. MSD of lithium ions for Li6PS5I and Li6PS5Cl with 0%, 50%, and 100% S/X site inversion. Shaded regions show estimated 95% conﬁdence intervals, calculated at each time interval via bootstrap sampling.73 Figure adapted from ref 60 under a CC BY-SA 4.0 license https://creativecommons.org/licenses/by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    310.6
+   ],
+   "w": 1052,
+   "h": 1032,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Time-averaged probabilities for a lithium ion to occupy a particular tetrahedral site type, for (a) Li6PS5I and (b) Li6PS5Cl with 0%, 50%, and 100% S/X site inversion. Figure adapted from ref 60 under a CC BY-SA 4.0 license https://creativecommons.org/licenses/ by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    242.7
+   ],
+   "w": 1051,
+   "h": 749,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.809
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Transition matrices showing the probabilities for lithium ions to move from site type i (rows) to site type j (columns), in 0%, 50%, and 100% site-inverted Li6PS5X. Each row sums to a total probability of 1.0. Individual probabilities are shown rounded to two decimal places. Figure adapted from ref 60 under a CC BY-SA 4.0 license https:// creativecommons.org/licenses/by-sa/4.0. possibility that it is not simply the occupations of the diﬀerent tetrahedral sites that is important, but that the anion conﬁguration may crucially aﬀect whether the diﬀusion pathways connecting these sites are active or inactive. To determine the active diﬀusion paths in each system, we have analyzed our inherent structure trajectories to identify transition events, deﬁned as a lithium ion moving from one tetrahedral site to a neighboring site. We can then calculate the probability that a lithium ion i",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    315.3
+   ],
+   "w": 1052,
+   "h": 1051,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Schematic of all possible site−site lithium diﬀusion pathways between face-sharing pairs of type 2, type 4, and type 5 tetrahedra. (b) In 0% site-inverted Li6PS5I and Li6PS5Cl, only 5 →5, 5 →2, and 2 →5 transitions are observed, corresponding to “caged” diﬀusion around 4c sites. (c) In 100% site-inverted Li6PS5I and Li6PS5Cl, only 2 →2, 2 →5, 5 →2, 5 →4, and 4 →5 transitions are observed, corresponding to “caged” diﬀusion around 4a sites. have equivalent tetrahedral interstitial sites available for lithium diﬀusion. Understanding why a speciﬁc arrangement of anions across the 4a and 4c sites gives continuous versus discontinuous diﬀusion pathways requires going beyond the analysis presented above, which only considers the occupation of speciﬁc tetrahedra and the movement of lithium between these discrete sites. In the mixed-anion Li6PS5X argyrodites, each tetrahedral hole m",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    214.6
+   ],
+   "w": 2150,
+   "h": 632,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Lithium site−site radial distribution functions for Li6PS5I and Li6PS5Cl at 0%, 50%, and 100% anion-site-inversion. For each set of data, the vertical dashed line shows the minimum separation for which the lithium sites form a percolating network. Figure adapted from ref 60 under a CC BY-SA 4.0 license https://creativecommons.org/licenses/ by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    263.2,
+    570.5,
+    682.1
+   ],
+   "w": 1052,
+   "h": 1747,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. S(4a/4c)−Li and X(4a/4c)−Li radial distribution functions, g(r), for Li6PS5I and Li6PS5Cl with 0%, 50%, and 100% S/X site inversion. Figure adapted from ref 60 under a CC BY-SA 4.0 license https://creativecommons.org/licenses/by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    360.7,
+    306.5,
+    607.1
+   ],
+   "w": 1051,
+   "h": 1028,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. S(4a/4c)−Li and X(4a/4c)−Li coordination numbers, n, for Li6PS5I and Li6PS5Cl with 0%, 50%, and 100% S/X site inversion. Figure adapted from ref 60 under a CC BY-SA 4.0 license https:// creativecommons.org/licenses/by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    186.7,
+    570.5,
+    435.3
+   ],
+   "w": 1052,
+   "h": 1037,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Schematic illustrating the coupling between conﬁgurational order/disorder of the anion substructure and static order/disorder of the Li sites. (a) “Ideal” anion substructure. All Li sites are in symmetric environments, and all site−site distances are equal. (b) Ordered anion substructure. All Li sites are in locally asymmetric environments, and move toward S2−(blue) and away from X−(yellow) anions, to give an ordered nonpercolating network of short site−site distances. (c) Disordered anion substructure. The shift of Li site positions depends on the local anion conﬁguration. Moving toward S and away from X anions produces a disordered percolating network of short site−site distances. Solid lines in (c) indicate site−site distances that are shorter than in the “ideal” anion substructure.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    216.0
+   ],
+   "w": 2151,
+   "h": 637,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Populations of SLix coordination polyhedral geometries, for Li6PS5I and Li6PS5Cl with 0%, 50%, and 100% S/X site inversion. Polyhedral geometries have been assigned by calculating the minimum continuous symmetry measure (CSM)77 for a set of reference coordination geometries.64,78 Blue bars denote 6-coordinate polyhedra; yellow bars denote 7-coordinate polyhedra. Figure adapted from ref 60 under a CC BY-SA 4.0 license https://creativecommons.org/licenses/by-sa/4.0. number of n > 6 Li ions indicates that some Li contributes to coordination of more than one S center. numbers (cf. Figure 9). In these anion-ordered systems, these SLi6 units preferentially adopt approximately octahedral geo- metries, with a few trigonal prismatic conﬁgurations observed for all but the Li6PS5I 0% system. An octahedral distribution of lithium ions around each S is reasonable from electrostatics, becau",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    285.2,
+    570.5,
+    430.3
+   ],
+   "w": 2151,
+   "h": 606,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Internal dynamics of one 4c SLi6 coordination polyhedron in the Li6PS5I 0% site-inverted system at 500 K. The ordinate gives the normalized projection of each S−Li vector onto the [001] cell axis (i.e., the cosine similarity). The horizontal dashed lines show cos(±45°). Labels above the plot indicate diﬀerent classes of internal dynamics: O indicates a “rigid” octahedral rotation (Figure 13a); O′ is an “incomplete” rotation, that moves to a 45° rotated orientation, before returning to the previous geometry; T indicates an internal reorganization via a trigonal-prismatic intermediate (Figure 13b). Both the octahedral rotations and trigonal-prismatic rearrangements have stable intermediates where multiple lithium ions occupy type 2 tetrahedra. Figure adapted from ref 60 under a CC BY-SA 4.0 license https://creativecommons.org/licenses/by-sa/4.0. We also observe a small number of",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    160.8
+   ],
+   "w": 2151,
+   "h": 407,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Schematic of the concerted (a) rigid rotation and (b) trigonal-prismatic reorganization modes of lithium motion within SLi6 coordination polyhedra in the anion-ordered Li6PS5X systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    549.6,
+    306.5,
+    722.9
+   ],
+   "w": 1051,
+   "h": 724,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 10,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Probability distributions P(n) of string lengths n for Li6PS5I and Li6PS5Cl with 0%, 50%, and 100% S/X site inversion. For the 50% site-inverted systems, the gray empty symbols show the maximum likelihood estimate for a geometric distribution for each dataset. Figure adapted from ref 60 under a CC BY-SA 4.0 license https:// creativecommons.org/licenses/by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    317.4
+   ],
+   "w": 1052,
+   "h": 1060,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 11,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Schematic of the change in lithium coordination around 4a/4c S ions as a function of S/X order/disorder. (a) For S/X anion ordering, the 4c (or 4a) S ions are well separated, and Li ions arrange into SLix coordination “cages”. (b) S/X anion disorder means S ions occupy adjacent 4a and 4c sites. Maintaining SLi6 coordination would produce short Li−Li distances (red arrows), which are Coulombically disfavored. (c) Sharing Li between adjacent 4a and 4c S coordination environments reduces the net Li−Li repulsion, and gives a mix of irregular SLi6 and SLi7 coordination environments. maximize Li−Li separations within each coordination cage. In an anion-ordered system, these two factors can be simulta- neously optimized by arranging exactly six Li ions around each 4a or 4c S anion (Figure 15a). Within each SLi6 unit, the Li−Li repulsion is minimized by the Li ions adopting an approxi",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.6,
+    201.1
+   ],
+   "w": 2151,
+   "h": 575,
+   "dpi": 300,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "FIG. S1. x, y, z coordinates of a single lithium ion dur- ing the 50 % site-inverted Li6PS5Cl simulation, from both the unprocessed simulation trajectory (“raw coordinates”) and from the corresponding inherent structures. Figure adapted from Ref. [4] under a CC BY-SA 4.0 license https://creativecommons.org/licenses/by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.0,
+    162.0,
+    568.1,
+    340.1
+   ],
+   "w": 1073,
+   "h": 743,
+   "dpi": 300,
+   "src": "9. Sup) Mechanistic_origin_superionic_Li6PS5X_SI.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "FIG. S2. Site-indices for the tetrahedral sites deemed “oc- cupied” by a single lithium ion during the 0 % Li6PS5I (up- per panel) and 50 % Li6PS5Cl (lower panel simulations, as- signed from the unprocessed simulation trajectories and from the corresponding inherent-structure trajectories. The site numbering is arbitrary and in each case is assigned based on the order of sites occupied in the unprocessed trajectory. Figure adapted from Ref. [4] under a CC BY-SA 4.0 license https://creativecommons.org/licenses/by-sa/4.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.1,
+    305.1,
+    227.3
+   ],
+   "w": 1072,
+   "h": 660,
+   "dpi": 300,
+   "src": "9. Sup) Mechanistic_origin_superionic_Li6PS5X_SI.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Tetrahedral Holes Formed by the Close-Packed S/X Anion Substructure in Li6PS5X (F4̅3m, Setting 2), Following the Classiﬁcation of Deiseroth et al.36 Wyckoﬀnotation for type tetrahedron center Comments 0 4b (P) Center of PS4 tetrahedra 1 16e 4-fold coordination of 4c sites. 2 48h 12-fold coordination of 4a and 4c sites. Form face-sharing pairs around 4a sites. 3 4d Four common corners with neighboring PS4 tetrahedra. 4 16e 4-fold coordination of 4a sites. 5 48h 12-fold coordination of 4c and 4a sites. Form face-sharing pairs around 4c sites.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    43.7,
+    569.5,
+    792.0
+   ],
+   "w": 2057,
+   "h": 2994,
+   "dpi": 288,
+   "src": "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "blank": 0.839
+  }
+ ]
+}

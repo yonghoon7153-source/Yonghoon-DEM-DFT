@@ -1,0 +1,6 @@
+"# C3 gate: dEa = Ea(600-800 K) - Ea(800-1000 K), seed-resampled CI95"
+"# pre-sealed allowed window = [-0.05, 0.05] eV (sealed before results; not chosen from the data)"
+# sources: db/properties/modelc_box331_c2_mto_5seed_2026_09_18.json ; db/properties/modelc_box331_c3_result_5seed_2026_09_18.json ; db/properties/modelc_box331_c3_result_2026_09_15.json
+round,n_seed_600_800_1000,dEa_eV,CI95_lo_eV,CI95_hi_eV,CI95_width_eV,allow_lo_eV,allow_hi_eV,verdict
+3-seed,2/3/3,-0.0339,-0.0539,-0.0137,0.0402,-0.05,0.05,inconclusive
+5-seed,3/5/5,-0.0299,-0.0434,-0.0175,0.0259,-0.05,0.05,compatible

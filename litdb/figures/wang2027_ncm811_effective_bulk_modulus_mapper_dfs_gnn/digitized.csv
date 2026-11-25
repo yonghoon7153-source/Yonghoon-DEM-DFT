@@ -1,0 +1,167 @@
+figure,panel,series,x,x_unit,y,y_unit,kind,method,note
+5,main,reconstruction loss,3,epoch,26.37,x1e5,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,10,epoch,24.09,x1e5,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,20,epoch,9.51,x1e5,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,30,epoch,3.67,x1e5,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,50,epoch,1.89,x1e5,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,80,epoch,1.04,x1e5,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,300,epoch,0.58,x1e5,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,500,epoch,0.5,x1e5,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+5,main,reconstruction loss,800,epoch,0.5,x1e5,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",steep part ±1 (1 epoch = 1.33 px); epochs 100/1000 not read (box edge / red marker)
+10,a,CBD peak,0.088,volume fraction,805,count (peak height),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",support CBD 0.045-0.136 · pore 0.158-0.243 · AM ~0.63-0.79 (AM lower edge by eye)
+10,a,pore peak,0.205,volume fraction,606,count (peak height),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",support CBD 0.045-0.136 · pore 0.158-0.243 · AM ~0.63-0.79 (AM lower edge by eye)
+10,a,AM peak,0.702,volume fraction,566,count (peak height),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",support CBD 0.045-0.136 · pore 0.158-0.243 · AM ~0.63-0.79 (AM lower edge by eye)
+10,b,K histogram bin,8.6,GPa (bin centre; width 1.2),6,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,9.8,GPa (bin centre; width 1.2),28,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,11.0,GPa (bin centre; width 1.2),51,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,12.2,GPa (bin centre; width 1.2),104,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,13.4,GPa (bin centre; width 1.2),126,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,14.6,GPa (bin centre; width 1.2),129,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,15.8,GPa (bin centre; width 1.2),131,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,17.0,GPa (bin centre; width 1.2),125,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,18.2,GPa (bin centre; width 1.2),85,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,19.4,GPa (bin centre; width 1.2),69,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,20.6,GPa (bin centre; width 1.2),50,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,21.8,GPa (bin centre; width 1.2),33,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,23.0,GPa (bin centre; width 1.2),30,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,24.2,GPa (bin centre; width 1.2),13,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,25.4,GPa (bin centre; width 1.2),5,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,26.6,GPa (bin centre; width 1.2),6,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,27.8,GPa (bin centre; width 1.2),2,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,29.0,GPa (bin centre; width 1.2),2,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,K histogram bin,30.2,GPa (bin centre; width 1.2),1,count,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",rounded to integer; last bin read as two fragments (~1 count)
+10,b,summary,,,n=996 mean=16.06 sd=3.62 CV=0.226 median=15.80,GPa,our arithmetic,from digitized bins,Table 1 two-phase mean 13.531 (n=20) is 3.7 SE lower
+11,,GNN loss (left axis),50,epoch,1.86,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs
+11,,CNN loss (right axis),50,epoch,0.136,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs; different axis scale
+11,,GNN loss (left axis),100,epoch,1.61,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs
+11,,CNN loss (right axis),100,epoch,0.131,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs; different axis scale
+11,,GNN loss (left axis),150,epoch,1.39,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs
+11,,CNN loss (right axis),150,epoch,0.126,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs; different axis scale
+11,,GNN loss (left axis),190,epoch,1.28,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs
+11,,CNN loss (right axis),190,epoch,0.13,loss (undefined units),digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit) (frame-based y)",median over ±5 epochs; different axis scale
+13,a,GNN count,0-2,% abs. relative error,19,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,0-2,% abs. relative error,21,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,2-4,% abs. relative error,15,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,2-4,% abs. relative error,22,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,4-6,% abs. relative error,24,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,4-6,% abs. relative error,15,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,6-8,% abs. relative error,13,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,6-8,% abs. relative error,9,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,8-10,% abs. relative error,6,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,8-10,% abs. relative error,13,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,10-12,% abs. relative error,6,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,10-12,% abs. relative error,6,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,12-14,% abs. relative error,4,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,12-14,% abs. relative error,7,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,14-16,% abs. relative error,7,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,14-16,% abs. relative error,2,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,16-18,% abs. relative error,1,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,16-18,% abs. relative error,1,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,18-20,% abs. relative error,0,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,18-20,% abs. relative error,1,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,20-22,% abs. relative error,0,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,20-22,% abs. relative error,0,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,GNN count,22-24,% abs. relative error,1,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)","16-18 bin: legend patch excluded, bar = 1"
+13,a,CNN count,22-24,% abs. relative error,1,count,digitized,"pixel read, axes calibrated from frame lines (no tick marks)",
+13,a,summary,,,GNN n=96 bin-centre mean 6.17% ; CNN n=98 mean 6.00%,,our arithmetic,,test set = 100; consistent with Acc 93.95/93.80 of Fig 12
+15,a,graph-size score,"N=12, r=0.1",,52.6,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=12, r=0.3",,50.5,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=12, r=0.5",,49.5,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=12, r=0.7",,51.5,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=10, r=0.1",,43.9,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=10, r=0.3",,43.1,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=10, r=0.5",,42.8,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=10, r=0.7",,46.0,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=8, r=0.1",,36.1,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=8, r=0.3",,35.6,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=8, r=0.5",,35.9,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=8, r=0.7",,39.3,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=6, r=0.1",,28.8,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=6, r=0.3",,28.5,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=6, r=0.5",,29.5,score,printed in figure,transcribed from cell label,
+15,a,graph-size score,"N=6, r=0.7",,32.4,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=12, r=0.1",,72.7,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=12, r=0.3",,72.0,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=12, r=0.5",,71.2,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=12, r=0.7",,69.5,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=10, r=0.1",,71.3,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=10, r=0.3",,70.9,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=10, r=0.5",,70.2,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=10, r=0.7",,68.7,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=8, r=0.1",,69.6,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=8, r=0.3",,69.3,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=8, r=0.5",,69.0,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=8, r=0.7",,67.7,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=6, r=0.1",,67.3,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=6, r=0.3",,67.3,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=6, r=0.5",,67.5,score,printed in figure,transcribed from cell label,
+15,b,graph-representation quality Q,"N=6, r=0.7",,66.5,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=12, r=0.1",,92.2,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=12, r=0.3",,92.8,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=12, r=0.5",,93.2,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=12, r=0.7",,93.0,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=10, r=0.1",,92.1,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=10, r=0.3",,93.2,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=10, r=0.5",,92.6,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=10, r=0.7",,93.1,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=8, r=0.1",,92.2,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=8, r=0.3",,93.3,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=8, r=0.5",,93.4,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=8, r=0.7",,93.6,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=6, r=0.1",,92.9,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=6, r=0.3",,92.5,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=6, r=0.5",,93.6,score,printed in figure,transcribed from cell label,
+15,c,test Acc (%),"N=6, r=0.7",,93.4,score,printed in figure,transcribed from cell label,
+16,a,Full GNN,,,0.88,R2,printed in figure,bar label,
+16,a,-Geometry,,,0.59,R2,printed in figure,bar label,
+16,a,-Phase,,,0.86,R2,printed in figure,bar label,
+16,a,-Explicit Topology,,,0.87,R2,printed in figure,bar label,
+16,c,FE,17 pairs,,3.009,mean |dK| GPa,printed in figure,bar label,pairs: dphi<=0.1 p.p. and |dK_FE|>=2 GPa
+16,c,Quadratic,17 pairs,,0.066,mean |dK| GPa,printed in figure,bar label,pairs: dphi<=0.1 p.p. and |dK_FE|>=2 GPa
+16,c,GNN,17 pairs,,1.244,mean |dK| GPa,printed in figure,bar label,pairs: dphi<=0.1 p.p. and |dK_FE|>=2 GPa
+16,b,FE,25.823,CBD-pore fraction % (printed),24.04,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,Quadratic,25.823,CBD-pore fraction % (printed),20.64,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,GNN,25.823,CBD-pore fraction % (printed),23.01,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,FE,25.838,CBD-pore fraction % (printed),19.16,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,Quadratic,25.838,CBD-pore fraction % (printed),20.64,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,GNN,25.838,CBD-pore fraction % (printed),19.65,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,FE,27.02,CBD-pore fraction % (printed),15.99,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,Quadratic,27.02,CBD-pore fraction % (printed),18.76,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,GNN,27.02,CBD-pore fraction % (printed),16.93,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,FE,26.933,CBD-pore fraction % (printed),19.12,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,Quadratic,26.933,CBD-pore fraction % (printed),18.85,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,GNN,26.933,CBD-pore fraction % (printed),19.39,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,FE,30.192,CBD-pore fraction % (printed),13.35,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,Quadratic,30.192,CBD-pore fraction % (printed),14.42,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,GNN,30.192,CBD-pore fraction % (printed),14.38,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,FE,30.094,CBD-pore fraction % (printed),16.57,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,Quadratic,30.094,CBD-pore fraction % (printed),14.51,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,GNN,30.094,CBD-pore fraction % (printed),16.3,K GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",
+16,b,pair 1 |dK| FE/Quad/GNN,,,"digitized (4.88, 0.0, 3.36) vs printed (4.885, 0.025, 3.334)",GPa,check,,agreement within ±0.05 GPa
+16,b,pair 2 |dK| FE/Quad/GNN,,,"digitized (3.13, 0.09, 2.46) vs printed (3.138, 0.135, 2.428)",GPa,check,,agreement within ±0.05 GPa
+16,b,pair 3 |dK| FE/Quad/GNN,,,"digitized (3.22, 0.09, 1.92) vs printed (3.199, 0.116, 1.902)",GPa,check,,agreement within ±0.05 GPa
+D1,a,RVE1 (phi 25.84%),10^3,FE grid,39.41,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE1 (phi 25.84%),20^3,FE grid,30.69,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE1 (phi 25.84%),40^3,FE grid,19.27,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE1 (phi 25.84%),80^3,FE grid,19.45,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE1 (phi 25.84%),100^3,FE grid,19.36,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE2 (phi 27.87%),10^3,FE grid,40.85,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE2 (phi 27.87%),20^3,FE grid,28.17,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE2 (phi 27.87%),40^3,FE grid,16.93,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE2 (phi 27.87%),80^3,FE grid,16.66,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE2 (phi 27.87%),100^3,FE grid,16.48,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE3 (phi 29.26%),10^3,FE grid,34.11,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE3 (phi 29.26%),20^3,FE grid,24.8,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE3 (phi 29.26%),40^3,FE grid,15.22,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE3 (phi 29.26%),80^3,FE grid,15.31,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE3 (phi 29.26%),100^3,FE grid,15.27,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE4 (phi 30.56%),10^3,FE grid,32.13,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE4 (phi 30.56%),20^3,FE grid,23.94,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE4 (phi 30.56%),40^3,FE grid,14.59,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE4 (phi 30.56%),80^3,FE grid,14.77,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE4 (phi 30.56%),100^3,FE grid,14.59,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE5 (phi 32.43%),10^3,FE grid,30.33,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE5 (phi 32.43%),20^3,FE grid,19.0,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE5 (phi 32.43%),40^3,FE grid,10.09,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE5 (phi 32.43%),80^3,FE grid,10.14,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%
+D1,a,RVE5 (phi 32.43%),100^3,FE grid,10.09,K_N GPa,digitized,"pixel read of 300-dpi crop, axes calibrated from tick marks (linear fit)",±0.1 GPa (1 px = 0.09 GPa); 80 vs 100 sub-1% differences not resolvable — use printed 0.36-0.75%

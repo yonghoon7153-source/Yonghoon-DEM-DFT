@@ -1,0 +1,37 @@
+{
+ "what": "Y 자리 선호 검증 — Wang 2025 Angew(P_4b 주장) vs 우리 cascade site-rule(Li_24g)",
+ "date": "2026-08-25",
+ "host": "comp1 = Li6PS5Cl (db/structures/comp1_V0_k444.cif)",
+ "why": "논문의 −4.27846 vs −4.26615 eV/atom 은 자리 선호 에너지가 아니다 (조성이 달라 μ_P−μ_Li 가 섞임 · 전하 보상 없음 · 고립원자 기준 = 응집에너지). litdb §19.4 에서 무효 판정. 우리 site-rule(M³⁺ 26/26 Li_24g)에 대한 외부 반증은 문헌에 없고, **우리 쪽 능동 검증도 아직 없었다** — 이게 그 첫 계산.",
+ "models": {
+  "sc_P_4b": {
+   "nat": 108,
+   "comp": "Li52 Y2 P6 S37 O3 Cl8",
+   "Y_on": "P_4b",
+   "Y_fraction_of_P_sites": 0.25,
+   "charge": 0,
+   "note": "논문 농도(25 %)와 일치. Y³⁺→P⁵⁺ 결손을 **Li 추가**로 보상"
+  },
+  "sc_Li_24g": {
+   "nat": 100,
+   "comp": "Li42 Y2 P8 S37 O3 Cl8",
+   "Y_on": "Li_24g",
+   "Y_fraction_of_P_sites": 0.0,
+   "charge": 0,
+   "note": "우리 규칙. Y³⁺→Li⁺ 과잉을 **Li 제거**로 보상"
+  },
+  "P_4b": {
+   "nat": 56,
+   "comp": "Li28 Y2 P2 S17 O3 Cl4",
+   "note": "농도 2배(50 %) 대조"
+  },
+  "Li_24g": {
+   "nat": 48,
+   "comp": "Li18 Y2 P4 S17 O3 Cl4",
+   "note": "농도 2배 대조"
+  }
+ },
+ "⚠_why_not_per_atom": "두 모델은 원자수가 다르다(108 vs 100). 총에너지를 원자수로 나눠 비교하면 논문과 **같은 오류**를 반복한다. 판정은 **E_above_hull** 로 한다 — 조성 차이가 화학퍼텐셜로 정확히 흡수된다.",
+ "method": "UMA(uma-s-1p1, omat) 이완 → convex_hull_ehull.py --mode uma (MP 경쟁상 단일점)",
+ "site_rule_now": "tools/doping/site_preference.py: Y → ['Li_24g'], confidence 'cited' (문헌 인용 — 우리 계산 근거 아님). 이 검증이 그 confidence 를 올리거나 뒤집는다"
+}

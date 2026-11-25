@@ -1,0 +1,107 @@
+{
+ "schema": "agc_k9set_collect/v1",
+ "decision": "D-2026-10-05-wad-agc-graphite-k9-registry",
+ "stage2": "/home/kgy/work/runs/wad_agc_graphite_2026_10_02/stage2_pkg",
+ "raw2": "/home/kgy/work/runs/wad_agc_graphite_2026_10_02/stage2",
+ "k9_dir": "db/inputs/wad_agc_graphite_2026_10_02/k9set",
+ "k9_raw": "/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set",
+ "rows": {
+  "AGC_N3_top_fcc": {
+   "A_A2": 21.523194956359582,
+   "W_k6_J_m2": 0.5129835422617702,
+   "W_k9_J_m2": 0.492739261243266,
+   "dW_k9_minus_k6_J_m2": -0.02024428101850423,
+   "k9_source": "2단계 G4 k9 (기존 · 다시 안 돌림)",
+   "jobs": {
+    "AGC_N3_top_fcc_G4_k9_bound": "OK",
+    "AGC_N3_top_fcc_G4_k9_far": "OK"
+   }
+  },
+  "AGC_N3_top_hcp": {
+   "A_A2": 21.523194956359582,
+   "W_k6_J_m2": 0.5128971502930011,
+   "W_k9_J_m2": 0.4925626286685815,
+   "dW_k9_minus_k6_J_m2": -0.020334521624419566,
+   "k9_source": "k9set (새로)",
+   "jobs": {
+    "AGC_N3_top_hcp_K9_bound": "OK",
+    "AGC_N3_top_hcp_K9_far": "OK"
+   }
+  },
+  "AGC_N3_hollow_fcc": {
+   "A_A2": 21.523194956359582,
+   "W_k6_J_m2": 0.5128981630975828,
+   "W_k9_J_m2": 0.49256688243585056,
+   "dW_k9_minus_k6_J_m2": -0.020331280661732287,
+   "k9_source": "k9set (새로)",
+   "jobs": {
+    "AGC_N3_hollow_fcc_K9_bound": "OK",
+    "AGC_N3_hollow_fcc_K9_far": "OK"
+   }
+  },
+  "AGC_N3_s01": {
+   "A_A2": 21.523194956359582,
+   "W_k6_J_m2": 0.5129023155811697,
+   "W_k9_J_m2": 0.4925623248267464,
+   "dW_k9_minus_k6_J_m2": -0.02033999075442333,
+   "k9_source": "k9set (새로)",
+   "jobs": {
+    "AGC_N3_s01_K9_bound": "OK",
+    "AGC_N3_s01_K9_far": "OK"
+   }
+  },
+  "AGC_N4_top_fcc": {
+   "A_A2": 21.523194956359582,
+   "W_k6_J_m2": 0.5141910041785301,
+   "W_k9_J_m2": 0.4940454713096906,
+   "dW_k9_minus_k6_J_m2": -0.020145532868839522,
+   "k9_source": "k9set (새로)",
+   "jobs": {
+    "AGC_N4_top_fcc_K9_bound": "OK",
+    "AGC_N4_top_fcc_K9_far": "OK"
+   }
+  }
+ },
+ "jobs": {
+  "AGC_N3_top_fcc_G4_k9_bound": "OK",
+  "AGC_N3_top_fcc_G4_k9_far": "OK",
+  "AGC_N3_top_hcp_K9_bound": "OK",
+  "AGC_N3_top_hcp_K9_far": "OK",
+  "AGC_N3_hollow_fcc_K9_bound": "OK",
+  "AGC_N3_hollow_fcc_K9_far": "OK",
+  "AGC_N3_s01_K9_bound": "OK",
+  "AGC_N3_s01_K9_far": "OK",
+  "AGC_N4_top_fcc_K9_bound": "OK",
+  "AGC_N4_top_fcc_K9_far": "OK"
+ },
+ "jobs_not_ok": [],
+ "all_10_ok": true,
+ "headline_k9": {
+  "what": "Ag(111)|흑연(0001) 3층 · W_sep (끝점 10 Å · PBE+D3(BJ) 2체) · registry 넷 평균 [min, max] · k 9×9×1",
+  "n_registry": 4,
+  "n_ok": 4,
+  "missing": [],
+  "mean_J_m2": 0.49260777429361113,
+  "range_J_m2": [
+   0.4925623248267464,
+   0.492739261243266
+  ],
+  "status": "REPLACE"
+ },
+ "spread_k9": {
+  "spread_J_m2": 0.000176936416519613,
+  "threshold_J_m2": 0.01,
+  "status": "OK"
+ },
+ "thickness_k9": {
+  "pair": "AGC_N4_top_fcc − AGC_N3_top_fcc (k9)",
+  "dW_J_m2": 0.001306210066424618,
+  "threshold_abs_dW": 0.02,
+  "status": "PASS"
+ },
+ "labels_k9": [
+  "k 9×9×1 (대표 AGC_N3_top_fcc 의 12×12×1 탐침으로 k 수렴 확인 — 넷 각각의 12×12×1 은 재지 않았다)",
+  "컷오프 (e70) · smearing (s05) 축은 k 6×6×1 대표에서 PASS — 9×9×1 에서 다시 보지 않음"
+ ],
+ "reading": "사전 규칙대로 헤드라인을 k9 registry 평균으로 교체한다 — 기록은 새 마감 결정 (이 도구는 판독만)"
+}

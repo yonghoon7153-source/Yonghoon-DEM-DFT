@@ -1,0 +1,627 @@
+{
+  "product_census": {
+    "n_unique": 12,
+    "counts": {
+      "CoS2": 5,
+      "Li2SO4": 3,
+      "LiCl": 3,
+      "Al(PO3)3": 3,
+      "SO2": 2,
+      "SCl": 2,
+      "CoP4O11": 2,
+      "LiAl5O8": 1,
+      "Li3PO4": 1,
+      "Li4P2O7": 1,
+      "AlPO4": 1,
+      "LiPO3": 1
+    },
+    "first_seen": {
+      "LiAl5O8": "LiCoO2@2.50V/Al",
+      "CoS2": "LiCoO2@2.50V/Al",
+      "Li3PO4": "LiCoO2@2.50V/Al",
+      "Li2SO4": "LiCoO2@2.50V/Al",
+      "LiCl": "LiCoO2@2.50V/Al",
+      "Li4P2O7": "LiCoO2@3.00V/Al",
+      "AlPO4": "LiCoO2@3.00V/Al",
+      "Al(PO3)3": "LiCoO2@3.50V/Al",
+      "LiPO3": "LiCoO2@3.50V/Al",
+      "SO2": "LiCoO2@4.00V/Al",
+      "SCl": "LiCoO2@4.00V/Al",
+      "CoP4O11": "LiCoO2@4.00V/Al"
+    },
+    "reservoir_excluded": {
+      "Li": 5
+    },
+    "\u26d4": "\uc5f4\ub9b0 \uc6d0\uc18c\uc758 \ud651\uc6d0\uc18c\ub294 \uc800\uc7a5\uc18c \ud68c\uacc4\ub77c \ub300\uc0c1\uc5d0\uc11c \ube90\ub2e4 (reservoir_excluded). \uae30\uccb4\u00b7\ud651\uc6d0\uc18c(S\u00b7SO\u2082 \ub4f1)\ub294 **\uc548 \uac78\ub800\ub2e4** \u2014 \ud654\ud559 \ud310\ub2e8\uc740 \uce74\ub4dc\u00b7\uc0ac\ub78c \ubaab\uc774\ub2e4."
+  },
+  "method": "GrandPotentialInterfacialReactivity (Richards/Ong 2016), open to Li reservoir; mu_Li = mu_Li(metal) - V; use_hull_energy=True; MP GGA_GGA+U. More negative = more reactive interface at that voltage.",
+  "mu_Li_metal_eV": -1.9089,
+  "voltages_V": [
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.3
+  ],
+  "results": {
+    "LiCoO2": {
+      "composition": "LiCoO2",
+      "by_voltage": {
+        "2.50": {
+          "Al": -0.61494
+        },
+        "3.00": {
+          "Al": -0.71276
+        },
+        "3.50": {
+          "Al": -0.86203
+        },
+        "4.00": {
+          "Al": -1.11903
+        },
+        "4.30": {
+          "Al": -1.28083
+        }
+      },
+      "reactions": {
+        "2.50": {
+          "Al": "0.3133 Li4.8Al0.2P1S4.4Cl1.6 + 0.6867 LiCoO2 -> 0.7268 Li + 0.01253 LiAl5O8 + 0.6867 CoS2 + 0.3133 Li3PO4 + 0.005013 Li2SO4 + 0.5013 LiCl"
+        },
+        "3.00": {
+          "Al": "0.3205 Li4.8Al0.2P1S4.4Cl1.6 + 0.6795 LiCoO2 -> 1.09 Li + 0.1282 Li4P2O7 + 0.6795 CoS2 + 0.0641 AlPO4 + 0.05128 Li2SO4 + 0.5128 LiCl"
+        },
+        "3.50": {
+          "Al": "0.3268 Li4.8Al0.2P1S4.4Cl1.6 + 0.6732 LiCoO2 -> 1.405 Li + 0.06536 Al(PO3)3 + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.1307 LiPO3 + 0.5229 LiCl"
+        },
+        "4.00": {
+          "Al": "0.4027 Li4.8Al0.2P1S4.4Cl1.6 + 0.5973 LiCoO2 -> 2.53 Li + 0.557 CoS2 + 0.01342 SO2 + 0.6443 SCl + 0.08054 Al(PO3)3 + 0.04027 CoP4O11"
+        },
+        "4.30": {
+          "Al": "0.4027 Li4.8Al0.2P1S4.4Cl1.6 + 0.5973 LiCoO2 -> 2.53 Li + 0.6443 SCl + 0.04027 CoP4O11 + 0.08054 Al(PO3)3 + 0.557 CoS2 + 0.01342 SO2"
+        }
+      },
+      "kinks": {
+        "2.50": {
+          "Al": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "LiCoO2 -> LiCoO2"
+            },
+            {
+              "x_atomic_frac": 0.12,
+              "reaction_energy_eV_per_atom": -0.277906,
+              "reaction": "0.04348 Li4.8Al0.2P1S4.4Cl1.6 + 0.9565 LiCoO2 -> 0.5739 Li + 0.9565 CoO + 0.008696 LiAlO2 + 0.04348 Li3PO4 + 0.1913 Li2SO4 + 0.06957 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.120482,
+              "reaction_energy_eV_per_atom": -0.278951,
+              "reaction": "0.04367 Li4.8Al0.2P1S4.4Cl1.6 + 0.9563 LiCoO2 -> 0.5808 Li + 0.004367 Al2CoO4 + 0.952 CoO + 0.04367 Li3PO4 + 0.1921 Li2SO4 + 0.06987 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.427107,
+              "reaction_energy_eV_per_atom": -0.582761,
+              "reaction": "0.199 Li4.8Al0.2P1S4.4Cl1.6 + 0.801 LiCoO2 -> 0.4777 Li + 0.0199 Al2CoO4 + 0.08678 Co9S8 + 0.199 Li3PO4 + 0.1815 Li2SO4 + 0.3185 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.431928,
+              "reaction_energy_eV_per_atom": -0.585878,
+              "reaction": "0.2022 Li4.8Al0.2P1S4.4Cl1.6 + 0.7978 LiCoO2 -> 0.4691 Li + 0.008088 LiAl5O8 + 0.08864 Co9S8 + 0.2022 Li3PO4 + 0.1805 Li2SO4 + 0.3235 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.500911,
+              "reaction_energy_eV_per_atom": -0.608713,
+              "reaction": "0.2507 Li4.8Al0.2P1S4.4Cl1.6 + 0.7493 LiCoO2 -> 0.5816 Li + 0.01003 LiAl5O8 + 0.2498 Co3S4 + 0.2507 Li3PO4 + 0.1039 Li2SO4 + 0.4011 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.577812,
+              "reaction_energy_eV_per_atom": -0.614944,
+              "reaction": "0.3133 Li4.8Al0.2P1S4.4Cl1.6 + 0.6867 LiCoO2 -> 0.7268 Li + 0.01253 LiAl5O8 + 0.6867 CoS2 + 0.3133 Li3PO4 + 0.005013 Li2SO4 + 0.5013 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.581395,
+              "reaction_energy_eV_per_atom": -0.612693,
+              "reaction": "0.3165 Li4.8Al0.2P1S4.4Cl1.6 + 0.6835 LiCoO2 -> 0.7278 Li + 0.01266 LiAl5O8 + 0.6835 CoS2 + 0.3165 Li3PO4 + 0.5063 LiCl + 0.006329 LiS4"
+            },
+            {
+              "x_atomic_frac": 0.6,
+              "reaction_energy_eV_per_atom": -0.596866,
+              "reaction": "0.3333 Li4.8Al0.2P1S4.4Cl1.6 + 0.6667 LiCoO2 -> 0.9 Li + 0.6667 CoS2 + 0.06667 AlPO4 + 0.2667 Li3PO4 + 0.5333 LiCl + 0.03333 LiS4"
+            },
+            {
+              "x_atomic_frac": 0.882353,
+              "reaction_energy_eV_per_atom": -0.243318,
+              "reaction": "0.7143 Li4.8Al0.2P1S4.4Cl1.6 + 0.2857 LiCoO2 -> 2.429 Li + 0.2857 P2S7 + 0.2857 CoS2 + 0.1429 AlPO4 + 1.143 LiCl + 0.1429 LiS4"
+            },
+            {
+              "x_atomic_frac": 0.952381,
+              "reaction_energy_eV_per_atom": -0.137548,
+              "reaction": "0.8696 Li4.8Al0.2P1S4.4Cl1.6 + 0.1304 LiCoO2 -> 2.783 Li + 0.4348 P2S7 + 0.1304 CoS2 + 0.08696 Al2O3 + 1.391 LiCl + 0.1304 LiS4"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.05757,
+              "reaction": "Li4.8Al0.2P1S4.4Cl1.6 -> 2.875 Li + 0.2 LiAlS2 + 0.5 P2S7 + 1.6 LiCl + 0.125 LiS4"
+            }
+          ]
+        },
+        "3.00": {
+          "Al": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": 0.0,
+              "reaction": "LiCoO2 -> LiCoO2"
+            },
+            {
+              "x_atomic_frac": 0.120482,
+              "reaction_energy_eV_per_atom": -0.370172,
+              "reaction": "0.04367 Li4.8Al0.2P1S4.4Cl1.6 + 0.9563 LiCoO2 -> 0.5808 Li + 0.004367 Al2CoO4 + 0.04367 Li3PO4 + 0.952 CoO + 0.1921 Li2SO4 + 0.06987 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.125523,
+              "reaction_energy_eV_per_atom": -0.38174,
+              "reaction": "0.04566 Li4.8Al0.2P1S4.4Cl1.6 + 0.9543 LiCoO2 -> 0.653 Li + 0.004566 Al2CoO4 + 0.04566 LiCoPO4 + 0.9041 CoO + 0.2009 Li2SO4 + 0.07306 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.12987,
+              "reaction_energy_eV_per_atom": -0.386637,
+              "reaction": "0.04739 Li4.8Al0.2P1S4.4Cl1.6 + 0.9526 LiCoO2 -> 0.7156 Li + 0.004739 Al2CoO4 + 0.03791 CoCl2 + 0.04739 LiCoPO4 + 0.8626 CoO + 0.2085 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.132743,
+              "reaction_energy_eV_per_atom": -0.389864,
+              "reaction": "0.04854 Li4.8Al0.2P1S4.4Cl1.6 + 0.9515 LiCoO2 -> 0.7573 Li + 0.004854 Al2CoO4 + 0.03883 CoCl2 + 0.02427 Co3(PO4)2 + 0.835 CoO + 0.2136 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.353107,
+              "reaction_energy_eV_per_atom": -0.601471,
+              "reaction": "0.1539 Li4.8Al0.2P1S4.4Cl1.6 + 0.8461 LiCoO2 -> 1.078 Li + 0.01539 Al2CoO4 + 0.1232 CoCl2 + 0.05296 Co9S8 + 0.07697 Co3(PO4)2 + 0.2537 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.366928,
+              "reaction_energy_eV_per_atom": -0.613646,
+              "reaction": "0.1619 Li4.8Al0.2P1S4.4Cl1.6 + 0.8381 LiCoO2 -> 0.9715 Li + 0.01619 Al2CoO4 + 0.1295 CoCl2 + 0.1619 LiCoPO4 + 0.05894 Co9S8 + 0.2409 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.391441,
+              "reaction_energy_eV_per_atom": -0.635353,
+              "reaction": "0.1766 Li4.8Al0.2P1S4.4Cl1.6 + 0.8234 LiCoO2 -> 0.7768 Li + 0.01766 Al2CoO4 + 0.1766 LiCoPO4 + 0.06992 Co9S8 + 0.2175 Li2SO4 + 0.2825 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.405405,
+              "reaction_energy_eV_per_atom": -0.646917,
+              "reaction": "0.1852 Li4.8Al0.2P1S4.4Cl1.6 + 0.8148 LiCoO2 -> 0.8148 Li + 0.1481 LiCoPO4 + 0.03704 AlPO4 + 0.07407 Co9S8 + 0.2222 Li2SO4 + 0.2963 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.45961,
+              "reaction_energy_eV_per_atom": -0.674848,
+              "reaction": "0.2209 Li4.8Al0.2P1S4.4Cl1.6 + 0.7791 LiCoO2 -> 0.9719 Li + 0.2008 Co3S4 + 0.1767 LiCoPO4 + 0.04418 AlPO4 + 0.1687 Li2SO4 + 0.3534 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.504587,
+              "reaction_energy_eV_per_atom": -0.690776,
+              "reaction": "0.2535 Li4.8Al0.2P1S4.4Cl1.6 + 0.7465 LiCoO2 -> 0.7097 Li + 0.2488 Co3S4 + 0.05069 AlPO4 + 0.2028 Li3PO4 + 0.1198 Li2SO4 + 0.4055 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.509259,
+              "reaction_energy_eV_per_atom": -0.692369,
+              "reaction": "0.257 Li4.8Al0.2P1S4.4Cl1.6 + 0.743 LiCoO2 -> 0.8738 Li + 0.1028 Li4P2O7 + 0.2477 Co3S4 + 0.0514 AlPO4 + 0.1402 Li2SO4 + 0.4112 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.585937,
+              "reaction_energy_eV_per_atom": -0.712759,
+              "reaction": "0.3205 Li4.8Al0.2P1S4.4Cl1.6 + 0.6795 LiCoO2 -> 1.09 Li + 0.1282 Li4P2O7 + 0.6795 CoS2 + 0.0641 AlPO4 + 0.05128 Li2SO4 + 0.5128 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.625,
+              "reaction_energy_eV_per_atom": -0.687838,
+              "reaction": "0.3571 Li4.8Al0.2P1S4.4Cl1.6 + 0.6429 LiCoO2 -> 1.143 Li + 0.1429 Li4P2O7 + 0.6429 CoS2 + 0.07143 AlPO4 + 0.5714 LiCl + 0.07143 LiS4"
+            },
+            {
+              "x_atomic_frac": 0.652174,
+              "reaction_energy_eV_per_atom": -0.666984,
+              "reaction": "0.3846 Li4.8Al0.2P1S4.4Cl1.6 + 0.6154 LiCoO2 -> 1.423 Li + 0.6154 CoS2 + 0.07692 AlPO4 + 0.3077 LiPO3 + 0.6154 LiCl + 0.1154 LiS4"
+            },
+            {
+              "x_atomic_frac": 0.882353,
+              "reaction_energy_eV_per_atom": -0.445699,
+              "reaction": "0.7143 Li4.8Al0.2P1S4.4Cl1.6 + 0.2857 LiCoO2 -> 2.429 Li + 0.2857 P2S7 + 0.2857 CoS2 + 0.1429 AlPO4 + 1.143 LiCl + 0.1429 LiS4"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.289077,
+              "reaction": "Li4.8Al0.2P1S4.4Cl1.6 -> 3.575 Li + 0.2 LiAlCl4 + 0.5 P2S7 + 0.8 LiCl + 0.225 LiS4"
+            }
+          ]
+        },
+        "3.50": {
+          "Al": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.013345,
+              "reaction": "LiCoO2 -> 0.5 Li + 0.5 Li(CoO2)2"
+            },
+            {
+              "x_atomic_frac": 0.083799,
+              "reaction_energy_eV_per_atom": -0.366247,
+              "reaction": "0.02959 Li4.8Al0.2P1S4.4Cl1.6 + 0.9704 LiCoO2 -> 0.716 Li + 0.002959 Al2CoO4 + 0.02959 Li3PO4 + 0.3225 Co3O4 + 0.1302 Li2SO4 + 0.04734 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.088757,
+              "reaction_energy_eV_per_atom": -0.385657,
+              "reaction": "0.03145 Li4.8Al0.2P1S4.4Cl1.6 + 0.9686 LiCoO2 -> 0.761 Li + 0.003145 Al2CoO4 + 0.03145 LiCoPO4 + 0.3113 Co3O4 + 0.1384 Li2SO4 + 0.05031 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.093168,
+              "reaction_energy_eV_per_atom": -0.399323,
+              "reaction": "0.03311 Li4.8Al0.2P1S4.4Cl1.6 + 0.9669 LiCoO2 -> 0.8013 Li + 0.003311 Al2CoO4 + 0.03311 LiCoPO4 + 0.02649 CoCl2 + 0.3013 Co3O4 + 0.1457 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.096154,
+              "reaction_energy_eV_per_atom": -0.408581,
+              "reaction": "0.03425 Li4.8Al0.2P1S4.4Cl1.6 + 0.9658 LiCoO2 -> 0.8288 Li + 0.003425 Al2CoO4 + 0.0274 CoCl2 + 0.01712 Co3(PO4)2 + 0.2945 Co3O4 + 0.1507 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.11194,
+              "reaction_energy_eV_per_atom": -0.4546,
+              "reaction": "0.04032 Li4.8Al0.2P1S4.4Cl1.6 + 0.9597 LiCoO2 -> 0.9758 Li + 0.004032 Al2CoO4 + 0.08871 Li2Co(SO4)2 + 0.03226 CoCl2 + 0.02016 Co3(PO4)2 + 0.2581 Co3O4"
+            },
+            {
+              "x_atomic_frac": 0.133929,
+              "reaction_energy_eV_per_atom": -0.518099,
+              "reaction": "0.04902 Li4.8Al0.2P1S4.4Cl1.6 + 0.951 LiCoO2 -> 1.186 Li + 0.004902 Al2CoO4 + 0.03922 CoCl2 + 0.2157 CoSO4 + 0.02451 Co3(PO4)2 + 0.2059 Co3O4"
+            },
+            {
+              "x_atomic_frac": 0.164835,
+              "reaction_energy_eV_per_atom": -0.604955,
+              "reaction": "0.06173 Li4.8Al0.2P1S4.4Cl1.6 + 0.9383 LiCoO2 -> 1.235 Li + 0.006173 Al2CoO4 + 0.5185 CoO + 0.04938 CoCl2 + 0.2716 CoSO4 + 0.03086 Co3(PO4)2"
+            },
+            {
+              "x_atomic_frac": 0.298595,
+              "reaction_energy_eV_per_atom": -0.752263,
+              "reaction": "0.1243 Li4.8Al0.2P1S4.4Cl1.6 + 0.8757 LiCoO2 -> 1.472 Li + 0.01243 Al2CoO4 + 0.0307 Co9S8 + 0.09942 CoCl2 + 0.3012 CoSO4 + 0.06213 Co3(PO4)2"
+            },
+            {
+              "x_atomic_frac": 0.310597,
+              "reaction_energy_eV_per_atom": -0.763671,
+              "reaction": "0.1306 Li4.8Al0.2P1S4.4Cl1.6 + 0.8694 LiCoO2 -> 1.496 Li + 0.03379 Co9S8 + 0.1045 CoCl2 + 0.3041 CoSO4 + 0.02611 AlPO4 + 0.05223 Co3(PO4)2"
+            },
+            {
+              "x_atomic_frac": 0.34202,
+              "reaction_energy_eV_per_atom": -0.78616,
+              "reaction": "0.1477 Li4.8Al0.2P1S4.4Cl1.6 + 0.8523 LiCoO2 -> 1.561 Li + 0.1181 CoCl2 + 0.2785 CoSO4 + 0.02954 AlPO4 + 0.05907 Co3(PO4)2 + 0.09283 Co3S4"
+            },
+            {
+              "x_atomic_frac": 0.378151,
+              "reaction_energy_eV_per_atom": -0.80399,
+              "reaction": "0.1685 Li4.8Al0.2P1S4.4Cl1.6 + 0.8315 LiCoO2 -> 1.64 Li + 0.1348 CoCl2 + 0.2472 CoSO4 + 0.03371 AlPO4 + 0.2472 CoS2 + 0.06742 Co3(PO4)2"
+            },
+            {
+              "x_atomic_frac": 0.414747,
+              "reaction_energy_eV_per_atom": -0.818246,
+              "reaction": "0.1911 Li4.8Al0.2P1S4.4Cl1.6 + 0.8089 LiCoO2 -> 1.726 Li + 0.03822 Al(PO3)3 + 0.1529 CoCl2 + 0.242 CoSO4 + 0.2994 CoS2 + 0.03822 Co3(PO4)2"
+            },
+            {
+              "x_atomic_frac": 0.428571,
+              "reaction_energy_eV_per_atom": -0.82346,
+              "reaction": "0.2 Li4.8Al0.2P1S4.4Cl1.6 + 0.8 LiCoO2 -> 1.76 Li + 0.04 Co2P2O7 + 0.04 Al(PO3)3 + 0.16 CoCl2 + 0.24 CoSO4 + 0.32 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.449251,
+              "reaction_energy_eV_per_atom": -0.830659,
+              "reaction": "0.2138 Li4.8Al0.2P1S4.4Cl1.6 + 0.7862 LiCoO2 -> 1.784 Li + 0.0285 LiCo(PO3)3 + 0.04276 Al(PO3)3 + 0.171 CoCl2 + 0.2328 CoSO4 + 0.3539 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.48913,
+              "reaction_energy_eV_per_atom": -0.842329,
+              "reaction": "0.2419 Li4.8Al0.2P1S4.4Cl1.6 + 0.7581 LiCoO2 -> 1.69 Li + 0.03226 LiCo(PO3)3 + 0.04839 Al(PO3)3 + 0.09879 Li2Co(SO4)2 + 0.1935 CoCl2 + 0.4335 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.516648,
+              "reaction_energy_eV_per_atom": -0.84982,
+              "reaction": "0.2627 Li4.8Al0.2P1S4.4Cl1.6 + 0.7373 LiCoO2 -> 1.62 Li + 0.03503 LiCo(PO3)3 + 0.05254 Al(PO3)3 + 0.2102 CoCl2 + 0.4921 CoS2 + 0.1716 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.580645,
+              "reaction_energy_eV_per_atom": -0.861013,
+              "reaction": "0.3158 Li4.8Al0.2P1S4.4Cl1.6 + 0.6842 LiCoO2 -> 1.442 Li + 0.04211 LiCo(PO3)3 + 0.06316 Al(PO3)3 + 0.6421 CoS2 + 0.1053 Li2SO4 + 0.5053 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.592885,
+              "reaction_energy_eV_per_atom": -0.862032,
+              "reaction": "0.3268 Li4.8Al0.2P1S4.4Cl1.6 + 0.6732 LiCoO2 -> 1.405 Li + 0.06536 Al(PO3)3 + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.1307 LiPO3 + 0.5229 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.666667,
+              "reaction_energy_eV_per_atom": -0.855408,
+              "reaction": "0.4 Li4.8Al0.2P1S4.4Cl1.6 + 0.6 LiCoO2 -> 2.28 Li + 0.08 Al(PO3)3 + 0.56 SCl + 0.6 CoS2 + 0.16 LiPO3 + 0.08 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.672269,
+              "reaction_energy_eV_per_atom": -0.853566,
+              "reaction": "0.4061 Li4.8Al0.2P1S4.4Cl1.6 + 0.5939 LiCoO2 -> 2.391 Li + 0.08122 Al(PO3)3 + 0.01015 PCl5 + 0.599 SCl + 0.5939 CoS2 + 0.1523 LiPO3"
+            },
+            {
+              "x_atomic_frac": 0.769231,
+              "reaction_energy_eV_per_atom": -0.787013,
+              "reaction": "0.5263 Li4.8Al0.2P1S4.4Cl1.6 + 0.4737 LiCoO2 -> 3 Li + 0.1053 Al(PO3)3 + 0.09288 P2S7 + 0.02477 PCl5 + 0.7183 SCl + 0.4737 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.882353,
+              "reaction_energy_eV_per_atom": -0.685683,
+              "reaction": "0.7143 Li4.8Al0.2P1S4.4Cl1.6 + 0.2857 LiCoO2 -> 3.714 Li + 0.2521 P2S7 + 0.06723 PCl5 + 0.8067 SCl + 0.1429 AlPO4 + 0.2857 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.95122,
+              "reaction_energy_eV_per_atom": -0.620153,
+              "reaction": "0.8667 Li4.8Al0.2P1S4.4Cl1.6 + 0.1333 LiCoO2 -> 4.293 Li + 0.1067 AlSCl7 + 0.4 P2S7 + 0.64 SCl + 0.06667 AlPO4 + 0.1333 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.985401,
+              "reaction_energy_eV_per_atom": -0.58574,
+              "reaction": "0.9574 Li4.8Al0.2P1S4.4Cl1.6 + 0.04255 LiCoO2 -> 4.468 Li + 0.1702 LiAlCl4 + 0.4681 P2S7 + 0.8511 SCl + 0.02128 AlPO4 + 0.04255 CoS2"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.570299,
+              "reaction": "Li4.8Al0.2P1S4.4Cl1.6 -> 4.6 Li + 0.2 LiAlCl4 + 0.5 P2S7 + 0.8 SCl + 0.1 S"
+            }
+          ]
+        },
+        "4.00": {
+          "Al": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.096678,
+              "reaction": "LiCoO2 -> 0.5 Li + 0.5 Li(CoO2)2"
+            },
+            {
+              "x_atomic_frac": 0.063598,
+              "reaction_energy_eV_per_atom": -0.395279,
+              "reaction": "0.02214 Li4.8Al0.2P1S4.4Cl1.6 + 0.9779 LiCoO2 -> 0.8362 Li + 0.01771 LiCoPO4 + 0.04175 Co23O32 + 0.03542 LiClO4 + 0.004428 AlPO4 + 0.09741 Li2SO4"
+            },
+            {
+              "x_atomic_frac": 0.081839,
+              "reaction_energy_eV_per_atom": -0.478342,
+              "reaction": "0.02885 Li4.8Al0.2P1S4.4Cl1.6 + 0.9711 LiCoO2 -> 0.7865 Li + 0.02308 LiCoPO4 + 0.04122 Co23O32 + 0.005771 AlPO4 + 0.127 Li2SO4 + 0.04617 LiCl"
+            },
+            {
+              "x_atomic_frac": 0.086136,
+              "reaction_energy_eV_per_atom": -0.497575,
+              "reaction": "0.03046 Li4.8Al0.2P1S4.4Cl1.6 + 0.9695 LiCoO2 -> 0.8233 Li + 0.02437 LiCoPO4 + 0.04003 Co23O32 + 0.006092 AlPO4 + 0.134 Li2SO4 + 0.02437 CoCl2"
+            },
+            {
+              "x_atomic_frac": 0.088458,
+              "reaction_energy_eV_per_atom": -0.507976,
+              "reaction": "0.03133 Li4.8Al0.2P1S4.4Cl1.6 + 0.9687 LiCoO2 -> 0.8433 Li + 0.03939 Co23O32 + 0.006267 AlPO4 + 0.1379 Li2SO4 + 0.01253 Co3(PO4)2 + 0.02507 CoCl2"
+            },
+            {
+              "x_atomic_frac": 0.103858,
+              "reaction_energy_eV_per_atom": -0.574321,
+              "reaction": "0.03719 Li4.8Al0.2P1S4.4Cl1.6 + 0.9628 LiCoO2 -> 0.9777 Li + 0.03507 Co23O32 + 0.007439 AlPO4 + 0.01488 Co3(PO4)2 + 0.08183 Li2Co(SO4)2 + 0.02976 CoCl2"
+            },
+            {
+              "x_atomic_frac": 0.111111,
+              "reaction_energy_eV_per_atom": -0.605602,
+              "reaction": "0.04 Li4.8Al0.2P1S4.4Cl1.6 + 0.96 LiCoO2 -> 0.976 Li + 0.264 Co3O4 + 0.008 AlPO4 + 0.016 Co3(PO4)2 + 0.088 Li2Co(SO4)2 + 0.032 CoCl2"
+            },
+            {
+              "x_atomic_frac": 0.132743,
+              "reaction_energy_eV_per_atom": -0.698724,
+              "reaction": "0.04854 Li4.8Al0.2P1S4.4Cl1.6 + 0.9515 LiCoO2 -> 1.184 Li + 0.2136 Co3O4 + 0.009709 AlPO4 + 0.01942 Co3(PO4)2 + 0.03883 CoCl2 + 0.2136 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.133929,
+              "reaction_energy_eV_per_atom": -0.703115,
+              "reaction": "0.04902 Li4.8Al0.2P1S4.4Cl1.6 + 0.951 LiCoO2 -> 1.186 Li + 0.004902 Al2CoO4 + 0.2059 Co3O4 + 0.02451 Co3(PO4)2 + 0.03922 CoCl2 + 0.2157 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.164835,
+              "reaction_energy_eV_per_atom": -0.794349,
+              "reaction": "0.06173 Li4.8Al0.2P1S4.4Cl1.6 + 0.9383 LiCoO2 -> 1.235 Li + 0.006173 Al2CoO4 + 0.03086 Co3(PO4)2 + 0.04938 CoCl2 + 0.5185 CoO + 0.2716 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.298595,
+              "reaction_energy_eV_per_atom": -0.961271,
+              "reaction": "0.1243 Li4.8Al0.2P1S4.4Cl1.6 + 0.8757 LiCoO2 -> 1.472 Li + 0.01243 Al2CoO4 + 0.0307 Co9S8 + 0.06213 Co3(PO4)2 + 0.09942 CoCl2 + 0.3012 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.310597,
+              "reaction_energy_eV_per_atom": -0.974493,
+              "reaction": "0.1306 Li4.8Al0.2P1S4.4Cl1.6 + 0.8694 LiCoO2 -> 1.496 Li + 0.02611 AlPO4 + 0.03379 Co9S8 + 0.05223 Co3(PO4)2 + 0.1045 CoCl2 + 0.3041 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.34202,
+              "reaction_energy_eV_per_atom": -1.001778,
+              "reaction": "0.1477 Li4.8Al0.2P1S4.4Cl1.6 + 0.8523 LiCoO2 -> 1.561 Li + 0.09283 Co3S4 + 0.02954 AlPO4 + 0.05907 Co3(PO4)2 + 0.1181 CoCl2 + 0.2785 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.378151,
+              "reaction_energy_eV_per_atom": -1.025202,
+              "reaction": "0.1685 Li4.8Al0.2P1S4.4Cl1.6 + 0.8315 LiCoO2 -> 1.64 Li + 0.2472 CoS2 + 0.03371 AlPO4 + 0.06742 Co3(PO4)2 + 0.1348 CoCl2 + 0.2472 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.414747,
+              "reaction_energy_eV_per_atom": -1.045214,
+              "reaction": "0.1911 Li4.8Al0.2P1S4.4Cl1.6 + 0.8089 LiCoO2 -> 1.726 Li + 0.2994 CoS2 + 0.03822 Co3(PO4)2 + 0.03822 Al(PO3)3 + 0.1529 CoCl2 + 0.242 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.428571,
+              "reaction_energy_eV_per_atom": -1.052627,
+              "reaction": "0.2 Li4.8Al0.2P1S4.4Cl1.6 + 0.8 LiCoO2 -> 1.76 Li + 0.32 CoS2 + 0.04 Co2P2O7 + 0.04 Al(PO3)3 + 0.16 CoCl2 + 0.24 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.451128,
+              "reaction_energy_eV_per_atom": -1.06085,
+              "reaction": "0.2151 Li4.8Al0.2P1S4.4Cl1.6 + 0.7849 LiCoO2 -> 1.817 Li + 0.3548 CoS2 + 0.04301 Al(PO3)3 + 0.172 CoCl2 + 0.2366 CoSO4 + 0.02151 CoP4O11"
+            },
+            {
+              "x_atomic_frac": 0.564263,
+              "reaction_energy_eV_per_atom": -1.095156,
+              "reaction": "0.3015 Li4.8Al0.2P1S4.4Cl1.6 + 0.6985 LiCoO2 -> 2.146 Li + 0.5377 CoS2 + 0.1206 SCl4 + 0.0603 Al(PO3)3 + 0.1307 CoSO4 + 0.03015 CoP4O11"
+            },
+            {
+              "x_atomic_frac": 0.614334,
+              "reaction_energy_eV_per_atom": -1.109029,
+              "reaction": "0.3468 Li4.8Al0.2P1S4.4Cl1.6 + 0.6532 LiCoO2 -> 2.318 Li + 0.6185 CoS2 + 0.1503 SO2 + 0.1387 SCl4 + 0.06936 Al(PO3)3 + 0.03468 CoP4O11"
+            },
+            {
+              "x_atomic_frac": 0.669145,
+              "reaction_energy_eV_per_atom": -1.119027,
+              "reaction": "0.4027 Li4.8Al0.2P1S4.4Cl1.6 + 0.5973 LiCoO2 -> 2.53 Li + 0.557 CoS2 + 0.01342 SO2 + 0.6443 SCl + 0.08054 Al(PO3)3 + 0.04027 CoP4O11"
+            },
+            {
+              "x_atomic_frac": 0.674157,
+              "reaction_energy_eV_per_atom": -1.11822,
+              "reaction": "0.4082 Li4.8Al0.2P1S4.4Cl1.6 + 0.5918 LiCoO2 -> 2.551 Li + 0.551 CoS2 + 0.6531 SCl + 0.08163 Al(PO3)3 + 0.04082 CoP4O11 + 0.04082 S"
+            },
+            {
+              "x_atomic_frac": 0.691244,
+              "reaction_energy_eV_per_atom": -1.111019,
+              "reaction": "0.4274 Li4.8Al0.2P1S4.4Cl1.6 + 0.5726 LiCoO2 -> 2.624 Li + 0.5385 CoS2 + 0.01709 P2S7 + 0.6838 SCl + 0.08547 Al(PO3)3 + 0.03419 CoP4O11"
+            },
+            {
+              "x_atomic_frac": 0.769231,
+              "reaction_energy_eV_per_atom": -1.074892,
+              "reaction": "0.5263 Li4.8Al0.2P1S4.4Cl1.6 + 0.4737 LiCoO2 -> 3 Li + 0.4737 CoS2 + 0.09288 P2S7 + 0.02477 PCl5 + 0.7183 SCl + 0.1053 Al(PO3)3"
+            },
+            {
+              "x_atomic_frac": 0.882353,
+              "reaction_energy_eV_per_atom": -0.995207,
+              "reaction": "0.7143 Li4.8Al0.2P1S4.4Cl1.6 + 0.2857 LiCoO2 -> 3.714 Li + 0.2857 CoS2 + 0.2521 P2S7 + 0.1429 AlPO4 + 0.06723 PCl5 + 0.8067 SCl"
+            },
+            {
+              "x_atomic_frac": 0.95122,
+              "reaction_energy_eV_per_atom": -0.943446,
+              "reaction": "0.8667 Li4.8Al0.2P1S4.4Cl1.6 + 0.1333 LiCoO2 -> 4.293 Li + 0.1333 CoS2 + 0.1067 AlSCl7 + 0.4 P2S7 + 0.06667 AlPO4 + 0.64 SCl"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -0.902692,
+              "reaction": "Li4.8Al0.2P1S4.4Cl1.6 -> 4.8 Li + 0.03333 AlSCl7 + 0.5 P2S7 + 0.8667 SCl + 0.1667 AlCl3"
+            }
+          ]
+        },
+        "4.30": {
+          "Al": [
+            {
+              "x_atomic_frac": 0.0,
+              "reaction_energy_eV_per_atom": -0.17822,
+              "reaction": "LiCoO2 -> Li + CoO2"
+            },
+            {
+              "x_atomic_frac": 0.087282,
+              "reaction_energy_eV_per_atom": -0.599325,
+              "reaction": "0.03089 Li4.8Al0.2P1S4.4Cl1.6 + 0.9691 LiCoO2 -> 1.117 Li + 0.01236 Co3(PO4)2 + 0.02471 Co(ClO4)2 + 0.006178 AlPO4 + 0.03354 Co23O32 + 0.1359 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.096953,
+              "reaction_energy_eV_per_atom": -0.644632,
+              "reaction": "0.03455 Li4.8Al0.2P1S4.4Cl1.6 + 0.9654 LiCoO2 -> 1.131 Li + 0.01382 Co3(PO4)2 + 0.00691 AlPO4 + 0.03356 Co23O32 + 0.05528 ClO2 + 0.152 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.125749,
+              "reaction_energy_eV_per_atom": -0.778647,
+              "reaction": "0.04575 Li4.8Al0.2P1S4.4Cl1.6 + 0.9542 LiCoO2 -> 1.174 Li + 0.0183 Co3(PO4)2 + 0.00915 AlPO4 + 0.02876 Co23O32 + 0.0366 CoCl2 + 0.2013 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.132743,
+              "reaction_energy_eV_per_atom": -0.809634,
+              "reaction": "0.04854 Li4.8Al0.2P1S4.4Cl1.6 + 0.9515 LiCoO2 -> 1.184 Li + 0.01942 Co3(PO4)2 + 0.009709 AlPO4 + 0.03883 CoCl2 + 0.2136 Co3O4 + 0.2136 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.133929,
+              "reaction_energy_eV_per_atom": -0.814124,
+              "reaction": "0.04902 Li4.8Al0.2P1S4.4Cl1.6 + 0.951 LiCoO2 -> 1.186 Li + 0.02451 Co3(PO4)2 + 0.004902 Al2CoO4 + 0.03922 CoCl2 + 0.2059 Co3O4 + 0.2157 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.164835,
+              "reaction_energy_eV_per_atom": -0.907985,
+              "reaction": "0.06173 Li4.8Al0.2P1S4.4Cl1.6 + 0.9383 LiCoO2 -> 1.235 Li + 0.5185 CoO + 0.03086 Co3(PO4)2 + 0.006173 Al2CoO4 + 0.04938 CoCl2 + 0.2716 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.298595,
+              "reaction_energy_eV_per_atom": -1.086676,
+              "reaction": "0.1243 Li4.8Al0.2P1S4.4Cl1.6 + 0.8757 LiCoO2 -> 1.472 Li + 0.0307 Co9S8 + 0.06213 Co3(PO4)2 + 0.01243 Al2CoO4 + 0.09942 CoCl2 + 0.3012 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.310597,
+              "reaction_energy_eV_per_atom": -1.100987,
+              "reaction": "0.1306 Li4.8Al0.2P1S4.4Cl1.6 + 0.8694 LiCoO2 -> 1.496 Li + 0.03379 Co9S8 + 0.05223 Co3(PO4)2 + 0.02611 AlPO4 + 0.1045 CoCl2 + 0.3041 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.34202,
+              "reaction_energy_eV_per_atom": -1.131148,
+              "reaction": "0.1477 Li4.8Al0.2P1S4.4Cl1.6 + 0.8523 LiCoO2 -> 1.561 Li + 0.09283 Co3S4 + 0.05907 Co3(PO4)2 + 0.02954 AlPO4 + 0.1181 CoCl2 + 0.2785 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.378151,
+              "reaction_energy_eV_per_atom": -1.157929,
+              "reaction": "0.1685 Li4.8Al0.2P1S4.4Cl1.6 + 0.8315 LiCoO2 -> 1.64 Li + 0.06742 Co3(PO4)2 + 0.03371 AlPO4 + 0.2472 CoS2 + 0.1348 CoCl2 + 0.2472 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.414747,
+              "reaction_energy_eV_per_atom": -1.181395,
+              "reaction": "0.1911 Li4.8Al0.2P1S4.4Cl1.6 + 0.8089 LiCoO2 -> 1.726 Li + 0.03822 Co3(PO4)2 + 0.03822 Al(PO3)3 + 0.2994 CoS2 + 0.1529 CoCl2 + 0.242 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.428571,
+              "reaction_energy_eV_per_atom": -1.190127,
+              "reaction": "0.2 Li4.8Al0.2P1S4.4Cl1.6 + 0.8 LiCoO2 -> 1.76 Li + 0.04 Co2P2O7 + 0.04 Al(PO3)3 + 0.32 CoS2 + 0.16 CoCl2 + 0.24 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.451128,
+              "reaction_energy_eV_per_atom": -1.200519,
+              "reaction": "0.2151 Li4.8Al0.2P1S4.4Cl1.6 + 0.7849 LiCoO2 -> 1.817 Li + 0.02151 CoP4O11 + 0.04301 Al(PO3)3 + 0.3548 CoS2 + 0.172 CoCl2 + 0.2366 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.564263,
+              "reaction_energy_eV_per_atom": -1.246039,
+              "reaction": "0.3015 Li4.8Al0.2P1S4.4Cl1.6 + 0.6985 LiCoO2 -> 2.146 Li + 0.03015 CoP4O11 + 0.0603 Al(PO3)3 + 0.5377 CoS2 + 0.1206 SCl4 + 0.1307 CoSO4"
+            },
+            {
+              "x_atomic_frac": 0.614334,
+              "reaction_energy_eV_per_atom": -1.265061,
+              "reaction": "0.3468 Li4.8Al0.2P1S4.4Cl1.6 + 0.6532 LiCoO2 -> 2.318 Li + 0.03468 CoP4O11 + 0.06936 Al(PO3)3 + 0.6185 CoS2 + 0.1387 SCl4 + 0.1503 SO2"
+            },
+            {
+              "x_atomic_frac": 0.669145,
+              "reaction_energy_eV_per_atom": -1.280829,
+              "reaction": "0.4027 Li4.8Al0.2P1S4.4Cl1.6 + 0.5973 LiCoO2 -> 2.53 Li + 0.6443 SCl + 0.04027 CoP4O11 + 0.08054 Al(PO3)3 + 0.557 CoS2 + 0.01342 SO2"
+            },
+            {
+              "x_atomic_frac": 0.674157,
+              "reaction_energy_eV_per_atom": -1.280558,
+              "reaction": "0.4082 Li4.8Al0.2P1S4.4Cl1.6 + 0.5918 LiCoO2 -> 2.551 Li + 0.6531 SCl + 0.04082 CoP4O11 + 0.08163 Al(PO3)3 + 0.551 CoS2 + 0.04082 S"
+            },
+            {
+              "x_atomic_frac": 0.691244,
+              "reaction_energy_eV_per_atom": -1.27519,
+              "reaction": "0.4274 Li4.8Al0.2P1S4.4Cl1.6 + 0.5726 LiCoO2 -> 2.624 Li + 0.01709 P2S7 + 0.6838 SCl + 0.03419 CoP4O11 + 0.08547 Al(PO3)3 + 0.5385 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.769231,
+              "reaction_energy_eV_per_atom": -1.24762,
+              "reaction": "0.5263 Li4.8Al0.2P1S4.4Cl1.6 + 0.4737 LiCoO2 -> 3 Li + 0.09288 P2S7 + 0.7183 SCl + 0.1053 Al(PO3)3 + 0.02477 PCl5 + 0.4737 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.882353,
+              "reaction_energy_eV_per_atom": -1.180922,
+              "reaction": "0.7143 Li4.8Al0.2P1S4.4Cl1.6 + 0.2857 LiCoO2 -> 3.714 Li + 0.2521 P2S7 + 0.8067 SCl + 0.06723 PCl5 + 0.1429 AlPO4 + 0.2857 CoS2"
+            },
+            {
+              "x_atomic_frac": 0.95122,
+              "reaction_energy_eV_per_atom": -1.137422,
+              "reaction": "0.8667 Li4.8Al0.2P1S4.4Cl1.6 + 0.1333 LiCoO2 -> 4.293 Li + 0.4 P2S7 + 0.1067 AlSCl7 + 0.64 SCl + 0.06667 AlPO4 + 0.1333 CoS2"
+            },
+            {
+              "x_atomic_frac": 1.0,
+              "reaction_energy_eV_per_atom": -1.102692,
+              "reaction": "Li4.8Al0.2P1S4.4Cl1.6 -> 4.8 Li + 0.5 P2S7 + 0.03333 AlSCl7 + 0.8667 SCl + 0.1667 AlCl3"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

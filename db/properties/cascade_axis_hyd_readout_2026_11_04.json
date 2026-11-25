@@ -1,0 +1,2033 @@
+{
+ "card": "db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json",
+ "decision": "D-2026-11-04-cascade-axis-hydrolysis",
+ "run_dir": "db/raw/cascade_axis_hyd_2026_11_04",
+ "constants": {
+  "delta_meV": 10.0,
+  "iqr_meV": 10.0,
+  "df_flag": 0.1,
+  "pair_df": 0.1,
+  "rho_overlap": 0.8
+ },
+ "gates": {
+  "decision": {
+   "ok": true,
+   "state": "active",
+   "card": "db/properties/cascade_axis_hydrolysis_estimand_2026_11_04.json"
+  },
+  "G1": {
+   "ok": true,
+   "missing": [],
+   "load_problems": []
+  },
+  "G3": {
+   "ok": true,
+   "before": "2026.09.28",
+   "after": "2026.09.28"
+  },
+  "G2": {
+   "ok": true,
+   "n_problems": 0,
+   "problems": [],
+   "n_expected": 91
+  },
+  "G1b": {
+   "ok": true,
+   "host_dE_negative": true,
+   "host_H2S_share": 0.6,
+   "host_reaction": "0.2 Li6PS5Cl + 0.8 H2O -> 0.4 LiHS + 0.6 H2S + 0.2 Li3PO4 + 0.2 LiCl"
+  },
+  "G5": {
+   "ok": true,
+   "missing_in_card": [],
+   "card_sha256": "5e9b37d398a4f3091d6918891517ee1d79011a0b7e469605609cd858f37422de"
+  },
+  "G4": {
+   "q1_meV": 1.08,
+   "q3_meV": 5.45,
+   "iqr_meV": 4.37,
+   "discriminates": false,
+   "method": "statistics.quantiles(n=4, method='inclusive')"
+  },
+  "G7": {
+   "rho_spearman": 0.759,
+   "n": 91,
+   "overlap": false,
+   "use": "안 겹침 — 두 축 다 Pareto 에 넣는다 (G4 통과 축만)"
+  }
+ },
+ "blocking": [],
+ "⛔": "상대값만 — 순위 · 거르기는 합치는 규칙대로 (R3 · R4) · H₂S 몫은 발생량이 아니다 · Lee 2024 · Zhu 2020 과 섞지 않는다",
+ "rows": [
+  {
+   "species": "Ag2O",
+   "formula": "Ag2Cl4Li22O1P4S19",
+   "delta_hyd_meV": 2.71,
+   "differs_from_host": false,
+   "H2S_share": 0.6316,
+   "dH2S_share": 0.0316,
+   "endpoint": false,
+   "reaction": "0.0625 Li22Ag2P4S19Cl4O + 0.9375 H2O -> 0.75 H2S + 0.375 LiHS + 0.25 Li3PO4 + 0.0625 Ag2S + 0.25 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Al2O3",
+   "formula": "Cl5Li17O3P4S16Al2",
+   "delta_hyd_meV": 3.34,
+   "differs_from_host": false,
+   "H2S_share": 0.9999,
+   "dH2S_share": 0.3999,
+   "endpoint": false,
+   "reaction": "0.05556 Li17Al2P4S16Cl5O3 + 0.9444 H2O -> 0.1111 AlHO2 + 0.8889 H2S + 0.2222 Li3PO4 + 0.2778 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "Al2S3",
+   "formula": "Cl1Li18P4S23Al2",
+   "delta_hyd_meV": -2.92,
+   "differs_from_host": false,
+   "H2S_share": 0.7441,
+   "dH2S_share": 0.1441,
+   "endpoint": false,
+   "reaction": "0.0495 Li18Al2P4S23Cl + 0.9505 H2O -> 0.8472 H2S + 0.198 Li3PO4 + 0.2065 LiHS + 0.02122 LiS4 + 0.0495 LiCl + 0.0198 LiAl5O8",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "AlBr3",
+   "formula": "Cl4Li21P4S17Al1Br3",
+   "delta_hyd_meV": -0.19,
+   "differs_from_host": false,
+   "H2S_share": 0.8942,
+   "dH2S_share": 0.2942,
+   "endpoint": false,
+   "reaction": "0.05376 Li21AlP4S17Br3Cl4 + 0.9462 H2O -> 0.2151 Li3PO4 + 0.01075 LiAl5O8 + 0.09677 LiHS + 0.8172 H2S + 0.1613 LiBr + 0.2151 LiCl + 0.08065 H2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "AlCl3",
+   "formula": "Cl4Li21P4S20Al1",
+   "delta_hyd_meV": -0.54,
+   "differs_from_host": false,
+   "H2S_share": 0.76,
+   "dH2S_share": 0.16,
+   "endpoint": false,
+   "reaction": "0.05376 Li21AlP4(S5Cl)4 + 0.9462 H2O -> 0.8172 H2S + 0.2151 Li3PO4 + 0.2581 LiHS + 0.2151 LiCl + 0.01075 LiAl5O8",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "AlF3",
+   "formula": "Cl1Li21P4S20Al1F3",
+   "delta_hyd_meV": -0.54,
+   "differs_from_host": false,
+   "H2S_share": 0.76,
+   "dH2S_share": 0.16,
+   "endpoint": false,
+   "reaction": "0.05376 Li21AlP4S20ClF3 + 0.9462 H2O -> 0.01075 LiAl5O8 + 0.8172 H2S + 0.2581 LiHS + 0.1613 LiF + 0.05376 LiCl + 0.2151 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "AlI3",
+   "formula": "Cl1Li21P4S20Al1I3",
+   "delta_hyd_meV": -0.54,
+   "differs_from_host": false,
+   "H2S_share": 0.76,
+   "dH2S_share": 0.16,
+   "endpoint": false,
+   "reaction": "0.05376 Li21AlP4S20I3Cl + 0.9462 H2O -> 0.8172 H2S + 0.01075 LiAl5O8 + 0.2581 LiHS + 0.2151 Li3PO4 + 0.1613 LiI + 0.05376 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "AlN",
+   "formula": "Cl4Li21P4S19Al1N1",
+   "delta_hyd_meV": -10.55,
+   "differs_from_host": true,
+   "H2S_share": 0.675,
+   "dH2S_share": 0.075,
+   "endpoint": false,
+   "reaction": "0.05376 Li21AlP4S19NCl4 + 0.9462 H2O -> 0.01075 LiAl5O8 + 0.2984 LiHS + 0.6895 H2S + 0.04032 H4NCl + 0.00672 H8S5N2 + 0.2151 Li3PO4 + 0.1747 LiCl",
+   "F1_hyd": true,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "As2S3",
+   "formula": "As2Cl4Li28P2S20",
+   "delta_hyd_meV": 7.09,
+   "differs_from_host": false,
+   "H2S_share": 0.0,
+   "dH2S_share": -0.6,
+   "endpoint": false,
+   "reaction": "0.2222 Li14AsP(S5Cl)2 + 0.8889 H2O -> 1.778 LiHS + 0.2222 LiAsS2 + 0.2222 Li3PO4 + 0.4444 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "B2O3",
+   "formula": "Cl5Li17O3P4S16B2",
+   "delta_hyd_meV": 2.71,
+   "differs_from_host": false,
+   "H2S_share": 1.0001,
+   "dH2S_share": 0.4001,
+   "endpoint": false,
+   "reaction": "0.05755 Li17B2P4S16Cl5O3 + 0.9424 H2O -> 0.9209 H2S + 0.02158 LiB5H2O9 + 0.007194 BPO4 + 0.2878 LiCl + 0.223 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "BaCl2",
+   "formula": "Cl4Li22P4S20Ba1",
+   "delta_hyd_meV": 0.88,
+   "differs_from_host": false,
+   "H2S_share": 0.6001,
+   "dH2S_share": 0.0001,
+   "endpoint": false,
+   "reaction": "0.05882 BaLi22P4(S5Cl)4 + 0.9412 H2O -> 0.05882 BaCl2 + 0.4706 LiHS + 0.7059 H2S + 0.1176 LiCl + 0.2353 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "BaO",
+   "formula": "Cl4Li22O1P4S19Ba1",
+   "delta_hyd_meV": 2.05,
+   "differs_from_host": false,
+   "H2S_share": 0.5789,
+   "dH2S_share": -0.0211,
+   "endpoint": false,
+   "reaction": "0.0625 BaLi22P4S19Cl4O + 0.9375 H2O -> 0.0625 BaCl2 + 0.5 LiHS + 0.6875 H2S + 0.125 LiCl + 0.25 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Ca3N2",
+   "formula": "Cl4Li18P4S18N2Ca3",
+   "delta_hyd_meV": -17.96,
+   "differs_from_host": true,
+   "H2S_share": 0.5932,
+   "dH2S_share": -0.0068,
+   "endpoint": false,
+   "reaction": "0.06195 Li18Ca3P4S18(NCl2)2 + 0.9381 H2O -> 0.1504 LiHS + 0.2345 Li3PO4 + 0.01327 LiPH21S3N7 + 0.2478 LiCl + 0.6615 H2S + 0.01549 H8S5N2 + 0.1858 CaS",
+   "F1_hyd": true,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "CaBr2",
+   "formula": "Cl2Li22P4S20Br2Ca1",
+   "delta_hyd_meV": 1.08,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li22CaP4S20(BrCl)2 + 0.9412 H2O -> 0.2353 Li3PO4 + 0.1176 LiBr + 0.1176 LiCl + 0.7647 H2S + 0.3529 LiHS + 0.05882 CaS",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "CaCl2",
+   "formula": "Cl4Li22P4S20Ca1",
+   "delta_hyd_meV": 1.08,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li22CaP4(S5Cl)4 + 0.9412 H2O -> 0.2353 Li3PO4 + 0.05882 CaS + 0.3529 LiHS + 0.7647 H2S + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "CaF2",
+   "formula": "Cl2Li22P4S20F2Ca1",
+   "delta_hyd_meV": 1.08,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li22CaP4S20(ClF)2 + 0.9412 H2O -> 0.3529 LiHS + 0.7647 H2S + 0.1176 LiCl + 0.05882 CaS + 0.1176 LiF + 0.2353 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "CaO",
+   "formula": "Cl4Li22O1P4S19Ca1",
+   "delta_hyd_meV": 2.26,
+   "differs_from_host": false,
+   "H2S_share": 0.6316,
+   "dH2S_share": 0.0316,
+   "endpoint": false,
+   "reaction": "0.0625 Li22CaP4S19Cl4O + 0.9375 H2O -> 0.25 Li3PO4 + 0.0625 CaS + 0.375 LiHS + 0.75 H2S + 0.25 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "CaS",
+   "formula": "Cl4Li22P4S20Ca1",
+   "delta_hyd_meV": 1.08,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li22CaP4(S5Cl)4 + 0.9412 H2O -> 0.2353 Li3PO4 + 0.05882 CaS + 0.3529 LiHS + 0.7647 H2S + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "CoO",
+   "formula": "Cl4Li22O1P4S19Co1",
+   "delta_hyd_meV": 2.26,
+   "differs_from_host": false,
+   "H2S_share": 0.6316,
+   "dH2S_share": 0.0316,
+   "endpoint": false,
+   "reaction": "0.0625 Li22CoP4S19Cl4O + 0.9375 H2O -> 0.75 H2S + 0.005208 Co3S4 + 0.25 Li3PO4 + 0.005208 Co9S8 + 0.375 LiHS + 0.25 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Cr2O3",
+   "formula": "Cl4Li18O3P4S17Cr2",
+   "delta_hyd_meV": 8.7,
+   "differs_from_host": false,
+   "H2S_share": 0.7647,
+   "dH2S_share": 0.1647,
+   "endpoint": false,
+   "reaction": "0.07143 Li18Cr2P4S17Cl4O3 + 0.9286 H2O -> 0.2857 Li3PO4 + 0.1429 LiCrS2 + 0.9286 H2S + 0.2857 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "CrCl3",
+   "formula": "Cl7Li21P4S17Cr1",
+   "delta_hyd_meV": 2.91,
+   "differs_from_host": false,
+   "H2S_share": 0.8235,
+   "dH2S_share": 0.2235,
+   "endpoint": false,
+   "reaction": "0.05882 Li21CrP4S17Cl7 + 0.9412 H2O -> 0.2353 Li3PO4 + 0.05882 LiCrS2 + 0.05882 LiHS + 0.8235 H2S + 0.4118 LiCl + 0.08824 H2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "CrO3",
+   "formula": "Cl4Li18O3P4S17Cr1",
+   "delta_hyd_meV": 7.77,
+   "differs_from_host": false,
+   "H2S_share": 0.7479,
+   "dH2S_share": 0.1479,
+   "endpoint": false,
+   "reaction": "0.07143 Li18CrP4S17Cl4O3 + 0.9286 H2O -> 0.2857 Li3PO4 + 0.07143 LiCrS2 + 0.04082 LiHS + 0.03061 LiS4 + 0.9082 H2S + 0.2857 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "Cu2O",
+   "formula": "Cl4Li22O1P4S19Cu2",
+   "delta_hyd_meV": 3.55,
+   "differs_from_host": false,
+   "H2S_share": 0.6316,
+   "dH2S_share": 0.0316,
+   "endpoint": false,
+   "reaction": "0.9375 H2O + 0.0625 Li22Cu2P4S19Cl4O -> 0.75 H2S + 0.375 LiHS + 0.25 Li3PO4 + 0.01562 Cu7S4 + 0.25 LiCl + 0.01563 Cu",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Fe2O3",
+   "formula": "Cl4Li18O3P4S17Fe2",
+   "delta_hyd_meV": 7.56,
+   "differs_from_host": false,
+   "H2S_share": 0.647,
+   "dH2S_share": 0.047,
+   "endpoint": false,
+   "reaction": "0.9286 H2O + 0.07143 Li18Fe2P4S17Cl4O3 -> 0.1429 LiHS + 0.7857 H2S + 0.2857 Li3PO4 + 0.1429 FeS2 + 0.2857 LiCl + 0.07143 H2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "FeCl3",
+   "formula": "Cl4Li21P4S20Fe1",
+   "delta_hyd_meV": 1.68,
+   "differs_from_host": false,
+   "H2S_share": 0.6445,
+   "dH2S_share": 0.0445,
+   "endpoint": false,
+   "reaction": "0.0604 Li21FeP4(S5Cl)4 + 0.9396 H2O -> 0.3221 LiHS + 0.7785 H2S + 0.2349 Li3PO4 + 0.006711 FeP + 0.05369 FeS2 + 0.2416 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Ga2O3",
+   "formula": "Cl4Li18O3P4S17Ga2",
+   "delta_hyd_meV": 8.7,
+   "differs_from_host": false,
+   "H2S_share": 0.7647,
+   "dH2S_share": 0.1647,
+   "endpoint": false,
+   "reaction": "0.07143 Li18Ga2P4S17Cl4O3 + 0.9286 H2O -> 0.2857 Li3PO4 + 0.9286 H2S + 0.1429 LiGaS2 + 0.2857 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "Ga2S3",
+   "formula": "Cl4Li18P4S20Ga2",
+   "delta_hyd_meV": 4.45,
+   "differs_from_host": false,
+   "H2S_share": 0.8003,
+   "dH2S_share": 0.2003,
+   "endpoint": false,
+   "reaction": "0.1176 Li9GaP2(S5Cl)2 + 0.9412 H2O -> 0.2353 Li3PO4 + 0.9412 H2S + 0.1176 LiGaS2 + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "GaCl3",
+   "formula": "Cl7Li21P4S17Ga1",
+   "delta_hyd_meV": 2.56,
+   "differs_from_host": false,
+   "H2S_share": 0.8235,
+   "dH2S_share": 0.2235,
+   "endpoint": false,
+   "reaction": "0.05882 Li21GaP4S17Cl7 + 0.9412 H2O -> 0.05882 LiHS + 0.2353 Li3PO4 + 0.8235 H2S + 0.05882 LiGaS2 + 0.4118 LiCl + 0.08824 H2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "GaN",
+   "formula": "Cl4Li21P4S19N1Ga1",
+   "delta_hyd_meV": -8.32,
+   "differs_from_host": false,
+   "H2S_share": 0.6119,
+   "dH2S_share": 0.0119,
+   "endpoint": false,
+   "reaction": "0.05882 Li21GaP4S19NCl4 + 0.9412 H2O -> 0.05882 LiGaS2 + 0.04412 H4NCl + 0.6838 H2S + 0.2794 LiHS + 0.007353 H8S5N2 + 0.1912 LiCl + 0.2353 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Gd2O3",
+   "formula": "Cl4Li18O3P4S17Gd2",
+   "delta_hyd_meV": 8.7,
+   "differs_from_host": false,
+   "H2S_share": 0.7647,
+   "dH2S_share": 0.1647,
+   "endpoint": false,
+   "reaction": "0.9286 H2O + 0.07143 Li18Gd2P4S17Cl4O3 -> 0.1429 LiGdS2 + 0.2857 Li3PO4 + 0.9286 H2S + 0.2857 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "GeO2",
+   "formula": "Cl4Li25O2P3S18Ge1",
+   "delta_hyd_meV": 8.49,
+   "differs_from_host": false,
+   "H2S_share": 0.3334,
+   "dH2S_share": -0.2666,
+   "endpoint": false,
+   "reaction": "0.09091 Li25GeP3S18(Cl2O)2 + 0.9091 H2O -> 0.2727 Li3PO4 + 0.7273 LiHS + 0.5455 H2S + 0.3636 LiCl + 0.09091 Li4GeS4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "GeS2",
+   "formula": "Cl4Li25P3S20Ge1",
+   "delta_hyd_meV": 5.45,
+   "differs_from_host": false,
+   "H2S_share": 0.4,
+   "dH2S_share": -0.2,
+   "endpoint": false,
+   "reaction": "0.07692 Li25GeP3(S5Cl)4 + 0.9231 H2O -> 0.2308 Li3PO4 + 0.6154 LiHS + 0.6154 H2S + 0.3077 LiCl + 0.07692 Li4GeS4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "HfCl4",
+   "formula": "Cl4Li20P4S20Hf1",
+   "delta_hyd_meV": -0.87,
+   "differs_from_host": false,
+   "H2S_share": 0.8,
+   "dH2S_share": 0.2,
+   "endpoint": false,
+   "reaction": "0.9474 H2O + 0.05263 Li20HfP4(S5Cl)4 -> 0.2105 LiHS + 0.8421 H2S + 0.2105 Li3PO4 + 0.2105 LiCl + 0.05263 HfO2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "HfO2",
+   "formula": "Cl4Li20O2P4S18Hf1",
+   "delta_hyd_meV": 1.74,
+   "differs_from_host": false,
+   "H2S_share": 0.7778,
+   "dH2S_share": 0.1778,
+   "endpoint": false,
+   "reaction": "0.05882 Li20HfP4S18(Cl2O)2 + 0.9412 H2O -> 0.2353 LiHS + 0.8235 H2S + 0.2353 Li3PO4 + 0.2353 LiCl + 0.05882 HfO2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "In2O3",
+   "formula": "Cl4Li18O3P4S17In2",
+   "delta_hyd_meV": 8.7,
+   "differs_from_host": false,
+   "H2S_share": 0.7647,
+   "dH2S_share": 0.1647,
+   "endpoint": false,
+   "reaction": "0.07143 Li18In2P4S17Cl4O3 + 0.9286 H2O -> 0.2857 Li3PO4 + 0.1429 LiInS2 + 0.2857 LiCl + 0.9286 H2S",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "La2O3",
+   "formula": "Cl4Li18O3P4S17La2",
+   "delta_hyd_meV": 6.95,
+   "differs_from_host": false,
+   "H2S_share": 0.7058,
+   "dH2S_share": 0.1058,
+   "endpoint": false,
+   "reaction": "0.07143 Li18La2P4S17Cl4O3 + 0.9286 H2O -> 0.1429 LiHS + 0.8571 H2S + 0.07143 La2S3 + 0.2857 Li3PO4 + 0.2857 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "LaCl3",
+   "formula": "Cl7Li21P4S17La1",
+   "delta_hyd_meV": 1.78,
+   "differs_from_host": false,
+   "H2S_share": 0.7941,
+   "dH2S_share": 0.1941,
+   "endpoint": false,
+   "reaction": "0.05882 Li21LaP4S17Cl7 + 0.9412 H2O -> 0.1176 LiHS + 0.7941 H2S + 0.02941 La2S3 + 0.2353 Li3PO4 + 0.4118 LiCl + 0.08824 H2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "LaF3",
+   "formula": "Cl1Li21P4S20F3La1",
+   "delta_hyd_meV": 1.14,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li21LaP4S20ClF3 + 0.9412 H2O -> 0.05882 LaSF + 0.7647 H2S + 0.1176 LiF + 0.05882 LiCl + 0.3529 LiHS + 0.2353 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Li2O",
+   "formula": "Cl4Li24O1P4S19",
+   "delta_hyd_meV": 1.14,
+   "differs_from_host": false,
+   "H2S_share": 0.5789,
+   "dH2S_share": -0.0211,
+   "endpoint": false,
+   "reaction": "0.0625 Li24P4S19Cl4O + 0.9375 H2O -> 0.5 LiHS + 0.6875 H2S + 0.25 Li3PO4 + 0.25 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Li2S",
+   "formula": "Cl4Li24P4S20",
+   "delta_hyd_meV": 0.0,
+   "differs_from_host": false,
+   "H2S_share": 0.6,
+   "dH2S_share": 0.0,
+   "endpoint": false,
+   "reaction": "0.2353 Li6PS5Cl + 0.9412 H2O -> 0.4706 LiHS + 0.7059 H2S + 0.2353 Li3PO4 + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Li3N",
+   "formula": "Cl4Li24P4S19N1",
+   "delta_hyd_meV": -10.29,
+   "differs_from_host": true,
+   "H2S_share": 0.5066,
+   "dH2S_share": -0.0934,
+   "endpoint": false,
+   "reaction": "0.05882 Li24P4S19NCl4 + 0.9412 H2O -> 0.5147 LiHS + 0.5662 H2S + 0.007353 H8S5N2 + 0.2353 Li3PO4 + 0.04412 H4NCl + 0.1912 LiCl",
+   "F1_hyd": true,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "LiBr",
+   "formula": "Cl3Li24P4S20Br1",
+   "delta_hyd_meV": 0.0,
+   "differs_from_host": false,
+   "H2S_share": 0.6001,
+   "dH2S_share": 0.0001,
+   "endpoint": false,
+   "reaction": "0.05882 Li24P4S20BrCl3 + 0.9412 H2O -> 0.4706 LiHS + 0.2353 Li3PO4 + 0.7059 H2S + 0.05882 LiBr + 0.1765 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "LiCl",
+   "formula": "Cl5Li24P4S19",
+   "delta_hyd_meV": 0.13,
+   "differs_from_host": false,
+   "H2S_share": 0.6316,
+   "dH2S_share": 0.0316,
+   "endpoint": false,
+   "reaction": "0.05882 Li24P4S19Cl5 + 0.9412 H2O -> 0.4118 LiHS + 0.7059 H2S + 0.2353 Li3PO4 + 0.2941 LiCl + 0.02941 H2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "LiF",
+   "formula": "Cl3Li24P4S20F1",
+   "delta_hyd_meV": 0.0,
+   "differs_from_host": false,
+   "H2S_share": 0.6001,
+   "dH2S_share": 0.0001,
+   "endpoint": false,
+   "reaction": "0.9412 H2O + 0.05882 Li24P4S20Cl3F -> 0.7059 H2S + 0.4706 LiHS + 0.2353 Li3PO4 + 0.1765 LiCl + 0.05882 LiF",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "LiI",
+   "formula": "Cl3Li24P4S20I1",
+   "delta_hyd_meV": 0.0,
+   "differs_from_host": false,
+   "H2S_share": 0.6001,
+   "dH2S_share": 0.0001,
+   "endpoint": false,
+   "reaction": "0.05882 Li24P4S20ICl3 + 0.9412 H2O -> 0.4706 LiHS + 0.2353 Li3PO4 + 0.7059 H2S + 0.05882 LiI + 0.1765 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Mg3N2",
+   "formula": "Cl4Li18P4S18N2Mg3",
+   "delta_hyd_meV": -17.24,
+   "differs_from_host": true,
+   "H2S_share": 0.5932,
+   "dH2S_share": -0.0068,
+   "endpoint": false,
+   "reaction": "0.06195 Li18Mg3P4S18(NCl2)2 + 0.9381 H2O -> 0.01327 LiPH21S3N7 + 0.2478 LiCl + 0.1504 LiHS + 0.6615 H2S + 0.2345 Li3PO4 + 0.01549 H8S5N2 + 0.1858 MgS",
+   "F1_hyd": true,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "MgBr2",
+   "formula": "Cl4Li22P4S18Br2Mg1",
+   "delta_hyd_meV": 1.33,
+   "differs_from_host": false,
+   "H2S_share": 0.7223,
+   "dH2S_share": 0.1223,
+   "endpoint": false,
+   "reaction": "0.05882 Li22MgP4S18(BrCl2)2 + 0.9412 H2O -> 0.7647 H2S + 0.2353 LiHS + 0.2353 LiCl + 0.2353 Li3PO4 + 0.1176 LiBr + 0.05882 MgS + 0.05882 H2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "MgCl2",
+   "formula": "Cl4Li22P4S20Mg1",
+   "delta_hyd_meV": 1.08,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li22MgP4(S5Cl)4 + 0.9412 H2O -> 0.3529 LiHS + 0.7647 H2S + 0.2353 Li3PO4 + 0.2353 LiCl + 0.05882 MgS",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "MgF2",
+   "formula": "Cl2Li22P4S20F2Mg1",
+   "delta_hyd_meV": -0.26,
+   "differs_from_host": false,
+   "H2S_share": 0.6001,
+   "dH2S_share": 0.0001,
+   "endpoint": false,
+   "reaction": "0.05882 Li22MgP4S20(ClF)2 + 0.9412 H2O -> 0.4706 LiHS + 0.2353 Li3PO4 + 0.7059 H2S + 0.1176 LiCl + 0.05882 MgF2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "MgI2",
+   "formula": "Cl2Li22P4S20I2Mg1",
+   "delta_hyd_meV": 1.08,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li22MgP4S20(ICl)2 + 0.9412 H2O -> 0.3529 LiHS + 0.7647 H2S + 0.1176 LiCl + 0.2353 Li3PO4 + 0.1176 LiI + 0.05882 MgS",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "MgO",
+   "formula": "Cl5Li21O1P4S18Mg1",
+   "delta_hyd_meV": 3.41,
+   "differs_from_host": false,
+   "H2S_share": 0.7222,
+   "dH2S_share": 0.1222,
+   "endpoint": false,
+   "reaction": "0.0625 Li21MgP4S18Cl5O + 0.9375 H2O -> 0.25 LiHS + 0.8125 H2S + 0.25 Li3PO4 + 0.3125 LiCl + 0.0625 MgS",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "MgS",
+   "formula": "Cl4Li22P4S20Mg1",
+   "delta_hyd_meV": 1.08,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li22MgP4(S5Cl)4 + 0.9412 H2O -> 0.3529 LiHS + 0.7647 H2S + 0.2353 Li3PO4 + 0.2353 LiCl + 0.05882 MgS",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "MnO",
+   "formula": "Cl4Li22O1P4S19Mn1",
+   "delta_hyd_meV": 2.79,
+   "differs_from_host": false,
+   "H2S_share": 0.5789,
+   "dH2S_share": -0.0211,
+   "endpoint": false,
+   "reaction": "0.0625 Li22MnP4S19Cl4O + 0.9375 H2O -> 0.25 Li3PO4 + 0.375 LiHS + 0.6875 H2S + 0.0625 MnS2 + 0.25 LiCl + 0.0625 H2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "MoO3",
+   "formula": "Cl4Li23O3P3S17Mo1",
+   "delta_hyd_meV": 7.6,
+   "differs_from_host": false,
+   "H2S_share": 0.2437,
+   "dH2S_share": -0.3563,
+   "endpoint": false,
+   "reaction": "0.1 Li23MoP3S17Cl4O3 + 0.9 H2O -> 0.9714 LiHS + 0.3 Li3PO4 + 0.02857 LiS4 + 0.4143 H2S + 0.1 MoS2 + 0.4 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Na2O",
+   "formula": "Cl4Li22O1P4S19Na2",
+   "delta_hyd_meV": 1.14,
+   "differs_from_host": false,
+   "H2S_share": 0.5789,
+   "dH2S_share": -0.0211,
+   "endpoint": false,
+   "reaction": "0.9375 H2O + 0.0625 Na2Li22P4S19Cl4O -> 0.125 LiCl + 0.25 Li3PO4 + 0.6875 H2S + 0.5 LiHS + 0.125 NaCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Na2S",
+   "formula": "Cl4Li22P4S20Na2",
+   "delta_hyd_meV": 0.0,
+   "differs_from_host": false,
+   "H2S_share": 0.6003,
+   "dH2S_share": 0.0003,
+   "endpoint": false,
+   "reaction": "0.1176 NaLi11P2(S5Cl)2 + 0.9412 H2O -> 0.1176 LiCl + 0.2353 Li3PO4 + 0.7059 H2S + 0.4706 LiHS + 0.1176 NaCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "NaI",
+   "formula": "Cl3Li23P4S20I1Na1",
+   "delta_hyd_meV": 0.0,
+   "differs_from_host": false,
+   "H2S_share": 0.6001,
+   "dH2S_share": 0.0001,
+   "endpoint": false,
+   "reaction": "0.9412 H2O + 0.05882 NaLi23P4S20ICl3 -> 0.7059 H2S + 0.4706 LiHS + 0.05882 NaI + 0.1765 LiCl + 0.2353 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Nb2O5",
+   "formula": "Cl4Li24O5P2S15Nb2",
+   "delta_hyd_meV": 26.72,
+   "differs_from_host": true,
+   "H2S_share": 0.0,
+   "dH2S_share": -0.6,
+   "endpoint": false,
+   "reaction": "0.25 Li24Nb2P2S15Cl4O5 + 0.75 H2O -> 0.3158 NbS3 + 0.9342 Li2S + 1.5 LiHS + 0.5 Li3PO4 + 0.02632 Li5(NbS2)7 + LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "NbCl5",
+   "formula": "Cl9Li24P3S15Nb1",
+   "delta_hyd_meV": 5.03,
+   "differs_from_host": false,
+   "H2S_share": 0.5143,
+   "dH2S_share": -0.0857,
+   "endpoint": false,
+   "reaction": "0.9231 H2O + 0.07692 Li24NbP3(S5Cl3)3 -> 0.5934 H2S + 0.4066 LiHS + 0.2308 Li3PO4 + 0.01099 Li5(NbS2)7 + 0.6923 LiCl + 0.1264 H2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Nd2O3",
+   "formula": "Cl5Li17O3P4S16Nd2",
+   "delta_hyd_meV": 8.27,
+   "differs_from_host": false,
+   "H2S_share": 0.8125,
+   "dH2S_share": 0.2125,
+   "endpoint": false,
+   "reaction": "0.07143 Li17Nd2P4S16Cl5O3 + 0.9286 H2O -> 0.07143 Nd2S3 + 0.9286 H2S + 0.2857 Li3PO4 + 0.3571 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "NdCl3",
+   "formula": "Cl4Li21P4S20Nd1",
+   "delta_hyd_meV": 1.41,
+   "differs_from_host": false,
+   "H2S_share": 0.675,
+   "dH2S_share": 0.075,
+   "endpoint": false,
+   "reaction": "0.05882 Li21NdP4(S5Cl)4 + 0.9412 H2O -> 0.02941 Nd2S3 + 0.2941 LiHS + 0.7941 H2S + 0.2353 Li3PO4 + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "NdF3",
+   "formula": "Cl1Li21P4S20F3Nd1",
+   "delta_hyd_meV": 1.0,
+   "differs_from_host": false,
+   "H2S_share": 0.65,
+   "dH2S_share": 0.05,
+   "endpoint": false,
+   "reaction": "0.05882 Li21NdP4S20ClF3 + 0.9412 H2O -> 0.7647 H2S + 0.05882 NdSF + 0.2353 Li3PO4 + 0.3529 LiHS + 0.1176 LiF + 0.05882 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "NiO",
+   "formula": "Cl4Li22O1P4S19Ni1",
+   "delta_hyd_meV": 2.35,
+   "differs_from_host": false,
+   "H2S_share": 0.6316,
+   "dH2S_share": 0.0316,
+   "endpoint": false,
+   "reaction": "0.0625 Li22NiP4S19Cl4O + 0.9375 H2O -> 0.375 LiHS + 0.005208 Ni9S8 + 0.75 H2S + 0.25 Li3PO4 + 0.005208 Ni3S4 + 0.25 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Sb2O5",
+   "formula": "Cl4Li24O5P2S15Sb2",
+   "delta_hyd_meV": 25.91,
+   "differs_from_host": true,
+   "H2S_share": 0.0,
+   "dH2S_share": -0.6,
+   "endpoint": false,
+   "reaction": "0.25 Li24Sb2P2S15Cl4O5 + 0.75 H2O -> 0.5 Li3SbS4 + LiCl + 1.5 LiHS + 0.25 Li2S + 0.5 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Sb2S3",
+   "formula": "Cl1Li28P2S23Sb2",
+   "delta_hyd_meV": 5.67,
+   "differs_from_host": false,
+   "H2S_share": 0.0,
+   "dH2S_share": -0.6,
+   "endpoint": false,
+   "reaction": "0.1111 Li28Sb2P2S23Cl + 0.8889 H2O -> 0.05556 LiSbS2 + 0.1667 Li3SbS4 + 0.1111 LiCl + 1.778 LiHS + 0.2222 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Sc2O3",
+   "formula": "Cl4Li18O3P4S17Sc2",
+   "delta_hyd_meV": 8.7,
+   "differs_from_host": false,
+   "H2S_share": 0.7647,
+   "dH2S_share": 0.1647,
+   "endpoint": false,
+   "reaction": "0.07143 Li18Sc2P4S17Cl4O3 + 0.9286 H2O -> 0.9286 H2S + 0.1429 LiScS2 + 0.2857 Li3PO4 + 0.2857 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "ScCl3",
+   "formula": "Cl4Li21P4S20Sc1",
+   "delta_hyd_meV": 2.18,
+   "differs_from_host": false,
+   "H2S_share": 0.7,
+   "dH2S_share": 0.1,
+   "endpoint": false,
+   "reaction": "0.05882 Li21ScP4(S5Cl)4 + 0.9412 H2O -> 0.8235 H2S + 0.05882 LiScS2 + 0.2353 LiHS + 0.2353 Li3PO4 + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "ScF3",
+   "formula": "Cl1Li21P4S20F3Sc1",
+   "delta_hyd_meV": 2.18,
+   "differs_from_host": false,
+   "H2S_share": 0.7,
+   "dH2S_share": 0.1,
+   "endpoint": false,
+   "reaction": "0.05882 Li21ScP4S20ClF3 + 0.9412 H2O -> 0.2353 LiHS + 0.05882 LiScS2 + 0.1765 LiF + 0.05882 LiCl + 0.8235 H2S + 0.2353 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "SiO2",
+   "formula": "Cl4Li25O2P3S18Si1",
+   "delta_hyd_meV": 2.03,
+   "differs_from_host": false,
+   "H2S_share": 0.3333,
+   "dH2S_share": -0.2667,
+   "endpoint": false,
+   "reaction": "0.07692 Li25SiP3S18(Cl2O)2 + 0.9231 H2O -> 0.4615 H2S + 0.9231 LiHS + 0.3077 LiCl + 0.2308 Li3PO4 + 0.07692 SiO2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "SiS2",
+   "formula": "Cl2Li25P3S22Si1",
+   "delta_hyd_meV": -3.75,
+   "differs_from_host": false,
+   "H2S_share": 0.3247,
+   "dH2S_share": -0.2753,
+   "endpoint": false,
+   "reaction": "0.06667 Li25SiP3(S11Cl)2 + 0.9333 H2O -> 0.4762 H2S + 0.9143 LiHS + 0.01905 LiS4 + 0.1333 LiCl + 0.2 Li3PO4 + 0.06667 SiO2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Sm2O3",
+   "formula": "Cl5Li17O3P4S16Sm2",
+   "delta_hyd_meV": 8.27,
+   "differs_from_host": false,
+   "H2S_share": 0.8125,
+   "dH2S_share": 0.2125,
+   "endpoint": false,
+   "reaction": "0.07143 Li17Sm2P4S16Cl5O3 + 0.9286 H2O -> 0.9286 H2S + 0.07143 Sm2S3 + 0.2857 Li3PO4 + 0.3571 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "SmCl3",
+   "formula": "Cl4Li21P4S20Sm1",
+   "delta_hyd_meV": 1.83,
+   "differs_from_host": false,
+   "H2S_share": 0.675,
+   "dH2S_share": 0.075,
+   "endpoint": false,
+   "reaction": "0.05882 Li21SmP4(S5Cl)4 + 0.9412 H2O -> 0.7941 H2S + 0.2941 LiHS + 0.02941 Sm2S3 + 0.2353 Li3PO4 + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "SnO2",
+   "formula": "Cl4Li25O2P3S18Sn1",
+   "delta_hyd_meV": 8.49,
+   "differs_from_host": false,
+   "H2S_share": 0.3334,
+   "dH2S_share": -0.2666,
+   "endpoint": false,
+   "reaction": "0.09091 Li25SnP3S18(Cl2O)2 + 0.9091 H2O -> 0.09091 Li4SnS4 + 0.2727 Li3PO4 + 0.5455 H2S + 0.3636 LiCl + 0.7273 LiHS",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "SnS2",
+   "formula": "Cl4Li25P3S20Sn1",
+   "delta_hyd_meV": 5.45,
+   "differs_from_host": false,
+   "H2S_share": 0.4,
+   "dH2S_share": -0.2,
+   "endpoint": false,
+   "reaction": "0.07692 Li25SnP3(S5Cl)4 + 0.9231 H2O -> 0.07692 Li4SnS4 + 0.2308 Li3PO4 + 0.6154 H2S + 0.3077 LiCl + 0.6154 LiHS",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "SrCl2",
+   "formula": "Cl6Li22P4S18Sr1",
+   "delta_hyd_meV": 3.25,
+   "differs_from_host": false,
+   "H2S_share": 0.6667,
+   "dH2S_share": 0.0667,
+   "endpoint": false,
+   "reaction": "0.05882 SrLi22P4(S3Cl)6 + 0.9412 H2O -> 0.3529 LiHS + 0.05882 SrCl2 + 0.2353 LiCl + 0.7059 H2S + 0.2353 Li3PO4 + 0.05882 H2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "SrO",
+   "formula": "Cl4Li22O1P4S19Sr1",
+   "delta_hyd_meV": 2.16,
+   "differs_from_host": false,
+   "H2S_share": 0.5789,
+   "dH2S_share": -0.0211,
+   "endpoint": false,
+   "reaction": "0.9375 H2O + 0.0625 SrLi22P4S19Cl4O -> 0.5 LiHS + 0.0625 SrCl2 + 0.125 LiCl + 0.6875 H2S + 0.25 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "Ta2O5",
+   "formula": "Cl4Li24O5P2S15Ta2",
+   "delta_hyd_meV": 18.14,
+   "differs_from_host": true,
+   "H2S_share": 0.0,
+   "dH2S_share": -0.6,
+   "endpoint": false,
+   "reaction": "0.1364 Li24Ta2P2S15Cl4O5 + 0.8636 H2O -> 1.727 LiHS + 0.1515 LiTaO3 + 0.01515 Li2(TaS2)3 + 0.07576 TaS3 + 0.2727 Li3PO4 + 0.5455 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "TaCl5",
+   "formula": "Cl9Li24P3S15Ta1",
+   "delta_hyd_meV": 4.88,
+   "differs_from_host": false,
+   "H2S_share": 0.5111,
+   "dH2S_share": -0.0889,
+   "endpoint": false,
+   "reaction": "0.07692 Li24TaP3(S5Cl3)3 + 0.9231 H2O -> 0.4103 LiHS + 0.5897 H2S + 0.02564 Li2(TaS2)3 + 0.2308 Li3PO4 + 0.6923 LiCl + 0.1282 H2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "TiCl4",
+   "formula": "Cl8Li25P3S16Ti1",
+   "delta_hyd_meV": 3.36,
+   "differs_from_host": false,
+   "H2S_share": 0.4063,
+   "dH2S_share": -0.1937,
+   "endpoint": false,
+   "reaction": "0.07692 Li25TiP3(S2Cl)8 + 0.9231 H2O -> 0.5769 LiHS + 0.03846 Li(TiS2)2 + 0.5 H2S + 0.6154 LiCl + 0.2308 Li3PO4 + 0.1346 H2",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "TiF4",
+   "formula": "Li25P3S20F4Ti1",
+   "delta_hyd_meV": 2.74,
+   "differs_from_host": false,
+   "H2S_share": 0.31,
+   "dH2S_share": -0.29,
+   "endpoint": false,
+   "reaction": "0.07692 Li25TiP3(S5F)4 + 0.9231 H2O -> 0.01538 TiS3 + 0.8923 LiHS + 0.03077 Li(TiS2)2 + 0.2308 Li3PO4 + 0.4769 H2S + 0.3077 LiF",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "TiO2",
+   "formula": "Cl4Li25O2P3S18Ti1",
+   "delta_hyd_meV": 5.58,
+   "differs_from_host": false,
+   "H2S_share": 0.2333,
+   "dH2S_share": -0.3667,
+   "endpoint": false,
+   "reaction": "0.9091 H2O + 0.09091 Li25TiP3S18(Cl2O)2 -> 1.055 LiHS + 0.03636 Li(TiS2)2 + 0.01818 TiS3 + 0.3818 H2S + 0.3636 LiCl + 0.2727 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "V2O5",
+   "formula": "Cl4Li24O5P2S15V2",
+   "delta_hyd_meV": 25.91,
+   "differs_from_host": true,
+   "H2S_share": 0.0,
+   "dH2S_share": -0.6,
+   "endpoint": false,
+   "reaction": "0.25 Li24V2P2S15Cl4O5 + 0.75 H2O -> 1.5 LiHS + 0.5 Li3VS4 + 0.25 Li2S + LiCl + 0.5 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "WO3",
+   "formula": "Cl5Li17O3P4S16W1",
+   "delta_hyd_meV": 8.12,
+   "differs_from_host": false,
+   "H2S_share": 0.8125,
+   "dH2S_share": 0.2125,
+   "endpoint": false,
+   "reaction": "0.07143 Li17P4WS16Cl5O3 + 0.9286 H2O -> 0.9286 H2S + 0.06832 WS2 + 0.003106 WS9Cl4 + 0.2857 Li3PO4 + 0.01242 LiS4 + 0.3447 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "Y2O3",
+   "formula": "Cl4Li18O3P4S17Y2",
+   "delta_hyd_meV": 8.7,
+   "differs_from_host": false,
+   "H2S_share": 0.7647,
+   "dH2S_share": 0.1647,
+   "endpoint": false,
+   "reaction": "0.07143 Li18Y2P4S17Cl4O3 + 0.9286 H2O -> 0.9286 H2S + 0.1429 LiYS2 + 0.2857 Li3PO4 + 0.2857 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "YCl3",
+   "formula": "Cl4Li21P4S20Y1",
+   "delta_hyd_meV": 2.18,
+   "differs_from_host": false,
+   "H2S_share": 0.7,
+   "dH2S_share": 0.1,
+   "endpoint": false,
+   "reaction": "0.05882 Li21YP4(S5Cl)4 + 0.9412 H2O -> 0.8235 H2S + 0.05882 LiYS2 + 0.2353 LiHS + 0.2353 Li3PO4 + 0.2353 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "YF3",
+   "formula": "Cl1Li21P4S20F3Y1",
+   "delta_hyd_meV": 2.18,
+   "differs_from_host": false,
+   "H2S_share": 0.7,
+   "dH2S_share": 0.1,
+   "endpoint": false,
+   "reaction": "0.05882 Li21YP4S20ClF3 + 0.9412 H2O -> 0.8235 H2S + 0.2353 LiHS + 0.05882 LiYS2 + 0.2353 Li3PO4 + 0.1765 LiF + 0.05882 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "ZnO",
+   "formula": "Cl5Li21O1P4S18Zn1",
+   "delta_hyd_meV": 3.41,
+   "differs_from_host": false,
+   "H2S_share": 0.7222,
+   "dH2S_share": 0.1222,
+   "endpoint": false,
+   "reaction": "0.0625 Li21ZnP4S18Cl5O + 0.9375 H2O -> 0.0625 ZnS + 0.8125 H2S + 0.25 LiHS + 0.25 Li3PO4 + 0.3125 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "ZrBr4",
+   "formula": "Li25P3S20Br4Zr1",
+   "delta_hyd_meV": 2.03,
+   "differs_from_host": false,
+   "H2S_share": 0.3,
+   "dH2S_share": -0.3,
+   "endpoint": false,
+   "reaction": "0.07692 Li25ZrP3(S5Br)4 + 0.9231 H2O -> 0.4615 H2S + 0.9231 LiHS + 0.07692 ZrS2 + 0.3077 LiBr + 0.2308 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "ZrCl4",
+   "formula": "Cl8Li20P4S16Zr1",
+   "delta_hyd_meV": 2.24,
+   "differs_from_host": false,
+   "H2S_share": 0.875,
+   "dH2S_share": 0.275,
+   "endpoint": false,
+   "reaction": "0.05882 Li20ZrP4(S2Cl)8 + 0.9412 H2O -> 0.8235 H2S + 0.05882 ZrS2 + 0.2353 Li3PO4 + 0.4706 LiCl + 0.1176 H2",
+   "F1_hyd": false,
+   "F2_H2S": true,
+   "unknown": false
+  },
+  {
+   "species": "ZrF4",
+   "formula": "Li25P3S20F4Zr1",
+   "delta_hyd_meV": 2.03,
+   "differs_from_host": false,
+   "H2S_share": 0.3,
+   "dH2S_share": -0.3,
+   "endpoint": false,
+   "reaction": "0.9231 H2O + 0.07692 Li25ZrP3(S5F)4 -> 0.4615 H2S + 0.9231 LiHS + 0.07692 ZrS2 + 0.3077 LiF + 0.2308 Li3PO4",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  },
+  {
+   "species": "ZrO2",
+   "formula": "Cl4Li25O2P3S18Zr1",
+   "delta_hyd_meV": 4.82,
+   "differs_from_host": false,
+   "H2S_share": 0.2222,
+   "dH2S_share": -0.3778,
+   "endpoint": false,
+   "reaction": "0.09091 Li25ZrP3S18(Cl2O)2 + 0.9091 H2O -> 0.3636 H2S + 1.091 LiHS + 0.09091 ZrS2 + 0.2727 Li3PO4 + 0.3636 LiCl",
+   "F1_hyd": false,
+   "F2_H2S": false,
+   "unknown": false
+  }
+ ],
+ "pairs_R5": [
+  {
+   "oxide": "Al2O3",
+   "sulfide": "Al2S3",
+   "delta_O_minus_S_meV": 6.26,
+   "f_O_minus_S": 0.2558,
+   "differs": true
+  },
+  {
+   "oxide": "CaO",
+   "sulfide": "CaS",
+   "delta_O_minus_S_meV": 1.18,
+   "f_O_minus_S": -0.0184,
+   "differs": false
+  },
+  {
+   "oxide": "Ga2O3",
+   "sulfide": "Ga2S3",
+   "delta_O_minus_S_meV": 4.25,
+   "f_O_minus_S": -0.0356,
+   "differs": false
+  },
+  {
+   "oxide": "GeO2",
+   "sulfide": "GeS2",
+   "delta_O_minus_S_meV": 3.04,
+   "f_O_minus_S": -0.0666,
+   "differs": false
+  },
+  {
+   "oxide": "Li2O",
+   "sulfide": "Li2S",
+   "delta_O_minus_S_meV": 1.14,
+   "f_O_minus_S": -0.0211,
+   "differs": false
+  },
+  {
+   "oxide": "MgO",
+   "sulfide": "MgS",
+   "delta_O_minus_S_meV": 2.33,
+   "f_O_minus_S": 0.0722,
+   "differs": false
+  },
+  {
+   "oxide": "Na2O",
+   "sulfide": "Na2S",
+   "delta_O_minus_S_meV": 1.14,
+   "f_O_minus_S": -0.0214,
+   "differs": false
+  },
+  {
+   "oxide": "Sb2O5",
+   "sulfide": "Sb2S3",
+   "delta_O_minus_S_meV": 20.24,
+   "f_O_minus_S": 0.0,
+   "differs": true
+  },
+  {
+   "oxide": "SiO2",
+   "sulfide": "SiS2",
+   "delta_O_minus_S_meV": 5.78,
+   "f_O_minus_S": 0.0086,
+   "differs": false
+  },
+  {
+   "oxide": "SnO2",
+   "sulfide": "SnS2",
+   "delta_O_minus_S_meV": 3.04,
+   "f_O_minus_S": -0.0666,
+   "differs": false
+  }
+ ],
+ "R6_zhu_기록만": {
+  "n": 28,
+  "rho_spearman": 0.1903,
+  "⛔": "다른 양 (이진 황화물 ΔG · 기체 분압) — 판정 · 게이트에 안 쓴다"
+ },
+ "summary": {
+  "n_designs": 91,
+  "n_differs_from_host": 8,
+  "n_F1_hyd": 4,
+  "n_F2_H2S": 32,
+  "n_unknown": 0,
+  "host_H2S_share": 0.6,
+  "n_pairs_differ": 2
+ },
+ "combination": {
+  "axes_in_pareto": [
+   "delta_NCM_LNO_half_meV"
+  ],
+  "n_designs": 91,
+  "n_flagged": 43,
+  "selection": null,
+  "rule": "R4 — 연속 축이 하나 이하라 표시만 (고르지 않는다)",
+  "rows": [
+   {
+    "species": "Ag2O",
+    "flags": [
+     "축①F1_금속성"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 12.32
+   },
+   {
+    "species": "Al2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 2.08
+   },
+   {
+    "species": "Al2S3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -71.88
+   },
+   {
+    "species": "AlBr3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -14.9
+   },
+   {
+    "species": "AlCl3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -24.45
+   },
+   {
+    "species": "AlF3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -24.45
+   },
+   {
+    "species": "AlI3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -24.45
+   },
+   {
+    "species": "AlN",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F1_가수분해증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": -17.95
+   },
+   {
+    "species": "As2S3",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 44.5
+   },
+   {
+    "species": "B2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 1.56
+   },
+   {
+    "species": "BaCl2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -2.99
+   },
+   {
+    "species": "BaO",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 8.44
+   },
+   {
+    "species": "Ca3N2",
+    "flags": [
+     "축②F1_가수분해증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 3.91
+   },
+   {
+    "species": "CaBr2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -2.66
+   },
+   {
+    "species": "CaCl2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -2.66
+   },
+   {
+    "species": "CaF2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -2.66
+   },
+   {
+    "species": "CaO",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 9.58
+   },
+   {
+    "species": "CaS",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -2.66
+   },
+   {
+    "species": "CoO",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 12.77
+   },
+   {
+    "species": "Cr2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 19.94
+   },
+   {
+    "species": "CrCl3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": -1.42
+   },
+   {
+    "species": "CrO3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 12.21
+   },
+   {
+    "species": "Cu2O",
+    "flags": [
+     "축①F1_금속성"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 14.47
+   },
+   {
+    "species": "Fe2O3",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 11.66
+   },
+   {
+    "species": "FeCl3",
+    "flags": [
+     "축①F2_반응증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": -32.08
+   },
+   {
+    "species": "Ga2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 24.23
+   },
+   {
+    "species": "Ga2S3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -22.14
+   },
+   {
+    "species": "GaCl3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 0.09
+   },
+   {
+    "species": "GaN",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": -5.19
+   },
+   {
+    "species": "Gd2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 15.08
+   },
+   {
+    "species": "GeO2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 47.15
+   },
+   {
+    "species": "GeS2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 24.37
+   },
+   {
+    "species": "HfCl4",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -36.43
+   },
+   {
+    "species": "HfO2",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -6.98
+   },
+   {
+    "species": "In2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 34.6
+   },
+   {
+    "species": "La2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 18.66
+   },
+   {
+    "species": "LaCl3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -0.36
+   },
+   {
+    "species": "LaF3",
+    "flags": [
+     "축①F2_반응증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -11.28
+   },
+   {
+    "species": "Li2O",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 11.43
+   },
+   {
+    "species": "Li2S",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 0.0
+   },
+   {
+    "species": "Li3N",
+    "flags": [
+     "축②F1_가수분해증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 5.26
+   },
+   {
+    "species": "LiBr",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 0.0
+   },
+   {
+    "species": "LiCl",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 3.41
+   },
+   {
+    "species": "LiF",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 0.0
+   },
+   {
+    "species": "LiI",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 0.0
+   },
+   {
+    "species": "Mg3N2",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F1_가수분해증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": -17.33
+   },
+   {
+    "species": "MgBr2",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -1.99
+   },
+   {
+    "species": "MgCl2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -8.82
+   },
+   {
+    "species": "MgF2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -8.82
+   },
+   {
+    "species": "MgI2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -8.82
+   },
+   {
+    "species": "MgO",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 4.38
+   },
+   {
+    "species": "MgS",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -8.82
+   },
+   {
+    "species": "MnO",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 6.93
+   },
+   {
+    "species": "MoO3",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 64.82
+   },
+   {
+    "species": "Na2O",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 11.43
+   },
+   {
+    "species": "Na2S",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 0.0
+   },
+   {
+    "species": "NaI",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 0.0
+   },
+   {
+    "species": "Nb2O5",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 87.44
+   },
+   {
+    "species": "NbCl5",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 41.19
+   },
+   {
+    "species": "Nd2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 21.09
+   },
+   {
+    "species": "NdCl3",
+    "flags": [
+     "축①F2_반응증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -11.97
+   },
+   {
+    "species": "NdF3",
+    "flags": [
+     "축①F2_반응증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -11.97
+   },
+   {
+    "species": "NiO",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 12.11
+   },
+   {
+    "species": "Sb2O5",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 101.13
+   },
+   {
+    "species": "Sb2S3",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 35.18
+   },
+   {
+    "species": "Sc2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 6.11
+   },
+   {
+    "species": "ScCl3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -17.6
+   },
+   {
+    "species": "ScF3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -17.6
+   },
+   {
+    "species": "SiO2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 33.0
+   },
+   {
+    "species": "SiS2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -2.5
+   },
+   {
+    "species": "Sm2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 18.02
+   },
+   {
+    "species": "SmCl3",
+    "flags": [
+     "축①F2_반응증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -12.96
+   },
+   {
+    "species": "SnO2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 49.89
+   },
+   {
+    "species": "SnS2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 27.2
+   },
+   {
+    "species": "SrCl2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 5.32
+   },
+   {
+    "species": "SrO",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 8.51
+   },
+   {
+    "species": "Ta2O5",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 74.32
+   },
+   {
+    "species": "TaCl5",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 32.52
+   },
+   {
+    "species": "TiCl4",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 33.49
+   },
+   {
+    "species": "TiF4",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 15.31
+   },
+   {
+    "species": "TiO2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 37.71
+   },
+   {
+    "species": "V2O5",
+    "flags": [],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 102.71
+   },
+   {
+    "species": "WO3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [
+     "축①R2"
+    ],
+    "delta_NCM_LNO_half_meV": 36.59
+   },
+   {
+    "species": "Y2O3",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 12.97
+   },
+   {
+    "species": "YCl3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -13.58
+   },
+   {
+    "species": "YF3",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -13.58
+   },
+   {
+    "species": "ZnO",
+    "flags": [
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 14.05
+   },
+   {
+    "species": "ZrBr4",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 16.97
+   },
+   {
+    "species": "ZrCl4",
+    "flags": [
+     "축①F2_반응증가",
+     "축②F2_H2S증가"
+    ],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": -14.44
+   },
+   {
+    "species": "ZrF4",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 16.97
+   },
+   {
+    "species": "ZrO2",
+    "flags": [],
+    "unknown": [],
+    "delta_NCM_LNO_half_meV": 38.6
+   }
+  ]
+ }
+}

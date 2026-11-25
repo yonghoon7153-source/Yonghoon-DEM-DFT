@@ -1,0 +1,9 @@
+fragment,anchor_molecule_element,anchor_surface_element,n_basins
+ptfe_c10,F,Ni,35
+ptfe_c10,F,Li,35
+ptfe_c10,F,O,26
+sdcp_neutral,H,O,66
+sdcp_neutral,H,Ni,15
+sdcp_neutral,H,Li,13
+sdcp_neutral,O,Ni,4
+sdcp_neutral,O,Li,3

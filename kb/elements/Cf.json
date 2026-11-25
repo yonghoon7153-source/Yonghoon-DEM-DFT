@@ -1,0 +1,35 @@
+{
+  "symbol": "Cf",
+  "name": "Californium",
+  "Z": 98,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 5f¹⁰7s². 초우라늄이며 Cf-252(반감기 2.6년)는 강한 자발핵분열 중성자원으로 실용(중성자 라디오그래피·개시원). 주 산화수 +3(가장 안정), +4/+2도 존재. 후반 악티나이드라 5f 국재. 전지와 무관.",
+  "oxidation_states": ["+3", "+4", "+2"],
+  "electronegativity": 1.3,
+  "ionic_radius_A": {
+    "Cf3+_VI": 0.95,
+    "Cf4+_VI": 0.821,
+    "_note": "Shannon 1976: Cf3+ VI 0.95, Cf4+ VI 0.821 A. 계열 수축으로 후반 악티나이드에서 완만히 감소."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f¹⁰ 7s²",
+    "electron_config": "[Rn] 5f¹⁰ 7s²",
+    "valence_orbitals": "5f¹⁰ 7s² — Cf³⁺면 5f⁹. +2도 관측될 만큼 후반 악티나이드에서 저산화수 접근성↑",
+    "band_character": "5f¹⁰ 국재, 강상관 — 후반 악티나이드라 5f가 란타나이드 4f처럼 국재. 국소모멘트 보유, DFT+U/스핀분극 대상. 후반부라 +2 산화수 접근성이 커지는 경향.",
+    "bonding": "Cf–O/Cf–Cl 이온성(Cf₂O₃, CfCl₃), 국재 5f는 결합 관망 — 란타나이드형."
+  },
+  "representative_compounds": [
+    {"formula": "Cf2O3", "context": "산화물(+3, 대표)", "battery_role": "해당 없음(방사성)", "note": "+3 안정"},
+    {"formula": "CfCl3", "context": "할라이드(+3)", "battery_role": "해당 없음", "note": "Cf-252는 자발핵분열 중성자원으로 실용"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "5f¹⁰ 국재, 강상관 — 후반 악티나이드로 5f가 란타나이드 4f처럼 국재해 국소모멘트를 가짐. DFT+U/스핀분극 대상. 후반부 특유로 +2 접근성이 커짐. 극미량·강방사능이라 실측 전자구조는 사실상 없음.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Cf3+/Cf4+)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — Cf 화학",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · CRC/Greenwood) — 우리 db 절대값과 분리."
+}

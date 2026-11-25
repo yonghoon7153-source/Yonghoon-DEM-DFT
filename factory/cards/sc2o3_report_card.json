@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.2",
+  "generated_utc": "2026-06-30T07:04:56.594837+00:00",
+  "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
+  "system": {
+    "id": "sc2o3",
+    "composition": "(LPSCl1.6 + Sc2O3, x=0.25)",
+    "structure_ref": "db/structures/sc2o3_TODO.cif (not yet built/relaxed)",
+    "n_atoms": null,
+    "provenance": "cascade_v23 rank-1 dopant (Sc2O3); NOT yet deep-validated"
+  },
+  "screening": {
+    "status": "done",
+    "confidence": "C",
+    "method": "cascade tier descriptors (fast proxy)",
+    "source_pipeline": "cascade_v23",
+    "candidate_id": "Sc2O3_x010",
+    "ranking_basis": "cascade_v23 champions (rank_combined / combined_score)",
+    "rank": 1,
+    "score": 0.7989,
+    "descriptors": {
+      "bvs_li_proxy_score": 0.9067,
+      "migration_volume_fraction": 0.1206,
+      "blocking_fraction": 0.5882,
+      "li_li_disorder_std": 0.3084,
+      "cation_site": "Li_24g",
+      "anion_site": "S_16e"
+    },
+    "cascade_fast_estimates": {
+      "eos_B0_GPa": 16.21,
+      "elastic_E_GPa": 46.95,
+      "elastic_nu": 0.2062,
+      "pugh_GoverB": 0.7306
+    },
+    "caveats": "fast screening estimate; deep-validation sections are high-fidelity. rank/score from champions.csv (NOTE: ranked.csv lists B2O3 #6/47 by a different stability metric). cascade evolves -> re-link by (version, candidate_id)."
+  },
+  "transport": {
+    "status": "pending",
+    "confidence": null,
+    "method": "UMA-s-1p1 MLIP-MD, MSD window 2-50 ps, 3pt Arrhenius, Nernst-Einstein (Haven=1)",
+    "source": "db/properties/sc2o3_vs_modelc_md.json + bvse_sc2o3/sc2o3_bvse_percolation.json + kb/methodology/md_conductivity_protocol.md",
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "thermodynamic_stability": {
+    "status": "pending",
+    "confidence": null,
+    "method": "UMA-consistent convex hull (e_above_hull), MP chemsys ",
+    "source": "db/properties/sc2o3_ehull_result.json",
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "electrochemical_window": {
+    "status": "pending",
+    "confidence": null,
+    "method": "grand-potential ESW (MP GGA/GGA+U hull) + MP band gaps of SEI products",
+    "source": "db/properties/sc2o3_esw.json + sc2o3_sei_gaps.json",
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "mechanical": {
+    "status": "pending",
+    "confidence": null,
+    "method": "DFT relaxed-ion finite-strain Cij (running on KISTI); EOS B0 as proxy",
+    "source": "db/properties/sc2o3_eos_dft_result.json (B0); elastic Cij pending (db/properties/elastic.json)",
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "electronic": {
+    "status": "pending",
+    "confidence": null,
+    "method": "DFT DOS/PDOS (scf->nscf->projwfc); scalars curated (no machine-readable summary)",
+    "source": null,
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "structure_chemistry": {
+    "status": "pending",
+    "confidence": null,
+    "method": "coordination (Voronoi) + bond lengths + Bader oxidation states (parsed) + Lowdin S-site order",
+    "source": "db/properties/sc2o3_bond_lengths.json + sc2o3_coordination_bonds.json + sc2o3_charge_xps.csv",
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "dynamical_stability": {
+    "status": "pending",
+    "confidence": null,
+    "method": "UMA Gamma-point finite-displacement phonons",
+    "source": "db/properties/sc2o3_phonon_stability.json",
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "testable_predictions": {
+    "status": "pending",
+    "confidence": null,
+    "method": "aggregated fingerprints for experimental validation (derived)",
+    "source": "derived from structure_chemistry + dynamical_stability",
+    "caveats": "not yet computed — orchestrator plans this stage"
+  },
+  "anode_interface_stability": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not computed",
+    "source": "—",
+    "caveats": "run tools/oxidation/anode_interface_stability.py (Li-open) — decisive risk (external review #1)"
+  },
+  "cathode_interface_stability": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not computed",
+    "source": "—",
+    "caveats": "run tools/oxidation/interface_reactivity_v2.py (SE x cathode, voltage-resolved) for the oxidation-side interface"
+  },
+  "critical_current_density": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not in v1 pipeline",
+    "source": "—",
+    "caveats": "dendrite resistance / CCD — most-requested SE metric; not computed."
+  },
+  "grain_boundary_transport": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not in v1 pipeline",
+    "source": "—",
+    "caveats": "bulk sigma != total sigma; GB often dominates."
+  },
+  "air_moisture_stability": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not in v1 pipeline",
+    "source": "—",
+    "caveats": "H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive)."
+  },
+  "electronic_conductivity": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not in v1 pipeline",
+    "source": "—",
+    "caveats": "sigma_electronic (self-discharge driver), beyond just band gap."
+  },
+  "overall": {
+    "summary": "cascade rank-1 candidate (LPSCl1.6 + Sc2O3, x=0.25): deep validation PENDING (1/9 core done). Only cascade screening available so far; the orchestrator plans the remaining DFT/MLIP stages (with gates).",
+    "flags": [
+      "screening:done",
+      "transport:pending",
+      "thermodynamic_stability:pending",
+      "electrochemical_window:pending",
+      "mechanical:pending",
+      "electronic:pending",
+      "structure_chemistry:pending",
+      "dynamical_stability:pending",
+      "testable_predictions:pending"
+    ],
+    "honesty_notes": [
+      "FRESH candidate — values shown are cascade fast-estimates only, not deep validation",
+      "deep DFT/MLIP stages not yet run (see orchestrator run plan)",
+      "cascade fast-estimates vs deep-validation differ (seeds future ML calibration)"
+    ],
+    "completeness": "1/9 core sections done; 4 descriptors on roadmap"
+  }
+}

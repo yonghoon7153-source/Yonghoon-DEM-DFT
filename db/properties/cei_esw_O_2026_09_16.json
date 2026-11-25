@@ -1,0 +1,575 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **O opened**.",
+  "open_element": "O",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "Nd",
+    "O"
+  ],
+  "landmarks": {
+    "Li->Li2O": {
+      "mu_eV": -11.1328,
+      "dmu_O_eV": -6.1848
+    },
+    "Li2S->Li2SO4": {
+      "mu_eV": -7.8651,
+      "dmu_O_eV": -2.9171
+    },
+    "Li3PS4->Li3PO4": null
+  },
+  "excluded_phases": [],
+  "mu_O_ref_eV": -4.948,
+  "axis_convention": "dmu_O = mu - mu_ref(element); 0 = 원소 기준상태. ⚠ 전압(V vs Li/Li+)이 **아니다.**",
+  "results": {
+    "comp1": {
+      "composition": "Li6PS5Cl",
+      "label": "comp1",
+      "open_element": "O",
+      "n_O_nominal": 0.0,
+      "mu_O_ref_eV": -4.948,
+      "meaning": {
+        "uptake": "**산화** — 저장소(O₂)에서 O 를 받아들인다",
+        "release": "환원/탈산소 — O 를 내놓는다",
+        "axis": "dmu_O_eV"
+      },
+      "uptake_onset_rxn": "Li6PS5Cl + 2 O2 -> 0.4286 Li2S + 1.143 LiS4 + Li3PO4 + LiCl",
+      "release_onset_rxn": null,
+      "neutral_rxn": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl",
+      "profile": [
+        {
+          "mu_O_eV": -4.948,
+          "dmu_O_eV": 0.0,
+          "evolution_O": 24.0,
+          "reaction": "Li6PS5Cl + 12 O2 -> LiPO3 + 0.5 Cl2O7 + 2.5 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -4.9575,
+          "dmu_O_eV": -0.0095,
+          "evolution_O": 23.5,
+          "reaction": "Li6PS5Cl + 11.75 O2 -> ClO3 + LiPO3 + 2.5 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -5.2462,
+          "dmu_O_eV": -0.2983,
+          "evolution_O": 22.5,
+          "reaction": "Li6PS5Cl + 11.25 O2 -> LiPO3 + 2.5 Li2S2O7 + ClO2"
+        },
+        {
+          "mu_O_eV": -5.4773,
+          "dmu_O_eV": -0.5293,
+          "evolution_O": 20.5,
+          "reaction": "Li6PS5Cl + 10.25 O2 -> LiPO3 + 2.5 Li2S2O7 + 0.5 Cl2"
+        },
+        {
+          "mu_O_eV": -5.8572,
+          "dmu_O_eV": -0.9093,
+          "evolution_O": 20.0,
+          "reaction": "Li6PS5Cl + 10 O2 -> 0.1667 PCl5 + 0.8333 LiPO3 + 2.5 Li2S2O7 + 0.1667 LiCl"
+        },
+        {
+          "mu_O_eV": -6.7381,
+          "dmu_O_eV": -1.7901,
+          "evolution_O": 19.8,
+          "reaction": "Li6PS5Cl + 9.9 O2 -> LiPO3 + 2.4 Li2S2O7 + 0.2 SCl4 + 0.2 LiCl"
+        },
+        {
+          "mu_O_eV": -7.1243,
+          "dmu_O_eV": -2.1763,
+          "evolution_O": 19.75,
+          "reaction": "Li6PS5Cl + 9.875 O2 -> LiPO3 + 0.25 Li2SO4 + 2.25 Li2S2O7 + 0.25 SCl4"
+        },
+        {
+          "mu_O_eV": -7.1737,
+          "dmu_O_eV": -2.2257,
+          "evolution_O": 17.5,
+          "reaction": "Li6PS5Cl + 8.75 O2 -> SCl + LiPO3 + Li2SO4 + 1.5 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -7.2404,
+          "dmu_O_eV": -2.2924,
+          "evolution_O": 13.0,
+          "reaction": "Li6PS5Cl + 6.5 O2 -> SCl + LiPO3 + 2.5 Li2SO4 + 1.5 S"
+        },
+        {
+          "mu_O_eV": -7.33,
+          "dmu_O_eV": -2.3821,
+          "evolution_O": 11.0,
+          "reaction": "Li6PS5Cl + 5.5 O2 -> LiPO3 + 2 Li2SO4 + LiCl + 3 S"
+        },
+        {
+          "mu_O_eV": -7.4606,
+          "dmu_O_eV": -2.5126,
+          "evolution_O": 9.2857,
+          "reaction": "Li6PS5Cl + 4.643 O2 -> LiPO3 + 1.571 Li2SO4 + 0.8571 LiS4 + LiCl"
+        },
+        {
+          "mu_O_eV": -7.4615,
+          "dmu_O_eV": -2.5136,
+          "evolution_O": 7.5,
+          "reaction": "Li6PS5Cl + 3.75 O2 -> 0.5 Li4P2O7 + Li2SO4 + LiS4 + LiCl"
+        },
+        {
+          "mu_O_eV": -7.5323,
+          "dmu_O_eV": -2.5843,
+          "evolution_O": 5.7143,
+          "reaction": "Li6PS5Cl + 2.857 O2 -> 0.4286 Li2SO4 + 1.143 LiS4 + Li3PO4 + LiCl"
+        },
+        {
+          "mu_O_eV": -7.8651,
+          "dmu_O_eV": -2.9171,
+          "evolution_O": 4.0,
+          "reaction": "Li6PS5Cl + 2 O2 -> 0.4286 Li2S + 1.143 LiS4 + Li3PO4 + LiCl"
+        },
+        {
+          "mu_O_eV": -8.3211,
+          "dmu_O_eV": -3.3731,
+          "evolution_O": -0.0,
+          "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+        }
+      ],
+      "uptake_onset_mu_eV": -7.8651,
+      "release_onset_mu_eV": null,
+      "neutral_mu_eV": -8.3211,
+      "⛔_caveat": "⛔ μ_O 축의 절대값을 믿지 말 것. (1) PBE 는 O₂ 분자를 ~1 eV 과결합하고, MP 는 anion correction 으로 보정한다 — 그래서 이 축은 **MP 보정 기준계**의 것이다. (2) UMA 등 다른 방법의 에너지와 **섞으면 축이 통째로 밀린다**. (3) pO₂·온도 환산은 이 도구가 하지 않는다 — 환산은 기준 선택이 결과를 지배하는 자리라 고체 기준반응(예: Li₂O 생성)에 앵커한 뒤 별도로 한다. 여기서 인용 가능한 것은 **Δμ_O 축 위의 순서와 분해산물 정체**다."
+    },
+    "modelc": {
+      "composition": "Li5.4PS4.4Cl1.6",
+      "label": "modelc",
+      "open_element": "O",
+      "n_O_nominal": 0.0,
+      "mu_O_ref_eV": -4.948,
+      "meaning": {
+        "uptake": "**산화** — 저장소(O₂)에서 O 를 받아들인다",
+        "release": "환원/탈산소 — O 를 내놓는다",
+        "axis": "dmu_O_eV"
+      },
+      "uptake_onset_rxn": "Li5.4P1S4.4Cl1.6 + 1.4 O2 -> 0.3 Li3PS4 + 0.8 LiS4 + 0.7 Li3PO4 + 1.6 LiCl",
+      "release_onset_rxn": null,
+      "neutral_rxn": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl",
+      "profile": [
+        {
+          "mu_O_eV": -4.948,
+          "dmu_O_eV": 0.0,
+          "evolution_O": 24.0,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 12 O2 -> LiPO3 + 0.8 Cl2O7 + 2.2 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -4.9575,
+          "dmu_O_eV": -0.0095,
+          "evolution_O": 23.2,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 11.6 O2 -> 1.6 ClO3 + LiPO3 + 2.2 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -5.2462,
+          "dmu_O_eV": -0.2983,
+          "evolution_O": 21.6,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 10.8 O2 -> LiPO3 + 2.2 Li2S2O7 + 1.6 ClO2"
+        },
+        {
+          "mu_O_eV": -5.4773,
+          "dmu_O_eV": -0.5293,
+          "evolution_O": 18.4,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 9.2 O2 -> LiPO3 + 2.2 Li2S2O7 + 0.8 Cl2"
+        },
+        {
+          "mu_O_eV": -5.8572,
+          "dmu_O_eV": -0.9093,
+          "evolution_O": 17.6,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 8.8 O2 -> 0.2667 PCl5 + 0.7333 LiPO3 + 2.2 Li2S2O7 + 0.2667 LiCl"
+        },
+        {
+          "mu_O_eV": -6.7381,
+          "dmu_O_eV": -1.7901,
+          "evolution_O": 17.28,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 8.64 O2 -> LiPO3 + 2.04 Li2S2O7 + 0.32 SCl4 + 0.32 LiCl"
+        },
+        {
+          "mu_O_eV": -7.1243,
+          "dmu_O_eV": -2.1763,
+          "evolution_O": 17.2,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 8.6 O2 -> LiPO3 + 0.4 Li2SO4 + 1.8 Li2S2O7 + 0.4 SCl4"
+        },
+        {
+          "mu_O_eV": -7.1737,
+          "dmu_O_eV": -2.2257,
+          "evolution_O": 13.6,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 6.8 O2 -> 1.6 SCl + LiPO3 + 1.6 Li2SO4 + 0.6 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -7.2404,
+          "dmu_O_eV": -2.2924,
+          "evolution_O": 11.8,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 5.9 O2 -> 1.6 SCl + LiPO3 + 2.2 Li2SO4 + 0.6 S"
+        },
+        {
+          "mu_O_eV": -7.33,
+          "dmu_O_eV": -2.3821,
+          "evolution_O": 8.6,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 4.3 O2 -> LiPO3 + 1.4 Li2SO4 + 1.6 LiCl + 3 S"
+        },
+        {
+          "mu_O_eV": -7.4606,
+          "dmu_O_eV": -2.5126,
+          "evolution_O": 6.8857,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 3.443 O2 -> LiPO3 + 0.9714 Li2SO4 + 0.8571 LiS4 + 1.6 LiCl"
+        },
+        {
+          "mu_O_eV": -7.4615,
+          "dmu_O_eV": -2.5136,
+          "evolution_O": 5.1,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 2.55 O2 -> 0.5 Li4P2O7 + 0.4 Li2SO4 + LiS4 + 1.6 LiCl"
+        },
+        {
+          "mu_O_eV": -7.5323,
+          "dmu_O_eV": -2.5843,
+          "evolution_O": 3.85,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 1.925 O2 -> 0.15 Li4P2O7 + 1.1 LiS4 + 0.7 Li3PO4 + 1.6 LiCl"
+        },
+        {
+          "mu_O_eV": -7.9337,
+          "dmu_O_eV": -2.9857,
+          "evolution_O": 3.6903,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 1.845 O2 -> 0.03871 P2S7 + 1.032 LiS4 + 0.9226 Li3PO4 + 1.6 LiCl"
+        },
+        {
+          "mu_O_eV": -8.2671,
+          "dmu_O_eV": -3.3192,
+          "evolution_O": 2.8,
+          "reaction": "Li5.4P1S4.4Cl1.6 + 1.4 O2 -> 0.3 Li3PS4 + 0.8 LiS4 + 0.7 Li3PO4 + 1.6 LiCl"
+        },
+        {
+          "mu_O_eV": -8.3211,
+          "dmu_O_eV": -3.3731,
+          "evolution_O": -0.0,
+          "reaction": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+        }
+      ],
+      "uptake_onset_mu_eV": -8.2671,
+      "release_onset_mu_eV": null,
+      "neutral_mu_eV": -8.3211,
+      "⛔_caveat": "⛔ μ_O 축의 절대값을 믿지 말 것. (1) PBE 는 O₂ 분자를 ~1 eV 과결합하고, MP 는 anion correction 으로 보정한다 — 그래서 이 축은 **MP 보정 기준계**의 것이다. (2) UMA 등 다른 방법의 에너지와 **섞으면 축이 통째로 밀린다**. (3) pO₂·온도 환산은 이 도구가 하지 않는다 — 환산은 기준 선택이 결과를 지배하는 자리라 고체 기준반응(예: Li₂O 생성)에 앵커한 뒤 별도로 한다. 여기서 인용 가능한 것은 **Δμ_O 축 위의 순서와 분해산물 정체**다."
+    },
+    "lpsocl": {
+      "composition": "Li27P5S21OCl8",
+      "label": "lpsocl",
+      "open_element": "O",
+      "n_O_nominal": 1.0,
+      "mu_O_ref_eV": -4.948,
+      "meaning": {
+        "uptake": "**산화** — 저장소(O₂)에서 O 를 받아들인다",
+        "release": "환원/탈산소 — O 를 내놓는다",
+        "axis": "dmu_O_eV"
+      },
+      "uptake_onset_rxn": "Li27P5S21Cl8O + 7 O2 -> 1.25 Li3PS4 + 4 LiS4 + 3.75 Li3PO4 + 8 LiCl",
+      "release_onset_rxn": "Li27P5S21Cl8O -> 4.6 Li3PS4 + 2.6 Li2S + 8 LiCl + 0.4 P + 0.5 O2",
+      "neutral_rxn": "Li27P5S21Cl8O -> 4.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 8 LiCl",
+      "profile": [
+        {
+          "mu_O_eV": -4.948,
+          "dmu_O_eV": 0.0,
+          "evolution_O": 116.0,
+          "reaction": "Li27P5S21Cl8O + 58 O2 -> 5 LiPO3 + 3.5 Cl2O7 + LiClO4 + 10.5 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -4.9575,
+          "dmu_O_eV": -0.0095,
+          "evolution_O": 112.5,
+          "reaction": "Li27P5S21Cl8O + 56.25 O2 -> 7 ClO3 + 5 LiPO3 + LiClO4 + 10.5 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -5.0279,
+          "dmu_O_eV": -0.08,
+          "evolution_O": 112.0,
+          "reaction": "Li27P5S21Cl8O + 56 O2 -> 8 ClO3 + 5 LiPO3 + Li2SO4 + 10 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -5.2462,
+          "dmu_O_eV": -0.2983,
+          "evolution_O": 104.0,
+          "reaction": "Li27P5S21Cl8O + 52 O2 -> 5 LiPO3 + Li2SO4 + 10 Li2S2O7 + 8 ClO2"
+        },
+        {
+          "mu_O_eV": -5.4773,
+          "dmu_O_eV": -0.5293,
+          "evolution_O": 88.0,
+          "reaction": "Li27P5S21Cl8O + 44 O2 -> 5 LiPO3 + Li2SO4 + 10 Li2S2O7 + 4 Cl2"
+        },
+        {
+          "mu_O_eV": -5.7028,
+          "dmu_O_eV": -0.7548,
+          "evolution_O": 87.5,
+          "reaction": "Li27P5S21Cl8O + 43.75 O2 -> 5 LiPO3 + 10.5 Li2S2O7 + LiCl + 3.5 Cl2"
+        },
+        {
+          "mu_O_eV": -5.8572,
+          "dmu_O_eV": -0.9093,
+          "evolution_O": 84.0,
+          "reaction": "Li27P5S21Cl8O + 42 O2 -> 1.167 PCl5 + 3.833 LiPO3 + 10.5 Li2S2O7 + 2.167 LiCl"
+        },
+        {
+          "mu_O_eV": -6.7381,
+          "dmu_O_eV": -1.7901,
+          "evolution_O": 82.6,
+          "reaction": "Li27P5S21Cl8O + 41.3 O2 -> 5 LiPO3 + 9.8 Li2S2O7 + 1.4 SCl4 + 2.4 LiCl"
+        },
+        {
+          "mu_O_eV": -7.1243,
+          "dmu_O_eV": -2.1763,
+          "evolution_O": 82.0,
+          "reaction": "Li27P5S21Cl8O + 41 O2 -> 5 LiPO3 + 3 Li2SO4 + 8 Li2S2O7 + 2 SCl4"
+        },
+        {
+          "mu_O_eV": -7.1737,
+          "dmu_O_eV": -2.2257,
+          "evolution_O": 64.0,
+          "reaction": "Li27P5S21Cl8O + 32 O2 -> 8 SCl + 5 LiPO3 + 9 Li2SO4 + 2 Li2S2O7"
+        },
+        {
+          "mu_O_eV": -7.2404,
+          "dmu_O_eV": -2.2924,
+          "evolution_O": 58.0,
+          "reaction": "Li27P5S21Cl8O + 29 O2 -> 8 SCl + 5 LiPO3 + 11 Li2SO4 + 2 S"
+        },
+        {
+          "mu_O_eV": -7.33,
+          "dmu_O_eV": -2.3821,
+          "evolution_O": 42.0,
+          "reaction": "Li27P5S21Cl8O + 21 O2 -> 5 LiPO3 + 7 Li2SO4 + 8 LiCl + 14 S"
+        },
+        {
+          "mu_O_eV": -7.4606,
+          "dmu_O_eV": -2.5126,
+          "evolution_O": 34.0,
+          "reaction": "Li27P5S21Cl8O + 17 O2 -> 5 LiPO3 + 5 Li2SO4 + 4 LiS4 + 8 LiCl"
+        },
+        {
+          "mu_O_eV": -7.4615,
+          "dmu_O_eV": -2.5136,
+          "evolution_O": 25.0714,
+          "reaction": "Li27P5S21Cl8O + 12.54 O2 -> 2.5 Li4P2O7 + 2.143 Li2SO4 + 4.714 LiS4 + 8 LiCl"
+        },
+        {
+          "mu_O_eV": -7.5323,
+          "dmu_O_eV": -2.5843,
+          "evolution_O": 18.375,
+          "reaction": "Li27P5S21Cl8O + 9.188 O2 -> 0.625 Li4P2O7 + 5.25 LiS4 + 3.75 Li3PO4 + 8 LiCl"
+        },
+        {
+          "mu_O_eV": -7.9337,
+          "dmu_O_eV": -2.9857,
+          "evolution_O": 17.7097,
+          "reaction": "Li27P5S21Cl8O + 8.855 O2 -> 0.1613 P2S7 + 4.968 LiS4 + 4.677 Li3PO4 + 8 LiCl"
+        },
+        {
+          "mu_O_eV": -8.2671,
+          "dmu_O_eV": -3.3192,
+          "evolution_O": 14.0,
+          "reaction": "Li27P5S21Cl8O + 7 O2 -> 1.25 Li3PS4 + 4 LiS4 + 3.75 Li3PO4 + 8 LiCl"
+        },
+        {
+          "mu_O_eV": -8.3211,
+          "dmu_O_eV": -3.3731,
+          "evolution_O": -0.0,
+          "reaction": "Li27P5S21Cl8O -> 4.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 8 LiCl"
+        },
+        {
+          "mu_O_eV": -9.1672,
+          "dmu_O_eV": -4.2192,
+          "evolution_O": -1.0,
+          "reaction": "Li27P5S21Cl8O -> 4.6 Li3PS4 + 2.6 Li2S + 8 LiCl + 0.4 P + 0.5 O2"
+        }
+      ],
+      "uptake_onset_mu_eV": -8.2671,
+      "release_onset_mu_eV": -9.1672,
+      "neutral_mu_eV": -8.3211,
+      "⛔_caveat": "⛔ μ_O 축의 절대값을 믿지 말 것. (1) PBE 는 O₂ 분자를 ~1 eV 과결합하고, MP 는 anion correction 으로 보정한다 — 그래서 이 축은 **MP 보정 기준계**의 것이다. (2) UMA 등 다른 방법의 에너지와 **섞으면 축이 통째로 밀린다**. (3) pO₂·온도 환산은 이 도구가 하지 않는다 — 환산은 기준 선택이 결과를 지배하는 자리라 고체 기준반응(예: Li₂O 생성)에 앵커한 뒤 별도로 한다. 여기서 인용 가능한 것은 **Δμ_O 축 위의 순서와 분해산물 정체**다."
+    },
+    "modelc_nd": {
+      "composition": "Li48Nd2P10O3S41Cl16",
+      "label": "modelc_nd",
+      "open_element": "O",
+      "n_O_nominal": 3.0,
+      "mu_O_ref_eV": -4.948,
+      "meaning": {
+        "uptake": "**산화** — 저장소(O₂)에서 O 를 받아들인다",
+        "release": "환원/탈산소 — O 를 내놓는다",
+        "axis": "dmu_O_eV"
+      },
+      "uptake_onset_rxn": "Li48Nd2P10S41Cl16O3 + 0.4 O2 -> 0.2 Nd10S19 + 9.05 Li3PS4 + Li2S + 0.95 Li3PO4 + 16 LiCl",
+      "release_onset_rxn": "Li48Nd2P10S41Cl16O3 -> 8.8 Li3PS4 + Nd2S3 + 2.8 Li2S + 16 LiCl + 1.2 P + 1.5 O2",
+      "neutral_rxn": "Li48Nd2P10S41Cl16O3 -> 9.25 Li3PS4 + Nd2S3 + Li2S + 0.75 Li3PO4 + 16 LiCl",
+      "profile": [
+        {
+          "mu_O_eV": -4.948,
+          "dmu_O_eV": 0.0,
+          "evolution_O": 228.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 114 O2 -> 2 LiPO3 + 6.5 Cl2O7 + 3 LiClO4 + 20.5 Li2S2O7 + 2 LiNd(PO3)4"
+        },
+        {
+          "mu_O_eV": -4.9575,
+          "dmu_O_eV": -0.0095,
+          "evolution_O": 221.5,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 110.8 O2 -> 13 ClO3 + 2 LiPO3 + 3 LiClO4 + 20.5 Li2S2O7 + 2 LiNd(PO3)4"
+        },
+        {
+          "mu_O_eV": -5.0279,
+          "dmu_O_eV": -0.08,
+          "evolution_O": 220.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 110 O2 -> 16 ClO3 + 2 LiPO3 + 3 Li2SO4 + 19 Li2S2O7 + 2 LiNd(PO3)4"
+        },
+        {
+          "mu_O_eV": -5.2462,
+          "dmu_O_eV": -0.2983,
+          "evolution_O": 204.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 102 O2 -> 2 LiPO3 + 3 Li2SO4 + 19 Li2S2O7 + 2 LiNd(PO3)4 + 16 ClO2"
+        },
+        {
+          "mu_O_eV": -5.4773,
+          "dmu_O_eV": -0.5293,
+          "evolution_O": 172.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 86 O2 -> 2 LiPO3 + 3 Li2SO4 + 19 Li2S2O7 + 2 LiNd(PO3)4 + 8 Cl2"
+        },
+        {
+          "mu_O_eV": -5.7028,
+          "dmu_O_eV": -0.7548,
+          "evolution_O": 170.5,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 85.25 O2 -> 2 LiPO3 + 20.5 Li2S2O7 + 2 LiNd(PO3)4 + 3 LiCl + 6.5 Cl2"
+        },
+        {
+          "mu_O_eV": -5.8572,
+          "dmu_O_eV": -0.9093,
+          "evolution_O": 164.5,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 82.25 O2 -> 2 PCl5 + 20.5 Li2S2O7 + 2 LiNd(PO3)4 + 5 LiCl + 0.5 Cl2"
+        },
+        {
+          "mu_O_eV": -5.8938,
+          "dmu_O_eV": -0.9459,
+          "evolution_O": 164.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 82 O2 -> 2.167 PCl5 + 20.5 Li2S2O7 + 1.958 LiNd(PO3)4 + 0.04167 NdCl3 + 5.042 LiCl"
+        },
+        {
+          "mu_O_eV": -6.6466,
+          "dmu_O_eV": -1.6986,
+          "evolution_O": 163.8,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 81.9 O2 -> 2 PCl5 + 20.4 Li2S2O7 + 2 LiNd(PO3)4 + 0.2 SCl4 + 5.2 LiCl"
+        },
+        {
+          "mu_O_eV": -6.7381,
+          "dmu_O_eV": -1.7901,
+          "evolution_O": 161.4,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 80.7 O2 -> 2 LiPO3 + 19.2 Li2S2O7 + 2 LiNd(PO3)4 + 2.6 SCl4 + 5.6 LiCl"
+        },
+        {
+          "mu_O_eV": -7.1243,
+          "dmu_O_eV": -2.1763,
+          "evolution_O": 160.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 80 O2 -> 2 LiPO3 + 7 Li2SO4 + 15 Li2S2O7 + 2 LiNd(PO3)4 + 4 SCl4"
+        },
+        {
+          "mu_O_eV": -7.1737,
+          "dmu_O_eV": -2.2257,
+          "evolution_O": 124.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 62 O2 -> 16 SCl + 2 LiPO3 + 19 Li2SO4 + 3 Li2S2O7 + 2 LiNd(PO3)4"
+        },
+        {
+          "mu_O_eV": -7.2404,
+          "dmu_O_eV": -2.2924,
+          "evolution_O": 115.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 57.5 O2 -> 16 SCl + 2 LiPO3 + 22 Li2SO4 + 2 LiNd(PO3)4 + 3 S"
+        },
+        {
+          "mu_O_eV": -7.33,
+          "dmu_O_eV": -2.3821,
+          "evolution_O": 83.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 41.5 O2 -> 2 LiPO3 + 14 Li2SO4 + 2 LiNd(PO3)4 + 16 LiCl + 27 S"
+        },
+        {
+          "mu_O_eV": -7.4606,
+          "dmu_O_eV": -2.5126,
+          "evolution_O": 67.5714,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 33.79 O2 -> 2 LiPO3 + 10.14 Li2SO4 + 2 LiNd(PO3)4 + 7.714 LiS4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -7.4615,
+          "dmu_O_eV": -2.5136,
+          "evolution_O": 64.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 32 O2 -> Li4P2O7 + 9 Li2SO4 + 2 LiNd(PO3)4 + 8 LiS4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -7.4686,
+          "dmu_O_eV": -2.5206,
+          "evolution_O": 46.1429,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 23.07 O2 -> 2 NdPO4 + 4 Li4P2O7 + 3.286 Li2SO4 + 9.429 LiS4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -7.5323,
+          "dmu_O_eV": -2.5843,
+          "evolution_O": 35.875,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 17.94 O2 -> 2 NdPO4 + 1.125 Li4P2O7 + 10.25 LiS4 + 5.75 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -7.9337,
+          "dmu_O_eV": -2.9857,
+          "evolution_O": 34.6774,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 17.34 O2 -> 2 NdPO4 + 0.2903 P2S7 + 9.742 LiS4 + 7.419 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -8.1794,
+          "dmu_O_eV": -3.2315,
+          "evolution_O": 28.7419,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 14.37 O2 -> 0.03226 P2S7 + 2 NdPS4 + 8.194 LiS4 + 7.935 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -8.2668,
+          "dmu_O_eV": -3.3189,
+          "evolution_O": 28.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 14 O2 -> 0.08333 Li9Nd2(PS4)5 + 1.833 NdPS4 + 8 LiS4 + 7.75 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -8.2802,
+          "dmu_O_eV": -3.3322,
+          "evolution_O": 22.5,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 11.25 O2 -> 0.725 Li9Nd2(PS4)5 + 0.55 NdS2 + 6.35 LiS4 + 6.375 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -8.2807,
+          "dmu_O_eV": -3.3327,
+          "evolution_O": 8.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 4 O2 -> 7.25 Li3PS4 + 2 NdS2 + 2 LiS4 + 2.75 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -8.3211,
+          "dmu_O_eV": -3.3731,
+          "evolution_O": 1.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 0.5 O2 -> 9 Li3PS4 + 2 NdS2 + Li2S + Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -8.5928,
+          "dmu_O_eV": -3.6449,
+          "evolution_O": 0.8,
+          "reaction": "Li48Nd2P10S41Cl16O3 + 0.4 O2 -> 0.2 Nd10S19 + 9.05 Li3PS4 + Li2S + 0.95 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -8.761,
+          "dmu_O_eV": -3.813,
+          "evolution_O": -0.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 -> 9.25 Li3PS4 + Nd2S3 + Li2S + 0.75 Li3PO4 + 16 LiCl"
+        },
+        {
+          "mu_O_eV": -9.1672,
+          "dmu_O_eV": -4.2192,
+          "evolution_O": -3.0,
+          "reaction": "Li48Nd2P10S41Cl16O3 -> 8.8 Li3PS4 + Nd2S3 + 2.8 Li2S + 16 LiCl + 1.2 P + 1.5 O2"
+        }
+      ],
+      "uptake_onset_mu_eV": -8.5928,
+      "release_onset_mu_eV": -9.1672,
+      "neutral_mu_eV": -8.761,
+      "⛔_caveat": "⛔ μ_O 축의 절대값을 믿지 말 것. (1) PBE 는 O₂ 분자를 ~1 eV 과결합하고, MP 는 anion correction 으로 보정한다 — 그래서 이 축은 **MP 보정 기준계**의 것이다. (2) UMA 등 다른 방법의 에너지와 **섞으면 축이 통째로 밀린다**. (3) pO₂·온도 환산은 이 도구가 하지 않는다 — 환산은 기준 선택이 결과를 지배하는 자리라 고체 기준반응(예: Li₂O 생성)에 앵커한 뒤 별도로 한다. 여기서 인용 가능한 것은 **Δμ_O 축 위의 순서와 분해산물 정체**다."
+    }
+  },
+  "⛔_caveat": "⛔ μ_O 축의 절대값을 믿지 말 것. (1) PBE 는 O₂ 분자를 ~1 eV 과결합하고, MP 는 anion correction 으로 보정한다 — 그래서 이 축은 **MP 보정 기준계**의 것이다. (2) UMA 등 다른 방법의 에너지와 **섞으면 축이 통째로 밀린다**. (3) pO₂·온도 환산은 이 도구가 하지 않는다 — 환산은 기준 선택이 결과를 지배하는 자리라 고체 기준반응(예: Li₂O 생성)에 앵커한 뒤 별도로 한다. 여기서 인용 가능한 것은 **Δμ_O 축 위의 순서와 분해산물 정체**다."
+}

@@ -1,0 +1,159 @@
+{
+ "slug": "morasch2018_binder_gradient_impedance_tortuosity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Optical microscope image of graphite electrodes stacked between aluminum sheets, vacuum ﬁlled with resin, and polished after hardening of the resin. Shown are the cross sectional areas for several embedded electrodes which are used for EDS measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.5,
+    289.1,
+    245.4
+   ],
+   "w": 1081,
+   "h": 771,
+   "dpi": 300,
+   "src": "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf",
+   "blank": 0.145,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. RC- Transmission line models (TLMs) where the resistances rep- resent the ionic resistance of inﬁnitesimal element and the capacitors the electrochemical double layer capacity in the electrode; a) Homogeneous RC- Transmission line model with resistive elements of equal value throughout the electrode; b) Gradient RC-Transmission line model showing a gradient in resistance with a higher resistance toward the top (separator interface) of the electrode. Capacitive elements throughout both equivalent circuits are of equal capacitance.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.2,
+    556.1,
+    342.4
+   ],
+   "w": 1080,
+   "h": 1177,
+   "dpi": 300,
+   "src": "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf",
+   "blank": 0.316,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Chosen ionic resistance distributions in the electrolyte phase across the thickness of a porous electrode used for modeling its EIS response with a blocking electrolyte. Here, and furtheron, “bottom” refers to the interface between the current collector and the electrode, and “top” refers to the elec- trode/separator interface. The various shown proﬁles are described as follows. ng (“no gradient”): represents a uniform resistance proﬁle, i.e., without gradi- ent, and is given for reference (black curve),. lb (“linear bottom”) represents a linear Rion proﬁle with higher resistance (1.5 × Rion) at the bottom (CC-side, blue curve); lt (“linear top”) represents a linear Rion proﬁle with higher resis- tance (1.5 × Rion) at the top (separator-side, red curve). sb (“step bottom”) represents a step function proﬁle with a higher resistance in the bottom quarter of the electrode (2.5 × R",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.9,
+    288.2,
+    273.4
+   ],
+   "w": 1081,
+   "h": 887,
+   "dpi": 300,
+   "src": "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf",
+   "blank": 0.666,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Modeled EIS response (high frequency corrected) for a porous electrode with a blocking electrolyte (RC-TLM model) for a constant ionic resistance in the electrolyte phase (Rion) across the electrode thickness (ng, black lines) as well as various resistance distributions as shown in Fig. 3. The latter are linear resistance gradients with a maximum resistance either at the top of the electrode (lt, red) or at the bottom of the electrode (lb, blue) as well as step functions with a maximum resistance either at the top (st, magenta, dotted line) or at the bottom of the electrode (sb, green, dashed line); here, “top” refers to the separator side of the electrode and “bottom” to the current collector side of the electrode. a) Nyquist plot of the scaled negative imaginary part of the impedance vs. the scaled real part of the impedance;. b) corresponding phase angle plot (Bode plot). Th",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    49.9,
+    555.2,
+    586.4
+   ],
+   "w": 1081,
+   "h": 2237,
+   "dpi": 300,
+   "src": "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf",
+   "blank": 0.921,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. EDS cross section line scans for electrodes dried at different tem- peratures with a ﬁnal thickness of ∼245 μm (±6%), coated at a wet ﬁlm thickness of 500 μm. a) Example of the EDS raw signals for carbon (gray, sig- nal divided by 45), ﬂuorine (blue), and aluminum (red, signal divided by 165) of an electrode dried at 100◦C. Carbon and Aluminium signals indicate the beginning and end of the electrode (marked by vertical orange dashed lines). b) Background corrected ﬂuorine signal stemming from the PVDF binder for electrodes dried between RT and 125◦C; the ﬂuorine signals were averaged over ﬁve evenly spaced segments across the electrode thickness, with the x- axis values of 0 and 1.0 corresponding to the bottom (CC-side) and the top (separator-side) of the electrodes, respectively (for details see Experimental section). The left axis was normalized to show the expected average ﬂ",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.7,
+    556.1,
+    380.4
+   ],
+   "w": 1080,
+   "h": 1333,
+   "dpi": 300,
+   "src": "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf",
+   "blank": 0.852,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Experimental EIS response of graphite electrodes dried between 25 and 125◦C and with a ﬁnal thickness of ∼245 μm (±6%), coated at a wet ﬁlm thickness of 500 μm; the electrode labeled “125◦C reversed” was dried at 125◦C, removed from the current collector, and re-assembled such that the original CC-side of the electrode becomes the separator-side in the re-assembled cell. EIS measurements (20 mV amplitude, between 10 mHz and 200 kHz) were conducted in a symmetric cell setup (T-cells, ø = 10.95 mm) using a non-intercalating electrolyte (10 mM TBAClO4 in EC:EMC 3:7, with κ = 0.258 mS/cm). a) High frequency resistance (HFR) corrected Nyquist plots with frequencies marked for the 75◦C sample. b) HFR-corrected phase angle plots. c) Phase angle plot of the 75◦C dried electrode corrected for the experimentally determined HFR of 226 Ω, but adding small deviations of ± 2 Ω (i.e., ca. ± 1",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    49.9,
+    555.2,
+    387.2
+   ],
+   "w": 2193,
+   "h": 1407,
+   "dpi": 300,
+   "src": "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf",
+   "blank": 0.928,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Impedance characteristics and charge rate capability of graphite electrodes with areal capacities of ∼2.4 mAh/cm2 (corresponding to ∼7.4 mggraphite/cm2 (±2%) and electrode thicknesses of ∼74 μm (±2%)) dried at either 75◦C (blue lines/symbols) or 125◦C (red dashed lines/symbols). a) HFR-corrected phase angle plots and tortuosity values obtained from symmet- ric cell measurements with non-intercalating electrolyte (∼10 mM TBAClO4 in EC:EMC 3:7). b) Charge (i.e., lithiation) capacity vs. C-rate for cycling the graphite electrodes between 1.5 V and 0.01 V vs. a Li-metal reference elec- trode. The error bars show the standard deviation of independent measurements with three nominally identical electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.7,
+    288.2,
+    452.4
+   ],
+   "w": 1081,
+   "h": 1633,
+   "dpi": 300,
+   "src": "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf",
+   "blank": 0.878,
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

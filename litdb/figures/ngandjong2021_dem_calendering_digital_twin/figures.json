@@ -1,0 +1,201 @@
+{
+ "slug": "ngandjong2021_dem_calendering_digital_twin",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Mechanical model validation. A) Comparison of experimental (black line) and simulated (red line/dots) microindentation curve. The experimental curve corresponds to an average of 30 independent measurements, the grey area represents the standard deviation. The experimental and simulated electrode maximal contact surface and displacement are equal to ~31000 μm2/~18 μm and ~11600 μm2/~16 μm, respectively. B) Comparison of experimental (black) and simulated (red) evolution of the electrode porosity as a function of the applied calendering pressure. The error bars represent the experimental standard deviation. (For interpretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.)",
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    249.6
+   ],
+   "w": 2227,
+   "h": 836,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. A) Experimental PSD obtained through Hg intrusion porosimetry and normalized by the electrode mass. B) Pore size distribution of the simulated electrode (normalized by its mass, while the bin indicates the resolution used for the calculation) calculated by the open source software PorosityPlus [57], which was adapted to our case study. information about the short/long range particles arrangement in the electrode mesostructure. latter clearly indicates that upon calendering CBD particles cover each AM particle type filling the AM-AM interstitial pores. Moreover, by increasing the applied calender pressure (red vs. blue curve) the peaks distances do not change. This demonstrates that calendering decreases the AM-CBD particles distances up to a certain limit. As in the case of AM-CBD, the AM-AM g(r), reported in Fig. 4C, shows that calendering induces a locally ordered structure in ",
+   "bbox": [
+    31.6,
+    315.4,
+    566.0,
+    509.8
+   ],
+   "w": 2228,
+   "h": 811,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Radial distribution function g(r) of the un-calendered electrode (black curve) and electrodes calendered up to 31.5% (red curve) and to 27.2% (blue curve) porosity for A) CBD-CBD, B) CBD-AM and C) AM-AM particles. The distances were calculated from the center of mass of A) CBD, B) AM and C) AM particles. The inset in Fig. 4A displays a zoom of the first peak for the two calendered structures to ease their comparison. (For interpretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.) Celgard separator based on the SEM images from the open-source data of Lagadec et al. [68] A 5 μm thick current collector was added to the ex­ tremes of the in silico cell. Dbulk*ε1.5, where Dbulk is the bulk electrolyte diffusivity and ε, the porosity) was assigned to the CBD phase in order to consider an inner-porosity of 47%. The evolu",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    436.7
+   ],
+   "w": 2228,
+   "h": 1615,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Tortuosity factor for calendered and not calendered electrodes as a function of the applied calendering pressure for x, y and z Cartesian directions by considering a CBD inner porosity of 47%. The dashed lines and the associ­ ated values correspond to the electrode macroporosity (Fig. 2B) for the applied calendering pressures. length of this region is directly linked to the EIS tortuosity factor (τEIS), whose calculated values (Table 3) are in agreement with the ones ob­ tained through GeoDict diffusivity methodology (Fig. 5). Fig. 6B dis­ plays the ionic contribution to the overall impedance of a cross-sectional cut at half the electrode thickness at 100 Hz. Within our models for­ mality, CBD has 47% of inner porosity treated as a region permeable to the electrolyte diffusion. The effective ionic diffusion coefficient is corrected through a Bruggeman relation. Therefore, in the ",
+   "bbox": [
+    31.6,
+    49.4,
+    297.0,
+    267.5
+   ],
+   "w": 1107,
+   "h": 910,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (A) Simulated Nyquist plots for un-calendered and calendered electrodes in symmetric cell configuration. (B) (Top row) Electrode cross-sectional impedance 2D plots corresponding to the ionic contribution to the total measured impedance at half the electrode thickness at 100 Hz. (Bottom row) Scheme reporting the distribution of AM, CBDs and pore phases. limitation. In the un-calendered electrode there is a steeper gradient of concentration from top to bottom, i.e. a worse electronic conductivity, which is in agreement with the results reported in Fig. 7 (B,C). Also noteworthy, the lithiation state depends on the AM particle size distri­ bution in the un-calendered and in the two calendered electrodes, even though the lithiation homogeneity is improved in the latter. The centers of the biggest AM particles remain less accessible to Li, whereas for smaller AM particles the degree of",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    510.0
+   ],
+   "w": 2228,
+   "h": 1921,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.82
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (A) Meshed half-cells used for the electrochemical simulations (applied calen­ dering pressure increases from left to right). In red, the AM; in yellow, the CBD; in green, the separator; and in purple, the Li foil. (B) Discharge curves as a function of the specific capacity (the dotted line is a fit to reach 2 V) for the un-calendered and calendered elec­ trodes. (C) Electrolyte Transport (the inverse of the average Li+ concentration gradient value along the z-axis); CBD Transport (defined as the inverse of the average stan­ dard deviation of local current density at the CBD surface); and the Active Surface Area, which refers to the AM surface area in con­ tact with the electrolyte. (For interpretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.)",
+   "bbox": [
+    407.6,
+    363.9,
+    565.8,
+    586.3
+   ],
+   "w": 660,
+   "h": 927,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Electrodes slices along the z axis for each condition showing their lithiation state ([Li]s/[Li]s,max) at the same discharge time, i.e. at 110 mAh.g−1. The white phase stands for the electrolyte while the light grey one for the CBD. phases for the case of LiNi0.33Mn0.33Co0.33O2-based cathodes. This dig­ ital twin considers explicitly the slurry, dried and calendered electrode, whose associated properties were validated through comparison to in house experimental results. The latter was used to assess the effect of calendering on the mesostructural and electrochemical properties of cathodes containing 96 wt% of AM and 4 wt% of CBD. Specifically, the evolution of the PSD, tortuosity factor, particles arrangement, discharge galvanostatic performance and electrochemical impedance spectroscopy were analyzed and discussed in detail. In terms of the PSD both pores amount and dimensions ",
+   "bbox": [
+    31.6,
+    238.1,
+    566.0,
+    622.1
+   ],
+   "w": 2228,
+   "h": 1601,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Comparison of experimental (with associated standard deviation) and simulated density and porosity of the dried electrode. ρ (g cm−3) Porosity (%) Experimental 2.3 ± 0.1 42 ± 2 Simulated 2.4 41.6",
+   "bbox": [
+    32.6,
+    31.6,
+    564.8,
+    748.3
+   ],
+   "w": 2219,
+   "h": 2987,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 DEM parameters used for both micro-indentation and calendering. The mixed interactions i-j (ex. AM-CBD) for e, v and Xu correspond to the geometric mean of each property associated to the materials i and j. The AM and CBD dimensions and density were kept constant relative the ones used for the dried electrode CGMD simulation (Table S2). AM CBD Al Steel",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "w": 2213,
+   "h": 2989,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Ionic resistances (Rion) of the electrolyte within the porous electrode and asso­ ciated tortuosity factors (τEIS) calculated according to the Transmission Line Model proposed by Landesfeind et al. [69]. Rion (Ω m2)a τEIS b Uncal-41.6% 0.02595 1.3676 31.5% 0.02913 1.3808 27.2% 0.04014 1.7527 a Obtained from the graphical interpolation of the high-to-mid frequency re­ gion on the EI spectra. b EIS-derived tortuosity obtained through the graphical method according to Landesfeind et al. [69]. calendered electrodes. On top of the clear difference in porosity, the difference in AM lithiation can also be observed. For each electrode, the region closer to the current collector has a higher lithiation state than the region closer to the separator, highlighting an electronic transport",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    747.5
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf",
+   "blank": 0.843
+  }
+ ]
+}

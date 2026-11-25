@@ -1,0 +1,32 @@
+[2026-10-22 01:05:50] ════ P2′ 봉인 구조 UMA 단일점 · kgy · HEAD d640e8e7 · SEAL db/inputs/wad_p2small_seal_2026_10_17 · OUT /home/kgy/work/runs/wad_p2small_uma_sp_2026_10_17 ════
+  ✓ S_A_bound.extxyz 922c55304c03495b
+  ✓ S_A_far.extxyz 89cee1cbaece8ce9
+  ✓ S_A_p05_bound.extxyz 36669da6b89ed8e1
+  ✓ Li_A_bound.extxyz 8eaa8b9b69f46ad9
+  ✓ Li_A_far.extxyz a0b58abadef9915a
+  ✓ Li_A_p05_bound.extxyz 5005372b59229acd
+  ✓ S_A_G3_c2_bound.extxyz a437c28d90b94d05
+  ✓ S_A_G3_c2_far_i.extxyz e24130e5a3a1889d
+  ✓ S_A_G3_c2_far_ii.extxyz 80d7f2830619c7d7
+  봉인 manifest sha 65a0ca0e376b3c67
+  판: fairchem.core 2.21.0 · torch 2.8.0+cu128 · cuda 12.8 · ase 3.29.0 · GPU True
+[2026-10-22 01:05:55] GPU 합계 15023 MiB · 문턱 16000 · 감시 23500 · 상한 4000
+[2026-10-22 01:05:55] DRY_RUN — 여기서 끝 (계산 0)
+[2026-10-22 01:05:55] ════ P2′ 봉인 구조 UMA 단일점 · kgy · HEAD d640e8e7 · SEAL db/inputs/wad_p2small_seal_2026_10_17 · OUT /home/kgy/work/runs/wad_p2small_uma_sp_2026_10_17 ════
+  ✓ S_A_bound.extxyz 922c55304c03495b
+  ✓ S_A_far.extxyz 89cee1cbaece8ce9
+  ✓ S_A_p05_bound.extxyz 36669da6b89ed8e1
+  ✓ Li_A_bound.extxyz 8eaa8b9b69f46ad9
+  ✓ Li_A_far.extxyz a0b58abadef9915a
+  ✓ Li_A_p05_bound.extxyz 5005372b59229acd
+  ✓ S_A_G3_c2_bound.extxyz a437c28d90b94d05
+  ✓ S_A_G3_c2_far_i.extxyz e24130e5a3a1889d
+  ✓ S_A_G3_c2_far_ii.extxyz 80d7f2830619c7d7
+  봉인 manifest sha 65a0ca0e376b3c67
+  판: fairchem.core 2.21.0 · torch 2.8.0+cu128 · cuda 12.8 · ase 3.29.0 · GPU True
+[2026-10-22 01:06:00] GPU 합계 15022 MiB · 문턱 16000 · 감시 23500 · 상한 4000
+[2026-10-22 01:06:00] ▶ 단일점 9 구조 (D3 없음)
+[2026-10-22 01:06:16] 단일점 rc=0
+  결박: fairchem.core 2.21.0 · uma-s-1p1 · omat · default · 체크포인트 07068e9c76702ca1 · 행 9
+[2026-10-22 01:06:16] 결박 ✓
+[2026-10-22 01:06:16] ■ 끝 · 끝 코드 0

@@ -1,0 +1,131 @@
+{
+ "slug": "jung2026_pamps_cnt_crosstalk_high_loading_lmb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustrations demonstrating the structure of NCM cathode using conductive agents as a) B-CNT and b) PAMPS-CNT, and the eﬀects on Li metal battery operation via chemical crosstalk.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.0,
+    572.7
+   ],
+   "w": 2118,
+   "h": 2092,
+   "dpi": 300,
+   "src": "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf",
+   "blank": 0.368
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Characterizations of polymer-functionalized CNTs. a) Raman spectroscopy and b) XPS analysis showing the structure of polymer-grafted CNTs. c) EIS-DRT analysis of polymer-grafted CNTs with PEEK washer. 3D laser microscopy of electrodes using conductive agents as d) B-CNT, e) PAM-CNT, and f) PAMPS-CNT. g) Charge-discharge voltage proﬁle of the NCM811||Li cells and h) post-formation EIS-DRT analysis. Long-term cycling stability of NCM811||Li cells at i) high rate (3mAh cm−2, 1 C, 4.3 V cut-oﬀ) and j) high-voltage with high loading (4.5 mAh cm−2, 0.3 C, 4.5 V cut-oﬀ).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.0,
+    576.7
+   ],
+   "w": 2118,
+   "h": 2108,
+   "dpi": 300,
+   "src": "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf",
+   "blank": 0.82
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Interfacial characterization of cathode and anode surfaces of Li||NCM811 cells. a) XPS analysis of S 2p, P 2p spectra for NCM811 cathodes incorporated with B-CNT or PAMPS-CNT, and b) 3D representation of ToF-SIMS depth proﬁle images of SO3−and PO2– on the NCM811 cathodes after 50 cycles at 0.5 C. TEM images of NCM811 cathodes using c) B-CNT and d) PAMPS-CNT after 50 cycles. The orange and blue squares are FFT images of the corresponding areas in the TEM images. e) XPS analysis of S 2p, F 1s spectra for 40 μm LMA and f) 3D representation of ToF-SIMS depth proﬁle images of SO3−and LiF−on the Li metal anodes at 0.5 C after 50 cycles. Top-view of SEM images of LMA for full cells with g) B-CNT and h) PAMPS-CNT.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.0,
+    642.7
+   ],
+   "w": 2118,
+   "h": 2383,
+   "dpi": 300,
+   "src": "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf",
+   "blank": 0.508
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Mechanism of the crosstalk eﬀect of PAMPS-CNT. a) EA and CIC analysis of NCM811 cathode before cycle, after 30 cycles, and after 50 cycles. b) HSO3−production mechanism by reaction between PAMPS and LiOH, and their relative energy using DFT calculation. c) Diﬀusion coeﬃcient of Li+, PF6−, and HSO3−. d) HOMO and LUMO energy levels of electrolytes (DEC, EC, FEC, PF6−) and HSO3−. e) Reaction pathway of HSO3−, Li and LiOH for the formation of the SEI layer. f) Schematic illustration of a mechanistic pathway where HSO3−intermediates from PAMPS migrate to the anode and contribute to the formation of a stable SEI layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.9,
+    550.0,
+    533.7
+   ],
+   "w": 2118,
+   "h": 1929,
+   "dpi": 300,
+   "src": "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical kinetics of PAMPS-CNT electrode. a) Changes in the internal resistance as a function of voltage during charge and discharge using GITT measurement. b) Measurement of diﬀusion coeﬃcient using voltage change with PITT analysis. EIS-DRT measurements on NCM811-based three-electrode cells incorporated c) B-CNT and d) PAMPS-CNT.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.7,
+    550.1,
+    540.7
+   ],
+   "w": 2118,
+   "h": 1960,
+   "dpi": 300,
+   "src": "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf",
+   "blank": 0.664
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Electrochemical performance of Li||NCM811 cells using PAMPS-CNT at various conditions. a) Fabrication high-loading NCM811 cathodes using B-CNT and PAMPS-CNT. b) Cycling performance of Li||NCM811 cells with PAMPS-CNT based NCM811 cathode. (37.4– 58.4 mg cm−2).c) Long- term cycling performance using S-free advanced electrolyte optimized for Li metal stability, (6.0 mAh cm−2, 0.2 C/0.3 C for charge/discharge, 4.5 V cut-oﬀ) and d) consequent cell voltage proﬁle. e) Cycle retention of Bi-stack pouch cell with 8.5 mAh cm−2 NCM811 cathode using PAMPS-CNT and f) corresponding voltage proﬁle. g) The performance of high-energy-density Li metal pouch cells with high loading cathode (more than 2.0 mAh cm−2) in reported literature and this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    586.7
+   ],
+   "w": 2118,
+   "h": 2149,
+   "dpi": 300,
+   "src": "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf",
+   "blank": 0.812
+  }
+ ]
+}

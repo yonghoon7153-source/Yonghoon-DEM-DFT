@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 236" width="540" height="236" role="img" aria-label="Thin and thick electron clouds; the thicker cloud shields the nucleus more">
+<style>
+text{font-family:"DejaVu Sans","Helvetica Neue",Arial,sans-serif;font-size:15px;fill:#1f2937}
+.mono{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:14px}
+.note{font-size:13.5px;fill:#6b7280}
+.li{fill:#0d9488} .p{fill:#7c3aed} .nd{fill:#db2777} .fld{fill:#2563eb} .wht{fill:#ffffff}
+.ax{stroke:#6b7280;stroke-width:1.2;fill:none}
+.guide{stroke:#6b7280;stroke-width:1;stroke-dasharray:3 4;fill:none}
+.trace{fill:none;stroke-width:2.2;stroke-linejoin:round}
+</style>
+<rect x="0.5" y="0.5" width="539" height="235" rx="8" fill="#ffffff" stroke="#d3dcdc"/>
+<defs><marker id="af2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker><marker id="ak2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker></defs>
+<line x1="22" y1="196" x2="22" y2="40" stroke="#2563eb" stroke-width="2" marker-end="url(#af2)"/>
+<text class="fld" x="22" y="30" text-anchor="middle">B₀</text>
+<text class="mono" x="275" y="30" text-anchor="middle">B_eff = B₀ − b_ind = B₀ (1 − σ)</text>
+<circle cx="150" cy="104" r="34" fill="#cfe8e5" stroke="#0d9488" stroke-dasharray="2 3"/>
+<circle cx="150" cy="104" r="12" fill="#0d9488"/>
+<line x1="150" y1="124" x2="150" y2="136" stroke="#1f2937" stroke-width="2" marker-end="url(#ak2)"/>
+<text x="150" y="184" text-anchor="middle">thin electron cloud</text>
+<text class="note" x="150" y="204" text-anchor="middle">small b_ind · feels more B</text>
+<text class="note" x="150" y="222" text-anchor="middle">→ higher f · higher ppm</text>
+<circle cx="395" cy="104" r="52" fill="#cfe8e5" stroke="#0d9488" stroke-dasharray="2 3"/>
+<circle cx="395" cy="104" r="12" fill="#0d9488"/>
+<line x1="395" y1="124" x2="395" y2="150" stroke="#1f2937" stroke-width="2" marker-end="url(#ak2)"/>
+<text x="395" y="184" text-anchor="middle">thick electron cloud</text>
+<text class="note" x="395" y="204" text-anchor="middle">larger b_ind · feels less B</text>
+<text class="note" x="395" y="222" text-anchor="middle">→ lower f · lower ppm (up-field)</text>
+</svg>

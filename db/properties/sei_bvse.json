@@ -1,0 +1,173 @@
+{
+  "property": "sei_bvse",
+  "warning": "BVSE 는 정적 기하 프록시다. **eV 단위 migration barrier 로 인용 금지** — 상 사이 상대 순위와 채널 개통 판정에만 쓴다. 절대 barrier 는 DFT NEB.",
+  "bv_params": "softBV Li-X R0: S 2.105 / Cl 2.249 / O 1.466, b=0.37 (Li-P 미확보)",
+  "results": {
+    "li2o_mp-1960": {
+      "cif": "/data/work/runs/sei_bvse/li2o_mp-1960.cif",
+      "n_atoms": 192,
+      "anions": [
+        "O"
+      ],
+      "grid": 32,
+      "voxel_A": 0.4113,
+      "bvse_min": 0.00288,
+      "bvse_perc_level": 0.0245,
+      "Li_migration_barrier_BVSE": 0.0216,
+      "Li_site_BVS_mean": 0.9262,
+      "Li_site_BVS_std": 0.0,
+      "note": "BVSE barrier = percolation threshold above global min (valence^2 units). Empirical BVSE; calibrate scale vs comp1/modelc reference run, not absolute eV.",
+      "status": "ok",
+      "nsites": 192,
+      "framework_cations": [],
+      "supercell": [
+        4,
+        4,
+        4
+      ],
+      "bvs_sanity": "ok"
+    },
+    "li2s_mp-1153": {
+      "cif": "/data/work/runs/sei_bvse/li2s_mp-1153.cif",
+      "n_atoms": 81,
+      "anions": [
+        "S"
+      ],
+      "grid": 32,
+      "voxel_A": 0.3759,
+      "bvse_min": 4e-05,
+      "bvse_perc_level": 0.78241,
+      "Li_migration_barrier_BVSE": 0.7824,
+      "Li_site_BVS_mean": 1.5627,
+      "Li_site_BVS_std": 0.0,
+      "note": "BVSE barrier = percolation threshold above global min (valence^2 units). Empirical BVSE; calibrate scale vs comp1/modelc reference run, not absolute eV.",
+      "status": "suspect",
+      "nsites": 81,
+      "framework_cations": [],
+      "supercell": [
+        3,
+        3,
+        3
+      ],
+      "bvs_sanity": "BVS 1.5627 outside 0.7-1.4"
+    },
+    "li3p_mp-736": {
+      "status": "skipped",
+      "reason": "no BV params for ['P']",
+      "nsites": 144,
+      "anions": []
+    },
+    "li3po4_mp-13725": {
+      "cif": "/data/work/runs/sei_bvse/li3po4_mp-13725.cif",
+      "n_atoms": 288,
+      "anions": [
+        "O"
+      ],
+      "grid": 32,
+      "voxel_A": 0.3786,
+      "bvse_min": 0.0,
+      "bvse_perc_level": 0.09984,
+      "Li_migration_barrier_BVSE": 0.0998,
+      "Li_site_BVS_mean": 1.1569,
+      "Li_site_BVS_std": 0.0568,
+      "note": "BVSE barrier = percolation threshold above global min (valence^2 units). Empirical BVSE; calibrate scale vs comp1/modelc reference run, not absolute eV.",
+      "status": "ok",
+      "nsites": 288,
+      "framework_cations": [
+        "P"
+      ],
+      "supercell": [
+        3,
+        3,
+        2
+      ],
+      "bvs_sanity": "ok"
+    },
+    "li3po4g_mp-2878": {
+      "cif": "/data/work/runs/sei_bvse/li3po4g_mp-2878.cif",
+      "n_atoms": 384,
+      "anions": [
+        "O"
+      ],
+      "grid": 32,
+      "voxel_A": 0.3794,
+      "bvse_min": 0.0,
+      "bvse_perc_level": 0.09198,
+      "Li_migration_barrier_BVSE": 0.092,
+      "Li_site_BVS_mean": 1.1537,
+      "Li_site_BVS_std": 0.0414,
+      "note": "BVSE barrier = percolation threshold above global min (valence^2 units). Empirical BVSE; calibrate scale vs comp1/modelc reference run, not absolute eV.",
+      "status": "ok",
+      "nsites": 384,
+      "framework_cations": [
+        "P"
+      ],
+      "supercell": [
+        3,
+        2,
+        2
+      ],
+      "bvs_sanity": "ok"
+    },
+    "licl_mp-22905": {
+      "cif": "/data/work/runs/sei_bvse/licl_mp-22905.cif",
+      "n_atoms": 216,
+      "anions": [
+        "Cl"
+      ],
+      "grid": 32,
+      "voxel_A": 0.4766,
+      "bvse_min": 3.03792,
+      "bvse_perc_level": 23.73609,
+      "Li_migration_barrier_BVSE": 20.6982,
+      "Li_site_BVS_mean": 2.743,
+      "Li_site_BVS_std": 0.0,
+      "note": "BVSE barrier = percolation threshold above global min (valence^2 units). Empirical BVSE; calibrate scale vs comp1/modelc reference run, not absolute eV.",
+      "status": "suspect",
+      "nsites": 216,
+      "framework_cations": [],
+      "supercell": [
+        3,
+        3,
+        3
+      ],
+      "bvs_sanity": "BVS 2.743 outside 0.7-1.4"
+    },
+    "lindo2_mp-1222355": {
+      "cif": "/data/work/runs/sei_bvse/lindo2_mp-1222355.cif",
+      "n_atoms": 288,
+      "anions": [
+        "O"
+      ],
+      "grid": 32,
+      "voxel_A": 0.3806,
+      "bvse_min": 0.0,
+      "bvse_perc_level": 0.02649,
+      "Li_migration_barrier_BVSE": 0.0265,
+      "Li_site_BVS_mean": 0.9744,
+      "Li_site_BVS_std": 0.0,
+      "note": "BVSE barrier = percolation threshold above global min (valence^2 units). Empirical BVSE; calibrate scale vs comp1/modelc reference run, not absolute eV.",
+      "status": "ok",
+      "nsites": 288,
+      "framework_cations": [
+        "Nd"
+      ],
+      "supercell": [
+        3,
+        3,
+        2
+      ],
+      "bvs_sanity": "ok"
+    },
+    "nd2o3_mp-2763": {
+      "status": "skipped",
+      "reason": "no Li in compound",
+      "nsites": 160
+    },
+    "nd2s3_mp-438": {
+      "status": "skipped",
+      "reason": "no Li in compound",
+      "nsites": 120
+    }
+  }
+}

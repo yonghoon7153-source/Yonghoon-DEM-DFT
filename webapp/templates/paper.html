@@ -1,0 +1,68 @@
+{# /paper/<slug> — 논문 digest 정독 페이지.
+   doc.html 을 **상속**한다: 목차·문서내 검색·frontmatter 배지는 거기 것을 그대로 쓴다
+   (같은 코드를 두 벌 두면 한쪽만 고쳐진다). 여기서 더하는 것은 두 가지뿐 —
+     ① topmatter: 인용 제한·뼈대 표시 밴드
+     ② scripts : 그림 크로핑(figref) + 여백 메모·형광펜(docnote)
+   ⚠ doc.html 은 F 묶음 소유다. 여기서는 base.html 이 여는 블록만 덮는다. #}
+{% extends "doc.html" %}
+
+{% block topmatter %}
+{% if paper_notice and (paper_notice.skeleton or paper_notice.ban_n) %}
+<div class="v3-band {% if paper_notice.skeleton %}is-blocked{% else %}is-hold{% endif %}"
+     style="margin-bottom:16px">
+  <div class="v3-band-cell" style="flex:1 1 100%">
+    {% if paper_notice.skeleton %}
+    <div class="v3-band-t">🌱 뼈대 (문서 대기)</div>
+    <div class="v3-band-v">실물(PDF·SI)을 아직 안 읽은 <b>빈 카드</b>다.
+      digest 머리말이 스스로 금지한다 — “<span class="mono">⏳ 문서 대기</span> 가 하나라도
+      남아 있으면 이 카드를 <b>인용하지 않는다</b>.”</div>
+    {% endif %}
+    {% if paper_notice.ban_n %}
+    <div class="v3-band-t"{% if paper_notice.skeleton %} style="margin-top:10px"{% endif %}>⛔ 인용 제한 문구 {{ paper_notice.ban_n }}곳</div>
+    <div class="v3-band-v">{{ paper_notice.ban }}</div>
+    {% endif %}
+    {# ⚠ 이 밴드가 **무엇이 아닌지**를 같이 적는다. 판정처럼 읽히면 안 된다. #}
+    <div class="muted" style="font-size:.72rem;margin-top:8px;line-height:1.6">
+      이 표시는 <b>digest 산문을 문자열로 훑은 것</b>이지 원장 판정이 아니다
+      (원장은 <a href="/governance">/governance</a> ·
+      <span class="mono">db/properties/citation_hazards.json</span>).
+      <b>표시가 없다고 인용 가능이라는 뜻이 아니다.</b> 무엇이 금지인지는 본문에서 확인한다.
+    </div>
+  </div>
+</div>
+{% endif %}
+{# 메모 개수 · 다는 법 (2026-10-28) — 여백은 메모가 있을 때만 열려서, 0 건이면 이 줄이 유일한 안내다.
+   개념 페이지 · 문헌 모달과 같은 #pnotebadge (docnote.js paintBadge 가 채운다). #}
+<div class="muted" style="font-size:.74rem;margin:0 0 10px"><span id="pnotebadge"></span></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/figref.js?v={{ asset_version }}"></script>
+<script src="/static/js/docnote.js?v={{ asset_version }}"></script>
+<script>
+/* 그림 → 본문 Fig 언급 링크화, 그 **뒤에** 여백 메모·형광펜.
+   순서가 바뀌면 figref 의 본문 교체가 형광펜을 지운다 (literature.html 모달과 같은 이유). */
+(function(){
+  var FIGS = {{ (figures or [])|tojson }};
+  var REL  = {{ (paper_rel or '')|tojson }};
+  function go(){
+    var body = document.getElementById('docbody');
+    if (!body) return;
+    if (window.figrefAttach) figrefAttach(body, FIGS, body);
+    // 여백 메모의 host = 본문만 감싼 격자 (.dn-host · style.css). ⛔ 2026-10-28 전에는 #main 이라
+    //   여백이 페이지 맨 끝에 붙어서 메모가 문단 옆이 아니라 끝에 몰렸다 (kim2025 메모 27 개 · 실측).
+    var host = body.parentNode.classList && body.parentNode.classList.contains('dn-host')
+             ? body.parentNode : null;
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'dn-host';
+      body.parentNode.insertBefore(host, body);
+      host.appendChild(body);
+    }
+    if (window.mountDocNotes && REL) mountDocNotes(body, REL, host);
+  }
+  if (document.readyState === 'complete') setTimeout(go, 120);
+  else window.addEventListener('load', function(){ setTimeout(go, 120); });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+Parsing 12 strain SCFs from /data/work/runs/elastic_modelc_2x
+strain magnitude h = 0.005 (tensor, ε_ij)
+
+  C_:1 (strain 11, normal): ['+43.20', '+16.60', '+18.40', '-2.40', '+6.50', '-4.50'] GPa
+  C_:2 (strain 22, normal): ['+15.50', '+36.40', '+19.20', '+5.00', '-0.10', '+3.50'] GPa
+  C_:3 (strain 33, normal): ['+18.90', '+18.90', '+43.20', '-5.20', '-7.30', '+0.50'] GPa
+  C_:4 (strain 23, shear): ['-3.45', '-6.10', '-0.75', '+33.35', '+2.30', '+0.75'] GPa
+  C_:5 (strain 13, shear): ['+0.45', '-2.80', '-11.05', '-10.90', '+28.80', '-3.85'] GPa
+  C_:6 (strain 12, shear): ['+2.65', '-2.80', '+0.05', '+1.35', '+1.80', '+6.40'] GPa
+
+[symmetrized] Cij ← (Cij + Cji) / 2
+
+Full 6×6 elastic matrix Cij (GPa):
+        j=    1  j=    2  j=    3  j=    4  j=    5  j=    6
+  i=1      43.20    16.05    18.65    -2.93     3.47    -0.93
+  i=2      16.05    36.40    19.05    -0.55    -1.45     0.35
+  i=3      18.65    19.05    43.20    -2.97    -9.18     0.27
+  i=4      -2.93    -0.55    -2.97    33.35    -4.30     1.05
+  i=5       3.47    -1.45    -9.18    -4.30    28.80    -1.03
+  i=6      -0.93     0.35     0.27     1.05    -1.03     6.40
+
+  C11/C22/C33 = 43.20, 36.40, 43.20  → avg 40.93, σ 3.21
+  C44/C55/C66 = 33.35, 28.80, 6.40  → avg 22.85, σ 11.78
+  C12/C13/C23 = 16.05, 18.65, 19.05  → avg 17.92, σ 1.33
+
+  eigenvalues of Cij: ['6.29', '15.97', '22.05', '30.86', '38.46', '77.72'] GPa  (all > 0 ⇒ mechanically stable)
+
+=== VRH-averaged engineering moduli ===
+  Bulk    Voigt   25.59  Reuss   25.03  VRH   25.31  GPa
+  Shear   Voigt   18.31  Reuss   11.93  VRH   15.12  GPa
+  Young's E       = 37.83 GPa
+  Poisson ν       = 0.2509
+  Zener A         = 2.457  (cubic only; 1 = isotropic)
+
+=== derived mechanical descriptors ===
+  Pugh B/G        = 1.674  (brittle; 1.75 boundary)
+  Cauchy pressure = -4.93 GPa  (+ ionic/metallic, - covalent/directional)
+  Vickers H_v     = 2.36 (Chen2011) / 3.50 (Tian2012) GPa
+  Universal aniso = 2.700  (0 = isotropic)
+  density         = 1.817 g/cm^3
+  sound v_l/v_t/v_m = 5002 / 2884 / 3202 m/s
+  Debye theta_D   = 353.5 K   (lower = softer lattice)
+
+→ /data/work/runs/elastic_modelc_2x/elastic_results_stress.json

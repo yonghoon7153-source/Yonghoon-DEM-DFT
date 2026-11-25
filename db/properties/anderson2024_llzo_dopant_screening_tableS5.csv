@@ -1,0 +1,61 @@
+dopant,substituted_site,garnet_wt_pct,cubic_wt_pct,sigma_ionic_S_cm,sigma_electronic_S_cm,Vmax_V,HV_integrated_current_mAh_g,Vmin_V,CCD_mA_cm2,source
+Ag,La,95.43,60.37,1.9e-05,3.48e-08,3.9,4.44,0.9,,paper SI Table S5
+Al,Li,98.61,98.61,6.04e-05,2.65e-08,3.9,2.44,0.7*,0.2,paper SI Table S5
+Au,Zr,85.13,48.57,3.54e-05,4.47e-08,3.9,0.83,1*,,paper SI Table S5
+B,Li,97.7,94.98,6.56e-06,2.77e-08,3.9,1.99,1.2,,paper SI Table S5
+Ba,La,92.32,30.7,1.36e-05,1.9e-08,3.9,0.48,< 0.1,0.60,paper SI Table S5
+Bi,La,93.99,93.99,1.97e-05,3.6e-08,3.9,2.04,1,,paper SI Table S5
+Ca,La,97.9,92.07,2.87e-05,2.31e-08,3.9,5.47,2.2*,">0.40,<0.85",paper SI Table S5
+Cd,Zr,100.0,90.17,2.1e-05,3.9e-08,3.9,1.08,< 0.1,,paper SI Table S5
+Ce,Zr,98.54,94.83,3.31e-05,2.49e-08,3.9,1.29,1.8*,,paper SI Table S5
+Co,Zr,93.43,44.13,9.37e-05,1.2e-06,3.9,0.46,< 0.1,0.1,paper SI Table S5
+Cr,Zr,95.39,93.47,1.1e-05,5.16e-08,3.8,2.16,1,,paper SI Table S5
+Cs,La,94.52,75.14,3.14e-05,2.62e-08,3.9,1.69,< 0.1,>0.50,paper SI Table S5
+Cu,Zr,97.31,45.15,2.52e-05,1.3e-07,3.9,1.15,< 0.1,,paper SI Table S5
+Dy,La,93.83,93.83,3.27e-05,3.85e-08,3.9,-0.05,1,">0.45,<0.75",paper SI Table S5
+Er,La,93.79,73.31,,,3.9,0.57,2.2,,paper SI Table S5
+Eu,Zr,88.67,83.86,5e-06,2.35e-08,3.9,1.83,0.4,,paper SI Table S5
+Fe,Li,98.07,98.07,0.00119,5.4e-08,3.9,0.71,1,0.2,paper SI Table S5
+Ga,Li,98.57,98.43,0.00116,1.97e-08,3.9,1.46,1,0.1,paper SI Table S5
+Gd,La,97.5,97.03,5.52e-05,2.97e-08,3.9,1.59,1,,paper SI Table S5
+Ge,Zr,99.41,71.63,1.4e-06,2.95e-08,3.9,0.55,1.1,,paper SI Table S5
+Hf,Zr,97.71,74.36,4.9e-05,4.51e-08,3.9,1.44,< 0.1,> 0.45,paper SI Table S5
+Ho,La,93.24,56.77,1.57e-05,2.42e-08,3.9,2.92,< 0.1,,paper SI Table S5
+In,Zr,97.56,41.51,2.58e-05,2e-08,3.9,1.66,< 0.1,> 0.25,paper SI Table S5
+Ir,Zr,100.0,59.63,9.06e-06,1.24e-07,3.9,3.28,< 0.1,,paper SI Table S5
+K,La,94.01,44.37,2.17e-05,2.3e-08,3.9,1.25,0.8,,paper SI Table S5
+Lu,La,96.17,96.17,2.81e-05,3.07e-08,3.9,5.21,< 0.1,,paper SI Table S5
+Mg,Zr,95.84,95.84,2.37e-05,2.84e-08,3.9,3.72,< 0.1,> 0.30,paper SI Table S5
+Mn,Zr,92.1,47.3,9.59e-06,3.15e-08,3.9,1.85,< 0.1,,paper SI Table S5
+Mo,Zr,51.85,51.85,,,3.9,5.18,0.9,,paper SI Table S5
+Na,La,95.19,68.43,4.81e-05,2.88e-08,3.9,3.85,< 0.1,> 0.50,paper SI Table S5
+Nb,Zr,99.31,94.7,3.98e-05,4.83e-08,3.9,2.39,1.4,,paper SI Table S5
+Nd,La,95.8,50.91,4.28e-06,2.96e-08,3.9,9.3,< 0.1,">0.55,<0.70",paper SI Table S5
+Ni,Zr,93.13,93.13,9.33e-05,2.7e-08,3.9,1.7,< 0.1,,paper SI Table S5
+P,Zr,95.91,61.61,3.39e-06,2.32e-08,3.9,1.54,< 0.1,,paper SI Table S5
+Pb,Zr,97.2,97.04,2.04e-05,2.73e-08,3.9,3.54,< 0.1,,paper SI Table S5
+Pd,Zr,26.91,26.91,8.25e-07,5.35e-08,3.9,2.68,< 0.1,,paper SI Table S5
+Pr,La,96.42,42.45,5.36e-05,3.05e-08,3.9,2.12,< 0.1,,paper SI Table S5
+Pt,Zr,100.0,34.87,1.27e-06,6.72e-08,3.9,0.83,0.8*,,paper SI Table S5
+Rb,La,94.62,54.45,2.87e-05,2.53e-08,3.9,1.26,1.2,,paper SI Table S5
+Re,Zr,100.0,96.67,7.32e-06,4.14e-08,3.9,0.95,1.3,,paper SI Table S5
+Rh,Zr,65.53,56.11,2.58e-06,5.68e-08,3.9,7.12,< 0.1,,paper SI Table S5
+Ru,Zr,97.64,97.64,6.26e-05,2.09e-07,3.9,6.09,< 0.1,> 0.30,paper SI Table S5
+Sc,Zr,97.69,62.86,2.46e-05,2.05e-08,3.9,0.36,< 0.1,> 0.40,paper SI Table S5
+Se,Zr,93.63,72.37,4.75e-06,2.6e-08,3.9,2.58,< 0.1,,paper SI Table S5
+Si,Zr,91.37,25.79,1.16e-05,1.68e-08,3.9,0.67,1,,paper SI Table S5
+Sm,La,97.83,97.33,2.92e-05,3.56e-08,3.9,3.34,< 0.1,,paper SI Table S5
+Sn,Zr,98.44,82.99,9.34e-05,4.59e-08,3.9,1.11,< 0.1,,paper SI Table S5
+Sr,La,96.87,94.49,4.18e-05,2.33e-08,3.9,3.11,0.9,,paper SI Table S5
+Ta,Zr,94.48,70.93,0.000247,2.16e-08,3.9,1.47,1.2*,,paper SI Table S5
+Tb,La,91.85,57.4,,,3.8,2.9,< 0.1,,paper SI Table S5
+Te,Zr,4.7,4.7,,,3.9,5.38,,,paper SI Table S5
+Ti,Zr,99.14,58.21,1.19e-05,2.66e-08,3.9,1.71,< 0.1,0.65,paper SI Table S5
+Tl,Zr,95.44,75.73,2e-05,2.87e-08,3.9,6.77,< 0.1,,paper SI Table S5
+Tm,La,96.25,96.25,5.81e-06,3.18e-08,3.9,2.55,< 0.1,,paper SI Table S5
+V,Zr,97.44,97.44,8.86e-06,2.36e-08,3.9,2.48,0.8*,,paper SI Table S5
+W,Zr,100.0,99.38,0.000273,3.08e-08,3.9,3.58,< 0.1,0.40,paper SI Table S5
+Y,La,94.8,94.6,2.46e-05,3.14e-08,3.9,0.53,< 0.1,,paper SI Table S5
+Yb,La,94.95,76.26,,,3.9,1.87,< 0.1,,paper SI Table S5
+Zn,Li,99.01,98.27,2.42e-05,2.16e-08,3.8,6.6,0.8*,> 0.40,paper SI Table S5
+Undoped,-,88.08,37.44,1.62e-06,1.66e-07,3.9,1.39,1,,paper SI Table S5

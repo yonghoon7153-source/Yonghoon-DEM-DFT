@@ -1,0 +1,192 @@
+{
+ "slug": "hu2024_amorphous_lif_coating_lco_lpscl_interface",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "129. AdvFunctMater_2024_Hu_Amorphous_LiF_coating_LCO_LPSCl_interface_MAIN.pdf",
+  "129. Sup) AdvFunctMater_2024_Hu_Amorphous_LiF_coating_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Workﬂow of the dataset generation. b) Comparisons of energies and forces obtained by the DP and DFT+U models on the training dataset and testing dataset. c) Atomic structures of the bare LCO/LPSCl and the a-LiF coated interfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.2,
+    552.9,
+    467.7
+   ],
+   "w": 2118,
+   "h": 1653,
+   "dpi": 300,
+   "src": "129. AdvFunctMater_2024_Hu_Amorphous_LiF_coating_LCO_LPSCl_interface_MAIN.pdf",
+   "blank": 0.547
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Time evolutions of speciﬁc atomic pairs’ RDF proﬁles in the absence of Li vacancies (upper) and in the presence of Li vacancies (bottom). b) Representative morphologies for the products induced by the interfacial side reactions, corresponding to the atomic pairs in panel (a). Please note that the a-LiF coating layer is absent in all the cases presented in this ﬁgure.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    407.7
+   ],
+   "w": 2118,
+   "h": 1406,
+   "dpi": 300,
+   "src": "129. AdvFunctMater_2024_Hu_Amorphous_LiF_coating_LCO_LPSCl_interface_MAIN.pdf",
+   "blank": 0.531
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Atomic structures of the bare LCO/LPSCl and the a-LiF coated interfaces with diﬀerent coating thicknesses. Time evolutions of the b) P-S and c) S-S pairs’ RDF proﬁles in Livac-free interfacial systems. Here, the ﬁrst peak’s position of the S-S pair RDF corresponds to the S─S bond length in P-S tetrahedrons when no Livac is present in LPSCl, because S2 dimers do not form under this condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.2,
+    552.9,
+    388.7
+   ],
+   "w": 2118,
+   "h": 1328,
+   "dpi": 300,
+   "src": "129. AdvFunctMater_2024_Hu_Amorphous_LiF_coating_LCO_LPSCl_interface_MAIN.pdf",
+   "blank": 0.498
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Mean square displacements (MSD) of Li ions in the a-LiF coating region with respect to simulation times in diﬀerent LiF-thickness models. Calculated diﬀusion coeﬃcients are presented as well. b) Atomic packing morphologies of LiF with coating layers of 5 Å and 20 Å thickness. The regular Li-F tetrahedron numbers and P-S tetrahedrons are also displayed.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    550.1,
+    457.7
+   ],
+   "w": 2118,
+   "h": 1614,
+   "dpi": 300,
+   "src": "129. AdvFunctMater_2024_Hu_Amorphous_LiF_coating_LCO_LPSCl_interface_MAIN.pdf",
+   "blank": 0.755
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Comparisons of the P-S and S-S pairs’ RDF in the uncoated LCO/LPSCl interface obtained from the AIMD and DeePMD simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    74.2,
+    514.4,
+    269.5
+   ],
+   "w": 1794,
+   "h": 815,
+   "dpi": 300,
+   "src": "129. Sup) AdvFunctMater_2024_Hu_Amorphous_LiF_coating_SI.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Time evolutions of S-S pairs’ RDF profiles in the interfacial systems with the presence of Li vacancies. We note again that the first peak denotes the S-S bond in the S2 dimer.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    327.4,
+    514.4,
+    453.6
+   ],
+   "w": 1794,
+   "h": 526,
+   "dpi": 300,
+   "src": "129. Sup) AdvFunctMater_2024_Hu_Amorphous_LiF_coating_SI.pdf",
+   "blank": 0.538
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Time evolutions of the LiLiF-S and LiLiF-Cl pairs’ RDF profiles with respect S4",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    525.4,
+    514.5,
+    735.0
+   ],
+   "w": 1794,
+   "h": 874,
+   "dpi": 300,
+   "src": "129. Sup) AdvFunctMater_2024_Hu_Amorphous_LiF_coating_SI.pdf",
+   "blank": 0.483
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The number of frames of various systems used in training DP models. We note that the training dataset contains some configurations with Li vacancies present in the LPSCl. System a-LiF LCO/LPSCl LCO/LiF LiF/LPSCl LCO/LiF/LPSCl bulk interface interface interface interface Total frames 1130 10164 840 1438 1510",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    70.6,
+    513.4,
+    783.7
+   ],
+   "w": 1786,
+   "h": 2972,
+   "dpi": 300,
+   "src": "129. Sup) AdvFunctMater_2024_Hu_Amorphous_LiF_coating_SI.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3. The number of frames in the testing dataset. We note that we used a well- converged DP model to run a 200 ps trajectory and then randomly selected 200 frames as the testing dataset. System LCO/LPSCl LCO/LiF LiF/LPSCl LCO/LiF/LPSCl interface interface interface interface Total frames 200 200 200 200",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    70.6,
+    513.2,
+    783.7
+   ],
+   "w": 1785,
+   "h": 2972,
+   "dpi": 300,
+   "src": "129. Sup) AdvFunctMater_2024_Hu_Amorphous_LiF_coating_SI.pdf",
+   "blank": 0.916
+  }
+ ]
+}

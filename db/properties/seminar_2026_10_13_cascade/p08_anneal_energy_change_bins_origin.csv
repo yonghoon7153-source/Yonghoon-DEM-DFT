@@ -1,0 +1,32 @@
+# Page 10 (user deck) — the same 693 values counted in 50 meV bins [left, right) — for a column plot.
+# n = 693 structures (main batch, short anneal 500 K / 50 ps, then relaxed again) · all 693 went lower.
+# Median ΔE = -811.5 meV = -0.81 eV per 52-atom cell (4 formula units) — NOT per atom.
+# Range -1197.4 … -660.5 meV. Exploratory (Stage 1).
+# Cell = the 52-atom conventional cell; the source CSV calls it "supercell". Same rows as p08_anneal_energy_change.csv.
+# Origin: X = bin_center_meV, Y = n_structures, Plot > Column/Bar, gap 0. The counts sum to n.
+bin_left_meV,bin_right_meV,bin_center_meV,n_structures
+-1250,-1200,-1225,0
+-1200,-1150,-1175,3
+-1150,-1100,-1125,4
+-1100,-1050,-1075,18
+-1050,-1000,-1025,49
+-1000,-950,-975,44
+-950,-900,-925,78
+-900,-850,-875,70
+-850,-800,-825,121
+-800,-750,-775,149
+-750,-700,-725,120
+-700,-650,-675,37
+-650,-600,-625,0
+-600,-550,-575,0
+-550,-500,-525,0
+-500,-450,-475,0
+-450,-400,-425,0
+-400,-350,-375,0
+-350,-300,-325,0
+-300,-250,-275,0
+-250,-200,-225,0
+-200,-150,-175,0
+-150,-100,-125,0
+-100,-50,-75,0
+-50,0,-25,0

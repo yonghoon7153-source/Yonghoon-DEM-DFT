@@ -1,0 +1,1027 @@
+{
+ "slug": "pycompact2025_dem_mpfem_workflow",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-11",
+ "sources": [
+  "02d3addf-1-s2.0-S2352711025004613-main.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Overview of the integrated DEM-MPFEM workflow.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.2,
+    568.7,
+    555.1,
+    732.2
+   ],
+   "w": 2145,
+   "h": 681,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.684,
+   "auto_bbox": [
+    40.2,
+    568.7,
+    555.1,
+    730.8
+   ],
+   "src_native": [
+    2095,
+    631
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: rendered at 300 dpi, bottom margin 4.6 pt against 6 pt on the other sides), then re-cut from the embedded native raster (xref 4, 2095×631 px = 300 dpi, no resampling): ink bounding box → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "caption_note": "the text layer appends the page number '2' to the caption block — removed here",
+   "viewed": true,
+   "mpm_note_ko": "두 상자 (DEM | MPFEM) 와 단계별 도구.  ★ 두 상자를 잇는 화살표 글자 = 넘기는 것의 정의: 'Initial powder configuration (size, center)' — 크기 (반지름) 와 중심뿐.  DEM 쪽 그림: FreeCAD 로 만든 경계 (Boundary) 상자 + 위쪽 삽입면 (Generator) → LIGGGHTS 가 위에서 뿌려 가라앉힘 → ParaView.  MPFEM 쪽: python + LS-PrePost (메시 · 금형 · 펀치) → OpenRadioss → ParaView."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Integrated workflow and algorithmic structure of PyCompact: (a) overall dataflow linking DEM and MPFEM stages, (b) implemented algorithm in InputGen.ipynb for generating the LIGGGHTS input file, and (c) implemented algorithm in MeshMatGen.ipynb for generating the MPFEM input file for compaction simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    49.4,
+    554.8,
+    685.9
+   ],
+   "w": 2143,
+   "h": 2652,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.897,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    565.7,
+    684.5
+   ],
+   "src_native": [
+    2095,
+    2602
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: rendered at 300 dpi, widened to the caption width: 14.6 pt of white on the left and 16.6 pt on the right against 6 / 4.6 pt above / below), then re-cut from the embedded native raster (xref 49, 2095×2602 px = 300 dpi, no resampling): ink bounding box → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(a) 전체 자료 흐름 · (b) InputGen.ipynb · (c) MeshMatGen.ipynb 순서도.  넘겨받는 과정의 그림 근거 전부가 이 한 장에 있다 — 패널별 크롭 fig_2a · fig_2b · fig_2c."
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 4,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — overall dataflow linking DEM and MPFEM stages (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.7,
+    49.4,
+    554.8,
+    268.8
+   ],
+   "w": 2142,
+   "h": 914,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.853,
+   "src_native": [
+    2095,
+    2602
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (a) of Fig. 2 — cut from the embedded native raster (xref 49, 2095×2602 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 0,0–2095,900) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f2",
+   "viewed": true,
+   "mpm_note_ko": "★ 넘기는 면: DEM 단계 (초록 점선) 의 끝 'Visualization (ParaView)' 에서 '.CSV File (x, y, z, r)' 한 장이 MPFEM 단계 (파란 점선) 의 MeshMatGen.ipynb 로 내려간다.  DEM 쪽 입력 = .STL (FreeCAD 경계) + Input File (Template & PSD → InputGen.ipynb) · DEM 출력 = .VTK.  MPFEM 쪽 = Command Files (.Cfile & .k) → 'Ls-PrePost [optional] (contact/boundary) Save/Reopen/modify' → Input File (.k) or (.rad) → OpenRadioss → .VTK → ParaView.  화살표는 한 방향뿐 — FE 결과가 DEM 으로 돌아가지 않는다 (한 번 넘김)."
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 4,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — implemented algorithm in InputGen.ipynb for generating the LIGGGHTS input file (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    284.1,
+    149.9,
+    685.9
+   ],
+   "w": 456,
+   "h": 1674,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.812,
+   "src_native": [
+    2095,
+    2602
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (b) of Fig. 2 — cut from the embedded native raster (xref 49, 2095×2602 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 0,930–720,2602) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f2",
+   "viewed": true,
+   "mpm_note_ko": "DEM 입력 만들기: Read template file (sample.txt) → Read Excel file (PSD.xlsx) → Determine atom_type & density → pdd 의 가장 큰 seed 찾기 → pts 마다 소수 (prime) seed → pts 줄 (radius, atom_type, density, seed) → pdd 블록 (volume fraction of each radius).  DEM 재료 값 가운데 이 순서도가 건드리는 것은 atom_type 과 density 뿐 — 영률 · 마찰은 template (sample.txt) 안."
+  },
+  {
+   "key": "f2c",
+   "kind": "figure",
+   "label": "2c",
+   "page": 4,
+   "file": "fig_2c.png",
+   "caption": "Fig. 2(c) — implemented algorithm in MeshMatGen.ipynb for generating the MPFEM input file for compaction simulation (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    289.8,
+    284.1,
+    554.8,
+    685.9
+   ],
+   "w": 1104,
+   "h": 1674,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.917,
+   "src_native": [
+    2095,
+    2602
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (c) of Fig. 2 — cut from the embedded native raster (xref 49, 2095×2602 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 720,930–2095,2602) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f2",
+   "viewed": true,
+   "mpm_note_ko": "★ 넘긴 뒤 입자를 다시 만드는 알고리즘.  왼 가지: Read input CSV file (position.csv) → Set parameters (unit_scale, mesh_dens, …., mesh_edge_size) → 행마다 'Create solid sphere at (x_i, y_i, z_i)' → 'Generate tetrahedral mesh' → 'Create surface' → 'Create part set'.  오른 가지: Set total number of particles → i 번째 입자마다 Define part id · Set pid = i · Set secid = i · Set mid = 1.  겹친 구를 다루는 단계 (틈 · 반지름 줄이기 · 침투 검사) 는 순서도에 없다."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Particle size distributions of the Fine and Coarse powders, (b) schematic representation of the powder compaction process showing the punch, die, and compacted powder, (c) Schematic 3D visualizations of the coarse (radii 48–96 μm, RVE size 1000 μm) and fine (radii 6–33 μm, RVE size 210 μm) powder models after DEM settlement, (d) MPFEM model of the powder compaction, where particles were generated and meshed using the Python script of the proposed workflow, (e) The effect of the element per particle on the axial stress at 95 % density, (f) Effect of friction coefficient on relative density for the Coarse powder: μ = 0.1, 0.2, and 0.3 at a pressure of 2000 (MPa), and (g) Influence of the RVE size on the relative density of Fine powder at a pressure of 2000 (MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    49.4,
+    554.7,
+    594.0
+   ],
+   "w": 2143,
+   "h": 2269,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.82,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    592.8
+   ],
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: rendered at 300 dpi, widened to the caption width: 14.7 pt of white on the left and 17 pt on the right against 6 / 4.6 pt above / below), then re-cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "caption_note": "the auto caption ran on into the next body paragraph ('(c). The packed assemblies were then converted …') — cut back to the printed caption",
+   "viewed": true,
+   "mpm_note_ko": "(a) 두 분말의 입도 · (b) 금형 압축 모식 · (c) DEM 침강 뒤 충전 (= 넘기는 상태) · (d) MPFEM 모형 (= 넘긴 뒤) · (e)(f)(g) 민감도 셋.  패널별 크롭 fig_3a … fig_3g."
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 5,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — Particle size distributions of the Fine and Coarse powders (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    49.4,
+    309.3,
+    265.2
+   ],
+   "w": 1120,
+   "h": 899,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.923,
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (a) of Fig. 3 — cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 0,0–1250,905) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "무게 분율 대 지름 (로그 축 0.1–1000 µm).  [판독] Fine 봉우리 0.025 @ ≈ 38 µm (반치 11–56 µm · 곡선 2–77 µm) · Coarse 봉우리 0.017 @ ≈ 122 µm (반치 100–163 µm).  본문 평균 (Fine 16 ± 9.4 µm · Coarse 118 ± 17 µm) 과 모형 반지름 범위 (6–33 · 48–96 µm) 는 캡션 · 본문 인쇄.  DEM 은 이 분포를 pdd (부피 또는 개수 분율) 로 받는다."
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 5,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — schematic representation of the powder compaction process showing the punch, die, and compacted powder (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    384.1,
+    49.4,
+    540.3,
+    269.0
+   ],
+   "w": 651,
+   "h": 915,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.575,
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (b) of Fig. 3 — cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 1300,0–2095,905) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "실험 (문헌 [15,16]) 의 금형 압축 모식: Punch · Die · Compacted Powder.  계산의 RVE (정육면체 · 벽 = 강체 금형) 는 이 원통 압분체의 작은 일부를 대신한다."
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 5,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3(c) — Schematic 3D visualizations of the coarse (radii 48–96 μm, RVE size 1000 μm) and fine (radii 6–33 μm, RVE size 210 μm) powder models after DEM settlement (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    278.4,
+    361.3,
+    434.4
+   ],
+   "w": 1337,
+   "h": 650,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.665,
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (c) of Fig. 3 — cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 0,930–1360,1600) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "★ 넘기는 순간의 상태 = DEM 중력 침강 뒤의 충전 (가압 전).  Coarse 1000 µm × 1000 µm (403 입자) · Fine 210 µm × 210 µm (569 입자 · 크기 폭이 넓다).  이 상태의 충전율 · 층 높이 · 겹침은 본문에 인쇄되지 않았다 (Fig. 4b 에서 읽으면 기공 ≈ 42–43 %)."
+  },
+  {
+   "key": "f3d",
+   "kind": "figure",
+   "label": "3d",
+   "page": 5,
+   "file": "fig_3d.png",
+   "caption": "Fig. 3(d) — MPFEM model of the powder compaction, where particles were generated and meshed using the Python script of the proposed workflow (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    384.6,
+    278.9,
+    554.7,
+    437.8
+   ],
+   "w": 709,
+   "h": 662,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.717,
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (d) of Fig. 3 — cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 1380,930–2095,1600) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "★ 넘긴 뒤의 모형: 구마다 사면체 메시 (확대한 구 한 개) + 강체 Punch (위 판 · 셸 메시) + 강체 Die (상자 · 셸 메시).  DEM 의 구가 그 자리 · 그 반지름의 변형체로 바뀐 것 — 접촉은 여기서 새로 정의된다 (일반 접촉 · 벌칙 + Coulomb 0.2)."
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 5,
+   "file": "fig_3e.png",
+   "caption": "Fig. 3(e) — The effect of the element per particle on the axial stress at 95 % density (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    445.0,
+    209.9,
+    594.0
+   ],
+   "w": 706,
+   "h": 621,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.893,
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (e) of Fig. 3 — cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 0,1620–683,2220) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "입자당 평균 요소 수 500 → 2500 에서 상대밀도 95 % 일 때의 축 응력 (Coarse).  [판독] 1641 · 1531 · 1469 · 1398 · 1380 MPa (1 화소 = 4.8 MPa).  ⚠ 본문 (p.6) 은 '1650 to 1310 MPa' — 2500 점이 그림 (≈ 1380) 과 70 MPa 어긋난다.  그림대로면 마지막 구간 −1.3 % (평탄), 본문 숫자면 −6.3 %.  지름당 요소 변으로는 ≈ 4.8 → 8.3 개 [카드 산술]."
+  },
+  {
+   "key": "f3f",
+   "kind": "figure",
+   "label": "3f",
+   "page": 5,
+   "file": "fig_3f.png",
+   "caption": "Fig. 3(f) — Effect of friction coefficient on relative density for the Coarse powder: μ = 0.1, 0.2, and 0.3 at a pressure of 2000 (MPa) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    210.9,
+    444.0,
+    379.8,
+    592.8
+   ],
+   "w": 704,
+   "h": 620,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.913,
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (f) of Fig. 3 — cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 683,1620–1400,2220) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "FE 쪽 입자 간 마찰 μ 0.1 · 0.2 · 0.3 → 제거 뒤 상대밀도 [판독] 84.2 · 85.5 · 85.9 % (Coarse · 2000 MPa).  본문: μ 가 크면 미끄럼 · 탄성 회복이 줄어 밀도가 오른다 · 'μ = 0.2 was selected for best experimental agreement' (실험 83.3 % 에는 μ 0.1 의 84.2 % 가 더 가깝다).  DEM 쪽 미끄럼 마찰 0.5 와 다른 값 — 넘긴 뒤의 풀이가 마찰을 새로 정한다."
+  },
+  {
+   "key": "f3g",
+   "kind": "figure",
+   "label": "3g",
+   "page": 5,
+   "file": "fig_3g.png",
+   "caption": "Fig. 3(g) — Influence of the RVE size on the relative density of Fine powder at a pressure of 2000 (MPa) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    384.1,
+    444.0,
+    553.3,
+    594.0
+   ],
+   "w": 705,
+   "h": 625,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.916,
+   "src_native": [
+    2095,
+    2220
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (g) of Fig. 3 — cut from the embedded native raster (xref 54, 2095×2220 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 1400,1620–2095,2220) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f3",
+   "viewed": true,
+   "mpm_note_ko": "RVE 변 210 · 250 · 300 µm (569 · 874 · 1033 입자 — Table 1) → 상대밀도 [판독] 86.9 · 87.0 · 87.5 % · 실험 선 (EXP) 87.8 %.  클수록 실험에 가까워지는 한 방향 변화 — 채택은 가장 작은 210 µm (9 h)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The obtained results from the simulation: (a) Engineering strain-stress curve of the Coarse powder at a peak pressure of 2000 MPa, (b) Evolution of pressure-porosity for coarse and fine powders, (c) von Mises stress distribution during compaction for Coarse powders, (d) von Mises stress distribution during compaction for Fine powders, (e) cross-sectional views of compacted Coarse powders (radii 48–96 μm, RVE size 1000 μm), (f) cross-sectional views of compacted Fine powders (radii 6–33 μm, RVE size 210 μm), comparison of pressure-relative density obtained from experimental and MPFEM for two different categories: (g) Coarse powders and (h) Fine powders. The relative density was calculated after unloading stage for both cases.",
+   "rotated_deg": 0,
+   "bbox": [
+    129.1,
+    49.4,
+    466.5,
+    697.5
+   ],
+   "w": 1406,
+   "h": 2700,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.792,
+   "src_native": [
+    1357,
+    2650
+   ],
+   "native_dpi": 300,
+   "manual_crop": "the tool skipped this figure ('영역 없음'): the figure fills PDF p.7 and its caption is printed on p.8 ('(caption on next page)') — cut from the embedded native raster (xref 105, 1357×2650 px = 300 dpi, no resampling): ink bounding box → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "caption_note": "caption printed on PDF p.8 (top), figure on p.7",
+   "viewed": true,
+   "mpm_note_ko": "(a) 응력–변형 · (b) 기공–압력 (가압 + 제거) · (c)(d) von Mises · (e)(f) 등가 소성 변형 단면 · (g)(h) 상대밀도–압력 (실험 · OpenRadioss · ABAQUS).  패널별 크롭 fig_4a · fig_4b · fig_4_c-d · fig_4_e-f · fig_4g · fig_4h.  ⚠ 캡션 (a) 는 Coarse 만 적었지만 그림에는 Coarse · Fine 두 곡선 · 캡션 / 본문의 (g) Coarse · (h) Fine 은 그림 범례 ((g) Fine · (h) Coarse) 와 반대 — 본문 값 85.4 % 는 범례가 Coarse 인 (h) 에서 읽힌다."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 7,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — Engineering strain-stress curve … at a peak pressure of 2000 MPa (panel of Fig. 4; the caption names the Coarse powder only, the panel shows Coarse and Fine).",
+   "rotated_deg": 0,
+   "bbox": [
+    129.1,
+    50.2,
+    286.0,
+    181.9
+   ],
+   "w": 654,
+   "h": 549,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.929,
+   "src_native": [
+    1357,
+    2650
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (a) of Fig. 4 — cut from the embedded native raster (xref 105, 1357×2650 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 0,0–678,530) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "공칭 응력–변형 (가압 + 제거).  [판독] 응력이 뜨는 변형률 Fine 0.287 · Coarse 0.371 (그 앞은 0 응력 — 펀치가 층에 닿기 전으로 읽힘 · 카드 추론) · 최고 2000 MPa 에서 0.576 · 0.622 · 제거 가지 100 MPa 0.559 · 0.603 → 20 MPa 0.540 · 0.591 → 0 응력 꼬리 끝 0.505 · 0.56.  되돌아옴의 대부분이 100 MPa 아래 (발끝) 에서 난다."
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 7,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — Evolution of pressure-porosity for coarse and fine powders (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.3,
+    49.4,
+    466.0,
+    181.9
+   ],
+   "w": 653,
+   "h": 552,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.922,
+   "src_native": [
+    1357,
+    2650
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (b) of Fig. 4 — cut from the embedded native raster (xref 105, 1357×2650 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 678,0–1357,530) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "★ 가압 + 제거를 한 축에 그린 기공–압력 곡선.  [판독 · Coarse / Fine] 시작 수직 구간 61 → 42.4 / 42.8 % (P ≈ 0) · 가압 500 MPa 27.0 / 24.7 · 1000 MPa 15.6 / 13.7 · 1500 MPa 8.5 / 7.0 · 2000 MPa 4.4 / 3.3 % · 제거 1000 MPa 5.6 / 4.4 · 100 MPa 8.4 / 6.9 · 20 MPa 10.4 / 9.2 · P → 0 끝 17.2 / 16.9 %.  압력 축의 0 눈금은 틀 왼쪽 끝이 아니다 (틀은 −204 MPa 에서 시작).  본문의 상대밀도 (제거 중 5 MPa 문턱 · 85.4 / ≈ 87 %) 는 20 MPa (89.6 / 90.8 %) 와 0 MPa (82.8 / 83.1 %) 사이의 수직 구간 위에 있다."
+  },
+  {
+   "key": "f4cd",
+   "kind": "figure",
+   "label": "4c–d",
+   "page": 7,
+   "file": "fig_4_c-d.png",
+   "caption": "Fig. 4(c)(d) — von Mises stress distribution during compaction for Coarse (c) and Fine (d) powders, with the stage header 'Initial stage → Loading stage → Unloading stage' (panels of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    129.1,
+    185.0,
+    465.7,
+    363.1
+   ],
+   "w": 1403,
+   "h": 742,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.746,
+   "src_native": [
+    1357,
+    2650
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panels (c) and (d) of Fig. 4 with their common stage header — cut from the embedded native raster (xref 105, 1357×2650 px = 300 dpi, no resampling): ink bounding box inside the box (native px 0,540–1357,1280) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "von Mises 응력 (색 눈금 0.0e+00–1.5e+03 MPa) 네 장면: 처음 → 가압 중 → 최고 → 제거.  ★ 'Initial stage' 는 전 입자가 눈금 맨 아래 색 (0–100 MPa 칸) = 넘긴 직후 응력이 없다는 그림 근거 [판독 — 0 인지 수십 MPa 인지는 색으로 못 가름].  Coarse 는 접촉점에 응력이 몰리고 Fine 은 더 고르다 (본문).  제거 장면에 응력이 남는다 (잔류)."
+  },
+  {
+   "key": "f4ef",
+   "kind": "figure",
+   "label": "4e–f",
+   "page": 7,
+   "file": "fig_4_e-f.png",
+   "caption": "Fig. 4(e)(f) — cross-sectional views (equivalent plastic strain) of compacted Coarse (e) and Fine (f) powders, 'Loading' and 'Unloading' (panels of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    129.1,
+    362.7,
+    460.0,
+    556.1
+   ],
+   "w": 1379,
+   "h": 806,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.635,
+   "src_native": [
+    1357,
+    2650
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panels (e) and (f) of Fig. 4 with their common header 'Loading / Unloading' — cut from the embedded native raster (xref 105, 1357×2650 px = 300 dpi, no resampling): ink bounding box inside the box (native px 0,1285–1357,2090) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "등가 소성 변형 단면 (색 눈금 0.0e+00–1.3e+00).  구가 다면체로 눌리고 접촉부가 붉다 (입자 속은 푸르다) — 입자 경계는 끝까지 남는다.  제거 장면에서 입자 사이 틈이 벌어진다.  화살표 라벨 445 µm (Coarse) · 120 µm (Fine) = 제거 장면의 단면 높이.  [판독] 단면 그림 높이 화소: 가압 179 → 제거 197 (Coarse · ×1.10) · 196 → 214 (Fine · ×1.09); 높이 ÷ 너비 × RVE 변 = 418 µm (Coarse) · 96 µm (Fine — 라벨 120 µm 보다 작다)."
+  },
+  {
+   "key": "f4g",
+   "kind": "figure",
+   "label": "4g",
+   "page": 7,
+   "file": "fig_4g.png",
+   "caption": "Fig. 4(g) — pressure–relative density, experiment vs MPFEM; the legend reads Fine-EXP / Fine-OpenRadioss / Fine-ABAQUS (the caption and the text call panel (g) Coarse).",
+   "rotated_deg": 0,
+   "bbox": [
+    129.1,
+    558.0,
+    286.0,
+    697.5
+   ],
+   "w": 654,
+   "h": 581,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.917,
+   "src_native": [
+    1357,
+    2650
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (g) of Fig. 4 — cut from the embedded native raster (xref 105, 1357×2650 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 0,2095–680,2650) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "범례 = Fine.  [판독 · ±0.3 %] 1400 · 1500 · 1600 · 1800 · 2000 MPa: 실험 83.9 · 83.5 · 83.9 · 87.6 · 87.8 % / OpenRadioss 82.9 · 83.9 · 84.7 · 86.5 · 87.0 % / ABAQUS 83.2 · 84.2 · 84.8 · 86.1 · 87.2 %.  표지가 겹쳐 가려진 변은 반지름으로 보정."
+  },
+  {
+   "key": "f4h",
+   "kind": "figure",
+   "label": "4h",
+   "page": 7,
+   "file": "fig_4h.png",
+   "caption": "Fig. 4(h) — pressure–relative density, experiment vs MPFEM; the legend reads Coarse-EXP / Coarse-OpenRadioss / Coarse-ABAQUS (the caption and the text call panel (h) Fine).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.0,
+    558.3,
+    466.5,
+    697.5
+   ],
+   "w": 652,
+   "h": 580,
+   "dpi": 300,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.913,
+   "src_native": [
+    1357,
+    2650
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel (h) of Fig. 4 — cut from the embedded native raster (xref 105, 1357×2650 px = 300 dpi, no resampling): ink bounding box inside the panel box (native px 680,2095–1357,2650) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "panel_of": "f4",
+   "viewed": true,
+   "mpm_note_ko": "범례 = Coarse.  [판독 · ±0.3 %] 실험 83.3 · 82.7 · 83.1 · 82.7 · 83.3 % / OpenRadioss 82.1 · 83.1 · 84.0 · 85.0 · 85.4 % / ABAQUS 80.8 · 81.6 · 82.3 · 82.8 · 84.1 %.  2000 MPa 의 85.4 (계산) · 83.3 (실험) 이 본문 인쇄값과 같다 → 이 패널이 Coarse.  계산 − 실험 = −1.2 · +0.4 · +0.9 · +2.3 · +2.1 %p — 1800 MPa 에서도 2 %p 를 넘는다."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 Comparison of RVE size, particle count, and wall-clock time for the MPFEM stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    662.9,
+    294.8,
+    747.4
+   ],
+   "w": 1462,
+   "h": 469,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.934,
+   "auto_bbox": [
+    32.6,
+    660.7,
+    295.8,
+    741.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: 300 dpi, 5 pt above the caption but 0.5 pt below the bottom rule), then re-cut: vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); caption included (tool convention for tables)",
+   "viewed": true,
+   "mpm_note_ko": "MPFEM 단계의 벽시계 시간: RVE 210 · 250 · 300 µm = 569 · 874 · 1033 입자 = 9 · 16 · 24 h (Fine).  CPU 수는 이 표에 없다 (24 CPU 는 Table 3 의 Coarse).  입자 수 대비 지수 1.34 → 2.43 [카드 산술]."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 Simulation configuration used in research [15,16].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.7,
+    49.9,
+    563.9,
+    142.0
+   ],
+   "w": 1462,
+   "h": 511,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.918,
+   "manual_crop": "the tool skipped this table ('영역 없음' — the table detector found no cells under the caption): vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); caption included (tool convention for tables)",
+   "viewed": true,
+   "mpm_note_ko": "두 풀이의 설정: Solver Explicit · 입자 /TETRA4 ↔ C3D4 · 금형 · 펀치 /SHELL ↔ R3D4 · General contact (/TYPE26) ↔ General contact · Friction coefficient 0.2.  인쇄된 표의 ABAQUS 칸은 Solver · Friction 행이 비어 있다 (본문 'follows the same geometric, material, and loading definitions' 로 공통 값이라 읽음).  펀치 속도 · 질량 스케일링 · 시간 간격 행은 없다."
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Computational efficiency comparison for DEM-MPFEM simulation between ABAQUS and PyCompact.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    120.6,
+    294.8,
+    196.5
+   ],
+   "w": 1462,
+   "h": 421,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.917,
+   "auto_bbox": [
+    32.6,
+    118.3,
+    295.8,
+    192.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox: 300 dpi, 5 pt above the caption but 1.9 pt below the bottom rule), then re-cut: vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); caption included (tool convention for tables)",
+   "viewed": true,
+   "mpm_note_ko": "Coarse · 2000 MPa · 24 CPU: ABAQUS 5 h ↔ PyCompact (OpenRadioss) 7 h.  CPU 수가 인쇄된 유일한 표.  Coarse 403 입자 × 2000 요소 ≈ 0.81 M 요소 [카드 산술]."
+  },
+  {
+   "key": "tmeta",
+   "kind": "table",
+   "label": "Metadata",
+   "page": 1,
+   "file": "tab_code_metadata.png",
+   "caption": "Metadata (unnumbered code metadata table, PDF p.1): C1 Current code version v1.0 · C2 Permanent link to code/repository https://github.com/plaslab-kimjh/PyCompact · C3 reproducible capsule N/A · C4 MIT license · C5 git · C6 Python 3.10; FreeCAD; LIGGGHTS; ParaView; LS-PrePost; OpenRadioss · C7 Windows; OpenRadioss r2024; LIGGGHTS-PUBLIC 3.8; ParaView 5.13.2; FreeCAD 1.0.2; Python 3.10 and higher; LS-PrePost 4.9 · C8 developer documentation/manual N/A · C9 kimjh@pusan.ac.kr.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    419.4,
+    294.8,
+    604.8
+   ],
+   "w": 1462,
+   "h": 1029,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.92,
+   "manual_crop": "unnumbered typeset table (no 'Table N' caption, so the tool cannot anchor it): vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); heading 'Metadata' to bottom rule",
+   "viewed": true,
+   "mpm_note_ko": "SoftwareX 의 코드 메타데이터 표 (번호 없음).  저장소 주소 · 판 (v1.0) · MIT · 운영체제 Windows · 도구 판.  재현 캡슐 (C3) 과 개발자 문서 (C8) 는 N/A.  저장소 안의 파일 구성은 논문에 없다 (본문 · 그림에 나오는 이름 = InputGen.ipynb · MeshMatGen.ipynb · sample.txt · PSD.xlsx · position.csv · material.k)."
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_impulse_definition.png",
+   "caption": "Equation (1), PDF p.3, §2.2 'Compaction and post-processing': J_Fi(t) = ∫₀ᵗ F_i(τ) dτ — impulse of the i-th force component on a rigid body (what OpenRadioss stores in the time-history file instead of the instantaneous reaction force).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.5,
+    420.2,
+    564.4,
+    461.4
+   ],
+   "w": 1472,
+   "h": 229,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.989,
+   "manual_crop": "display equation cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 7 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); equation number included",
+   "viewed": true,
+   "mpm_note_ko": "펀치 반력 읽기 ①: OpenRadioss 는 강체의 순간 반력이 아니라 그 시간 적분 (충격량 J) 을 시간 이력 파일에 남긴다.  우리 MPM 의 판 반력 (wallP · 경계 운동량 변화) 과 읽는 방식이 다르다."
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "file": "eq_02_force_from_impulse.png",
+   "caption": "Equation (2), PDF p.3, §2.2: F_i(t) = dJ_Fi/dt — instantaneous reaction force obtained by differentiating the stored impulse with respect to time.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.5,
+    507.0,
+    564.4,
+    537.9
+   ],
+   "w": 1472,
+   "h": 172,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.987,
+   "manual_crop": "display equation cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 7 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); equation number included",
+   "viewed": true,
+   "mpm_note_ko": "펀치 반력 읽기 ②: 저장된 충격량을 시간으로 미분해 순간 반력을 얻는다 → 압력 = 반력 ÷ 면적.  미분의 잡음을 어떻게 눌렀는지 (평활 · 창) 는 본문에 없다.  제거 중 5 MPa 문턱 판독은 이 미분값 위에서 한다."
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 5,
+   "file": "eq_03_swift_hardening_law.png",
+   "caption": "Equation (3), PDF p.5, §3: σ = K(ε + ε₀)ⁿ — Swift hardening law (σ flow stress in MPa, ε plastic strain, ε₀ = 0.0354 initial strain offset, K = 1380 MPa strength coefficient, n = 0.254 strain hardening exponent).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    651.6,
+    295.5,
+    674.2
+   ],
+   "w": 1470,
+   "h": 126,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.986,
+   "manual_crop": "display equation cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 7 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); equation number included",
+   "viewed": true,
+   "mpm_note_ko": "FE 쪽 입자 재료의 경화 법칙 (값은 [17] · 같은 연구실).  ε = 0 의 항복 590.7 MPa · ε 1.0 에서 1392 MPa · ε 1.3 에서 1485 MPa [카드 산술].  E 170 GPa · ν 0.3 · ρ 7130 kg/m³.  금속 분말 값 — 우리 재료 (LPSCl · NCM) 값으로 쓰지 않는다."
+  },
+  {
+   "key": "e01_02",
+   "kind": "equation",
+   "label": "eq1-2 (in text)",
+   "page": 3,
+   "file": "eq_01_02_in_text_reaction_force_readout.png",
+   "caption": "Equations (1) and (2) with their paragraph, PDF p.3 right column, 'Compaction and post-processing': two phases (loading to a peak nominal pressure, then unloading) in OpenRadioss; reaction forces on the punch from rigid-body time histories; impulse J_Fi(t) = ∫₀ᵗ F_i(τ)dτ (1) → F_i(t) = dJ_Fi/dt (2); OpenRadioss VTK output post-processed in ParaView (particle displacement, stress distribution, final porosity).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.5,
+    330.4,
+    564.8,
+    585.1
+   ],
+   "w": 1474,
+   "h": 1415,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.895,
+   "manual_crop": "context crop — the unaltered paragraph that carries Eqs. (1) and (2): vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 7 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "가압 → 제거 두 단계와 반력 판독법이 한 문단에 있다 (식 1 · 2 의 앞뒤 문장 그대로).  'loading to a peak nominal pressure and then unloading' = 하중 제거를 같은 계산에서 푼다는 인쇄 근거."
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-dem-fem-limits-mpfem-role",
+   "page": 2,
+   "file": "txt_p2_dem_fem_limits_and_mpfem_role.png",
+   "caption": "PDF p.2 left column (§1 Motivation and significance, continued): limits of homogenized FEM ('overlooks the discrete nature of particles … low-density stages where particle rearrangement dominates'), DEM advantages and limits ('assumptions of rigid or simplified particle shapes that neglect internal deformation'), the DEM–MPFEM split ('The DEM captures the initial particle interactions and packing behaviour, while the MPFEM extends traditional FEM to explicitly mesh and simulate the deformation of individual particles'; 'each particle is modeled as a deformable finite element body'; 'essential for accurately predicting high-pressure compaction behaviour') and the admitted difficulty ('achieving accurate data transfer between DEM and MPFEM stages can be challenging').",
+   "rotated_deg": 0,
+   "bbox": [
+    31.7,
+    48.9,
+    294.8,
+    414.1
+   ],
+   "w": 1461,
+   "h": 2028,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ DEM 의 한계 · 소성을 넣으려면 입자를 변형체로 풀어야 한다는 이유 · 역할 나눔이 한 단에 있다 (인용용 원문).  'essential' 은 고압 금속 분말 압축 맥락."
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-p3-handover-interface",
+   "page": 2,
+   "file": "txt_p2_p3_handover_interface_csv.png",
+   "caption": "PDF p.2 right column, §2.1 Software architecture (continued on p.3 top left): two stages (particle generation by DEM; compaction (loading-unloading) by MPFEM); raindrop insertion, 'then settled under gravity [28]'; VTK with particle IDs, centers and radii; 'Since DEM effectively manages the kinematics, the resulting configuration serves as a realistic initial configuration for MPFEM'; ParaView → 'CSV with (x, y, z, r). This file forms the interface between DEM and MPFEM'; MeshMatGen.ipynb → cfile, 'each sphere is created and meshed as a deformable solid'; general contact between all particles and against rigid tooling (die walls and punch); Swift hardening; OpenRadioss reads a subset of LS-DYNA keywords; LS-PrePost 'not necessary for reproduction'.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.5,
+    174.5,
+    564.3,
+    560.5
+   ],
+   "w": 1465,
+   "h": 2395,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.848,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); two pieces stacked on one canvas with a 6 pt white gap at the column / page break (text unaltered)",
+   "stitched_parts": [
+    "p.2 right column y 180.5–554.5 pt",
+    "p.3 left column y 54.9–94.1 pt (continuation)"
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★★ 넘기는 것 (x, y, z, r) · 넘기는 때 (중력 침강 뒤) · 넘긴 뒤 (구마다 변형체 + 일반 접촉) 의 인쇄 근거 문단.  'This file forms the interface between DEM and MPFEM' 한 문장이 넘기는 면의 정의."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-inputgen-template-psd-seed",
+   "page": 3,
+   "file": "txt_p3_inputgen_template_psd_seed_generation.png",
+   "caption": "PDF p.3 left column, 'DEM particle generation (InputGen.ipynb)': an Excel file (.xlsx) with particle radii and volume fractions or probability densities → LIGGGHTS particle templates and the pdd; two inputs (template LIGGGHTS input file + PSD Excel file); 'The template file provides the general structure of a LIGGGHTS input script, including definitions of material properties, units, boundary conditions, contact models, simulation domain, and timestep settings, which the user customizes'; the user specifies atom type and density; random seeds per size class restricted to prime numbers greater than 10,000; one pts line per particle size and the complete pdd block from the PSD data.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.7,
+    143.9,
+    295.4,
+    341.6
+   ],
+   "w": 1464,
+   "h": 1098,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator, second pass)",
+   "viewed": true,
+   "mpm_note_ko": "★ DEM 재료 값 (영률 · ν · 밀도 · 시간 간격) 이 논문에 없는 이유의 원문 — 사용자 템플릿 (sample.txt) 안에 있다.  넘김 (CSV) 에는 재료 값이 들어가지 않는다.  소수 시드 규칙 (10,000 초과) 의 원문."
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-dem-settings-conversion",
+   "page": 3,
+   "file": "txt_p3_dem_settings_and_dem_to_mpfem_conversion.png",
+   "caption": "PDF p.3 left column (continued at the top of the right column): DEM insertion (fix insert/rate/region until the target particle count), Hertz-Mindlin (tangential) contact, sliding friction 0.5, rolling friction 0.05, restitution 0.7, VTK → CSV (x, y, z, r); 'DEM to MPFEM conversion (MeshMatGen.ipynb)': CSV → cfile, DEM in centimeters × 10 → millimeters, user parameters (mesh density, number of elements and nodes, minimum and maximum edge sizes), 'creates solid spheres at the specified positions with the provided radii, applies a tetrahedral mesh to each particle, and generates both surface and part sets'; die, punch, contacts, material and boundary conditions 'completed manually within the LS-PrePost environment'; Coulomb friction + penalty-based contact 'preventing physical overlap'; inter-particle friction coefficient 0.2.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.7,
+    332.1,
+    294.8,
+    749.4
+   ],
+   "w": 1461,
+   "h": 2453,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator); two pieces stacked on one canvas with a 6 pt white gap at the column / page break (text unaltered)",
+   "stitched_parts": [
+    "p.3 left column y 338.1–743.4 pt",
+    "p.3 right column y 54.9–73.3 pt (continuation)"
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★★ 두 풀이의 접촉 값이 다르다는 근거 (DEM 미끄럼 0.5 · 구름 0.05 · 반발 0.7 ↔ FE Coulomb 0.2 + 벌칙) 와 구를 다시 만드는 절차의 원문.  겹침 · 틈 · 재평형에 대한 문장은 이 문단에 없다."
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-material-k-keyword-roundtrip",
+   "page": 3,
+   "file": "txt_p3_material_k_assignment_keyword_roundtrip.png",
+   "caption": "PDF p.3 right column: 'the key limitation of LS-PrePost is that it does not allow assigning material properties to all particles simultaneously'; the second part of MeshMatGen.ipynb writes material.k — the only user input is the total number of particles; pid and secid follow the particle number, mid = 1 for all; PIECEWISE_LINEAR_PLASTICITY; incorporation sequence: save as project (proj) → reload → re-save in keyword (k) format so that placeholder commands appear in an ordered block at the top of the input file ('After several trial-and-error iterations') → replace them with material.k → OpenRadioss.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.7,
+    69.8,
+    564.3,
+    340.6
+   ],
+   "w": 1464,
+   "h": 1504,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator, second pass)",
+   "viewed": true,
+   "mpm_note_ko": "넘긴 뒤 FE 쪽 재료 배정의 원문 — 입자 번호 i 로 pid · secid 를 다시 매기고 재료는 하나 (mid = 1).  GUI 라운드트립 (proj → k) 은 재현성의 약한 곳 (카드 §4.5 · §12)."
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-material-boundary-conditions",
+   "page": 5,
+   "file": "txt_p5_material_constants_and_fe_boundary_conditions.png",
+   "caption": "PDF p.5 below Fig. 3 (both columns): Eq. (3) Swift law with ε₀ = 0.0354, K = 1380 MPa, n = 0.254; Young's modulus 170 GPa, Poisson's ratio 0.3, density 7130 kg/m³ 'all obtained from reference [17]'; 'The packed assemblies were then converted to meshed deformable spherical particles with a rigid die and punch. The die was fully constrained, while the punch moves downward using a prescribed motion rigid boundary condition to a target peak pressure followed by unloading'; element count varied from 500 to 2500 (coarse powder, 95 % relative density).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.7,
+    652.2,
+    563.8,
+    745.0
+   ],
+   "w": 2955,
+   "h": 515,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.869,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "FE 쪽 재료 값 전부와 경계 · 하중 (금형 완전 구속 · 펀치 지정 운동 → 최고 압력 → 제거) 의 인쇄 근거.  펀치 속도 · 질량 스케일링 · 준정적 판정은 이 문단에도 없다."
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-mesh-friction-rve-abaqus",
+   "page": 6,
+   "file": "txt_p6_mesh_friction_rve_choices_and_abaqus_reference.png",
+   "caption": "PDF p.6 left column: axial stress '1650 to 1310 MPa, corresponding to 500 and 2500 elements … indicating convergence'; runtime 36 h (2500 elements per particle) vs 9 h (2000) → 'an average of 2000 elements per particle was selected as the converged and optimal mesh'; friction μ = 0.1, 0.2, 0.3 raises relative density, 'μ = 0.2 was selected for best experimental agreement'; 210 µm RVE chosen; ABAQUS reference model 'follows the same geometric, material, and loading definitions'; 4-node tetrahedra ↔ C3D4; penalty-based surface-to-surface general contact; RVE 1000 µm / 403 particles (coarse), 210 µm / 569 particles (fine); 'A peak pressure of 2000 MPa was applied in all simulations'.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.7,
+    48.9,
+    294.8,
+    434.9
+   ],
+   "w": 1461,
+   "h": 2144,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "메시 · 마찰 · RVE 선택의 근거 문장.  ⚠ '1310 MPa' 는 Fig. 3(e) 의 2500 점 (≈ 1380) 과 다르다 · '2000 MPa … in all simulations' 는 Fig. 4(g)(h) 의 다섯 압력 (1400–2000 MPa) 과 맞지 않는다 — 압력별 계산을 어떻게 얻었는지 미기재."
+  },
+  {
+   "key": "x6c",
+   "kind": "text",
+   "label": "p6-compaction-stages-loading-unloading",
+   "page": 6,
+   "file": "txt_p6_compaction_stages_loading_unloading_mechanics.png",
+   "caption": "PDF p.6 left column 'The simulation results …' continued at the top of the right column: Fig. 4(a)(b) global response, three stages (a) particle rearrangement, (b) densification through deformation, (c) partial elastic recovery; 'During unloading, the stress drops rapidly, indicating elastic recovery. However, the remaining strain after unloading reveals that permanent densification has taken place'; 'The fine powder shows reaching a lower final porosity due to its denser packing'; coarse: stress concentrations at interparticle contacts, 'During unloading, stress relaxation showed elastic recovery primarily at particle peripheries', residual voids between larger particles; fine: more homogeneous stress, absence of large voids.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.7,
+    425.6,
+    294.8,
+    654.6
+   ],
+   "w": 1461,
+   "h": 2395,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator, second pass); two pieces stacked on one canvas with a 6 pt white gap at the column break (text unaltered)",
+   "stitched_parts": [
+    "p.6 left column y 431.6–648.6 pt",
+    "p.6 right column y 152.5–348.7 pt (continuation)"
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 제하 (되돌아옴) 의 저자 서술 원문 — 응력 급강하 = 탄성 회복 · 남은 변형 = 영구 치밀화 · 회복은 입자 주변에서.  'denser packing' 문장도 여기 (카드 §8 — 그림은 초기 충전 차이를 보여주지 않는다)."
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-relative-density-readout-limits",
+   "page": 6,
+   "file": "txt_p6_relative_density_readout_deviation_limits.png",
+   "caption": "PDF p.6 right column: 'The relative density was calculated after the unloading stage'; RVE volume measured from the simulation output; 'a designated pressure level of 5 MPa was established as the threshold for determining the volume of the compacted powders in the unloading phase'; particle volume = initial volumes before compaction; fine ≈ 87 % (experiment and simulation), coarse 83.3 % (experiment) vs 85.4 % (simulation); 'roughly 2.5 % variance' and its causes; 'assuming perfectly spherical particles slightly reduces densification'; literature deviation 0.5–4 %; 'two unimodal powders and small RVEs'.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.7,
+    345.3,
+    563.8,
+    741.8
+   ],
+   "w": 1461,
+   "h": 2202,
+   "dpi": 400,
+   "src": "02d3addf-1-s2.0-S2352711025004613-main.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text cut by hand — band between the neighbouring lines (edges placed in the white gaps measured at 400 dpi) → ink bounding box → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised for the 6.4–7.5 pt type); running head, page number and neighbouring paragraphs excluded (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 제거 뒤 상대밀도의 정의 (5 MPa 문턱 · 고체 부피 = 처음 구 부피 합) 와 편차 · 한계의 원문.  본문의 (g)(h) 패널 문자는 그림 범례와 반대다."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-11) extracted Fig. 1–3 and Table 1 · 3 and reported Table 2 ('영역 없음') as a number gap; Fig. 4 was skipped silently in the gap report (listed under 제외: 'f4 p8 영역 없음' — the figure fills p.7 and the caption is on p.8).  Both were cut by hand (manual_crop).  All printed items are present: 4 figures (Fig. 1–4), 3 numbered tables (Table 1–3), the unnumbered code metadata table (p.1) and the 3 numbered display equations (1)–(3).  The paper has no supplementary material.  Every one of the 34 crops was opened and checked after cutting; 10 crops were re-cut: the 5 tool crops (Fig. 1–3: uneven margins / widened to the caption width; Table 1 · 3: 0.5–1.9 pt under the bottom rule) and 5 hand crops whose first band edge cut through a text line (the Eq. (1)–(2) context crop and the text crops x2a · x3a · x6a · x6b; the first hand band of Table 3 also touched the Fig. 4 caption) — band edges were then placed in the white gaps measured at 400 dpi; x2b was extended once to carry the continuation of its paragraph from p.3 (2026-11-11, litdb-curator); second pass (2026-11-11, litdb-curator, after the earlier session stopped before the card edit): all 34 crops reopened one by one — none cut, none mixed with neighbouring text, captions excluded from figure images as the tool does; three evidence paragraphs added for the handover analysis of the card (§4.7): x3b (p.3 InputGen/template — where the DEM material values live), x3c (p.3 material.k and the proj → k round trip), x6c (p.6 compaction stages and unloading); 37 crops in total. Read-outs re-checked independently from the native rasters for Fig. 3(e) markers, the Fig. 4(a) zero-stress tail and the Fig. 4(b) tick registration (x 869 = 0 MPa, 1145.5 = 1500, 1237.5 = 2000, 1329 = 2500; frame left edge = −204 MPa) — same values as digitized.csv",
+ "note_manual": "The four figures are single embedded 300 dpi RGB rasters (xref 4 · 49 · 54 · 105); whole-figure and panel crops are taken from the native pixels (no re-rendering), so the read-out in digitized.csv (162 rows: Fig. 3a · e · f · g, Fig. 4a · b · e · f · g · h) uses the same pixels.  Tables, equations and text crops are vector text rendered at 400 dpi.  Panel crops carry panel_of; the stage headers of Fig. 4(c)(d) and (e)(f) are shared by two panels, so those panels are kept together (fig_4_c-d.png, fig_4_e-f.png).  Printed inconsistencies visible in the crops: Fig. 4 caption/text call panel (g) Coarse and (h) Fine while the legends read Fine and Coarse; the caption of Fig. 4(a) names only the Coarse powder; the text (p.6) prints 1310 MPa for 2500 elements while the marker in Fig. 3(e) reads ≈ 1380 MPa.",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of), tmeta = unnumbered code metadata table, e01–e03 = Eqs. (1)–(3), e01_02 = Eqs. (1)(2) with their paragraph, x<page><letter> = evidence paragraph (kind 'text'); second pass adds x3b · x3c · x6c (kind 'text', p.3 and p.6)"
+}

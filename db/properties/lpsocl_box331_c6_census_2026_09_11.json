@@ -1,0 +1,105 @@
+{
+ "schema": "gate_measurement/v1",
+ "date": "2026-09-11",
+ "citable": false,
+ "제목": "LPSOCl 3×3×1 400 ps 9런 — C6 원자별 자리 이탈 census (개정안 §2 · 1저자 비준 문턱)",
+ "규칙": "framework_site_census.py --card lpsocl_box331_closure_amendment_2026_09_11.json — O>2.5 / S>3.0 Å (최근접 P) · 자유 음이온·P 변위 >2.0 Å (골격 평균 병진 제거) · 10 ps 연속. 런 판정 → 온도 집계 전건.",
+ "실행": "kgy 2026-09-11 tmux c6 · ~/work/runs/lpsocl_box331_400ps/census/s{2,3,4}_T{600,800,1000}.{json,log} · 규칙 비준(34398d452) 뒤 실행",
+ "결과_런별": {
+  "s2/1000": "framework_rigid · 이벤트 0",
+  "s2/600": "framework_rigid · 이벤트 0",
+  "s2/800": "framework_rigid · 이벤트 0",
+  "s3/1000": "framework_rigid · 이벤트 0",
+  "s3/600": "framework_rigid · 이벤트 0",
+  "s3/800": "framework_rigid · 이벤트 0",
+  "s4/1000": "framework_rigid · 이벤트 0",
+  "s4/600": "framework_rigid · 이벤트 0",
+  "s4/800": "framework_rigid · 이벤트 0"
+ },
+ "결과_온도별_전건": {
+  "600": "rigid (s2·s3·s4 전부)",
+  "800": "rigid (s2·s3·s4 전부)",
+  "1000": "rigid (s2·s3·s4 전부)"
+ },
+ "★_C6_판정": "9/9 framework_rigid → **세 온도 모두 C6 통과.** β 경보 3칸(s2/800·s4/800·s4/1000, O β 0.40–0.53)은 '자리 이탈 없는 저β' 로 기록 — O 는 어느 런에서도 자기 P 에서 2.0 Å 를 넘지 않았다(문턱 2.5).",
+ "여유_원자별_최대_Å": {
+  "s2/1000": {
+   "Cl/free": 3.02,
+   "O/P-bonded": 1.94,
+   "P/free": 1.9,
+   "S/P-bonded": 2.77,
+   "S/free": 1.78
+  },
+  "s2/600": {
+   "Cl/free": 2.08,
+   "O/P-bonded": 1.79,
+   "P/free": 1.68,
+   "S/P-bonded": 2.47,
+   "S/free": 1.52
+  },
+  "s2/800": {
+   "Cl/free": 2.23,
+   "O/P-bonded": 1.82,
+   "P/free": 1.74,
+   "S/P-bonded": 2.65,
+   "S/free": 1.65
+  },
+  "s3/1000": {
+   "Cl/free": 2.55,
+   "O/P-bonded": 1.9,
+   "P/free": 2.25,
+   "S/P-bonded": 2.76,
+   "S/free": 2.17
+  },
+  "s3/600": {
+   "Cl/free": 1.81,
+   "O/P-bonded": 1.77,
+   "P/free": 1.46,
+   "S/P-bonded": 2.48,
+   "S/free": 1.44
+  },
+  "s3/800": {
+   "Cl/free": 2.23,
+   "O/P-bonded": 1.82,
+   "P/free": 1.75,
+   "S/P-bonded": 2.59,
+   "S/free": 1.53
+  },
+  "s4/1000": {
+   "Cl/free": 2.69,
+   "O/P-bonded": 2.0,
+   "P/free": 2.22,
+   "S/P-bonded": 2.79,
+   "S/free": 1.84
+  },
+  "s4/600": {
+   "Cl/free": 2.0,
+   "O/P-bonded": 1.79,
+   "P/free": 1.77,
+   "S/P-bonded": 2.62,
+   "S/free": 1.29
+  },
+  "s4/800": {
+   "Cl/free": 2.1,
+   "O/P-bonded": 1.84,
+   "P/free": 1.96,
+   "S/P-bonded": 2.59,
+   "S/free": 1.91
+  }
+ },
+ "문턱_Å": {
+  "O/P-bonded": 2.5,
+  "S/P-bonded": 3.0,
+  "Cl/free": 2.0,
+  "P/free": 2.0,
+  "S/free": 2.0
+ },
+ "⚠_문턱을_넘었지만_10_ps_미만인_것": "Cl/free 최대 3.02(s2/1000)·2.69(s4/1000)·2.55(s3/1000)·2.23(800 K 두 칸)·2.08–2.10, P/free 2.25·2.22(1000 K), S/free 2.17(s3/1000) — 변위가 2.0 Å 를 넘었으나 10 ps 연속이 아니어서 이벤트가 아니다(일시 이탈·큰 진폭). 이것은 비준된 규칙의 지속 조건이 거른 것이고, 여기 그대로 남긴다. P 결합 O·S 는 문턱 아래(O ≤ 2.00 / S ≤ 2.79).",
+ "⛔_이_파일이_못_하는_것": [
+  "왜 움직였는지(회전·재배열) 안 가른다",
+  "Li 를 보지 않는다",
+  "C2·C2b·C3 를 판정하지 않는다",
+  "β 를 다시 계산하지 않는다"
+ ],
+ "다음": "자격표 (600 K = s2·s3 · 800/1000 K = s2·s3·s4) → C3/C4/C5 (arrhenius_compat 2판, MTO D)."
+}

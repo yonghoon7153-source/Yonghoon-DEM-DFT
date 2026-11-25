@@ -1,0 +1,72 @@
+data_4_76_sym
+_audit_creation_date              2024-04-01
+_audit_creation_method            'Materials Studio'
+_symmetry_space_group_name_H-M    'P1'
+_symmetry_Int_Tables_number       1
+_symmetry_cell_setting            triclinic
+loop_
+_symmetry_equiv_pos_as_xyz
+  x,y,z
+_cell_length_a                    7.2101
+_cell_length_b                    10.8164
+_cell_length_c                    5.9554
+_cell_angle_alpha                 90.0000
+_cell_angle_beta                  90.0000
+_cell_angle_gamma                 90.0000
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_adp_type
+_atom_site_occupancy
+Li1    Li    0.00000   0.19659   0.49375   0.00000  Uiso   1.00
+Li2    Li    0.00000   0.69659   0.99375   0.00000  Uiso   1.00
+Li3    Li   -0.00000   0.80341   0.49375   0.00000  Uiso   1.00
+Li4    Li   -0.00000   0.30341   0.99375   0.00000  Uiso   1.00
+Ge5    Ge    0.25000   0.00000   0.00145   0.00000  Uiso   1.00
+Ge6    Ge    0.25000   0.50000   0.50145   0.00000  Uiso   1.00
+S7     S     0.25000   0.17199   0.19778   0.00000  Uiso   1.00
+S8     S     0.25000   0.67199   0.69778   0.00000  Uiso   1.00
+S9     S     0.25000  -0.17199   0.19778   0.00000  Uiso   1.00
+S10    S     0.25000   0.32801   0.69778   0.00000  Uiso   1.00
+S11    S    -0.00000   0.00000  -0.25101   0.00000  Uiso   1.00
+S12    S     0.00000   0.50000   0.24899   0.00000  Uiso   1.00
+Li13   Li    0.50000   0.19659   0.49375   0.00000  Uiso   1.00
+Li14   Li    0.50000   0.69659   0.99375   0.00000  Uiso   1.00
+Li15   Li    0.50000   0.80341   0.49375   0.00000  Uiso   1.00
+Li16   Li    0.50000   0.30341   0.99375   0.00000  Uiso   1.00
+Ge17   Ge    0.75000  -0.00000   0.00145   0.00000  Uiso   1.00
+Ge18   Ge    0.75000   0.50000   0.50145   0.00000  Uiso   1.00
+S19    S     0.75000   0.17199   0.19778   0.00000  Uiso   1.00
+S20    S     0.75000   0.67199   0.69778   0.00000  Uiso   1.00
+S21    S     0.75000  -0.17199   0.19778   0.00000  Uiso   1.00
+S22    S     0.75000   0.32801   0.69778   0.00000  Uiso   1.00
+S23    S     0.50000  -0.00000  -0.25101   0.00000  Uiso   1.00
+S24    S     0.50000   0.50000   0.24899   0.00000  Uiso   1.00
+loop_
+_geom_bond_atom_site_label_1
+_geom_bond_atom_site_label_2
+_geom_bond_distance
+_geom_bond_site_symmetry_2
+_ccdc_geom_bond_type
+Ge5    S7      2.197   .     S
+Ge5    S9      2.197   .     S
+Ge5    S11     2.347   .     S
+Ge5    S23     2.347   .     S
+Ge6    S8      2.197   .     S
+Ge6    S10     2.197   .     S
+Ge6    S12     2.347   .     S
+Ge6    S24     2.347   .     S
+S11    Ge17    2.347   1_455 S
+S12    Ge18    2.347   1_455 S
+Ge17   S19     2.197   .     S
+Ge17   S21     2.197   .     S
+Ge17   S23     2.347   .     S
+Ge17   S11     2.347   1_655 S
+Ge18   S20     2.197   .     S
+Ge18   S22     2.197   .     S
+Ge18   S24     2.347   .     S
+Ge18   S12     2.347   1_655 S

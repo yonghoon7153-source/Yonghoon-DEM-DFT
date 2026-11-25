@@ -1,0 +1,920 @@
+{
+ "slug": "chu2026_solubility_guided_interlayer_li_plating_stripping_garnet",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "chu2026_solubility_interlayer_main.pdf",
+  "chu2026_solubility_interlayer_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Statistical analysis of interlayer eﬀects on interfacial resistance and cell performance. (a) Schematic representation of a Li-alloying metal interlayer applied as a thin coating at the Li|LLZO interface, compared to cells without interlayers. (b) Aggregated critical current density (CCD) data from 94 datasets collected at room temperature, illustrating the relationship between interfacial resistance (Rint) and CCD. Gray dots represent data from cells without interlayers, while yellow squares represent cells with Li-alloying metal interlayers. The right panel zooms in on data with interfacial resistance below 25 O cm2, highlighting separate markers for results using Au interlayers.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    514.1,
+    558.8,
+    666.5
+   ],
+   "w": 2177,
+   "h": 636,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Lithiophilicity trends and initial characterization of Li-alloying metal (M) interlayers. (a) Enlarged binary phase diagrams (Li content higher than 75 at%) for M = Cu, Au, and Ag with Li, showing their potential to form Li–M alloy phases. The maximum solubility of each metal in the room- temperature-stable Li phase (Li(rt)) is marked separately in the graph. Full range phase diagrams are separately provided in Fig. S2. (b) Phase, structural characterization, and wettability analysis of metal interlayers. Left panels display XRD patterns confirming the phase purity of each metal coating. Right panels show the microstructure and thickness of interlayers on LLZO surfaces. The scale bars represent 100 nm. Low-magnification SEM images are included in Fig. S3. Insets in the upper right highlight contact angle measurements, demonstrating the lithiophilicity trend across the three interl",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    398.0
+   ],
+   "w": 2177,
+   "h": 1477,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.737
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Influence of interlayers on performance and interfacial resistance. (a) Critical current density (CCD) results as a function of interlayer lithiophilicity in Li||Li symmetric cells, with Cu represented in red, Au in orange, and Ag in green. The upper left inset illustrates the symmetric cell configuration (Li|M|LLZO|M|Li) used for CCD measurements, while the upper right inset presents a bar graph summarizing CCD statistics as a function of lithiophilicity. Individual CCD values are highlighted within the graph, with enlarged insets examining the voltage drops associated with short-circuit events. (b) Electrochemical impedance spectra illustrating the evolution of interfacial resistance during cycling. The upper panel presents equivalent circuit models commonly used for Li||Li symmetric cells. Nyquist plots are color-coded to diﬀerentiate contributions: brown for LLZO electrolyte r",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    406.7
+   ],
+   "w": 2177,
+   "h": 1513,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Interface stability challenges in Li metal cells with low-lithiophilicity interlayers. (a) Voltage profiles and direct current (DC) resistance calculated from the overpotentials in the Cu cell at 0.20 mA cm\u00022. The inset illustrates the cell configuration with the assignment of working electrode (WE) and counter electrode (CE). The directions of Li+ ion migration during forward (+) and reverse (\u0002) operations are marked along with the configuration to clarify the plating and stripping electrodes per each stage. Within a single plating/stripping cycle, the polarization developed asymmetrically between the forward (Step 2) and reverse cycles (Step 3). (b) Schematic illustration of interface evolution at the CE during cycling, linked to impedance data collected before and after the forward and reverse cycles at 0.20 mA cm\u00022. The diagram highlights the origin of resistance changes and i",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    417.1
+   ],
+   "w": 2177,
+   "h": 1556,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Li nucleation dynamics on alloying metals with varying lithiophilicity. (a) Voltage profiles highlighting nucleation overpotentials for Li deposition on Cu (red), Au (orange), and Ag (green) surfaces. The inset shows the half-cell configuration (Li|M|LLZO|M) used for the measurements. The nucleation overpotential, indicated by gray arrows, represents the diﬀerence between the voltage dip at the onset of nucleation and the flat plateau corresponding to mass-transport-controlled growth. Enlarged profiles are separately provided to allow closer examination. (b) Current–time transients from chronoamperometry (CA) experiments at \u000210 mV and \u000220 mV. The upper left panel compares the dimensionless current–time response for Li electrodeposition on a Cu surface at \u000210 mV with the Scharifker and Hills (S–H) instantaneous (Inst.) and progressive (Prog.) nucleation models. The upper right pane",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    338.4
+   ],
+   "w": 2177,
+   "h": 1228,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Operando study of Li nucleation and growth on patterned microelectrodes with various interlayer metals on LLZO. (a) Schematic illustration of the in situ Li plating setup. Patterned microelectrodes composed of diﬀerent interlayer metals (Cu, Au, and Ag) were contacted using a tungsten needle functioning as the working electrode (WE). Li metal was electrochemically drawn from a Li foil counter electrode (CE) and plated onto the microelectrodes. This process was monitored operando using scanning electron microscopy (SEM). (b) Nucleation densities on selected interlayer metals of Cu and Ag were analyzed at diﬀerent applied current densities (0.5 and 1.0 mA cm\u00022). Specific nucleation density values are provided in Fig. S17. (c) SEM images of Li morphology as a function of interlayer metal and plating current density. Morphological evolution was observed for each interlayer metal at cu",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    393.8
+   ],
+   "w": 2177,
+   "h": 1459,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.519
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Interface degradation mechanisms with high-lithiophilicity Ag interlayer. (a) Voltage profiles and corresponding direct-current (DC) resistances of the Ag (green) interlayer cell during a single plating/stripping cycle at 0.56 mA cm\u00022. The inset illustrates the cell configuration with the assignment of working electrode (WE) and counter electrode (CE). The directions of Li+ ion migration during forward (+) and reverse (\u0002) operations are marked along with the configuration to clarify the plating and stripping electrodes per each stage. The voltage curves show that the polarization developed asymmetrically between the forward (Step 2) and reverse cycles (Step 3). (b) Schematic illustrations of interface evolution during cycling, linked to impedance data before and after plating and stripping at 0.56 mA cm\u00022. The impedance spectra show interfacial (int) resistance changes for the for",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    416.8
+   ],
+   "w": 2177,
+   "h": 1555,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.714
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Li absorption and void formation kinetics trends across diﬀerent interlayer materials. (a) Voltage-dependent current responses during linear sweep voltammetry (LSV) measurements for Cu (red), Au (orange), and Ag (green) interlayers. The half-cell configuration (inset) features Li metal on one side and an interlayer-coated electrode on the other side. The shaded areas under the current–voltage curves represent the calculated discharge capacity (Q), determined by integrating the current and voltage and normalized by the applied sweep rate of 0.02 mV s\u00021. The capacity corresponds to the amount of Li absorbed by each interlayer material prior to the onset of Li deposition. (b) Atomic configurations before and after a 100 ps NVT molecular dynamics (MD) simulation of Li-stripped model Li–M (M = Ag or Au) systems. Removal of Li atoms from the center of the randomized Li–M alloy structure",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    326.2
+   ],
+   "w": 2177,
+   "h": 1178,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 Lithiophilicity-based selection process and its application in identifying optimal interlayer materials. (a) Categorization of 18 metals based on their lithiophilicity using binary phase diagrams. The metals are categorized into four distinct lithiophilicity levels: strongly, moderately, weakly lithiophilic, and strongly lithiophobic. An optimum interlayer candidate, Pt, is highlighted in pink within its corresponding lithiophilicity range. The bottom panel features an enlarged binary phase diagram for Pt with Li, focusing on the Li-rich region (Li content 4 92 at%). The full-range phase diagram is shown in the inset to display various Li–Pt alloy phases. The maximum solubility of Pt in the room-temperature-stable Li phase (Li(rt)) is marked on the graph. (b) Phase, structural characterization, and wettability analysis of the Pt interlayer. The left panel displays XRD pattern conf",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    283.3,
+    558.8,
+    596.8
+   ],
+   "w": 2177,
+   "h": 1307,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1 Statistical correlation between initial interfacial resistance (Rint) and CCD. Scatter plots and Spearman correlation analyses are presented for a) the entire aggregated dataset, revealing a general inverse trend. b) The subset of cells without interlayers, highlighting bare interfaces consistently fail at low CCDs due to high initial resistances. c) The subset of cells with Li-alloying interlayers. In this low-resistance regime, the negative correlation (R) is significantly weakened with an increased P-value, demonstrating that the direct relationship between initial contact quality and dynamic cycling stability breaks down.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    471.3,
+    548.9,
+    620.4
+   ],
+   "w": 2012,
+   "h": 623,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 12,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 Binary phase diagrams for interlayer metals with Li. The complete binary phase diagrams show the potential to form Li-M alloy phases for a) Cu, b) Au, and c) Ag. Each reported alloy phase is marked separately in the diagrams. The phase diagrams were obtained from the ASM Alloy Phase Diagrams Center, ASM International,58 with diagram numbers of Cu (904229),59 Au (900226),60 and Ag (900032).61 The phase diagram of Cu was slightly modified to include the high-temperature alloy phase reported in previous literature.62",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    183.5,
+    548.9,
+    462.5
+   ],
+   "w": 2012,
+   "h": 1163,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.706
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 13,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 Low-magnification SEM images of interlayers deposited on LLZO. Cross-sectional images of a) Cu, b) Au, and c) Ag interlayers coated on polished LLZO surfaces, each shown at 5000× magnification with scale bars included in the images. The scale bars are provided in each image for reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.7,
+    182.2
+   ],
+   "w": 2012,
+   "h": 485,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.331
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 14,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 Contact angle measurements of Li droplets on interlayer-coated LLZO. The optical images of Li droplets on a) Cu, b) Au, and c) Ag deposited LLZO electrolytes. For each material, the left image shows the contact angle recorded immediately after contact, and the right image shows the contact angle recorded after 5 minutes of equilibration. The contact angle values per each measurement are provided in the images.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    318.3
+   ],
+   "w": 2012,
+   "h": 1052,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.544
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 20,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 Computational bond energies and configurational entropic flexibility. a) Representative DFT- relaxed structures of Li adsorbed on the M (111), M (110), and M (100) surfaces (M = Cu, Au, and Ag, left panels), and calculated Li adsorption energies (Eads) on the corresponding crystallographic facets of Cu (red), Au (orange), and Ag (green) (right panel). b) Average Boltzmann weights for Li-M model systems (5 at% Li) calculated at three experiment-relevant temperatures. c) Corresponding “raw” Boltzmann weight distributions across 1000 random atomic configurations sampled at the three temperatures. Data points are color-coded by metal as indicated.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    206.4,
+    549.1,
+    470.2
+   ],
+   "w": 2013,
+   "h": 1099,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 22,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 Phase characterization of LLZO electrolyte pellets. a) Raman spectroscopy results for the LLZO sample (light brown) compared with reference spectra of cubic and tetragonal LLZO, and potential secondary phases. The reference Raman spectra were obtained from an internal database reported in a prior publication.82 Additionally, the labels provide details on each vibrational mode associated with the cation- oxygen bonds in LLZO. b) XRD spectrum of the LLZO electrolyte sample (light brown) presented with reference patterns for Li6.5La3Zr1.5Ta0.5O12 (Ta-doped LLZO, cubic, PDF# 01-090-2953) and the most probable secondary phase La2Zr2O7 (LZO, PDF# 01-074-8764).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    437.9,
+    548.8,
+    618.5
+   ],
+   "w": 2012,
+   "h": 754,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 23,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 SEM images of LLZO pellet samples. The microstructure of LLZO electrolytes was examined using SEM analysis. The figure includes various magnification images: a) top-view at 5000x, b) top-view at 2000x, and c) cross-sectional view at 500x, providing insights into surface morphology, grain size distribution, and qualitative sintering density of LLZO pellets. The scale bars are provided in each image for reference. d) Grain size distribution extracted from the SEM image and summary of grain size statistics provided in the accompanying table.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    260.3,
+    548.9,
+    509.9
+   ],
+   "w": 2013,
+   "h": 1041,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.664,
+   "recrop": "tool crop [66.0, 232.6, 548.9, 509.9] included the last body-text line above the figure (SI p.23, line y 238.1–251.4); top moved to y=260.3 (= raster top 266.3 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 24,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8 Surface topography of LLZO and the ultrathin Au interlayer. a) AFM topography map of the dry- polished LLZO surface. b) Height profiles from two distinct line scans (Scan 1 and Scan 2) and a table summarizing the corresponding surface roughness statistics including a RMS and mean roughness. c) CCD test profile (top) and cycle-wise impedance Nyquist plots (bottom) for a Li|LLZO|Li symmetric cell employing a 10 nm Au interlayer. The voltage profile displays the response during step-wise current increases until cell, with an inset magnifying the short-circuit event. The Nyquist plots show the corresponding interfacial resistance at applied current densities of initial, before short, after short regimes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    384.5,
+    548.9,
+    575.7
+   ],
+   "w": 2013,
+   "h": 797,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.777,
+   "recrop": "tool crop [66.0, 356.8, 548.9, 575.7] included the last body-text line above the figure (SI p.24, line y 362.3–375.6); top moved to y=384.5 (= raster top 390.5 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 25,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9 CCD outcomes as a function of the interlayer’s lithiophilicity. Voltage curves of a) Cu (red), b) Au (orange), and c) Ag (green) interlayer cells (Li|M|LLZO|M|Li, M = Cu, Au, and Ag) with individual CCD values labeled on the graph. Enlarged insets include arrows indicating the voltage drops where short- circuiting events occurred for detailed comparison. The CCD was determined using the current density from the cycle immediately preceding failure. The failure current itself is often mistakenly used in the literature but does not align with the definition of CCD.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    270.4,
+    548.7,
+    595.7
+   ],
+   "w": 2012,
+   "h": 1357,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.953,
+   "recrop": "tool crop [66.0, 238.6, 548.7, 595.7] included the last body-text line above the figure (SI p.25, line y 244.1–257.4); top moved to y=270.4 (= raster top 276.4 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 26,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10 Long-term galvanostatic cycling profiles of Li|LLZO|Li cells. Voltage-time profiles measured over 1,500 hours at room temperature are shown for cells employing a) Cu, b) Au, and c) Ag interlayers. All measurements were conducted under a uniform testing condition with a current density of 0.25 mA cm- 2 and a plating/stripping areal capacity of 0.125 mAh cm-2 (0.5 h per half-cycle). The insets in each panel display the magnified voltage profiles at the early stage (around 5 h) and the late stage (around 1495 h) of cycling, highlighting the detailed plating and stripping behavior.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    215.9,
+    548.7,
+    539.5
+   ],
+   "w": 2012,
+   "h": 1349,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 28,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11 Temperature-dependent EIS spectra and Kramers-Kronig (K-K) validity test. Top panels present Nyquist plots with annotated frequency ranges and key frequency markers for LLZO electrolyte (brown), interfacial (yellow), and Li metal (gray) contributions, collected at specific temperatures: a) –20 °C, b) 0 °C, and c) 20 °C. The high-frequency response shifts into the measurable window at lower temperatures. Bottom panels show corresponding K-K residual plots for real (red) and imaginary (blue) components against frequency, assessing data quality suitable for further analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    430.6,
+    548.9,
+    618.3
+   ],
+   "w": 2012,
+   "h": 783,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 29,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12 DRT analysis and equivalent circuit fitting validation. Three columns display results at distinct temperatures: a) –20 °C, b) 0 °C, and c) 20 °C. Top panels show experimental Nyquist data (circles) with overlaid 3-RQ equivalent circuit fits (solid lines), indicating apex frequencies marked for bulk (Bulk), grain-boundary (GB), and Li|LLZO interface (int) transport processes. Middle panels present DRT spectra derived using the regularization parameter of 0.005 and full-width-half-maximum (FWHM) of 0.5. Distinct peaks are assigned to specific physical contributions. The tables at the bottom summarize the fitted capacitance (C), resistance (R), relaxation time (τ), and characteristic frequency (f) for each deconvoluted component, demonstrating cross-validation between methods. The extreme low-frequency tail was excluded from the DRT and EIS fitting.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    298.7,
+    548.9,
+    578.5
+   ],
+   "w": 2012,
+   "h": 1167,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 33,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13 Electrochemical impedance spectra during cycling. a) A symmetric cell configuration of Li|M|LLZO|M|Li (M = Cu, Ag, Au) and the corresponding equivalent circuit model for the cell. Each RQ component is color-coded: brown for LLZO electrolyte resistance (LLZO), yellow for Li|LLZO interfacial resistance (int), and gray for the Li metal electrode resistance (Li). Nyquist plots of the initial cycle impedance are shown for the b) Cu, c) Au, and d) Ag interlayer cells. The plots recorded immediately before reaching CCD are displayed for the e) Cu, f) Au, and g) Ag cells. The cycle-wise impedance data were obtained during the CCD measurements, with the corresponding voltage profiles presented in Fig. 3a of the main manuscript. To differentiate this test set from the second trial in Fig. S9, we labeled them with the numbering “1”. The characteristic peak frequencies for each semicircle—4",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.9,
+    550.1,
+    465.5
+   ],
+   "w": 2018,
+   "h": 1641,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 34,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14 Enlarged impedance spectra and interface evolution in the Cu cell. Schematic illustration of interface evolution during plating and stripping cycles, associated with measured (open symbols) and fitted (solid lines) impedance data a) before forward, b) after forward, and c) after reverse operation of the Cu interlayer cell at 0.20 mA cm–2. The presented data were obtained during the CCD measurements, with the corresponding voltage profiles shown in Fig. 4a of the main manuscript. Data points at the characteristic peak frequency of Li|LLZO interfacial impedance (14 kHz) are highlighted in the plot, with detailed fitting data for resistance (R) and pseudo-capacitance (C) values summarized in the accompanying table.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    417.2,
+    548.7,
+    613.5
+   ],
+   "w": 2012,
+   "h": 819,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 35,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15 SEM images of the Cu cell interface with varying magnifications. Images at 10000x, 5000x, and 2000x magnifications were collected for a) the Li-plated side and b) the Li-stripped side of the Cu interlayer cell. The Li-plated side images reveal the deposition morphology of Li metal on the Cu interlayer, while the stripped side images show the progression of void formation at the interface. The scale bars are provided in each image for reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    283.2,
+    548.9,
+    490.8
+   ],
+   "w": 2012,
+   "h": 867,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.358
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 43,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16 Analytical modeling of the nucleation process under constant potential. a) Illustration of the three distinct stages of current evolution under potentio-static discharge: Stage I – initial nucleation and surface area expansion (marked as 1); Stage II – overlap of diffusion zones and peak current (Im) at time (tm) (2); Stage III – decline in current with decreasing active surface, eventually reaching a steady-state (3). (b-d) Dimensionless current-time transients derived from two diffusion-controlled 3D nucleation models, instantaneous (Inst.) and progressive (Prog.) models, comparing with experimentally obtained current-time curves from the b) Cu, c) Au, and d) Ag interfaces at two perturbation voltages. The accompanying tables summarize tm, Im, and Li nuclei density (N0) for each interlayer material at two step voltages.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    218.9,
+    549.1,
+    572.6
+   ],
+   "w": 2013,
+   "h": 1474,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 45,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17 Operando SEM and nuclei density analysis, revealing distinct lithium nucleation characteristics across interlayer metals. a) Voltage profile referenced to the lithium metal electrode and sequential SEM images of the Au interlayer captured at 0, 1, 3, and 5 minutes during galvanostatic discharge at 0.5 mA cm– 2. The data highlight the evolution of surface contrast associated with Li-Au alloy formation prior to the emergence of metallic Li on the surface. b) Areal nuclei densities extracted from operando SEM images for Cu and Ag at various current densities. Both metals show a decrease in visible nuclei density as current increases, suggesting a shift in deposition behavior. Quantification is based on identifiable surface nuclei within the SEM field of view. Nuclei density for Au is omitted due to predominant subsurface alloying and the diffuse, delayed appearance of metallic Li, ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    119.4,
+    548.8,
+    313.5
+   ],
+   "w": 2012,
+   "h": 810,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.668
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 47,
+   "file": "fig_S18.png",
+   "caption": "Fig. S18 Operando SEM and electrochemical profiles of Li plating and stripping. a) Operando top-view SEM images of the electrode surfaces coated with Cu, Au, and Ag interlayers. The images display the pristine state (left), after Li plating (middle), and after subsequent Li stripping (right) at a current density of 0.5 mA cm–2 with an areal capacity of 0.05 mAh cm–2. b) Corresponding voltage-capacity profiles of the initial Li plating and stripping processes for the Cu, Au, and Ag electrodes. The respective Coulomb Efficiencies (CEs) are annotated in each plot, and the inset illustrates the operando cell configuration.121",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    112.4,
+    548.9,
+    513.2
+   ],
+   "w": 2013,
+   "h": 1671,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.632,
+   "recrop": "tool crop [66.0, 87.8, 548.9, 513.2] included the last body-text line above the figure (SI p.47, line y 93.1–106.4); top moved to y=112.4 (= raster top 118.4 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 48,
+   "file": "fig_S19.png",
+   "caption": "Fig. S19 Impedance spectra and corresponding interface evolution in the Ag cell. The upper schematics illustrate the prospective interfacial changes during forward and reverse cycles. The lower panels present measured (open symbols) and fitted (solid lines) impedance data from three cycling stages: a) before forward, b) after forward, and c) after reverse operation at 0.56 mA cm–2. The presented data were obtained during the CCD measurements, with the corresponding voltage profiles shown in Fig. 7a of the main manuscript. The characteristic peak frequency of Li|LLZO interfacial impedance (14 kHz) is separately marked in the graphs, and a summary of resistance (R) and pseudo-capacitance (C) values is provided in the accompanying table.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    361.1,
+    548.8,
+    557.4
+   ],
+   "w": 2012,
+   "h": 819,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 49,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20 SEM images of the Ag cell interface at varying magnifications. Images at 10000x, 5000x, and 2000x magnifications were collected for a) the Li-stripped side and b) the Li-plated side of the Ag interlayer cell. The Li-stripped side images reveal the extensive population of elongated interfacial voids at the Ag cell interface, while the plated side images show the deposition morphology of Li metal on the Ag interlayer. The scale bars are provided in each image for reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    405.2,
+    548.8,
+    611.4
+   ],
+   "w": 2012,
+   "h": 860,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.43,
+   "recrop": "tool crop [66.0, 377.6, 548.8, 611.4] included the last body-text line above the figure (SI p.49, line y 382.9–396.2); top moved to y=405.2 (= raster top 411.2 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 51,
+   "file": "fig_S21.png",
+   "caption": "Fig. S21 Thermodynamic analysis and electrochemical validation of Li-Au alloy phase transitions. a) Binary phase diagram for the Li-Au system, highlighting the sequence of thermodynamically stable alloy phases at 25 °C.60 b) Summary of total energies per atom and calculated theoretical equilibrium voltages for the respective Li-Au phase transitions. Total energy values for the stoichiometric structures were obtained from the Materials Project database, and equilibrium voltages were derived using the Nernst equation. c) GITT potential profile of the Au electrode during lithiation. The plot displays the transient voltage during the applied current and the extracted quasi-equilibrium OCV curve. The GITT protocol consisted of 3-min discharge pulses followed by 6-min relaxation periods. The observed quasi-equilibrium voltage plateaus were matched with the calculated theoretical equilibrium po",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.3,
+    401.3
+   ],
+   "w": 2014,
+   "h": 1398,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 52,
+   "file": "fig_S22.png",
+   "caption": "Fig. S22 Thermodynamic analysis and electrochemical validation of Li-Ag alloy phase transitions. a) Binary phase diagram for the Li-Ag system, highlighting the sequence of thermodynamically stable alloy phases at 25 °C.61 b) Summary of total energies per atom and calculated theoretical equilibrium voltages for the respective Li-Ag phase transitions. Total energy values for the stoichiometric structures were obtained from the Materials Project database, and equilibrium voltages were derived using the Nernst equation. c) GITT potential profile of the Ag electrode during lithiation. The plot displays the transient voltage during the applied current and the extracted quasi-equilibrium OCV curve. The GITT protocol consisted of 3-min discharge pulses followed by 6-min relaxation periods. The observed quasi-equilibrium voltage plateaus were matched with the calculated theoretical equilibrium po",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    133.1,
+    548.8,
+    465.8
+   ],
+   "w": 2012,
+   "h": 1387,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 56,
+   "file": "fig_S23.png",
+   "caption": "Fig. S23 Atomic configurations and dynamic analysis of Li-stripped alloy systems. Li atoms were removed from the center of the equilibrated Li-M alloy structures—a) Au and b) Ag—across three crystallographic facets: (111) (left), (110) (center), and (100) (right). A single representative “before” configuration is shown for the (111) facet, illustrating the structure immediately after Li removal. The “after” panels display three independent relaxed configurations for each facet following molecular dynamics (MD) simulation. In the (111) facet snapshots, we highlight the extent to which Li atoms at the interface migrate into the Li-stripped zone to replenish vacancy sites. MSD and void volume analysis (upper and lower panels, respectively): For each configuration, the mean square displacement in the z-direction (MSDz) is shown in the upper panel and the total void volume as a function of time is shown in the lower panel. Each plot includes the maximum (max, dashed line), minimum (min, dashed line), and average (solid line) values, based on three independent simulations. Ag and Au data are color-coded in green and orange, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    545.9,
+    322.5
+   ],
+   "w": 2000,
+   "h": 1069,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool skipped the first page of Fig. S23 (p.56: the caption starts 2.5 pt below the raster, tool output only the 'Cont’d' page p.57) → hand-cut = embedded raster rect [72,72,539.9,321.1] + 6 pt margin, clipped at y=322.5 just above the caption line (y=323.6) · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS23cont",
+   "kind": "figure",
+   "label": "S23",
+   "page": 57,
+   "file": "fig_S23_cont.png",
+   "caption": "Fig. S23 Cont’d (SI p.57 — continuation of Fig. S23; panels as described in the Fig. S23 caption on SI p.56)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    545.9,
+    327.5
+   ],
+   "w": 2000,
+   "h": 1090,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.718,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: it is the continuation page (p.57) of Fig. S23; the first page (p.56, with the caption) is the new fig_S23.png (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 59,
+   "file": "fig_S24.png",
+   "caption": "Fig S24 Li chemical diffusion kinetics via GITT for Au and Ag. a) GITT potential profiles and extracted apparent chemical diffusion coefficients (DLi) for the Li-Au system. The top plot displays the transient voltage response (gray solid line) and the quasi-equilibrium OCVs (orange solid line) over time. The bottom plot shows the corresponding DLi profile (orange line) calculated using the standard Weppner-Huggins equation. The specific apparent DLi values extracted from sloping single-phase regions are annotated for the respective Li-Au alloy regimes (Li3Au and Li15Au4). b) Corresponding GITT analysis for the Li-Ag system (green lines). Similar to the Au system, the extracted DLi values are annotated for the specific Li- Ag alloy phases (Li9Ag4, Li4Ag, and Li9Ag).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    222.6,
+    548.9,
+    373.8
+   ],
+   "w": 2013,
+   "h": 631,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.921,
+   "recrop": "tool crop [66.0, 191.2, 548.9, 373.8] included the last body-text line above the figure (SI p.59, line y 196.7–210.0); top moved to y=222.6 (= raster top 228.6 − 6 pt margin) · same x · same bottom · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 61,
+   "file": "fig_S25.png",
+   "caption": "Fig. S25 Binary phase diagrams for interlayer metals with Li. The complete binary phase diagrams are used to assess the relative Li affinity of a) strongly lithiophilic, b) moderately lithiophilic, c) weakly lithiophilic, and d) strongly lithiophobic metals. The maximum solubility points of the metals in the Li(rt) phase are highlighted with yellow arrows in the diagrams. The phase diagrams were obtained from the ASM Alloy Phase Diagrams Center, ASM International,58 with diagram numbers Ag (900032),61 Mg (2002119),128 Cd (900587),129 Au (900226),60 Zn (104154),130 Sn (103448),131 Pt (901517),132 Al (103030),133 Bi (102045),134 Pd (980999),135 In (901388),136 Sb (981188),137 Cu (904229),59 Si (981098),138 C (900508),139 Ni (901514),140 Fe (901048),141 and Ti (901529).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    545.7,
+    468.5
+   ],
+   "w": 1999,
+   "h": 1678,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool skipped the first page of Fig. S25 (p.61), output only the 'Cont’d' page p.62 → hand-cut = embedded raster rect [72,72,539.7,468.2] + 6 pt margin, clipped at y=468.5 just above the caption line (y=468.7) · 300 dpi (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS25cont",
+   "kind": "figure",
+   "label": "S25",
+   "page": 62,
+   "file": "fig_S25_cont.png",
+   "caption": "Fig. S25 Cont’d (SI p.62 — continuation: c) weakly lithiophilic, d) strongly lithiophobic metals; see the Fig. S25 caption on SI p.61)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.2,
+    469.6
+   ],
+   "w": 2014,
+   "h": 1682,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.781,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: continuation page (p.62) of Fig. S25; the first page (p.61, with the caption) is the new fig_S25.png (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 64,
+   "file": "fig_S26.png",
+   "caption": "Fig. S26 CCD measurement and impedance analysis for the Pt interlayer cell. a) Voltage profiles of the Pt (pink) interlayer cell from the second trial. The onset of cell short-circuit is marked with a black arrow. The CCD was determined using the current density from the cycle immediately preceding the failure, and the value is separately provided in the graph. Nyquist plots of b) the initial impedance (at 0.05 mA cm-2) and c) impedance shortly before CCD (at 1.10 mA cm-2) for the Pt cell. The presented data were obtained during the CCD measurements, with the corresponding voltage profiles shown in Fig. 9c of the main manuscript. To differentiate this test set from the second trial in Fig. S26a, we labeled them with the different numbering. The peak frequencies for each semicircle—4.8 MHz for the electrolyte, 14 kHz for the interface, and 1 Hz for the electrode—are indicated in the graph",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    281.0,
+    548.8,
+    558.1
+   ],
+   "w": 2012,
+   "h": 1156,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 65,
+   "file": "fig_S27.png",
+   "caption": "Fig. S27 Performance of the NMC811|LLZO|Li full cell using the Pt interlayer. a) Schematic illustration of the hybrid full-cell configuration, utilizing a Pt-modified LLZO solid electrolyte paired with a Li metal anode and an NMC811 cathode (9.08 mg cm-2) with a liquid electrolyte (LE)-wetted separator. Long-term cycling performance and Coulomb Efficiency (CE) of the full cells evaluated at b) 0.2 C (effective current density of 0.37 mA cm-2) over 200 cycles and c) 0.125 C (0.23 mA cm-2) over 300 cycles. d) Cycle-wise impedance plots collected during the full-cell operation at 0.125 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    340.1,
+    548.9,
+    557.8
+   ],
+   "w": 2012,
+   "h": 907,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 68,
+   "file": "fig_S28.png",
+   "caption": "Fig. S28 Structural and electrochemical evaluation of the Palladium (Pd) interlayer. a) Schematic of the lithiophilicity spectrum including Pd, alongside the Li-Pd binary phase diagram indicating approximately zero solubility of Pd in room-temperature Li. b) XRD pattern and cross-sectional SEM image of the Pd interlayer on the LLZO substrate, confirming its FCC phase purity and a uniform thickness. c) CCD test results of two independent Li|LLZO|Li symmetric cells with Pd interlayers (Pd 1 and Pd 2) showing short- circuit failures magnified in insets, respectively. d) Cycle-wise impedance plots of the Pd 1 cell, displaying the progressive evolution of interfacial resistance at different applied current densities before and after short-circuiting.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    361.1
+   ],
+   "w": 2012,
+   "h": 1230,
+   "dpi": 300,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1 CCD data for Li|LLZO|Li cells without interlayers. Baseline CCD statistics of pristine Li|LLZO|Li cells without any interlayer additions, providing reference ranges for interface resistances and critical current density performances. In the table, we use acronyms for sintering methods: Cold-Uni (cold uniaxial pressing), Hot-Uni (hot uniaxial pressing), Hot-Iso (hot isostatic pressing), and SPS (spark plasma sintering). Without a dedicated interlayer, researchers used alternative interface modification techniques like Evap. (Li thermal evaporation on LLZO) and Rub. (Li mechanically rubbed on LLZO) to enhance electrolyte wettability. In the testing temperature column, RT indicates room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.0,
+    763.8,
+    561.5
+   ],
+   "w": 3001,
+   "h": 2173,
+   "dpi": 295,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool output only p.8 (a 'Cont’d' page) for Table S1; p.7 (first page + caption) hand-cut = table drawings [36,36,756.6,480.7] + caption lines to y=556.5, 5 pt margin, same convention as the tool's table crops (caption included) (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "tS1cont1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1_cont1.png",
+   "caption": "Table S1 Cont’d (SI p.8 — rows: refs 23–33 of the SI list)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.2,
+    761.4,
+    562.2
+   ],
+   "w": 2993,
+   "h": 2177,
+   "dpi": 295,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.914,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: 2nd of 3 pages of Table S1 (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "tS1cont2",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1_cont2.png",
+   "caption": "Table S1 Cont’d (SI p.9 — last page of Table S1; rows: refs 13 · 34–41 of the SI list)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.0,
+    761.6,
+    473.6
+   ],
+   "w": 3001,
+   "h": 1818,
+   "dpi": 296,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool dropped p.9 as '중복(작은 쪽)' of Table S1 → hand-cut = drawings [36,36,756.6,443.4] + 'Table S1 Cont’d' line (to y=468.6), 5 pt margin (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 10,
+   "file": "tab_S2.png",
+   "caption": "Table S2 CCD data for cells with Li-alloying metal interlayers. CCD data and relevant metrics for Li|LLZO|Li cells with Li-alloying metal interlayers, highlighting the impact of interface engineering on electrochemical performances. In the table, we use acronyms for sintering methods: Cold-Uni (cold uniaxial pressing), Hot- Uni (hot uniaxial pressing), Hot-Iso (hot isostatic pressing), and SPS (spark plasma sintering). CCD values measured with pre-made alloying anodes are also included for the statistics, but marked separately as “anode” to distinguish them from interlayers prepared using conventional coating processes. In the interfacial resistance column, the E stands for the estimated value derived from the impedance semicircle. In the temperature column, RT represents room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.0,
+    763.8,
+    571.4
+   ],
+   "w": 3001,
+   "h": 2214,
+   "dpi": 295,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "manual_crop": "tool output only p.11 (the 'Cont’d' page) for Table S2; p.10 (first page + caption) hand-cut = drawings [36,36,756.6,489.3] + caption lines to y=566.4, 5 pt margin (2026-11-24, litdb-curator)"
+  },
+  {
+   "key": "tS2cont",
+   "kind": "table",
+   "label": "S2",
+   "page": 11,
+   "file": "tab_S2_cont.png",
+   "caption": "Table S2 Cont’d (SI p.11 — rows: refs 47–57 of the SI list)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    31.2,
+    764.1,
+    608.6
+   ],
+   "w": 2995,
+   "h": 2358,
+   "dpi": 294,
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "blank": 0.92,
+   "recrop": "tool's crop kept as-is but re-keyed/renamed: 2nd of 2 pages of Table S2 (2026-11-24, litdb-curator)"
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "chu2026_solubility_interlayer_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "chu2026_solubility_interlayer_SI.pdf",
+   "above_adjacent": 4,
+   "below_adjacent": 0,
+   "caption_below": true
+  }
+ ],
+ "hand_notes": [
+  "2026-11-24 litdb-curator: SI multi-page items — tool kept only one page each for Fig. S23 · Fig. S25 · Table S1 · Table S2. Canonical keys (fS23 · fS25 · tS1 · tS2) now point to the FIRST page (with the caption); continuation pages carry keys fS23cont · fS25cont · tS1cont1 · tS1cont2 · tS2cont. Video frames (video_frames/) are outside this manifest and are deleted by --clean — the ffmpeg commands are recorded in the digest §9b."
+ ]
+}

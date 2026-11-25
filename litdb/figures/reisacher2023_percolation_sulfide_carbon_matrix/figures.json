@@ -1,0 +1,163 @@
+{
+ "slug": "reisacher2023_percolation_sulfide_carbon_matrix",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) XRD patterns of the precursor mixture after ball milling (black) and the corresponding pattern after reaction induced by heat treatment at 550 ◦C (red). Additionally, the reference pattern (ICSD: 418490) of Li-argyrodite is plotted. (b) SEM image of the synthesized solid electrolyte after heat treatment. (c) Surface of a pelletized separator. (d) Fabricated separator on the bottom current collector of the measurement cell.",
+   "bbox": [
+    159.3,
+    151.9,
+    592.3,
+    421.8
+   ],
+   "w": 1806,
+   "h": 1126,
+   "dpi": 300,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.707
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Nyquist plot of the synthesized SE in blocking condition at temperatures between 65 ◦C and 5 ◦C. (b) Arrhenius plot of Li6PS5Cl to determine the activation energy for Li-ion transport. For simplicity, in the following sections, we will use the sample notation “CM-A”, where CM stands for conducting matrix, and A gives the amount of C65 (in wt.-%) that is added to the SE.",
+   "bbox": [
+    91.8,
+    486.3,
+    566.5,
+    698.0
+   ],
+   "w": 1979,
+   "h": 883,
+   "dpi": 300,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Nyquist plot of the conducting matrix with (a) pure SE, (b) CM-1: 1 wt.-% C65, (c) CM-3: 3 wt.-% C65 and (d) CM-4: 4 wt.-% C65 measured between 5 and 65 ◦C with temperatures steps of 10 ◦C (7.0 MHz–1.0 Hz). The impedance spectrum of the sample CM-1 is shown in Figure 3b. Although the temperature dependence of the Nyquist plots for CM-1 is similar to the pure solid electrolyte, the total resistance values at 65 ◦C (RCM-1: 247.67 Ω; Rpure SE: 102.10 Ω) are higher, while it exhibits a lower total resistance of 522 Ωat room temperature. Below room temperature, the spectrum exhibits a stretched semicircle in the mid-frequency range, and in the low-frequency range, all spectra show a high impedance of the imaginary part representing the polarization at the blocking electrodes. A change in conduction behavior can be observed in sample CM-3, the total resistance values decrease slightl",
+   "bbox": [
+    159.8,
+    80.4,
+    567.0,
+    488.5
+   ],
+   "w": 1698,
+   "h": 1701,
+   "dpi": 300,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Effective conductivities of the conducting matrix as a function of the temperature. Different colors represent the weight fraction of C65 in the powder mixture. According to the Arrhenius equation, the pure solid electrolyte shows a temperature- dependent increase in (ionic) conductivity. This formula does not apply to the conducting matrix, because it should be regarded as a mixed conductor. However, an increase in conductivity can be observed for the sample CM-1 with increasing temperature, too, indicating that ionic conductivity dominates the effective conductivity. In contrast, the conductivity of the samples with ≥3 wt.-% decreases with increasing temperature, which indicates that the electronic conduction is dominating the overall behavior of the samples. At room temperature (25 ◦C), a systematic increase in the effective conductivity of the CM with increasing C65 content",
+   "bbox": [
+    156.8,
+    319.0,
+    566.9,
+    582.6
+   ],
+   "w": 1710,
+   "h": 1099,
+   "dpi": 300,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Effective conductivities of the conducting matrix as a function of the C65 weight and volume fraction at 25 ◦C. The approximate range of the percolation threshold pc is highlighted. The X-axes are not scaled and display tested C65 fractions. Although carbon additives have already been shown to increase the rate performance of thiophosphate-based composite cathodes [26], they have detrimental effects on the battery performance mainly due to forming side reactions [18]. When defining a conduct- ing matrix based on percolation theory and describing the formation of interconnected regions of randomly distributed particles in this structure, the so-called percolating clusters could provide a minimized conductive additive/cathode active material ratio [44]. The conductive matrix prepared in this study can be considered as such a structure in which the",
+   "bbox": [
+    159.8,
+    404.2,
+    566.9,
+    642.3
+   ],
+   "w": 1698,
+   "h": 994,
+   "dpi": 300,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Schema of the conducting matrix microstructure with different weight fractions of C65; (b–e) correlated top-view images of the conducting matrix with increasing C65 content (yellow arrows indicate solid electrolyte particles and dark blue arrows indicate C65 nanoparticles): (b) CM-1, (c) CM-2, (d) CM-5 and (e) CM-10. A schema of the conducting matrix’ microstructure is shown in Figure 6a. Illustrated on the left is the subcritical percolation phase, where the C65 nanoparticles are distributed within the solid electrolyte as isolated islands (the SEM image of the C65 particles can be found in Supporting Information Figure S5). At the percolation threshold pc, the amount of C65 is sufficient to form a network and electronic conduction can occur via the network. A further increase in C65 in the supercritical percolation phase will inevitably reduce the ionic",
+   "bbox": [
+    158.8,
+    229.0,
+    566.4,
+    640.7
+   ],
+   "w": 1699,
+   "h": 1716,
+   "dpi": 300,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.372
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Prepared powder mixtures of the conducting matrix with weight (wt.) and volume (vol.) fractions.",
+   "bbox": [
+    160.9,
+    47.0,
+    566.0,
+    777.7
+   ],
+   "w": 1661,
+   "h": 2995,
+   "dpi": 295,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Temperature protocol of the EIS measurements for the separator and the conducting matrix.",
+   "bbox": [
+    50.9,
+    47.0,
+    566.0,
+    772.1
+   ],
+   "w": 2126,
+   "h": 2992,
+   "dpi": 297,
+   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "blank": 0.898
+  }
+ ]
+}

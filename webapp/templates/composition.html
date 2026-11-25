@@ -1,0 +1,1160 @@
+{% extends "base.html" %}
+{% block title %}{{ comp.label }} · DFT{% endblock %}
+{% block head %}
+<script src="{{ vsrc('3Dmol-min.js','https://3dmol.org/build/3Dmol-min.js') }}"></script>
+<script src="{{ vsrc('plotly.min.js','https://cdn.plot.ly/plotly-2.35.2.min.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1><span class="dot" style="background:{{ comp.color }};width:14px;height:14px"></span> {{ comp.label }}</h1>
+    <div class="sub"><span class="mono">{{ comp.formula }}</span> · {{ comp.cell }} · <span class="badge b-fam">{{ comp.family }}</span></div>
+  </div>
+  <div class="page-actions">
+    {# 해석 카드가 가리키는 화면 보고서 — **머리에 올린다**. 2026-09-16: 카드 절 안에만
+       있던 링크를 1저자가 못 찾았다("여기에 url이 어디있어"). 카드마다 따로 세지 않고
+       이 조성의 카드 링크를 전부 모아 중복 없이 낸다. #}
+    {% for lk in interps|map(attribute='links')|select|sum(start=[])|unique(attribute='url') %}
+    <a class="btn sm" href="{{ lk.url }}" target="_blank" rel="noopener noreferrer"
+       title="{{ lk.label }}">📄 보고서</a>
+    {% endfor %}
+    <button class="btn sm" onclick="copyComp()">📋 값 복사</button>
+    <a class="btn" href="/compare">⇄ 비교</a>
+  </div>
+</div>
+
+{# ── 이 조성의 살아 있는 결정 ────────────────────────────────────────────────
+   ⛔ 2026-09-09 (v3 D) — 1저자가 2026-09-08 에 비준한 LPSOCl 닫힘 조건이 decisions.json
+      에 active 로 있는데 /composition/lpsocl 렌더 결과엔 '닫힘'·'400 ps'·'보고량' 이
+      **0회**였다. 화면이 자기 캠페인의 지위를 모르는 상태였다.
+   ★ 숫자·제목·상태는 전부 원장 파생(decisions_view) — 여기에 손으로 쓰지 않는다. #}
+{% if decisions and (decisions.live or decisions.folded or cards) %}
+<div class="v3-band{% if hazards and hazards[0].level == 'BLOCKED' %} is-blocked{% elif hazards %} is-hold{% endif %}"
+     style="display:block">
+  <div class="v3-band-t">이 조성의 살아 있는 결정 · 마감 카드</div>
+  {% for d in decisions.live %}
+  <div class="v3-band-v" style="margin-top:6px">
+    <a href="/governance#{{ d.id }}" class="mono" style="font-size:.72rem">{{ d.id }}</a>
+    <span class="badge {% if d.state == 'active' %}b-canon{% else %}b-prov{% endif %}">{{ d.state }}</span>
+    {% if d.kind %}<span class="badge b-fam">{{ d.kind }}</span>{% endif %}
+    {{ d.title|bold }}
+    {% if d.statement %}<div class="muted" style="font-weight:400;font-size:.78rem;line-height:1.6;margin-top:2px">{{ d.statement|bold|claimbind }}</div>{% endif %}
+    {# ⚠ `d.reopen` 은 **목록**이다 (원장이 배열로도 적는다 · decisions_view.reopen_items).
+       종전 판은 문자열로 다뤄 파이썬 repr `['…', '…']` 이 그대로 나왔다 — 2026-09-15 정정. #}
+    {% if d.reopen %}<div class="muted" style="font-weight:400;font-size:.75rem;margin-top:2px">재개 조건:
+      {%- if d.reopen|length == 1 %} {{ d.reopen[0]|bold }}
+      {%- else %}<ul style="margin:2px 0 0;padding-left:1.1em">
+        {% for x in d.reopen %}<li>{{ x|bold }}</li>{% endfor %}</ul>{% endif %}</div>{% endif %}
+  </div>
+  {% endfor %}
+  {% if cards %}
+  <div class="v3-band-v" style="margin-top:8px;font-weight:400">
+    {% for c in cards %}<a class="btn sm" href="/files?q={{ c.file.rsplit('/',1)[-1] }}"
+      title="{{ c.title|plain }}">📄 {{ c.kind }}{% if c.date %} · {{ c.date }}{% endif %}</a> {% endfor %}
+  </div>
+  {% endif %}
+  {% if decisions.folded %}
+  <details class="v3-fold" style="margin-top:6px"><summary>철회된 옛 판정 {{ decisions.folded|length }}건</summary>
+    {% for d in decisions.folded %}<div class="muted" style="font-size:.78rem;line-height:1.6">
+      <a href="/governance#{{ d.id }}" class="mono">{{ d.id }}</a> · {{ d.state }} — {{ d.title }}</div>{% endfor %}
+  </details>{% endif %}
+  <div class="muted" style="font-size:.72rem;margin-top:6px">
+    출처 <span class="mono">db/governance/decisions.json</span>
+    {%- if decisions.n_global %} · 전 계 공통 정책 {{ decisions.n_global }}건은
+    <a href="/governance">판정 원장</a>에 있어요{% endif %}</div>
+</div>
+{% endif %}
+
+{# ── 이 조성의 원자료에 걸린 인용 위험 ──────────────────────────────────────
+   ⚠ 원장이 **파일 단위**로 적은 위험은 파일 단위로만 낸다 — 값마다 금지 여부를
+     여기서 판정하지 않는다(같은 파일 안에서도 영향 없는 축이 있다고 원장이 명시했다). #}
+{% if hazards %}
+<details class="v3-fold card" style="margin-bottom:14px">
+  <summary><b style="color:var(--red)">⛔ 이 조성의 원자료에 걸린 인용 위험 {{ hazards|length }}건</b>
+    <span class="muted" style="font-weight:400">— 값보다 먼저 읽어요</span></summary>
+  {% for h in hazards %}
+  <div data-claim="{{ h.id }}" style="margin-top:8px;font-size:.8rem;line-height:1.65">
+    <span class="badge" style="color:#b91c1c;background:#fee2e2">{{ h.level }}</span>
+    <span class="mono" style="font-size:.72rem">{{ h.id }}</span> — <b>{{ h.what|bold }}</b>
+    <div class="muted">{{ h.why|bold }}</div>
+    {% if h.fix %}<div>→ {{ h.fix|bold|claimbind }}</div>{% endif %}
+    <div class="muted mono" style="font-size:.68rem">{{ h.file }}
+      · 연결 근거 {{ '판정(claim)' if h.how == 'claim' else '원자료 경로' }}</div>
+  </div>
+  {% endfor %}
+</details>
+{% endif %}
+
+{# ── 해석 카드 (2026-09-14) — **값이 아니라 서술**이다 ──────────────────────────
+   왜 화면에 올리나: 값의 지위는 원장이 지키는데, "이 값을 무엇으로 설명하나" 는 말로만
+   돌아다녔다. 랩 미팅에서 'Nd 3+ 유지 → 산화 안정' 이 그렇게 돌았고 우리 계산엔 그 연결이
+   없었다. 서술도 원장에 두고 화면은 **읽기만** 한다.
+   ⛔ 화면이 판정하지 않는다 — citable·허용·금지는 카드가 적은 그대로 낸다. #}
+{% if interps %}
+{% for it in interps %}
+<div class="card" style="margin-bottom:14px;border-left:4px solid #7c3aed">
+  {% if it.error %}
+  <b style="color:var(--red)">⛔ 해석 카드를 못 읽었다</b>
+  <div class="mono muted" style="font-size:.72rem">{{ it.file }} — {{ it.error }}</div>
+  {% else %}
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span class="badge" style="background:#ede9fe;color:#5b21b6">해석</span>
+    {% if not it.citable %}<span class="badge" style="background:#fee2e2;color:#b91c1c">citable = no</span>{% endif %}
+    <b style="font-size:.92rem">{{ it.title|mdlite }}</b>
+    <span class="mono muted" style="font-size:.7rem;margin-left:auto">{{ it.date }}</span>
+  </div>
+  {% if it.status %}<div class="muted" style="font-size:.74rem;margin-top:2px">{{ it.status|mdlite }}</div>{% endif %}
+  {% if it.headline %}<div style="margin-top:8px;font-size:.86rem;line-height:1.6">{{ it.headline|mdlite }}</div>{% endif %}
+  {# 외부 링크 — ⚠ **접힘 밖**이다. 2026-09-16 실측: 카드 §7 에 아티팩트 URL 을 넣었는데
+     그 절이 `<details>`(본문 N절) 안이라 접혀 있었고, 1저자가 "여기에 url 이 어디 있어"
+     라고 물었다. 접힌 링크는 붙인 것이 아니다. #}
+  {% if it.links %}
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+    {% for lk in it.links %}
+    <a href="{{ lk.url }}" target="_blank" rel="noopener noreferrer"
+       style="display:inline-flex;align-items:center;gap:5px;font-size:.76rem;
+              text-decoration:none;border:1px solid #ddd6fe;background:#f5f3ff;
+              color:#5b21b6;border-radius:999px;padding:3px 11px">📄 {{ lk.label }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {# 숫자 표 — 원본은 각 표의 source 파일이다. 화면이 값을 보관하지 않는다. #}
+  {% for tb in it.tables %}
+  <div style="margin-top:12px">
+    {% if tb.title %}<div style="font-size:.8rem;font-weight:700">{{ tb.title|mdlite }}</div>{% endif %}
+    {% if tb.error %}<div style="color:var(--red);font-size:.76rem">⛔ 표가 어긋난다 — {{ tb.error }}</div>{% endif %}
+    <div style="overflow-x:auto">
+      <table class="mdl-tbl" style="margin-top:5px;font-size:.76rem">
+        <thead><tr>{% for c in tb.columns %}<th>{{ c|mdlite }}</th>{% endfor %}</tr></thead>
+        <tbody>{% for r in tb.rows %}<tr>{% for c in r %}<td>{{ c|mdlite }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+      </table>
+    </div>
+    {% if tb.note %}<div class="muted" style="font-size:.74rem;margin-top:4px;line-height:1.55">{{ tb.note|mdlite }}</div>{% endif %}
+    {% if tb.source %}<div class="mono muted" style="font-size:.66rem;margin-top:2px">출처 {{ tb.source }}</div>{% endif %}
+  </div>
+  {% endfor %}
+
+  {% if it.counter %}
+  <details class="v3-fold" style="margin-top:8px">
+    <summary><b style="color:#c05621">반대 증거 {{ it.counter|length }}건</b>
+      <span class="muted" style="font-weight:400">— 숨기지 않는다</span></summary>
+    <ul style="margin:6px 0 0;font-size:.8rem;line-height:1.6">
+      {% for c in it.counter %}<li>{{ c|mdlite }}</li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+  {# 번호 절 — 카드가 쓴 산문 그대로. ⚠ 2026-09-16 신설: 그 전에는 뽑는 키가 고정이라
+     카드에 절을 더해도 **화면에 한 글자도 안 떴다**. 숫자의 출처는 절 안에 있다. #}
+  {% if it.sections %}
+  <details class="v3-fold" style="margin-top:8px">
+    <summary><b style="color:#5b21b6">본문 {{ it.sections|length }}절</b>
+      <span class="muted" style="font-weight:400">— 카드 원문</span></summary>
+    {% for sec in it.sections %}
+    <div style="margin-top:9px">
+      <div style="font-size:.79rem;font-weight:700;color:#5b21b6">{{ sec.title|mdlite }}</div>
+      <div style="font-size:.77rem;line-height:1.6">
+        {% for r in sec.body %}
+        <div style="margin-left:{{ r.indent * 14 }}px;margin-top:2px">
+          {% if r.label %}<span class="muted" style="font-weight:600">{{ r.label|mdlite }}</span>{% if r.text %} — {% endif %}{% endif %}{{ r.text|mdlite }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </details>
+  {% endif %}
+  {% if it.allowed or it.forbidden %}
+  <div class="grid grid-2" style="margin-top:10px;gap:10px">
+    {% if it.allowed %}
+    <div><div class="muted" style="font-size:.72rem;font-weight:700">허용 서술 (이대로만)</div>
+      <ul style="margin:4px 0 0;font-size:.78rem;line-height:1.55">
+        {% for x in it.allowed %}<li>{{ x|mdlite }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    {% if it.forbidden %}
+    <div><div class="muted" style="font-size:.72rem;font-weight:700;color:var(--red)">금지 서술</div>
+      <ul style="margin:4px 0 0;font-size:.78rem;line-height:1.55">
+        {% for x in it.forbidden %}<li>{{ x|mdlite }}</li>{% endfor %}</ul></div>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% if it.open %}
+  <details class="v3-fold" style="margin-top:8px">
+    <summary><b>미결 {{ it.open|length }}건</b>
+      <span class="muted" style="font-weight:400">— 이것이 있어야 주장이 선다</span></summary>
+    <ul style="margin:6px 0 0;font-size:.78rem;line-height:1.55">
+      {% for x in it.open %}<li>{{ x|mdlite }}</li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+  <div class="mono muted" style="font-size:.68rem;margin-top:8px">{{ it.file }} — 원본은 이 파일이다</div>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- canonical metric badges -->
+{# ⚠ 하드코딩하면 레지스트리에 metric 이 늘어도 label·unit 이 빈칸으로 렌더된다
+   (2026-08-07 Codex 5라운드 실측). data.metric_meta() 에서 만든다. #}
+{% set units = {} %}{% set labels = {} %}
+{% for k, mm in MM.items() %}{% set _ = units.update({k: mm.unit}) %}{% set _ = labels.update({k: mm.label}) %}{% endfor %}
+{% set todo_keys = [] %}{% set other_keys = [] %}
+<div class="metrics-row">
+{% for key, val in canonical.items() %}
+  {% set prov = canonical_provisional.get(key) %}
+  {% set nt = notices.get(key, {}) %}
+  {% if val is none and key in other_family %}{% set _ = other_keys.append(key) %}
+  {% elif val is not none %}
+  {#- ⛔ Codex BI P0 (2026-09-08) — 값 타일에 `data-claim` 이 없어서 /composition/b2o3 이
+      철회값 0.199 를 **이름 없이** 찍고 있었다. 배지는 결속이 아니다(스캐너는 조상
+      data-claim 만 본다). 원장 파생이므로 status 를 되돌리면 결속도 같이 풀린다. -#}
+  {%- set _cl = canonical_claim.get(key) %}
+  {%- set st = canonical_status.get(key) %}
+  {#- ⛔ P0 (2026-09-09) — 철회값이 정본과 **같은** 1.28rem·800·navy 로 찍혔다. 구분은
+      옆의 작은 배지뿐이었는데, 같은 페이지 Raw 탭은 폐기 항목에 취소선을 긋고 있었다
+      (한 페이지 안에 규칙이 둘). 값 자체가 죽은 값으로 보여야 한다. -#}
+  {%- set dead = st and st.status in ('retracted','superseded','non_citable') %}
+  <div class="metric"{% if _cl %} data-claim="{{ _cl }}"{% endif %} title="{{ (canonical_meta[key])|plain }}{% if prov %}&#10;⚠ {{ (prov)|plain }}{% endif %}">
+    <div class="mv"{% if dead %} style="text-decoration:line-through;color:var(--muted)"{% endif %}>{{ val }}<span style="font-size:.55em;color:var(--dim)"> {{ units[key] }}</span></div>
+    {#- ★ 대체값은 **툴팁이 아니라 본문**에 — 복사·인쇄·텍스트추출에서 살아남아야 한다. -#}
+    {%- if dead or nt.hold %}
+    <div class="mm" style="color:var(--red);font-weight:600">
+      {% if nt.instead %}대신 쓸 값: {{ nt.instead }}
+      {% elif dead %}대신 쓸 값: 원장에 등록된 대체값이 없다
+      {% else %}⏸ 조건부 보류 — 절대값을 그대로 인용하지 않아요{% endif %}</div>
+    {%- endif %}
+    {#- ★ 상태 배지는 **하나만** (2026-08-07 Codex 4라운드). 레지스트리 status 와 옛
+        CANONICAL_PROVISIONAL 이 겹쳐 '잠정' 이 두 번 찍혔다. 레지스트리가 단일 진실
+        원천이므로 그쪽 우선, 없을 때만 PROV. -#}
+    <div class="ml">{{ labels[key] }}
+      {%- if st and st.status != 'canonical' %} <span class="badge" style="color:{{ st.fg }};background:{{ st.bg }}"
+        title="{{ st.why|plain }}">{{ st.label }}</span>
+      {%- elif prov %} <span class="badge b-prov" title="{{ prov|plain }}">잠정</span>{% endif %}
+      {#- ★ 값은 맞다. 그 값을 만든 실행을 파일로 재현할 수 없다는 표식이다. -#}
+      {%- set po = canonical_prov.get(key) %}
+      {%- if po %} <span class="badge" style="color:#0369a1;background:#e0f2fe"
+        title="출처 미확보: {{ (po.why)|plain }}">출처⚠</span>{% endif %}
+      {#- ★ 잣대 세대 — status 배지와 **다른 축**이다. status 는 '지금 쓸 수 있는가',
+          이건 '어느 시절 규칙으로 만들어졌는가'. gen0 이라고 틀린 값이 아니다. -#}
+      {%- set gb = canonical_gen.get(key) %}
+      {%- if gb %} <span class="badge" style="color:{{ gb.fg }};background:{{ gb.bg }}"
+        title="{{ gb.why|plain }}">{{ gb.label }}</span>{% endif %}
+      {#- ★ 보류는 status 와 또 다른 축이다 — 값은 등록됐고 status 도 안 내려갔는데
+          **절대값만** 못 쓴다(기준 비대칭 δ_m·δ_LREAL). 원장 prohibitions 파생. -#}
+      {%- if nt.hold %} <span class="badge" style="color:#b45309;background:#fef3c7"
+        title="조건부 보류 — {{ (nt.hold_why)|plain }}">보류</span>{% endif %}</div>
+    {# 회신 BG ② — 방법·출처 주석은 **다른 계의 정본값을 자주 인용한다**(여기선 b2o3 0.199).
+       그 값이 나중에 철회돼도 이 문장은 그대로 남으므로, 렌더할 때 결속을 붙인다. #}
+    {#- ⚠ 빈 상자를 그리지 않는다 — CANONICAL_META 에 없는 축(SDCP_*)이 빈 회색 줄로 떴다. -#}
+    {%- if canonical_meta[key] %}<div class="mm" title="{{ canonical_meta[key]|plain }}">{{ canonical_meta[key]|claimbind }}</div>{% endif %}
+    {%- if prov %}<div class="mm mm-prov" title="{{ prov|plain }}">⚠ {{ prov|claimbind }}</div>{% endif %}
+    {#- ★ **이 값이 어느 파일에서 왔나** — 종전엔 화면 어디에도 없었다. -#}
+    {%- if nt.source_path %}
+    <div class="mm mono" style="font-size:.62rem;opacity:.8"><a href="/files?q={{ nt.source_path.rsplit('/',1)[-1] }}"
+      title="원자료 파일">{{ nt.source_path }}</a>{% if nt.updated %} · {{ nt.updated }}{% endif %}</div>
+    {%- endif %}
+  </div>
+  {% elif canonical_na.get(key) %}
+  {# '하면 안 되거나 정의되지 않는' 축은 TODO 로 광고하면 안 된다 (예: li3n × UMA MD).
+     ⚠ TODO(안 했다) 와 N/A(성립하지 않는다) 를 같은 회색 점선으로 뭉치지 않는다 — .metric.na #}
+  <div class="metric na" title="{{ canonical_na.get(key)|plain }}">
+    <div class="mv">N/A</div>
+    <div class="ml">{{ labels[key] }}</div>
+    <div class="mm">{{ canonical_na.get(key)|bold|claimbind }}</div>
+  </div>
+  {% else %}{% set _ = todo_keys.append(key) %}
+  {% endif %}
+{% endfor %}
+</div>
+{#- ── TODO·다른 계열 축은 **타일 벽이 아니라 한 줄** ────────────────────────────
+    ⛔ P0-09 (2026-09-09) — metric_meta 곱집합 때문에 SDCP 분자 metric 11개가 **전 조성
+       페이지**에 TODO 로 찍혔다. LPSCl 페이지가 PTFE 흡착에너지를 '미계산' 으로 광고했고
+       그건 애초에 보류(HOLD)된 양이다. 지우지 않고 접는다 — 캠페인 범위 선언이라서. -#}
+{% if todo_keys or other_keys %}
+<div style="margin:-6px 0 18px">
+  {% if todo_keys %}
+  <details class="v3-fold"><summary>아직 계산 안 한 축 {{ todo_keys|length }}개 <span class="badge b-todo">TODO</span></summary>
+    <div class="muted" style="font-size:.78rem;line-height:1.8">
+      {% for k in todo_keys %}<span class="badge b-todo">{{ labels[k] }}</span> {% endfor %}
+      <div style="margin-top:4px">TODO = 아직 안 했다. (성립하지 않는 축은 위에 <b>N/A</b> 로,
+        했는데 못 쓰는 값은 <b>철회·인용불가</b> 배지로 따로 표시해요.)</div>
+    </div>
+  </details>
+  {% endif %}
+  {% if other_keys %}
+  <details class="v3-fold"><summary>다른 계열의 축 {{ other_keys|length }}개</summary>
+    <div class="muted" style="font-size:.78rem;line-height:1.8">
+      {% for k in other_keys %}<span class="badge b-fam">{{ labels[k] }}</span> {% endfor %}
+      <div style="margin-top:4px">이 축들은 <b>{{ comp.family }}</b> 계열에 등록된 항목이 원장에 하나도 없어요 —
+        TODO 로 광고하면 "하면 되는데 안 했다"로 읽혀서 접어 둡니다. 판정은 레지스트리
+        <span class="mono">system</span> 계열에서 파생돼요(손 목록 아님).</div>
+    </div>
+  </details>
+  {% endif %}
+</div>
+{% endif %}
+{% if canonical.values()|select('ne', None)|list|length == 0 %}
+<div class="card" style="margin-bottom:16px">
+  <b>이 조성은 아직 계산 전이에요.</b>
+  <div class="muted" style="font-size:.82rem;line-height:1.7;margin-top:4px">
+    등록된 정본 값이 0건입니다. 그래도 목록에 남겨 두는 이유는 <b>캠페인 범위 선언</b>이기
+    때문이에요 — "이 조성은 보기로 했다"는 기록을 지우면 무엇을 안 했는지가 사라져요.
+    아래 Structure·Charts 탭에 원자료가 있으면 그건 계산 중이라는 뜻이고요.
+  </div>
+</div>
+{% endif %}
+
+{% if cascade_dopant and cascade_rows and cascade_rows.ranked %}
+{% set cr = cascade_rows.ranked[0] %}
+<div class="card cascade-banner">
+  <div class="cb-tag">🗄 Cascade — historical 47종</div>
+  <div class="cb-body">
+    {# ⛔ 2026-08-16 (Codex f9 P0-3) — 도펀트 라벨 join 을 validation 이라고 부르지 않는다. #}
+    {% if cascade_join and cascade_join.validation_link_status == 'different_composition' %}
+    <div style="border:2px solid var(--red);border-radius:6px;padding:8px 10px;margin-bottom:8px">
+      <div style="color:var(--red);font-weight:700">
+        ⛔ 같은 조성의 검증이 아니다 — 부호 충돌이 미해결이다</div>
+      <div style="font-size:.84rem;margin-top:4px">
+        이 페이지의 DFT 셀 <span class="mono">{{ cascade_join.dft_deep_formula }}</span> 는 산화 onset
+        <b>{{ cascade_join.dft_deep_ox_V }} V</b> 로 host({{ cascade_join.host_ox_V }} V) <b>아래</b>이고,
+        아래 캐스케이드 챔피언 <span class="mono">{{ cascade_join.cascade_formula }}</span>
+        (<span class="mono">{{ cascade_join.cascade_generator_variant }}</span>,
+        치환 자리 <span class="mono">{{ cascade_join.cascade_substitution_site }}</span>) 는
+        <b>{{ cascade_join.cascade_ox_V }} V</b> 로 host <b>위</b>다.
+        <b>둘은 다른 조성</b>이고 도펀트 이름만 같다.</div>
+      <div class="muted" style="font-size:.78rem;margin-top:4px">
+        composition_match <b>false</b> · phase_set_match <b>{{ cascade_join.phase_set_match }}</b> ·
+        method_family_match {{ cascade_join.method_family_match }} — {{ cascade_join.why }}</div>
+    </div>
+    <div><b>{{ cascade_dopant }}</b> 는 UMA 도핑 스크리닝의 도펀트 라벨이고, 이 페이지는 그 라벨을 가진
+      <b>다른 조성</b>의 DFT 계산이에요. 스크리닝이 고른 조성의 검증이 아닙니다.</div>
+    {% else %}
+    <div><b>{{ cascade_dopant }}</b> 는 UMA 도핑 스크리닝에서 고른 도펀트 — 이 페이지는 같은 도펀트의
+      <b>DFT 심층계산</b>이에요.
+      {% if cascade_join %}<span class="muted" style="font-size:.8rem">(조성식 대조는 아직 —
+      <span class="mono">{{ cascade_join.validation_link_status }}</span>)</span>{% endif %}</div>
+    {% endif %}
+    {# ⛔ 2026-08-14 — 아래 rank/score 는 2026-06-29 취합 경계의 47종판이다. 현재 승인된
+       랭킹은 0종이므로 "현재 순위" 로 읽히면 안 된다 (Codex 재감사 legacy-rank 우회). #}
+    <div class="cb-cav" style="color:var(--red);font-weight:600;font-size:.82rem">
+      ⛔ 아래 rank·score 는 <b>superseded 47종 스냅샷</b>이다 — 현재 승인된 랭킹은 <b>0종</b>.
+      완주분은 90종이고 재랭킹은 게이트 정의가 닫힌 뒤에 한다.</div>
+    <div class="cb-stats">
+      <span class="cb-s"><em>rank</em> #{{ cr.rank|int }}{% if cascade_rows.total %}/{{ cascade_rows.total }}{% endif %}</span>
+      <span class="cb-s"><em>score</em> {{ cr.score }}</span>
+      <span class="cb-s"><em>ox_V</em> {{ cr.ox_V }}</span>
+      <span class="cb-s"><em>E (UMA)</em> {{ cr.E_GPa }} GPa</span>
+      <span class="cb-s"><em>Pugh</em> {{ cr.pugh }}</span>
+      {% if cr.group %}<span class="cb-s"><em>group</em> {{ cr.group }}</span>{% endif %}
+      <span class="cb-s cb-warn" title="{{ (cascade_meta.caveat if cascade_meta else '')|plain }}">⚠ UMA 상대값 — 절대값 인용 금지</span>
+    </div>
+    <div class="cb-cav muted">{{ cascade_meta.caveat if cascade_meta else '' }}</div>
+  </div>
+  <a class="btn primary" href="/cascade">캐스케이드 감사 화면 →</a>
+</div>
+{% endif %}
+
+<div class="tabs" id="tabs">
+  <button class="active" data-tab="structure">🧊 Structure ({{ structures|length }})</button>
+  <button data-tab="charts">📊 Charts ({{ datafiles|length }})</button>
+  {% if icohp or cohp_curves or elf_curves %}<button data-tab="bonding">🔗 Bonding</button>{% endif %}
+  <button data-tab="raw">🗂 Raw ({{ metrics|length }})</button>
+  {% if rollup %}<button data-tab="record">📄 Record</button>{% endif %}
+</div>
+
+<!-- Structure -->
+<div class="tab-panel active" id="tab-structure">
+  {% if structures %}
+  <div class="card">
+    <h3>3D 구조 <span class="muted" style="font-weight:400">— 드래그 회전 / 스크롤 확대 (VESTA 대체)</span></h3>
+    {% set sv = (structures|selectattr('viewable')|list|first) %}
+    {#- ── 구조 목록: 폴더 → 같은 stem 두 단계로 접는다 (v3 D) ────────────────────
+        실측 버튼 수 sdcp 95 · vgcf_hbn 64 · li3n 60 이고 그 안에 같은 구조의
+        .xyz/.vasp/.vesta 3종 세트가 섞여 있어 **사람이 고를 수 없었다**.
+        .vesta 는 3Dmol 파서가 없다 — 3D 줄에서 빼고 다운로드로만 준다. -#}
+    <div class="muted" style="font-size:.74rem;margin-bottom:8px">
+      구조 {{ struct_groups.total }}개 · 파일 {{ struct_groups.n_files }}개
+      {%- if struct_groups.n_vesta %} (그중 .vesta {{ struct_groups.n_vesta }}개는 다운로드 전용){% endif %}
+      — 같은 이름의 여러 형식은 한 항목으로 묶었어요.
+    </div>
+    {% for g in struct_groups.groups %}
+    <details class="v3-fold" {% if loop.first %}open{% endif %} style="margin-bottom:8px">
+      <summary><b>{{ g.folder if g.folder else '(db/structures 바로 아래)' }}</b>
+        <span class="muted" style="font-weight:400">{{ g.n }}개</span></summary>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px">
+        {% for it in g.rows %}
+        {% if it.view %}
+        <span class="mono" style="display:inline-flex;gap:2px;align-items:center">
+          <button class="btn sm {% if sv and it.view.name == sv.name %}primary{% endif %}"
+                  onclick="loadStruct('{{ it.view.name }}','{{ it.view.fmt }}',this)"
+                  title="{{ it.view.name|plain }}">{{ it.stem }}</button>
+          {% for f in it.files %}<a class="btn sm" style="padding:2px 5px;font-size:.65rem"
+             href="/api/structure/{{ f.name|urlencode }}" download title="{{ (f.name)|plain }} 내려받기">{{ f.ext }}</a>{% endfor %}
+          {% for f in it.vesta %}<a class="btn sm" style="padding:2px 5px;font-size:.65rem"
+             href="/api/structure/{{ f.name|urlencode }}" download
+             title="VESTA 전용 — 3D 파서가 없어요">vesta</a>{% endfor %}
+        </span>
+        {% else %}
+        <span class="mono" style="display:inline-flex;gap:2px;align-items:center">
+          <span class="btn sm" style="opacity:.6;cursor:default"
+                title="3D 파서 없음 — 다운로드해서 VESTA로 보세요">{{ it.stem }}</span>
+          {% for f in it.files + it.vesta %}<a class="btn sm" style="padding:2px 5px;font-size:.65rem"
+             href="/api/structure/{{ f.name|urlencode }}" download title="{{ f.name|plain }}">{{ f.ext }}</a>{% endfor %}
+        </span>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+    {% endfor %}
+    {# 보기 조작 — VESTA 에서 늘 하는 것들(다면체·타일링·정면) 을 버튼으로 #}
+    <div id="v3d-ctrls" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+      <span class="muted" style="font-size:.72rem">보기</span>
+      <button class="btn sm active" id="v3d-poly" onclick="v3dToggle('poly',this)"
+              title="PS₄ 사면체를 면으로 — argyrodite 골격이 이렇게 읽힌다">🔷 PS₄ 다면체</button>
+      <button class="btn sm active" id="v3d-cell" onclick="v3dToggle('cell',this)" title="단위셀 상자">▦ 셀</button>
+      <button class="btn sm" id="v3d-li" onclick="v3dToggle('li',this)" title="Li 를 숨기면 골격이 또렷하다">Li 숨기기</button>
+      <span style="width:8px"></span>
+      <button class="btn sm active" onclick="v3dRep(1)" id="v3d-r1">1×1×1</button>
+      <button class="btn sm" onclick="v3dRep(2)" id="v3d-r2" title="주기 반복을 보고 싶을 때">2×2×2</button>
+      <span style="width:8px"></span>
+      <button class="btn sm" onclick="v3dView('a')">a축</button>
+      <button class="btn sm" onclick="v3dView('b')">b축</button>
+      <button class="btn sm" onclick="v3dView('c')">c축</button>
+      <button class="btn sm" onclick="v3dView('iso')" title="살짝 비스듬히 — 깊이가 보인다">비스듬히</button>
+    </div>
+    <div class="viewer3d" id="viewer"></div>
+    <div id="v3d-legend" class="v3d-legend"></div>
+    <div class="struct-dl muted" style="font-size:.74rem;margin-top:8px">
+      cif = 단위셀 표시 · xyz = 원자만(격자 없음 → 타일링·셀 불가) · vasp(POSCAR) 지원 · vesta는 다운로드 전용
+      &nbsp;·&nbsp; <a id="dl-struct" href="#" download>⬇ 현재 파일 다운로드</a>
+    </div>
+  </div>
+  {% else %}<div class="card"><span class="muted">구조 파일 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
+</div>
+
+<!-- Charts (모든 post-processing CSV) -->
+<div class="tab-panel" id="tab-charts">
+  {% if datafiles %}
+  <div class="chip-bar">
+    {#- ⚠ 칩 라벨을 kind 로만 쓰면 sdcp 15칩 중 11개가 전부 'data' 라 눌러 보기 전에는
+        무엇인지 알 수 없다(실측). 파일 stem 축약을 앞에 두고 kind 는 배지로. -#}
+    {% for d in datafiles %}<button class="chip {% if loop.first %}active{% endif %}"
+      title="db/{{ (d.rel)|plain }}" onclick="plotCsv('{{ d.rel }}','{{ d.kind }}',this)">{{ d.short }}
+      <span class="badge b-fam" style="font-size:.6rem">{{ d.kind }}</span></button>{% endfor %}
+  </div>
+  <div class="card">
+    <div class="chart-ctrls" id="chart-ctrls"></div>
+    <div class="chart" id="chart"></div>
+    <div class="muted" id="chart-summary" style="font-size:.72rem;margin-top:8px;line-height:1.6"></div>
+    <div class="muted" id="chart-src" style="font-size:.74rem;margin-top:6px"></div>
+    {# ⚠ CSV 가 자기 안에 적어 둔 규율 캐비앳(# 머리말)을 여기 띄운다.
+       예전엔 read_csv 가 통째로 버려서 절대 σ 가 무경고로 그려질 수 있었다. #}
+    <div class="callout cal-warn" id="chart-notes" style="display:none;font-size:.76rem;margin-top:8px"></div>
+  </div>
+  {% else %}<div class="card"><span class="muted">CSV 데이터 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
+</div>
+
+<!-- Raw -->
+<div class="tab-panel" id="tab-raw">
+  {% if metrics %}
+  <div class="card" style="overflow-x:auto">
+    <div class="muted" style="font-size:.76rem;margin-bottom:10px;line-height:1.6">
+      ⚠ 출처 = <span class="mono">db/_index.json</span> 스냅샷{% if index_built %} (<b>{{ index_built[:10] }}</b> 생성){% endif %} —
+      <b>canonical 아님</b>. 페이지 상단 metric 카드가 정본이에요. 폐기값엔 <span class="badge b-todo">폐기</span> 배지가 붙어요.
+    </div>
+    <table class="data-table"><thead><tr><th>path</th><th>value</th></tr></thead><tbody>
+    {% for m in metrics %}<tr><td class="mono">{{ m.path }}{% if m.stale %} <span class="badge b-todo" title="{{ m.stale|plain }}">폐기</span>{% endif %}</td>
+      <td class="num"{% if m.stale %} style="text-decoration:line-through;opacity:.65" title="{{ m.stale|plain }}"{% endif %}>{{ m.value }}</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+  {% else %}<div class="card"><span class="muted">인덱스 메트릭 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
+</div>
+
+<!-- Bonding (LOBSTER ICOHP + COHP 곡선) -->
+{# ⚠ 세 자료는 따로 존재할 수 있다 — comp2 는 곡선 CSV 만 있고 ICOHP JSON 이 없어서
+   `if icohp` 하나로 묶어 두면 탭이 통째로 사라진다(실제로 그랬다). 조건을 분리한다. #}
+{% if icohp or cohp_curves or elf_curves %}
+<div class="tab-panel" id="tab-bonding">
+  {% if icohp %}<div class="card">
+    <h3>결합 강도 — LOBSTER ICOHP <span class="muted" style="font-weight:400;font-size:.8rem">음수 클수록 강한 결합</span></h3>
+    {#- ⛔ P0-05 (2026-09-09) — 이 표가 CUTOFF ARTIFACT 로 정정된 Li-S −2.493 / Li-Cl −2.265
+        를 경고 없이 찍고 있었다. 같은 페이지 아래 '계 간 비교' 카드는 정정본 −1.647/−2.132
+        를 쓰고 있어서 **한 화면이 자기를 부정했다**. 이제 icohp_for 가 정정본을 표의
+        정본으로 올리고, 옛 표는 아래 접힘에 취소선으로 남는다(삭제 아님 — 이력이다). -#}
+    {% if icohp._promoted_from %}
+    <div style="border:2px solid var(--red);border-radius:6px;padding:8px 10px;margin:6px 0 10px">
+      <div style="color:var(--red);font-weight:700">⛔ 아래 표는 <b>정정본</b>이에요 —
+        원장의 정정 기록에 따라 <span class="mono">{{ icohp._promoted_from }}</span> 를 올렸습니다.</div>
+      <div style="font-size:.82rem;margin-top:4px;line-height:1.6">{{ icohp._promoted_why|bold }}</div>
+    </div>
+    {% endif %}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px">
+      {# ⚠ per_bond_json 스키마엔 spilling 키가 **둘 다 없다** — `is defined` 사슬만으로는
+   두 번째에서 UndefinedError 가 난다(실제로 comp1/modelc 가 500). .get() 으로 방어. #}
+      {% set spill = icohp.get('spilling_pct', icohp.get('charge_spilling_pct')) %}
+      {% if spill is not none %}<span class="badge {% if spill < 5 %}b-canon{% else %}b-todo{% endif %}">charge spilling {{ spill }}%</span>{% endif %}
+      <span class="badge b-fam mono" style="font-size:.68rem">{{ icohp.system }}</span>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr>
+      <th>Bond</th><th class="num">N</th><th class="num">d̄ (Å)</th><th class="num">ICOHP (eV/bond)</th><th class="num">range</th></tr></thead><tbody>
+    {% for bond, v in icohp.bonds.items() %}
+    <tr><td><b>{{ bond }}</b></td>
+      <td class="num">{{ v.N if v.N is defined else '—' }}</td>
+      <td class="num">{{ '%.3f'|format(v.d_mean_A) if v.d_mean_A is defined else '—' }}</td>
+      {% set icv = v.ICOHP_total_eV_per_bond if v.ICOHP_total_eV_per_bond is defined else (v.ICOHP_eV if v.ICOHP_eV is defined else none) %}
+      <td class="num" style="font-weight:600">{{ '%.3f'|format(icv) if icv is not none else '—' }}</td>
+      <td class="num muted" style="font-size:.76rem">{% if v.ICOHP_min is defined %}{{ '%.2f'|format(v.ICOHP_min) }} … {{ '%.2f'|format(v.ICOHP_max) }}{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table>
+    </div>
+    {% set hl = icohp.headline_CORRECTED or icohp.headline %}
+    {% if hl %}
+    <div class="muted" style="font-size:.82rem;margin-top:10px;line-height:1.6">
+      {%- if hl is mapping -%}
+        <ul style="margin:0;padding-left:18px">
+        {%- for hk, hv in hl.items() %}<li><b>{{ hk.replace('_',' ') }}</b> — {{ hv }}</li>{% endfor -%}
+        </ul>
+      {%- else -%}{{ hl }}{%- endif -%}
+    </div>{% endif %}
+    {% if icohp.bonds.values()|selectattr('d_mean_A','defined')|list|length == 0 %}
+    <div class="muted" style="font-size:.72rem;margin-top:6px">※ d̄ 열은 이 계산에 원자료가 없어 비어 있어요 (LOBSTER 재파싱 대기).</div>{% endif %}
+    {% if icohp.bonds_superseded %}
+    <details class="v3-fold" style="margin-top:10px">
+      <summary style="color:var(--red)">CUTOFF ARTIFACT 로 정정되기 전의 옛 표 {{ icohp.bonds_superseded|length }}행
+        <span class="muted" style="font-weight:400">— 인용 금지, 이력으로만 남깁니다</span></summary>
+      <div style="overflow-x:auto;margin-top:6px">
+      <table class="data-table"><thead><tr><th>Bond</th><th class="num">N</th>
+        <th class="num">d̄ (Å)</th><th class="num">ICOHP (eV/bond)</th></tr></thead><tbody>
+      {% for bond, v in icohp.bonds_superseded.items() %}
+      {#- ⚠ 경고를 표 머리에만 두면 **행 옆에서는 안 보인다** — 스크롤·복사·텍스트추출에서
+          숫자만 떨어져 나간다. 행마다 붙인다. -#}
+      <tr style="text-decoration:line-through;opacity:.62"><td><b>{{ bond }}</b>
+        <span class="badge" style="color:#b91c1c;background:#fee2e2;text-decoration:none">CUTOFF ARTIFACT</span></td>
+        <td class="num">{{ v.N if v.N is defined else '—' }}</td>
+        <td class="num">{{ '%.3f'|format(v.d_mean_A) if v.d_mean_A is defined else '—' }}</td>
+        <td class="num">{{ '%.3f'|format(v.ICOHP_total_eV_per_bond)
+           if v.ICOHP_total_eV_per_bond is defined else '—' }}</td></tr>
+      {% endfor %}
+      </tbody></table></div>
+    </details>{% endif %}
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">{{ icohp.method }}</div>
+  </div>{% endif %}
+
+  {# ── COHP 곡선 (bonding / antibonding) ───────────────────────────────
+     ICOHP 는 **적분값**이라 "어느 에너지에서 결합/반결합인지"를 못 본다.
+     그 정보는 COHPCAR.lobster 에만 있고, 없으면 왜 없는지를 그대로 띄운다.
+     ⚠ ELF 만 있는 계에서는 카드째 숨긴다 — LOBSTER 를 안 돌린 계에 '회수 절차'만
+       띄우면 할 일 목록처럼 보인다. #}
+  {% if icohp or cohp_curves %}
+  <div class="card">
+    <h3>COHP 곡선 — bonding / antibonding
+      <span class="muted" style="font-weight:400;font-size:.8rem">−pCOHP &gt; 0 = 결합성, &lt; 0 = 반결합성</span></h3>
+    {% if cohp_curves %}
+    <div class="muted" style="font-size:.78rem;line-height:1.6;margin-bottom:8px">
+      ICOHP 는 이 곡선을 <b>E<sub>F</sub> 까지 적분한 값</b>이에요 — 표는 "얼마나 센가"만,
+      곡선은 <b>어느 에너지에서 결합/반결합인가</b>를 보여줘요.
+      {% if cohp_curves.legacy %}
+      <br><span class="badge b-todo">구형 CSV</span> 이 계의 곡선은 예전 규약이라
+      매칭된 결합의 <b>합(sum)</b>이에요. 결합 수 N 이 다른 패널끼리 높이를 비교하면 안 되고
+      (합이라 N 에 비례), 곡선 적분도 ICOHP 표시값과 일치하지 않아요.
+      <span class="mono">tools/figures/extract_cohp_curves.py</span> 로 다시 뽑으면 결합당 평균이 됩니다.
+      {% else %}
+      곡선은 <b>결합당 평균</b>으로 정규화해서, 패널 높이가 곧 결합 하나의 세기예요
+      (N 이 1인 P–O 와 100 넘는 Li–S 를 같은 눈금에서 비교할 수 있게 —
+      ∫(−pCOHP)dE|<sub>E<sub>F</sub></sub> = −ICOHP/bond 로 상자와 자기일관).
+      {% endif %}
+      <br><b>x 눈금은 패널마다 달라요</b> — P 계(−6~−8 eV)와 Li 계(−1~−2 eV)를 한 눈금에 두면
+      Li 패널이 뭉개져서요. 높이 비교는 눈금이 같은 패널끼리만 하세요.
+      {% set lowcov = cohp_curves.pairs.values()|selectattr('window_coverage','defined')
+                        |rejectattr('window_coverage','ge',0.95)|list %}
+      {% if lowcov %}
+      <br><b style="color:#b91c1c">⚠ 상자의 ICOHP ≠ 그림에 보이는 면적</b> — LOBSTER 의 ICOHP 는
+      전 에너지 적분인데 COHPCAR 격자가 −∞ 에서 시작하지 않아서, 깊은 결합 기여가 창 밖에 있어요.
+      커버리지가 95% 미만인 패널엔 <b>(N% in window)</b> 를 붙였습니다 — 그 패널의 면적으로
+      ICOHP 를 주장하면 안 되고, 곡선은 <b>“어느 에너지에서 결합/반결합인가”만</b> 말해요.
+      {% endif %}
+    </div>
+    <div class="chart" id="cohp-chart" style="min-height:520px"></div>
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">
+      {% if not cohp_curves.legacy %}db/{% endif %}{{ cohp_curves.rel }}
+      {%- if cohp_curves.smooth_eV %} · Gaussian σ {{ cohp_curves.smooth_eV }} eV{% endif %}
+      {%- if cohp_curves.window_eV %} · window {{ cohp_curves.window_eV[0] }} … {{ cohp_curves.window_eV[1] }} eV{% endif %}</div>
+    <script>window._COHP={rel:{{ cohp_curves.rel|tojson }},pairs:{{ cohp_curves.pairs|tojson }}};</script>
+    {% else %}
+    <div class="muted" style="font-size:.82rem;line-height:1.7">
+      아직 없어요. 곡선은 <span class="mono">COHPCAR.lobster</span> 원자료가 있어야 그려지는데,
+      그 파일은 계산 서버(gabia <span class="mono">{{ icohp.raw.split(':')[-1] if icohp.raw else '…' }}</span>)에만 있고
+      수십 MB라 repo 로 통째로 못 가져와요.<br>
+      회수 절차: 서버에서 <span class="mono">tools/figures/extract_cohp_curves.py</span> 로 패널 곡선만
+      압축 CSV(<span class="mono">db/properties/{{ cid }}_cohp_curves_origin.csv</span>)로 뽑아 옮기면
+      이 자리에 바로 그려지고, <span class="mono">tools/figures/fig_lpsocl_cohp_curves.py</span> 가
+      논문용 PNG 를 냅니다.
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {# ── ELF 결합 프로파일 (ICOHP=공유성 · Bader=전하 와 함께 세 번째 축) ──────
+     ⚠ 판정값은 [0.40,0.60] 최솟값. 곡선 전체 최솟값을 쓰면 Li 1s|2s 코어 노드를
+       집어 Li–Cl < Li–O < Li–S 로 순서가 뒤집힌다 (data.py ELF_WIN 참조). #}
+  {% if elf_curves %}
+  <div class="card">
+    <h3>ELF 결합 프로파일
+      <span class="muted" style="font-weight:400;font-size:.8rem">— 결합 경로를 따라간 전자 국재화</span></h3>
+    <div class="muted" style="font-size:.78rem;line-height:1.6;margin-bottom:8px">
+      ICOHP 가 "얼마나 센가", Bader 가 "전하가 어디로 갔나"라면 ELF 는
+      <b>결합 사이에 전자가 모여 있나(공유) 비어 있나(이온)</b>를 말해요.
+      판정은 결합 경로의 <b>가운데 구간 [{{ elf_curves.window[0] }}, {{ elf_curves.window[1] }}] 최솟값</b>으로 하고
+      (&gt; {{ elf_curves.cov }} 공유 · &lt; {{ elf_curves.ion }} 이온),
+      노란 띠가 그 구간이에요.
+      <br><b style="color:#b91c1c">⚠ 곡선 전체의 최솟값으로 읽으면 안 돼요.</b>
+      Li 결합은 frac 0.65 근처에서 ELF 가 0.03~0.08 까지 떨어지는데, 이건 결합이 아니라
+      <b>Li 의 1s|2s 코어 노드</b>예요 (쓰는 유사퍼텐셜에서 Li 1s 가 가전자라 Li 핵에서 ELF→1).
+      원자 성질이라 그 골로 줄을 세우면 순서가 뒤집혀요.
+      <br>표의 <b>mean</b> 열이 <b>인용 표준</b>(n개 결합 평균)이고, 곡선은 결합종마다
+      <b>대표 1개</b>라서 소수 셋째 자리가 다를 수 있어요.
+    </div>
+    <div class="chart" id="elf-chart" style="min-height:460px"></div>
+    <div style="overflow-x:auto;margin-top:10px">
+    <table class="data-table"><thead><tr>
+      <th>Bond</th><th class="num">d (Å)</th><th class="num">n</th>
+      <th class="num">central min (mean)</th><th class="num">midpoint (mean)</th>
+      <th>판정</th><th class="num">Li core node</th></tr></thead><tbody>
+    {% for c, v in elf_curves.bonds.items() %}
+    <tr><td><b>{{ v.label }}</b></td>
+      <td class="num muted">{{ '%.2f'|format(v.dist_A) }}</td>
+      <td class="num muted">{{ v.n_bonds if v.n_bonds else '—' }}</td>
+      <td class="num" style="font-weight:600">
+        {{ '%.3f'|format(v.mean_central_min) if v.mean_central_min is not none
+           else ('%.3f'|format(v.central_min) ~ ' *') }}</td>
+      <td class="num muted">{{ '%.3f'|format(v.mean_midpoint) if v.mean_midpoint is not none else '—' }}</td>
+      <td><span class="badge {{ 'b-ok' if v.verdict == 'covalent' else ('b-todo' if v.verdict == 'ionic' else '') }}">{{ v.verdict }}</span></td>
+      <td class="num muted" style="font-size:.78rem">
+        {% if v.core_node is not none %}{{ '%.3f'|format(v.core_node) }} <span style="font-size:.7rem">(원자)</span>{% else %}—{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px;line-height:1.6">
+      ※ <b>midpoint</b> 는 참고용이에요 — 짧은 결합에서는 중점이 상대 원자의 lone-pair 안에
+      들어가 실제보다 높게 읽혀요 (Li–O 가 중점 0.784 인데 central min 0.163).
+      {% if elf_curves.bonds.values()|selectattr('mean_central_min','none')|list %}
+      <br>* 표시는 중점 CSV 에 해당 결합이 없어 <b>대표 1결합 값</b>을 쓴 항목이에요.{% endif %}
+    </div>
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">db/{{ elf_curves.rel }}
+      {%- if elf_curves.mid_rel %} · db/{{ elf_curves.mid_rel }}{% endif %}</div>
+    <script>window._ELF={{ elf_curves|tojson }};</script>
+  </div>
+  {% endif %}
+
+  {# ── 자리별 Li 앵커 세기 (같은 원소쌍이라도 자리가 다르면 세기가 다르다) ── #}
+  {% if icohp.per_site %}
+  <div class="card">
+    <h3>자리별 결합 세기 <span class="muted" style="font-weight:400;font-size:.8rem">— 같은 원소쌍도 자리에 따라 다르다</span></h3>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr>
+      <th>Site</th><th class="num">ICOHP (eV/bond)</th><th class="num">std</th><th class="num">n</th><th>note</th></tr></thead><tbody>
+    {% for s, v in icohp.per_site.items() %}
+    <tr><td class="mono">{{ s }}</td>
+      <td class="num" style="font-weight:600">{{ '%.3f'|format(v.ICOHP_eV) }}</td>
+      <td class="num muted">{{ '%.3f'|format(v.std) if v.std is defined else '—' }}</td>
+      <td class="num muted">{{ v.n if v.n is defined else '—' }}</td>
+      <td class="muted" style="font-size:.78rem">{{ v.note or '' }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.75rem;margin-top:8px">
+      ※ std 가 큰 자리(예: PS<sub>4</sub>-S)는 <b>평균 하나로 말하면 안 되는</b> 자리예요 —
+      분포가 넓다는 뜻이라 대표값보다 범위를 인용하세요.
+    </div>
+  </div>
+  {% endif %}
+
+  {# ── 계 간 비교 (도핑이 host 를 건드렸나) ───────────────────────────── #}
+  {% if icohp._comparison %}
+  <div class="card">
+    <h3>계 간 비교 <span class="muted" style="font-weight:400;font-size:.8rem">— 도핑이 host 결합을 바꿨나</span></h3>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr><th>Bond</th>
+      {% for c in icohp._comparison_cols %}<th class="num">{{ c }}</th>{% endfor %}
+      <th>note</th></tr></thead><tbody>
+    {% for bond, row in icohp._comparison.items() %}
+    <tr><td><b>{{ bond }}</b></td>
+      {% for c in icohp._comparison_cols %}
+      {# ⚠ pct 열을 eV 서식(%.3f)으로 찍어서 0.4 %가 0.400 eV 처럼 보였다 (2026-07-29 감사) #}
+      <td class="num">{% if row[c] is defined and row[c] not in (none,'') %}
+        {%- if 'pct' in c or '%' in c %}{{ '%.1f'|format(row[c]|float) }} %{% else %}{{ '%.3f'|format(row[c]|float) }}{% endif -%}
+      {% else %}—{% endif %}</td>
+      {% endfor %}
+      <td class="muted" style="font-size:.78rem">{{ row.note or '' }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">db 키: {{ icohp._comparison_key }}</div>
+    {% if icohp._comparison_note %}
+    <div class="muted" style="font-size:.75rem;margin-top:6px;line-height:1.6">⚠ {{ icohp._comparison_note }}</div>{% endif %}
+  </div>
+  {% endif %}
+
+  {# ── Bader 전하 (ICOHP 와 짝: 공유결합성 vs 이온성) ─────────────────── #}
+  {% if icohp.bader %}
+  <div class="card">
+    <h3>Bader 전하 <span class="muted" style="font-weight:400;font-size:.8rem">— ICOHP(공유성)와 짝이 되는 이온성 축</span></h3>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr><th>Element</th><th class="num">net charge (e)</th>
+      {% if icohp._comparison_bader %}{% for c in icohp._comparison_cols %}<th class="num">{{ c }}</th>{% endfor %}{% endif %}
+      <th>note</th></tr></thead><tbody>
+    {% for el, v in icohp.bader.items() %}{% if v is number and not el.endswith('_std') and not el.startswith('n_') %}
+    <tr><td><b>{{ el }}</b></td>
+      <td class="num" style="font-weight:600">{{ '%+.3f'|format(v) }}</td>
+      {% if icohp._comparison_bader %}{% set cb = icohp._comparison_bader.get(el) %}
+      {% for c in icohp._comparison_cols %}
+      <td class="num">{% if cb and cb[c] is defined %}{{ '%+.3f'|format(cb[c]|float) }}{% else %}—{% endif %}</td>
+      {% endfor %}{% endif %}
+      <td class="muted" style="font-size:.78rem">
+        {#- ⚠ `_comparison_bader` 는 비교표가 있는 계에만 있다. `icohp.` 로 바로 타면
+            bader 만 있는 JSON 이 하나 들어오는 순간 UndefinedError 로 이 페이지가 500 이
+            된다(같은 패턴으로 comp1/modelc 가 500 났던 전례가 위 205줄 주석에 있다).
+            `.get()` 이 아니라 **위 가드와 같은 조건**을 다시 걸어 방어한다. -#}
+        {%- if icohp._comparison_bader and icohp._comparison_bader.get(el) %}{{ icohp._comparison_bader[el].note or '' }}{% endif -%}
+        {%- if icohp.bader[el ~ '_std'] is defined %} <span class="mono">std {{ '%.3f'|format(icohp.bader[el ~ '_std']) }}</span>{% endif -%}
+      </td></tr>
+    {% endif %}{% endfor %}
+    </tbody></table></div>
+    {% if icohp.bader.n_electrons_recovered %}
+    <div class="muted" style="font-size:.72rem;margin-top:6px">
+      적분 회수 전자수 {{ icohp.bader.n_electrons_recovered }} — 정수에서 멀면 격자/컷오프 부족 신호예요.</div>{% endif %}
+    <div class="muted" style="font-size:.75rem;margin-top:6px;line-height:1.6">
+      ⚠ Bader 절대값은 <b>밀도 소스(AE plot_num=17 + PAW vs 가전자 plot_num=0 + NC)</b>에 따라 통째로 달라져요.
+      방법이 다른 계끼리 같은 표에 놓지 마세요.
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Record (db JSON 원본) -->
+{% if rollup %}
+<div class="tab-panel" id="tab-record">
+  <div class="card">
+    <h3>Composition record <span class="muted" style="font-weight:400;font-size:.8rem">— db/compositions/{{ cid }}.json</span></h3>
+    <pre class="record-json">{{ rollup|tojson(indent=2) }}</pre>
+  </div>
+</div>
+{% endif %}
+
+{# ── 더 보기 ────────────────────────────────────────────────────────────────
+   실측(2026-09-09): /composition/lpsocl <main> 안의 실링크가 **/compare 하나**였다.
+   방법·판정·원자료·미결로 나가는 길이 본문에 없었다. #}
+<div class="card" style="margin-top:18px">
+  <b style="font-size:.86rem">더 보기</b>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+    <a class="btn sm" href="/methods">🧪 어떻게 쟀나 (방법)</a>
+    <a class="btn sm" href="/governance">⚖ 판정 원장</a>
+    <a class="btn sm" href="/explorer">▤ 정본 값 진입점</a>
+    <a class="btn sm" href="/compare">⇄ 두 계 비교</a>
+    <a class="btn sm" href="/files?q={{ cid }}">🗂 원자료 파일</a>
+    <a class="btn sm" href="/glossary">📖 용어</a>
+    <a class="btn sm" href="/todo">📋 미결</a>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+  if(b.dataset.tab==='structure'&&viewer)setTimeout(()=>{viewer.resize();viewer.render();},50);
+  if(b.dataset.tab==='charts'&&window._firstCsv){window._firstCsv();window._firstCsv=null;}
+  if(b.dataset.tab==='bonding'&&window._COHP&&!window._COHP._done){window._COHP._done=1;drawCohp();}
+  if(b.dataset.tab==='bonding'&&window._ELF&&!window._ELF._done){window._ELF._done=1;drawElf();}
+});
+
+// ── COHP 곡선 패널 (bonding/antibonding) ───────────────────────────────
+// ⚠ 패널마다 x 눈금을 따로 준다. 공유하면 Li 계(−1~−2 eV)가 P 계(−6~−8) 옆에서
+//   납작해져 "Li–O 공유성이 modest 하다"는 판정 근거가 그림에서 사라진다.
+var _COHP_COLOR={'P-S':'#7c3aed','P-O':'#be123c','Li-S':'#c05621','Li-Cl':'#65a30d',
+                 'Li-O':'#be123c','S-S':'#6b7280','B-S':'#0284c7','Nd-S':'#7d5ba6'};
+function drawCohp(){
+  var box=document.getElementById('cohp-chart');if(!box)return;
+  if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';return;}
+  fetch('/api/csv/'+encodeURIComponent(window._COHP.rel)).then(r=>r.json()).then(function(d){
+    if(d.error||!d.columns){box.innerHTML='<span class="muted">CSV 로드 실패: '+(d.error||'?')+'</span>';return;}
+    var xk=d.columns[0];
+    // 열 이름 규약이 세 세대 있다: mean_pCOHP_*(현행, 결합당 평균) / sum_pCOHP_*(합) /
+    // '-pCOHP_*'(구형 docs 산출, 합). 우선순위대로 집는다.
+    var cols=d.columns.filter(function(c){return c.indexOf('mean_pCOHP_')===0;}),perBond=true;
+    if(!cols.length){cols=d.columns.filter(function(c){return c.indexOf('sum_pCOHP_')===0;});perBond=false;}
+    if(!cols.length){cols=d.columns.filter(function(c){return c.indexOf('-pCOHP_')===0;});perBond=false;}
+    // ⚠ 축 라벨은 정규화 규약을 따라가야 한다. sum 곡선에 'per bond' 라고 쓰면
+    //   N 배 큰 값을 결합 하나의 세기로 읽게 만든다 (Li-S N=125 → 100배 넘는 착시).
+    var xlab=perBond?'−pCOHP/bond':'−pCOHP (sum of N bonds)';
+    if(!cols.length){box.innerHTML='<span class="muted">곡선 열(*pCOHP_*)이 없어요 — 열: '+
+      d.columns.join(', ')+'</span>';return;}
+    var E=d.data.map(function(r){return r[xk];});
+    var n=cols.length, ncol=Math.min(3,n), nrow=Math.ceil(n/ncol);
+    var traces=[],shapes=[],anns=[],layout={grid:{rows:nrow,columns:ncol,pattern:'independent'}};
+    cols.forEach(function(c,i){
+      var lab=c.replace(/^(mean_|sum_|-)pCOHP_/,'').replace(/\u2013/g,'-'),
+          y=d.data.map(function(r){return r[c];});
+      var mx=Math.max.apply(null,y.map(Math.abs))*1.18||1, ax=(i?String(i+1):'');
+      traces.push({x:y,y:E,type:'scatter',mode:'lines',name:lab,fill:'tozerox',
+        line:{color:_COHP_COLOR[lab]||'#6b7280',width:1.4},
+        fillcolor:(_COHP_COLOR[lab]||'#6b7280')+'55',hovertemplate:lab+'<br>E−E_F %{y:.2f} eV<br>−pCOHP %{x:.3f}<extra></extra>',
+        xaxis:'x'+(i+1),yaxis:'y'+(i+1)});
+      layout['xaxis'+(i+1)]={title:{text:xlab,font:{size:11}},range:[-mx,mx],
+        zeroline:true,zerolinecolor:'#9ca3af',tickfont:{size:9}};
+      layout['yaxis'+(i+1)]={title:{text:i%ncol===0?'E − E_F (eV)':'',font:{size:11}},
+        range:[-12,6],tickfont:{size:9},showticklabels:i%ncol===0};
+      shapes.push({type:'line',xref:'x'+(i+1),yref:'y'+(i+1),x0:-mx,x1:mx,y0:0,y1:0,
+        line:{color:'#6b7280',width:1,dash:'dash'}});
+      var p=(window._COHP.pairs||{})[lab]||{};
+      anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:0,y:5.2,text:'<b>'+lab+'</b>'+(p.N?' (N='+p.N+')':''),
+        showarrow:false,font:{size:12}});
+      if(p.ICOHP_per_bond_eV!=null)anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:0,y:-11,
+        text:'ICOHP '+Number(p.ICOHP_per_bond_eV).toFixed(2)+' eV/bond',showarrow:false,font:{size:10,color:'#374151'}});
+      anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:-mx*0.94,y:3.6,text:'<i>Anti</i>',showarrow:false,
+        font:{size:9,color:'#9ca3af'},xanchor:'left'});
+      anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:mx*0.94,y:3.6,text:'<i>Bonding</i>',showarrow:false,
+        font:{size:9,color:'#9ca3af'},xanchor:'right'});
+    });
+    layout.shapes=shapes;layout.annotations=anns;layout.showlegend=false;
+    layout.height=Math.max(420,300*nrow);layout.margin={l:56,r:16,t:18,b:44};
+    Plotly.newPlot('cohp-chart',traces,layout,{responsive:true,displaylogo:false});
+  }).catch(function(e){box.innerHTML='<span class="muted">차트 로드 실패</span>';});
+}
+// ── ELF 결합 프로파일 패널 ─────────────────────────────────────────────
+// ⚠ 판정 마커는 **[0.40,0.60] 안의 최솟값**에만 찍는다. 곡선 전체 최솟값에 찍으면
+//   Li 결합에서 1s|2s 코어 노드(원자 성질)를 결합 세기처럼 보여 주게 된다.
+var _ELF_COLOR={'P–S':'#7c3aed','P–O':'#be123c','S(free)–Li':'#c05621','Li–S':'#c05621',
+                'Cl–Li':'#65a30d','Li–Cl':'#65a30d','O–Li':'#be123c','Li–O':'#be123c',
+                'B–S':'#0284c7','S–S':'#6b7280'};
+function drawElf(){
+  var box=document.getElementById('elf-chart');if(!box)return;
+  if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';return;}
+  var E=window._ELF;
+  fetch('/api/csv/'+encodeURIComponent(E.rel)).then(r=>r.json()).then(function(d){
+    if(d.error||!d.columns){box.innerHTML='<span class="muted">CSV 로드 실패: '+(d.error||'?')+'</span>';return;}
+    var xk=d.columns[0], X=d.data.map(function(r){return r[xk];});
+    var cols=d.columns.slice(1).filter(function(c){return E.bonds[c];});
+    if(!cols.length){box.innerHTML='<span class="muted">ELF 열을 못 찾았어요 — 열: '+d.columns.join(', ')+'</span>';return;}
+    var n=cols.length, ncol=Math.min(3,n), nrow=Math.ceil(n/ncol);
+    var traces=[],shapes=[],anns=[],layout={grid:{rows:nrow,columns:ncol,pattern:'independent'}};
+    cols.forEach(function(c,i){
+      var b=E.bonds[c], col=_ELF_COLOR[b.label]||'#6b7280',
+          Y=d.data.map(function(r){return r[c];}), ax=(i+1);
+      traces.push({x:X,y:Y,type:'scatter',mode:'lines',name:b.label,
+        line:{color:col,width:2},
+        hovertemplate:b.label+'<br>frac %{x:.3f}<br>ELF %{y:.3f}<extra></extra>',
+        xaxis:'x'+ax,yaxis:'y'+ax});
+      // 판정 마커 — 창 안 최솟값 위치를 곡선에서 다시 찾는다 (표의 대표값과 같은 정의)
+      var bi=-1,bv=2;
+      X.forEach(function(x,k){if(x>=E.window[0]-1e-9&&x<=E.window[1]+1e-9&&Y[k]<bv){bv=Y[k];bi=k;}});
+      if(bi>=0)traces.push({x:[X[bi]],y:[Y[bi]],type:'scatter',mode:'markers',
+        marker:{size:9,color:'#fff',line:{color:col,width:2.2}},hoverinfo:'skip',
+        showlegend:false,xaxis:'x'+ax,yaxis:'y'+ax});
+      layout['xaxis'+ax]={title:{text:'fraction along bond',font:{size:10}},range:[0,1],tickfont:{size:9}};
+      layout['yaxis'+ax]={title:{text:i%ncol===0?'ELF':'',font:{size:11}},range:[0,1.30],
+        tickvals:[0,.2,.4,.6,.8,1],tickfont:{size:9},showticklabels:i%ncol===0};
+      shapes.push({type:'rect',xref:'x'+ax,yref:'y'+ax,x0:E.window[0],x1:E.window[1],y0:0,y1:1.30,
+        fillcolor:'#fef9c3',line:{width:0},layer:'below'});
+      [[E.cov,'#0d9488'],[E.ion,'#be123c']].forEach(function(t){
+        shapes.push({type:'line',xref:'x'+ax,yref:'y'+ax,x0:0,x1:1,y0:t[0],y1:t[0],
+          line:{color:t[1],width:1,dash:'dot'}});});
+      var mv=(b.mean_central_min!=null?b.mean_central_min:b.central_min);
+      anns.push({xref:'x'+ax,yref:'y'+ax,x:0.5,y:1.24,showarrow:false,font:{size:11,color:col},
+        text:'<b>'+b.label+'</b>  '+b.dist_A.toFixed(2)+' Å'});
+      anns.push({xref:'x'+ax,yref:'y'+ax,x:0.5,y:1.10,showarrow:false,
+        font:{size:10,color:b.verdict==='covalent'?'#0d9488':(b.verdict==='ionic'?'#be123c':'#6b7280')},
+        text:'central min '+(mv!=null?mv.toFixed(3):'?')+' · '+(b.verdict||'')});
+      if(b.core_node!=null)anns.push({xref:'x'+ax,yref:'y'+ax,x:0.98,y:0.20,showarrow:false,
+        xanchor:'right',font:{size:8,color:'#6b7280'},
+        text:'Li 1s|2s node '+b.core_node.toFixed(3)+'<br>atomic — not the bond'});
+    });
+    layout.shapes=shapes;layout.annotations=anns;layout.showlegend=false;
+    layout.height=Math.max(380,300*nrow);layout.margin={l:52,r:16,t:14,b:44};
+    Plotly.newPlot('elf-chart',traces,layout,{responsive:true,displaylogo:false});
+  }).catch(function(e){box.innerHTML='<span class="muted">차트 로드 실패</span>';});
+}
+/* ── 3D 구조 뷰어 (3Dmol) — VESTA 스타일 ───────────────────────────────
+ * 1저자 지적(2026-08-06): "3D 구조가 구려 / argyrodite, primitive cell 처럼 보이게".
+ * 기본값(회색 공+막대, 1셀, 정면)으로는 argyrodite 골격이 안 읽힌다. 바꾼 것:
+ *   ① 원소 색·크기를 우리 house 팔레트 + 이온반경 비례로 (Li 작게, S 크게)
+ *   ② **PS₄ 사면체를 면으로** 그린다 — 이 계의 골격은 고립 PS₄ 이고, 그게 보여야
+ *      "argyrodite" 로 읽힌다 (3Dmol 은 다면체가 없어 addCustom 으로 4면을 직접 만든다)
+ *   ③ 기본 2×2×2 타일링 — 1셀만 보면 케이지가 잘려 덩어리로 보인다
+ *   ④ 비스듬한 시점 + 얕은 원근 — 정면은 겹쳐서 깊이가 죽는다
+ * ⚠ xyz 는 격자가 없다 → 타일링·셀 버튼은 자동으로 꺼진다.
+ */
+const V3D_COLOR = {Li:'#0d9488', P:'#7c3aed', S:'#c05621', Cl:'#65a30d',
+                   O:'#be123c', B:'#0284c7', N:'#2563eb', C:'#334155', H:'#94a3b8'};
+const V3D_RADIUS = {Li:0.34, P:0.42, S:0.62, Cl:0.62, O:0.52, B:0.36, N:0.5, C:0.5, H:0.25};
+let viewer, v3dModel, v3dCell = null, v3dName = '', v3dFmt = '';
+let v3dOpt = {poly:true, cell:true, li:true, rep:1, view:'iso'};
+
+function v3dHasCell(){ return !!v3dCell; }
+
+/* 격자 벡터 3개 — 3Dmol 은 modelData.cryst.matrix(3x3, 열 우선) 에 담아 둔다.
+   xyz 처럼 격자가 없으면 null (그땐 주기 이미지를 못 만든다). */
+function v3dLattice(){
+  try{
+    const c = viewer.getModel().modelData.cryst;
+    const e = c && c.matrix && c.matrix.elements;
+    if(!e) return null;
+    return [[e[0],e[1],e[2]],[e[3],e[4],e[5]],[e[6],e[7],e[8]]];
+  }catch(e){ return null; }
+}
+
+function v3dApply(){
+  if(!viewer || !v3dModel) return;
+  viewer.removeAllShapes();
+  const atoms = viewer.selectedAtoms({});
+
+  /* ⚠ 자동 결합(stick)을 쓰지 않는다. argyrodite 는 Li 가 60% 라 Li 결합까지 그리면
+     화면이 실뭉치가 된다(2026-08-06 실측). VESTA 로 그리는 방식 그대로:
+       · 골격 = PS₄ 사면체(면) + 그 안의 P–S 막대만
+       · Li · Cl = 결합 없는 구 (Cl 은 케이지 중심, Li 는 그 사이 — 이게 argyrodite 그림이다) */
+  viewer.setStyle({}, {sphere:{scale:0.001}});           // 기본을 지우고
+  Object.keys(V3D_COLOR).forEach(el=>{
+    viewer.setStyle({elem:el}, {sphere:{radius:V3D_RADIUS[el]||0.4, color:V3D_COLOR[el]}});
+  });
+  if(!v3dOpt.li) viewer.setStyle({elem:'Li'}, {sphere:{radius:0.001}});
+
+  /* PS₄ (또는 PO₄) — 중심 P 마다 가장 가까운 S/O 4개.
+     ⚠ **주기 이미지까지 봐야 한다.** 셀 경계의 P 는 파트너 S 가 옆 셀에 있어서,
+       셀 안만 뒤지면 사면체가 4개 중 1개만 그려진다 (2026-08-06 실측 — 그래서 '구려' 보였다).
+       격자를 아는 형식(cif·vasp)이면 ±1 셀 27개 평행이동을 같이 훑는다. */
+  const P = atoms.filter(a=>a.elem==='P'), X0 = atoms.filter(a=>a.elem==='S'||a.elem==='O');
+  const L = v3dLattice();                       // [[ax,ay,az],[bx..],[cx..]] 또는 null
+  const X = [];
+  if(L){
+    for(let i=-1;i<=1;i++) for(let j=-1;j<=1;j++) for(let k=-1;k<=1;k++){
+      const dx=i*L[0][0]+j*L[1][0]+k*L[2][0], dy=i*L[0][1]+j*L[1][1]+k*L[2][1],
+            dz=i*L[0][2]+j*L[1][2]+k*L[2][2];
+      X0.forEach(a=>X.push({x:a.x+dx, y:a.y+dy, z:a.z+dz, elem:a.elem}));
+    }
+  } else { X0.forEach(a=>X.push(a)); }
+  P.forEach(p=>{
+    const near = X.map(x=>({x, d:Math.hypot(x.x-p.x, x.y-p.y, x.z-p.z)}))
+                  .filter(o=>o.d < 2.9).sort((a,b)=>a.d-b.d).slice(0,4).map(o=>o.x);
+    if(near.length < 2) return;
+    near.forEach(x=>viewer.addCylinder({start:{x:p.x,y:p.y,z:p.z}, end:{x:x.x,y:x.y,z:x.z},
+                                        radius:0.11, color:V3D_COLOR.P, fromCap:1, toCap:1}));
+    if(v3dOpt.poly && near.length===4){
+      [[0,1,2],[0,1,3],[0,2,3],[1,2,3]].forEach(f=>viewer.addCustom({
+        vertexArr:f.map(i=>({x:near[i].x, y:near[i].y, z:near[i].z})),
+        normalArr:[], faceArr:[0,1,2], color:V3D_COLOR.P, opacity:0.62}));
+    }
+  });
+
+  if(v3dOpt.cell && v3dHasCell()){
+    try{ viewer.addUnitCell(v3dModel, {box:{color:'#64748b'}, alabel:'', blabel:'', clabel:''}); }catch(e){}
+  }
+  viewer.render();
+}
+
+function v3dCamera(){
+  if(!viewer) return;
+  viewer.zoomTo();
+  if(v3dOpt.view==='a'){ viewer.rotate(90,'y'); }
+  else if(v3dOpt.view==='b'){ viewer.rotate(90,'x'); }
+  else if(v3dOpt.view==='iso'){ viewer.rotate(-20,'x'); viewer.rotate(26,'y'); }
+  // 'c' = 그대로(정면)
+  viewer.zoom(0.88);
+  viewer.render();
+}
+
+function v3dToggle(k, btn){
+  v3dOpt[k] = !v3dOpt[k];
+  if(btn) btn.classList.toggle('active', k==='li' ? !v3dOpt[k] : v3dOpt[k]);
+  if(k==='li' && btn) btn.textContent = v3dOpt.li ? 'Li 숨기기' : 'Li 보이기';
+  v3dApply();
+}
+function v3dRep(n){
+  v3dOpt.rep = n;
+  ['v3d-r1','v3d-r2'].forEach(id=>{
+    const e=document.getElementById(id); if(e) e.classList.toggle('active', id==='v3d-r'+n);
+  });
+  if(v3dName) loadStruct(v3dName, v3dFmt);          // 타일링은 다시 읽어야 한다
+}
+function v3dView(v){ v3dOpt.view = v; if(viewer){ viewer.setView(v3dHome||undefined); } v3dCamera(); }
+let v3dHome = null;
+
+function v3dLegend(atoms){
+  const box = document.getElementById('v3d-legend');
+  if(!box) return;
+  const seen = {};
+  (atoms||[]).forEach(a=>{ seen[a.elem] = (seen[a.elem]||0)+1; });
+  const order = ['Li','P','S','Cl','O','B','N','C','H'].filter(e=>seen[e]);
+  box.innerHTML = order.map(e=>
+    '<span class="v3d-chip"><i style="background:'+(V3D_COLOR[e]||'#888')+'"></i>'+e+
+    ' <span class="muted">'+seen[e]+'</span></span>').join('') +
+    (v3dHasCell() ? '' : '<span class="muted" style="font-size:.72rem">· 격자 정보 없음(xyz) — 셀·타일링 꺼짐</span>');
+}
+
+function _dlNote(name,msg){
+  var v=document.getElementById('viewer');
+  if(v)v.innerHTML='<div class="muted" style="padding:28px;line-height:1.7">'+msg+
+    '<br><a class="btn sm" style="margin-top:10px" href="/api/structure/'+encodeURIComponent(name)+'" download>⬇ '+_cesc(name)+' 다운로드</a></div>';
+}
+function loadStruct(name,fmt,btn){
+  document.querySelectorAll('#tab-structure .btn').forEach(x=>x.classList.remove('primary'));
+  if(btn)btn.classList.add('primary');
+  var dl=document.getElementById('dl-struct');
+  if(dl){dl.href='/api/structure/'+encodeURIComponent(name);dl.setAttribute('download',name);}
+  if(!fmt){_dlNote(name,'이 형식(.'+_cesc(name.split('.').pop())+')은 3D 파서가 없어요 — 다운로드해서 VESTA로 보세요.');return;}
+  if(typeof $3Dmol==='undefined'){_dlNote(name,'3D 뷰어(3Dmol)를 불러오지 못했어요 — 네트워크/CDN 확인.');return;}
+  fetch('/api/structure/'+encodeURIComponent(name)).then(r=>r.text()).then(txt=>{
+    if(!viewer)viewer=$3Dmol.createViewer('viewer',{backgroundColor:'#ffffff',antialias:true,orthographic:false});
+    viewer.clear();
+    try{
+      viewer.addModel(txt, fmt);              // ⚠ 확장자별 실제 파서 (POSCAR를 xyz로 넘기던 버그 수정)
+      if(!viewer.getModel()||!viewer.selectedAtoms({}).length)throw new Error('no atoms parsed');
+    }catch(e){
+      _dlNote(name,'이 파일을 3D로 파싱하지 못했어요 (형식 '+_cesc(fmt)+'). 다운로드해서 VESTA로 보세요.');
+      return;
+    }
+    v3dModel = viewer.getModel();
+    v3dName = name; v3dFmt = fmt;
+    // 격자가 있는 형식만 셀·타일링이 가능하다 (xyz 는 원자 좌표뿐)
+    v3dCell = (fmt==='cif'||fmt==='vasp') ? true : null;
+    var ctl = document.getElementById('v3d-ctrls');
+    if(ctl) ctl.querySelectorAll('#v3d-cell,#v3d-r1,#v3d-r2').forEach(function(b){
+      b.disabled = !v3dCell; b.style.opacity = v3dCell ? '' : .45; });
+    if(v3dCell && v3dOpt.rep > 1){
+      try{ viewer.replicateUnitCell(v3dOpt.rep, v3dOpt.rep, v3dOpt.rep, v3dModel); }catch(e){}
+    }
+    v3dApply();
+    viewer.zoomTo(); viewer.zoom(0.92);
+    v3dHome = viewer.getView();
+    v3dCamera();
+    v3dLegend(viewer.selectedAtoms({}));
+    /* ⚠ 첫 호출 때 modelData.cryst 가 아직 안 채워져 있을 때가 있다 — 그러면 주기 이미지를
+       못 만들어 **사면체가 4개 중 1개만** 그려진다(2026-08-06 실측: shapes 12 → 다시 부르면 36).
+       한 틱 뒤 한 번 더 그린다(먼저 removeAllShapes 하므로 중복 없음). */
+    setTimeout(()=>{ if(v3dCell && v3dLattice()) v3dApply(); }, 80);
+  }).catch(()=>showToast('구조 로드 실패'));
+}
+{% set sv0 = (structures|selectattr('viewable')|list|first) %}
+{% if sv0 %}loadStruct('{{ sv0.name }}','{{ sv0.fmt }}');{% endif %}
+function plotCsv(rel,kind,btn){
+  document.querySelectorAll('#tab-charts .chip').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
+  document.getElementById('chart-src').textContent='db/'+rel;
+  var _cn=document.getElementById('chart-notes'); if(_cn){_cn.style.display='none';_cn.innerHTML='';}
+  fetch('/api/csv/'+encodeURIComponent(rel)).then(r=>r.json()).then(d=>{
+    var box=document.getElementById('chart'), ctr=document.getElementById('chart-ctrls');
+    if(!d.data||!d.data.length){box.innerHTML='<span class="muted">빈 데이터</span>';ctr.innerHTML='';return;}
+    var cols=d.columns.slice();
+    // ── 열 타입 → 그룹 → x → y 를 한 덩어리로 결정 (이 순서가 서로를 바꾸므로 분리 패치 금지) ──
+    // 요약행(ratio_… 등)은 서버(read_csv)에서 d.summary 로 분리돼 나오므로 타입 판정을 오염시키지 않는다.
+    function isNum(c){var n=0,t=0;d.data.forEach(function(r){var v=r[c];if(v!==''&&v!=null){t++;if(typeof v==='number')n++;}});return t>0&&n/t>=0.85;}
+    var numeric=cols.filter(isNum), cat=cols.filter(function(c){return numeric.indexOf(c)<0;});
+    // 그룹 열(계열별 여러 곡선) 감지
+    var group=cols.filter(function(c){return /^(series|system|site|kind|variant|dopant|seed|basin|_dir)$/i.test(c);})
+      .filter(function(c){var u={};d.data.forEach(function(r){u[r[c]]=1;});var n=Object.keys(u).length;return n>1&&n<=10;})[0]||'';
+    // 자연 x 후보 — energy는 보통 종속변수(y)라 제외; 그룹열도 x 후보에서 제외
+    var XPREF=/(e_minus|e_vbm|e_ef|1000_?over_?t|inv_?t|invt|volume|\bvol\b|x_scale|x_ang|\bxi\b|freq|frequenc|omega|distance|\bdist|t_ps|\btime\b|r_ang)/i;
+    var xcands=numeric.filter(function(c){return c!==group;});
+    var catx=cat.filter(function(c){return c!==group;});
+    // ⚠ 마지막 폴백에서 group 제외를 푼다 — 안 그러면 ['Site','DeltaE_eV'] 같은 표에서 값 열이
+    //    x로 소비되고 y가 빈 배열이 되어 '죽은 차트'가 된다.
+    var xdef=xcands.filter(function(c){return XPREF.test(c);})[0] || catx[0] || cat[0] || xcands[0];
+    // 숫자열이 하나뿐이면 진짜 인덱스 열을 만들어 x로 쓴다 (없는 열 이름을 쓰면 축이 전부 undefined).
+    if(xdef===undefined || (numeric.length===1 && xdef===numeric[0])){
+      d.data.forEach(function(r,i){r.__i=i;});
+      if(cols.indexOf('__i')<0)cols.push('__i');
+      xdef='__i';
+    }
+    // y 기본: 노이즈(절대에너지·불확도·개수) 제외.
+    //  ^sig  = MLIP-MD Nernst-Einstein 절대 σ 및 그 오차(sig600_mScm·sigma_300K_mS_cm·sigma_err_*)
+    //          — CLAUDE.md '절대값 인용 금지'라 기본 시리즈에서 빼고
+    //           사용자가 체크박스로 명시 선택할 때만 그린다 (열 자체는 남겨 opt-in 가능).
+    var NOISE=/(_pm$|_std$|_err$|^t_k$|_ry$|^n_li|_bohr|count|^rank$|^index$|vperfu|^sig)/i;
+    var ydef=numeric.filter(function(c){return c!==xdef && !NOISE.test(c);});
+    if(!ydef.length)ydef=numeric.filter(function(c){return c!==xdef;});
+    window._CH={rel:rel,kind:kind,d:d,cols:cols,numeric:numeric,cat:cat,x:xdef,y:ydef,grp:group,useGrp:!!group,logy:false};
+    // 요약/파생 행은 차트에서 빼고 각주로 (열 타입 판정 오염 방지 + 정보 손실 방지)
+    // CSV 머리말(# 캐비앳)을 규율 상자로 승격
+    var cn=document.getElementById('chart-notes');
+    if(cn && d.notes && d.notes.length){
+      cn.innerHTML='<b>이 표가 스스로 붙여 둔 캐비앳</b><ul style="margin:6px 0 0;padding-left:18px">'
+        +d.notes.map(function(n){return '<li>'+n.replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];})+'</li>';}).join('')+'</ul>';
+      cn.style.display='';
+    }
+    var sm=document.getElementById('chart-summary');
+    if(sm&&d.summary&&d.summary.length){
+      sm.innerHTML='<b>요약 행 (차트 제외)</b><br>'+d.summary.map(function(r){
+        return cols.filter(function(c){return r[c]!==''&&r[c]!=null;})
+                   .map(function(c){return _cesc(c)+'='+_cesc(''+r[c]);}).join(' · ');}).join('<br>');
+    }
+    _buildCtrls(); _renderChart();
+  }).catch(function(){document.getElementById('chart').innerHTML='<span class="muted">차트 로드 실패</span>';document.getElementById('chart-ctrls').innerHTML='';});
+}
+function _cesc(s){return (s+'').replace(/[&<>"]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+function _buildCtrls(){
+  var c=window._CH,h='';
+  h+='<label>x <select onchange="_CH.x=this.value;_renderChart()">'+c.cols.map(function(col){return '<option'+(col===c.x?' selected':'')+'>'+_cesc(col)+'</option>';}).join('')+'</select></label>';
+  if(c.grp)h+='<label class="cc-chk"><input type="checkbox"'+(c.useGrp?' checked':'')+' onchange="_CH.useGrp=this.checked;_renderChart()"> '+_cesc(c.grp)+'별</label>';
+  h+='<label class="cc-chk"><input type="checkbox" onchange="_CH.logy=this.checked;_renderChart()"> log y</label>';
+  h+='<span class="cc-y">y</span>'+c.numeric.filter(function(col){return col!==c.x&&col!=='__i';}).map(function(col){
+    return '<label class="cc-chk"><input type="checkbox" data-y="'+_cesc(col)+'"'+(c.y.indexOf(col)>=0?' checked':'')+' onchange="_toggleY()"> '+_cesc(col)+'</label>';}).join('');
+  document.getElementById('chart-ctrls').innerHTML=h;
+}
+function _toggleY(){window._CH.y=[].slice.call(document.querySelectorAll('#chart-ctrls input[data-y]:checked')).map(function(i){return i.getAttribute('data-y');});_renderChart();}
+function _renderChart(){
+  var c=window._CH,d=c.d,x=c.x,ys=c.y,box=document.getElementById('chart');
+  if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요 — 네트워크/CDN 확인 (tools/vendor_libs.sh 로 로컬화 가능).</span>';return;}
+  if(!ys||!ys.length){box.innerHTML='<span class="muted">y 시리즈를 선택하세요</span>';return;}
+  var xCat=c.cat.indexOf(x)>=0, traces=[], lay2={};
+  if(c.grp&&c.useGrp){
+    var groups={},order=[]; d.data.forEach(function(r){var g=r[c.grp];if(!(g in groups)){groups[g]=[];order.push(g);}groups[g].push(r);});
+    order.forEach(function(g){ys.forEach(function(y){var rows=groups[g];
+      traces.push({x:rows.map(function(r){return r[x];}),y:rows.map(function(r){return r[y];}),
+        name:g+(ys.length>1?'·'+y:''),mode:'lines+markers',type:xCat?'bar':'scatter'});});});
+  }else{
+    // 규모차 판정은 max 아닌 median(|value|) — outlier 하나에 안 속게
+    function _med(vs){vs=vs.filter(function(v){return typeof v==='number'&&isFinite(v);}).map(Math.abs).sort(function(a,b){return a-b;});return vs.length?vs[Math.floor(vs.length/2)]:0;}
+    var mag={},mx=0; ys.forEach(function(y){var m=_med(d.data.map(function(r){return r[y];}));mag[y]=m;mx=Math.max(mx,m);});
+    var useY2=!xCat&&ys.length>1&&ys.some(function(y){return mag[y]>0&&mx/mag[y]>50;});
+    ys.forEach(function(y){var small=useY2&&mag[y]>0&&mx/mag[y]>100;
+      traces.push({x:d.data.map(function(r){return r[x];}),y:d.data.map(function(r){return r[y];}),
+        name:y+(small?' (우축)':''),mode:'lines+markers',type:xCat?'bar':'scatter',yaxis:small?'y2':'y'});});
+    if(useY2)lay2={yaxis2:{overlaying:'y',side:'right',showgrid:false}};
+  }
+  var layout=Object.assign({margin:{t:14,r:(lay2.yaxis2?54:16),b:48,l:58},font:plotlyFont(),
+    xaxis:{title:x},yaxis:{title:c.kind,type:c.logy?'log':'linear'},barmode:'group',
+    legend:{orientation:'h',y:-0.28},hovermode:'closest'},plotlyBG(),lay2);
+  Plotly.newPlot('chart',traces,layout,{responsive:true,displaylogo:false});
+}
+window.addEventListener('themechange',function(){if(window._CH&&window._CH.d)_renderChart();});
+{% if datafiles %}window._firstCsv=function(){plotCsv('{{ datafiles[0].rel }}','{{ datafiles[0].kind }}',document.querySelector('#tab-charts .chip'));};{% endif %}
+/* 값이 사이트 맥락 밖으로 나가는 유일한 경로.
+ * ⛔⛔ P0-04 (2026-09-09) — 종전 이 함수는 canonical/labels/units/meta 만 읽고
+ *   **canonical_status 를 안 읽었다.** 그래서 /composition/b2o3 의 '📋 값 복사' 가
+ *   철회값 `MD Ea: 0.199 eV` 를 내보내면서 마지막 줄에 `(canonical, 방법 표기 포함)`
+ *   꼬리표까지 붙였다 — 철회값이 **정본을 자칭하며** 클립보드로 나간 것이다.
+ *   같은 줄이 '잠정' 도 떨어뜨렸다.
+ * ★ 지금은 지위가 라벨 뒤에 **강제로** 들어가고(서버 파생 · decisions_view.metric_notices),
+ *   대체값도 같이 실린다. 지위가 붙은 줄이 하나라도 있으면 꼬리말에서 'canonical' 을 뺀다.
+ *   ⚠ 표식을 JS 조건문으로 다시 만들지 말 것 — 그러면 원장과 화면이 또 갈라진다. */
+function copyComp(){
+  let t="{{ comp.label }} ({{ comp.formula }})\n";
+  {%- set unclean = [] %}{% set blocked = [] %}
+  {% for k,v in canonical.items() %}{% if v is not none %}
+  {%- set n = notices.get(k, {}) %}{% set mark = n.mark or '' %}
+  {%- if mark %}{% set _ = unclean.append(k) %}{% endif %}
+  {%- if mark.startswith('⛔') or mark.startswith('⏸') %}{% set _ = blocked.append(k) %}{% endif %}
+  t+={{ (labels.get(k,k) ~ (' [' ~ mark ~ ']' if mark else '') ~ ': ' ~ v ~ ' ' ~ units.get(k,'')) | tojson }}
+    +{{ ('  [' ~ canonical_meta.get(k,'') ~ ']') | tojson }}
+    {%- if canonical_provisional.get(k) %}+{{ ('  ⚠ 잠정 — ' ~ canonical_provisional.get(k)) | tojson }}{% endif %}
+    {%- if n.instead %}+{{ ('\n    ↳ 대신 쓸 값: ' ~ n.instead) | tojson }}
+    {%- elif mark.startswith('⛔') %}+{{ '\n    ↳ 대신 쓸 값: 원장에 등록된 대체값이 없다' | tojson }}{% endif %}
+    {%- if n.hold and not n.instead %}+{{ ('\n    ↳ 보류 사유: ' ~ n.hold_why) | tojson }}{% endif %}
+    +"\n";
+  {% endif %}{% endfor %}
+  {%- if blocked %}
+  t+={{ ('⛔ 위 목록에 인용 금지·보류 항목이 ' ~ blocked|length ~ '건 있어요 — 그대로 인용하면 안 됩니다.\n') | tojson }};
+  t+="— 출처: {{ request.host_url if request else '' }}composition/{{ cid }} (지위 표기 포함 · 인용 금지 값 포함)\n";
+  {%- elif unclean %}
+  t+="— 출처: {{ request.host_url if request else '' }}composition/{{ cid }} (지위 표기 포함 · 잠정 값 포함 — canonical 아님)\n";
+  {%- else %}
+  t+="— 출처: {{ request.host_url if request else '' }}composition/{{ cid }} (canonical, 방법 표기 포함)\n";
+  {%- endif %}
+  copyText(t);
+}
+</script>
+{% endblock %}

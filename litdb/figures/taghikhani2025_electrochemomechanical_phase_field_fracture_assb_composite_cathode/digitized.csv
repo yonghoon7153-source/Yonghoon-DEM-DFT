@@ -1,0 +1,1156 @@
+figure,series,x_name,x,y_name,y,note
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,0.39,voltage_V,3.5139,"Fig. 7 (PDF p.11), stroked vector paths; axes calibrated on printed tick marks: x 0 -> 203.78 pt, 200 -> 363.11 pt (mAh/g); y 4.2 -> 55.35 pt, 3.6 -> 168.91 pt (V); vector path vertex"
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,7.39,voltage_V,3.7748,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,14.67,voltage_V,3.7954,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,21.38,voltage_V,3.8116,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,30.06,voltage_V,3.8354,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,37.05,voltage_V,3.8527,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,43.21,voltage_V,3.8721,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,49.64,voltage_V,3.8937,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,55.8,voltage_V,3.9175,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,61.12,voltage_V,3.9391,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,66.71,voltage_V,3.9629,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,72.03,voltage_V,3.9855,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,78.18,voltage_V,4.0147,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,84.9,voltage_V,4.0438,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,92.74,voltage_V,4.0816,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,98.89,voltage_V,4.114,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,104.49,voltage_V,4.1442,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,109.81,voltage_V,4.1755,vector path vertex
+fig7,experiment (fastest rate; pairs with sim 'fast'),capacity_mAh_per_g,112.88,voltage_V,4.195,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,0.02,voltage_V,3.7022,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,5.18,voltage_V,3.8122,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,10.33,voltage_V,3.8217,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,15.49,voltage_V,3.8301,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,20.64,voltage_V,3.8384,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,25.8,voltage_V,3.8471,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,30.95,voltage_V,3.8561,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,36.11,voltage_V,3.8657,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,41.26,voltage_V,3.8761,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,46.42,voltage_V,3.8872,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,51.57,voltage_V,3.8996,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,56.73,voltage_V,3.9135,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,61.88,voltage_V,3.9291,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,67.04,voltage_V,3.9461,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,72.19,voltage_V,3.9642,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,77.23,voltage_V,3.9829,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,82.39,voltage_V,4.0013,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,87.54,voltage_V,4.0196,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,92.7,voltage_V,4.0376,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,97.88,voltage_V,4.0591,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,103.04,voltage_V,4.0777,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,108.19,voltage_V,4.0974,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,113.23,voltage_V,4.1185,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,118.39,voltage_V,4.1428,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,123.54,voltage_V,4.1707,vector path vertex
+fig7,simulation fast (legend '0.5 C' · caption/text '5 C'),capacity_mAh_per_g,128.39,voltage_V,4.1996,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,0.39,voltage_V,3.5646,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,7.39,voltage_V,3.6541,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,12.43,voltage_V,3.6617,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,18.86,voltage_V,3.6693,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,24.74,voltage_V,3.6758,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,31.45,voltage_V,3.6834,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,37.05,voltage_V,3.6888,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,42.93,voltage_V,3.6953,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,50.48,voltage_V,3.7072,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,56.08,voltage_V,3.7159,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,65.03,voltage_V,3.7321,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,72.03,voltage_V,3.7462,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,78.47,voltage_V,3.7592,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,85.74,voltage_V,3.7711,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,95.82,voltage_V,3.7916,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,102.25,voltage_V,3.8057,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,109.53,voltage_V,3.8241,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,115.12,voltage_V,3.8403,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,121.0,voltage_V,3.8597,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,126.88,voltage_V,3.8846,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,133.03,voltage_V,3.9094,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,140.03,voltage_V,3.9407,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,147.02,voltage_V,3.9721,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,152.9,voltage_V,3.9958,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,159.05,voltage_V,4.0217,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,164.09,voltage_V,4.0401,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,169.41,voltage_V,4.0649,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,174.45,voltage_V,4.0887,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,179.76,voltage_V,4.1168,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,184.8,voltage_V,4.1437,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,189.84,voltage_V,4.1729,vector path vertex
+fig7,experiment (pairs with sim 0.02 C),capacity_mAh_per_g,194.59,voltage_V,4.1977,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,0.02,voltage_V,3.5311,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,5.11,voltage_V,3.6496,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,10.21,voltage_V,3.6614,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,15.3,voltage_V,3.6713,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,20.4,voltage_V,3.6797,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,25.49,voltage_V,3.6865,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,30.59,voltage_V,3.6928,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,35.68,voltage_V,3.6991,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,40.77,voltage_V,3.7059,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,45.87,voltage_V,3.7131,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,50.96,voltage_V,3.7202,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,56.06,voltage_V,3.7272,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,61.15,voltage_V,3.7344,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,66.25,voltage_V,3.7422,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,71.34,voltage_V,3.7502,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,76.44,voltage_V,3.7578,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,81.53,voltage_V,3.7654,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,86.62,voltage_V,3.7742,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,91.72,voltage_V,3.7837,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,96.81,voltage_V,3.7923,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,101.97,voltage_V,3.8017,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,107.06,voltage_V,3.8134,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,112.16,voltage_V,3.8262,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,117.25,voltage_V,3.8399,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,122.34,voltage_V,3.8564,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,127.35,voltage_V,3.8746,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,132.41,voltage_V,3.8931,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,137.51,voltage_V,3.9125,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,142.6,voltage_V,3.9318,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,147.69,voltage_V,3.9516,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,152.79,voltage_V,3.9721,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,157.88,voltage_V,3.9913,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,162.98,voltage_V,4.0098,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,168.07,voltage_V,4.03,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,173.16,voltage_V,4.0513,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,178.26,voltage_V,4.0739,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,183.35,voltage_V,4.0973,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,188.45,voltage_V,4.1216,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,193.46,voltage_V,4.1485,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,198.69,voltage_V,4.1746,vector path vertex
+fig7,simulation 0.02 C,capacity_mAh_per_g,203.78,voltage_V,4.1989,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,0.02,voltage_V,3.601,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,5.61,voltage_V,3.7109,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,11.67,voltage_V,3.7205,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,17.73,voltage_V,3.7274,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,23.8,voltage_V,3.7344,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,29.86,voltage_V,3.7418,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,35.93,voltage_V,3.7495,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,41.99,voltage_V,3.7574,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,48.06,voltage_V,3.7656,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,54.12,voltage_V,3.7742,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,60.19,voltage_V,3.7832,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,66.25,voltage_V,3.7927,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,72.32,voltage_V,3.8023,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,78.38,voltage_V,3.8124,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,84.45,voltage_V,3.8239,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,90.51,voltage_V,3.8367,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,96.26,voltage_V,3.8507,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,101.51,voltage_V,3.8648,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,107.57,voltage_V,3.8834,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,113.64,voltage_V,3.9027,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,119.7,voltage_V,3.9227,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,125.77,voltage_V,3.9426,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,131.83,voltage_V,3.9638,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,137.89,voltage_V,3.9854,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,143.96,voltage_V,4.0061,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,150.02,voltage_V,4.0269,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,156.09,voltage_V,4.05,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,162.15,voltage_V,4.0759,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,167.31,voltage_V,4.1039,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,172.92,voltage_V,4.1331,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,178.98,voltage_V,4.1677,vector path vertex
+fig7,simulation 0.1 C,capacity_mAh_per_g,183.83,voltage_V,4.1975,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,-0.03,voltage_V,3.5022,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,5.24,voltage_V,3.6926,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,13.81,voltage_V,3.7052,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,26.67,voltage_V,3.7204,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,35.24,voltage_V,3.7305,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,43.15,voltage_V,3.7405,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,51.06,voltage_V,3.7506,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,59.3,voltage_V,3.7633,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,67.54,voltage_V,3.7772,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,75.12,voltage_V,3.7911,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,82.71,voltage_V,3.8062,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,89.96,voltage_V,3.824,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,96.88,voltage_V,3.8455,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,103.14,voltage_V,3.8683,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,109.08,voltage_V,3.8911,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,115.01,voltage_V,3.9164,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,122.92,voltage_V,3.9545,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,129.19,voltage_V,3.9823,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,134.79,voltage_V,4.0077,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,140.39,voltage_V,4.033,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,146.99,voltage_V,4.0609,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,153.58,voltage_V,4.0964,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,161.82,voltage_V,4.1433,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,167.75,voltage_V,4.1763,vector path vertex
+fig7,experiment (pairs with sim 0.1 C),capacity_mAh_per_g,171.71,voltage_V,4.1953,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,-0.03,voltage_V,3.502,"Fig. 8a (PDF p.11), vector paths; axes are thin filled rectangles, ticks: x 50 -> 112.35 pt, 150 -> 182.46 pt; y 4.15 -> 266.07 pt, 3.6 -> 358.35 pt; vector path vertex"
+fig8a,experiment 0.1 C,capacity_mAh_per_g,5.24,voltage_V,3.6925,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,13.82,voltage_V,3.7051,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,26.67,voltage_V,3.7202,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,35.24,voltage_V,3.7303,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,43.16,voltage_V,3.7404,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,51.07,voltage_V,3.7505,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,59.31,voltage_V,3.7631,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,67.55,voltage_V,3.777,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,75.13,voltage_V,3.7909,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,82.72,voltage_V,3.8061,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,89.97,voltage_V,3.8238,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,96.89,voltage_V,3.8453,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,103.15,voltage_V,3.8682,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,109.09,voltage_V,3.891,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,115.02,voltage_V,3.9163,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,122.94,voltage_V,3.9543,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,129.2,voltage_V,3.9822,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,134.8,voltage_V,4.0076,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,140.41,voltage_V,4.0329,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,147.0,voltage_V,4.0608,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,153.59,voltage_V,4.0963,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,160.19,voltage_V,4.1331,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,165.79,voltage_V,4.1661,vector path vertex
+fig8a,experiment 0.1 C,capacity_mAh_per_g,171.73,voltage_V,4.1952,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,0.03,voltage_V,3.5837,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,6.16,voltage_V,3.7022,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,12.23,voltage_V,3.7125,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,18.29,voltage_V,3.7202,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,24.36,voltage_V,3.7279,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,30.42,voltage_V,3.736,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,36.49,voltage_V,3.7443,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,42.56,voltage_V,3.7528,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,48.62,voltage_V,3.7617,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,54.69,voltage_V,3.7707,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,60.75,voltage_V,3.7801,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,66.82,voltage_V,3.7902,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,72.88,voltage_V,3.8,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,78.95,voltage_V,3.8102,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,85.01,voltage_V,3.8221,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,91.08,voltage_V,3.8353,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,97.14,voltage_V,3.85,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,103.21,voltage_V,3.8674,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,109.27,voltage_V,3.8864,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,115.34,voltage_V,3.9058,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,121.4,voltage_V,3.9254,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,127.47,voltage_V,3.9449,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,133.53,voltage_V,3.9651,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,139.6,voltage_V,3.9859,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,145.66,voltage_V,4.006,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,151.73,voltage_V,4.0268,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,157.34,voltage_V,4.0489,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,163.4,voltage_V,4.0751,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,169.47,voltage_V,4.104,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,175.53,voltage_V,4.1352,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,180.69,voltage_V,4.1651,vector path vertex
+fig8a,simulation 0.1 C p=40 MPa,capacity_mAh_per_g,185.73,voltage_V,4.1949,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,-0.03,voltage_V,3.5022,"Fig. 9a (PDF p.12), vector paths; ticks: x 0 -> 79.19 pt, 150 -> 178.32 pt; y 4.15 -> 78.41 pt, 3.55 -> 173.45 pt; vector path vertex"
+fig9a,experiment 0.1 C,capacity_mAh_per_g,5.24,voltage_V,3.6926,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,13.81,voltage_V,3.7052,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,26.66,voltage_V,3.7204,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,35.23,voltage_V,3.7304,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,43.14,voltage_V,3.7405,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,51.05,voltage_V,3.7506,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,59.29,voltage_V,3.7633,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,67.53,voltage_V,3.7771,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,75.11,voltage_V,3.791,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,82.69,voltage_V,3.8062,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,89.94,voltage_V,3.8239,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,96.86,voltage_V,3.8455,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,103.12,voltage_V,3.8683,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,109.05,voltage_V,3.8911,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,114.99,voltage_V,3.9164,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,122.89,voltage_V,3.9544,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,129.16,voltage_V,3.9823,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,134.76,voltage_V,4.0077,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,140.36,voltage_V,4.033,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,146.95,voltage_V,4.0609,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,153.54,voltage_V,4.0964,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,160.13,voltage_V,4.1331,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,165.74,voltage_V,4.1661,vector path vertex
+fig9a,experiment 0.1 C,capacity_mAh_per_g,171.67,voltage_V,4.1953,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,0.03,voltage_V,3.5841,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,6.17,voltage_V,3.7025,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,12.23,voltage_V,3.7128,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,18.3,voltage_V,3.7205,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,24.36,voltage_V,3.7282,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,30.42,voltage_V,3.7363,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,36.49,voltage_V,3.7447,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,42.55,voltage_V,3.7532,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,48.61,voltage_V,3.7621,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,54.68,voltage_V,3.7712,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,60.74,voltage_V,3.7806,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,66.8,voltage_V,3.7907,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,72.86,voltage_V,3.8005,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,78.93,voltage_V,3.8109,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,84.99,voltage_V,3.8229,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,91.05,voltage_V,3.8362,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,97.12,voltage_V,3.851,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,103.18,voltage_V,3.8732,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,108.67,voltage_V,3.9242,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,114.74,voltage_V,3.9468,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,120.8,voltage_V,3.9714,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,126.41,voltage_V,4.0588,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,132.47,voltage_V,4.1047,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,138.53,voltage_V,4.1346,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,144.6,voltage_V,4.1641,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,150.66,voltage_V,4.1936,vector path vertex
+fig9a,simulation 0.1 C no pressure,capacity_mAh_per_g,103.18,voltage_V,3.8732,near-vertical step start (to 3.8990 V)
+fig10a,experiment 0.1 C,capacity_mAh_per_g,-0.1,voltage_V,3.5021,"Fig. 10a (PDF p.12), vector paths; ticks: x 0 -> 77.21 pt, 150 -> 171.94 pt; y 4.15 -> 264.93 pt, 3.55 -> 355.48 pt; vector path vertex"
+fig10a,experiment 0.1 C,capacity_mAh_per_g,5.18,voltage_V,3.6925,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,13.75,voltage_V,3.7051,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,26.61,voltage_V,3.7202,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,35.19,voltage_V,3.7303,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,43.11,voltage_V,3.7404,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,51.02,voltage_V,3.7505,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,59.27,voltage_V,3.7631,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,67.51,voltage_V,3.777,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,75.1,voltage_V,3.7909,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,82.68,voltage_V,3.8061,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,89.94,voltage_V,3.8238,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,96.87,voltage_V,3.8453,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,103.13,voltage_V,3.8681,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,109.07,voltage_V,3.891,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,115.01,voltage_V,3.9163,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,122.92,voltage_V,3.9543,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,129.19,voltage_V,3.9822,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,134.79,voltage_V,4.0076,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,140.4,voltage_V,4.0329,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,147.0,voltage_V,4.0608,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,153.59,voltage_V,4.0963,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,160.19,voltage_V,4.1331,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,165.8,voltage_V,4.166,vector path vertex
+fig10a,experiment 0.1 C,capacity_mAh_per_g,171.73,voltage_V,4.1952,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,-0.05,voltage_V,3.5837,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,6.1,voltage_V,3.7023,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,12.16,voltage_V,3.7125,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,18.23,voltage_V,3.7202,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,24.3,voltage_V,3.7279,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,30.37,voltage_V,3.736,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,36.44,voltage_V,3.7443,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,42.5,voltage_V,3.7528,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,48.57,voltage_V,3.7617,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,54.64,voltage_V,3.7707,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,60.71,voltage_V,3.7801,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,66.78,voltage_V,3.7902,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,72.84,voltage_V,3.8,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,78.91,voltage_V,3.8102,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,84.98,voltage_V,3.8221,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,91.05,voltage_V,3.8353,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,97.12,voltage_V,3.85,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,103.18,voltage_V,3.8674,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,109.25,voltage_V,3.8864,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,115.32,voltage_V,3.9058,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,121.39,voltage_V,3.9253,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,127.46,voltage_V,3.9449,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,133.52,voltage_V,3.9651,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,139.59,voltage_V,3.9859,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,145.66,voltage_V,4.0059,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,151.73,voltage_V,4.0268,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,157.34,voltage_V,4.0488,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,163.41,voltage_V,4.0751,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,169.48,voltage_V,4.104,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,175.55,voltage_V,4.1352,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,180.7,voltage_V,4.165,vector path vertex
+fig10a,simulation 0.1 C 40 MPa,capacity_mAh_per_g,185.75,voltage_V,4.1949,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,-0.05,voltage_V,3.584,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,6.1,voltage_V,3.7024,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,12.17,voltage_V,3.7127,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,18.24,voltage_V,3.7204,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,24.31,voltage_V,3.7281,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,30.38,voltage_V,3.7362,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,36.44,voltage_V,3.7445,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,42.51,voltage_V,3.7531,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,48.58,voltage_V,3.762,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,54.65,voltage_V,3.771,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,60.71,voltage_V,3.7805,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,66.78,voltage_V,3.7906,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,72.85,voltage_V,3.8004,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,78.92,voltage_V,3.8108,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,84.99,voltage_V,3.8228,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,91.05,voltage_V,3.8361,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,97.12,voltage_V,3.8509,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,103.19,voltage_V,3.8731,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,108.69,voltage_V,3.924,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,114.76,voltage_V,3.9467,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,120.82,voltage_V,3.9713,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,126.44,voltage_V,4.0587,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,132.5,voltage_V,4.1046,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,138.57,voltage_V,4.1345,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,144.64,voltage_V,4.164,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,150.71,voltage_V,4.1935,vector path vertex
+fig10a,simulation 0.1 C no pressure,capacity_mAh_per_g,103.19,voltage_V,3.8731,near-vertical step start (to 3.8989 V)
+fig11,experiment 0.1 C,capacity_mAh_per_g,-0.16,voltage_V,3.5022,"Fig. 11 (PDF p.13), vector paths; ticks: x 0 -> 207.60 pt, 150 -> 336.32 pt; y 4.2 -> 54.99 pt, 3.55 -> 189.43 pt; vector path vertex"
+fig11,experiment 0.1 C,capacity_mAh_per_g,5.11,voltage_V,3.6926,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,13.69,voltage_V,3.7053,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,26.56,voltage_V,3.7204,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,35.13,voltage_V,3.7305,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,43.05,voltage_V,3.7406,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,50.97,voltage_V,3.7506,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,59.21,voltage_V,3.7633,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,67.46,voltage_V,3.7772,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,75.04,voltage_V,3.7911,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,82.63,voltage_V,3.8062,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,89.89,voltage_V,3.8239,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,96.82,voltage_V,3.8455,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,103.08,voltage_V,3.8683,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,109.02,voltage_V,3.8911,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,114.96,voltage_V,3.9164,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,120.24,voltage_V,3.9418,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,125.51,voltage_V,3.9658,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,130.79,voltage_V,3.9899,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,136.73,voltage_V,4.0152,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,143.0,voltage_V,4.0419,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,148.93,voltage_V,4.0735,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,155.86,voltage_V,4.109,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,161.8,voltage_V,4.1433,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,167.74,voltage_V,4.1762,vector path vertex
+fig11,experiment 0.1 C,capacity_mAh_per_g,171.69,voltage_V,4.1952,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,-0.11,voltage_V,3.59,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,6.04,voltage_V,3.7085,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,12.11,voltage_V,3.7189,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,18.18,voltage_V,3.7268,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,24.25,voltage_V,3.7346,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,30.32,voltage_V,3.7428,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,36.38,voltage_V,3.7511,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,42.45,voltage_V,3.7596,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,48.52,voltage_V,3.7684,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,54.59,voltage_V,3.7776,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,60.66,voltage_V,3.7872,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,66.73,voltage_V,3.7971,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,72.8,voltage_V,3.8071,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,78.87,voltage_V,3.8176,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,84.93,voltage_V,3.8295,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,91.0,voltage_V,3.8428,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,97.07,voltage_V,3.8577,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,103.14,voltage_V,3.875,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,109.21,voltage_V,3.8939,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,115.28,voltage_V,3.9133,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,121.35,voltage_V,3.9328,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,127.42,voltage_V,3.9524,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,133.49,voltage_V,3.9733,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,138.52,voltage_V,3.992,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,143.9,voltage_V,4.0109,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,149.51,voltage_V,4.0319,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,155.58,voltage_V,4.0559,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,161.65,voltage_V,4.0828,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,167.72,voltage_V,4.1124,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,172.88,voltage_V,4.1456,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,178.95,voltage_V,4.1847,vector path vertex
+fig11,simulation LLZO 0.1 C 40 MPa,capacity_mAh_per_g,181.37,voltage_V,4.1999,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,-0.11,voltage_V,3.5841,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,6.03,voltage_V,3.7025,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,12.1,voltage_V,3.7128,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,18.17,voltage_V,3.7204,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,24.24,voltage_V,3.7281,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,30.31,voltage_V,3.7362,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,36.38,voltage_V,3.7445,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,42.45,voltage_V,3.753,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,48.52,voltage_V,3.7619,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,54.58,voltage_V,3.7709,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,60.65,voltage_V,3.7803,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,66.72,voltage_V,3.7904,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,72.79,voltage_V,3.8002,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,78.86,voltage_V,3.8104,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,84.93,voltage_V,3.8223,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,91.0,voltage_V,3.8355,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,97.07,voltage_V,3.8503,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,103.14,voltage_V,3.8676,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,109.2,voltage_V,3.8866,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,115.27,voltage_V,3.906,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,121.34,voltage_V,3.9255,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,127.41,voltage_V,3.9451,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,133.48,voltage_V,3.9653,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,139.55,voltage_V,3.986,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,145.62,voltage_V,4.0064,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,151.69,voltage_V,4.0278,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,157.75,voltage_V,4.0514,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,163.82,voltage_V,4.0778,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,169.89,voltage_V,4.1068,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,175.96,voltage_V,4.1381,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,182.03,voltage_V,4.1731,vector path vertex
+fig11,simulation LPSC 0.1 C 40 MPa,capacity_mAh_per_g,186.43,voltage_V,4.1987,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,-0.22,voltage_V,3.5025,"Fig. 12 (PDF p.13), vector paths; ticks: x 0 -> 215.62 pt, 150 -> 328.69 pt; y 4.15 -> 280.87 pt, 3.55 -> 390.00 pt; vector path vertex"
+fig12,experiment 0.1 C,capacity_mAh_per_g,5.06,voltage_V,3.6928,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,13.65,voltage_V,3.7054,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,26.52,voltage_V,3.7206,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,35.1,voltage_V,3.7306,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,43.02,voltage_V,3.7407,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,50.94,voltage_V,3.7508,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,59.19,voltage_V,3.7634,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,67.45,voltage_V,3.7773,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,75.04,voltage_V,3.7912,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,82.63,voltage_V,3.8064,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,89.89,voltage_V,3.8241,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,96.82,voltage_V,3.8456,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,103.09,voltage_V,3.8684,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,109.04,voltage_V,3.8912,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,114.98,voltage_V,3.9165,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,122.9,voltage_V,3.9545,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,129.17,voltage_V,3.9824,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,134.78,voltage_V,4.0077,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,140.39,voltage_V,4.033,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,147.0,voltage_V,4.0609,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,153.6,voltage_V,4.0964,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,161.85,voltage_V,4.1432,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,169.77,voltage_V,4.1863,vector path vertex
+fig12,experiment 0.1 C,capacity_mAh_per_g,171.75,voltage_V,4.1952,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,-0.16,voltage_V,3.5842,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,5.98,voltage_V,3.7026,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,12.06,voltage_V,3.7129,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,18.13,voltage_V,3.7205,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,24.2,voltage_V,3.7282,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,30.27,voltage_V,3.7363,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,36.35,voltage_V,3.7446,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,42.42,voltage_V,3.7531,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,48.49,voltage_V,3.762,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,54.56,voltage_V,3.771,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,60.64,voltage_V,3.7804,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,66.71,voltage_V,3.7905,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,72.78,voltage_V,3.8003,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,78.86,voltage_V,3.8105,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,84.93,voltage_V,3.8224,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,91.0,voltage_V,3.8356,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,97.07,voltage_V,3.8503,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,103.15,voltage_V,3.8676,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,109.22,voltage_V,3.8866,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,115.29,voltage_V,3.906,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,121.37,voltage_V,3.9255,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,127.44,voltage_V,3.9451,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,133.51,voltage_V,3.9652,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,139.58,voltage_V,3.986,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,145.66,voltage_V,4.0061,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,151.73,voltage_V,4.0269,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,157.35,voltage_V,4.0489,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,163.42,voltage_V,4.0752,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,169.49,voltage_V,4.104,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,175.56,voltage_V,4.1352,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,180.73,voltage_V,4.165,vector path vertex
+fig12,simulation Gc_int 2.0 J/m2 no pressure,capacity_mAh_per_g,185.77,voltage_V,4.1949,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,-0.16,voltage_V,3.5844,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,5.99,voltage_V,3.7028,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,12.06,voltage_V,3.7131,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,18.13,voltage_V,3.7207,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,24.21,voltage_V,3.7284,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,30.28,voltage_V,3.7365,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,36.35,voltage_V,3.7449,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,42.43,voltage_V,3.7534,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,48.5,voltage_V,3.7626,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,54.57,voltage_V,3.772,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,60.64,voltage_V,3.7821,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,66.72,voltage_V,3.7953,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,72.79,voltage_V,3.8076,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,78.97,voltage_V,3.8196,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,85.04,voltage_V,3.8717,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,91.11,voltage_V,3.897,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,97.18,voltage_V,3.9222,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,103.26,voltage_V,3.9541,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,109.33,voltage_V,3.9883,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,115.4,voltage_V,4.0245,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,121.47,voltage_V,4.0662,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,127.35,voltage_V,4.1056,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,133.42,voltage_V,4.1352,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,139.49,voltage_V,4.1646,vector path vertex
+fig12,simulation Gc_int 0.2 J/m2 (legend; text says 0.5) no pressure,capacity_mAh_per_g,145.57,voltage_V,4.1973,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,-0.16,voltage_V,3.5844,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,5.99,voltage_V,3.7028,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,12.06,voltage_V,3.7131,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,18.13,voltage_V,3.7207,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,24.21,voltage_V,3.7284,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,30.28,voltage_V,3.7365,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,36.35,voltage_V,3.7449,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,42.43,voltage_V,3.7534,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,48.5,voltage_V,3.7623,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,54.57,voltage_V,3.7713,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,60.64,voltage_V,3.7808,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,66.72,voltage_V,3.7908,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,72.79,voltage_V,3.8007,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,78.86,voltage_V,3.8111,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,84.93,voltage_V,3.823,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,91.01,voltage_V,3.8363,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,97.08,voltage_V,3.8511,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,103.15,voltage_V,3.8733,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,108.65,voltage_V,3.9242,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,114.73,voltage_V,3.9469,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,120.8,voltage_V,3.9715,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,126.42,voltage_V,4.0588,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,132.49,voltage_V,4.1046,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,138.56,voltage_V,4.1346,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,144.64,voltage_V,4.164,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,150.71,voltage_V,4.1935,vector path vertex
+fig12,simulation Gc_int 1.0 J/m2 no pressure,capacity_mAh_per_g,103.15,voltage_V,3.8733,near-vertical step start (to 3.8991 V)
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,0.02,voltage_V,3.582,"Fig. 13 (PDF p.14), vector paths (one path per pressure, three cycles each: 5 MPa 1800 vertices, 40 MPa 28807 vertices); ticks: x 0 -> 216.17 pt, 150 -> 326.75 pt; y 4.2 -> 55.19 pt, 3.5 -> 177.91 pt (y ticks 1.42 pt long); path split into branches monotone in capacity; vector path vertex"
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,5.33,voltage_V,3.699,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,10.63,voltage_V,3.7091,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,15.94,voltage_V,3.716,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,21.25,voltage_V,3.7227,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,26.56,voltage_V,3.7297,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,31.87,voltage_V,3.7369,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,37.17,voltage_V,3.7442,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,42.48,voltage_V,3.7518,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,47.79,voltage_V,3.7596,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,53.09,voltage_V,3.7676,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,58.4,voltage_V,3.7757,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,63.71,voltage_V,3.7845,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,69.02,voltage_V,3.7933,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,74.32,voltage_V,3.8019,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,79.63,voltage_V,3.8113,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,84.94,voltage_V,3.822,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,90.25,voltage_V,3.8337,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,95.55,voltage_V,3.8465,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,100.86,voltage_V,3.8612,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,106.17,voltage_V,3.8777,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,111.48,voltage_V,3.8947,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,116.79,voltage_V,3.9119,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,122.09,voltage_V,3.9291,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,127.4,voltage_V,3.9464,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,132.71,voltage_V,3.9643,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,138.02,voltage_V,3.9825,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,143.33,voltage_V,4.0008,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,148.64,voltage_V,4.0191,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,153.95,voltage_V,4.039,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,159.26,voltage_V,4.0611,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,164.56,voltage_V,4.0853,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,169.87,voltage_V,4.1114,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,175.18,voltage_V,4.1394,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,180.49,voltage_V,4.1703,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,185.56,voltage_V,4.2001,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,187.2,voltage_V,4.1229,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,187.2,voltage_V,4.1229,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,182.03,voltage_V,4.0547,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,176.72,voltage_V,4.0174,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,171.41,voltage_V,3.989,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,166.1,voltage_V,3.9663,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,160.8,voltage_V,3.9449,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,155.49,voltage_V,3.9221,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,150.18,voltage_V,3.8995,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,144.87,voltage_V,3.8767,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,139.57,voltage_V,3.8532,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,134.26,voltage_V,3.8291,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,128.95,voltage_V,3.8084,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,123.64,voltage_V,3.7912,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,118.34,voltage_V,3.7764,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,113.03,voltage_V,3.7646,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,107.72,voltage_V,3.753,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,102.41,voltage_V,3.7415,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,97.11,voltage_V,3.7305,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,91.8,voltage_V,3.7188,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,86.49,voltage_V,3.7065,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,81.18,voltage_V,3.6936,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,75.88,voltage_V,3.679,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,70.57,voltage_V,3.6617,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,65.26,voltage_V,3.638,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,59.95,voltage_V,3.5994,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,54.65,voltage_V,3.5398,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,52.58,voltage_V,3.6107,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,52.58,voltage_V,3.6107,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,57.75,voltage_V,3.7213,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,63.06,voltage_V,3.739,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,68.37,voltage_V,3.754,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,73.68,voltage_V,3.7685,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,78.98,voltage_V,3.7811,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,84.29,voltage_V,3.7942,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,89.6,voltage_V,3.8064,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,94.91,voltage_V,3.8194,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,100.21,voltage_V,3.8345,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,105.52,voltage_V,3.8507,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,110.83,voltage_V,3.8694,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,116.14,voltage_V,3.8895,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,121.44,voltage_V,3.9093,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,126.75,voltage_V,3.9289,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,132.06,voltage_V,3.9484,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,137.37,voltage_V,3.9683,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,142.67,voltage_V,3.9884,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,147.98,voltage_V,4.0076,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,153.29,voltage_V,4.0276,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,158.6,voltage_V,4.0499,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,163.9,voltage_V,4.0744,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,169.21,voltage_V,4.101,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,174.52,voltage_V,4.1292,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,179.83,voltage_V,4.1602,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,185.13,voltage_V,4.1924,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,188.06,voltage_V,4.1229,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,188.06,voltage_V,4.1229,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,182.94,voltage_V,4.0555,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,177.64,voltage_V,4.0182,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,172.33,voltage_V,3.99,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,167.02,voltage_V,3.9673,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,161.71,voltage_V,3.9462,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,156.41,voltage_V,3.9237,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,151.1,voltage_V,3.9013,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,145.79,voltage_V,3.8787,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,140.48,voltage_V,3.8556,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,135.18,voltage_V,3.8316,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,129.87,voltage_V,3.8105,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,124.56,voltage_V,3.7932,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,119.26,voltage_V,3.7781,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,113.95,voltage_V,3.7661,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,108.64,voltage_V,3.7546,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,103.33,voltage_V,3.743,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,98.02,voltage_V,3.7321,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,92.72,voltage_V,3.7205,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,87.41,voltage_V,3.7083,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,82.1,voltage_V,3.6956,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,76.79,voltage_V,3.6813,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,71.49,voltage_V,3.6645,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,66.18,voltage_V,3.6424,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,60.87,voltage_V,3.6063,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,55.56,voltage_V,3.5518,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,52.68,voltage_V,3.6108,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,52.68,voltage_V,3.6108,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,58.0,voltage_V,3.7219,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,63.31,voltage_V,3.7394,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,68.62,voltage_V,3.7545,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,73.93,voltage_V,3.7689,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,79.23,voltage_V,3.7815,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,84.54,voltage_V,3.7946,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,89.85,voltage_V,3.8068,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,95.16,voltage_V,3.8198,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,100.47,voltage_V,3.835,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,105.77,voltage_V,3.8513,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,111.08,voltage_V,3.8701,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,116.39,voltage_V,3.8902,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,121.69,voltage_V,3.91,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,127.0,voltage_V,3.9297,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,132.31,voltage_V,3.9491,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,137.62,voltage_V,3.969,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,142.93,voltage_V,3.9891,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,148.23,voltage_V,4.0084,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,153.54,voltage_V,4.0285,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,158.85,voltage_V,4.0508,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,164.15,voltage_V,4.0755,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,169.46,voltage_V,4.1021,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,174.77,voltage_V,4.1305,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,180.08,voltage_V,4.1616,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,185.39,voltage_V,4.1938,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · charge branch,capacity_mAh_per_g,188.07,voltage_V,4.1229,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,188.07,voltage_V,4.1229,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,182.73,voltage_V,4.0536,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,177.43,voltage_V,4.0169,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,172.12,voltage_V,3.9889,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,166.81,voltage_V,3.9665,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,161.5,voltage_V,3.9453,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,156.2,voltage_V,3.9227,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,150.89,voltage_V,3.9004,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,145.58,voltage_V,3.8778,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,140.27,voltage_V,3.8546,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,134.97,voltage_V,3.8307,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,129.66,voltage_V,3.8097,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,124.35,voltage_V,3.7925,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,119.04,voltage_V,3.7775,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,113.74,voltage_V,3.7656,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,108.43,voltage_V,3.7541,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,103.12,voltage_V,3.7426,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,97.81,voltage_V,3.7316,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,92.51,voltage_V,3.72,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,87.2,voltage_V,3.7078,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,81.89,voltage_V,3.6951,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,76.58,voltage_V,3.6807,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,71.28,voltage_V,3.6638,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,65.97,voltage_V,3.6413,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,60.66,voltage_V,3.6045,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,55.35,voltage_V,3.5489,vector path vertex
+fig13,simulation 5 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,52.69,voltage_V,3.6108,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,-0.03,voltage_V,3.5022,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,5.24,voltage_V,3.6926,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,13.81,voltage_V,3.7053,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,26.66,voltage_V,3.7204,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,35.23,voltage_V,3.7305,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,43.14,voltage_V,3.7406,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,51.05,voltage_V,3.7507,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,59.29,voltage_V,3.7633,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,67.53,voltage_V,3.7772,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,75.11,voltage_V,3.7911,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,82.69,voltage_V,3.8063,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,89.94,voltage_V,3.824,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,96.86,voltage_V,3.8455,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,103.13,voltage_V,3.8683,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,109.06,voltage_V,3.8911,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,114.99,voltage_V,3.9165,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,122.9,voltage_V,3.9545,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,129.16,voltage_V,3.9824,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,134.77,voltage_V,4.0078,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,140.37,voltage_V,4.0331,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,146.96,voltage_V,4.061,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,153.55,voltage_V,4.0965,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,161.79,voltage_V,4.1434,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,167.72,voltage_V,4.1764,vector path vertex
+fig13,experiment (single charge),capacity_mAh_per_g,171.68,voltage_V,4.1954,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,0.02,voltage_V,3.5838,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,5.04,voltage_V,3.6994,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,10.04,voltage_V,3.7096,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,15.04,voltage_V,3.7162,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,20.05,voltage_V,3.7224,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,25.05,voltage_V,3.7288,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,30.05,voltage_V,3.7355,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,35.06,voltage_V,3.7423,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,40.06,voltage_V,3.7493,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,45.06,voltage_V,3.7565,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,50.06,voltage_V,3.7639,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,55.07,voltage_V,3.7713,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,60.07,voltage_V,3.7791,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,65.07,voltage_V,3.7873,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,70.07,voltage_V,3.7956,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,75.08,voltage_V,3.8036,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,80.08,voltage_V,3.8124,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,85.08,voltage_V,3.8223,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,90.08,voltage_V,3.8332,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,95.09,voltage_V,3.8449,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,100.09,voltage_V,3.8582,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,105.09,voltage_V,3.8733,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,110.09,voltage_V,3.8891,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,115.1,voltage_V,3.9051,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,120.1,voltage_V,3.9212,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,125.1,voltage_V,3.9374,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,130.1,voltage_V,3.9536,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,135.13,voltage_V,3.9707,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,140.13,voltage_V,3.9878,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,145.13,voltage_V,4.0042,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,150.13,voltage_V,4.0213,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,155.15,voltage_V,4.0405,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,160.16,voltage_V,4.061,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,165.16,voltage_V,4.0836,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,170.17,voltage_V,4.1077,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,175.18,voltage_V,4.1335,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,180.2,voltage_V,4.1626,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,185.2,voltage_V,4.1919,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,188.27,voltage_V,4.1211,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,188.27,voltage_V,4.1211,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,183.26,voltage_V,4.0542,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,178.25,voltage_V,4.019,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,173.24,voltage_V,3.992,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,168.24,voltage_V,3.9703,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,163.24,voltage_V,3.9508,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,158.24,voltage_V,3.9299,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,153.23,voltage_V,3.9089,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,148.23,voltage_V,3.8879,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,143.22,voltage_V,3.8664,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,138.2,voltage_V,3.8443,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,133.2,voltage_V,3.8223,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,128.18,voltage_V,3.8041,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,123.16,voltage_V,3.7884,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,118.16,voltage_V,3.7751,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,113.16,voltage_V,3.7641,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,108.14,voltage_V,3.7533,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,103.13,voltage_V,3.7426,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,98.13,voltage_V,3.7323,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,93.13,voltage_V,3.7216,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,88.13,voltage_V,3.7103,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,83.12,voltage_V,3.6986,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,78.12,voltage_V,3.6858,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,73.12,voltage_V,3.6709,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,68.12,voltage_V,3.6528,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,63.11,voltage_V,3.6258,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,58.11,voltage_V,3.5836,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,53.11,voltage_V,3.5155,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,52.52,voltage_V,3.6157,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,52.52,voltage_V,3.6157,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,57.53,voltage_V,3.7235,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,62.54,voltage_V,3.7403,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,67.54,voltage_V,3.7543,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,72.54,voltage_V,3.7679,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,77.54,voltage_V,3.7798,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,82.55,voltage_V,3.7917,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,87.57,voltage_V,3.8034,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,92.58,voltage_V,3.8147,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,97.59,voltage_V,3.8277,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,102.59,voltage_V,3.842,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,107.59,voltage_V,3.8575,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,112.6,voltage_V,3.8754,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,117.6,voltage_V,3.8939,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,122.6,voltage_V,3.9123,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,127.6,voltage_V,3.9305,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,132.62,voltage_V,3.9486,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,137.65,voltage_V,3.9671,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,142.65,voltage_V,3.9858,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,147.66,voltage_V,4.004,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,152.67,voltage_V,4.0222,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,157.7,voltage_V,4.0423,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,162.7,voltage_V,4.0644,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,167.72,voltage_V,4.0884,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,172.74,voltage_V,4.1142,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,177.76,voltage_V,4.1415,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,182.79,voltage_V,4.1716,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,187.81,voltage_V,4.2001,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,189.2,voltage_V,4.1211,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,189.2,voltage_V,4.1211,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,184.19,voltage_V,4.0545,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,179.19,voltage_V,4.0196,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,174.18,voltage_V,3.9928,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,169.18,voltage_V,3.9711,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,164.15,voltage_V,3.9518,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,159.15,voltage_V,3.9312,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,154.13,voltage_V,3.9103,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,149.11,voltage_V,3.8895,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,144.08,voltage_V,3.8682,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,139.08,voltage_V,3.8464,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,134.05,voltage_V,3.8243,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,129.05,voltage_V,3.8059,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,124.05,voltage_V,3.7902,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,119.03,voltage_V,3.7765,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,114.01,voltage_V,3.7654,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,109.0,voltage_V,3.7547,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,104.0,voltage_V,3.744,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,99.0,voltage_V,3.7337,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,94.0,voltage_V,3.7231,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,88.99,voltage_V,3.7119,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,83.99,voltage_V,3.7003,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,78.99,voltage_V,3.6877,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,73.99,voltage_V,3.6732,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,68.98,voltage_V,3.6558,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,63.98,voltage_V,3.6306,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,58.98,voltage_V,3.591,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,53.97,voltage_V,3.5296,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,52.63,voltage_V,3.6157,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,52.63,voltage_V,3.6157,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,57.64,voltage_V,3.7235,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,62.65,voltage_V,3.7403,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,67.65,voltage_V,3.7543,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,72.65,voltage_V,3.7679,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,77.65,voltage_V,3.7798,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,82.67,voltage_V,3.7918,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,87.7,voltage_V,3.8035,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,92.7,voltage_V,3.8148,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,97.71,voltage_V,3.8278,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,102.71,voltage_V,3.8422,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,107.71,voltage_V,3.8577,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,112.71,voltage_V,3.8756,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,117.72,voltage_V,3.8941,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,122.72,voltage_V,3.9125,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,127.72,voltage_V,3.9307,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,132.73,voltage_V,3.9488,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,137.73,voltage_V,3.9673,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,142.74,voltage_V,3.986,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,147.74,voltage_V,4.0042,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,152.74,voltage_V,4.0224,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,157.74,voltage_V,4.0424,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,162.75,voltage_V,4.0644,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,167.75,voltage_V,4.0885,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,172.75,voltage_V,4.1141,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,177.75,voltage_V,4.1414,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,182.76,voltage_V,4.1713,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,187.78,voltage_V,4.2001,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · charge branch,capacity_mAh_per_g,189.22,voltage_V,4.1211,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,189.22,voltage_V,4.1211,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,184.21,voltage_V,4.0546,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,179.21,voltage_V,4.0196,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,174.21,voltage_V,3.9929,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,169.21,voltage_V,3.9712,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,164.2,voltage_V,3.9519,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,159.2,voltage_V,3.9314,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,154.2,voltage_V,3.9106,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,149.2,voltage_V,3.8898,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,144.19,voltage_V,3.8686,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,139.19,voltage_V,3.8469,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,134.19,voltage_V,3.8248,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,129.19,voltage_V,3.8063,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,124.18,voltage_V,3.7906,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,119.16,voltage_V,3.7768,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,114.16,voltage_V,3.7657,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,109.16,voltage_V,3.755,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,104.15,voltage_V,3.7443,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,99.15,voltage_V,3.734,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,94.15,voltage_V,3.7235,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,89.15,voltage_V,3.7123,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,84.14,voltage_V,3.7007,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,79.14,voltage_V,3.6881,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,74.14,voltage_V,3.6737,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,69.12,voltage_V,3.6563,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,64.12,voltage_V,3.6315,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,59.11,voltage_V,3.5922,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,54.11,voltage_V,3.5318,vector path vertex
+fig13,simulation 40 MPa (3 cycles) · discharge branch,capacity_mAh_per_g,52.63,voltage_V,3.6156,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,-0.09,voltage_V,3.5015,"Fig. 14a (PDF p.15), ticks: x 0 -> 75.53 pt, 150 -> 181.59 pt; y 4.15 -> 65.89 pt, 3.55 -> 170.07 pt; experiment and '15% porosity' are stroked vector paths; 'No pores' is drawn as filled dash outlines (centres listed) that end at 180.5 mAh/g in vector form - the rest of that curve lies in the embedded raster; vector path vertex"
+fig14a,experiment 0.1 C,capacity_mAh_per_g,5.18,voltage_V,3.6921,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,13.76,voltage_V,3.7048,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,26.62,voltage_V,3.7199,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,35.19,voltage_V,3.73,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,43.11,voltage_V,3.7401,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,51.02,voltage_V,3.7502,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,59.27,voltage_V,3.7629,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,67.51,voltage_V,3.7768,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,75.09,voltage_V,3.7907,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,82.68,voltage_V,3.8059,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,89.93,voltage_V,3.8236,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,96.86,voltage_V,3.8451,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,103.12,voltage_V,3.868,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,109.06,voltage_V,3.8908,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,114.99,voltage_V,3.9162,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,122.91,voltage_V,3.9542,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,129.17,voltage_V,3.9821,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,134.78,voltage_V,4.0075,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,140.39,voltage_V,4.0329,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,146.98,voltage_V,4.0608,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,153.58,voltage_V,4.0963,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,160.17,voltage_V,4.1331,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,165.78,voltage_V,4.1661,vector path vertex
+fig14a,experiment 0.1 C,capacity_mAh_per_g,171.71,voltage_V,4.1953,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,-0.04,voltage_V,3.5815,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,5.5,voltage_V,3.6987,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,11.57,voltage_V,3.7102,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,17.63,voltage_V,3.7182,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,23.7,voltage_V,3.7265,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,29.77,voltage_V,3.7351,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,35.84,voltage_V,3.7436,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,41.9,voltage_V,3.7521,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,47.97,voltage_V,3.7607,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,54.04,voltage_V,3.7695,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,60.1,voltage_V,3.7787,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,66.17,voltage_V,3.7886,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,72.24,voltage_V,3.7984,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,78.3,voltage_V,3.8087,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,84.37,voltage_V,3.8206,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,90.44,voltage_V,3.8341,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,96.5,voltage_V,3.8492,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,102.57,voltage_V,3.8672,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,108.64,voltage_V,3.8877,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,114.7,voltage_V,3.9076,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,120.77,voltage_V,3.9275,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,126.84,voltage_V,3.9474,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,132.91,voltage_V,3.968,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,138.97,voltage_V,3.9889,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,145.04,voltage_V,4.0091,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,150.65,voltage_V,4.0291,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,156.72,voltage_V,4.0531,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,162.78,voltage_V,4.0797,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,168.85,voltage_V,4.1087,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,174.38,voltage_V,4.1377,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,180.44,voltage_V,4.1724,vector path vertex
+fig14a,simulation 15% porosity 0.1 C 40 MPa,capacity_mAh_per_g,184.08,voltage_V,4.1932,vector path vertex
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,-0.04,voltage_V,3.578,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,-0.03,voltage_V,3.6026,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,-0.03,voltage_V,3.6272,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,-0.01,voltage_V,3.6519,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,0.74,voltage_V,3.6723,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,5.11,voltage_V,3.6894,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,10.2,voltage_V,3.7023,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,15.98,voltage_V,3.7096,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,21.79,voltage_V,3.7164,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,27.58,voltage_V,3.7235,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,33.36,voltage_V,3.7308,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,39.13,voltage_V,3.7382,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,44.89,voltage_V,3.7456,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,50.63,voltage_V,3.7534,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,56.35,voltage_V,3.7613,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,62.07,voltage_V,3.7693,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,67.76,voltage_V,3.7776,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,73.39,voltage_V,3.7866,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,79.01,voltage_V,3.7956,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,84.61,voltage_V,3.8051,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,90.11,voltage_V,3.8151,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,95.43,voltage_V,3.8268,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,100.66,voltage_V,3.8391,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,105.71,voltage_V,3.8527,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,110.61,voltage_V,3.867,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,115.32,voltage_V,3.8825,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,120.01,voltage_V,3.898,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,124.69,voltage_V,3.9136,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,129.33,voltage_V,3.9294,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,133.95,voltage_V,3.9453,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,138.52,voltage_V,3.9614,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,143.05,voltage_V,3.9777,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,147.59,voltage_V,3.9939,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,152.17,voltage_V,4.01,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,156.69,voltage_V,4.0264,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,160.97,voltage_V,4.0437,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,165.13,voltage_V,4.0616,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,169.1,voltage_V,4.0802,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,173.0,voltage_V,4.099,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,176.78,voltage_V,4.1182,centre of a filled dash outline
+fig14a,simulation no pores 0.1 C 40 MPa (filled-outline dash centres),capacity_mAh_per_g,180.49,voltage_V,4.1376,centre of a filled dash outline
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.2212,D_axis_value_(x1e-16_m2_per_s),0.149,"Fig. A.1a (PDF p.16), centres of the red filled marker paths; ticks: x 0.5 -> 260.30 pt, 1.0 -> 369.57 pt; y 6 -> 65.46 pt, 1 -> 134.68 pt; axis label as printed 'D x 10^-16 (m2 s-1)'; red marker centre (vector)"
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.2506,D_axis_value_(x1e-16_m2_per_s),1.729,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.2831,D_axis_value_(x1e-16_m2_per_s),3.3515,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.3127,D_axis_value_(x1e-16_m2_per_s),3.5655,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.344,D_axis_value_(x1e-16_m2_per_s),3.471,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.3747,D_axis_value_(x1e-16_m2_per_s),3.8246,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.4022,D_axis_value_(x1e-16_m2_per_s),4.6458,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.4344,D_axis_value_(x1e-16_m2_per_s),6.4672,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.465,D_axis_value_(x1e-16_m2_per_s),6.8469,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.4958,D_axis_value_(x1e-16_m2_per_s),6.2291,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.5244,D_axis_value_(x1e-16_m2_per_s),5.0025,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.5505,D_axis_value_(x1e-16_m2_per_s),3.603,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.5821,D_axis_value_(x1e-16_m2_per_s),3.3657,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.6124,D_axis_value_(x1e-16_m2_per_s),3.2144,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.6454,D_axis_value_(x1e-16_m2_per_s),3.3224,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.6723,D_axis_value_(x1e-16_m2_per_s),3.4439,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.7033,D_axis_value_(x1e-16_m2_per_s),3.3937,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.7312,D_axis_value_(x1e-16_m2_per_s),3.762,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.7664,D_axis_value_(x1e-16_m2_per_s),3.3104,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.7985,D_axis_value_(x1e-16_m2_per_s),1.9045,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.8309,D_axis_value_(x1e-16_m2_per_s),0.4373,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.8533,D_axis_value_(x1e-16_m2_per_s),0.2121,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.8822,D_axis_value_(x1e-16_m2_per_s),0.0959,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.9101,D_axis_value_(x1e-16_m2_per_s),0.0548,red marker centre (vector)
+figA1a,D (1e-16 m2/s),intercalation_fraction_x,0.9426,D_axis_value_(x1e-16_m2_per_s),0.0548,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.2475,i0_axis_value_(label_i0_x_1e-10_A_per_m2),3.4516,"Fig. A.1b (PDF p.16), marker centres; ticks: x 0.5 -> 260.30 pt, 1.0 -> 369.57 pt; y 14 -> 168.16 pt, 2 -> 250.04 pt; axis label as printed 'i0 x 10^-10 (A m-2)' - whether the tick numbers are i0 multiplied or divided by 1e-10 is not stated (ambiguous); red marker centre (vector)"
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.2807,i0_axis_value_(label_i0_x_1e-10_A_per_m2),5.6411,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.3098,i0_axis_value_(label_i0_x_1e-10_A_per_m2),7.8563,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.3409,i0_axis_value_(label_i0_x_1e-10_A_per_m2),9.6805,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.3695,i0_axis_value_(label_i0_x_1e-10_A_per_m2),11.0685,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.3977,i0_axis_value_(label_i0_x_1e-10_A_per_m2),12.2417,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.4298,i0_axis_value_(label_i0_x_1e-10_A_per_m2),13.1075,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.4607,i0_axis_value_(label_i0_x_1e-10_A_per_m2),13.7221,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.4898,i0_axis_value_(label_i0_x_1e-10_A_per_m2),14.1969,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.5205,i0_axis_value_(label_i0_x_1e-10_A_per_m2),14.6159,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.5484,i0_axis_value_(label_i0_x_1e-10_A_per_m2),15.007,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.5773,i0_axis_value_(label_i0_x_1e-10_A_per_m2),15.307,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.606,i0_axis_value_(label_i0_x_1e-10_A_per_m2),15.4467,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.64,i0_axis_value_(label_i0_x_1e-10_A_per_m2),15.3786,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.6682,i0_axis_value_(label_i0_x_1e-10_A_per_m2),15.007,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.6996,i0_axis_value_(label_i0_x_1e-10_A_per_m2),14.149,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.7315,i0_axis_value_(label_i0_x_1e-10_A_per_m2),12.8755,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.7589,i0_axis_value_(label_i0_x_1e-10_A_per_m2),11.236,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.7881,i0_axis_value_(label_i0_x_1e-10_A_per_m2),9.2808,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.8137,i0_axis_value_(label_i0_x_1e-10_A_per_m2),7.4931,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.8386,i0_axis_value_(label_i0_x_1e-10_A_per_m2),5.9569,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.8621,i0_axis_value_(label_i0_x_1e-10_A_per_m2),4.7558,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.892,i0_axis_value_(label_i0_x_1e-10_A_per_m2),3.7223,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.9231,i0_axis_value_(label_i0_x_1e-10_A_per_m2),2.7726,red marker centre (vector)
+figA1b,"i0 (axis label: i0 x 10^-10, A m^-2)",intercalation_fraction_x,0.9769,i0_axis_value_(label_i0_x_1e-10_A_per_m2),1.7184,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.2213,OCV_V_vs_Li,4.2201,"Fig. A.1c (PDF p.16), marker centres; ticks: x 0.5 -> 260.69 pt, 1.0 -> 370.02 pt; y 4.2 -> 263.72 pt, 2.8 -> 349.98 pt (V vs Li+/Li); red marker centre (vector)"
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.2478,OCV_V_vs_Li,4.1888,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.2791,OCV_V_vs_Li,4.1555,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.3086,OCV_V_vs_Li,4.1168,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.338,OCV_V_vs_Li,4.0735,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.3694,OCV_V_vs_Li,4.0355,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.3989,OCV_V_vs_Li,4.0044,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.4293,OCV_V_vs_Li,3.9755,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.4597,OCV_V_vs_Li,3.9399,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.4892,OCV_V_vs_Li,3.9045,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.5196,OCV_V_vs_Li,3.871,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.5489,OCV_V_vs_Li,3.8377,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.5786,OCV_V_vs_Li,3.8173,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.6105,OCV_V_vs_Li,3.7988,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.6402,OCV_V_vs_Li,3.7798,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.6698,OCV_V_vs_Li,3.7597,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.7002,OCV_V_vs_Li,3.7463,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.7283,OCV_V_vs_Li,3.7288,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.7593,OCV_V_vs_Li,3.7106,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.7896,OCV_V_vs_Li,3.6884,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.8199,OCV_V_vs_Li,3.6683,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.8484,OCV_V_vs_Li,3.6469,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.8784,OCV_V_vs_Li,3.6333,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.9102,OCV_V_vs_Li,3.6193,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.9397,OCV_V_vs_Li,3.6059,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.9683,OCV_V_vs_Li,3.5894,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.9786,OCV_V_vs_Li,3.0187,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.9812,OCV_V_vs_Li,2.9049,red marker centre (vector)
+figA1c,OCV (V vs Li+/Li),intercalation_fraction_x,0.9935,OCV_V_vs_Li,2.6859,red marker centre (vector)
+fig14a,simulation no pores 0.1 C 40 MPa - END (raster),capacity_mAh_per_g,190.1,voltage_V,4.195,"end of the red 'No pores' curve located by colour in a 1200 dpi render of the raster part (topmost red pixels at x 209.74-210.16 pt, y 58.06 pt); at 4.2 V about 190-191 mAh/g (plot frame right edge = 191.8)"
+fig13,simulation 5 MPa - SUMMARY: cycle 1 charge: CC end (first V >= 4.199),capacity_mAh_per_g,185.56,voltage_V,4.2001,"turning points of the cycling path (same calibration as the fig13 rows); capacities by difference: 5 MPa cycle 1 charge 187.20 / discharge 134.62 (71.9 %), cycle 2 135.48 / 135.38, cycle 3 135.39 / 135.38; 40 MPa cycle 1 188.27 / 135.75 (72.1 %), cycle 2 136.68 / 136.57, cycle 3 136.59 / 136.59 mAh/g; discharge cut-off voltage is not printed in the paper (read-out 3.50 V)"
+fig13,simulation 5 MPa - SUMMARY: cycle 1 charge: CV end (max Q),capacity_mAh_per_g,187.2,voltage_V,4.2001,
+fig13,simulation 5 MPa - SUMMARY: cycle 1 discharge start (after current reversal),capacity_mAh_per_g,187.2,voltage_V,4.1229,
+fig13,simulation 5 MPa - SUMMARY: cycle 1 discharge end (min V),capacity_mAh_per_g,52.58,voltage_V,3.5019,
+fig13,simulation 5 MPa - SUMMARY: cycle 2 charge start,capacity_mAh_per_g,52.58,voltage_V,3.6107,
+fig13,simulation 5 MPa - SUMMARY: cycle 2 charge: CC end,capacity_mAh_per_g,186.42,voltage_V,4.2001,
+fig13,simulation 5 MPa - SUMMARY: cycle 2 charge: CV end,capacity_mAh_per_g,188.06,voltage_V,4.2001,
+fig13,simulation 5 MPa - SUMMARY: cycle 2 discharge end,capacity_mAh_per_g,52.68,voltage_V,3.5112,
+fig13,simulation 5 MPa - SUMMARY: cycle 3 charge: CC end,capacity_mAh_per_g,186.35,voltage_V,4.1996,
+fig13,simulation 5 MPa - SUMMARY: cycle 3 charge: CV end,capacity_mAh_per_g,188.07,voltage_V,4.1996,
+fig13,simulation 5 MPa - SUMMARY: cycle 3 discharge end,capacity_mAh_per_g,52.69,voltage_V,3.5056,
+fig13,simulation 40 MPa - SUMMARY: cycle 1 charge: CC end (first V >= 4.199),capacity_mAh_per_g,186.45,voltage_V,4.1991,
+fig13,simulation 40 MPa - SUMMARY: cycle 1 charge: CV end (max Q),capacity_mAh_per_g,188.27,voltage_V,4.1991,
+fig13,simulation 40 MPa - SUMMARY: cycle 1 discharge start (after current reversal),capacity_mAh_per_g,188.27,voltage_V,4.1211,
+fig13,simulation 40 MPa - SUMMARY: cycle 1 discharge end (min V),capacity_mAh_per_g,52.52,voltage_V,3.5004,
+fig13,simulation 40 MPa - SUMMARY: cycle 2 charge start,capacity_mAh_per_g,52.52,voltage_V,3.6157,
+fig13,simulation 40 MPa - SUMMARY: cycle 2 charge: CC end,capacity_mAh_per_g,187.37,voltage_V,4.1991,
+fig13,simulation 40 MPa - SUMMARY: cycle 2 charge: CV end,capacity_mAh_per_g,189.2,voltage_V,4.1991,
+fig13,simulation 40 MPa - SUMMARY: cycle 2 discharge end,capacity_mAh_per_g,52.63,voltage_V,3.5003,
+fig13,simulation 40 MPa - SUMMARY: cycle 3 charge: CC end,capacity_mAh_per_g,187.4,voltage_V,4.1991,
+fig13,simulation 40 MPa - SUMMARY: cycle 3 charge: CV end,capacity_mAh_per_g,189.22,voltage_V,4.1991,
+fig13,simulation 40 MPa - SUMMARY: cycle 3 discharge end,capacity_mAh_per_g,52.63,voltage_V,3.4999,
+fig3,40 x 40 um composite-cathode region - void (white),area_percent_raw_colour_class,12.46,area_percent_renormalised_void+SE+AM,14.54,"Fig. 3 (PDF p.5) embedded raster 823 x 664 px (content box 812 x 650 px; 16.25 px per um from the 40 um height); pixel colour classes: white (R,G,B > 235), yellow (SE), dark grey (AM), black outlines, rest; region = 40 um left of the brown current-collector strip (separator width by difference 9.6 um); bounds if every outline/other pixel is counted as AM: AM 63.4 %, as SE: SE 38.4 %; AM/(AM+SE) = 67.0 % by area; 2-D area fractions of a hand-edited image - not a measured porosity"
+fig3,40 x 40 um composite-cathode region - solid electrolyte (yellow),area_percent_raw_colour_class,24.16,area_percent_renormalised_void+SE+AM,28.18,
+fig3,40 x 40 um composite-cathode region - active material (grey),area_percent_raw_colour_class,49.11,area_percent_renormalised_void+SE+AM,57.28,
+fig3,40 x 40 um composite-cathode region - outline (black),area_percent_raw_colour_class,8.53,area_percent_renormalised_void+SE+AM,,
+fig3,"40 x 40 um composite-cathode region - other (anti-aliasing, labels)",area_percent_raw_colour_class,5.73,area_percent_renormalised_void+SE+AM,,
+fig3,40 x 40 um composite-cathode region - AM (grey) connected components >= 60 px,count,125,equivalent_circle_diameter_um_median,1.97,"4-neighbour connected components of the grey class (same raster and region as the fig3 area rows); equivalent-circle diameter = 2*sqrt(area/pi)/16.25 px per um: min 0.56, mean 2.42, max 8.17, area-weighted median 3.89 um; components >= 60 px hold 98.3 % of the grey area; black outlines are not counted, so diameters are slightly low; 2-D section of a hand-edited image - not a measured particle-size distribution"
+fig3,40 x 40 um composite-cathode region - void (white) connected components >= 15 px,count,87,equivalent_circle_diameter_um_median,1.55,"same method; min 0.37, mean 1.58, max 3.03, area-weighted median 2.06 um; 2 of the 87 touch the region edge (the large void at the separator boundary)"

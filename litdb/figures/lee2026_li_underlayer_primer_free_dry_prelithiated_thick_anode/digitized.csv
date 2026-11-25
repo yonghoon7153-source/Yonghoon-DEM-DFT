@@ -1,0 +1,103 @@
+# lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode — figure readings (판독) · 2026-10-13
+# Method: pixel analysis of the crops in this folder (main figures = 300 ppi native raster rendered at 300 dpi; SI = ~220 ppi raster rendered at 220/260 dpi).
+#   Axes calibrated from frame lines + tick marks of each panel; curve end points / markers / bar tops found by colour (blue = PrL-ThA, orange = ThA).
+# Self-checks (against PRINTED values in the same paper):
+#   Fig 5b cycle-1 markers 3.46 / 5.11 mAh/cm2 vs text 3.46 / 5.1 (LFP) ; Fig 5d cycle-1 markers 4.55 / 5.67 vs text 4.50 (implied) / 5.63 (NCM).
+#   Fig 5c curve ends 4.51 / 5.65 mAh/cm2 (difference 1.14) vs printed difference 1.13.
+#   Fig 4b ThA lithiation / delithiation 520.7 / 451.0 mAh/g -> loss 69.7 (printed 68.9), ICE 86.6 % (printed 86.7 %).
+#   SI Fig S12 ThA bars 77.3 / 90.3 ohm vs Table S1 77.3 / 90.5 ohm.
+#   Fig 4h / 4i t=0 F:O = 30.5:21.3 (1.43) / 34.3:31.3 (1.10) vs printed "3:2" / "~1:1" ; SI Fig S13 t=0 F 33.5 / 62.2 % vs printed 33 / 60 %.
+#   Fig 3e graphite SOC at top (electrolyte case) 0.064 vs printed "at least 6%".
+# Precision: capacities +-0.03 mAh/cm2 (Fig 5a,c), +-0.05 (Fig 5b,d,f markers), +-2 mAh/g (Fig 4b,e), peel +-0.03 gf/mm (mean of curve),
+#   resistance bars +-0.0003 ohm cm2 (Fig 2f) / +-0.3 ohm (S12), atomic ratio +-1 %p, SOC +-0.01, energy density +-5 Wh/kg. TREND use only — never quote as printed values.
+figure,panel,series,x,x_unit,y,y_unit,method,note
+Fig 2d,peel strength (mean 10-50 mm),ThA,,,3.846,gf/mm,mean of curve (range 3.65-4.06),= 0.0377 N/mm [우리 산술]
+Fig 2d,peel strength (mean 10-50 mm),PrL-ThA,,,3.452,gf/mm,mean of curve (range 3.01-3.80),= 0.0339 N/mm; -10 % vs ThA [우리 산술]; text says 'similar'
+Fig 2f,interface resistance,Cu w/o primer,,,0.0084,ohm cm2 (axis printed 'ohm cm-2'),bar top,measuring pressure not stated
+Fig 2f,interface resistance,ThA (SBR primer),,,0.0460,ohm cm2 (axis printed 'ohm cm-2'),bar top,
+Fig 2f,interface resistance,PrL-ThA (Li/Cu),,,0.0215,ohm cm2 (axis printed 'ohm cm-2'),bar top,ThA/PrL = 2.14 (text 'more than twice lower')
+Fig S2,adsorption energy,Li-Si,,,-0.11,eV,bar bottom,method/normalisation not stated
+Fig S2,adsorption energy,Li-Cu,,,-3.00,eV,bar bottom,
+Fig S2,adsorption energy,Li-Graphite,,,-1.52,eV,bar bottom,
+Fig 3e,SOC vs height,Gr/PrL-ThA (no electrolyte),0,um,0.99,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA (no electrolyte),2,um,0.87,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA (no electrolyte),5,um,0.68,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA (no electrolyte),10,um,0.36,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA (no electrolyte),15,um,0.16,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA (no electrolyte),20,um,0.025,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA (no electrolyte),26,um,0.00,SOC fraction,curve end,26/50 um = 52 % of domain height (likely the printed '~52%')
+Fig 3e,SOC vs height,Si/PrL-ThA (no electrolyte),2,um,0.10,SOC fraction,curve,
+Fig 3e,SOC vs height,Si/PrL-ThA (no electrolyte),10,um,0.04,SOC fraction,curve,
+Fig 3e,SOC vs height,Si/PrL-ThA (no electrolyte),20,um,0.005,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA with electrolyte,2,um,0.205,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA with electrolyte,10,um,0.146,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA with electrolyte,20,um,0.101,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA with electrolyte,30,um,0.076,SOC fraction,curve,
+Fig 3e,SOC vs height,Gr/PrL-ThA with electrolyte,45,um,0.064,SOC fraction,curve,printed 'at least 6%' at top
+Fig 3e,SOC vs height,Si/PrL-ThA with electrolyte,8,um,0.34,SOC fraction,curve start,
+Fig 3e,SOC vs height,Si/PrL-ThA with electrolyte,15,um,0.22,SOC fraction,curve,
+Fig 3e,SOC vs height,Si/PrL-ThA with electrolyte,26,um,0.17,SOC fraction,curve,
+Fig 3e,SOC vs height,Si/PrL-ThA with electrolyte,33,um,0.10,SOC fraction,curve,
+Fig 4b,1st cycle lithiation end,ThA,520.7,mAh/g,0.01,V,curve end,
+Fig 4b,1st cycle delithiation end,ThA,451.0,mAh/g,1.5,V,curve end,ICE 86.6 % (printed 86.7)
+Fig 4b,2nd cycle delithiation end,ThA,429.8,mAh/g,1.5,V,curve end,~ Table S2 specific capacity 428.27
+Fig 4b,1st cycle lithiation end,PrL-ThA,438.9,mAh/g,0.01,V,curve end,
+Fig 4b,1st cycle delithiation end,PrL-ThA,438.9,mAh/g,1.5,V,curve end,ICE ~100 % (printed 100.2)
+Fig 4b,2nd cycle delithiation end,PrL-ThA,431.8,mAh/g,1.5,V,curve end,
+Fig 4c,arc minimum before diffusion tail,ThA before formation,318,ohm,48,ohm (-Im),Nyquist,Table S1 R_total 346.3 (arc does not close)
+Fig 4c,arc minimum before diffusion tail,PrL-ThA before formation,205,ohm,3,ohm (-Im),Nyquist,Table S1 R_total 209.1
+Fig 4d,arc minimum before diffusion tail,ThA after formation,109,ohm,8,ohm (-Im),Nyquist,Table S1 R_total 202.1 (components sum 170.0)
+Fig 4d,end of arcs (tail onset),PrL-ThA after formation,~45,ohm,~5,ohm (-Im),Nyquist (visual),Table S1 R_total 60.2
+Fig 4e,discharge capacity cycle 50,PrL-ThA,50,cycle,372,mAh/g,marker band centre,
+Fig 4e,discharge capacity cycle 50,ThA,50,cycle,~334,mAh/g,marker band centre (partly hidden under PrL markers),
+Fig 4h,atomic ratio t=0 s,ThA back C/O/F,0,s,45.5/21.3/30.5,at%,markers,
+Fig 4h,atomic ratio t=1000 s,ThA back C/O/F,1000,s,70.8/12.0/15.2,at%,markers,
+Fig 4i,atomic ratio t=0 s,PrL-ThA back O/F (C hidden ~32),0,s,31.3/34.3,at%,markers,
+Fig 4i,atomic ratio t=1000 s,PrL-ThA back C/O/F,1000,s,17.9/55.7/25.0,at%,markers,
+SI Fig S13c,atomic ratio t=0 s,ThA front C/O/F,0,s,37.2/25.8/33.5,at%,markers,printed F 33 %
+SI Fig S13d,atomic ratio t=0 s,PrL-ThA front C/O/F,0,s,23.9/11.9/62.2,at%,markers,printed F 60 %
+Fig 5a,LFP charge end (4.0 V),ThA,4.94,mAh/cm2,4.0,V,curve end,
+Fig 5a,LFP discharge end (2.5 V),ThA,3.57,mAh/cm2,2.5,V,curve end,text 3.46
+Fig 5a,LFP charge end (4.0 V),PrL-ThA,4.99,mAh/cm2,4.0,V,curve end,
+Fig 5a,LFP discharge end (2.5 V),PrL-ThA,4.93,mAh/cm2,2.5,V,curve end,text 5.1; plotted difference 1.36 vs printed arrow 1.64
+Fig 5b,LFP cycle 1,PrL-ThA,1,cycle,5.11,mAh/cm2,marker,
+Fig 5b,LFP cycle 10,PrL-ThA,10,cycle,4.61,mAh/cm2,band centre,
+Fig 5b,LFP cycle 100,PrL-ThA,100,cycle,3.93,mAh/cm2,band centre,
+Fig 5b,LFP cycle 197,PrL-ThA,197,cycle,3.51,mAh/cm2,band centre,printed retention 74.1 % (reference cycle not stated)
+Fig 5b,LFP cycle 1,ThA,1,cycle,3.46,mAh/cm2,marker,
+Fig 5b,LFP cycle 10,ThA,10,cycle,3.06,mAh/cm2,band centre,
+Fig 5b,LFP cycle 100,ThA,100,cycle,2.49,mAh/cm2,band centre,
+Fig 5b,LFP cycle 197,ThA,197,cycle,2.28,mAh/cm2,band centre,printed retention 68.2 %
+Fig 5c,NCM charge end (4.25 V),ThA,6.16,mAh/cm2,4.25,V,curve end,= 234 mAh/g_NCM [우리 산술]
+Fig 5c,NCM discharge end (2.8 V),ThA,4.51,mAh/cm2,2.8,V,curve end,
+Fig 5c,NCM charge end (4.25 V),PrL-ThA,6.06,mAh/cm2,4.25,V,curve end,= 230 mAh/g_NCM [우리 산술]
+Fig 5c,NCM discharge end (2.8 V),PrL-ThA,5.65,mAh/cm2,2.8,V,curve end,printed 5.63
+Fig 5d,NCM cycle 1,PrL-ThA,1,cycle,5.67,mAh/cm2,marker,
+Fig 5d,NCM cycle 10,PrL-ThA,10,cycle,5.23,mAh/cm2,band centre,
+Fig 5d,NCM cycle 100,PrL-ThA,100,cycle,4.70,mAh/cm2,band centre,
+Fig 5d,NCM cycle 300,PrL-ThA,300,cycle,4.12,mAh/cm2,band centre,
+Fig 5d,NCM cycle 500,PrL-ThA,500,cycle,3.83,mAh/cm2,band centre,retention not printed
+Fig 5d,NCM cycle 1,ThA,1,cycle,4.55,mAh/cm2,marker,
+Fig 5d,NCM cycle 10,ThA,10,cycle,4.18,mAh/cm2,band centre,
+Fig 5d,NCM cycle 100,ThA,100,cycle,3.58,mAh/cm2,band centre,
+Fig 5d,NCM cycle 300,ThA,300,cycle,3.07,mAh/cm2,band centre,
+Fig 5d,NCM cycle 500,ThA,500,cycle,2.74,mAh/cm2,band centre,cycle 10->500 loss: PrL 1.40 vs ThA 1.44 mAh/cm2 [우리 산술]
+Fig 5f,rate 0.5 mA/cm2 (cycle 1-3),PrL-ThA,2,cycle,5.39,mAh/cm2,marker,
+Fig 5f,rate 1.0 mA/cm2 (cycle 4-6),PrL-ThA,5,cycle,5.20,mAh/cm2,marker,
+Fig 5f,rate 1.5 mA/cm2 (cycle 7-9),PrL-ThA,8,cycle,5.03,mAh/cm2,marker,
+Fig 5f,rate 2.5 mA/cm2 (cycle 10-12),PrL-ThA,11,cycle,5.00,mAh/cm2,marker,
+Fig 5f,rate 5.0 mA/cm2 (cycle 13-15),PrL-ThA,14,cycle,4.96,mAh/cm2,marker,
+Fig 5f,rate 0.5 mA/cm2 (cycle 1-3),ThA,2,cycle,4.45,mAh/cm2,marker (legend overlap at cycles 1-2),
+Fig 5f,rate 1.0 mA/cm2 (cycle 4-6),ThA,5,cycle,4.27,mAh/cm2,marker,
+Fig 5f,rate 1.5 mA/cm2 (cycle 7-9),ThA,8,cycle,4.14,mAh/cm2,marker,
+Fig 5f,rate 2.5 mA/cm2 (cycle 10-12),ThA,11,cycle,4.08,mAh/cm2,marker,
+Fig 5f,rate 5.0 mA/cm2 (cycle 13-15),ThA,14,cycle,4.01,mAh/cm2,marker,
+SI Fig S12,R_SEI after formation,ThA,,,77.3,ohm,bar top,Table S1 77.3
+SI Fig S12,R_SEI after formation,PrL-ThA,,,29.5,ohm,bar top,Table S1 27.8
+SI Fig S12,R_ct after formation,ThA,,,90.3,ohm,bar top,Table S1 90.5
+SI Fig S12,R_ct after formation,PrL-ThA,,,32.1,ohm,bar top,Table S1 30.8
+SI Fig S18,NCM811 half-cell 1st charge / discharge,NCM811,~215 / ~191,mAh/g,,,curve ends,ICE printed 88.8 %; Table S2 191.82
+SI Fig S19,LFP energy density cycle 1 / 200,PrL-ThA,1 / 200,cycle,~342 / 236,Wh/kg,marker band,
+SI Fig S19,LFP energy density cycle 1 / 200,ThA,1 / 200,cycle,~246 / 161,Wh/kg,marker band,
+SI Fig S20,NCM energy density cycle 1 / 500,PrL-ThA,1 / 500,cycle,~477 / 324,Wh/kg,marker band,caption says LFP but legend says NCM
+SI Fig S20,NCM energy density cycle 1 / 500,ThA,1 / 500,cycle,~380 / 231,Wh/kg,marker band,absolute loss ~153 vs ~149 Wh/kg [우리 산술]

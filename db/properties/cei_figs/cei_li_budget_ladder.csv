@@ -1,0 +1,7 @@
+donor_phosphate,li_per_P,donor_contains_Nd,dE_eV_per_P,balanced_reaction
+LiNd(PO3)4,0.25,1,-1.21561,0.25 LiNd(PO3)4 + 0.375 Nd2O3 -> NdPO4 + 0.125 Li2O
+LiPO3,1.0,0,-0.82386,LiPO3 + 0.5 Nd2O3 -> NdPO4 + 0.5 Li2O
+Li4P2O7,2.0,0,0.40301,0.5 Li4P2O7 + 0.5 Nd2O3 -> NdPO4 + Li2O
+Li3PO4,3.0,0,1.50352,Li3PO4 + 0.5 Nd2O3 -> NdPO4 + 1.5 Li2O
+
+crossover_li_per_P_linear_interp_between_adjacent_points,1.6715

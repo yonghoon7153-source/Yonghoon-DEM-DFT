@@ -1,0 +1,480 @@
+#!/usr/bin/env python3
+"""constrained_esw.py — Mechanically-CONSTRAINED electrochemical stability window
+(Gil-González/Fitzhugh constrained-ensemble method), our-cells implementation.
+
+Reproduces the composition dependence of Gil-González (Energy Storage Mater. 2022)
+for OUR comp1 / modelc by computing the REACTION VOLUMETRIC STRAIN of the
+decomposition explicitly and applying the Fitzhugh strain term as a leading-order
+shift of the window edges.
+
+Why strain-explicit (not augmented-hull)
+----------------------------------------
+get_element_profile gives edge voltages set by PHASE stability, which are
+composition-INDEPENDENT (comp1 and modelc share the same Li-P-S-Cl decomposition
+phases -> identical edges). Gil-González's Cl-rich-widens-more result instead
+comes from the composition-dependent REACTION STRAIN. Here we:
+  1. Get the K_eff=0 oxidation-onset and reduction-onset reactions per
+     composition (clean MP hull, LiS4/SCl3/Li5PS4Cl2 excluded).
+  2. Compute the reaction volume change DeltaV = V_products(solids) - V_SE from
+     MP molar volumes (released/consumed Li goes to/from the anode reservoir and
+     does NOT count in the constrained solid volume).
+  3. Apply Fitzhugh Eq.1 at the onset: the decomposition driving force
+     d_sD G' = dG_chem + K_eff*DeltaV ; near the K_eff=0 onset dG_chem grows
+     ~ -n_e*(phi - phi0)*e, so the edge shifts by
+        anodic : phi_ox(K)  = phi_ox0  + K_eff*DeltaV_ox  / n_e_ox
+        cathodic: phi_red(K) = phi_red0 - K_eff*DeltaV_red / n_e_red
+     (units: GPa*Å^3 -> eV via 6.242e-3; per electron -> Volts.) A volume-
+     EXPANDING decomposition (DeltaV>0) is suppressed -> the window WIDENS, and
+     a composition whose decomposition expands MORE per electron widens MORE.
+
+Usage (gabia, MP_API_KEY set):
+    python3 constrained_esw.py \
+        --target "Li6PS5Cl:comp1" "Li5.4P1S4.4Cl1.6:modelc" \
+        --v_se_A3 254.16 243.29 \
+        --k_eff 0 10 20 \
+        --out constrained_esw_results.json
+  --v_se_A3 : SE molar volume per FORMULA UNIT (Å^3): comp1 1016.62/4=254.16,
+              modelc 1216.44/5=243.29.
+"""
+import argparse
+import json
+import os
+import pathlib
+from pathlib import Path
+
+GPA_A3_TO_EV = 6.241509074e-3
+EXCLUDE_FORMULAS = {"LiS4", "SCl3", "Li5PS4Cl2"}  # Gil-González SI exclusions
+
+
+def get_entries(elements, exclude=True):
+    """MP 엔트리. `exclude=False` 면 `EXCLUDE_FORMULAS` 를 **빼지 않는다**(감사용 대조판)."""
+    key = os.environ.get("MP_API_KEY") or os.environ.get("PMG_MAPI_KEY")
+    from mp_api.client import MPRester
+    with MPRester(key) as mpr:
+        entries = mpr.get_entries_in_chemsys(
+            elements, additional_criteria={"thermo_types": ["GGA_GGA+U"]})
+    if not exclude:
+        print(f"[mp_api] {len(entries)} entries; **제외 없음**(감사용 대조판)")
+        return list(entries)
+    kept, dropped = [], []
+    for e in entries:
+        if e.composition.reduced_formula in EXCLUDE_FORMULAS:
+            dropped.append(e.composition.reduced_formula); continue
+        kept.append(e)
+    print(f"[mp_api] {len(entries)} entries; dropped {sorted(set(dropped))}; "
+          f"kept {len(kept)}")
+    return kept
+
+
+def audit_edges(target, elements, out_path):
+    """⭐ F-감사: **상 배제 포함/배제 두 판**으로 사다리를 뽑아 가장자리를 대조한다.
+
+    왜 있나 — 2026-09-22 에 환원 가장자리 라벨을 고쳤고(`esw_window_edges()`),
+    남은 미해결이 **산화 한 변 0.246 V** 다(우리 2.256 vs 문헌 2.01). 후보가 둘인데
+    확정이 안 됐다: ① 우리가 뺀 상 3개(`LiS4`·`SCl3`·`Li5PS4Cl2`) ② MP 판본 드리프트.
+    ①의 몫을 재려면 **같은 스냅샷에서 포함/배제 두 판**을 돌려 빼면 된다.
+    ②는 이걸로 못 가른다 — 남는 차가 ②의 상한이다.
+
+    ⛔ **이 함수가 못 하는 것**: MP 스냅샷 자체를 고정하지 못한다. 두 판이 **같은 호출에서**
+      나오므로 서로는 비교 가능하지만, **문헌(2021 이전 MP)과의 차는 여전히 미확정**이다.
+      그래서 출력에 `mp_snapshot_note` 를 박는다.
+    """
+    from pymatgen.core import Composition, Element
+    from pymatgen.analysis.phase_diagram import PhaseDiagram
+    res = {"target": target, "elements": list(elements),
+           "mp_snapshot_note": "⚠ MP 스냅샷 버전이 기록되지 않는다 — 두 판은 서로 비교 가능하지만 "
+                               "문헌(2021 이전 MP)과의 차는 이걸로 못 가른다.",
+           "runs": {}}
+    comp = Composition(target)
+    for tag, exc in (("excluded", True), ("included", False)):
+        ents = get_entries(elements, exclude=exc)
+        pd = PhaseDiagram(ents)
+        mu_ref = min(e.energy_per_atom for e in ents
+                     if e.composition.reduced_formula == "Li")
+        prof = pd.get_element_profile(Element("Li"), comp)
+        steps = [{"V": round(mu_ref - float(p["chempot"]), 3),
+                  "evo": round(float(p["evolution"]), 4),
+                  "rxn": str(p["reaction"])} for p in prof]
+        e = esw_window_edges(steps)
+        e["n_entries"] = len(ents)
+        e["steps"] = sorted(steps, key=lambda x: x["V"])
+        res["runs"][tag] = e
+        print(f"\n[{tag}] entries {len(ents)} · 환원 {e['reduction_limit_V']} · "
+              f"산화 {e['oxidation_limit_V']} · 창 {e['window_V']} "
+              f"(첫 환원 평탄 {e['first_reduction_plateau_V']})")
+        if e["note"]:
+            print(f"   ⚠ {e['note']}")
+    a, b = res["runs"]["excluded"], res["runs"]["included"]
+    if a["oxidation_limit_V"] is not None and b["oxidation_limit_V"] is not None:
+        d = round(a["oxidation_limit_V"] - b["oxidation_limit_V"], 3)
+        res["exclusion_share_of_oxidation_V"] = d
+        res["verdict"] = (
+            f"상 배제가 산화 한계를 **{d:+.3f} V** 움직인다. 문헌과의 총 격차 0.246 V 중 "
+            f"이만큼이 배제 몫이고, **나머지 {round(0.246 - d, 3):+.3f} V 는 MP 판본 등 다른 축**이다. "
+            "⛔ 나머지를 '판본 탓' 으로 단정하지 마라 — 이 계산은 그걸 **못 가른다**.")
+        print(f"\n⇒ {res['verdict']}")
+    pathlib_write(out_path, res)
+    return res
+
+
+def pathlib_write(out_path, obj):
+    Path(out_path).write_text(json.dumps(obj, ensure_ascii=False, indent=1) + "\n",
+                              encoding="utf-8")
+    print(f"→ {out_path}")
+
+
+def selftest():
+    """자체 점검 — **음성 경로가 본체다.** 가장자리 판정은 `esw_window_edges()` 가 정본이고
+    `esw_cascade_batch.py` 의 selftest 가 실측 comp1 사다리로 그걸 시험한다. 여기서는
+    **이 파일이 그 정본을 실제로 쓰는지**와 `--audit_edges` 의 산수를 본다.
+
+    ⛔ 못 하는 것: MP 호출은 안 한다 (네트워크·키가 필요하다). `audit_edges()` 의
+      **네트워크 뒷부분은 시험되지 않는다** — 시험되는 것은 가장자리 판정과 차이 계산이다.
+    """
+    ok = fail = 0
+    def chk(name, cond):
+        nonlocal ok, fail
+        print(("  \u2b55 " if cond else "  \u26d4 ") + name)
+        ok, fail = ok + bool(cond), fail + (not cond)
+
+    LADDER = [{"V": 0.0, "evo": 8.0}, {"V": 1.242, "evo": 5.0},
+              {"V": 1.717, "evo": 0.0}, {"V": 2.256, "evo": -2.0}]
+    e = esw_window_edges(LADDER)
+    chk("가장자리: 환원 = 교환 0 의 최저 (1.717)", e["reduction_limit_V"] == 1.717)
+    chk("가장자리: 창 = 0.539 (옛 1.014 아님)", e["window_V"] == 0.539)
+    chk("[음성] 옛 값 1.242 를 버리지 않고 이름을 바꿔 남긴다",
+        e["first_reduction_plateau_V"] == 1.242)
+    #: ⚠ 이 시험은 한 번 **헛것을 쟀다** — docstring 길이에 기대는 900자 창을 봤는데
+    #:   docstring 이 길어서 정작 호출부가 창 밖이었다. **본문만** 보도록 고쳤다.
+    import inspect as _insp
+    _body = "".join(_insp.getsource(onset_reactions).split('"""')[2:])
+    chk("[음성] onset_reactions 가 **같은 정본을 호출한다** (식이 두 군데로 갈리지 않는다)",
+        "esw_window_edges(" in _body)
+    chk("[음성] 그리고 옛 식을 **안 쓴다** (되돌아가면 잡힌다)",
+        "max(pos" not in _body and 'x["evo"] > 1e-6' not in _body)
+
+    #: --audit_edges 의 산수 — 배제 몫과 '나머지' 를 섞지 않는지
+    a, b = 2.256, 2.140
+    d = round(a - b, 3)
+    chk("감사: 배제 몫 = 두 판의 산화 한계 차 (2.256 − 2.140 = 0.116)", d == 0.116)
+    chk("[음성·핵심] 남는 것을 **'판본 탓' 으로 단정하지 않는다** — 문구가 그렇게 적혀 있다",
+        "못 가른다" in (audit_edges.__doc__ or "")
+        and "단정하지 마라" in pathlib.Path(__file__).read_text(encoding="utf-8"))
+    chk("[음성] MP 스냅샷을 고정 못 한다는 한계가 출력에 박힌다",
+        "mp_snapshot_note" in pathlib.Path(__file__).read_text(encoding="utf-8"))
+    chk("[음성] EXCLUDE_FORMULAS 가 정확히 그 셋이다 (조용히 바뀌면 감사가 무의미하다)",
+        EXCLUDE_FORMULAS == {"LiS4", "SCl3", "Li5PS4Cl2"})
+    print(f"\nselftest: {ok} passed, {fail} failed")
+    return 1 if fail else 0
+
+
+def vol_per_atom_table(entries):
+    """reduced_formula -> volume per atom (Å^3) from the lowest-energy entry."""
+    best = {}
+    vpa = {}
+    for e in entries:
+        rf = e.composition.reduced_formula
+        epa = e.energy_per_atom
+        if rf not in best or epa < best[rf]:
+            best[rf] = epa
+            try:
+                vpa[rf] = float(e.structure.volume) / e.composition.num_atoms
+            except Exception:
+                pass
+    return vpa
+
+
+def esw_window_edges(steps):
+    """`steps` → 안정창의 두 가장자리. **이 파일과 `esw_cascade_batch.py` 가 공유한다.**
+
+    `steps` = [{"V": float, "evo": float}, …]  (`evo` = 부호 있는 Li 교환량)
+    → `{"reduction_limit_V", "oxidation_limit_V", "window_V",
+        "first_reduction_plateau_V", "n_neutral_steps", "neutral_V", "note"}`
+
+    ⛔⛔ **2026-09-22 정정 — 종전 판은 환원 가장자리를 한 계단 아래로 잡았다.**
+      옛 코드는 두 도구가 똑같이 `red = max(V | evo > 0)` 을 썼다. 그건 **Li 을 아직
+      흡수하는 단계 중 가장 높은 전압**이지 안정창의 가장자리가 아니다.
+      `evo == 0` 행(= Li 교환이 없는 구간) 이 필터에서 통째로 빠졌다.
+      실측(comp1): 1.242 V 에서 아직 **Li 5 개를 흡수**하고(`+5Li → 5Li₂S+LiCl+P`),
+      교환 0 은 **1.717 V** 다 ⇒ 창은 **1.717–2.256 = 0.539 V** 이지 1.014 V 가 아니다.
+      cascade 356 행 전수 재유도에서 **0 행을 빼고 전부 넓었다**(중앙 +0.475 · 최대 +0.676 V).
+      게다가 어긋남이 **계마다 다르다**(할라이드 Na 7 종 실측 0.11–1.10 V) ⇒ **순위도 흔든다.**
+
+    ⭐ 문헌 관례가 이쪽이다 — `[Schw21]` *"the decomposition potential **closest to the
+      stable solid electrolyte phase**"* · `[Sjolin23]` *"hull 위에 머무는 μ 구간"* ·
+      `[Jang26Na]` 은 아예 그림 축을 `Na uptake` 로 놓아 **교환 0 구간**을 눈에 보이게 한다.
+      우리 1.717 은 `[Zhu15]`·`[Schw21]` 의 1.72 와 **0.003 V** 차다.
+
+    ⛔ **이 함수가 못 하는 것**: 교환-0 행이 **둘 이상**일 때 그 구간들이 이어져 있는지
+      모른다. `steps` 만으로는 구간 연결성을 확정할 수 없어서, 그럴 때는 가장 낮은 것을
+      쓰되 `note` 에 **몇 개였는지 적고 경고**한다. 판단은 사람이 한다 — 조용히 고르지 않는다.
+    """
+    s = sorted(steps, key=lambda x: float(x["V"]))
+    EPS = 1e-6
+    pos = [x for x in s if float(x["evo"]) > EPS]     # Li 흡수 (환원)
+    neg = [x for x in s if float(x["evo"]) < -EPS]    # Li 방출 (산화)
+    neu = [x for x in s if abs(float(x["evo"])) <= EPS]
+    red = min((float(x["V"]) for x in neu), default=None)   # ← 가장자리는 **교환 0** 의 최저
+    ox = min((float(x["V"]) for x in neg), default=None)
+    out = {
+        "reduction_limit_V": red,
+        "oxidation_limit_V": ox,
+        "window_V": (round(ox - red, 3) if (ox is not None and red is not None) else None),
+        # 옛 `reduction_limit_V` 가 담던 값 — **이름을 사실대로 바꿔 남긴다**(이력 보존)
+        "first_reduction_plateau_V": max((float(x["V"]) for x in pos), default=None),
+        "n_neutral_steps": len(neu),
+        "neutral_V": [float(x["V"]) for x in neu],
+        "note": None,
+    }
+    if not neu:
+        out["note"] = ("교환 0 인 단계가 **없다** — 이 계는 모든 전압에서 Li 을 주고받는다. "
+                       "안정창을 정의할 수 없다(`reduction_limit_V = None`).")
+    elif len(neu) > 1:
+        out["note"] = (f"교환 0 단계가 **{len(neu)} 개**다 ({out['neutral_V']}). "
+                       "가장 낮은 것을 가장자리로 썼지만, 그 구간들이 **이어져 있는지 "
+                       "이 함수는 모른다.** 사람이 `steps` 를 열어 확인해야 한다.")
+    return out
+
+
+def onset_reactions(pd, comp, mu_Li_ref):
+    """K_eff=0: return (red_limit_V, red_rxn, ox_limit_V, ox_rxn, full_steps)."""
+    from pymatgen.core import Element
+    Li = Element("Li")
+    profile = pd.get_element_profile(Li, comp)
+    steps = []
+    for p in profile:
+        steps.append({"V": round(mu_Li_ref - float(p["chempot"]), 3),
+                      "evo": round(float(p["evolution"]), 4),
+                      "rxn": p["reaction"]})
+    # ⛔ 2026-09-22 정정: 종전 판은 `red = max(V | evo > 0)` 이었다 — Li 을 **아직 흡수하는**
+    #   단계 중 최고 전압이라 안정창의 가장자리가 아니다. 가장자리는 **교환 0** 의 최저 V 다.
+    #   판정은 `esw_window_edges()` 한 곳에서만 한다 (두 도구가 갈라지지 못하게).
+    s = sorted(steps, key=lambda x: x["V"])
+    edges = esw_window_edges(s)
+    red = next((x for x in s if x["V"] == edges["reduction_limit_V"]), None)
+    ox = next((x for x in s if x["V"] == edges["oxidation_limit_V"]), None)
+    for r in (red, ox):
+        if r is not None:
+            r["edges"] = edges          # 가장자리 판정 근거를 행에 붙여 둔다
+    return red, ox, steps
+
+
+def reaction_strain(rxn, vpa, v_se):
+    """DeltaV = V_products(solids) - V_SE, n_e = |Li exchanged|. Returns
+    (DeltaV_A3_per_fu, n_e, eps_RXN, product_str, missing[list])."""
+    from pymatgen.core import Composition, Element
+    Li = Composition("Li").reduced_formula
+    vol_prod = 0.0
+    n_Li = 0.0
+    missing = []
+    parts = []
+    for c in rxn.products:
+        coeff = abs(rxn.get_coeff(c))
+        rf = c.reduced_formula
+        if rf == "Li":
+            n_Li += coeff * c.num_atoms
+            continue
+        vpa_i = vpa.get(rf)
+        if vpa_i is None:
+            missing.append(rf); continue
+        v = coeff * c.num_atoms * vpa_i
+        vol_prod += v
+        parts.append(f"{coeff:.3g}{rf}({v:.1f})")
+    # Li may instead be a REACTANT (reduction) -> count it as Li exchanged too
+    for c in rxn.reactants:
+        if c.reduced_formula == "Li":
+            n_Li += abs(rxn.get_coeff(c)) * c.num_atoms
+    dV = vol_prod - v_se
+    eps = dV / v_se if v_se else None
+    return dV, n_Li, eps, " + ".join(parts), missing
+
+
+def augmented_pd_relax(entries, k_eff):
+    """Augmented PhaseDiagram for Fitzhugh re-min: E_i -> E_i + K_eff*V_i for every
+    SOLID phase; Li metal kept UNAUGMENTED (open-element reservoir at the anode).
+    Volume-expanding decompositions are penalised; optimal product set re-selected
+    at each K_eff (reproduces Gil-González Table S1 product-set switching:
+    PCl3/P2S7/SCl at 0 GPa -> SCl4/Li2PS3/S at 20 GPa)."""
+    from pymatgen.analysis.phase_diagram import PhaseDiagram, PDEntry
+    pd_entries = []
+    for e in entries:
+        els = e.composition.elements
+        is_Li_metal = (len(els) == 1 and els[0].symbol == "Li")
+        try:
+            V = float(e.structure.volume)
+        except Exception:
+            V = None
+        if V is None or is_Li_metal:
+            pd_entries.append(PDEntry(e.composition, e.energy))
+        else:
+            pd_entries.append(PDEntry(e.composition, e.energy + k_eff * V * GPA_A3_TO_EV))
+    return PhaseDiagram(pd_entries)
+
+
+def main():
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--audit_edges", action="store_true",
+                    help="상 배제 **포함/배제 두 판**으로 사다리를 뽑아 가장자리를 대조한다 "
+                         "(2026-09-22 산화 한 변 0.246 V 감사). --target 하나만 쓴다.")
+    ap.add_argument("--selftest", action="store_true", help="자체 점검 (음성 경로 포함)")
+    ap.add_argument("--target", nargs="+", required=False)
+    ap.add_argument("--v_se_A3", nargs="+", type=float, required=False)
+    ap.add_argument("--elements", nargs="+", default=["Li", "P", "S", "Cl"])
+    ap.add_argument("--k_eff", nargs="+", type=float, default=[0, 10, 20])
+    ap.add_argument("--mode", choices=["leading", "relax", "hybrid"], default="leading",
+                    help="leading = leading-order edge shift (fast, K_eff=0 onset reused). "
+                         "relax = full Fitzhugh re-min (augmented hull per K_eff; reports the "
+                         "switched product set; absolute edge voltages come from breakpoints "
+                         "which are composition-INVARIANT, so prefer hybrid for the comp1-vs-"
+                         "modelc trend). "
+                         "hybrid = use relax mode to DETECT product-set switching, then apply "
+                         "leading-order phi += K_eff*DeltaV/n_e with the SWITCHED reaction's "
+                         "DeltaV/n_e -- gives both the Gil-González product physics AND the "
+                         "composition-resolved widening.")
+    ap.add_argument("--out", default="constrained_esw_results.json")
+    args = ap.parse_args()
+
+    if args.selftest:
+        return selftest()
+    if args.audit_edges:
+        if not args.target or len(args.target) != 1:
+            ap.error("--audit_edges 는 --target 을 **하나만** 받는다")
+        audit_edges(args.target[0], args.elements, args.out)
+        return 0
+    # ⚠ 감사 모드가 아니면 아래 경로가 두 인자를 **반드시** 쓴다 — 여기서 막는다
+    #   (argparse required 를 풀었으므로 조용히 None 으로 흘러가면 안 된다)
+    if not args.target or not args.v_se_A3:
+        ap.error("--target 과 --v_se_A3 가 필요하다 (또는 --audit_edges / --selftest)")
+
+    from pymatgen.core import Element, Composition
+    from pymatgen.analysis.phase_diagram import PhaseDiagram
+    Li = Element("Li")
+
+    entries = get_entries(args.elements)
+    vpa = vol_per_atom_table(entries)
+    pd = PhaseDiagram(entries)
+    mu_ref = pd.el_refs[Li].energy_per_atom
+    print(f"mu_Li(metal) = {mu_ref:.4f} eV/atom\n")
+
+    results = {}
+    for i, spec in enumerate(args.target):
+        cs, _, lab = spec.partition(":")
+        lab = lab or cs
+        v_se = args.v_se_A3[i]
+        comp = Composition(cs)
+        red, ox, steps = onset_reactions(pd, comp, mu_ref)
+
+        print(f"=== {lab}  ({cs})   V_SE = {v_se:.1f} Å^3/fu ===")
+        ox_info = red_info = None
+        if ox:
+            dV, ne, eps, pstr, miss = reaction_strain(ox["rxn"], vpa, v_se)
+            ox_info = {"phi0_V": ox["V"], "rxn": str(ox["rxn"]),
+                       "DeltaV_A3": round(dV, 1), "n_e": round(ne, 3),
+                       "eps_RXN": round(eps, 4) if eps is not None else None,
+                       "products_vol": pstr, "missing_vol": miss}
+            print(f"  OX  onset {ox['V']:.2f} V | n_e={ne:.2f} | "
+                  f"DeltaV={dV:+.1f} Å^3 | eps_RXN={eps:+.3f} | {ox['rxn']}")
+            if miss: print(f"      [warn] no MP volume for: {miss}")
+        if red:
+            dVr, ner, epsr, pstrr, missr = reaction_strain(red["rxn"], vpa, v_se)
+            red_info = {"phi0_V": red["V"], "rxn": str(red["rxn"]),
+                        "DeltaV_A3": round(dVr, 1), "n_e": round(ner, 3),
+                        "eps_RXN": round(epsr, 4) if epsr is not None else None,
+                        "products_vol": pstrr, "missing_vol": missr}
+            print(f"  RED onset {red['V']:.2f} V | n_e={ner:.2f} | "
+                  f"DeltaV={dVr:+.1f} Å^3 | eps_RXN={epsr:+.3f} | {red['rxn']}")
+
+        # window vs K_eff: leading-order or full Fitzhugh re-min
+        win = {}
+        print(f"  window vs K_eff ({args.mode} mode):")
+        for k in args.k_eff:
+            phi_ox = phi_red = None
+            ox_rxn_k = red_rxn_k = None
+            if args.mode == "leading":
+                if ox_info and ox_info["n_e"]:
+                    phi_ox = ox_info["phi0_V"] + k * ox_info["DeltaV_A3"] * GPA_A3_TO_EV / ox_info["n_e"]
+                    ox_rxn_k = ox_info["rxn"]
+                if red_info and red_info["n_e"]:
+                    phi_red = red_info["phi0_V"] - k * red_info["DeltaV_A3"] * GPA_A3_TO_EV / red_info["n_e"]
+                    red_rxn_k = red_info["rxn"]
+            else:  # relax or hybrid: rebuild augmented hull at each K_eff
+                if k == 0:
+                    pd_k, mu_k = pd, mu_ref
+                else:
+                    pd_k = augmented_pd_relax(entries, k)
+                    mu_k = pd_k.el_refs[Li].energy_per_atom
+                try:
+                    red_k, ox_k, _ = onset_reactions(pd_k, comp, mu_k)
+                except Exception as e:
+                    print(f"    K={k:>4.0f} GPa: ERROR {type(e).__name__}: {e}")
+                    win[str(k)] = {"error": str(e)}
+                    continue
+                if args.mode == "relax":
+                    # raw breakpoint voltages (composition-INVARIANT, all same)
+                    if ox_k:
+                        phi_ox = ox_k["V"]; ox_rxn_k = str(ox_k["rxn"])
+                    if red_k:
+                        phi_red = red_k["V"]; red_rxn_k = str(red_k["rxn"])
+                else:  # hybrid: leading-order shift using the SWITCHED rxn's DeltaV/n_e
+                    if ox_k and ox_info:
+                        dVx, nex, _, _, _ = reaction_strain(ox_k["rxn"], vpa, v_se)
+                        if nex:
+                            phi_ox = ox_info["phi0_V"] + k * dVx * GPA_A3_TO_EV / nex
+                            ox_rxn_k = f"{str(ox_k['rxn'])} [DeltaV={dVx:+.1f} n_e={nex:.2f}]"
+                    if red_k and red_info:
+                        dVr, ner, _, _, _ = reaction_strain(red_k["rxn"], vpa, v_se)
+                        if ner:
+                            phi_red = red_info["phi0_V"] - k * dVr * GPA_A3_TO_EV / ner
+                            red_rxn_k = f"{str(red_k['rxn'])} [DeltaV={dVr:+.1f} n_e={ner:.2f}]"
+            width = (phi_ox - phi_red) if (phi_ox is not None and phi_red is not None) else None
+            win[str(k)] = {"reduction_V": round(phi_red, 3) if phi_red is not None else None,
+                           "oxidation_V": round(phi_ox, 3) if phi_ox is not None else None,
+                           "width_V": round(width, 3) if width is not None else None,
+                           "oxidation_rxn": ox_rxn_k,
+                           "reduction_rxn": red_rxn_k}
+            print(f"    K={k:>4.0f} GPa: {win[str(k)]['reduction_V']} - "
+                  f"{win[str(k)]['oxidation_V']} V  (width {win[str(k)]['width_V']})")
+            if args.mode in ("relax", "hybrid") and ox_rxn_k:
+                base_rxn = ox_info["rxn"] if ox_info else None
+                switched = (ox_rxn_k.split(" [")[0] != base_rxn) if base_rxn else False
+                if switched:
+                    print(f"      [re-min] anodic rxn switched to: {ox_rxn_k}")
+        print()
+        results[lab] = {"composition": cs, "v_se_A3_per_fu": v_se,
+                        "oxidation_onset_K0": ox_info, "reduction_onset_K0": red_info,
+                        "window_vs_k_eff": win}
+
+    # comp1 vs modelc widening comparison
+    labs = list(results)
+    if len(labs) == 2:
+        a, b = labs
+        print("================ comp1 vs modelc ================")
+        for lab in (a, b):
+            ox = results[lab]["oxidation_onset"]
+            if ox:
+                print(f"  {lab}: oxidation eps_RXN = {ox['eps_RXN']:+.3f} "
+                      f"(DeltaV {ox['DeltaV_A3']:+.1f} Å^3, n_e {ox['n_e']})")
+        print("  -> larger eps_RXN / (DeltaV/n_e) widens MORE under constriction.")
+
+    if args.mode == "leading":
+        method_desc = ("strain-explicit constrained ESW (Fitzhugh leading-order "
+                       "edge shift phi += K_eff*DeltaV/n_e using K_eff=0 onset rxn)")
+    elif args.mode == "hybrid":
+        method_desc = ("Fitzhugh hybrid: augmented hull per K_eff to DETECT product-set "
+                       "switching, then leading-order shift with the SWITCHED rxn's "
+                       "DeltaV/n_e -- gives both product physics and composition-resolved widening")
+    else:
+        method_desc = ("Fitzhugh full re-minimisation (augmented hull E_i += K_eff*V_i "
+                       "for SOLID phases; Li metal unaugmented; raw breakpoint voltages -- "
+                       "composition-INVARIANT, use only for product-set diagnostics)")
+    Path(args.out).write_text(json.dumps({
+        "method": method_desc + ". MP GGA_GGA+U hull; LiS4/SCl3/Li5PS4Cl2 excluded.",
+        "mode": args.mode,
+        "k_eff_GPa": args.k_eff, "results": results,
+    }, indent=2))
+    print(f"→ {args.out}")
+
+
+if __name__ == "__main__":
+    main()

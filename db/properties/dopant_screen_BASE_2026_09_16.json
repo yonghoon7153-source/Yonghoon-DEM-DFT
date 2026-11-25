@@ -1,0 +1,126 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "O"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {},
+  "formation": {
+    "Li3PO4": {
+      "reduced_formula": "Li3PO4",
+      "n_atoms": 16.0,
+      "n_P": 2.0,
+      "E_f_eV_per_atom": -2.7535,
+      "E_f_eV_per_P": -22.02798,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaauhx-GGA",
+      "found": true
+    },
+    "Li4P2O7": {
+      "reduced_formula": "Li4P2O7",
+      "n_atoms": 26.0,
+      "n_P": 4.0,
+      "E_f_eV_per_atom": -2.74386,
+      "E_f_eV_per_P": -17.83507,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabqcg-GGA",
+      "found": true
+    },
+    "LiPO3": {
+      "reduced_formula": "LiPO3",
+      "n_atoms": 60.0,
+      "n_P": 12.0,
+      "E_f_eV_per_atom": -2.70316,
+      "E_f_eV_per_P": -13.51581,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabrex-GGA",
+      "found": true
+    },
+    "LiCl": {
+      "reduced_formula": "LiCl",
+      "n_atoms": 4.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -2.13692,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacpllf-GGA",
+      "found": true
+    },
+    "Li2O": {
+      "reduced_formula": "Li2O",
+      "n_atoms": 3.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -2.0616,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaacxk-GGA",
+      "found": true
+    },
+    "Li2S": {
+      "reduced_formula": "Li2S",
+      "n_atoms": 3.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -1.50377,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaabsj-GGA",
+      "found": true
+    },
+    "P2S7": {
+      "reduced_formula": "P2S7",
+      "n_atoms": 36.0,
+      "n_P": 8.0,
+      "E_f_eV_per_atom": -0.51201,
+      "E_f_eV_per_P": -2.30406,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacqhbm-GGA",
+      "found": true
+    }
+  },
+  "formation_per_element": "P",
+  "⛔_formation_caveat": "이 표는 **반응에너지가 아니다.** `E_f_per_P` 는 O:P 비가 다른 상들을 한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — **순위 힌트**다. 판정은 균형반응(`reactions`)이 한다. 0 K · MP2020 보정 에너지이고 온도·엔트로피·pO₂ 를 안 본다. 여기 상들이 실제로 합성/석출된다는 뜻도 아니다.",
+  "reactions": {
+    "Li3PO4,Li2O > LiPO3,Li2O": {
+      "ok": true,
+      "reaction": "0.3333 Li3PO4 + 0.6667 Li2O -> 0.3333 LiPO3 + Li2O",
+      "E_eV_as_written": 0.77579,
+      "E_eV_per_reactant_atom": 0.16624,
+      "E_eV_per_P": 2.32738,
+      "n_P_reactant_side": 0.3333,
+      "entry_ids": {
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "Li2O": "mp-aaaaacxk-GGA",
+        "LiPO3": "mp-aaaabrex-GGA"
+      }
+    },
+    "LiCl,Li3PO4 > LiPO3,LiCl": {
+      "ok": true,
+      "reaction": "LiCl -> LiCl",
+      "E_eV_as_written": 0.0,
+      "E_eV_per_reactant_atom": 0.0,
+      "E_eV_per_P": null,
+      "n_P_reactant_side": 0.0,
+      "entry_ids": {
+        "LiCl": "mp-aaacpllf-GGA",
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "LiPO3": "mp-aaaabrex-GGA"
+      }
+    }
+  },
+  "⛔_reaction_caveat": "반응물·생성물 집합은 **사람이 고른 것**이다 — hull 이 고른 게 아니다. hull 이 고르는 판정은 interface_reactivity_v2.py 쪽이다. 반응이 **일어나는지**(운동학·경로)는 말하지 않는다."
+}

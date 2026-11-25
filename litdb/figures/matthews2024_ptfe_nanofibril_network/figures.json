@@ -1,0 +1,191 @@
+{
+ "slug": "matthews2024_ptfe_nanofibril_network",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-04",
+ "sources": [
+  "18480bfb-fenrg111336344.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Schematic of the three main steps involved in the PTFE-fibrillation process to make dry LiB electrodes. The active material and the PTFE are represented in grey and green respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    574.6,
+    510.7,
+    728.3
+   ],
+   "w": 1898,
+   "h": 641,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Typical microstructures of (A) NMC + 1 wt.% PTFE solvent-free electrode, and (C) NMC + 2 wt.% PVDF + 2 wt.% C65 slurry cast electrode. Respective EDX maps (B, D) showing the distribution of the active material (Ni and O signals in blue) and PTFE and PVDF binders (F and C signals in green).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    88.3,
+    540.9,
+    384.4
+   ],
+   "w": 2023,
+   "h": 1235,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.416
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Typical microstructures of (A, B) NMC + 1 wt.% PTFE solvent-free electrode, and (C–D) NMC + 2 wt.% PVDF + 2 wt.% C65 slurry cast electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    450.2,
+    522.5,
+    742.3
+   ],
+   "w": 1946,
+   "h": 1218,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.388
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 (A) Schematic showing the three stages of formation of primary and secondary fibrils during compression and shear mixing of NMC and PTFE. (B) Micrograph showing the formation of a primary fibril with a large PTFE particle being flattened and anchored to the surface of a NMC particle (indicated by the arrow) and drawn out into a large primary fibril composed of a bundle of smaller PTFE strands (inset). (C) Micrograph showing the formation of secondary fibrils. Two smaller NMC particles have drawn out smaller bundles of PTFE strands from a primary fibril to form secondary fibrils (indicated by the arrows).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    88.3,
+    547.4,
+    396.6
+   ],
+   "w": 2050,
+   "h": 1286,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 First charge and discharge curves at C/20 of solvent-free and slurry cast NMC-based electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.2,
+    499.0,
+    539.7,
+    678.6
+   ],
+   "w": 953,
+   "h": 749,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Typical microstructure of (A) cycled solvent-free NMC-based electrode containing 1 wt.% PTFE and 3.5 wt.% CNF and (B) cycled slurry cast electrode composed of 2 wt.% PVDF and 2 wt.% C65 (30 charge-discharge cycles at rates between 0.1C and 2C). The green and orange arrows in (A) indicate typical PTFE fibrils and CNFs, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    88.3,
+    540.7,
+    238.1
+   ],
+   "w": 2023,
+   "h": 626,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.424
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 (A) Discharge capacity of solvent-free and slurry cast cathodes at different C-rates in half-cell configuration (against Li metal). (B) Discharge capacity (left) and coulombic efficiency (right) of solvent-free and slurry cast cathodes at C/3 in full-cell configuration (against LTO).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    323.5,
+    540.0,
+    509.9
+   ],
+   "w": 2020,
+   "h": 778,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 (A) Nyquist plot of solvent-free and slurry cast NMC-based electrodes (in the discharged state) in a 3 electrode arrangement with inset equivalent circuit used for best-fit modelling. (B) Spectroscopic capacitance plot of the same data and best-fit to the data from the equivalent circuit in (A).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    88.3,
+    529.1,
+    266.9
+   ],
+   "w": 1974,
+   "h": 746,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 Resistances obtained from an equivalent circuit analysis and corresponding to the best-fit curves shown in Figure 8A. Cathode Rcont [Ω] RCT [Ω] Rion [Ω] Solvent-free 36 (1) 18 (1) 50 (4) Slurry cast 24.6 (7) 20.9 (9) 114 (28)",
+   "rotated_deg": 0,
+   "bbox": [
+    43.4,
+    333.3,
+    296.5,
+    419.8
+   ],
+   "w": 1056,
+   "h": 362,
+   "dpi": 300,
+   "src": "18480bfb-fenrg111336344.pdf",
+   "blank": 0.712
+  }
+ ]
+}

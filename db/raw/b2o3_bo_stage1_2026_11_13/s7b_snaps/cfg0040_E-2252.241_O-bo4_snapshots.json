@@ -1,0 +1,42 @@
+{
+ "kind": "b2o3_bo_pilot_snapshots/v1",
+ "inputs": {
+  "screen_verdict": {
+   "path": "../s6_verdict.json",
+   "sha256": "6889935781b9390e5297dac28db635cf1f9fbf9d3eb73ae332b0a68e4e0dc587"
+  },
+  "pilot_results": {
+   "path": "../s7a_pilot/anneal_results.json",
+   "sha256": "6e24e9bffdd55d765509c9fff8226b3cda3bc0972c519c64ec449db6476634a7"
+  }
+ },
+ "pilot_name": "cfg0040_E-2252.241_O-bo4",
+ "pilot_identity_sha": "187fea725e04d809da3fb40bb0393712d3f80cdab48607c92388939ec2b92574",
+ "traj": {
+  "rel": "cfg0040_E-2252.241_O-bo4/md.traj",
+  "sha256": "f15d1b19766559751ffd65015c2725365b9e2ad7cc308016b18ac18f199026eb",
+  "dt_fs": 2.0,
+  "log_every_steps": 500,
+  "n_frames": 101
+ },
+ "snapshots": {
+  "20": {
+   "frame": 20,
+   "time_ps": 20.0,
+   "file": "cfg0040_E-2252.241_O-bo4_t020.xyz",
+   "sha256": "e10df8cc906db49e011d007099a9ecc21a57c5111c3f68c33be261c6fa707845"
+  },
+  "50": {
+   "frame": 50,
+   "time_ps": 50.0,
+   "file": "cfg0040_E-2252.241_O-bo4_t050.xyz",
+   "sha256": "c0a82d866c7c330cff5bad7b3079b838ed022c86c16ddd47b75b830a69888d19"
+  },
+  "100": {
+   "frame": 100,
+   "time_ps": 100.0,
+   "file": "cfg0040_E-2252.241_O-bo4_t100.xyz",
+   "sha256": "e22c8c37de228a4cdefc2cd62d0954dafef57b7c7b0d07e8a3a9c9a3e29efe3c"
+  }
+ }
+}

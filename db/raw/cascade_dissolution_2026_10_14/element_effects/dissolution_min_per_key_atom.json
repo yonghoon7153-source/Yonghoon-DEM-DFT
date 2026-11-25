@@ -1,0 +1,204 @@
+{
+ "label": "dissolution_min_per_key_atom",
+ "better": "low",
+ "demo_note": "label from db/raw/cascade_dissolution_2026_10_14/result/label_dissolution_min_per_key_atom.csv",
+ "gate": {
+  "n_precursors": 82,
+  "anion_family_R2": 0.187238329989601,
+  "family_means": {
+   "Br": 1.3936116799999998,
+   "Cl": 1.3544437249999999,
+   "F": 3.3892418099999992,
+   "I": 1.64822765,
+   "O": 0.06572170810810812,
+   "S": 1.8855073
+  }
+ },
+ "additive_rmse": 2.234625848304564,
+ "prediction": {
+  "n": 82,
+  "n_features": 12,
+  "features": [
+   "z_cat",
+   "r_cat",
+   "z_over_r",
+   "en_cat",
+   "period_cat",
+   "z_an",
+   "r_an",
+   "en_an",
+   "d_en",
+   "cat_per_an",
+   "atoms_per_fu",
+   "host_anion"
+  ],
+  "leave_one_cation_out": {
+   "Q2": 0.16737522653719272,
+   "spearman": 0.46162971669877345,
+   "enrichment_top10": 2.0,
+   "perm_p": 0.005,
+   "perm_null_Q2_mean": -0.04939561215589414
+  },
+  "leave_one_anion_family_out": {
+   "Q2": -0.8157612983232068,
+   "spearman": -0.04245709123757904
+  },
+  "random_5fold": {
+   "Q2": 0.1885167447074685,
+   "spearman": 0.5038147168620281
+  },
+  "ridge_lambda_full": 0.03162277660168379,
+  "standardized_coef": {
+   "z_cat": -2.119686462478171,
+   "r_cat": -1.5367824910034895,
+   "z_over_r": 0.24652874383336687,
+   "en_cat": -2.428820478057502,
+   "period_cat": 0.5652255925255538,
+   "z_an": -3.7426686452432594,
+   "r_an": -7.3081601482871505,
+   "en_an": -5.017125276614886,
+   "d_en": -1.896853695057986,
+   "cat_per_an": -0.7222194314849489,
+   "atoms_per_fu": -0.4802489785924525,
+   "host_anion": -0.2106517511651349
+  }
+ },
+ "anion_effects": {
+  "Br": {
+   "effect": -1.0570827626334047,
+   "band_5_95": null
+  },
+  "Cl": {
+   "effect": 0.47738140871772355,
+   "band_5_95": null
+  },
+  "F": {
+   "effect": 1.8471706985319718,
+   "band_5_95": null
+  },
+  "I": {
+   "effect": -1.1483925843387144,
+   "band_5_95": null
+  },
+  "O": {
+   "effect": -0.5638409081576374,
+   "band_5_95": null
+  },
+  "S": {
+   "effect": 0.4447641478800612,
+   "band_5_95": null
+  }
+ },
+ "cation_effects_multi_family": {
+  "Al": {
+   "effect": 0.2031585094210835,
+   "n_families": 6,
+   "band_5_95": null
+  },
+  "Ba": {
+   "effect": 0.9949508258077032,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Ca": {
+   "effect": 1.2993655592200097,
+   "n_families": 5,
+   "band_5_95": null
+  },
+  "Cr": {
+   "effect": -1.6611444547130685,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Fe": {
+   "effect": -1.5926646741922903,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Ga": {
+   "effect": 0.2597131932743677,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Ge": {
+   "effect": 0.7757999562265426,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Hf": {
+   "effect": 1.535920325807705,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "La": {
+   "effect": -0.3633769902762774,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Li": {
+   "effect": 6.115801465237196,
+   "n_families": 4,
+   "band_5_95": null
+  },
+  "Mg": {
+   "effect": 1.3176067427544134,
+   "n_families": 6,
+   "band_5_95": null
+  },
+  "Na": {
+   "effect": 0.7997945242931779,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Nd": {
+   "effect": 0.1635913430570707,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Sb": {
+   "effect": -0.8871815437734608,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sc": {
+   "effect": 0.5210290097237235,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Si": {
+   "effect": 1.788838456226535,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sm": {
+   "effect": 0.0661478258077099,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sn": {
+   "effect": 1.4913909562265277,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Sr": {
+   "effect": 0.9999848258077023,
+   "n_families": 2,
+   "band_5_95": null
+  },
+  "Ti": {
+   "effect": -0.7720817569429314,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Y": {
+   "effect": 0.18042767639039564,
+   "n_families": 3,
+   "band_5_95": null
+  },
+  "Zr": {
+   "effect": -0.12010968302691526,
+   "n_families": 4,
+   "band_5_95": null
+  }
+ }
+}

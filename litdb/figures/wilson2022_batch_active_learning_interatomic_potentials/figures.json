@@ -1,0 +1,272 @@
+{
+ "slug": "wilson2022_batch_active_learning_interatomic_potentials",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+  "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of the flow diagram of our batch active learning method.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.6,
+    49.8,
+    525.8,
+    210.1
+   ],
+   "w": 1902,
+   "h": 669,
+   "dpi": 300,
+   "src": "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.604
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Root mean square error (RMSE) of the potential energy based on (a) active learning potential and (b) random sampling potential as a function of the number of batches for 𝑁𝑆different starting conditions (𝑁𝑆= 10). ‘‘All Data’’ includes all 13,006 structures in the pool of candidate structures. ‘‘Training Data’’ are the labeled structures (𝑁𝐵*𝑁𝑆𝐵 structures for batch number 𝑁𝐵). ‘‘Un-sampled Data’’ are the unlabeled structures (13,006-𝑁𝐵*𝑁𝑆𝐵structures for batch number 𝑁𝐵). The ratio of training to un-sampled data depends on the batch number.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    187.8
+   ],
+   "w": 2218,
+   "h": 576,
+   "dpi": 300,
+   "src": "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Distance between the coefficients from the active learning models and the coefficients of the model trained on all the data as a function of the number of batches for 𝑁𝑆different starting conditions (𝑁𝑆= 10). (b) Distance between the coefficients from the random sampling models and the coefficients of the model trained on all the data as a function of the number of batches for 𝑁𝑆different starting conditions. (c) One of the 121 model coefficients from the active learning model as a function of the number of batches for 𝑁𝑆different starting conditions. (d) One of the 121 model coefficients of the random sampling model as a function of the number of batches for 𝑁𝑆different starting conditions. Each color in (a), (b), (c), and (d) represents a different starting condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    235.8,
+    563.7,
+    523.5
+   ],
+   "w": 2218,
+   "h": 1200,
+   "dpi": 300,
+   "src": "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Root mean square error (RMSE) of the atomic forces predicted by active learning and random sampling as a function of the number of sampled structures. The shaded region indicates the standard deviation based on 𝑁𝑆different starting conditions (𝑁𝑆= 10). (b), (c) Comparison between the forces from DFT calculations and the predicted forces from the potential trained on (b) 1,000 actively-sampled structures and (c) 1,000 randomly-sampled structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    171.2
+   ],
+   "w": 2218,
+   "h": 507,
+   "dpi": 300,
+   "src": "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a), (b) Phonon dispersion predicted by the potential trained on (a) 1,000 and (b) 3,000 actively sampled structures. (c), (d) Phonon dispersion predicted by the potential trained on (c) 1,000 and (d) 3,000 randomly sampled structures. The shaded blue region indicates the standard deviation from 𝑁𝑆different starting conditions (𝑁𝑆= 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    210.7,
+    563.7,
+    489.6
+   ],
+   "w": 2218,
+   "h": 1163,
+   "dpi": 300,
+   "src": "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Temperature dependent potential energy for monolayer GeSe from MD simulation under 𝑁𝑃𝑇ensemble using the active learning potential. (b) Temperature dependent lattice constant in the 𝑥and 𝑦direction for monolayer GeSe from MD simulation under 𝑁𝑃𝑇ensemble. The shaded region indicates the standard deviation obtained from MD simulation. (c), (d), (e) Small section of monolayer GeSe at 0 K, 250 K, and 450 K, respectively. Full atomistic structures can be found in Supplementary Material.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    316.9
+   ],
+   "w": 2218,
+   "h": 1114,
+   "dpi": 300,
+   "src": "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Total 121 coefficients of the model from active learning as function of the number of batches for NS =10 different starting conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.5,
+    139.4,
+    536.7,
+    681.3
+   ],
+   "w": 1994,
+   "h": 2259,
+   "dpi": 300,
+   "src": "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Total 121 coefficients of the model from random sampling as function of the number of batches for NS =10 different starting conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.5,
+    130.4,
+    536.8,
+    690.3
+   ],
+   "w": 1994,
+   "h": 2334,
+   "dpi": 300,
+   "src": "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Atomistic structure of GeSe monolayer in a 20 × 20 supercell at 0K.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.8,
+    189.7,
+    513.4,
+    631.0
+   ],
+   "w": 1800,
+   "h": 1840,
+   "dpi": 300,
+   "src": "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.482
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: A snapshot of the atomstic structure of GeSe monolayer in a 20 × 20 supercell at 50K.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.8,
+    182.2,
+    513.5,
+    638.5
+   ],
+   "w": 1800,
+   "h": 1902,
+   "dpi": 300,
+   "src": "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.477
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: A snapshot of the atomstic structure of GeSe monolayer in a 20 × 20 supercell at 250K .",
+   "rotated_deg": 0,
+   "bbox": [
+    81.8,
+    181.2,
+    513.5,
+    639.5
+   ],
+   "w": 1800,
+   "h": 1910,
+   "dpi": 300,
+   "src": "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.474
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: A snapshot of the atomstic structure of GeSe monolayer in a 20 × 20 supercell at 450K.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.8,
+    198.6,
+    513.5,
+    622.1
+   ],
+   "w": 1800,
+   "h": 1766,
+   "dpi": 300,
+   "src": "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.44
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Parameters for the machine learning interatomic potential. Parameters #1 #2 #3 #4 #5 #6 #7 #8 𝜂2 (Å) 1.0 1.329 1.766 2.347 3.120 4.146 5.510 7.333 −1) 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 𝜂3 (Å) 1 1.766 3.120 5.510 – – – – 𝑓(cos(𝜃𝑗𝑖𝑘)) cos3(𝜃𝑗𝑖𝑘) cos2(𝜃𝑗𝑖𝑘) −4 cos4(𝜃𝑗𝑖𝑘) 1 −4 3 cos2(𝜃𝑗𝑖𝑘) – – – – – 𝜅(Å",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.2
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
+   "blank": 0.867
+  }
+ ]
+}

@@ -1,0 +1,106 @@
+{
+ "slug": "park2026_thiolene_sbr_binder_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/13. Multi-Faceted Binder Enhancement via Slurry-ApplicableThiol-Ene Click Chemistry for Low-Pressure-OperableAll-Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Two synthetic routes toward the SBR binders via the thiol-ene click reaction. a) Reaction mechanisms of grafting and cross-linking via reactions between SBR and thiol-functionalized molecules. b) Schematic illustrating the role of each modiﬁed binder. Conducting carbon additives are omitted in (b) for clarity of visualization.",
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    499.7
+   ],
+   "w": 2118,
+   "h": 1788,
+   "dpi": 300,
+   "src": "13. Multi-Faceted Binder Enhancement via Slurry-ApplicableThiol-Ene Click Chemistry for Low-Pressure-OperableAll-Solid-State Batteries.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Material characterization and electrochemical performances of the electrodes with SBR, g-SBR, and X-SBR. a) FTIR spectra and results of the b) SAICAS and c) peel-oﬀtest results. d) First-cycle charge–discharge voltage proﬁles of NCM||(Li-In) cells at 0.2C, 30 °C, and 0.3 MPa.",
+   "bbox": [
+    42.0,
+    71.0,
+    550.0,
+    466.7
+   ],
+   "w": 2118,
+   "h": 1650,
+   "dpi": 300,
+   "src": "13. Multi-Faceted Binder Enhancement via Slurry-ApplicableThiol-Ene Click Chemistry for Low-Pressure-OperableAll-Solid-State Batteries.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Characterization of SBR and X-SBR (X6, X10, and X14) with diﬀerent cross-linker mass ratios. a) FTIR spectra and the results of the b) swelling, c) tensile, and d) nanoindentation studies.",
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    490.7
+   ],
+   "w": 2118,
+   "h": 1751,
+   "dpi": 300,
+   "src": "13. Multi-Faceted Binder Enhancement via Slurry-ApplicableThiol-Ene Click Chemistry for Low-Pressure-OperableAll-Solid-State Batteries.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Comparative electrochemical characterization of the NCM electrodes with SBR and X10 in NCM||(Li-In) cells at 30 °C and 0.3 MPa. a) First-cycle charge–discharge voltage proﬁles at 0.2C, b) Nyquist plots at various cut-oﬀvoltages during charging, c) rate capabilities, and d) cycling performances at 0.2C.",
+   "bbox": [
+    42.0,
+    71.0,
+    550.0,
+    443.2
+   ],
+   "w": 2118,
+   "h": 1552,
+   "dpi": 300,
+   "src": "13. Multi-Faceted Binder Enhancement via Slurry-ApplicableThiol-Ene Click Chemistry for Low-Pressure-OperableAll-Solid-State Batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. In situ or ex situ characterization of NCM electrodes with SBR or X10 at 0.2C, 30 °C, and 3 MPa. a) Schematic of the OEP measurement set-up and b) ﬁrst-cycle charge–discharge voltage proﬁles of NCM||(LTO) cells with corresponding pressure changes. c) Schematic of the mechanisms corre- sponding to Region 1 in (b). d) First-cycle charge–discharge voltage proﬁles of NCM||(Li-In) cells during in situ XRD measurements. e,f) Corresponding in situ XRD reﬂections showing the evolution of the (101) reﬂection of NCM for X10 (e) and SBR electrodes (f). g) Associated changes in peak position, Δ(2𝜃). h−k) Cross-sectional SEM images of SBR (h,i) and X10 electrodes (j,k) before cycling (h,j) and after charging to 4.4 V (vs Li/Li+) at 100th cycles (i,k). l) Corresponding box plots of each area fraction of the voids, the median and mean values are represented by solid and dotted horizontal line",
+   "bbox": [
+    42.0,
+    70.7,
+    550.1,
+    653.3
+   ],
+   "w": 2118,
+   "h": 2429,
+   "dpi": 300,
+   "src": "13. Multi-Faceted Binder Enhancement via Slurry-ApplicableThiol-Ene Click Chemistry for Low-Pressure-OperableAll-Solid-State Batteries.pdf",
+   "blank": 0.721
+  }
+ ]
+}

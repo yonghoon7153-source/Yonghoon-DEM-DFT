@@ -1,0 +1,8 @@
+"# Slide 10 (right) - structures generated per (cation site, anion site) pair.",,,
+"# Source: cascade_v23_all.csv, all 3,615 generated structures (90 compounds).",,,
+"# ** counts are STRUCTURES, not compounds. ** All nine pairs are populated.",,,
+cation_site,free sulfide,sulfur in the PS₄ corner,halide site,row_total
+Li 24g,1050,810,600,2460
+P 4b (framework),375,270,180,825
+Li 48h,120,105,105,330
+column_total,1545,1185,885,3615

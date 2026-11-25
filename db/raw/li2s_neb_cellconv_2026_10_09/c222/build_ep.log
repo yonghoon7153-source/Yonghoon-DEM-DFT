@@ -1,0 +1,17 @@
+pseudo 디렉터리 /home/kgy/wt_li2scc_1009/db/inputs/li2s_neb_cellconv_2026_10_09/pseudo — 2종  (목록은 --pseudo_list)
+  Li  li_pbe_v1.4.uspp.F.UPF
+  S   s_pbe_v1.4.uspp.F.UPF
+
+⏭  li2s       vacancy 끝점 미이완 — 먼저 `bash tools/sei/run_sei_neb.sh endpoints li2s` 로 li2s/ep_initial · ep_final 을 이완할 것. (강행하려면 --allow_unrelaxed_endpoints · li3p Ea=0 사고 참조)
+
+════════════════════════════════════════════════════════════════════════
+→ /home/kgy/work/runs/li2s_neb_cellconv_1009/c222
+실행:  bash tools/sei/run_sei_neb.sh
+⚠ 돌리기 전에 initial.xyz / final.xyz 를 VESTA 로 열어 **경로가 셀을 가로지르지
+  않는지** 눈으로 볼 것 — 주기 경계를 넘는 홉은 코드가 최소이미지로 폈지만,
+  뛴 Li 가 다른 원자를 관통하는 경로면 중간 이미지가 무너진다.
+⚠ 전하 규약은 상의 electronic_class 로 갈린다 (db/properties/sei_electronic_class.json):
+   · insulator → tot_charge = −1 (V_Li⁻) + jellium. 유한 셀 근사가 남으므로
+     **상 사이 비교**에 쓰고 절대값은 셀 수렴 확인 뒤 인용할 것.
+   · metal     → tot_charge = 0 (중성 공공) · mv smearing. jellium 없음.
+   ⛔ 2026-08-11 이전의 tot_charge=+1 입력은 정공 2개짜리라 **무효**다.

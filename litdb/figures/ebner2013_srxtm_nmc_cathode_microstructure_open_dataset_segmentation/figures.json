@@ -1,0 +1,1151 @@
+{
+ "slug": "ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+  "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Scanning electron micrographs of (a) the NMC particles and (b) a cross-section of an uncompressed porous electrode (5 wt% carbon black and binder) and (c) a close up photograph of the cylindrical porous electrode infused with epoxy used in this experiment. (d) Schematic showing sample configuration for the tomography experiment. The results of each step in the particle identification algorithm: (e) raw 2D tomography image after reconstruction with histogram inset (abscissa: gray-scale value, ordinate: pixel count) illustrating contrast, (f) 2D image after binarization, (g) after application of the labeling algorithm, and (h) 3D visualization of a 111 × 111 × 37 μm region. Particles are randomly colored to assist in visualization. Data shown in (e-h) is from an uncompressed NMC cathode prepared with 5 wt% carbon black and binder. Under high compression (2000 bar), increased numbers of fractured large particles are observed in both the (i) gray-scale and (j) binarized horizontal cross-sections.",
+   "rotated_deg": 0,
+   "bbox": [
+    316.1,
+    76.4,
+    532.2,
+    574.3
+   ],
+   "w": 951,
+   "h": 2125,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.268,
+   "auto_bbox": [
+    297.6,
+    70.4,
+    552.7,
+    580.3
+   ],
+   "recrop": "re-cut by hand (tool crop had 18–20 pt side margins vs 6 pt top/bottom): clip = the embedded raster bbox (xref 37, 1800×4148 px native 600 dpi) rendered at 300 dpi, uniform 6 pt white margin"
+  },
+  {
+   "key": "f1ab",
+   "kind": "figure",
+   "label": "1ab",
+   "page": 2,
+   "file": "fig_1ab.png",
+   "caption": "Fig. 1(a–b) — SEM of a spherical NMC (LiNi1/3Mn1/3Co1/3O2, 3M BC-618K) secondary particle (10 µm bar) and a cross-section of an uncompressed porous electrode with 5 wt% carbon black and binder (50 µm bar) (panels of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    316.1,
+    76.4,
+    532.2,
+    162.9
+   ],
+   "w": 951,
+   "h": 411,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.185,
+   "panel_of": "f1",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → no trim (raster mosaic edges are image content), uniform 6 pt white margin"
+  },
+  {
+   "key": "f1cd",
+   "kind": "figure",
+   "label": "1cd",
+   "page": 2,
+   "file": "fig_1cd.png",
+   "caption": "Fig. 1(c–d) — photograph of the epoxy-infused cylindrical electrode sample (0.7 mm wide; 500 µm bar) and schematic of the TOMCAT set-up (monochromatic X-rays, sample on centering & rotation stage, scintillator screen 5 mm behind, lens, mirror, CCD) (panels of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    316.1,
+    163.2,
+    532.2,
+    250.1
+   ],
+   "w": 951,
+   "h": 413,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.638,
+   "panel_of": "f1",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → no trim (raster mosaic edges are image content), uniform 6 pt white margin"
+  },
+  {
+   "key": "f1eh",
+   "kind": "figure",
+   "label": "1e-h",
+   "page": 2,
+   "file": "fig_1efgh.png",
+   "caption": "Fig. 1(e–h) — particle identification on an uncompressed 5 wt% CB & PVDF cathode: (e) reconstructed grey-scale slice with bimodal histogram inset, (f) binarized, (g) labeled (random colours), (h) 3D view of a 111 × 111 × 37 µm region (panels of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    316.1,
+    250.45,
+    532.2,
+    466.0
+   ],
+   "w": 951,
+   "h": 949,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.21,
+   "panel_of": "f1",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → no trim (raster mosaic edges are image content), uniform 6 pt white margin"
+  },
+  {
+   "key": "f1ij",
+   "kind": "figure",
+   "label": "1ij",
+   "page": 2,
+   "file": "fig_1ij.png",
+   "caption": "Fig. 1(i–j) — fractured large NMC particles (arrows) after 2000 bar compression in (i) grey-scale and (j) binarized horizontal cross-sections (panels of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    316.1,
+    466.3,
+    532.2,
+    574.3
+   ],
+   "w": 951,
+   "h": 501,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.358,
+   "panel_of": "f1",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → no trim (raster mosaic edges are image content), uniform 6 pt white margin"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Comparison of the PSD obtained from the labeled tomography data of the assembled porous electrodes and the PSD of the NMC particles obtained experimentally from laser diffraction shows good agreement. (b) PSD and porosity as functions of distance from the current collector of a compressed sample indicate that smaller particles preferentially pack next to boundaries. Dashed black curves indicate a linear diameter–distance relation of the PSD in the boundary regions. Horizontal electrode cross-sections (c) from the vicinity of the current collector (blue) and electrode bulk (purple), corresponding to the dotted lines in b, visualize the difference in particle population and porosity. Vertical gray-scale and labeled (randomly colored) cross-sections are also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.2,
+    76.5,
+    476.3,
+    415.7
+   ],
+   "w": 1541,
+   "h": 1464,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.544,
+   "auto_bbox": [
+    42.2,
+    70.5,
+    552.2,
+    421.7
+   ],
+   "recrop": "re-cut by hand: the tool box spanned the full page width (uneven ~22/35 % side margins); clip = embedded raster bbox (xref 51, native 600 dpi) rendered at 300 dpi → ink trim → uniform 6 pt white margin"
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 4,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — volume-weighted density distribution q3 vs particle diameter (log axis 1–100 µm): labeled tomography particles (equivalent spherical diameter, blue circles) vs laser diffraction of the NMC powder (purple squares) (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    116.2,
+    76.5,
+    285.9,
+    250.6
+   ],
+   "w": 758,
+   "h": 755,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.765,
+   "panel_of": "f2",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → ink trim → uniform 6 pt white margin"
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 4,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — spatially resolved PSD (2 µm bins in z; colour = count) and in-plane averaged porosity vs distance from the current collector z (0–72 µm) of one compressed electrode; dashed curves = linear diameter–distance relation near the boundaries; dotted lines = slices shown in (c) (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    76.5,
+    476.3,
+    250.6
+   ],
+   "w": 791,
+   "h": 776,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.665,
+   "panel_of": "f2",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → ink trim → uniform 6 pt white margin"
+  },
+  {
+   "key": "f2c",
+   "kind": "figure",
+   "label": "2c",
+   "page": 4,
+   "file": "fig_2c.png",
+   "caption": "Fig. 2(c) — horizontal cross-sections near the current collector (blue) and in the electrode bulk (purple), plus vertical grey-scale and labeled cross-sections; 50 µm bars (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    116.2,
+    257.5,
+    476.3,
+    415.7
+   ],
+   "w": 1524,
+   "h": 710,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.364,
+   "panel_of": "f2",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → ink trim → uniform 6 pt white margin"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Influence of compression and carbon black and binder content on (a) electrode porosity and (b) discharge rate capacity in CC (blue squares) and CCCV (purple diamonds) mode as a function of discharge rate. Electrochemical data from 4 electrodes with 2 and 5 wt% CB & PVDF content and 0 bar and 2000 bar compression are displayed with insets depicting cell potential (2.4–4.4 V) as a function of state of charge (SOC, 0–100%) for increasing discharge rates (top to bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    76.5,
+    291.6,
+    418.3
+   ],
+   "w": 1051,
+   "h": 1474,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.808,
+   "auto_bbox": [
+    45.1,
+    70.5,
+    300.0,
+    424.3
+   ],
+   "recrop": "re-cut by hand for uniform margins: clip = embedded raster bbox (xref 63, native 600 dpi) rendered at 300 dpi → ink trim → uniform 6 pt white margin"
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 5,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — porosity ε (Eq. 1) vs compression (0, 300, 600, 2000 bar) for 2/3/4/5 wt% CB & PVDF (left) and the same data vs CB & PVDF content for each compression (right) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    76.5,
+    291.6,
+    197.0
+   ],
+   "w": 1028,
+   "h": 552,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.882,
+   "panel_of": "f3",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → ink trim → uniform 6 pt white margin"
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 5,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — discharge capacity (mAh g⁻¹, left axis; %, right axis) vs discharge rate C/20–5C in CC (blue squares) and CCCV (purple diamonds) for 5 / 2 wt% CB & PVDF at 0 / 2000 bar, insets = potential 2.4–4.4 V vs SOC (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    202.0,
+    291.6,
+    418.3
+   ],
+   "w": 1028,
+   "h": 950,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.764,
+   "panel_of": "f3",
+   "manual_crop": "panel crop by hand: page clip inside the embedded raster rendered at 300 dpi (Fig. 1 rows split at the native-raster intensity steps y ≈ 722 / 1449 / 3248 px; Fig. 2 and 3 split at white gap rows/columns of the native raster) → ink trim → uniform 6 pt white margin"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Full (2048x2048 pixel) gray-scale image of sample cross-section with the region (889x889 pixel) of processed data indicated. (Labels inside the raster: '757x757um' full slice, '329x329um' processed region.)",
+   "rotated_deg": 0,
+   "bbox": [
+    177.3,
+    468.4,
+    418.0,
+    709.1
+   ],
+   "w": 1054,
+   "h": 1054,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.093,
+   "auto_bbox": [
+    64.8,
+    407.3,
+    533.4,
+    696.3
+   ],
+   "recrop": "re-cut by hand: the tool crop swallowed a (red-highlighted) body-text line above and cut off the '757x757um' label at the bottom; clip = embedded raster bbox (xref 75, 502×502 px, 150 dpi native) rendered at 300 dpi, uniform 6 pt margin"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Cycles and typical rates. (Cycles 1–2 C/20 = 8 mA/g · 3–5 C/10 = 16 · 6–8 C/5 = 32 · 9–11 C/2 = 80 · 12–16 1C = 160 · 17–21 2C = 320 · 22–26 5C = 800 · 27–28 C/20 = 8 mA/g.)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    80.0,
+    400.0,
+    222.5
+   ],
+   "w": 1343,
+   "h": 628,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.958,
+   "manual_crop": "table cut by hand (the tool reports S2/S3 as missing figure numbers — they are tables whose caption sits BELOW the table): text table + caption rendered at 300 dpi → ink trim → 6 pt margin"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 8,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Missing cycles from specific electrodes. (NMC_96wt_0bar: 9 · NMC_96wt_300bar: 7, 8, 9 · NMC_96wt_600bar: 7, 8, 9, 10, 11.)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    260.0,
+    400.0,
+    334.0
+   ],
+   "w": 1399,
+   "h": 342,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.918,
+   "manual_crop": "table cut by hand (the tool reports S2/S3 as missing figure numbers — they are tables whose caption sits BELOW the table): text table + caption rendered at 300 dpi → ink trim → 6 pt margin"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Constant current (CC, blue dots) and constant current – constant voltage (CCCV, purple squares) discharge rate performance of all 16 electrodes. Electrodes featuring higher carbon black content (90 wt% NMC) show higher CC capacity at high rates than low CB electrodes (96 wt% NMC). Strong compression (2000 bar) increases the stability of electrodes with low carbon black content.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    355.3,
+    524.0,
+    713.0
+   ],
+   "w": 1939,
+   "h": 1518,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.791,
+   "auto_bbox": [
+    60.1,
+    349.3,
+    533.8,
+    703.9
+   ],
+   "recrop": "re-cut by hand: the tool crop stopped at the caption block top (703.9 pt) and lost the bottom row's 'Discharge rate [C]' labels and the frame; clip = vector union (66.1, 355.3)–(524.0, 713.0) pt (frame bottom ≈711 pt, caption glyphs from ≈715 pt) → ink trim → 6 pt margin"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Consecutive steps of the algorithm: Gray-scale images (a) are binarized (b), defects are removed (c), and the distance transform (d) is applied. The watershed algorithm determines connected regions and region borders (e). After removing borders (f), regions are connected by shared surface area criteria (g) and proximity of region centers (h). Finally, voxels added during defect elimination are removed (i). Regions in (e-i) are randomly colored to aid in visualization.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.9,
+    192.4,
+    524.4,
+    645.9
+   ],
+   "w": 1940,
+   "h": 1941,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.149,
+   "auto_bbox": [
+    64.8,
+    131.6,
+    533.8,
+    633.6
+   ],
+   "recrop": "re-cut by hand: the tool crop swallowed the last caption line of Fig. S4 ('with low carbon black content.') and cut the bottom row (g–i); clip = embedded raster bbox (xref 94, 2102×2102 px) rendered at 300 dpi, 6 pt margin"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. PSD and porosity as functions of distance from current collector of all 16 electrodes. All electrodes show PSD shift towards smaller particle size near the current collector, but only compressed electrodes show a distinct shift near the electrode surface. Porosity (averaged in plane parallel to the current collector) does not show distinct variation with respect to distance from the current collector.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.85,
+    137.24,
+    524.35,
+    579.99
+   ],
+   "w": 1940,
+   "h": 1895,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.713,
+   "auto_bbox": [
+    64.8,
+    104.0,
+    533.4,
+    586.1
+   ],
+   "recrop": "re-cut by hand: the tool crop swallowed the last caption line of Fig. S5 ('to aid in visualization.') and a red tracked-change frame line on the right; clip = black vector frame (70.85, 137.24)–(524.35, 579.99) pt, inside the red frame (70.8–524.9 × 137.3–580.1) → ink trim → 6 pt margin"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Binarized cross-sections from the interior of the electrode are projected towards the current collector, resulting in a two-dimensional porosity map. Only the contribution of active material to porosity is thus considered here. Bright regions correspond to individual large particles (circular) or particle clusters (non-circular), whereas extended dark areas correspond to regions with high porosity and low particle density.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.65,
+    82.05,
+    490.65,
+    548.0
+   ],
+   "w": 1659,
+   "h": 1986,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.304,
+   "auto_bbox": [
+    64.8,
+    29.4,
+    533.4,
+    554.6
+   ],
+   "recrop": "re-cut by hand: the tool crop included the journal header logo ('Submitted to ADVANCED ENERGY MATERIALS') and a red tracked-change frame line at the bottom; clip = (104.65, 82.05)–(490.65, 548.0) pt (red frame bottom 548.6 pt excluded; 0 red pixels left) → ink trim → 6 pt margin"
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 5,
+   "file": "eq_01_porosity_from_nmc_fraction_cb_pvdf_mass.png",
+   "caption": "Eq. (1), PDF p.5 right column (Porosity Calculation): ε = 1 − φ_NMC − φ_NMC · x/(100 − 2x) · (ρ_NMC/ρ_CB + ρ_NMC/ρ_PVDF) — φ_NMC = NMC volume fraction of central sub-volumes of the binarized data; x = wt% of carbon black and of binder (each); ρ_NMC 4.7, ρ_CB 2, ρ_PVDF 1.78 g cm⁻³.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    431.0,
+    551.0,
+    455.0
+   ],
+   "w": 1378,
+   "h": 111,
+   "dpi": 400,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.933,
+   "manual_crop": "equation band cut by hand between the neighbouring text lines (text-layer line boxes) rendered at 400 dpi (tool default 300) → ink trim → uniform 4 pt white margin; equation number included"
+  },
+  {
+   "key": "eS6",
+   "kind": "equation",
+   "label": "eqS6",
+   "page": 6,
+   "file": "eq_S6_join_shared_surface_over_smaller_region.png",
+   "caption": "Eq. (S6), SI p.6 (segmentation step 6, join by surface fraction): A_A∩B · min(A_A, A_B)⁻¹ > th_min — two touching regions are merged if their shared surface over the surface of the smaller region exceeds th_min (fixed 0.25).",
+   "rotated_deg": 0,
+   "bbox": [
+    105.0,
+    268.0,
+    525.0,
+    312.0
+   ],
+   "w": 2306,
+   "h": 166,
+   "dpi": 400,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.976,
+   "manual_crop": "equation band cut by hand between the neighbouring text lines (text-layer line boxes) rendered at 400 dpi (tool default 300) → ink trim → uniform 4 pt white margin; equation number included"
+  },
+  {
+   "key": "eS7",
+   "kind": "equation",
+   "label": "eqS7",
+   "page": 6,
+   "file": "eq_S7_join_shared_surface_over_total_area.png",
+   "caption": "Eq. (S7), SI p.6 (step 6): A_A∩B · (A_A + A_B)⁻¹ > th_sum — merge if the shared surface over the total surface of both regions exceeds th_sum (fixed 0.06).",
+   "rotated_deg": 0,
+   "bbox": [
+    105.0,
+    364.0,
+    525.0,
+    406.0
+   ],
+   "w": 2306,
+   "h": 165,
+   "dpi": 400,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation band cut by hand between the neighbouring text lines (text-layer line boxes) rendered at 400 dpi (tool default 300) → ink trim → uniform 4 pt white margin; equation number included"
+  },
+  {
+   "key": "eS8",
+   "kind": "equation",
+   "label": "eqS8",
+   "page": 6,
+   "file": "eq_S8_join_by_center_proximity_volume_scaled.png",
+   "caption": "Eq. (S8), SI p.6 (step 7, join by proximity): π^(1/3) · (V_A + V_B)^(−1/3) · ‖c_A − c_B‖ ≤ th_prox — merge regions whose seed centres (ultra-erosion) are closer than th_prox (fixed 0.6) relative to the cube root of their combined volume; 'especially helpful to recover cracked particles'.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.0,
+    628.0,
+    525.0,
+    670.0
+   ],
+   "w": 2289,
+   "h": 167,
+   "dpi": 400,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.972,
+   "manual_crop": "equation band cut by hand between the neighbouring text lines (text-layer line boxes) rendered at 400 dpi (tool default 300) → ink trim → uniform 4 pt white margin; equation number included"
+  },
+  {
+   "key": "eS6_8",
+   "kind": "equation",
+   "label": "eqS6-S8",
+   "page": 6,
+   "file": "eq_S6_S8_region_join_criteria_with_steps.png",
+   "caption": "SI p.6, segmentation steps 6–7 with Eqs. (S6)–(S8) and their symbol definitions (shared surface A_A∩B, region surfaces A_A, A_B, seed centres c_A, c_B from ultra-erosion, volumes V_A, V_B), stacked as printed for pasting.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.0,
+    135.0,
+    531.0,
+    747.0
+   ],
+   "w": 1848,
+   "h": 2559,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.937,
+   "manual_crop": "equation band cut by hand between the neighbouring text lines (text-layer line boxes) rendered at 300 dpi (tool default 300) → ink trim → uniform 4 pt white margin; equation number included"
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract-srxtm-16-cathodes",
+   "page": 1,
+   "file": "txt_p1_abstract_srxtm_volume_16_cathodes_open_data.png",
+   "caption": "PDF p.1 left column (opening paragraph): SRXTM 'statistically significant volume (∼700 × 700 × 70 μm³)'; segmentation validated against laser-diffraction PSD; NMC cathodes with 2–5 wt% carbon black and binder and compressions 0–2000 bar; raw + labeled tomographic data and electrochemical data for 16 cathodes open source [2]; 'approx. 7000-19000 per electrode' particles; particle fracture under high compression.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    196.0,
+    296.0,
+    493.5
+   ],
+   "w": 1043,
+   "h": 1263,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.831,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-computer-generated-microstructures",
+   "page": 1,
+   "file": "txt_p1_computer_generated_microstructures_unquantified.png",
+   "caption": "PDF p.1 left column end → right column top (one paragraph): 'the simulation community … must rely on simplified pictures of porous electrode microstructure or computer generated microstructures that bear an as-of-yet unquantified relationship to real battery microstructures'.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    493.5,
+    296.0,
+    581.5
+   ],
+   "w": 1043,
+   "h": 723,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.838,
+   "parts": [
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 1,
+     "bbox": [
+      49.0,
+      493.5,
+      296.0,
+      581.5
+     ]
+    },
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 1,
+     "bbox": [
+      304.0,
+      196.0,
+      551.0,
+      273.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin; parts stacked top to bottom in reading order (listed in 'parts')"
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-2d-closed-porosity-3d-generated",
+   "page": 1,
+   "file": "txt_p1_2d_closed_porosity_3d_generated_packings.png",
+   "caption": "PDF p.1 right column: 2D models 'are prone to introduce errors, such as the closed porosity for systems near the two dimensional percolation threshold' [10]; 3D geometries 'are most often computer-generated and thus their representation of real porous electrodes is questionable' — monodisperse symmetric spheres (Goldin), collision-algorithm random packing (Wang), compression of spheroid particles with a size distribution (Awarke).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    449.0,
+    551.0,
+    614.5
+   ],
+   "w": 1037,
+   "h": 708,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-tomcat-16-electrodes-scan-time",
+   "page": 2,
+   "file": "txt_p2_srxtm_tomcat_16_electrodes_scan_time.png",
+   "caption": "PDF p.2 left column: SRXTM high photon flux, sub-micrometer resolution of highly absorbing materials; TOMCAT beamline (Swiss Light Source, PSI): 16 NMC-based electrodes with varying carbon black/binder and compression; collection time about 20 min (5 min with the newer camera) per sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    383.5,
+    293.0,
+    548.5
+   ],
+   "w": 1039,
+   "h": 714,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-p3-beamline-voxel",
+   "page": 2,
+   "file": "txt_p2_p3_beamline_28kev_projections_voxel_037um.png",
+   "caption": "PDF p.2 left column end → p.3 left column top (one paragraph): parallel monochromatic 28 keV X-rays ([W/Si]100 multilayer), 20 µm LuAG scintillator, 20× objective, CCD 7.4 µm pixel pitch, 180° rotation with a projection every 0.12°, Fourier/gridding reconstruction on a 60-core cluster, Hamming window + ramp filter, voxel 0.37 × 0.37 × 0.37 µm³.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    592.5,
+    293.0,
+    724.5
+   ],
+   "w": 1039,
+   "h": 996,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.841,
+   "parts": [
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 2,
+     "bbox": [
+      46.0,
+      592.5,
+      293.0,
+      724.5
+     ]
+    },
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 3,
+     "bbox": [
+      49.0,
+      75.5,
+      296.0,
+      174.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin; parts stacked top to bottom in reading order (listed in 'parts')"
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-binarization-phases",
+   "page": 3,
+   "file": "txt_p3_binarization_epoxy_cb_binder_not_separable.png",
+   "caption": "PDF p.3 left column: 2048 × 2048 px 16-bit stacks; tilt corrected; bright = NMC, dark = pores (epoxy-filled), carbon black or binder; bipartite histogram → level-based binarization; epoxy, carbon black and binder cannot be discriminated; SEM shows carbon black fills a large part of the voids.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    174.5,
+    296.0,
+    383.5
+   ],
+   "w": 1039,
+   "h": 897,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-cracks-watershed-spherical",
+   "page": 3,
+   "file": "txt_p3_crack_fill_watershed_spherical_criterion.png",
+   "caption": "PDF p.3 left column (two paragraphs): noise holes and cracks cause over-segmentation → filled by morphological reconstruction, later removed by voxel-wise multiplication so cracked particles can be quantified; distance transform + 3D watershed; regions merged by shared surface and centre proximity using the criterion 'that NMC particles are spherical'.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    383.5,
+    296.0,
+    724.5
+   ],
+   "w": 1044,
+   "h": 1447,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-fracture-psd-validation",
+   "page": 3,
+   "file": "txt_p3_fracture_compressibility_psd_validation.png",
+   "caption": "PDF p.3 right column (two paragraphs): particle fracture (Fig. 1i–j) in electrodes subjected to high compression — 'the packing density of the hard transition metal oxide materials limits the compressibility … When the NMC particles can no longer redistribute under compression, they absorb the force and crack'; impact on electrochemical performance negligible; PSD from equivalent spherical diameters agrees with laser diffraction → 'does not over-count significantly'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    75.5,
+    551.0,
+    339.5
+   ],
+   "w": 1044,
+   "h": 1126,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.838,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x3e",
+   "kind": "text",
+   "label": "p3-spatial-psd-boundaries",
+   "page": 3,
+   "file": "txt_p3_spatial_psd_small_particles_at_boundaries.png",
+   "caption": "PDF p.3 right column: spatially resolved PSD of a compressed electrode, 2 µm resolution normal to the current collector, from particle centres and equivalent diameters; small particles near the current collector and (compressed only) at the top; onset at a distance comparable to the mean particle diameter, linear distance–diameter relation.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    339.5,
+    551.0,
+    636.5
+   ],
+   "w": 1044,
+   "h": 1263,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.836,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x3f",
+   "kind": "text",
+   "label": "p3-p4-porosity-trend-inhomogeneity",
+   "page": 3,
+   "file": "txt_p3_p4_porosity_from_nmc_fraction_trend_inhomogeneity.png",
+   "caption": "PDF p.3 right column end → p.4 left column (one paragraph): porosity from the NMC volume fraction plus CB and PVDF from their mass ratio (Fig. 3a); compression has a stronger influence than CB & PVDF content; porosity maps (Fig. S7); inhomogeneity higher at low CB & PVDF and low compression ('insufficient mixing … particle rearrangement').",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    636.5,
+    551.0,
+    724.5
+   ],
+   "w": 1039,
+   "h": 723,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.843,
+   "parts": [
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 3,
+     "bbox": [
+      304.0,
+      636.5,
+      551.0,
+      724.5
+     ]
+    },
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 4,
+     "bbox": [
+      46.0,
+      515.5,
+      293.0,
+      592.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin; parts stacked top to bottom in reading order (listed in 'parts')"
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-rate-capacity-factor-two",
+   "page": 4,
+   "file": "txt_p4_rate_capacity_5c_porosity_factor_two.png",
+   "caption": "PDF p.4 left column → right column top (one paragraph): Fig. 3b four electrodes; '5 wt% CB exhibit high (> 80% at 5C) CC capacity', 2 wt% '< 80% at 5C'; 'Although compression results in a porosity decrease by a factor of two, high rate CC discharge capacity is virtually unaffected' → limited by electronic rather than ionic conduction.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    592.5,
+    293.0,
+    724.5
+   ],
+   "w": 1043,
+   "h": 769,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.84,
+   "parts": [
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 4,
+     "bbox": [
+      46.0,
+      592.5,
+      293.0,
+      724.5
+     ]
+    },
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 4,
+     "bbox": [
+      301.0,
+      515.5,
+      549.0,
+      559.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin; parts stacked top to bottom in reading order (listed in 'parts')"
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-conclusion-tortuosity-future",
+   "page": 4,
+   "file": "txt_p4_conclusion_tortuosity_left_to_follow_up.png",
+   "caption": "PDF p.4 right column (conclusion): technique, particle fracture, non-uniform local PSD, open data; 'electrode tortuosity can be quantified following the method developed by Vijayaraghavan et al.' (not done here); in situ fracture experiments; anisotropy for non-spherical particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.0,
+    559.5,
+    549.0,
+    724.5
+   ],
+   "w": 1038,
+   "h": 713,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.834,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-materials-electrode-prep",
+   "page": 5,
+   "file": "txt_p5_materials_electrode_preparation.png",
+   "caption": "PDF p.5 left column → right column top: Materials (NMC BC-618K 3M, Super C65 TIMCAL, Kynar 761 Arkema, NMP, LP30, EpoHeat epoxy); SEM Hitachi S-4800 at 2 kV; PSD by HELOS/RODOS laser diffraction; slurries 96:2:2, 94:3:3, 92:4:4, 90:5:5 (NMC:CB:binder), 5 min high-shear mixing, up to 3 h roller bench, cast on 12 µm Al with a 200 µm notch bar, vacuum 80 °C 8 h, 13 mm discs.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    533.5,
+    296.0,
+    724.5
+   ],
+   "w": 1042,
+   "h": 988,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.833,
+   "parts": [
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 5,
+     "bbox": [
+      49.0,
+      533.5,
+      296.0,
+      724.5
+     ]
+    },
+    {
+     "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 5,
+     "bbox": [
+      304.0,
+      75.5,
+      551.0,
+      114.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin; parts stacked top to bottom in reading order (listed in 'parts')"
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-roller-line-load",
+   "page": 5,
+   "file": "txt_p5_compression_roller_line_load_pressures.png",
+   "caption": "PDF p.5 right column: compression at room temperature in 6 cycles of increasing pressure, 80 mm diameter roller, load per unit length 36.3, 72.5 and 241.6 N/mm → 'pressures of approximately 300, 600, and 2000 bar'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    113.5,
+    551.0,
+    161.5
+   ],
+   "w": 1037,
+   "h": 226,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x5c",
+   "kind": "text",
+   "label": "p5-cells-tomo-samples-processing",
+   "page": 5,
+   "file": "txt_p5_cells_electrochem_tomo_samples_processing.png",
+   "caption": "PDF p.5 right column: coin half-cells (Li metal, 1 mm glass fibre separator, 500 µl electrolyte); CC C/20–5C, 2.3–4.3 V, 30 °C, CV 1 h; tomography samples = pieces in 15 mm epoxy molds, 24 h at 55 °C under vacuum, lathe-milled to 0.7 mm-wide cylinders; Mathematica 8 (tilt, binarization, visualization), Matlab 7.14 (segmentation, statistics) on Condor.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    161.5,
+    551.0,
+    370.5
+   ],
+   "w": 1038,
+   "h": 899,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "x5d",
+   "kind": "text",
+   "label": "p5-porosity-calculation",
+   "page": 5,
+   "file": "txt_p5_porosity_calculation_densities.png",
+   "caption": "PDF p.5 right column: Porosity Calculation — 'Central sub-volumes of the binarized datasets were used to calculate the volume fraction of NMC particles φNMC'; ρNMC = 4.7, ρCB = 2, ρPVDF = 1.78 g cm⁻³; x = wt% of carbon black and binder → Eq. 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.0,
+    370.0,
+    551.0,
+    427.5
+   ],
+   "w": 1038,
+   "h": 266,
+   "dpi": 300,
+   "src": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.865,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "s2a",
+   "kind": "text",
+   "label": "si-p2-data-doi-naming",
+   "page": 2,
+   "file": "txt_si_p2_dataset_doi_naming_16_folders.png",
+   "caption": "SI p.2: data DOI 10.5905/ethz-iis-1 (ETH Zurich library, DataCite); 16 folders named NMC_<wtpercent>wt_<compr> with NMC 96/94/92/90 wt% and 0/300/600/2000 bar (e.g. NMC_90wt_0bar = 90:5:5 uncompressed). (The data-availability sentence is red-highlighted in the SI PDF itself.)",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    236.0,
+    529.0,
+    575.0
+   ],
+   "w": 1925,
+   "h": 1429,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.869,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  },
+  {
+   "key": "s2b",
+   "kind": "text",
+   "label": "si-p2-p3-grayscale-binarized-threshold",
+   "page": 2,
+   "file": "txt_si_p2_p3_grayscale_binarized_global_threshold.png",
+   "caption": "SI p.2 → p.3: folder 'grayscale' = 16 bit TIF stack 2048x2048 px, 0.37 µm pixel and slice spacing (cubic voxels), tilt-corrected; folder 'binarized' = 8 bit central 889x889 px; one global threshold for all datasets = arithmetic mean of the expectation values of two normal distributions fitted to the combined histogram; white = particle, black = carbon black, binder or void.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    637.0,
+    529.0,
+    764.0
+   ],
+   "w": 1926,
+   "h": 1753,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.917,
+   "parts": [
+    {
+     "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 2,
+     "bbox": [
+      69.0,
+      637.0,
+      529.0,
+      764.0
+     ]
+    },
+    {
+     "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 3,
+     "bbox": [
+      69.0,
+      80.0,
+      529.0,
+      373.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin; parts stacked top to bottom in reading order (listed in 'parts')"
+  },
+  {
+   "key": "s3",
+   "kind": "text",
+   "label": "si-p3-p4-labeled-objlist",
+   "page": 3,
+   "file": "txt_si_p3_p4_labeled_objlist_columns.png",
+   "caption": "SI p.3 → p.4: folder 'labeled' = 16 bit, each voxel = particle identifier or 0; NMC_<wtpercent>wt_<compr>_objlist.csv columns value (ID), volume (number of voxels), xmin…zmax (bounding box), xCenter…zCenter (centre) with three example rows.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    384.0,
+    529.0,
+    760.0
+   ],
+   "w": 1925,
+   "h": 1868,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.933,
+   "parts": [
+    {
+     "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 3,
+     "bbox": [
+      69.0,
+      384.0,
+      529.0,
+      760.0
+     ]
+    },
+    {
+     "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+     "page": 4,
+     "bbox": [
+      69.0,
+      80.0,
+      529.0,
+      152.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin; parts stacked top to bottom in reading order (listed in 'parts')"
+  },
+  {
+   "key": "s7a",
+   "kind": "text",
+   "label": "si-p7-thresholds",
+   "page": 7,
+   "file": "txt_si_p7_join_thresholds_fixed.png",
+   "caption": "SI p.7: the values th_min, th_sum and th_prox were varied systematically for a compromise between under- and over-segmentation and fixed to 0.25, 0.06 and 0.6 for all datasets.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    163.0,
+    529.0,
+    207.5
+   ],
+   "w": 1923,
+   "h": 195,
+   "dpi": 300,
+   "src": "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "blank": 0.905,
+   "manual_crop": "evidence paragraph cut by hand: band between the text lines just outside the first and last cited line (text-layer line boxes) rendered at 300 dpi → ink trim → uniform 4 pt white margin"
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-16) found Fig. 1–3 (main, 6 pp) and Fig. S1, S4–S7 (SI, 11 pp) — 8 crops, all opened; it flagged S2/S3 as missing numbers: they are Tables S2 and S3 (SI p.8, caption below the table) and were cut by hand (tab_S2, tab_S3).  All 8 tool crops were re-cut (uneven margins for Fig. 1–3; stray caption/body lines in S1, S5, S6; S4 bottom row cut; S7 journal header; red tracked-change frame lines in S6/S7).  Added by hand: 9 panel crops (Fig. 1a–b · 1c–d · 1e–h · 1i–j · 2a · 2b · 2c · 3a · 3b), 2 tables, 5 equation crops (Eq. 1 · S6 · S7 · S8 · the S6–S8 set with steps 6–7) and 20 evidence-paragraph crops (kind 'text').  Every one of the 44 crops was opened after cutting.  Read-outs: digitized.csv (155 rows: Fig. 3a left/right · 3b · 2a · S6 thickness from vector cells · cross-check rows of the citing paper zhang2026 Fig. 4c) (2026-11-16, litdb-curator).",
+ "note_manual": "Printed inconsistencies visible in the crops: text '> 80% at 5C' CC capacity for 5 wt% CB vs Fig. 3b 5C CC ≈ 69–72 % of 160 mAh/g (read; > 80 % holds at 2C); 'porosity decrease by a factor of two' holds for 4–5 wt% CB & PVDF only (×0.53–0.55 read) not for 2–3 wt% (×0.68–0.73); q3 axis labelled µm⁻¹ although both curves integrate to 1 over log10 d; Fig. 3 caption CC = blue squares / CCCV = purple diamonds vs Fig. S4 caption CC = blue dots / CCCV = purple squares (different markers in the two figures); SI equations numbered (S6)–(S8) with no S1–S5 equations; SI says 'The binarized images are generated by applying the segmentation algorithm' in the paragraph on the labeled folder (labeled images meant); 'soruce', 'oft', 'Compresssion', 'Merk', 'ULTRA-DURRAX', 'Ann. Phyisk' (ref 6) typos; the SI PDF carries red highlights and red frames (tracked changes) on the data-availability sentence, the microstructure-analysis paragraph and Figs. S6/S7.",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of); tS<N> = SI table; e<eq> = equation crop (kind 'equation'); x<page><letter> = evidence paragraph from the main PDF, s<page><letter> = from the SI (kind 'text'; x1b · x2b · x3f · x4a · x5a · s2b · s3 stack several column/page parts, listed in 'parts')"
+}

@@ -1,0 +1,490 @@
+{
+ "slug": "cardenasbarrantes2022_soft_spheres_3d_compaction_nscd",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) 3D cross-section of an elastic spherical particle vertically compressed between two walls. The color intensity is proportional to the mean displacement field. (b) Normal contact force applied on a single spherical particle as a function of the deformation for different meshes. The continuous black line is the approximation given by the Hertz's contact law eqn (1).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    395.4,
+    288.1,
+    665.5
+   ],
+   "w": 1008,
+   "h": 1126,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.776,
+   "src_native": [
+    982,
+    1101
+   ],
+   "viewed": true,
+   "mpm_note_ko": "입자 하나를 두 평판 사이에서 누르는 단위 시험 (우리 단위 시험 U1 과 같은 꼴): 4 절점 사면체 444 · 808 · 6685 · 14 688 개 메시의 힘–변위를 Hertz 식 (1) 과 견줘 808 개를 골랐다 (범례는 14668 로 인쇄).  판독: 808 개 메시는 δ/d = 0.01 에서 Hertz 의 약 1.8 배 · 0.02 에서 1.3 배 · 0.03 에서 1.08 배 · 0.04 이상에서 1.03–1.04 배 — 작은 변형 쪽이 덜 수렴한 채 채택됐다 (본문 표현은 'slightly overestimated').  시험 범위가 δ/d ≤ 0.06 (Hertz 영역) 뿐이라 큰 변형에서의 메시 수렴은 보이지 않았다.  가로축 이름은 (δ/d)^(3/2) 이지만 그려진 값은 δ/d 로 읽힌다 (검은 선이 식 (1) 을 δ/d 에 대해 그린 것과 1–2 % 안에서 일치 · 판독).  재설계 MPM 의 '지름당 셀 수' 규칙을 정할 때 같은 형식 (해석해 대조 → 큰 변형까지) 을 쓰되, 소성 SE 는 Hertz 가 아니라 항복 뒤 응답까지 봐야 한다.  808 사면체 ≈ 지름당 요소 변 5.7 개 (정사면체 등가 · 카드 산술).",
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 326.9–666.7) pulled in Eq. (1) and the journal rule above the figure; clip = embedded raster rect (49.4, 398.4, 285.1, 662.5; native 982×1101 px) padded 3 pt; caption excluded; border-ink check 0; opened and checked"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 View of a granular assembly composed of 100 soft spherical particles at (a) the initial configuration and (b) close to φ = 0.96. The color intensity, from blue to red, is related to the mean stresses in the particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    297.9,
+    582.2
+   ],
+   "w": 1090,
+   "h": 2245,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.459,
+   "src_native": [
+    965,
+    2202
+   ],
+   "viewed": true,
+   "mpm_note_ko": "구 100 개를 마찰 없는 단단한 벽 상자 (주기 경계 아님) 에서 등방으로 눌러 φ 0.49 → 0.96: 구가 다면체로 바뀌어도 입자 경계는 끝까지 남는다 (입자별 유한요소 + 접촉 = 후보 B 의 3D 실물).  상자 한 변이 평균 지름의 약 3.7 배 (N = 50) · 4.7 배 (N = 100) 뿐이라 (jammed 상태 · 카드 산술) 벽 효과가 크다 (jammed φ0 0.50–0.51 · Z0 ≃ 3.5 — 본문이 'size effects' 라고 적음).  우리 real_14 의 SE 32,832 개와는 입자 수가 300 배 넘게 차이 난다 — 이 방식을 전극 규모로 가져가기 어렵다는 것을 보여 주는 그림이기도 하다.  탄성 입자라 하중을 빼면 되돌아간다 (탈압은 계산하지 않음).  ※ φ = 0.96 은 그림 3 · 5 · 7 의 평균 자료 끝 (φ ≈ 0.91–0.92 · 판독) 보다 높다.",
+   "crop_note": "auto crop kept (tool) — clip already = embedded raster + white margin; nothing foreign inside; border-ink check 0; opened and checked (2026-11-10 litdb-curator)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Packing fraction φ as a function of the mean confining stress P normalized by the reduced Young Modulus E*. The dotted line is the approximation given by Heckel eqn (3), the dashed line is the small strain approximation given by eqn (7) (SD), and the continuous black line is the prediction given by our micromechanical approach eqn (8). The inset shows experimental data of the uniaxial compaction of a packing of hydrogel spheres [26], together with eqn (7) and (8). (b) Reduced coordination number Z − Z0 as a function of the reduced solid fraction φ − φ0 (log–log scale is shown in the inset). The continuous black line is the power-law relation given by eqn (4) with exponent 0.5. For the NSCD simulations, the error bars represent the standard deviation on the averaged behavior performed over 4 independent samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    43.8,
+    558.8,
+    310.8
+   ],
+   "w": 1091,
+   "h": 1114,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.921,
+   "src_native": [
+    982,
+    1071
+   ],
+   "viewed": true,
+   "mpm_note_ko": "(a) 3D 압밀 곡선: NSCD (N = 50 · 100) 는 서로 겹치고, 점접촉 Hertz DEM (YADE · 구 2500 개) 은 P/E* ≈ 0.04–0.05 (φ − φ0 ≈ 0.15) 까지 따라가다 그 뒤 더 조밀한 쪽으로 벗어난다 (판독: P/E* 0.1 에서 φ − φ0 0.29 vs 0.22 · 0.2 에서 0.49 vs 0.29) — 본문 설명은 '입자가 실제로 변형하지 못해서'.  재설계 후보의 1차 관측량 = 이 곡선의 포화 (NSCD 평균 자료는 φ − φ0 ≈ 0.40–0.42 = φ ≈ 0.91–0.92 까지 · 판독).  (b) 배위수 Z − Z0 = ψ√(φ − φ0), ψ ≈ 8.5 (2D 판 5.1) — 단일 속도장 MPM 에서는 Z 가 정의되지 않는다.  ⚠ 탄성 구 · P/E* 축 · 등방 · N ≤ 100 이라 절대값은 우리 3D 소성 SE 로 옮기지 않는다.  ⚠ 식 (8) 을 본문 상수 (Z0 3.5 · ψ 8.5 · Γ 4.4 · φ0 0.51 · φmax 0.95) 로 계산하면 그림 실선보다 압력이 1.6–2.3 배 낮다 (카드 산술 + 판독 · 점선 Heckel 은 3 % 안에서 재현) — 계수가 아니라 형식만 쓴다.  삽도 = 하이드로겔 구 일축 실험 (Mukhopadhyay & Peixinho 2011): 모델이 같은 φ − φ0 에 필요한 압력을 실험의 약 절반으로 낮게 준다 (판독).",
+   "crop_note": "auto crop kept (tool) — clip already = embedded raster + white margin; nothing foreign inside; border-ink check 0; opened and checked (2026-11-10 litdb-curator)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 The macroscopic volumetric strain ε as a function of the mean contact strain ⟨εℓ⟩ in the small deformation domain. The continuous black line is a linear fit with slope Γ ≈ 4.4.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    551.7,
+    558.8,
+    686.4
+   ],
+   "w": 1091,
+   "h": 563,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.961,
+   "src_native": [
+    949,
+    519
+   ],
+   "viewed": true,
+   "mpm_note_ko": "거시 체적 변형 ε 와 평균 접촉 변형 ⟨εℓ⟩ 의 선형 관계 (ε ≈ Γ⟨εℓ⟩, Γ ≈ 4.4 · 직선 판독 4.43 · ε ≤ 0.14 = φ − φ0 ≲ 0.08 구간): 입방 격자면 3, 무질서 충전이라 더 크다 (본문).  압밀 법칙 (식 7 · 8) 에서 국소와 거시를 잇는 유일한 다리.  입자 경계가 있는 후보 (A′ · B · C · C′ · D0) 에서만 잴 수 있다 — D0 (LIGGGHTS) 압축 궤적의 겹침 δ/d 평균으로 새 런 없이 Γ 를 재 볼 수 있다.  ※ 캡션은 'ε as a function of ⟨εℓ⟩ · continuous line' 이라 쓰지만 그림은 가로 ε · 세로 ⟨εℓ⟩ · 일점쇄선이다.",
+   "crop_note": "auto crop kept (tool) — clip already = embedded raster + white margin; nothing foreign inside; border-ink check 0; opened and checked (2026-11-10 litdb-curator)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Evolution of the excess sphericity, ρ̂ − ρ̂0 as a function of the excess packing fraction φ − φ0 for the isotropic compaction of soft spheres. The dashed line is the power-law relation given by eqn (10).",
+   "rotated_deg": 0,
+   "bbox": [
+    311.2,
+    555.1,
+    545.0,
+    685.2
+   ],
+   "w": 975,
+   "h": 543,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.9,
+   "src_native": [
+    949,
+    518
+   ],
+   "viewed": true,
+   "mpm_note_ko": "구형도 감소 −(ρ̂ − ρ̂0) = A(φ − φ0)^β (본문 β ≈ 2.5 · A ≈ 0.6): φ − φ0 = 0.4 에서 0.06–0.07 (판독) — 입자 형상 변화의 정량 관측량.  N = 50 이 N = 100 보다 13–27 % 높고 (φ − φ0 ≥ 0.2 · 판독) 파선 기울기도 다르게 읽힌다 (N = 50 ≈ 2.4 · N = 100 ≈ 2.5–2.6) — 본문의 한 쌍 (2.5 · 0.6) 은 N = 100 곡선과 맞는다 = 계 크기 의존이 남아 있다.  우리 MPM 은 SE 형상이 바뀌므로 입자 번호를 유지하면 (후보 A′ · 입자 번호 승계) 같은 양을 잴 수 있다 — 소성이라 지수가 같을 이유는 없다.  ※ 식 (10) 은 부호 없이 인쇄됐고 그림 세로축은 −(ρ̂ − ρ̂0) 이다 (구형도는 1 에서 내려간다).",
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 538.8–686.3) kept the journal rule (y 544.8–546.3) above the figure; clip = embedded raster rect (314.2, 558.1, 542.0, 682.2; native 949×518 px) padded 3 pt; caption excluded; border-ink check 0; opened and checked"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Three-dimensional cross-section of the von Misses stress field σvm at each particle and for different packing fractions φ = 0.66 (a), φ = 0.86 (b) and φ = 0.96 (c) in an assembly of 100 particles. The color intensity is proportional to the von Mises stress scaled by the Young's modulus, σvm/E.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    249.9
+   ],
+   "w": 2177,
+   "h": 860,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.45,
+   "src_native": [
+    2006,
+    817
+   ],
+   "viewed": true,
+   "mpm_note_ko": "입자 안 von Mises 응력 단면 (φ 0.66 → 0.86 → 0.96): 처음엔 접촉점에 몰리고 조밀해지면 고르게 퍼진다.  색 눈금이 σ_vm/E = 0.005–0.4 (로그) — 탄성만으로 φ 0.96 에 가려면 입자 안 전단응력이 E 의 수십 % 가 돼야 한다는 뜻이다.  고무 · 하이드로겔 같은 탄성체가 아닌 분말 재료는 그보다 훨씬 전에 항복한다 (우리 SE: σ_y/E ≈ 0.002–0.014 — σ_y 0.05–0.30 GPa · E 22–24 GPa, 주 리포 값) → 이 논문의 P/E* 축과 응력 수준은 소성 재료에 옮길 수 없다.  논문은 소성을 다루지 않고 결론에서 확장 과제로만 둔다.  응력장 자체는 우리 MPM 이 내는 관측량과 같은 종류.",
+   "crop_note": "auto crop kept (tool) — clip already = embedded raster + white margin; nothing foreign inside; border-ink check 0; opened and checked (2026-11-10 litdb-curator)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Probability density function (PDF) of the local von Mises stress σvm computed on each node and normalized by the corresponding average value in one of the systems composed of 100 particles. The inset shows the standard deviation of the distribution of σvm as a function of the packing fraction φ for 50 and 100 particle assemblies (averaged over the four independent systems).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    515.1,
+    298.0,
+    656.5
+   ],
+   "w": 1090,
+   "h": 590,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.803,
+   "src_native": [
+    982,
+    547
+   ],
+   "viewed": true,
+   "mpm_note_ko": "입자 내부 von Mises 응력 (절점값 / 평균) 의 분포: jammed 근처는 지수 꼬리 (평균의 4–5 배까지), 조밀해지면 Gauss 꼴로 좁아진다 — 표준편차 / 평균이 φ ≈ 0.51 의 ≈ 2.9 에서 φ ≈ 0.92 의 ≈ 0.5 로 (삽도 판독).  '입상체 → 연속체' 전이의 통계 표지.  우리 MPM (격자 응력) · DEM (입자 응력) 둘 다 같은 통계를 낼 수 있어 후보 간 공통 관측량으로 쓸 수 있다.  분포 본 그림은 N = 100 계 하나 (표본 하나) 다.  ※ 본문은 'inset in Fig. 7(b)' 라 하지만 패널은 하나뿐이다.",
+   "crop_note": "auto crop kept (tool) — clip already = embedded raster + white margin; nothing foreign inside; border-ink check 0; opened and checked (2026-11-10 litdb-curator)"
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_hertz_single_sphere.png",
+   "caption": "Equation (1), p. 314: f/d² = (2^(3/2)/3)·E/(1 − ν²)·(δ/d)^(3/2) — Hertz law for the single elastic sphere compressed between two walls (mesh check, Fig. 1b).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    326.5,
+    292.0,
+    360.0
+   ],
+   "w": 1040,
+   "h": 140,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.973,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "단일 구–평판 Hertz 식 — 메시 검증 기준.  계수 2^(3/2)/3 은 '접촉 하나의 접근량 δ' 에 대한 구–강체 평면 Hertz 식과 같다 (카드 산술); δ 가 윗벽 총 이동량이면 1/3 이어야 한다 — 본문은 'vertical displacement' 라고만 쓴다.  소성 SE 의 단위 시험이라면 기준 해가 Hertz 가 아니라 항복 뒤 압입 해 (우리 U1 · U3) 여야 한다."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "file": "eq_02_granular_stress_tensor.png",
+   "caption": "Equation (2), p. 314: σ_αβ = (1/V) Σ_{c∈V} f_α^c ℓ_β^c — granular stress tensor from contact forces and branch vectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.3,
+    685.5,
+    552.8,
+    716.5
+   ],
+   "w": 1041,
+   "h": 130,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.979,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "접촉력 × 가지 벡터의 합으로 쓰는 입상 응력 텐서 (우리 DEM 의 Love–Weber 응력과 같은 정의 계열).  변형 입자끼리의 접촉력은 맞닿은 면의 접촉 절점 힘을 벡터 합한 것 (본문)."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 5,
+   "file": "eq_03_heckel_secondi.png",
+   "caption": "Equation (3), p. 316: P/E* = −A ln[(φmax − φ)/(φmax − φ0)] — Heckel–Secondi form; fitted A = 0.15, φmax = 0.965.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    60.5,
+    292.0,
+    96.0
+   ],
+   "w": 1040,
+   "h": 148,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.969,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "φmax 를 남긴 Heckel (Heckel–Secondi) — 이 논문 적합값 A = 0.15 · φmax = 0.965.  그림 3a 점선은 A = 0.15 · φmax − φ0 = 0.445 로 3 % 안에서 재현된다 (판독 + 카드 산술).  저자: 중간 압력에서 약간 어긋나고 A 는 물리 의미가 정해지지 않았다."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 5,
+   "file": "eq_04_coordination_power_law.png",
+   "caption": "Equation (4), p. 316: (Z − Z0) = ψ √(φ − φ0), ψ ≈ 8.5 — coordination number vs packing fraction beyond jamming.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    401.5,
+    292.0,
+    425.5
+   ],
+   "w": 1040,
+   "h": 101,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.973,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "배위수 거듭제곱 법칙의 3D 판 — 지수 1/2 은 2D 와 같고 계수만 ψ ≈ 8.5 (2D 판 ξ ≈ 5.1).  그림 3b 의 선은 ψ ≈ 9.0 으로 읽힌다 (판독).  단일 속도장 MPM 에서는 Z 가 정의되지 않는다 — 입자 경계를 유지하는 후보에서만 잴 수 있다."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 5,
+   "file": "eq_05_stress_contact_average.png",
+   "caption": "Equation (5), p. 316: σ_αβ = n_c ⟨f_α^c ℓ_β^c⟩_c — stress tensor as contact density times the contact average.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    702.5,
+    292.0,
+    720.5
+   ],
+   "w": 1040,
+   "h": 76,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.972,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "식 (2) 를 접촉 밀도 n_c × 접촉 평균으로 다시 쓴 것 — 식 (6) 의 출발."
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 5,
+   "file": "eq_06_pressure_micro.png",
+   "caption": "Equation (6), p. 316: P ≃ (φZ/π) σℓ, with σℓ = ⟨f^c·ℓ^c⟩_c/⟨d⟩³ a measure of the mean contact stress.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.3,
+    146.0,
+    552.8,
+    175.0
+   ],
+   "w": 1041,
+   "h": 122,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.986,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "압력 = 충전률 × 배위수 × 평균 접촉 응력 (3D: n_c ≃ 3Zφ/(πd³) · σℓ 의 분모가 d³).  식의 꼴 (φZ/π)σℓ 은 2D 판과 같다.  입자 경계가 없는 단일 속도장 MPM 에서는 Z · σℓ 가 정의되지 않는다."
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq6b",
+   "page": 5,
+   "file": "eq_06b_hertz_closure_gamma.png",
+   "caption": "Text block, p. 316 (Sec. 3.2): small-deformation closure — f^c = (2/3)E* d^(1/2) δ^c^(3/2); σℓ ∼ (2/3)E*⟨εℓ⟩^(3/2) with εℓ = δ^c/d; Z = Z0; ε ∼ Γ⟨εℓ⟩ with Γ ∼ 4.4 (Γ ≈ 3 for a cubic lattice).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    297.5,
+    555.8,
+    537.0
+   ],
+   "w": 1065,
+   "h": 999,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.847,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand (inline math is garbled in the PDF text layer); clip = the paragraph lines only, column padded 3 pt; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "3D 판이 2D 와 갈리는 자리: 접촉력이 접근량의 3/2 제곱 (Hertz) 이라 σℓ ∝ ⟨εℓ⟩^(3/2) — 2D 는 선형.  '재료가 탄성이고 접촉이 Hertz' 라는 가정이 법칙의 꼴을 정한다 → 소성 SE 에 옮기려면 두 입자 사이 힘 법칙부터 바꿔야 한다 (결론이 그렇게 적음)."
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 6,
+   "file": "eq_07_small_deformation.png",
+   "caption": "Equation (7), p. 317: P_SD/E* = −[2/(3πΓ^(3/2))] Z0 φ ln^(3/2)(φ0/φ) — small-deformation (Hertz) limit.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    60.8,
+    292.0,
+    93.0
+   ],
+   "w": 1040,
+   "h": 135,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.963,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "작은 변형 극한.  인쇄 꼴은 음수의 3/2 제곱이라 글자 그대로는 실수가 아니다 — 뜻은 (2/(3πΓ^(3/2)))·Z0·φ·[ln(φ/φ0)]^(3/2) (카드 풀이).  그림 3a 의 파선은 이 식을 본문 상수로 계산한 값보다 압력이 3.3–4.1 배 높다 (판독 + 카드 산술 · 원인 미확인)."
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 6,
+   "file": "eq_08_compaction_law_3d.png",
+   "caption": "Equation (8), p. 317: P/E* = −[2/(3πΓ^(3/2))]·[(φmax − φ0)/φ0^(3/2)]·φ√(φ − φ0)·[Z0 − ψ√(φ − φ0)]·ln[(φmax − φ)/(φmax − φ0)] — 3D compaction equation as printed (minus sign inside the bracket).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    360.6,
+    292.0,
+    435.0
+   ],
+   "w": 1040,
+   "h": 311,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.967,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "핵심 3D 압밀 법칙 — 자유 매개변수는 φmax 하나.  ⚠ 대괄호 안이 'Z0 − ψ√(φ − φ0)' 로 인쇄됐는데 식 (4) (Z = Z0 + ψ√…) 와 맞지 않는다: 음수 부호면 φ − φ0 > (Z0/ψ)² ≈ 0.17 에서 압력이 음수가 된다 (카드 산술) → '+' 가 맞는 것으로 판단 (2D 원전 PRE 103, 062902 식 (11) 도 같은 부호로 인쇄).  재설계 후보의 φ(P) 를 이 형식으로 적합해 비교할 수 있으나 2D → 3D 에서 꼴 자체가 바뀌었다는 점 (√(φ − φ0) 인자 추가) 을 기억할 것."
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq8b",
+   "page": 6,
+   "file": "eq_08b_2d_equivalent_replacement.png",
+   "caption": "Text block, p. 317: difference from the 2D equivalent [57,58] — in 2D σℓ depends linearly on the mean contact strain, which replaces the terms (2√(φ − φ0)/(3Γφ0)^(3/2)) in eqn (8) by only 1/(Γφ0).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    72.5,
+    555.8,
+    172.0
+   ],
+   "w": 1065,
+   "h": 415,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.865,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand (inline math is garbled in the PDF text layer); clip = the paragraph lines only, column padded 3 pt; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "2D ↔ 3D 차이를 말하는 유일한 식 수준 문장: 2D 는 σℓ 가 접촉 변형에 선형이라 식 (8) 의 2√(φ − φ0)/(3(Γφ0)^(3/2)) 자리가 1/(Γφ0) 로 바뀐다.  ※ 인쇄는 '(3Γφ0)^(3/2)' 이지만 식 (8) 의 계수와 맞추면 3 은 지수 밖이다 (카드 유도).  ⇒ 2D 계산으로 맞춘 압밀 법칙을 3D 에 그대로 쓰지 못한다 (꼴이 다름)."
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 6,
+   "file": "eq_09_sphericity_definition.png",
+   "caption": "Equation (9), p. 317: ρ̂ = ⟨π^(1/3)(6V_i)^(2/3)/a_i⟩_i — sphericity (a_i = particle surface area).",
+   "rotated_deg": 0,
+   "bbox": [
+    303.3,
+    266.5,
+    552.8,
+    303.0
+   ],
+   "w": 1041,
+   "h": 153,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.979,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구형도 정의 (구 = 1 · 정육면체 0.806 · 마름모 십이면체 0.905 — 뒤 둘은 카드 산술).  입자 번호를 유지하는 MPM 이면 SE 입자마다 같은 양을 낼 수 있다."
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 6,
+   "file": "eq_10_sphericity_power_law.png",
+   "caption": "Equation (10), p. 317: ρ̂ − ρ̂0 = A(φ − φ0)^β, β ≈ 2.5, A ≈ 0.6 — shape parameter vs excess packing fraction (printed without a minus sign; Fig. 5 plots −(ρ̂ − ρ̂0)).",
+   "rotated_deg": 0,
+   "bbox": [
+    303.3,
+    395.0,
+    552.8,
+    414.0
+   ],
+   "w": 1041,
+   "h": 80,
+   "dpi": 300,
+   "src": "0ee79a35-8._Three-dimensional_compaction_of_soft_granular_packings.pdf",
+   "blank": 0.968,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; border-ink check 0; opened and checked (2026-11-10 litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "형상 변화의 거듭제곱 법칙 (β ≈ 2.5 · A ≈ 0.6).  부호 없이 인쇄 — 그림 5 세로축은 −(ρ̂ − ρ̂0).  2D 에서도 '비슷한 지수' 라고만 쓰고 값 · 출처는 없다."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "all printed figures (Fig. 1–7) cropped; the paper has no tables and no supplementary file; Fig. 1 and Fig. 5 re-cropped by hand (recrop); 12 equation / text-block crops added as kind=equation because the PDF text layer garbles them; every PNG opened and checked; border-ink check 0 for all (2026-11-10 litdb-curator)"
+}

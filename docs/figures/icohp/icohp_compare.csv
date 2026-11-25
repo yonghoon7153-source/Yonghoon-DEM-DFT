@@ -1,0 +1,16 @@
+bond,kind,system,ICOHP_eV,n_bonds
+P-S,avg_bond_type,comp1,-5.944,16
+P-S,avg_bond_type,modelc,-6.0,20
+Li-Cl,avg_bond_type,comp1,-1.855,24
+Li-Cl,avg_bond_type,modelc,-2.103,42
+Li-S,avg_bond_type,comp1,-1.592,120
+Li-S,avg_bond_type,modelc,-1.717,113
+S-S,avg_bond_type,comp1,-0.107,56
+S-S,avg_bond_type,modelc,-0.11,58
+Li-Cl(4a),site_split,comp1,-1.855,24
+Li-Cl(4a),site_split,modelc,-2.026,38
+"Li-Cl(4d,anti)",site_split,modelc,-2.836,4
+Li-S(PS4),site_split,comp1,-1.348,96
+Li-S(PS4),site_split,modelc,-1.622,101
+"Li-S(4d,freeS)",site_split,comp1,-2.566,24
+"Li-S(4d,freeS)",site_split,modelc,-2.516,12

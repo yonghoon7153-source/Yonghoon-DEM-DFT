@@ -1,0 +1,2784 @@
+#!/usr/bin/env python3
+"""extract_figures.py — 논문 PDF 에서 **그림/표를 캡션 기준으로 잘라** litdb 에 등록.
+
+1저자 요청(2026-08-06): "논문 에이전트도 figure 크로핑해서 저장해두면 보기 좋지 않나."
+digest(`litdb/papers/<slug>.md`) 본문에 `Fig. 5e` 같은 언급이 나오면 webapp 이 그 그림을
+오른쪽 여백에 띄운다 — 그 그림들을 만드는 도구다.
+
+왜 "임베디드 이미지 추출"이 아니라 **캡션 앵커 + 영역 렌더**인가
+  ACS/RSC/Elsevier 논문의 상당수가 그림을 **벡터**로 넣는다. `page.get_images()` 는
+  이 경우 아무것도(또는 조각난 래스터만) 돌려준다. 반대로 캡션은 어떤 저널이든 텍스트라
+  안정적으로 잡힌다 → 캡션 위(그림) / 아래(표) 영역을 통째로 **렌더**하면 벡터·래스터·
+  혼합 어느 쪽이든 똑같이 나온다.
+
+오탐 방지 (이게 핵심)
+  본문에도 "Figure 2a shows a representative..." 처럼 Figure 로 시작하는 문단이 많다.
+  실측(Kraft 2017 p4)에서 캡션 4개 중 2개가 이런 본문 문단이었다. 두 겹으로 막는다:
+    ① 구두점 규칙 — 번호 뒤가 `.`/`|`/`:` 이거나 대문자로 시작해야 캡션
+       ("Figure 3 shows" 는 소문자 동사라 탈락, "Figure 2a" 는 번호에 소문자가 붙어 탈락)
+    ② **기하 검증** — 잘라낼 영역에 실제 그래픽(배치 이미지 or 벡터 경로)이 있어야 한다.
+       본문 문단 위에는 본문 문단밖에 없으므로 여기서 확실히 걸린다.
+
+usage — 보통은 이 두 줄이면 끝난다 (inbox 를 훑어 digest 와 자동으로 짝지어 준다)
+  python3 tools/litdb/extract_figures.py --inbox           # 어느 PDF ↔ 어느 논문인지 표만
+  python3 tools/litdb/extract_figures.py --inbox --run     # 실제로 자르기
+
+한 편만 콕 집을 때 (⚠ <slug> 는 자리표시자다 — litdb/papers/ 의 실제 파일 이름을 넣는다)
+  python3 tools/litdb/extract_figures.py --slug kraft2017_lattice_polarizability_argyrodite_Li6PS5X \\
+      --pdf "litdb/inbox/31. ….pdf" --pdf "litdb/inbox/31. Sup) ….pdf" --clean
+
+출력
+  litdb/figures/<slug>/fig_<label>.png ...
+  litdb/figures/<slug>/figures.json     ← webapp 이 읽는 색인
+"""
+import argparse
+import hashlib
+import json
+import math
+import os
+import re
+import shutil
+import sys
+import time
+from pathlib import Path
+
+try:
+    import fitz                                # PyMuPDF
+except ImportError:                            # ⚠ Ubuntu 24.04+ 는 PEP 668 로 시스템 pip 이 막힌다
+    sys.exit(
+        "⛔ PyMuPDF 가 없다. Ubuntu 24.04(WSL)는 시스템 pip 이 막혀 있어(PEP 668) venv 를 쓴다:\n"
+        "     python3 -m venv ~/.venvs/litdb\n"
+        "     ~/.venvs/litdb/bin/pip install -q pymupdf pillow\n"
+        "   그 다음부터는 python3 대신 이걸로 실행:\n"
+        "     ~/.venvs/litdb/bin/python3 tools/litdb/extract_figures.py --inbox\n"
+        "   (자주 쓸 거면 ~/.bashrc 에)  alias litfig='~/.venvs/litdb/bin/python3 "
+        "~/Yonghoon-DEM-DFT/tools/litdb/extract_figures.py'")
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT_ROOT = ROOT / "litdb" / "figures"
+
+# ① 캡션 후보. 번호 뒤에 소문자가 바로 붙으면(2a) 본문 참조이므로 (?![a-z]) 로 막는다.
+#   ⚠ "Supplementary Fig. 1." 처럼 접두어가 붙는 저널이 있다(실측: Zhou 2026 SI 는 이것 때문에
+#     27쪽에서 0개가 나왔다). 접두어가 붙으면 번호에 S 가 없어도 SI 번호로 취급한다.
+#   ⚠ 옛 스캔 저널의 OCR 은 글자를 숫자로 읽는다 — 실측(Thornton & Ning 1998, Powder Tech.):
+#     "Fig. 3." → **"F19. 3."** (i→1, g→9, o→0, s→5, l→1). 캡션은 멀쩡한데 키워드만 깨져
+#     9쪽짜리 논문에서 캡션 인정 0건이었다. 키워드 철자만 관대하게 받는다 (번호는 진짜 숫자).
+SI_PRE = r"(?:Supplementary|Supplemental|Supporting|Extended\s+Data|Extended|Online)\s+"
+#   ⚠ 키워드 **뒤**에 콜론을 붙이는 SI 양식이 있다 — 실측(Barai 2021 Chem. Mater. SI):
+#     `Table: S-I.` / `Figure: S1.` 형식이라 25쪽 SI 에서 **0 개**가 나왔다.
+#     키워드 뒤 `[.:]?` 로 받는다.
+#   ⛔⛔ 2026-11-24 실측 (lepley2015 Phys. Rev. B · APS 꼴) — `TABLE I.` · `TABLE II.` 를 표로 못 찾아 손으로 잘랐다
+#     (`table_caption_vote` 0/0). **표만** 로마 숫자 라벨 (I–XXXIX · `S-I` · `SII`) 을 받아 아라비아 키 (t1 · tS2) 로 바꾼다 —
+#     그림 · 도식은 여전히 아라비아 숫자만 받는다 (is_caption 이 로마 숫자 그림을 버린다 · --selftest 음성).
+CAP_RE = re.compile(
+    r"^\s*(?P<si>" + SI_PRE + r")?"
+    r"(?P<kind>F[i1l][gq9](?:ure|s)?[.:]?|Tab[l1]e[.:]?|Sche[mn]e[.:]?)\s*"
+    r"(?P<label>(?:ST|S)?\d+|(?:S-?)?[IVX]{1,6})(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
+    re.S | re.I)
+#   ⚠ `Table ST1:` 양식 (2026-09-24 schlautmann2023 SI 실측) — 라벨이 `S?\d+` 뿐이라 **SI 표 4장이
+#     통째로** 안 나왔다.  ST 를 받고 is_caption 에서 S 로 정규화한다 (파일명은 여전히 tab_S1).
+# 본문 문단이 흔히 쓰는 동사 — 구두점이 없을 때 최종 판별
+VERBS = re.compile(
+    r"^(shows?|displays?|presents?|illustrates?|summari[sz]es?|gives?|depicts?|compares?|"
+    r"plots?|reports?|indicates?|reveals?|lists?|contains?|provides?|demonstrates?|"
+    r"and|in|of|for|to|is|are|was|were|we|it|this|which|shown|show|see|from)\b", re.I)
+# ⛔⛔ 2026-09-09 실측 — 여기 `the` 가 있어서 **관사로 시작하는 캡션이 통째로 탈락**했다.
+#   `Fig. 6 The self-part of the van Hove correlation function …` (jang2025) 가 본문으로
+#   오판돼 그림이 아예 안 나왔고, 하필 그 논문의 기전 근거 그림이었다.
+#   RSC·Nature 계열에 `Fig. N The …` 는 흔한 형식이라 **다른 논문에서도 샜을 가능성이 크다.**
+#   소문자 `the` 는 바로 위 `rest[:1].islower()` 가 이미 잡으므로, VERBS 에서 빼도
+#   본문 오판이 늘지 않는다 (아래 --selftest 가 그 음성 경로를 지킨다).
+# ⛔⛔ 2026-09-27 실측 (gao2026 Electrochem. Energy Rev. · Springer) — `Fig. 12 a Schematic illustration …`
+#   처럼 **번호 뒤에 소문자 패널 기호**가 오고 곧바로 대문자 문장이 이어지는 캡션을 `rest[:1].islower()` 가
+#   본문으로 떨궜다. 게다가 is_caption 이 None 이면 extract 는 그 블록을 **제외 목록에도 안 올려**
+#   Fig. 12·17 이 흔적 없이 사라졌다 (큐레이터가 손으로 보충). 패널 기호 한 글자(+ `)`·`.`) 뒤에 공백과
+#   **대문자·숫자·여는 괄호**가 오면 캡션으로 받는다. `Figure 3 a shows …`(소문자 동사)·`Fig. 5 a–c show …`
+#   (범위)·`Fig. 2 a and b …` 는 여전히 본문이다 (--selftest 음성).
+PANEL_RE = re.compile(r"^[a-z][).]?\s+[A-Z0-9(]")
+# ⛔⛔ 2026-11-16 실측 (liu2026 Adv. Funct. Mater. SI · In³⁺ 치환 LSPS) — `Figure S3␣␣In 3d XPS …` 가 통째로 탈락했다.
+#   번호 뒤 구분자가 공백이라 VERBS 판별로 갔고, VERBS 는 re.I 라 **원소 기호 `In`** 을 전치사 `in` 으로 읽었다.
+#   `Fig. 3 In situ Raman …` (Springer · Nature 꼴) 도 같은 길로 샌다. 소문자 `in` 은 바로 위 `rest[:1].islower()` 가
+#   이미 본문으로 떨구므로, **대문자로 시작하는 `In`** 만 본문 표지에서 뺀다 (VERBS 의 다른 낱말 And · We · This … 는 그대로).
+#   ⚠ 남는 위험: 구두점 없이 `Figure 3 In …` 으로 시작하는 본문 문단 — 문법상 드물고, 그림은 ② 기하 검증이 한 번 더 거른다.
+ELEMENT_IN = re.compile(r"In\b")                # 대소문자 구분 (re.I 아님) — 'In 3d' · 'In-doped' · 'In situ'
+
+
+def _roman_int(s):
+    """정식 꼴 로마 숫자 (I–XXXIX) → 정수 · 아니면 None ('IIII' · 'VX' 는 None)."""
+    s = (s or "").upper()
+    if not s or set(s) - set("IVX"):
+        return None
+    val = {"I": 1, "V": 5, "X": 10}
+    tot = prev = 0
+    for ch in reversed(s):
+        v = val[ch]
+        tot = tot - v if v < prev else tot + v
+        prev = max(prev, v)
+    out, n = "", tot
+    for v, sym in ((10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")):
+        while n >= v:
+            out, n = out + sym, n - v
+    return tot if out == s else None
+
+
+def _norm_label(raw, kind):
+    """CAP_RE 의 label → 파일 키에 쓰는 라벨 · 버릴 것이면 None.
+    ST1 → S1 · 아라비아 숫자는 그대로 · **표만** 로마 숫자 (IV → 4 · S-II / SII → S2) · 로마 숫자 그림 · 도식 → None."""
+    if raw[:2].upper() == "ST" and raw[2:].isdigit():
+        return "S" + raw[2:]
+    if any(ch.isdigit() for ch in raw):
+        return raw
+    if kind != "table":
+        return None
+    m = re.fullmatch(r"(S-?)?([IVX]+)", raw.upper())
+    n = _roman_int(m.group(2)) if m else None
+    return None if n is None else ("S" if m.group(1) else "") + str(n)
+
+
+def is_caption(text):
+    """캡션이면 (kind, label, si) 아니면 None. si=True 면 SI 번호(S를 붙인다)."""
+    t = " ".join(text.split())
+    m = CAP_RE.match(t)
+    if not m:
+        return None
+    kw = m.group("kind").lower()
+    kind = "table" if kw.startswith("tab") else \
+           ("scheme" if kw.startswith("sch") else "figure")
+    rest, sep = m.group("rest"), m.group("sep")
+    if sep in ".|:,–—":              # "Figure 1." / "Figure 5 |" → 캡션 확정
+        pass
+    elif PANEL_RE.match(rest):                 # "Fig. 12 a Schematic …" → 캡션 (위 PANEL_RE 주석)
+        pass
+    elif rest[:1].islower() or (VERBS.match(rest) and not ELEMENT_IN.match(rest)):
+        return None                            # "Figure 3 shows ..." → 본문 ('In 3d' · 'In situ' 는 캡션 · 위 ELEMENT_IN 주석)
+    if len(t) < 12:                            # "Figure 1" 만 있는 상호참조 조각
+        return None
+    label = _norm_label(m.group("label"), kind)   # "Table ST1" → S1 · "TABLE II." → 2 (위 CAP_RE 주석)
+    if label is None:                          # 로마 숫자 그림 · 정식 꼴이 아닌 로마 숫자
+        return None
+    return kind, label, bool(m.group("si"))
+
+
+def caption_rotation(page, cap_bbox):
+    """캡션 줄의 **쓰기 방향**으로 회전을 판정. 0 이면 정상, 90 이면 옆으로 누운 표.
+
+    왜 (2026-08-19, de Klerk 2016 SI 에서 잡음): Wiley/ACS SI 는 넓은 표를
+    `sidewaystable` 로 **90° 눕혀** 싣는 일이 잦다. 그러면 캡션 줄의 dir 이
+    (0,−1) 이 되고 bbox 가 **세로로 긴 띠**가 된다(실측 x 113–125 · y 72–720).
+    "캡션 아래가 표" 라는 기하 논리가 통째로 깨져서 표가 **한 장도 안 잘린다**
+    (de Klerk Tables S1–S3 가 정확히 그렇게 누락돼 있었다).
+    """
+    x0, y0, x1, y1 = cap_bbox
+    for b in page.get_text("dict")["blocks"]:
+        for l in b.get("lines", []):
+            bx0, by0, bx1, by1 = l["bbox"]
+            if bx1 < x0 - 2 or bx0 > x1 + 2 or by1 < y0 - 2 or by0 > y1 + 2:
+                continue
+            d = l.get("dir", (1, 0))
+            if abs(d[0]) < 0.5 and abs(d[1]) > 0.5:
+                return 90
+    return 0
+
+
+def text_blocks(page):
+    return [b for b in page.get_text("blocks") if b[6] == 0 and b[4].strip()]
+
+
+def _ink_lines(page):
+    """쪽의 글줄 bbox — 공백뿐인 줄은 뺀다 (`tighten_caption_tops` 용)."""
+    out = []
+    for bl in page.get_text("dict")["blocks"]:
+        if bl.get("type", 0) != 0:
+            continue
+        for ln in bl.get("lines", []):
+            if "".join(s.get("text", "") for s in ln.get("spans", [])).strip():
+                out.append(fitz.Rect(ln["bbox"]))
+    return out
+
+
+def tighten_caption_tops(blocks, ink):
+    """캡션 블록의 위 끝 y 를 **첫 글줄의 위 끝**으로 내린다 — 공백뿐인 머리 줄을 뺀다.
+
+    ⚠ 왜 (2026-11-16 실측 · 사용자 '권고대로 하고'): 일부 SI (wei2026 *ACS Nano* SI · chen2024 *AEM* SI) 는
+      캡션 블록이 실제 'Fig. Sx' 줄보다 14–18 pt 위의 **빈 줄** (단 오른쪽 끝의 공백 글자 하나) 에서 시작한다.
+      `_side_rect(up=True)` 는 그림 영역 아래 끝을 '캡션 블록 위 끝 − 2' 로 자르므로, 그 빈 줄 높이만큼
+      그림 아래 (축 라벨 · 스케일 막대 · 값 라벨) 가 잘렸다 — 그래픽이 크롭 아래로 1 pt 넘게 나간 것
+      wei2026 SI 57 장 중 56 · chen2024 SI 33 장 중 8 (두 편은 손으로 다시 렌더했다 · figures.json `bbox_extractor`).
+    고치는 범위: **캡션 블록의 위 끝만**. 본문 블록과 캡션 아래 끝 (꼬리 빈 줄) 은 안 건드린다 —
+      아래 끝을 바꾸면 merge_caption 의 이어붙이기 간격 (14 pt) 이 바뀌어 다른 회귀가 난다. 위 끝은 내리기만 한다.
+    못 하는 것: 블록 bbox 안에서 글줄을 하나도 못 찾으면 (회전 캡션 등) 그대로 둔다 ·
+      블록 안에 다른 블록의 글줄 (그림 속 라벨) 이 겹쳐 있으면 그 줄을 첫 글줄로 보아 **덜** 내린다 (보수 쪽) ·
+      그림이 캡션 글줄 2 pt 안까지 내려오면 그 2 pt 는 여전히 잘린다 (`_side_rect` 의 여백 그대로).
+    """
+    out = []
+    for b in blocks:
+        if is_caption(b[4]):
+            x0, y0, x1, y1 = b[:4]
+            ys = [r.y0 for r in ink
+                  if x0 - 1 <= (r.x0 + r.x1) / 2 <= x1 + 1 and y0 - 1 <= (r.y0 + r.y1) / 2 <= y1 + 1]
+            if ys and min(ys) > y0 + 0.5:
+                b = (x0, min(ys)) + tuple(b[2:])
+        out.append(b)
+    return out
+
+
+def page_blocks(page):
+    """`text_blocks` + 캡션 위 끝 보정 (`tighten_caption_tops`). 캡션이 없는 쪽은 dict 추출을 안 한다.
+
+    그림 영역을 만드는 두 곳 (`extract` · `why`) 이 이것을 쓴다 — 한쪽만 고치면 `--why` 진단이 실제 크롭과 갈린다.
+    """
+    blocks = text_blocks(page)
+    if any(is_caption(b[4]) for b in blocks):
+        blocks = tighten_caption_tops(blocks, _ink_lines(page))
+    return blocks
+
+
+def merge_caption(blocks, cap, gap=14.0):
+    """캡션이 여러 블록으로 쪼개진 경우 아래로 이어붙인다 → (합친 bbox, 합친 글).
+
+    ⚠ 왜 (2026-08-06 실측, Zhou 2026 SI): 캡션이 그림 **위**에 오는 SI 에서 캡션 본문이
+      2~3 블록으로 쪼개져 있었다. 첫 블록만 캡션으로 보면 "그 아래 영역"이 두 번째 캡션
+      줄까지밖에 안 돼(높이 3 pt) 그림을 통째로 놓친다.
+    """
+    order = sorted(blocks, key=lambda b: (b[1], b[0]))
+    try:
+        i = order.index(cap)
+    except ValueError:
+        return fitz.Rect(cap[:4]), " ".join(cap[4].split())
+    r = fitz.Rect(cap[:4])
+    txt = [cap[4]]
+    for b in order[i + 1:]:
+        if b[1] - r.y1 > gap or b[1] < r.y0:
+            break
+        if band_overlap((r.x0, r.x1), (b[0], b[2])) < 0.5:
+            break
+        if is_caption(b[4]):                   # 다음 그림 캡션이면 멈춘다
+            break
+        r |= fitz.Rect(b[:4])
+        txt.append(b[4])
+    return r, " ".join(" ".join(txt).split())
+
+
+_GCACHE = {}
+
+
+def graphics(page):
+    """이 쪽의 그래픽 bbox 들 — 배치 이미지 + 벡터 경로. (쪽당 1회만: get_drawings 가 느리다)
+
+    ⚠ 캐시 키에 **id(page.parent) 를 쓰면 안 된다** (2026-08-06, 53편 배치에서 발각):
+      문서를 닫고 다음 걸 열면 CPython 이 같은 주소를 재사용해서 키가 충돌한다
+      (실측 2편 6회 반복 → 27건 충돌). 그러면 뒤 논문의 쪽이 **앞 논문의 그래픽**을
+      물려받아 기하 검증이 엉뚱하게 통과/탈락한다.
+      증상: 한 편만 돌리면 4장인데 배치로 돌리면 1장(huang2022), sendek2017 fig_2·3 소실.
+      파일 경로로 키를 잡고, 문서마다 캐시를 비운다.
+    """
+    ck = (page.parent.name, page.number)
+    if ck in _GCACHE:
+        return _GCACHE[ck]
+    out = []
+    for it in page.get_image_info():
+        out.append(("img", fitz.Rect(it["bbox"])))
+    for d in page.get_drawings():
+        r = fitz.Rect(d["rect"])
+        if r.width > 1.5 and r.height > 1.5:   # 밑줄·괘선 같은 1픽셀 요소 제외
+            out.append(("draw", r))
+    _GCACHE[ck] = out
+    return out
+
+
+def band_overlap(a, b):
+    """가로 구간 겹침 비율 (좁은 쪽 기준)."""
+    lo, hi = max(a[0], b[0]), min(a[1], b[1])
+    w = min(a[1] - a[0], b[1] - b[0])
+    return max(0.0, hi - lo) / w if w > 0 else 0.0
+
+
+def table_rect(page, cap, tables, stop_y=1e9, margin=5.0):
+    """표는 **본문과 같은 텍스트**라 '그래픽 검증'이 안 통한다 → PyMuPDF 표 검출을 쓴다.
+
+    ⚠ 캡션 블록이 표 앞부분을 통째로 삼키는 쪽이 있다(실측: Hargreaves SI p21 에서
+      캡션 bbox 가 첫 표를 덮었다). 그래서 "캡션 **아래**"가 아니라 "캡션 시작선 이후"에
+      걸리는 표를 전부 합집합한다 — 한 캡션이 이어진 두 조각을 거느리는 경우까지 잡힌다.
+      단 stop_y(= 같은 쪽의 다음 캡션 y0)에서 끊는다 — 안 그러면 Table S6 크롭에 S7 까지
+      딸려 들어간다(실측: Kraft 2017 SI p8).
+    """
+    x0, y0, x1, y1 = cap[:4]
+    hit = [fitz.Rect(t) for t in tables]
+    hit = [t for t in hit if t.y1 > y0 + 2 and band_overlap((x0, x1), (t.x0, t.x1)) > 0.30
+           and t.y0 < stop_y]                   # ⚠ 다음 캡션 앞에서 끊는다
+    if not hit:
+        return None
+    u = fitz.Rect(hit[0])
+    for t in hit[1:]:
+        u |= t
+    u |= fitz.Rect(x0, y0, x1, y1)              # 표는 캡션까지 넣어야 스스로 설명된다
+    return (fitz.Rect(u.x0 - margin, u.y0 - margin,
+                      u.x1 + margin, u.y1 + margin) & page.rect)
+
+
+# ⛔⛔ 2026-11-16 실측 (warren2026 J. Mater. Chem. A SI) — 표 캡션이 표 **아래**에 붙는 양식이라 표 11 장 중 10 장이
+#   빠지거나 엉뚱하게 잘렸다 (캡션 아래만 보니 본문이나 **다음 표 격자**가 들어왔다: tab_S8 = S8 캡션 + 본문 + S9 격자).
+#   로컬 6 편 실측: 표 바로 위 (≤ 20 pt) 에 붙은 캡션은 warren SI 만 8 개 (간격 15.1–15.2 pt) · 나머지는 바로 아래 (5–34 pt)
+#   또는 앞 표와 38 pt 이상 떨어져 있었다. 그래서 **문서 단위 다수결**로 양식을 정하고, 아래 캡션 문서만 위를 본다.
+TABLE_ADJ_GAP = 20.0                            # pt — 표 끝 ↔ 캡션 끝 간격이 이 안이면 '붙어 있다'
+
+
+def table_caption_below(pages, gap=TABLE_ADJ_GAP):
+    """문서 하나의 표 캡션이 표 **아래**에 붙는 양식인가 (다수결) → (caption_below, n_above, n_below).
+
+    pages = [(caps, tabs), …] — caps 는 [(block, is_caption 결과), …] · tabs 는 그 쪽의 표 bbox 목록
+    (extract 첫 바퀴의 값 그대로 · PDF 없이 시험할 수 있다). 표 캡션마다 같은 단 (가로 겹침 > 0.30) 의 표가
+    캡션 바로 **위**에 붙어 있으면 n_above, 바로 **아래**에 붙어 있으면 n_below 를 센다.
+    n_above ≥ 2 이고 n_below 보다 많을 때만 True — 아니면 종전 (캡션 아래) 그대로다.
+
+    ⛔ 못 하는 것: 한 PDF 안에서 양식이 섞이면 (본문 표는 위 캡션 · 부록 표는 아래 캡션) 다수 쪽 하나로 간다 ·
+      표 검출이 안 된 쪽 (표 0 개) 은 세지 않는다 · 표 캡션이 하나뿐인 문서는 늘 종전대로 간다.
+    """
+    n_above = n_below = 0
+    for caps, tabs in pages:
+        for b, h in caps:
+            if not (h and h[0] == "table"):
+                continue
+            x0, y0, x1, y1 = b[:4]
+            band = [t for t in tabs if band_overlap((x0, x1), (t[0], t[2])) > 0.30]
+            if any(-2.0 <= y0 - t[3] <= gap for t in band):
+                n_above += 1
+            if any(-2.0 <= t[1] - y1 <= gap for t in band):
+                n_below += 1
+    return (n_above >= 2 and n_above > n_below), n_above, n_below
+
+
+def _owned_by_caption_below(t, blocks, gap=2 * TABLE_ADJ_GAP):
+    """표 t 바로 아래 (gap 안 · 같은 단) 에 **표 캡션**이 붙어 있으면 True — 아래 캡션 문서에서 그 표는 그 캡션의 몫이다."""
+    x0, _y0, x1, y1 = t[:4]
+    for b in blocks:
+        h = is_caption(b[4])
+        if h and h[0] == "table" and -2.0 <= b[1] - y1 <= gap \
+                and band_overlap((x0, x1), (b[0], b[2])) > 0.30:
+            return True
+    return False
+
+
+def table_rect_above(page, cap, tables, start_y=-1e9, margin=5.0):
+    """아래 캡션 문서 (table_caption_below 가 True) 의 표 영역 — 캡션 **위**의 표들 합집합 + 캡션.
+
+    start_y = 같은 쪽 같은 단에서 이 캡션 위에 있는 **다른 캡션의 아래 끝** — 그 위는 앞 표의 몫이라 끊는다
+    (warren SI p18: S8 · S9 두 표가 한 쪽에 있다). table_rect 의 stop_y 를 위아래로 뒤집은 것이다.
+    ⛔ 못 하는 것: 표가 앞 쪽에서 시작해 이 쪽으로 이어지면 이 쪽 조각만 잡는다 (두 쪽 이어붙이기는 손 크롭) ·
+      표 검출이 안 되면 None (그때 region_for 가 캡션 위 영역으로 떨어진다).
+    """
+    x0, y0, x1, y1 = cap[:4]
+    hit = [fitz.Rect(t) for t in tables]
+    hit = [t for t in hit if t.y1 <= y0 + 2 and t.y0 >= start_y - 2
+           and band_overlap((x0, x1), (t.x0, t.x1)) > 0.30]
+    if not hit:
+        return None
+    u = fitz.Rect(hit[0])
+    for t in hit[1:]:
+        u |= t
+    u |= fitz.Rect(x0, y0, x1, y1)              # 캡션까지 넣는다 (table_rect 와 같다)
+    return (fitz.Rect(u.x0 - margin, u.y0 - margin,
+                      u.x1 + margin, u.y1 + margin) & page.rect)
+
+
+def is_prose(b, pr=None):
+    """이 블록이 **경계로 쓸 수 있는가** (본문 문단 · 다른 캡션 · 머리글/꼬리글).
+
+    ⚠ 왜 (2026-08-06 실측, son2025·rao2011): 그림 **안**의 축 라벨·범례·눈금도 텍스트
+      블록으로 추출된다. 그걸 경계로 삼으면 캡션 바로 위 2~11 pt 만 남아 그림이 통째로
+      버려진다("영역 없음"). son2025 는 본문 5장 전부, rao2011 은 Fig 1 이 이렇게 날아갔다.
+        son2025 p3: 캡션 (40,532,…) 바로 위 = "Energy (eV)" (162,517,197,526) → 높이 2 pt
+        rao2011 p2: 캡션 (306,726,…) 바로 위 = "20 40 60 80 100 -2000" → 높이 11 pt
+      산문은 낱말이 많다 — 축 라벨·범례는 짧다. 다른 그림의 캡션은 낱말 수와 무관하게
+      진짜 경계이므로 그대로 인정한다.
+    """
+    t = " ".join((b[4] or "").split())
+    if bool(is_caption(t)) or (len(t.split()) >= 8 and len(t) >= 45):
+        return True
+    # 학술지 머리글("Journal of the American Chemical Society")·쪽번호는 짧지만 진짜 경계다.
+    #   안 넣으면 크롭 맨 위에 러닝헤드가 딸려 들어온다 (2026-08-06 kraft2017 실측).
+    if pr is not None:
+        z = 0.09 * pr.height
+        if b[3] <= pr.y0 + z or b[1] >= pr.y1 - z:
+            return True
+    return False
+
+
+def _up_limit(cap, blocks, pr):
+    """캡션 **위** 영역의 위쪽 경계 y — 같은 단에서 가장 가까운 경계 블록(산문·캡션·머리글)의 아래 끝.
+
+    PDF 없이 시험할 수 있게 `_side_rect` 에서 떼어냈다 (blocks 는 `text_blocks` 형식 튜플,
+    pr 은 쪽 사각형).
+    """
+    x0, y0, x1, y1 = cap[:4]
+    band = (x0, x1)
+    lim = pr.y0 + 24
+    for b in blocks:
+        if b[3] <= y0 + 1 and band_overlap(band, (b[0], b[2])) > 0.45 and is_prose(b, pr):
+            yb = b[3]
+            if is_caption(b[4]):
+                yb = max(yb, min(_caption_tail_y1(blocks, b), y0 + 1))
+            lim = max(lim, yb)
+    return lim
+
+
+def _caption_tail_y1(blocks, cap):
+    """위 그림 캡션 블록의 **이어진 한 줄짜리 블록들**까지 포함한 아래 끝 y.
+
+    ⚠ 2026-09-24 (schlautmann2023 SI S2·S5·S7·S9 실측): 캡션이 **줄마다 다른 블록**이면 짧은 마지막
+      줄("3.4 µm.")이 is_prose 를 못 넘어 경계에서 빠지고, 크롭 맨 위에 딸려 들어왔다.
+    ⛔ merge_caption(14 pt 안이면 무엇이든)을 쓰면 **안 된다** — 첫 수정이 그랬다가 캡션 뒤 본문 문단과
+      다음 그림의 패널 라벨 "(a) (b)" 까지 삼켜 Fig. 8 머리를 잘랐다 (79b422f7 임피던스 논문 p12 실측,
+      --selftest 음성 검사).  쪼개진 캡션의 이음줄만 받는다: **한 줄짜리** · 캡션과 **왼쪽 끝이 맞음**
+      (±3 pt) · 간격 ≤ 한 줄 높이 · 캡션이 아님.  가운데 정렬 캡션의 꼬리는 못 잡는다 (예전 동작 그대로).
+    """
+    txt = (cap[4] or "").strip()
+    lh = (cap[3] - cap[1]) / max(1, txt.count("\n") + 1)       # 캡션 한 줄 높이
+    y1 = cap[3]
+    for c in sorted(blocks, key=lambda c: (c[1], c[0])):
+        if c[1] < y1 - 0.5:
+            continue
+        if band_overlap((cap[0], cap[2]), (c[0], c[2])) < 0.5:
+            continue                                            # 다른 단
+        ct = (c[4] or "").strip()
+        if (c[1] - y1 > lh or is_caption(ct) or "\n" in ct
+                or c[3] - c[1] > 1.5 * lh or abs(c[0] - cap[0]) > 3):
+            break
+        y1 = c[3]
+    return y1
+
+
+def _side_rect(page, cap, blocks, up, margin=6.0):
+    """캡션 기준 위(up=True)/아래 영역 → (rect, 이미지수, 벡터수).
+
+    세로 경계는 "같은 단(column)에서 가장 가까운 **본문 문단**" — 위에 다른 그림의
+    캡션이 있으면 거기서 끊긴다. 그다음 그래픽 + 그림 안 텍스트로 실제 범위를 잡는다.
+    """
+    x0, y0, x1, y1 = cap[:4]
+    band, pr = (x0, x1), page.rect
+    if up:
+        lim = _up_limit(cap, blocks, pr)
+        rect = fitz.Rect(x0, lim + 2, x1, y0 - 2)
+    else:
+        lim = pr.y1 - 24
+        for b in blocks:
+            if b[1] >= y1 - 1 and band_overlap(band, (b[0], b[2])) > 0.45 and is_prose(b, pr):
+                lim = min(lim, b[1])
+        rect = fitz.Rect(x0, y1 + 2, x1, lim - 2)
+    if rect.height < 36:
+        return None, 0, 0
+    # ⚠ 분모를 그래픽 넓이로만 잡으면 **스캔본**에서 무너진다 (2026-08-06 실측, Thornton 1998):
+    #   스캔 PDF 는 쪽 전체가 이미지 1장이라, 그림 영역이 아무리 맞아도 "쪽 넓이의 12%"를
+    #   못 넘으면 '그래픽 없음' 으로 버려진다 — 10장 중 7장이 그렇게 날아갔다.
+    #   둘 중 **작은 쪽** 기준으로 본다: 큰 그래픽이 영역을 덮는 경우도 통과한다.
+    hit = [(k, r) for k, r in graphics(page) if r.intersects(rect) and
+           (r & rect).get_area() > 0.12 * min(r.get_area(), rect.get_area())]
+    if hit:
+        u = hit[0][1]
+        for _k, r in hit[1:]:
+            u |= r
+        # 그림 안의 짧은 텍스트(축 라벨·범례)도 그림의 일부다 — 안 넣으면 잘려 나간다
+        for b in blocks:
+            if is_prose(b, pr):
+                continue
+            br = fitz.Rect(b[:4])
+            if br.intersects(rect) and (br & rect).get_area() > 0.5 * max(br.get_area(), 1e-6):
+                u |= br
+        # 그래픽(+그림 안 라벨)에 **딱 맞춘다**. 예전엔 min/max 로 느슨한 후보 사각형과
+        # 합쳤는데, 그러면 그림 위 빈 칸이 통째로 딸려 와 크롭이 반쯤 백지가 된다
+        # (2026-08-06 kraft2017 fig_S1 실측: 위쪽 절반이 여백).
+        y_lo = max(u.y0 - margin, (lim + 2) if up else (y1 + 2))
+        y_hi = min(u.y1 + margin, (y0 - 2) if up else (lim - 2))
+        rect = fitz.Rect(min(rect.x0, u.x0) - margin, y_lo,
+                         max(rect.x1, u.x1) + margin, y_hi) & pr
+    ks = [k for k, _r in hit]
+    return (rect if rect.height >= 36 else None), ks.count("img"), ks.count("draw")
+
+
+def _beside_rect(page, cap, blocks, margin=6.0, max_cap_frac=0.35, min_tall=0.6):
+    """**옆캡션** 배치 (Springer side caption) → (rect, 이미지수, 벡터수) 또는 (None, 0, 0).
+
+    ⛔⛔ 2026-09-27 실측 (gao2026 p21·p24 · Fig. 13·15): 캡션이 왼쪽 **좁은 단**(x 51–162 · 폭 111 pt ·
+      높이 143 pt)에 있고 그림은 그 **오른쪽**(x 184–544 · y 58–519)에 있다. 위·아래만 보는 `_side_rect` 는
+      캡션 단 안에서만 그래픽을 찾으니 "그래픽 없음" 으로 버렸다 — 하필 그 리뷰의 ML 그림 두 장이었다.
+    언제 보나: `region_for` 가 위·아래 둘 다 그래픽을 못 찾았을 때만. 그리고 캡션 모양이 옆캡션일 때만 —
+      **폭 < 쪽 폭의 35 %** 이고 **높이 ≥ 폭 × 0.6** (좁고 긴 블록). 두 단 조판의 보통 캡션(폭 240 pt)이나
+      한 줄짜리 짧은 캡션은 여기 안 온다.
+    무엇을 잡나: 캡션 옆 띠(오른쪽 먼저, 그다음 왼쪽)에서 **캡션과 세로로 겹치는 그래픽**을 씨앗으로,
+      세로로 10 pt 안에 이어진 그래픽을 더한다. 캡션 단의 위·아래 **다른 캡션**이 세로 한계다
+      (한 쪽에 옆캡션 그림이 둘일 때).
+    ⛔ 막는 것: ① 잡은 영역이 **본문 문단과 겹치면** 그 옆은 버린다 ② 잡은 그래픽 바로 위·아래(40 pt 안)에
+      **다른 캡션**이 있으면 그 캡션의 그림이다 — 가져오지 않는다 (캡션과 그림이 다른 쪽인 논문에서
+      옆 단 그림을 엉뚱하게 붙이는 사고 방지).
+    ⛔ 못 하는 것: 캡션이 그림 **아래·위이면서** 옆으로 비껴 있는 배치, 캡션과 그림이 다른 쪽인 배치.
+    """
+    x0, y0, x1, y1 = cap[:4]
+    pr = page.rect
+    w, h = x1 - x0, y1 - y0
+    if w <= 0 or w >= max_cap_frac * pr.width or h < min_tall * w:
+        return None, 0, 0
+    lo, hi = pr.y0 + 0.05 * pr.height, pr.y1 - 0.05 * pr.height
+    caps_other = []
+    for b in blocks:
+        if tuple(b[:4]) == tuple(cap[:4]) or not is_caption(b[4]):
+            continue
+        caps_other.append(fitz.Rect(b[:4]))
+        if band_overlap((x0, x1), (b[0], b[2])) > 0.45:
+            if b[3] <= y0 + 1:
+                lo = max(lo, b[3])
+            elif b[1] >= y1 - 1:
+                hi = min(hi, b[1])
+    for side in ("right", "left"):
+        sx0, sx1 = (x1 + 4, pr.x1 - 12) if side == "right" else (pr.x0 + 12, x0 - 4)
+        if sx1 - sx0 < 72:
+            continue
+        strip = fitz.Rect(sx0, lo, sx1, hi)
+        hits = [(k, r) for k, r in graphics(page)
+                if r.intersects(strip) and (r & strip).get_area() > 0.5 * max(r.get_area(), 1e-6)]
+        taken = [i for i, (_k, r) in enumerate(hits) if r.y0 <= y1 + 10 and r.y1 >= y0 - 10]
+        if not taken:
+            continue
+        u = fitz.Rect(hits[taken[0]][1])
+        for i in taken[1:]:
+            u |= hits[i][1]
+        grown = True
+        while grown:                                    # 세로로 이어진 그래픽 (10 pt 안)
+            grown = False
+            for i, (_k, r) in enumerate(hits):
+                if i not in taken and r.y0 <= u.y1 + 10 and r.y1 >= u.y0 - 10:
+                    u |= r; taken.append(i); grown = True
+        if any(band_overlap((u.x0, u.x1), (b[0], b[2])) > 0.45 and fitz.Rect(b[:4]).intersects(u)
+               for b in blocks if is_prose(b, pr) and not is_caption(b[4])):
+            continue                                    # ① 본문 문단과 겹친다
+        if any(band_overlap((u.x0, u.x1), (c.x0, c.x1)) > 0.45
+               and (0 <= c.y0 - u.y1 <= 40 or 0 <= u.y0 - c.y1 <= 40) for c in caps_other):
+            continue                                    # ② 다른 캡션의 그림이다
+        for b in blocks:                                # 그림 안 라벨·범례
+            if is_prose(b, pr):
+                continue
+            br = fitz.Rect(b[:4])
+            if br.intersects(u):
+                u |= br
+        rect = fitz.Rect(u.x0 - margin, u.y0 - margin, u.x1 + margin, u.y1 + margin) & pr
+        ks = [hits[i][0] for i in taken]
+        return (rect if rect.height >= 36 else None), ks.count("img"), ks.count("draw")
+    return None, 0, 0
+
+
+def _fname_prefix(kind):
+    """kind → 파일이름 접두사. **scheme 은 fig 와 갈라야 한다.**
+
+    🐛 2026-08-29 (han2025 실측): `Scheme 1` 과 `Figure 1` 이 둘 다 `fig_1.png` 로 저장돼
+    **먼저 쓴 Scheme 1 이 통째로 사라졌다.** figures.json 에는 `s1`·`f1` 두 행이 남아 있어
+    "7장 추출" 로 보이는데 실제 PNG 는 6장이고, webapp `_fig_keys()` 는 파일이름을 키로 쓰므로
+    한쪽 주석이 통째로 다른 그림에 붙는다. dedupe 는 `key` 로 묶어서 이걸 못 잡는다.
+    ⚠ 이미 만들어 둔 폴더는 소급되지 않는다 — `--clean` 으로 다시 돌려야 고쳐진다.
+    """
+    return {"table": "tab", "scheme": "sch"}.get(kind, "fig")
+
+
+def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9,
+               cap_below=False, start_y=-1e9):
+    """캡션 블록 → (잘라낼 사각형, 이미지수, 벡터수).
+
+    figure/scheme 는 캡션 **위**가 기본. ⚠ SI 는 캡션을 그림 **위**에 두는 쪽이 많다
+    (실측: Zhou 2026 SI 의 Fig S1/S2/S12 는 캡션이 쪽 맨 위 y=76 이고 그림이 그 아래).
+    위가 비면 아래로 한 번 더 본다 — 표는 처음부터 아래.
+    단 cap_below (문서가 표 캡션을 표 아래에 붙이는 양식 · table_caption_below) 면 표는 **위**를 본다 (2026-11-16).
+    """
+    if kind == "table" and caption_rotation(page, cap) == 90:
+        # 누운 표는 쪽 전체를 잡는다. 표가 쪽을 거의 다 채우므로 잘라내다 잘릴 위험이
+        # 옆띠를 계산하는 것보다 크다. 방향은 렌더 뒤 PIL 로 세운다.
+        pr = page.rect
+        return (fitz.Rect(pr.x0 + 6, pr.y0 + 6, pr.x1 - 6, pr.y1 - 6), 1, 0)
+    if kind == "table" and cap_below:
+        r = table_rect_above(page, cap, tables, start_y)
+        if r is not None and r.height >= 36:
+            return r, 1, 0
+        # 아래 캡션 문서 안에도 위 캡션 표가 섞인다 (warren SI Table S2 — 캡션 400–413 · 표 427–521 · 위는 Fig. S5 캡션).
+        #   위에 표가 없을 때만 아래를 보되, 바로 아래에 **다른 표 캡션이 붙은 표**는 그 캡션 몫이라 뺀다
+        #   (S8 캡션 아래의 S9 격자 — 종전 tab_S8 크롭에 딸려 들어온 그 표).
+        free = [t for t in tables if not _owned_by_caption_below(t, blocks)]
+        r = table_rect(page, cap, free, stop_y)
+        if r is not None and r.height >= 36:
+            return r, 1, 0
+        return _side_rect(page, cap, blocks, up=True)   # 아래 캡션 문서에서 막연히 아래를 보면 본문 · 다음 표가 들어온다
+    if kind == "table":
+        r = table_rect(page, cap, tables, stop_y)
+        if r is not None and r.height >= 36:
+            return r, 1, 0
+        return _side_rect(page, cap, blocks, up=False)
+
+    r, ni, nd = _side_rect(page, cap, blocks, up=True)
+    if r is not None and (ni or nd >= min_draw):
+        return r, ni, nd
+    r2, ni2, nd2 = _side_rect(page, cap, blocks, up=False)
+    if r2 is not None and (ni2 or nd2 >= min_draw):
+        return r2, ni2, nd2
+    r3, ni3, nd3 = _beside_rect(page, cap, blocks)      # 옆캡션 (위·아래가 다 비었을 때만 · 2026-09-27)
+    if r3 is not None and (ni3 or nd3 >= min_draw):
+        return r3, ni3, nd3
+    return (r, ni, nd) if r is not None else (r2, ni2, nd2)
+
+
+def _upright(path, deg):
+    """누운 표 PNG 를 세운다. PIL 없으면 **조용히 넘어가지 않고** 알린다."""
+    try:
+        from PIL import Image
+    except Exception:
+        print(f"    ⚠ PIL 없음 — {Path(path).name} 이 {deg}° 누운 채 저장됐다")
+        return
+    im = Image.open(path)
+    im.rotate(-deg, expand=True).save(path, "PNG", optimize=True)
+
+
+def _shrink(path):
+    """PNG 재압축 — 선화(line art)는 팔레트로 줄이면 60~80% 작아진다. PIL 없으면 그냥 둔다."""
+    try:
+        from PIL import Image
+    except Exception:
+        return
+    try:
+        im = Image.open(path).convert("RGB")
+        # ⛔⛔ 2026-08-25 (codex D 리뷰) — 여기가 **정확히 반대로** 동작했다.
+        #   `getcolors(maxcolors=4096)` 은 4096 색을 넘으면 **None** 을 돌려준다.
+        #   `or []` 가 그걸 빈 목록으로 바꿔 len=0 → `0 > 3500` 거짓 → else 로 가서
+        #   **256 색으로 양자화**했다. 즉 **색이 가장 풍부한 이미지가 가장 심하게 뭉개졌다.**
+        #   스캔 자료집의 글자·미세 범례·열지도 판독을 해친다. talks 뿐 아니라
+        #   **모든 그림 추출**에 걸려 있었다. None = "너무 많다" 로 읽는다.
+        cols = im.getcolors(maxcolors=4096)
+        if cols is None or len(cols) > 3500:
+            im.save(path, "PNG", optimize=True)
+        else:
+            # ⛔ 2026-09-24 — 위 수정(08-25) 때 이 줄이 **같이 지워져** `q` 가 미정의였다.  NameError 를
+            #   아래 `except: pass` 가 삼켜 선화 재압축이 한 달 동안 **한 번도** 안 돌았다 (--selftest (c)).
+            q = im.quantize(colors=256, method=Image.MEDIANCUT)
+            q.save(path, "PNG", optimize=True)
+    except Exception:
+        pass
+
+
+def blank_ratio(pix):
+    """거의 흰 픽셀 비율 — 빈 영역(=오탐) 걸러내기."""
+    s = pix.samples
+    n = pix.width * pix.height
+    if n == 0:
+        return 1.0
+    stride, white = pix.n, 0
+    step = max(1, n // 20000)                  # 성능: 최대 2만 점만 표본
+    cnt = 0
+    for i in range(0, n, step):
+        j = i * stride
+        if s[j] > 244 and s[j + 1] > 244 and s[j + 2] > 244:
+            white += 1
+        cnt += 1
+    return white / max(cnt, 1)
+
+
+def orphans_if_cleaned(slug, new_paths, out_root=None):
+    """`--clean` 이 **되살릴 수 없게** 지우는 그림을 미리 찾는다 → [(파일명, src), …].
+
+    ⛔⛔ 2026-09-22 실측 사고. `lee2026_microcrack…` 의 SI 그림 **23장**이 이 경로로 날아갔다.
+      그 23장은 SI(.docx)에서 나왔는데 이 도구에는 **docx 경로가 없다** — 즉 같은 명령을
+      다시 돌려도 안 나온다. 게다가 대체 경로(PyMuPDF 없는 컨테이너)가 만든 **.jpg** 라
+      `*.png` 로 세는 점검에도 안 걸려서 "원래 없었다" 로 오독하기까지 했다.
+      ⇒ 지우기 **전에** 기존 색인의 `src` 를 보고, 이번 원본 목록에 없는 것이 있으면 멈춘다.
+
+    ⛔ 이 함수가 **못 하는 것**: 같은 원본에서 나온 그림이 이번 실행에서 *더 적게* 나오는
+      경우(캡션 규칙이 바뀌었다든가)는 못 잡는다. src 가 같으면 재생 가능으로 본다.
+    """
+    root = Path(out_root) if out_root else OUT_ROOT
+    idx = root / slug / "figures.json"
+    if not idx.exists():
+        return []
+    try:
+        meta = json.loads(idx.read_text(encoding="utf-8"))
+    except Exception:
+        return []                                   # 못 읽는 색인은 판단 근거가 아니다
+    have = {Path(p).name for p in new_paths}
+    out = []
+    for f in meta.get("figures", []):
+        if not isinstance(f, dict):
+            continue
+        src = f.get("src")
+        if src and Path(str(src)).name not in have:
+            out.append((f.get("file", "?"), Path(str(src)).name))
+    return out
+
+
+def _marked(v):
+    """손작업 표지의 참/거짓 — 값이 설명 문자열이어도 표지다 (정본 manual_crop 24장 중 23장이 문자열)."""
+    if isinstance(v, str):
+        return v.strip().lower() not in ("", "false", "0", "no", "none")
+    return bool(v)
+
+
+def handwork_if_cleaned(slug, out_root=None):
+    """폴더를 지우면 **이 도구로는 다시 못 만드는 손작업** → [(파일명, 사유), …].
+
+    ⛔⛔ 2026-09-27 실측. `qin2026_bilayer…` 의 f8 은 캡션(p25)과 그림(p24)이 다른 쪽이라 도구가
+      건너뛰었고 큐레이터가 손으로 넣었다(`manual_crop`). 나머지 7장도 저자 래스터의 테두리를
+      빼고 다시 잘랐다(`recrop`). 같은 PDF 를 다시 주면 `orphans_if_cleaned` 는 src 가 같아
+      **[] 를 낸다** → `--clean` 이 fig_8.png 를 지우고, 재추출은 7장만 낸다.
+      `--inbox --run` · `--refresh --apply` 는 가드가 아예 없었다. 게다가 `--refresh` 는 장수가
+      달라진 논문을 고르므로, **손으로 한 장 보탠 논문을 골라서** 지운다.
+      정본 실측(09-27): recrop 128장(12편) · manual_crop 24장(11편).
+    사유는 'manual_crop'(도구가 못 만든 그림)을 'recrop'(도구 크롭을 손으로 고친 것)보다 먼저 적는다.
+    ⛔ 못 하는 것: 표지를 안 단 손작업은 모른다 — 손으로 자르면 figures.json 에 표지를 단다.
+    """
+    root = Path(out_root) if out_root else OUT_ROOT
+    idx = root / slug / "figures.json"
+    if not idx.exists():
+        return []
+    try:
+        meta = json.loads(idx.read_text(encoding="utf-8"))
+    except Exception:
+        return []                                   # 못 읽는 색인은 판단 근거가 아니다
+    out = []
+    for f in meta.get("figures", []):
+        if not isinstance(f, dict):
+            continue
+        if _marked(f.get("manual_crop")):
+            out.append((f.get("file", "?"), "manual_crop"))
+        elif _marked(f.get("recrop")):
+            out.append((f.get("file", "?"), "recrop"))
+    return out
+
+
+def clean_blockers(slug, new_paths, out_root=None):
+    """폴더를 지우기 전에 막을 목록 = (src 고아, 손작업). 지우는 경로 셋이 모두 이것을 본다 —
+    `--slug … --clean` · `--inbox --run` · `--refresh --apply`. 넘기려면 `--force_clean`."""
+    return orphans_if_cleaned(slug, new_paths, out_root), handwork_if_cleaned(slug, out_root)
+
+
+def _clean_refusal(lost, hand):
+    """clean_blockers 결과를 사람이 읽는 거부문으로."""
+    msg = ["⛔⛔ **폴더 지우기를 멈췄다 — 다시 뽑아도 되살릴 수 없는 그림이 있다.**"]
+    if lost:
+        msg.append(f"   ① 기존 색인의 그림 {len(lost)}장이 **지금 --pdf 로 준 원본에서 나온 것이 아니다**:")
+        msg += [f"     {f}  ← src: {s}" for f, s in lost[:12]]
+        if len(lost) > 12:
+            msg.append(f"     … 외 {len(lost) - 12}장")
+        msg.append("   2026-09-22 실측: SI 가 .docx 인 논문에서 이 경로로 **SI 그림 23장이 날아갔다**\n"
+                   "   (대체 경로로 만든 .jpg 였고, 확장자가 달라 `*.png` 점검에도 안 걸렸다).")
+    if hand:
+        msg.append(f"   ② **손작업 {len(hand)}장** — 이 도구는 다시 못 만든다 "
+                   "(manual_crop = 도구가 못 뽑은 그림 · recrop = 손으로 고친 크롭):")
+        msg += [f"     {f}  ← {why}" for f, why in hand[:12]]
+        if len(hand) > 12:
+            msg.append(f"     … 외 {len(hand) - 12}장")
+        msg.append("   2026-09-27 실측: qin2026 f8 (캡션 p25 · 그림 p24) 은 재추출에서 아예 빠진다.")
+    msg.append("   ⇒ 빠진 원본을 --pdf 로 같이 주든가, 정말 버릴 거면 --force_clean 을 쓴다.")
+    return "\n".join(msg)
+
+
+def _near_key(text, si_file):
+    """캡션 **모양**(키워드+번호로 시작)인데 is_caption 이 떨군 블록 → 'f12' 같은 키, 아니면 None.
+    extract 의 키 규칙(SI 파일이면 S 를 붙인다 · ST→S)과 같게 만든다 — 갈리면 번호 공백 대조가 헛돈다."""
+    m = CAP_RE.match(" ".join((text or "").split()))
+    if not m:
+        return None
+    kw = m.group("kind").lower()
+    kind = "table" if kw.startswith("tab") else ("scheme" if kw.startswith("sch") else "figure")
+    label = _norm_label(m.group("label"), kind)
+    if label is None:
+        return None
+    if (si_file or m.group("si")) and not label.upper().startswith("S"):
+        label = "S" + label
+    return f"{kind[0]}{label.upper()}"
+
+
+# 본문 참조 (2026-11-23 · pandey2026 Fig. 19) — 끝 번호 대조용. 'Fig. 19' · 'Figure 19 presents' · 'FIGURE 19 |' ·
+#   'Figs. 3 and 19' · 'Figures 17–19' · 'Table 2' · 'Scheme 1' · 'Supplementary Fig. 3' · 'Fig. S3'.
+#   ⚠ 쉼표 · and 목록은 **복수 키워드** (Figs. · Figures · Tables · Schemes) 뒤에서만 받는다 — 단수 'Fig. 2, 20 mg' 의
+#     20 을 그림 번호로 읽지 않으려고. 단수는 첫 번호와 범위 (– · — · - · to) 만.
+#   ⚠ 150 넘는 번호는 버린다 (연도 · 쪽 번호 같은 숫자가 키워드 뒤에 붙는 우연).
+#   ⚠ 키워드 첫 글자는 대문자만 (F · T · S — 나머지는 대소문자 무관이라 'FIGURE' · 'TABLE' 은 받는다) — 소문자 'periodic table 3d' ·
+#     'scheme 2' 를 참조로 읽지 않으려고. 소문자 'fig. 3' 를 쓰는 옛 저널은 그래서 안 센다 (못 하는 것).
+REF_HEAD = re.compile(r"(?<![A-Za-z])(?P<si>" + SI_PRE + r")?"
+                      r"(?P<kw>(?-i:F)ig(?:ure)?s?\.?|(?-i:T)ables?|(?-i:S)chemes?)\s*(?=S?\s?\d)", re.I)
+REF_NUM = re.compile(r"\s*(?P<s>S\s?)?(?P<n>\d+)(?:[a-z](?![a-z]))?")
+REF_SEP_RANGE = re.compile(r"\s*(?:–|—|-|to\b)\s*", re.I)
+REF_SEP_LIST = re.compile(r"\s*(?:,\s*and\b|,|and\b|&|–|—|-|to\b)\s*", re.I)
+REF_MAX = 150
+
+
+def text_refs(text, si_file):
+    """본문 글에서 그림 · 표 · 스킴 참조 키 → ['f19', 'fS3', 't2', …] (같은 키가 여러 번 나오면 여러 번).
+
+    키 규칙은 `_near_key` · extract 와 같다 (SI 파일이면 S 를 붙인다). 캡션 자신의 번호도 참조로 센다 —
+    캡션 글이 있다는 것 자체가 그 번호가 있다는 뜻이다.
+    ⛔ 못 하는 것: 남의 논문 그림을 가리키는 'Figure 3 of ref. 12' 도 센다 (확인 대상으로만 쓴다) ·
+      단수 키워드 뒤 쉼표 목록 ('Fig. 3, 4') 은 첫 번호만 · 로마 숫자 ('TABLE I') · 소문자 키워드 ('fig. 3') 는 안 센다 ·
+      'Extended Data' 는 SI 로 친다 (CAP_RE 와 같다) · 블록 경계에서 갈린 'Supplementary' ↵ 'Table 2' 는 본문 표로 읽힌다.
+    """
+    # 줄 끝 하이픈을 먼저 잇는다 — 'Supple-\nmentary Table 2' (liu2026 Li-In-S p4 실측) 가 본문 'Table 2' 로 읽혀
+    #   표가 없는 논문에 t1 · t2 누락이 떴다. 소프트 하이픈 (\xad) 도 같은 자리에 온다 (pandey2026 'sche\xad').
+    t = re.sub(r"\xad\s*", "", text or "")
+    t = re.sub(r"(?<=[a-z])-[ \t]*\n\s*(?=[a-z])", "", t)
+    t = " ".join(t.split())
+    out = []
+    for m in REF_HEAD.finditer(t):
+        kw = m.group("kw").lower()
+        kind = "t" if kw.startswith("tab") else ("s" if kw.startswith("sch") else "f")
+        plural = kw.rstrip(".").endswith("s")          # figs · figures · tables · schemes
+        sep = REF_SEP_LIST if plural else REF_SEP_RANGE
+        pos, first = m.end(), True
+        while True:
+            if not first:
+                s = sep.match(t, pos)
+                if not s:
+                    break
+                pos = s.end()
+            n = REF_NUM.match(t, pos)
+            if not n:
+                break
+            pos, first = n.end(), False
+            num = int(n.group("n"))
+            if not 0 < num <= REF_MAX:
+                continue
+            si_ = bool(si_file or m.group("si") or n.group("s"))
+            out.append(f"{kind}{'S' if si_ else ''}{num}")
+    return out
+
+
+def missing_labels(found_keys, near, skipped, refs=None, si_given=False):
+    """추출 결과의 **번호 공백**과 **규칙에 떨어진 캡션 후보** → [{key, why, skipped, near_miss[, refs]}, …].
+
+    ⛔⛔ 2026-09-27 (gao2026 실측): Fig. 12·13·15·17 이 빠졌는데 추출 출력만 봐서는 몰랐다 — 12·17 은
+      is_caption 이 떨궈 **제외 목록에도 없었고**, 13·15 는 '그래픽 없음' 한 줄로 18 행 제한 속에 묻혔다.
+      번호 구멍 검사는 `--audit` 에만 있어서 추출 직후엔 아무도 돌리지 않았다. 추출이 스스로 말한다:
+      ① 종류·본문/SI 별로 1..최대 번호 중 빠진 번호 ② 캡션 모양인데 떨어진 후보 중 끝내 추출 안 된 번호.
+    ⛔⛔ 2026-11-23 (pandey2026 실측): 마지막 그림 Fig. 19 가 **보고 없이** 빠졌다 — 캡션은 인정됐는데 자르기에서
+      '영역 없음' 으로 떨어졌고, ① 은 1..18 만 봤고, 제외 목록의 번호는 ① 의 공백일 때만 붙었다. 그래서 더 본다:
+      ③ 본문 참조 (`text_refs`) 의 최댓값이 추출 최댓값보다 크면 그 사이 번호 (끝 번호) · 한 장도 안 나온 종류는 1..최댓값
+      ④ 캡션으로 인정됐는데 자르기에서 떨어진 번호 중 끝내 추출 안 된 것 (위치와 상관없이).
+      SI 번호의 ③ 은 SI 가 입력에 있을 때만 (si_given · 또는 SI 번호가 하나라도 추출됨) — 본문은 SI 를 늘 참조하는데
+      SI 파일이 없는 경우가 많아서, 안 그러면 매번 SI 전체가 '누락' 으로 뜬다.
+    found_keys = {'f1','fS3',…} · near = [(key, page, text)] · skipped = [(key, page, why)] ·
+      refs = [(key, page)] (`text_refs`) · si_given = 입력 파일 중 SI 파일이 있었나.
+    ⛔ 못 하는 것: 본문이 한 번도 안 가리키고 캡션도 안 잡힌 마지막 번호는 여전히 모른다 · ②④ 는 본문 참조나
+      본문 문단 오탐일 수도 있고 ③ 은 남의 논문 그림 참조일 수도 있다 (그렇게 적는다 — 확인 대상이지 판정이 아니다).
+    """
+    have = {}
+    for k in found_keys:
+        kind, lab = k[0], k[1:]
+        num = re.sub(r"\D", "", lab)
+        if num:
+            have.setdefault((kind, lab.startswith("S")), set()).add(int(num))
+    near_by, skip_by, ref_by = {}, {}, {}
+    for k, p, t in near:
+        near_by.setdefault(k, []).append({"page": p, "text": t[:90]})
+    for k, p, why in skipped:
+        skip_by.setdefault(k, []).append(f"p{p} {why}")
+    ref_max = {}
+    for k, p in (refs or ()):
+        g = (k[0], k[1:].startswith("S"))
+        n = int(re.sub(r"\D", "", k[1:]))
+        ref_by.setdefault(k, [])
+        if p not in ref_by[k]:
+            ref_by[k].append(p)
+        ref_max[g] = max(ref_max.get(g, 0), n)
+    si_seen = si_given or any(si_ for (_k, si_) in have)
+    out, seen = [], set()
+
+    def add(key, why):
+        seen.add(key)
+        rec = {"key": key, "why": why, "skipped": skip_by.get(key, []), "near_miss": near_by.get(key, [])}
+        if ref_by.get(key):
+            rec["refs"] = [f"p{p}" for p in ref_by[key][:4]]
+        out.append(rec)
+
+    for g in sorted(set(have) | {g for g in ref_max if not g[1] or si_seen}):
+        kind, si_ = g
+        nums = have.get(g, set())
+        top_have = max(nums) if nums else 0
+        top_ref = ref_max.get(g, 0) if (not si_ or si_seen) else 0
+        lab = f"{({'f': 'Fig.', 't': 'Table', 's': 'Scheme'})[kind]} {'S' if si_ else ''}{top_ref}"
+        for n in range(1, max(top_have, top_ref) + 1):
+            if n in nums:
+                continue
+            key = f"{kind}{'S' if si_ else ''}{n}"
+            if n <= top_have:
+                add(key, "번호 공백 — 이 번호가 추출되지 않았다")
+            elif nums:
+                add(key, f"끝 번호 — 본문이 {lab} 까지 가리키는데 추출 최대는 {top_have} "
+                         f"(남의 논문 그림 참조일 수도 있다 · 확인)")
+            else:
+                add(key, f"이 종류가 한 장도 추출되지 않았는데 본문이 {lab} 까지 가리킨다 "
+                         f"(남의 논문 참조일 수도 있다 · 확인)")
+    for key in sorted(skip_by, key=lambda k: (k[0], k[1:2] == "S", int(re.sub(r"\D", "", k[1:]) or 0))):
+        if key in found_keys or key in seen:
+            continue
+        add(key, "캡션으로 인정됐는데 자르기에서 떨어졌고 추출 0 — 본문 문단 오탐일 수도 있다 (제외 사유 확인)")
+    for key, lst in sorted(near_by.items()):
+        if key in found_keys or key in seen:
+            continue
+        add(key, "캡션 모양 후보가 규칙에 떨어졌고 추출 0 — 본문 참조일 수도 있다 (확인)")
+    return out
+
+
+def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
+            maxpx=1500, relto=None):
+    out_dir = OUT_ROOT / slug
+    found, seen, skipped, near, votes, refs = [], {}, [], [], [], []
+    si_given = any(SI_TAG.search(Path(p).stem) for p in pdf_paths)   # SI 번호의 끝 번호 대조는 SI 가 있을 때만
+    for pdf_path in pdf_paths:
+        _GCACHE.clear()                        # 문서마다 비운다 (위 주석 참고)
+        doc = fitz.open(pdf_path)
+        # ⚠ 여기 예전에 `\bsup|\bsi\b|…` 라는 **별도 정규식**이 있었다 (2026-08-06 실측 사고):
+        #   `\bsup` 이 "**Sup**erionic"·"**sup**erconductor" 를 잡아, 제목에 그 낱말이 든
+        #   논문 11편의 **본문 그림이 통째로 S 번호**로 붙었다(kraft2017 본문 8장 → SI 8장).
+        #   SI_TAG 하나만 쓴다 — 매칭 쪽과 판정이 갈리면 이런 사고가 또 난다.
+        si = bool(SI_TAG.search(Path(pdf_path).stem))
+        # 첫 바퀴 (2026-11-16): 쪽마다 블록 · 캡션 · 표를 먼저 다 모은다 — 표 캡션이 표 위/아래 어느 쪽에 붙는
+        #   양식인지 **문서 단위 다수결** (table_caption_below) 로 정한 뒤 자른다. 표 검출은 여기서 한 번만 한다.
+        pre = []
+        for pno in range(doc.page_count):
+            page = doc[pno]
+            blocks = page_blocks(page)         # 캡션 위 끝 = 첫 글줄 (2026-11-16 · tighten_caption_tops)
+            caps = [(b, is_caption(b[4])) for b in blocks]
+            for b in blocks:                   # 본문 참조 번호 — 끝 번호 대조 (2026-11-23 · missing_labels ③)
+                refs.extend((k, pno + 1) for k in text_refs(b[4], si))
+            for b, h in caps:                  # 캡션 모양인데 떨어진 블록 — 번호 공백 보고에 쓴다 (조용히 버리지 않는다)
+                if h is None:
+                    nk = _near_key(b[4], si)
+                    if nk:
+                        near.append((nk, pno + 1, " ".join(b[4].split())))
+            tabs = ()
+            if any(h and h[0] == "table" for _b, h in caps):
+                # 표가 있는 쪽에서만 (검출이 느리다). 괘선 없는 표는 lines 전략이 못 잡아서
+                # text 전략으로 한 번 더 본다 (실측: SI 의 정렬-텍스트 표들이 전부 여기서 나왔다).
+                for strat in ("lines", "text"):
+                    try:
+                        tabs = [t.bbox for t in page.find_tables(strategy=strat).tables]
+                    except Exception:
+                        tabs = ()
+                    if tabs:
+                        break
+            pre.append((blocks, caps, tabs))
+        cap_below, n_above, n_below = table_caption_below([(c, t) for _b, c, t in pre])
+        votes.append({"src": Path(pdf_path).name, "above_adjacent": n_above,
+                      "below_adjacent": n_below, "caption_below": cap_below})
+        for pno, (blocks, caps, tabs) in enumerate(pre):
+            page = doc[pno]
+            for cap, hit in caps:
+                if not hit:
+                    continue
+                kind, label, cap_si = hit
+                if (si or cap_si) and not label.upper().startswith("S"):
+                    label = "S" + label        # SI 의 "Figure 3" 은 곧 Fig S3
+                key = f"{kind[0]}{label.upper()}"
+                cr, caption = merge_caption(blocks, cap)
+                # 같은 쪽에서 이 캡션 다음에 오는 캡션의 시작선 — 표 크롭의 아래 한계
+                stop_y = min([b[1] for b, h in caps
+                              if h and b[1] > cr.y1 + 1
+                              and band_overlap((cr.x0, cr.x1), (b[0], b[2])) > 0.30] or [1e9])
+                # 같은 쪽에서 이 캡션 **위**에 있는 캡션의 아래 끝 — 아래 캡션 문서의 표 크롭 위 한계 (table_rect_above)
+                start_y = max([b[3] for b, h in caps
+                               if h and b[3] < cr.y0 - 1
+                               and band_overlap((cr.x0, cr.x1), (b[0], b[2])) > 0.30] or [-1e9])
+                rect, n_img, n_draw = region_for(page, tuple(cr), kind, blocks, tabs,
+                                                 min_draw=min_draw, stop_y=stop_y,
+                                                 cap_below=cap_below, start_y=start_y)
+                if rect is None:
+                    skipped.append((key, pno + 1, "영역 없음"))
+                    continue
+                # ② 기하 검증 — 그래픽이 없으면 본문 문단 오탐
+                if kind != "table" and n_img == 0 and n_draw < min_draw:
+                    skipped.append((key, pno + 1, f"그래픽 없음(img{n_img}/draw{n_draw})"))
+                    continue
+                # 긴 변이 maxpx 를 넘지 않도록 이 그림만 dpi 를 낮춘다.
+                #   ⚠ repo 에 커밋하는 파일이라 크기가 중요하다: 200 dpi 고정이면 논문 1편에
+                #     11 MB 까지 갔다(Zhou 2026, 25장). 화면 판독에는 긴 변 1500 px 면 충분.
+                d_eff = dpi
+                if maxpx:
+                    long_pt = max(rect.width, rect.height)
+                    if long_pt > 0:
+                        d_eff = min(dpi, max(72, int(maxpx * 72.0 / long_pt)))
+                rot = caption_rotation(page, tuple(cr)) if kind == "table" else 0
+                pix = page.get_pixmap(clip=rect, dpi=d_eff)
+                br = blank_ratio(pix)
+                fallback = None
+                if br > keep_blank and kind == "table" and not cap_below:
+                    # ⛔ 2026-11-24 실측 (choi2025 Nat. Commun. SI Table S1–S3) — 표를 표로 못 찾은 문서는 다수결이
+                    #   '캡션 위' 로 남아 캡션 **아래** 빈칸을 자르고 '거의 백지' 로 버렸다. 이 표만 캡션이 표 아래인 꼴로 보고
+                    #   캡션 **위**를 한 번 더 본다 (같은 쪽 · 위 경계 = 가장 가까운 본문 · 캡션). 거기도 백지면 종전대로 버린다.
+                    r2 = table_rect_above(page, tuple(cr), tabs, start_y)
+                    if r2 is None or r2.height < 36:
+                        r2 = _side_rect(page, tuple(cr), blocks, up=True)[0]
+                    if r2 is not None and r2.height >= 36:
+                        d2 = dpi if not maxpx else min(dpi, max(72, int(maxpx * 72.0 / max(r2.width, r2.height))))
+                        pix2 = page.get_pixmap(clip=r2, dpi=d2)
+                        if blank_ratio(pix2) <= keep_blank:
+                            rect, pix, d_eff, br = r2, pix2, d2, blank_ratio(pix2)
+                            fallback = "아래가 거의 백지라 캡션 위를 잘랐다 (이 표만 캡션이 표 아래인 꼴로 추정 · 눈으로 확인)"
+                if br > keep_blank:
+                    skipped.append((key, pno + 1, f"거의 백지({br:.3f})"))
+                    continue
+                if key in seen:                # 같은 번호가 또 나오면 큰 쪽만 (2단 재조판 등)
+                    if pix.width * pix.height <= seen[key]["px"]:
+                        skipped.append((key, pno + 1, "중복(작은 쪽)"))
+                        continue
+                    found = [f for f in found if f["key"] != key]
+                fn = f"{_fname_prefix(kind)}_{label.upper()}.png"
+                rec = {"key": key, "kind": kind, "label": label.upper(), "page": pno + 1,
+                       "file": fn, "caption": caption[:900], "rotated_deg": rot,
+                       "bbox": [round(v, 1) for v in rect],
+                       "w": pix.width, "h": pix.height, "px": pix.width * pix.height, "dpi": d_eff,
+                       "src": Path(pdf_path).name, "blank": round(br, 3)}
+                if fallback:
+                    rec["auto_fallback"] = fallback
+                seen[key] = rec
+                found.append(rec)
+                if not dry:
+                    out_dir.mkdir(parents=True, exist_ok=True)
+                    pix.save(out_dir / fn)
+                    if rot:
+                        _upright(out_dir / fn, rot)
+                    _shrink(out_dir / fn)
+        doc.close()
+
+    def sortkey(r):
+        L = r["label"]
+        return (r["kind"] != "figure", L.startswith("S"),
+                int(re.sub(r"\D", "", L) or 0))
+    found.sort(key=sortkey)
+    for r in found:
+        r.pop("px", None)
+    meta = {"slug": slug, "dpi": dpi, "maxpx": maxpx,
+            "generated": time.strftime("%Y-%m-%d"),
+            # ⚠ 원본 PDF 는 repo 에 없다(litdb/inbox 는 .gitignore). 그래서 **어느 하위 폴더의
+            #   어느 파일**이었는지를 남긴다 — 다른 머신에서도 --inbox_dir 만 맞추면 다시 찾는다.
+            "sources": [_relto(p, relto) for p in pdf_paths],
+            "figures": found,
+            # 번호 공백·떨어진 캡션 후보 (2026-09-27) — 빈 목록이 정상. 있으면 손 크롭(manual_crop) 대상 후보다.
+            # 2026-11-23: 본문 참조 최댓값과의 끝 번호 대조 · 자르기에서 떨어진 번호도 위치와 상관없이 (pandey2026 Fig. 19).
+            "missing_labels": missing_labels({r["key"] for r in found}, near, skipped, refs, si_given=si_given),
+            # PDF 마다 표 캡션 양식 다수결 (2026-11-16) — caption_below 가 True 인 파일만 표를 캡션 **위**에서 잘랐다.
+            "table_caption_vote": votes}
+    if not dry:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "figures.json").write_text(
+            json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+    return meta, skipped
+
+
+
+def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
+                   keep_blank=0.995, relto=None, nup=1):
+    """발표 덱(PPT→PDF)을 **슬라이드 1장 = 그림 1장**으로 자른다 (`--slides`).
+
+    왜 별도 모드인가 — 본체 extract() 는 "Fig. 1." 같은 **저널 캡션을 앵커**로 쓴다.
+    PPT 덱에는 그런 캡션이 아예 없어서 본체를 돌리면 **0장**이 나온다(litdb/talks 4편 실측).
+    덱은 슬라이드 자체가 그림이므로 쪽을 통째로 렌더하는 게 맞다.
+
+    캡션 = 그 슬라이드의 상단 텍스트(제목·불릿 앞부분). digest 에서 `Fig. 7` 로 쓰면
+    **슬라이드 7**을 가리키게 라벨을 쪽번호로 맞춘다 (덱 자체 인쇄 번호와 다를 수 있으니
+    digest 에 "PDF 쪽 = 슬라이드" 를 명시할 것).
+
+    ⭐ `nup=2` (2026-08-25) — **2-up 인쇄 자료집**(한 쪽에 슬라이드 2장)을 위·아래로
+      나눈다. 심포지엄 자료집이 대개 이 꼴이라 쪽 렌더만 하면 슬라이드 두 장이 한 그림에
+      뭉쳐 digest 가 "Fig. 3" 으로 무엇을 가리키는지 모호해진다.
+      라벨은 `<쪽>a` / `<쪽>b` 로 준다 — 덱 자체 인쇄 번호와 다를 수 있으므로
+      digest 에 **"PDF 쪽-위치 ↔ 덱 인쇄번호"** 대응을 반드시 적을 것.
+      ⚠ 반쪽이 거의 백지면(간지·마지막 홀수 슬라이드) 그 반쪽만 버린다.
+
+    이 모드가 못 하는 것: 한 슬라이드 안의 여러 패널을 나누지 않는다(a/b/c 분해 없음).
+      nup 은 **균등 분할**이라 위아래 여백이 다른 레이아웃에서는 경계가 어긋날 수 있다 —
+      결과를 눈으로 확인할 것.
+    """
+    out_dir = OUT_ROOT / slug
+    doc = fitz.open(pdf_path)
+    found, skipped = [], []
+    for pno in range(doc.page_count):
+        page = doc[pno]
+        d_eff = dpi
+        if maxpx:
+            long_pt = max(page.rect.width, page.rect.height)
+            if long_pt > 0:
+                d_eff = min(dpi, max(72, int(maxpx * 72.0 / long_pt)))
+        # ── nup 분할 (2-up 자료집) ─────────────────────────────────────
+        if nup > 1:
+            # ⚠ 2026-08-25 — 여백 자동탐지를 붙였다가 **되돌렸다.** digest 작성 쪽에서
+            #   "크롭이 반 슬라이드 어긋난다" 는 보고가 왔지만, fig_3a·fig_15b 를 직접
+            #   열어 보니 슬라이드가 온전하고 하단 소번호("1", "26")도 들어 있었다 —
+            #   **보고가 틀렸다.** 그리고 흰 띠 신호 자체가 못 믿을 것이었다
+            #   (중앙영역 최장 띠 중심이 쪽마다 362/568/316/431 로 제각각).
+            #   없는 버그를 고치려 불안정한 탐지기를 넣는 것이 더 나쁘다 → 균등 분할 유지.
+            #   레이아웃이 실제로 어긋나는 덱을 만나면 --nup-offset 을 여는 것이 맞다.
+            h = page.rect.height / nup
+            for k in range(nup):
+                clip = fitz.Rect(page.rect.x0, page.rect.y0 + k * h,
+                                 page.rect.x1, page.rect.y0 + (k + 1) * h)
+                sub = page.get_pixmap(dpi=d_eff, clip=clip)
+                sbr = blank_ratio(sub)
+                # ⛔ 2026-08-25 (codex D) — `'ab cdef'[2]` 가 **공백**이라 nup=3 에서
+                #   라벨이 `1a, 1b, "1 "` 이 됐다. 문자열 슬라이싱 대신 목록으로.
+                _SUF = "abcdefgh"
+                sublab = f"{pno + 1}{_SUF[k]}" if k < len(_SUF) else f"{pno + 1}_{k}"
+                # ⛔ 2026-08-25 (codex D·E) — 여기서 `continue` 로 **슬롯을 버렸다.**
+                #   26쪽×2 = 52 슬롯인데 manifest 엔 50개뿐이었고(2a·2b 소멸) 이유가
+                #   어디에도 안 남았다. skipped 는 콘솔로만 나가 기록이 아니다.
+                #   판정: blank_score 는 **삭제 기준이 아니라 검토 우선순위 점수**다.
+                #   전 슬롯·전 PNG 를 남기고, 사람이 확인해야 blank_confirmed 가 된다.
+                blank_cand = sbr > keep_blank
+                cap = " / ".join(
+                    " ".join(b[4].split()) for b in sorted(text_blocks(page), key=lambda b: b[1])
+                    if b[4].strip() and clip.y0 <= b[1] < clip.y1)[:900]
+                fn = f"fig_{sublab}.png"
+                found.append({"key": f"F{sublab}", "kind": "figure", "label": sublab,
+                              "slot_id": sublab,
+                              "page": pno + 1, "file": fn, "caption": cap,
+                              "rotated_deg": 0,
+                              "bbox": [round(v, 1) for v in clip],
+                              "w": sub.width, "h": sub.height, "dpi": d_eff,
+                              "src": Path(pdf_path).name, "blank": round(sbr, 3),
+                              "blank_score": round(sbr, 3),
+                              # 자동 분류일 뿐 확정 아님 — 확정은 사람만 한다
+                              "content_status": "blank_candidate" if blank_cand else "content",
+                              "artifact_retained": True,
+                              "digest_included": not blank_cand,
+                              "reviewed": False,
+                              "slide": True, "nup": nup, "nup_index": k})
+                if blank_cand:
+                    skipped.append((f"F{sublab}", pno + 1,
+                                    f"백지 후보({sbr:.3f}) — 보존됨, 검토 대기"))
+                if not dry:
+                    out_dir.mkdir(parents=True, exist_ok=True)
+                    sub.save(out_dir / fn)
+                    _shrink(out_dir / fn)
+            continue
+
+        pix = page.get_pixmap(dpi=d_eff)
+        br = blank_ratio(pix)
+        blank_cand = br > keep_blank             # 표지 뒤 백지·간지 — **버리지 않는다**
+        # 캡션 = 위에서부터 텍스트 블록을 이어붙인다 (제목 + 첫 불릿이면 충분)
+        cap = " / ".join(
+            " ".join(b[4].split()) for b in sorted(text_blocks(page), key=lambda b: b[1])
+            if b[4].strip())[:900]
+        label = str(pno + 1)
+        fn = f"fig_{label}.png"
+        found.append({"key": f"F{label}", "kind": "figure", "label": label,
+                      "slot_id": label,
+                      "page": pno + 1, "file": fn, "caption": cap, "rotated_deg": 0,
+                      "bbox": [round(v, 1) for v in page.rect],
+                      "w": pix.width, "h": pix.height, "dpi": d_eff,
+                      "src": Path(pdf_path).name, "blank": round(br, 3),
+                      "blank_score": round(br, 3),
+                      "content_status": "blank_candidate" if blank_cand else "content",
+                      "artifact_retained": True,
+                      "digest_included": not blank_cand,
+                      "reviewed": False,
+                      "slide": True})
+        if blank_cand:
+            skipped.append((f"F{label}", pno + 1,
+                            f"백지 후보({br:.3f}) — 보존됨, 검토 대기"))
+        if not dry:
+            out_dir.mkdir(parents=True, exist_ok=True)
+            pix.save(out_dir / fn)
+            _shrink(out_dir / fn)
+    doc.close()
+    meta = {"slug": slug, "dpi": dpi, "maxpx": maxpx, "mode": "slides", "nup": nup,
+            "generated": time.strftime("%Y-%m-%d"),
+            "sources": [_relto(Path(pdf_path), relto)], "figures": found}
+    if not dry:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "figures.json").write_text(
+            json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+    return meta, skipped
+
+
+# ── inbox 자동 매칭 ─────────────────────────────────────────────────────
+#   1저자가 `--slug <slug>` 를 그대로 붙여넣어 bash 오류를 냈다(2026-08-06).
+#   자리표시자를 직접 채우게 하지 말고, inbox 를 훑어 digest 와 자동으로 짝지어 준다.
+INBOX = ROOT / "litdb" / "inbox"
+PAPERS = ROOT / "litdb" / "papers"
+PDF_MAP = ROOT / "litdb" / "pdf_map.tsv"
+
+
+def load_map():
+    """손으로 지정한 slug ↔ PDF 짝 (litdb/pdf_map.tsv). 자동 매칭보다 **우선**한다.
+
+    ⚠ 왜 필요한가 (2026-08-06): digest 제목이 원제를 의역한 경우가 많아 파일명과 토큰이
+      안 겹친다. 문턱을 낮추면 다른 데서 오탐이 터진다(실측: 본문 색인을 넓히면 6건 중
+      3건은 붙고 다른 1건은 오히려 밀렸다). 자동으로 안 되는 것만 여기 적는다.
+      형식: `<slug>\t<PDF 파일명 일부>`  (# 은 주석). 파일명은 **부분 일치**면 된다.
+    """
+    if not PDF_MAP.exists():
+        return []
+    out = []
+    for ln in PDF_MAP.read_text(encoding="utf-8").splitlines():
+        ln = ln.split("#")[0].strip()
+        if not ln or "\t" not in ln:
+            continue
+        slug, pat = (x.strip() for x in ln.split("\t", 1))
+        if slug and pat:
+            out.append((slug, pat.lower()))
+    return out
+
+
+def pdf_roots(inbox_dir=""):
+    """PDF 를 찾을 곳들 (순서대로).
+
+    ⚠ 왜 업로드 폴더까지 (2026-08-06 1저자 요청 "논문 에이전트 먹이면 자동으로"):
+      채팅에 올린 PDF 는 litdb/inbox/ 가 아니라 Claude Code 업로드 폴더에 떨어진다.
+      inbox 에만 의존하면 "방금 올린 논문"을 못 찾아 매번 --pdf 로 경로를 줘야 한다.
+    """
+    out = []
+    if inbox_dir:
+        out.append(Path(inbox_dir).expanduser())
+    else:
+        out.append(INBOX)
+    env = os.environ.get("CLAUDE_UPLOAD_DIR", "")
+    if env:
+        out.append(Path(env).expanduser())
+    up = Path.home() / ".claude" / "uploads"
+    if up.is_dir():                             # 세션별 폴더 — 최근 것부터
+        try:
+            out += sorted((d for d in up.iterdir() if d.is_dir()),
+                          key=lambda d: -d.stat().st_mtime)
+        except OSError:
+            pass
+    seen, uniq = set(), []
+    for d in out:
+        if d.is_dir() and d not in seen:
+            seen.add(d); uniq.append(d)
+    return uniq
+# SI 판별. ⚠ `si` 를 느슨하게 잡으면 **원소 기호 Si** 를 SI 로 오인한다 — 실측(2026-08-06):
+#   "43. Phase stability … of the Li10±1MP2X12 (M = Ge, Si, Sn …)" 이 SI 로 분류돼
+#   본문이 사라지고 그림 번호가 전부 S1,S2… 로 잘못 붙었다.
+#   그래서 sup/mmc 계열은 느슨하게, **si·esi 는 파일명 구분자(_ - .)로 둘러싸인 때만** 본다
+#   (tz4c02029_si_001.pdf ○ / ", Si," ×).
+SI_TAG = re.compile(
+    r"(?:(?:^|[^a-z])sup(?:p|pl|porting|plementary|plement|pmat)?(?:[^a-z]|$)"
+    r"|(?:^|[^a-z])mmc(?:[^a-z]|$)"
+    r"|(?:^|[_\-.])e?si(?:[_\-.0-9]|$))", re.I)
+STOP = set("""the a an of on in for and or to with by from as at is are was were be been its
+their this that these those we our using via toward towards into over under between among
+new novel high low high- ultra super study investigation effect effects influence role
+based enabling enables enabled behavior behaviour properties property analysis review
+paper article letter communication sup supporting information supplementary supplement
+""".split())
+
+
+# ⚠ \b 를 쓰면 안 된다: `_` 가 단어문자라 'Minnmann_2021_J' 에서 연도를 못 잡는다(실측).
+#   앞뒤에 **숫자만** 없으면 되고(긴 숫자열 속 우연한 20xx 는 제외), _ - . 공백은 경계로 본다.
+YEAR_RE = re.compile(r"(?<![0-9])(?:19|20)\d{2}(?![0-9])")
+
+
+def _years(t):
+    return set(YEAR_RE.findall(t or ""))
+
+
+def _toks(s):
+    """제목/파일명 → 비교용 토큰 집합.
+
+    ⚠ 인접 토큰을 이어붙인 것도 넣는다: 파일명은 구두점이 지워져 `solidstate` 인데
+      제목은 `solid-state` 라 그냥 토큰만 쓰면 안 겹친다(실측: inbox #39, #4, #50 미배정).
+    """
+    s = re.sub(r"[^0-9a-zA-Z]+", " ", s.lower())
+    seq = [t for t in s.split() if len(t) > 2 and t not in STOP and not t.isdigit()]
+    out = set(seq)
+    out |= {a + b for a, b in zip(seq, seq[1:])}
+    return out
+
+
+def _paper_index():
+    """slug → (제목 토큰, inbox 번호 or None)."""
+    out = {}
+    for f in sorted(PAPERS.glob("*.md")):
+        if f.name.startswith("_"):
+            continue
+        head = f.read_text(encoding="utf-8", errors="ignore")[:4000]
+        title = next((ln.lstrip("# ").strip() for ln in head.splitlines()
+                      if ln.startswith("# ")), f.stem)
+        m = re.search(r"inbox\s*#\s*(\d+)", head)
+        out[f.stem] = (_toks(title) | _toks(f.stem), int(m.group(1)) if m else None)
+    return out
+
+
+def _idf(papers):
+    """토큰 희소도. `batteries`·`lithium` 처럼 어느 논문에나 있는 말은 증거가 못 된다.
+
+    ⚠ 왜 (2026-08-06 실측): `batteries-12-00060-v2.pdf`(MDPI 파일명, 제목 정보 0)가
+      살아남은 토큰 `batteries` 하나로 엉뚱한 논문에 "제목 100%" 로 붙었다.
+      단순 개수 대신 **희소한 토큰이 맞았는가**로 점수를 매긴다.
+    """
+    df = {}
+    for tt, _n in papers.values():
+        for t in tt:
+            df[t] = df.get(t, 0) + 1
+    n = max(len(papers), 1)
+    return df, (lambda t: math.log(1.0 + n / df.get(t, 0.5)))
+
+
+def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
+    """inbox PDF → slug 매칭. (배정, 미배정) 반환.
+
+    앵커 세 가지: ① digest 메타의 `inbox #NN` ↔ 파일명 맨 앞 번호 (정확), 흔치 않다(160편 중 20).
+                 ② 제목 토큰 겹침 — **IDF 가중**(흔한 말은 거의 0점)
+                 ③ 그래도 못 찾으면 PDF 1쪽 본문
+    """
+    papers = _paper_index()
+    df, idf = _idf(papers)
+
+    def score(ft, tt):
+        """맞은 토큰의 희소도 합 / 파일명 토큰 전체의 희소도 합."""
+        den = sum(idf(t) for t in ft)
+        if den <= 0:
+            return 0.0, set()
+        hit = ft & tt
+        return sum(idf(t) for t in hit) / den, hit
+    bynum = {n: s for s, (_t, n) in papers.items() if n}
+    assign, orphan = {}, []
+    # ⚠ rglob: 논문은 보통 주제·교수님별 하위 폴더로 나뉘어 있다(2026-08-06 1저자 폴더 실측).
+    #   최상위만 보면 한 편도 못 찾는다. 숨김/휴지통성 폴더는 건너뛴다.
+    manual = load_map()
+    # 지도의 오타가 조용히 묻히지 않게 — 없는 slug / 아무 파일도 못 맞춘 패턴을 보고한다
+    bad_slug = [s for s, _pat in manual if not (PAPERS / f"{s}.md").exists()]
+    used = set()
+
+    # ⚠ **번호가 유일할 때만 번호를 쓴다** (2026-08-06 1저자 발견).
+    #   폴더가 주제별로 나뉘어 있고(DEM 논문/·DFT 먹인 논문/·이상욱 교수님/…) **폴더마다 01 부터
+    #   다시 매겨진다**. 그래서 `#33` 이 서로 다른 논문 두 편을 가리켰고, 둘 다 같은 slug 로 붙어
+    #   argyrodite 논문 그림 목록에 DEM 그림 20장이 섞였다(adeli2019: 37장 중 20장이 남의 것,
+    #   같은 라벨끼리 덮어써서 원래 Fig 1 은 사라졌다). 전체 112편 중 19편이 이 상태였다.
+    #   → 번호가 여러 폴더에서 겹치면 번호는 열쇠가 아니다. 제목 토큰으로만 판정한다.
+    _num_cores = {}
+    for _p in inbox.rglob("*.pdf"):
+        if any(d.startswith((".", "~$")) or d in ("$RECYCLE.BIN", "node_modules")
+               for d in _p.relative_to(inbox).parts[:-1]):
+            continue
+        if (mm := re.match(r"\s*(\d+)\s*[.)]", _p.stem)):
+            core = re.sub(r"^\s*\d+\s*[.)]\s*", "", _p.stem)
+            core = SI_TAG.sub(" ", core).strip().lower()[:45]   # 같은 논문의 SI 판본은 한 편으로
+            _num_cores.setdefault(int(mm.group(1)), set()).add(core)
+    dup_nums = {n for n, cores in _num_cores.items() if len(cores) > 1}
+    for p in sorted(inbox.rglob("*.pdf")):
+        if any(d.startswith((".", "~$")) or d in ("$RECYCLE.BIN", "node_modules")
+               for d in p.relative_to(inbox).parts[:-1]):
+            continue
+        name = p.stem
+        num = int(m.group(1)) if (m := re.match(r"\s*(\d+)\s*[.)]", name)) else None
+        si = bool(SI_TAG.search(name))
+        slug, why = None, ""
+        low = str(p.relative_to(inbox)).lower()
+        for m_slug, pat in manual:            # ① 손으로 지정한 것이 최우선
+            if pat in low:
+                slug, why = m_slug, "수동 지정"
+                used.add(pat)
+                break
+        if slug:
+            pass
+        elif num is not None and num in bynum and num not in dup_nums:
+            slug, why = bynum[num], f"inbox #{num}"
+        else:
+            core = re.sub(r"^\s*\d+\s*[.)]\s*", "", name)
+            ft = _toks(core)
+            fyears = _years(core)
+            need = min(min_hits, len(ft))
+            best, bs = None, 0.0
+            for s, (tt, _n) in papers.items():
+                # ⚠ 연도가 어긋나면 같은 저자의 **다른 논문**이다 (2026-08-06 실측:
+                #   'Minnmann_2021_J.Electrochem.Soc' 이 minnmann2024 digest 에 100% 로 붙었다
+                #   — 파일명에 남은 토큰이 'minnmann' 하나뿐이라 만점이 나왔다).
+                sy = _years(s)
+                if sy and fyears and not (sy & fyears):
+                    continue
+                sc, hit = score(ft, tt)
+                if len(hit) < need or sc <= bs:
+                    continue
+                # 토큰이 min_hits 에 못 미치면(ECERD2600097 처럼 짧은 파일명) **희소한**
+                # 토큰이 맞았을 때만, 그것도 **거의 다 맞았을 때만** 인정한다.
+                #   ⚠ 느슨하면 'Minnmann_2021_J.Electrochem.Soc'(digest 없는 논문)가
+                #     electrochem/soc 몇 개로 엉뚱한 digest 에 56% 로 붙는다 (2026-08-06 실측).
+                if len(hit) < min_hits and not (
+                        sc >= 0.75 and any(df.get(t, 0) <= rare for t in hit)):
+                    continue
+                best, bs = s, sc
+            if best and bs >= min_score:
+                slug, why = best, f"제목 {bs:.0%}"
+        if slug:
+            assign.setdefault(slug, {"main": [], "si": [], "why": why})
+            assign[slug]["si" if si else "main"].append(p)
+        else:
+            orphan.append((p, si))
+
+    # 파일명이 출판사 해시인 것들(admi202200011sup0001suppmat.pdf, 1s2.0S…mmc1.pdf)은
+    # 이름으로는 못 잡는다 → **1쪽 본문**을 읽어 한 번 더 시도한다.
+    still = []
+    for p, si in orphan:
+        try:
+            with fitz.open(p) as d:
+                head = d[0].get_text()[:600] if d.page_count else ""
+        except Exception:
+            head = ""
+        ft = _toks(head)
+        best, bs = None, 0.0
+        for s, (tt, _n) in papers.items():
+            # 여긴 **제목 쪽** 기준으로 본다 (1쪽 본문이 제목보다 훨씬 길다)
+            sc, hit = score(tt, ft)
+            if len(hit) >= 5 and sc > bs:
+                best, bs = s, sc
+        if best and bs >= 0.45:
+            assign.setdefault(best, {"main": [], "si": [], "why": f"1쪽 본문 {bs:.0%}"})
+            assign[best]["si" if si else "main"].append(p)
+        else:
+            still.append((p, si))
+    dead = [(s, pat) for s, pat in manual if pat not in used]
+    if bad_slug or dead:
+        print("⚠ litdb/pdf_map.tsv 점검")
+        for s in bad_slug:
+            print(f"   없는 slug: {s}")
+        # 일부 폴더만 훑을 땐 대부분 안 맞는 게 정상이라 목록을 줄여 낸다
+        for s, pat in dead[:10]:
+            print(f"   아무 PDF 도 못 맞춘 패턴: {s}  ←  '{pat[:52]}'")
+        if len(dead) > 10:
+            print(f"   … 외 {len(dead)-10}개 (이 폴더에 그 PDF 가 없으면 정상)")
+        print()
+    return assign, still
+
+
+def _relto(p, base):
+    """inbox 기준 상대경로 (없으면 파일명만)."""
+    p = Path(p)
+    if base:
+        try:
+            return str(p.relative_to(base))
+        except ValueError:
+            pass
+    return p.name
+
+
+def _show(p, box, width=76):
+    """inbox 기준 상대경로. 길면 **파일명 쪽을** 줄인다 — 어느 하위 폴더였는지가 더 중요하다."""
+    t = _relto(p, box)
+    if len(t) <= width:
+        return t
+    head, _, tail = t.rpartition("/")
+    keep = width - len(head) - 2
+    return (head + "/" + tail[:max(keep, 12)] + "…") if head and keep > 12 else t[:width - 1] + "…"
+
+
+def _read_plan(slug, meta, top=8):
+    """**에이전트가 다음에 할 일**을 출력에 박아 넣는다.
+
+    ⚠ 왜 (2026-08-06 1저자 요청): "논문 먹이면 저절로 되게". 규칙을 에이전트 프롬프트에만
+      적어두면 잊는다. 자른 직후 화면에 '이 파일들을 Read 하라'가 경로째로 찍혀 있으면
+      그게 다음 행동이 된다. 사람이 볼 때도 어느 그림부터 볼지 안내가 된다.
+    표(tab_*)는 뺀다 — 글자라서 이미지로 읽는 것보다 PDF 텍스트가 정확하다.
+    """
+    figs = [r for r in meta["figures"] if r["kind"] != "table"]
+    if not figs:
+        return
+    main = [r for r in figs if not r["label"].startswith("S")]
+    si = [r for r in figs if r["label"].startswith("S")]
+    pick = (main + si)[:top]
+    ntab = len(meta["figures"]) - len(figs)
+    print()
+    print("┌─ 다음 단계 (필수) — 잘라낸 그림을 **Read 로 실제로 본다** ─────────────")
+    print("│  캡션만 읽고 쓰면 축·단위·마커 위치를 지어내게 된다. 보고 나서 digest 를 쓴다.")
+    for r in pick:
+        cap = r["caption"][:58].replace("\n", " ")
+        print(f"│  Read litdb/figures/{slug}/{r['file']}   ({cap}…)")
+    if len(figs) > top:
+        print(f"│  … 본문 그림 {len(main)} + SI {len(si)} 중 위 {len(pick)}장이 우선. "
+              f"나머지는 필요할 때만.")
+    if ntab:
+        print(f"│  표 {ntab}장(tab_*.png)은 이미지로 안 읽는다 — PDF 텍스트가 정확하다.")
+    print("│  본 그림에서만 읽은 값은 digest 에 `figure-read ≈` 로 표시하고,")
+    print("│  무엇을 보고 무엇을 안 봤는지 사용자에게 밝힌다.")
+    print("└──────────────────────────────────────────────────────────────────")
+
+
+def _report(slug, meta, skipped, dry):
+    print(f"=== {slug} — {len(meta['figures'])}개 추출"
+          f"{' (dry-run, 안 씀)' if dry else ''}")
+    print("key    p   크기         공백  캡션")
+    for r in meta["figures"]:
+        print(f"{r['key']:<6} {r['page']:<3} {r['w']}x{r['h']:<7} "
+              f"{r['blank']:.2f}  {r['caption'][:64]}")
+    if skipped:
+        print(f"--- 제외 {len(skipped)}건 (오탐 방지)")
+        for k, p, why in skipped[:18]:
+            print(f"  {k:<6} p{p:<3} {why}")
+    miss = meta.get("missing_labels") or []
+    if miss:                                   # 18 행 제한 없이 전부 — 놓친 그림은 묻히면 안 된다
+        print(f"--- ⚠ 번호 공백·끝 번호·놓친 캡션 후보 {len(miss)}건 — 조용히 넘기지 말고 확인할 것 "
+              f"(손으로 자르면 figures.json 에 manual_crop 사유)")
+        for m in miss:
+            sk = f" · 제외: {'; '.join(m['skipped'][:2])}" if m["skipped"] else ""
+            nm = m["near_miss"][0] if m["near_miss"] else None
+            rf = f" · 본문 참조 {' '.join(m['refs'])}" if m.get("refs") else ""
+            print(f"  {m['key']:<6} {m['why']}{sk}{rf}"
+                  + (f" · 후보 p{nm['page']}: {nm['text'][:56]!r}" if nm else ""))
+    if not dry:
+        print(f"→ litdb/figures/{slug}/  (figures.json 포함)")
+        _read_plan(slug, meta)
+
+
+def suggest(inbox):
+    """그림이 없는 digest × 짝 못 찾은 PDF → **후보 표**를 만들어 준다.
+
+    자동 매칭이 못 붙인 것을 손으로 채우기 쉽게, pdf_map.tsv 에 그대로 붙일 수 있는
+    형태로 낸다. 사람이 보고 틀린 줄만 지우면 된다.
+    """
+    papers = _paper_index()
+    df, idf = _idf(papers)
+    have = {d.name for d in OUT_ROOT.iterdir()
+            if d.is_dir() and (d / "figures.json").exists()} if OUT_ROOT.is_dir() else set()
+    assign, orphan = match_inbox(inbox)
+    pool = [p for p, _si in orphan]
+    todo = [s for s in papers if s not in have and s not in assign]
+    print(f"=== 후보 제안: 그림 없는 digest {len(todo)}편 × 짝 못 찾은 PDF {len(pool)}개\n")
+    print("# 아래를 litdb/pdf_map.tsv 에 붙이고 **틀린 줄은 지운다** (slug<TAB>파일명 일부)")
+    n = 0
+    for s in sorted(todo):
+        tt = papers[s][0]
+        best = []
+        for p in pool:
+            ft = _toks(re.sub(r"^\s*\d+\s*[.)]\s*", "", p.stem))
+            den = sum(idf(t) for t in ft)
+            hit = ft & tt
+            sc = (sum(idf(t) for t in hit) / den) if den else 0
+            if sc > 0.12:
+                best.append((sc, p))
+        best.sort(key=lambda x: -x[0])
+        if not best:
+            continue
+        n += 1
+        for sc, p in best[:3]:
+            mark = "" if sc >= 0.3 else "#  ⚠낮음 "
+            print(f"{mark}{s}\t{p.stem[:74]}   # {sc:.0%}")
+        print()
+    print(f"# 후보가 있는 digest {n}편 — 나머지는 PDF 가 이 폴더에 없다")
+    return 0
+
+
+def refresh(box, apply_it=False, dpi=300, maxpx=3000, force=False):
+    """추출기를 고친 뒤 **결과가 달라지는 논문만** 골라 다시 뽑는다.
+
+    ⚠ 왜 (2026-08-06): 전체 재생성은 PNG 가 통째로 새 blob 이 되어 .git 이 한 번에
+      수백 MB 늘어난다(실측: 재생성 4회에 .git 972 MB). 고친 규칙이 실제로 영향을 준
+      논문만 다시 뽑으면 히스토리가 그만큼만 는다.
+    먼저 dry-run 으로 장수를 비교해 표를 내고, --apply 를 줘야 실제로 덮어쓴다.
+    """
+    assign, _o = match_inbox(box)
+    todo = [d for d in sorted(OUT_ROOT.glob("*/figures.json")) if d.parent.name in assign]
+    print(f"훑는 중… PDF 가 있는 {len(todo)}편을 dry-run 으로 비교한다 "
+          f"(렌더링은 안 하지만 쪽 분석은 실제와 같아 몇 분 걸린다)")
+    rows = []
+    for k, d in enumerate(todo, 1):
+        slug = d.parent.name
+        v = assign[slug]
+        # 진행이 보이게 — 안 그러면 몇 분 동안 화면이 멈춘 것처럼 보인다
+        print(f"\r  [{k}/{len(todo)}] {slug[:52]:<52}", end="", flush=True)
+        try:
+            old = len(json.loads(d.read_text(encoding="utf-8")).get("figures", []))
+        except (OSError, ValueError):
+            old = -1
+        pdfs = [str(q) for q in v["main"] + v["si"]]
+        try:
+            meta, _sk = extract(pdfs, slug, dry=True, dpi=dpi, maxpx=maxpx)
+            new = len(meta["figures"])
+        except Exception as e:
+            print(f"   ⛔ {slug}: {type(e).__name__}: {e}")
+            continue
+        if new != old:
+            rows.append((slug, old, new, pdfs))
+    print(f"\r{' ' * 68}\r", end="")
+    print(f"=== 재추출 대상: {len(rows)}편 (PDF 가 있는 {len(todo)}편 중)")
+    # ⛔ 장수가 달라진 논문을 고르므로 **손으로 한 장 보탠 논문이 골라진다** (2026-09-27, qin2026 f8).
+    #   가드에 걸리는 논문은 표에 🔒 로 보이고, --apply 에서도 건너뛴다 (--force_clean 로만 넘김).
+    block = {slug: clean_blockers(slug, pdfs) for slug, _o, _n, pdfs in rows}
+    for slug, old, new, _p in rows:
+        lost, hand = block[slug]
+        lock = f"  🔒 손작업 {len(hand)} · 원본 빠짐 {len(lost)}" if (lost or hand) else ""
+        print(f"   {slug[:56]:<56} {old:>3} → {new:>3}  ({new-old:+d}){lock}")
+    if not rows:
+        print("   바뀌는 게 없다 — 다시 뽑을 필요 없음")
+        return 0
+    if not apply_it:
+        print("\n※ 표만 냈다. 실제로 덮어쓰려면 --apply 를 붙인다.")
+        return 0
+    print()
+    for i, (slug, _o, _n, pdfs) in enumerate(rows, 1):
+        print(f"[{i}/{len(rows)}] {slug}")
+        lost, hand = block[slug]
+        if (lost or hand) and not force:
+            print(f"   ⛔ 건너뜀 — 손작업 {len(hand)} · 원본 빠짐 {len(lost)} "
+                  "(`--slug <slug> --clean` 으로 목록 확인, 버릴 때만 --force_clean)\n")
+            continue
+        shutil.rmtree(OUT_ROOT / slug, ignore_errors=True)
+        meta, skipped = extract(pdfs, slug, dpi=dpi, maxpx=maxpx, relto=box)
+        _report(slug, meta, skipped, dry=False)
+        print()
+    _write_sources_index()
+    return 0
+
+
+def _write_sources_index():
+    """slug → 원본 PDF (inbox 상대경로) 한눈 색인.
+
+    PDF 본체는 repo 에 없으므로(저작권·용량), **어디서 왔는지**만이라도 추적 가능하게 둔다.
+    figures.json 마다 들어 있는 sources 를 모아 litdb/figures/_sources.json 로 쓴다.
+    """
+    idx = {}
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        try:
+            m = json.loads(j.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        idx[m.get("slug", j.parent.name)] = {"pdfs": m.get("sources", []),
+                                             "figures": len(m.get("figures", [])),
+                                             "generated": m.get("generated")}
+    if idx:
+        (OUT_ROOT / "_sources.json").write_text(
+            json.dumps(idx, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
+        print(f"→ litdb/figures/_sources.json  ({len(idx)}편: 어느 PDF 에서 왔는지 색인)")
+
+
+def why(slug, pdfs):
+    """왜 그 그림이 버려졌는지 좌표째로 — '영역 없음' 의 원인을 눈으로 본다.
+
+    캡션은 찾았는데 위/아래 어느 쪽도 36 pt 를 못 넘으면 버린다. 그 판단에 쓰인
+    병합 캡션 bbox·경계선·후보 사각형·주변 그래픽을 전부 찍는다.
+    """
+    for pdf_path in pdfs:
+        doc = fitz.open(pdf_path)
+        si_file = bool(SI_TAG.search(Path(pdf_path).stem))
+        print(f"\n##### {Path(pdf_path).name[:78]}  (SI 파일? {si_file})")
+        for pno in range(doc.page_count):
+            page = doc[pno]
+            blocks = page_blocks(page)         # extract() 와 같은 블록 — 진단이 실제 크롭과 갈리지 않게
+            caps = [(b, is_caption(b[4])) for b in blocks]
+            for cap, hit in caps:
+                if not hit:
+                    continue
+                kind, label, cap_si = hit
+                cr, captxt = merge_caption(blocks, cap)
+                up, ui, ud = _side_rect(page, tuple(cr), blocks, up=True)
+                dn, di, dd = _side_rect(page, tuple(cr), blocks, up=False)
+                ok = (up is not None and (ui or ud >= 6)) or (dn is not None and (di or dd >= 6))
+                print(f"  p{pno+1} {kind[0]}{label}{' (SI캡션)' if cap_si else ''} "
+                      f"{'OK' if ok else '⛔'}")
+                print(f"      쪽 {tuple(round(v) for v in page.rect)} · "
+                      f"캡션블록 {tuple(round(v) for v in cap[:4])} → 병합 "
+                      f"{tuple(round(v) for v in cr)}")
+                for nm, r, ni, nd in (("위", up, ui, ud), ("아래", dn, di, dd)):
+                    if r is None:
+                        print(f"      {nm}: 없음 (높이 36 pt 미만)")
+                    else:
+                        print(f"      {nm}: {tuple(round(v) for v in r)} "
+                              f"h={r.height:.0f} 이미지{ni} 벡터{nd}")
+                if not ok:
+                    g = graphics(page)
+                    print(f"      쪽 전체 그래픽 {len(g)}개: "
+                          + ", ".join(f"{k}{tuple(round(v) for v in r)}" for k, r in g[:4]))
+                    print(f"      캡션 앞뒤 블록:")
+                    for b in sorted(blocks, key=lambda b: b[1]):
+                        if abs(b[1] - cr.y0) < 260:
+                            print(f"        {tuple(round(v) for v in b[:4])} "
+                                  f"{' '.join(b[4].split())[:56]}")
+        doc.close()
+    return 0
+
+
+def audit_src():
+    """**남의 논문 그림이 섞였는지** 점검 (2026-08-06 1저자 발견 뒤 신설).
+
+    폴더마다 번호가 01 부터 다시 매겨져 `#33` 이 두 편을 가리키면 둘 다 같은 slug 로 붙었다
+    (매칭은 고쳤다 — 아래는 **이미 만들어 둔 데이터** 점검용).
+    그림마다 어느 PDF 에서 왔는지 `src` 가 남아 있으므로, 그 파일명이 그 논문 제목과
+    얼마나 겹치는지(IDF 가중)로 가른다. 재크로핑 뒤 0 이 나와야 정상.
+
+    ⚠ 출판사 해시 이름 SI(`anie…-sup-0001-misc_information.pdf`)는 제목 토큰이 없어
+      낮게 나온다 — 그런 건 `(?)` 로 따로 표시하고 오염으로 세지 않는다.
+    """
+    papers = _paper_index()
+    _df, idf = _idf(papers)
+
+    def sc(ft, tt):
+        den = sum(idf(t) for t in ft)
+        return (sum(idf(t) for t in (ft & tt)) / den) if den > 0 else 0.0
+
+    bad_tot = n_slug = 0
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        slug = j.parent.name
+        if slug not in papers:
+            continue
+        try:
+            figs = json.loads(j.read_text(encoding="utf-8")).get("figures", [])
+        except (OSError, ValueError):
+            continue
+        per = {}
+        for f in figs:
+            per.setdefault(f.get("src", ""), []).append(f.get("key", "?"))
+        if len(per) < 2:
+            continue
+        tt = papers[slug][0]
+        score = {}
+        for s in per:
+            core = re.sub(r"^\s*\d+\s*[.)]\s*", "", Path(s).name)
+            score[s] = sc(_toks(SI_TAG.sub(" ", core)), tt)
+        best = max(score.values())
+        # 제목과 거의 안 겹치는데 **다른 출처는 잘 겹치는** 경우만 남의 것으로 본다
+        bad = {s: v for s, v in per.items() if score[s] < 0.20 < best}
+        if not bad:
+            continue
+        # 파일명이 출판사 해시(anie202007621-sup-0001-misc…)면 그 논문 SI 일 수 있다 → 판정 보류.
+        # 가름: **다른 논문 제목에도 쓰이는 낱말**(df ≥ 1)이 3개 이상이어야 '알아볼 수 있는 제목'.
+        def known(s):
+            return sum(1 for t in _toks(Path(s).name) if _df.get(t, 0) >= 1)
+        sure = {s: v for s, v in bad.items() if known(s) >= 3}
+        n_bad = sum(len(v) for v in sure.values())
+        if n_bad:
+            n_slug += 1
+            bad_tot += n_bad
+        print(f"{'⛔' if n_bad else '？'} {slug}: {len(figs)}장 중 {n_bad}장 남의 것")
+        for s, keys in sorted(per.items(), key=lambda kv: -score[kv[0]]):
+            mark = "✓" if s not in bad else ("✗" if s in sure else "？")
+            print(f"     {mark} [{score[s]:4.0%}] {Path(s).name[:66]}  ({len(keys)}장)")
+    print(f"\n== 남의 그림이 섞인 논문 {n_slug}편 · 총 {bad_tot}장"
+          + ("  ✅ 깨끗함" if not bad_tot else "  → 재크로핑 필요"))
+    return 1 if bad_tot else 0
+
+
+def dup_groups(slug_dir):
+    """한 slug 폴더 안에서 **바이트가 똑같은** PNG 묶음을 찾는다.
+
+    같은 크롭이 서로 다른 번호로 두 번 나오면 그 번호 중 하나(이상)는
+    **실제로 잘린 적이 없다** — 여러 쪽에 걸친 표, 회전된 표, 캡션이 두 번 나오는 배치에서 생긴다.
+    돌려주는 값: [[keep_path, dup_path, ...], ...]
+    첫 번째 = 남길 것 = **자연순(숫자 인식) 최소** — `fig_9` 가 `fig_10` 보다 앞이다
+    (사전순이면 fig_10 이 앞이라 번호가 큰 쪽을 남기는 오류가 난다).
+
+    이 함수가 못 하는 것:
+      · **내용이 같지만 바이트가 다른** 크롭(다시 자른 것, 1픽셀 차이)은 못 잡는다.
+        픽셀 비교나 근사해시(dHash)는 하지 않는다 — 오탐이 진짜를 가린다.
+      · **어느 쪽이 진짜인지는 못 고른다.** 자연순 최소를 남기는 건 결정론적 타이브레이크일 뿐이고,
+        묶음에 그림과 표가 섞이면(예: `fig_11` ≡ `tab_1`) 사람이 봐야 한다 — 그래서 `dedupe` 가
+        지운 쪽에 `dup_of` 를 남긴다.
+    """
+    def natkey(p):
+        return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", p.name)]
+    by_hash = {}
+    for p in sorted(Path(slug_dir).glob("*.png"), key=natkey):
+        h = hashlib.sha1(p.read_bytes()).hexdigest()
+        by_hash.setdefault(h, []).append(p)
+    return [v for v in by_hash.values() if len(v) > 1]
+
+
+def dedupe(apply_it=False):
+    """바이트 동일 크롭을 지우고 figures.json 에 `dup_of` 표식을 남긴다.
+
+    표식을 남기는 이유: 파일만 지우면 "그 표는 애초에 없었다"로 읽히는데,
+    사실은 **캡션은 찾았고 크롭이 틀린 것**이다. 다시 자를 대상 목록이 사라지면 안 된다.
+    """
+    hit = tot = 0
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        groups = dup_groups(j.parent)
+        if not groups:
+            continue
+        try:
+            m = json.loads(j.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            print(f"⛔ {j.parent.name}: figures.json 을 못 읽는다")
+            continue
+        idx = {r.get("file"): r for r in m.get("figures", [])}
+        hit += 1
+        for grp in groups:
+            keep, dups = grp[0].name, [p.name for p in grp[1:]]
+            tot += len(dups)
+            kl = (idx.get(keep) or {}).get("label", "?")
+            dl = ",".join((idx.get(d) or {}).get("label", "?") for d in dups)
+            print(f"{'삭제' if apply_it else '삭제예정'} {j.parent.name}: "
+                  f"{keep}(label {kl}) 유지 ← {', '.join(dups)} (label {dl})")
+            if not apply_it:
+                continue
+            for d in dups:
+                (j.parent / d).unlink(missing_ok=True)
+                r = idx.get(d)
+                if r is not None:
+                    r["file"] = None
+                    r["dup_of"] = keep
+                    r["note"] = ((r.get("note") or "") + " | "
+                                 f"크롭이 {keep} 와 바이트 동일 → 이 번호는 실제로 잘린 적이 "
+                                 f"없다. 삭제하고 재추출 대상으로 남김.").strip(" |")
+        if apply_it:
+            j.write_text(json.dumps(m, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"\n{'지웠다' if apply_it else '지울 것'}: 중복 {tot}장 / {hit}편"
+          + ("" if apply_it else "  (실제 삭제는 --apply)"))
+    return 0
+
+
+def selftest():
+    """dup_groups/dedupe 자체 점검 — **음성 경로 포함**.
+
+    dup_groups 는 바이트만 보므로 진짜 PNG 가 필요 없다.  임시 폴더에 바이트를 써서 검사한다.
+
+    ⛔⛔ 2026-09-09 — 여기 *"캡션 탐지는 PDF 가 있어야 하므로 안 본다"* 라고 적혀 있었고,
+      **그 문장이 틀렸다.** `is_caption()` 은 순수 문자열 함수라 PDF 가 필요 없다.
+      그 면제 때문에 `VERBS` 의 `the` 가 **관사로 시작하는 캡션을 전부 탈락**시키는 버그가
+      살아남았다(jang2025 `Fig. 6` 이 통째로 안 나왔다). 이제 여기서 본다.
+      ⚠ **영역 산정**은 여전히 PDF 가 필요해서 못 본다 — 그건 `--audit` 이 맡는다.
+    """
+    import tempfile
+    global OUT_ROOT
+    ok = fail = 0
+
+    def chk(name, cond):
+        nonlocal ok, fail
+        print(("  ⭕ " if cond else "  ⛔ ") + name)
+        ok, fail = ok + bool(cond), fail + (not cond)
+
+    # --- 파일이름 접두사 (2026-08-29 han2025 회귀: Scheme 1 이 Figure 1 을 덮어썼다)
+    chk("양성: figure → fig_", _fname_prefix("figure") == "fig")
+    chk("양성: table → tab_", _fname_prefix("table") == "tab")
+    chk("양성: scheme → sch_", _fname_prefix("scheme") == "sch")
+    chk("음성⑩: scheme 과 figure 의 접두사가 **다르다** (같으면 같은 번호끼리 덮어쓴다)",
+        _fname_prefix("scheme") != _fname_prefix("figure"))
+    chk("음성⑪: 모르는 kind 는 fig 로 떨어진다 (예외로 죽지 않는다)",
+        _fname_prefix("plate") == "fig")
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        # --- 양성: 같은 바이트 3장 → 한 묶음, 이름순 첫 장을 남긴다
+        d1 = root / "paper_a"; d1.mkdir()
+        for n in ("tab_S1.png", "tab_S2.png", "tab_S3.png"):
+            (d1 / n).write_bytes(b"\x89PNG-same")
+        g = dup_groups(d1)
+        chk("양성: 동일 3장 → 묶음 1개", len(g) == 1)
+        chk("양성: 묶음 크기 3", len(g[0]) == 3)
+        chk("양성: 남길 것은 이름순 첫 장(tab_S1)", g[0][0].name == "tab_S1.png")
+
+        # --- 양성: 자연순 — fig_9 가 fig_10 보다 앞 (사전순이면 뒤집힌다)
+        d0 = root / "paper_nat"; d0.mkdir()
+        for n in ("fig_9.png", "fig_10.png"):
+            (d0 / n).write_bytes(b"\x89PNG-nat")
+        chk("양성: 자연순 — fig_9 를 남긴다 (사전순이면 fig_10)",
+            dup_groups(d0)[0][0].name == "fig_9.png")
+
+        # --- 음성 ①: 서로 다른 바이트는 절대 묶이면 안 된다
+        d2 = root / "paper_b"; d2.mkdir()
+        (d2 / "fig_1.png").write_bytes(b"\x89PNG-aaa")
+        (d2 / "fig_2.png").write_bytes(b"\x89PNG-bbb")
+        chk("음성①: 다른 2장 → 묶음 0개", dup_groups(d2) == [])
+
+        # --- 음성 ②: 1바이트만 달라도 안 묶인다 (문서화된 한계 — 근사해시 안 씀)
+        d3 = root / "paper_c"; d3.mkdir()
+        (d3 / "fig_1.png").write_bytes(b"\x89PNG-same")
+        (d3 / "fig_2.png").write_bytes(b"\x89PNG-samf")
+        chk("음성②: 1바이트 차 → 안 묶인다 (한계를 고정)", dup_groups(d3) == [])
+
+        # --- 음성 ③: 1장뿐 / 빈 폴더
+        d4 = root / "paper_d"; d4.mkdir()
+        (d4 / "fig_1.png").write_bytes(b"\x89PNG-solo")
+        chk("음성③: 1장뿐 → 묶음 0개", dup_groups(d4) == [])
+        d5 = root / "paper_e"; d5.mkdir()
+        chk("음성③: 빈 폴더 → 묶음 0개", dup_groups(d5) == [])
+
+        # --- dedupe: --apply 없이는 아무것도 지우면 안 된다 (음성 ④)
+        for d in (d1, d2, d3, d4):
+            (d / "figures.json").write_text(json.dumps({
+                "slug": d.name,
+                "figures": [{"key": p.stem, "kind": "table", "label": p.stem.split("_")[-1],
+                             "file": p.name} for p in sorted(d.glob("*.png"))]},
+                ensure_ascii=False), encoding="utf-8")
+        keep_root, OUT_ROOT = OUT_ROOT, root
+        try:
+            dedupe(apply_it=False)
+            chk("음성④: --apply 없으면 파일이 그대로", len(list(d1.glob("*.png"))) == 3)
+            dedupe(apply_it=True)
+            chk("양성: --apply 로 2장 삭제", sorted(p.name for p in d1.glob("*.png")) == ["tab_S1.png"])
+            chk("음성⑤: 중복 없던 폴더는 안 건드림", len(list(d2.glob("*.png"))) == 2)
+            m = json.loads((d1 / "figures.json").read_text(encoding="utf-8"))
+            marks = [r for r in m["figures"] if r.get("dup_of") == "tab_S1.png"]
+            chk("양성: figures.json 에 dup_of 표식 2개", len(marks) == 2)
+            chk("양성: 지운 항목의 file 은 None (기록은 남는다)",
+                all(r["file"] is None for r in marks))
+            chk("양성: 남긴 항목은 표식이 없다",
+                [r for r in m["figures"] if r["file"] == "tab_S1.png"][0].get("dup_of") is None)
+        finally:
+            OUT_ROOT = keep_root
+
+        # --- --slides 모드 (덱): 백지 슬라이드도 **버리지 않는다** (2026-08-25 codex E)
+        #     옛 판은 여기서 "1장만 남는다" 를 검사했다 — 그건 **버리던 시절의 계약**이다.
+        #     계약이 바뀌면 그 계약을 주장하던 테스트도 같이 고쳐야 한다.
+        deck = root / "deck.pdf"
+        d = fitz.open()
+        p1 = d.new_page(width=720, height=540)          # 내용 있는 슬라이드
+        p1.insert_text((60, 90), "Design variables D50 Dseed", fontsize=28)
+        p1.draw_rect(fitz.Rect(60, 140, 660, 480), fill=(0.2, 0.4, 0.9))
+        d.new_page(width=720, height=540)               # 백지 간지 (음성 경로)
+        d.save(deck); d.close()
+        keep_root, OUT_ROOT = OUT_ROOT, root
+        try:
+            m, sk = extract_slides(str(deck), "deck_test", dpi=72, maxpx=900, relto=root)
+            chk("양성(--slides): 슬롯 2개가 **전부** 남는다 (백지도 버리지 않는다)",
+                len(m["figures"]) == 2)
+            _blank = [f for f in m["figures"]
+                      if f.get("content_status") == "blank_candidate"]
+            chk("양성(--slides): 백지는 blank_candidate 로 **표시**된다 (삭제 아님)",
+                len(_blank) == 1 and _blank[0]["artifact_retained"] is True)
+            chk("음성⑧(--slides): 백지 후보는 digest 에서만 빠진다 (행·PNG 는 남는다)",
+                _blank[0]["digest_included"] is False)
+            chk("음성⑨(--slides): 자동 분류는 **확정이 아니다** (reviewed=False)",
+                _blank[0]["reviewed"] is False
+                and _blank[0]["content_status"] != "blank_confirmed")
+            chk("양성(--slides): 라벨=쪽번호, 파일명 fig_1.png",
+                m["figures"][0]["label"] == "1" and m["figures"][0]["file"] == "fig_1.png")
+            chk("양성(--slides): 캡션에 슬라이드 텍스트가 들어간다",
+                "D50" in m["figures"][0]["caption"])
+            chk("양성(--slides): mode 표시가 남는다", m.get("mode") == "slides")
+            chk("음성⑥(--slides): 백지는 '보존됨, 검토 대기' 로 사유가 남는다",
+                len(sk) == 1 and "검토 대기" in sk[0][2])
+            chk("음성⑦(--slides): PNG 는 **2장 다** 쓰인다 (사람이 열어봐야 하므로)",
+                len(list((root / "deck_test").glob("*.png"))) == 2)
+        finally:
+            OUT_ROOT = keep_root
+
+    # ── 캡션 탐지 (PDF 불필요 — 순수 문자열) ────────────────────────────────
+    #   ⛔ 2026-09-09 이전에는 이 절이 통째로 없었고, 그래서 `VERBS` 의 `the` 가
+    #     관사로 시작하는 캡션을 전부 탈락시키는 버그가 살아남았다.
+    for txt, want, why in (
+        ("Fig. 6 The self-part of the van Hove correlation function for Li",
+         True, "★관사 캡션 (jang2025 실측 — 종전에 탈락했다)"),
+        ("Figure 2 The crystal structure of argyrodite", True, "관사 캡션"),
+        ("Figure S3 A parity plot of forces", True, "관사(A) SI 캡션"),
+        ("Fig. 1. Schematic of the workflow", True, "마침표 구분"),
+        ("Figure 5 | Conductivity versus inversion", True, "파이프 구분 (Nature 계열)"),
+        ("Figure 3 shows the trajectory of Li ions in the cell",
+         False, "⛔음성: 본문 (shows)"),
+        ("Figure 3 the results are summarized below in this section",
+         False, "⛔음성: 본문 (소문자 the)"),
+        ("Figure 4 and Figure 5 are discussed together in the text",
+         False, "⛔음성: 본문 (and)"),
+        ("Figure 2 is shown in the appendix of this manuscript",
+         False, "⛔음성: 본문 (is)"),
+        # ── 키워드 뒤 콜론 양식 (2026-09-22 Barai 2021 SI 실측 — 종전에 25쪽 0개였다)
+        ("Figure: S1. Demonstration of the cathode computational domain",
+         True, "★키워드 뒤 콜론 SI 캡션 (barai2021 실측)"),
+        ("Table: S-II. List of parameters used in the continuum model",
+         True, "★로마숫자 표 라벨(S-II)도 받는다 — 2026-11-24 부터 표만 (lepley2015 · barai2021 꼴)"),
+        ("Figure: S-II. List of parameters used in the continuum model",
+         False, "⛔음성: 로마숫자 **그림** 라벨은 여전히 안 받는다"),
+        ("Figure: 3. Comparison between the performance curves",
+         True, "키워드 뒤 콜론 + 본문 번호"),
+        ("Figure: 3 shows the trajectory of Li ions in the cell",
+         False, "⛔음성: 콜론이 있어도 본문은 본문 (shows)"),
+    ):
+        chk(f"캡션판정 {why}", (is_caption(txt) is not None) == want)
+
+    # ── orphans_if_cleaned — **이 가드가 없어서 SI 그림 23장이 날아갔다** (2026-09-22) ──
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        (root / "slg").mkdir(parents=True)
+        idx = root / "slg" / "figures.json"
+        w = lambda figs: idx.write_text(json.dumps({"slug": "slg", "figures": figs},
+                                                   ensure_ascii=False), encoding="utf-8")
+        MAIN, SI = "paper_MAIN.pdf", "paper_SI.docx"
+        w([{"file": "fig_1.png", "src": MAIN}, {"file": "fig_S1.jpg", "src": SI}])
+        chk("clean 양성: 원본을 **다 주면** 막지 않는다",
+            orphans_if_cleaned("slg", [f"litdb/inbox/{MAIN}", f"x/{SI}"], root) == [])
+        chk("⛔음성: 빠진 원본의 그림을 **이름으로 집어낸다** (SI 23장 사고의 그 경로)",
+            orphans_if_cleaned("slg", [f"litdb/inbox/{MAIN}"], root) == [("fig_S1.jpg", SI)])
+        chk("⛔음성: **확장자가 달라도** 잡는다 (.jpg 라 `*.png` 점검에 안 걸렸던 것이 사고의 절반)",
+            orphans_if_cleaned("slg", [f"z/{SI}"], root) == [("fig_1.png", MAIN)])
+        chk("⛔음성: 경로가 달라도 **파일명이 같으면** 재생 가능으로 본다",
+            orphans_if_cleaned("slg", [f"/other/dir/{MAIN}", f"/q/{SI}"], root) == [])
+        w([{"file": "fig_1.png"}])
+        chk("⛔음성: src 가 없는 옛 색인은 막지 않는다 (판단 근거가 없다 ≠ 고아다)",
+            orphans_if_cleaned("slg", [], root) == [])
+        idx.write_text("{ 깨진 json", encoding="utf-8")
+        chk("⛔음성: 색인이 깨져도 죽지 않는다", orphans_if_cleaned("slg", [], root) == [])
+        chk("⛔음성: 색인이 아예 없으면 빈 목록", orphans_if_cleaned("없는슬러그", [], root) == [])
+
+    # ── handwork_if_cleaned — 손 크롭은 **src 가 같아서** 위 가드를 통과한다 (2026-09-27) ──
+    #   qin2026 f8 실측 경로: 캡션 p25 · 그림 p24 라 도구가 건너뛰어 손으로 넣었다.  같은 PDF 를
+    #   다시 주면 src 가드는 [] 를 내고 fig_8.png 가 지워진다 — 재추출은 7장뿐이다.
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        (root / "slg").mkdir(parents=True)
+        idx = root / "slg" / "figures.json"
+        w = lambda figs: idx.write_text(json.dumps({"slug": "slg", "figures": figs},
+                                                   ensure_ascii=False), encoding="utf-8")
+        MAIN = "paper_MAIN.pdf"
+        HAND = [("fig_2.png", "recrop"), ("fig_8.png", "manual_crop")]
+        w([{"file": "fig_1.png", "src": MAIN},
+           {"file": "fig_2.png", "src": MAIN, "recrop": "raster-bound clip (xref 77)"},
+           {"file": "fig_8.png", "src": MAIN, "recrop": "full-page raster", "manual_crop": True}])
+        chk("재현: 같은 원본을 주면 src 가드는 **통과시킨다** (그래서 f8 이 지워졌다)",
+            orphans_if_cleaned("slg", [f"litdb/inbox/{MAIN}"], root) == [])
+        chk("★손작업 가드: manual_crop · recrop 을 이름과 사유로 집어낸다 (manual 이 우선)",
+            handwork_if_cleaned("slg", root) == HAND)
+        chk("★막는 목록 = (src 고아, 손작업) — 세 삭제 경로가 같은 것을 본다",
+            clean_blockers("slg", [f"litdb/inbox/{MAIN}"], root) == ([], HAND))
+        chk("막는 목록: 원본이 빠지면 둘 다 나온다",
+            clean_blockers("slg", [], root) == ([(f, MAIN) for f in ("fig_1.png", "fig_2.png", "fig_8.png")], HAND))
+        w([{"file": "fig_1.png", "src": MAIN, "manual_crop": "tight crop to the embedded raster"}])
+        chk("손작업 가드: 설명 문자열도 표지다 (정본 manual_crop 24장 중 23장이 문자열)",
+            handwork_if_cleaned("slg", root) == [("fig_1.png", "manual_crop")])
+        w([{"file": "fig_1.png", "src": MAIN, "manual_crop": False, "recrop": ""},
+           {"file": "fig_2.png", "src": MAIN, "manual_crop": "false"}])
+        chk("⛔음성: 거짓·빈 표지는 손작업이 아니다", handwork_if_cleaned("slg", root) == [])
+        w([{"file": "fig_1.png", "src": MAIN}])
+        chk("⛔음성: 표지 없는 자동 크롭만 있으면 막지 않는다",
+            clean_blockers("slg", [MAIN], root) == ([], []))
+        idx.write_text("{ 깨진 json", encoding="utf-8")
+        chk("⛔음성: 색인이 깨져도 죽지 않는다 (손작업)", handwork_if_cleaned("slg", root) == [])
+        chk("⛔음성: 색인이 없으면 빈 목록 (손작업)", handwork_if_cleaned("없는슬러그", root) == [])
+
+    # ── 2026-09-24 schlautmann2023 SI 실측 — 결함 셋의 재현 ─────────────────────────
+    # (a) `Table ST1:` 양식.  라벨 정규식이 `S?\d+` 라 ST 를 못 받아 SI 표 4장이 통째로 빠졌다.
+    h = is_caption("Table ST1: Microstructure model parameters. Void space of the composite")
+    chk("★ST 표 라벨 → table · S1 로 정규화 (schlautmann2023 SI 실측 — 종전엔 0장)",
+        h is not None and h[0] == "table" and h[1] == "S1")
+    chk("⛔음성: ST 라벨이어도 본문은 본문 (shows)",
+        is_caption("Table ST2 shows the statistical input for the particle sizes") is None)
+    # (b) 위 그림의 캡션이 **줄마다 다른 블록**이면 짧은 마지막 줄이 산문 판정을 못 넘어
+    #     경계에서 빠진다 → 크롭 맨 위에 그 줄이 딸려 들어왔다 (S2·S5·S7·S9).  좌표는 실측.
+    pr = fitz.Rect(0, 0, 595, 842)
+    prev1 = (72, 246.3, 523, 261.0, "Figure S1: Scanning electron microscopy of "
+             "LiNi0.83Co0.11Mn0.06O2 particles with a D50vol value of", 0, 0)
+    prev2 = (72, 268.4, 140, 283.1, "3.4 µm.", 1, 0)
+    cur = (72, 647.1, 523, 661.8, "Figure S2: Scanning electron microscopy of Li6PS5Cl", 2, 0)
+    chk("★위 캡션의 짧은 마지막 줄까지 경계로 (S2 실측 283.1 — 종전 261.0)",
+        abs(_up_limit(cur, [prev1, prev2, cur], pr) - 283.1) < 1e-3)
+    lbl = (80, 300.0, 95, 310.0, "a)", 3, 0)
+    chk("⛔음성: 캡션과 떨어진 그림 속 라벨은 경계를 끌어내리지 않는다",
+        abs(_up_limit(cur, [prev1, prev2, lbl, cur], pr) - 283.1) < 1e-3)
+    # 첫 수정(merge_caption 재사용)의 회귀를 고정 — 79b422f7 임피던스 논문 p12 실측 좌표.
+    #   Fig. 7 캡션(4줄) 뒤 본문 문단(8줄)과 Fig. 8 패널 라벨 "(a) (b)" 를 삼켜 경계가 552.0 이 됐다.
+    cap7 = (72, 330.9, 542.8, 384.0, "Fig. 7. Effect of individual SEI-phase conductivity on\n"
+            "predicted impedance\nline three\nline four", 0, 0)
+    para = (72, 393.6, 543.0, 520.9, "\n".join(["Finally, all three SEI decomposition products "
+            "(Li2S, Li3P, and LiCl) were considered together"] * 8), 1, 0)
+    ab = (84.4, 532.6, 339.0, 552.0, "(a)\n(b)", 2, 0)
+    cur8 = (72, 662.0, 543.0, 690.0, "Fig. 8. Impedance of the full cell with all SEI phases", 3, 0)
+    chk("⛔음성: 캡션 뒤 **본문 문단·다음 그림 라벨**은 캡션 꼬리가 아니다 (경계 = 문단 끝 520.9, 첫 수정은 552.0)",
+        abs(_up_limit(cur8, [cap7, para, ab, cur8], pr) - 520.9) < 1e-3)
+    # (c) `_shrink` 팔레트 분기.  2026-08-25 수정 때 `q = im.quantize(...)` 한 줄이 빠져
+    #     NameError 를 `except: pass` 가 삼켰다 → 선화 재압축이 **한 번도** 안 돌았다.
+    try:
+        from PIL import Image as _Im
+    except Exception:
+        _Im = None
+    if _Im is None:
+        chk("PIL 없음 — _shrink 검사 건너뜀 (도구도 PIL 없으면 재압축을 안 한다)", True)
+    else:
+        import random as _rnd
+        with tempfile.TemporaryDirectory() as td:
+            p1 = Path(td) / "line.png"
+            im = _Im.new("RGB", (64, 64), "white")
+            im.paste((0, 0, 0), (10, 10, 50, 12))
+            im.save(p1)
+            _shrink(p1)
+            chk("★선화(색 2개)는 팔레트(P)로 저장된다 — 종전엔 조용히 RGB 그대로", _Im.open(p1).mode == "P")
+            p2 = Path(td) / "rich.png"
+            g = _rnd.Random(0)
+            im2 = _Im.new("RGB", (80, 80))
+            im2.putdata([(g.randrange(256), g.randrange(256), g.randrange(256)) for _ in range(6400)])
+            im2.save(p2)
+            _shrink(p2)
+            chk("⛔음성: 색이 많은 그림(4096 초과)은 RGB 로 남는다 (양자화 금지)", _Im.open(p2).mode == "RGB")
+
+    # ── 2026-09-27 gao2026 실측 — 조용한 누락 두 경로 + 번호 공백 보고 ─────────────────────
+    # (a) 번호 뒤 소문자 패널 기호 캡션 (Springer) — 종전엔 is_caption 이 떨궜고 제외 목록에도 없었다
+    for txt, want, why in (
+        ("Fig. 12 a Schematic illustration of the fabrication of PRC framework", True, "★패널 기호 캡션 (gao2026 Fig. 12 실측 — 종전 탈락)"),
+        ("Fig. 17 a Increasing energy densities and reducing critical minerals", True, "★패널 기호 캡션 (gao2026 Fig. 17)"),
+        ("Figure 3 a) SEM image of the cathode composite after cycling", True, "패널 기호 + 괄호"),
+        ("Figure 3 a shows the trajectory of Li ions in the cell", False, "⛔음성: 패널 뒤 소문자 동사는 본문"),
+        ("Fig. 5 a–c show the impedance spectra of the three cells", False, "⛔음성: 패널 범위(a–c)는 본문"),
+        ("Fig. 2 a and b are compared in the text below here", False, "⛔음성: 'a and b' 는 본문"),
+    ):
+        chk(f"캡션판정 {why}", (is_caption(txt) is not None) == want)
+    # (b) 캡션 모양인데 떨어진 블록의 키 — extract 의 키 규칙과 같아야 번호 공백 대조가 맞는다
+    chk("near-key: 본문 파일 'Figure 3 shows' → f3", _near_key("Figure 3 shows the data here", False) == "f3")
+    chk("near-key: SI 파일이면 S 를 붙인다 → fS3", _near_key("Figure 3 shows the data here", True) == "fS3")
+    chk("near-key: ST 라벨 → tS2", _near_key("Table ST2 lists the parameters used", False) == "tS2")
+    chk("⛔음성: 키워드로 시작하지 않으면 후보 아님", _near_key("The Figure 3 shows the data", False) is None)
+    # (c) missing_labels — 번호 공백 · 떨어진 후보 · 이미 추출된 번호는 조용히
+    ml = missing_labels({"f1", "f3", "fS1", "fS2"}, [("f2", 4, "Figure 2 shows the phase diagram")],
+                        [("f2", 4, "그래픽 없음(img0/draw0)")])
+    chk("★번호 공백: f1·f3 사이의 f2 를 짚고, 제외 사유·후보 문장을 붙인다",
+        [m["key"] for m in ml] == ["f2"] and ml[0]["skipped"] and ml[0]["near_miss"][0]["page"] == 4)
+    chk("⛔음성: 후보 번호가 이미 추출됐으면 보고하지 않는다 (본문 참조일 뿐)",
+        missing_labels({"f1", "f2"}, [("f2", 3, "Figure 2 shows")], []) == [])
+    ml2 = missing_labels({"f1", "f2"}, [("f3", 9, "Fig. 3 a shows the later result")], [])
+    chk("마지막 번호 뒤의 떨어진 후보도 보고한다 (공백 검사가 못 보는 자리) — '본문 참조일 수도' 표시",
+        [m["key"] for m in ml2] == ["f3"] and "본문 참조" in ml2[0]["why"])
+    chk("⛔음성: 빠진 게 없으면 빈 목록", missing_labels({"f1", "f2", "t1"}, [], []) == [])
+    # (c2) 끝 번호 · 자르기에서 떨어진 번호 (2026-11-23 · pandey2026 Fig. 19 — 캡션 인정 · '영역 없음' · 1..18 만 봐서 침묵)
+    chk("본문 참조: 'FIGURE 19 |' 캡션 꼴도 참조로 센다", text_refs("FIGURE 19 | Schematic summary of", False) == ["f19"])
+    chk("본문 참조: 'Figure 19 presents …' → f19", text_refs("Figure 19 presents a schematic summary", False) == ["f19"])
+    chk("본문 참조: 복수 목록 'Figs. 3 and 19' → f3 · f19", text_refs("as in Figs. 3 and 19, the", False) == ["f3", "f19"])
+    chk("본문 참조: 복수 범위 'Figures 17–19' → f17 · f19", text_refs("Figures 17–19 show", False) == ["f17", "f19"])
+    chk("본문 참조: 'Figs. 3,4' (빈칸 없는 쉼표) → f3 · f4", text_refs("see Figs. 3,4 for", False) == ["f3", "f4"])
+    chk("⛔음성: 단수 'Fig. 2, 20 mg' 의 20 은 그림 번호가 아니다", text_refs("in Fig. 2, 20 mg of powder", False) == ["f2"])
+    chk("⛔음성: 패널 범위 'Fig. 2a–c' 는 f2 하나", text_refs("Fig. 2a–c show", False) == ["f2"])
+    chk("⛔음성: 150 넘는 번호 ('Table 2025') 는 버린다", text_refs("Table 2025 data", False) == [])
+    chk("⛔음성: 소문자 'periodic table 3d' · 'scheme 2 times' 는 참조가 아니다 (대문자 'FIGURE 3' 은 참조)",
+        text_refs("the periodic table 3d metals and the doping scheme 2 times", False) == []
+        and text_refs("FIGURE 3 | caption", False) == ["f3"])
+    chk("⛔음성: 줄 끝 하이픈 'Supple-↵mentary Table 2' 는 SI 표 (tS2) — 본문 t2 가 아니다 (liu2026 Li-In-S p4)",
+        text_refs("results (Supple-\nmentary Table 2).", False) == ["tS2"]
+        and text_refs("Supple\xad\nmentary Fig. 4", False) == ["fS4"])
+    chk("⛔음성: 번호 없는 'Table of Contents' · 'Figure of merit' 는 참조 아님",
+        text_refs("Table of Contents and Figure of merit", False) == [])
+    chk("본문 참조: SI 표기 — 'Fig. S3' · 'Supplementary Table 2' · SI 파일의 'Figure 3'",
+        text_refs("Fig. S3 and Supplementary Table 2", False) == ["fS3", "tS2"]
+        and text_refs("Figure 3 shows", True) == ["fS3"])
+    ml3 = missing_labels({f"f{n}" for n in range(1, 19) if n not in (5, 11)}, [],
+                         [("f5", 9, "영역 없음"), ("f11", 17, "영역 없음"), ("f19", 25, "영역 없음")],
+                         [("f19", 25), ("f5", 9), ("f11", 17)])
+    chk("★pandey 꼴: 공백 f5 · f11 + 끝 번호 f19 (제외 사유 · 본문 참조 쪽 붙음)",
+        [m["key"] for m in ml3] == ["f5", "f11", "f19"] and "끝 번호" in ml3[2]["why"]
+        and ml3[2]["skipped"] == ["p25 영역 없음"] and ml3[2]["refs"] == ["p25"])
+    ml4 = missing_labels({"f1", "f2"}, [], [("f3", 7, "그래픽 없음(img0/draw2)")])
+    chk("★자르기에서 떨어진 끝 번호는 본문 참조가 없어도 보고한다 (종전 침묵)",
+        [m["key"] for m in ml4] == ["f3"] and "자르기에서 떨어졌고" in ml4[0]["why"])
+    ml5 = missing_labels({"f1", "f2"}, [], [], [("f4", 6)])
+    chk("★본문이 Fig. 4 까지 가리키면 f3 · f4 를 끝 번호로 보고한다",
+        [m["key"] for m in ml5] == ["f3", "f4"] and all("끝 번호" in m["why"] for m in ml5))
+    chk("⛔음성: 본문 참조 최댓값이 추출 최댓값 이하면 아무것도 안 더한다",
+        missing_labels({"f1", "f2", "f3"}, [], [], [("f2", 3), ("f3", 4)]) == [])
+    chk("⛔음성: SI 가 입력에 없으면 본문의 'Fig. S12' 참조로 SI 를 누락이라 하지 않는다",
+        missing_labels({"f1", "f2"}, [], [], [("fS12", 5)]) == [])
+    ml6 = missing_labels({"f1", "f2"}, [], [], [("fS2", 5)], si_given=True)
+    chk("SI 가 입력에 있으면 SI 참조도 대조한다 (fS1 · fS2)", [m["key"] for m in ml6] == ["fS1", "fS2"])
+    ml7 = missing_labels({"f1", "f2"}, [], [], [("t2", 4)])
+    chk("★표가 한 장도 안 나왔는데 본문이 Table 2 까지 가리키면 t1 · t2 보고 ('한 장도' 문구)",
+        [m["key"] for m in ml7] == ["t1", "t2"] and all("한 장도" in m["why"] for m in ml7))
+    chk("⛔음성: 이미 추출된 번호의 제외 기록 ('중복(작은 쪽)') 은 보고하지 않는다",
+        missing_labels({"f1", "f2"}, [], [("f2", 8, "중복(작은 쪽)")]) == [])
+    # (d) 옆캡션 — 합성 PDF 로 실제 영역 산정 경로를 시험한다 (gao2026 p21 좌표)
+    def _pix():
+        pm = fitz.Pixmap(fitz.csRGB, fitz.IRect(0, 0, 40, 40), False)
+        pm.clear_with(120)
+        return pm
+    SIDE = ("Fig. 13 Representative machine learning frameworks. a Scheme of ML-DFT calculations and "
+            "experimentally driven discovery of new materials. b Workflow of the composition screening "
+            "with gradient boosting and random forest models validated by molecular dynamics.")
+    PROSE = ("Composition-driven machine learning has emerged as an effective strategy for the discovery "
+             "of new solid electrolytes with high ionic conductivity and good stability in practice. ") * 2
+    with tempfile.TemporaryDirectory() as td:
+        def _doc(name, build):
+            d = fitz.open(); p = d.new_page(width=595, height=791); build(p)
+            path = str(Path(td) / name); d.save(path); d.close()
+            return path
+        # ⚠ 2026-11-16: keep_proportion=False — 40×40 정사각 픽스맵을 비율대로 넣으면 그림이 y 108.5–468.5 에만 그려져
+        #   아래 bbox[3] > 515 기대가 시험 재료 탓으로 실패했다 (PyMuPDF 2.1 · MuPDF 1.28.6 실측 · 도구 결함 아님).
+        side = _doc("side.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                           p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix(),
+                                                          keep_proportion=False),
+                                           p.insert_textbox(fitz.Rect(51, 560, 292, 720), PROSE, fontsize=9)))
+        m, _sk = extract([side], "side_test", dry=True)
+        f13 = [f for f in m["figures"] if f["key"] == "f13"]
+        chk("★옆캡션(왼쪽 좁은 단 · 그림 오른쪽) → 그림을 잡는다 (gao2026 Fig. 13 — 종전 '그래픽 없음')",
+            len(f13) == 1 and f13[0]["bbox"][0] > 170 and f13[0]["bbox"][2] > 540 and f13[0]["bbox"][3] > 515)
+        wide = _doc("wide.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 300, 95), "Fig. 13 A wide caption "
+                                                            "that spans a whole column of this page.", fontsize=9),
+                                           p.insert_image(fitz.Rect(310, 58, 544, 519), pixmap=_pix())))
+        m, sk = extract([wide], "wide_test", dry=True)
+        chk("⛔음성: 넓은 캡션(쪽 폭 35 % 이상)은 옆을 보지 않는다 → 옆 단 그림을 안 붙인다",
+            not m["figures"] and any(k == "f13" for k, _p, _w in sk))
+        owned = _doc("owned.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                             p.insert_image(fitz.Rect(184, 58, 544, 300), pixmap=_pix()),
+                                             p.insert_textbox(fitz.Rect(184, 306, 544, 336), "Fig. 14. The right-hand "
+                                                              "figure has its own caption directly below it.", fontsize=9)))
+        m, sk = extract([owned], "owned_test", dry=True)
+        keys = {f["key"]: f for f in m["figures"]}
+        chk("⛔음성: 옆 그림 바로 아래에 **다른 캡션**이 있으면 그 캡션의 그림이다 — f13 에 안 붙인다 (f14 는 제자리)",
+            "f13" not in keys and "f14" in keys and keys["f14"]["bbox"][0] > 170)
+        chk("번호 공백 보고: 합성 PDF 의 f13 누락이 missing_labels 에 제외 사유와 함께 올라온다",
+            any(x["key"] == "f13" and x["skipped"] for x in m["missing_labels"]))
+        # 호출부 결속 (2026-11-23) — 함수만 시험하면 extract 가 refs 를 안 넘겨도 초록이다 (2026-09-13 '호출부만 되돌림' 함정).
+        endref = _doc("endref.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                               p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix(),
+                                                              keep_proportion=False),
+                                               p.insert_textbox(fitz.Rect(51, 560, 544, 600), "The outlook in Figure 15 "
+                                                                "summarizes the remaining challenges.", fontsize=9)))
+        m, _sk = extract([endref], "endref_test", dry=True)
+        e15 = [x for x in m["missing_labels"] if x["key"] == "f15"]
+        chk("★호출부: 합성 PDF 본문의 'Figure 15' 참조가 extract → missing_labels 로 넘어가 f15 를 끝 번호로 보고",
+            any(f["key"] == "f13" for f in m["figures"]) and len(e15) == 1
+            and "끝 번호" in e15[0]["why"] and e15[0].get("refs") == ["p1"])
+        prose_over = _doc("prose.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                                  p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix()),
+                                                  p.insert_textbox(fitz.Rect(190, 300, 540, 380), PROSE, fontsize=9)))
+        _GCACHE.clear()
+        dd = fitz.open(prose_over); pg = dd[0]; bl = text_blocks(pg)
+        capb = [b for b in bl if is_caption(b[4])][0]
+        chk("⛔음성: 옆 영역이 **본문 문단과 겹치면** 그 옆은 버린다",
+            _beside_rect(pg, tuple(merge_caption(bl, capb)[0]), bl)[0] is None)
+        dd.close()
+        gap = _doc("gap.pdf", lambda p: (p.insert_image(fitz.Rect(60, 60, 280, 240), pixmap=_pix()),
+                                         p.insert_textbox(fitz.Rect(60, 246, 290, 270), "Fig. 1. First figure of "
+                                                          "the synthetic paper.", fontsize=9),
+                                         p.insert_textbox(fitz.Rect(60, 300, 290, 380), "Figure 2 shows the results of "
+                                                          "the analysis in considerable detail for all samples.", fontsize=9),
+                                         p.insert_image(fitz.Rect(320, 60, 540, 240), pixmap=_pix()),
+                                         p.insert_textbox(fitz.Rect(320, 246, 550, 270), "Fig. 3. Third figure of "
+                                                          "the synthetic paper.", fontsize=9)))
+        m, _sk = extract([gap], "gap_test", dry=True)
+        mk = {x["key"]: x for x in m["missing_labels"]}
+        chk("★추출 직후 번호 공백 보고: f1·f3 사이 f2 · 규칙에 떨어진 후보 문장('Figure 2 shows…')을 같이 싣는다",
+            sorted(f["key"] for f in m["figures"]) == ["f1", "f3"] and "f2" in mk
+            and mk["f2"]["near_miss"] and mk["f2"]["near_miss"][0]["text"].startswith("Figure 2 shows"))
+
+        # (e) 캡션 블록 머리의 공백 줄 (2026-11-16 · tighten_caption_tops) — wei2026 SI p.4 실측 꼴 그대로:
+        #     단 오른쪽 끝 (x 545) 의 굵은 Times 공백 한 칸이 캡션 블록을 15 pt 위로 늘렸고, 그만큼 그림 아래가 잘렸다.
+        def _blankhead(p):
+            p.insert_image(fitz.Rect(54, 100, 547, 452), pixmap=_pix())          # 그림이 공백 줄 높이 안까지 내려온다
+            p.insert_text((545.2, 455.0), " ", fontsize=10, fontname="tibo")
+            p.insert_text((54.0, 469.0), "Fig. S2: SQS configurations of twenty synthetic alloys.",
+                          fontsize=11, fontname="tiro")
+        bh = _doc("blankhead.pdf", _blankhead)
+        _GCACHE.clear()
+        dd = fitz.open(bh); pg = dd[0]
+        capr = [b for b in text_blocks(pg) if is_caption(b[4])]
+        capt = [b for b in page_blocks(pg) if is_caption(b[4])]
+        dd.close()
+        chk("재현 확인: 합성 캡션 블록이 실제 SI 처럼 공백 머리 줄을 품는다 (블록 위 끝 < 그림 아래 끝 452)",
+            len(capr) == 1 and capr[0][1] < 452.0 and capr[0][4].startswith(" \n"))
+        chk("★캡션 위 끝 = 첫 글줄 위 끝 (공백 머리 줄 제외) — 그림 아래 끝 + 2 보다 아래 · 나머지 칸은 그대로",
+            len(capt) == 1 and capt[0][1] > 454.0 and capt[0][2:] == capr[0][2:] and capt[0][0] == capr[0][0])
+        m, _sk = extract([bh], "blankhead_test", dry=True)
+        fs2 = [f for f in m["figures"] if f["key"] == "fS2"]
+        chk("★공백 머리 줄 캡션 → 그림 아래 끝 (452) 까지 자른다 (고치기 전 442.6 — 9 pt 잘림)",
+            len(fs2) == 1 and fs2[0]["bbox"][3] >= 452.0)
+        chk("⛔음성: 그래도 캡션 글줄은 크롭에 안 들어간다 (크롭 아래 끝 < 첫 글줄 위 끝)",
+            len(fs2) == 1 and len(capt) == 1 and fs2[0]["bbox"][3] < capt[0][1])
+        prose_b = (54.0, 444.6, 547.7, 472.1, " \nThe results of the synthetic alloys are shown here.", 0, 0)
+        cap_ok = (54.0, 458.9, 547.7, 472.1, "Fig. S3: A normal caption without a blank head line.", 1, 0)
+        cap_bh = (54.0, 444.6, 547.7, 472.1, " \nFig. S4: A caption with a blank head line.", 2, 0)
+        got = tighten_caption_tops([prose_b, cap_ok, cap_bh], [fitz.Rect(54.0, 458.9, 300.0, 472.1)])
+        chk("⛔음성: 캡션이 아닌 블록은 공백 머리 줄이 있어도 안 건드린다 (본문 경계는 그대로)", got[0] == prose_b)
+        chk("⛔음성: 공백 머리 줄 없는 캡션은 그대로 (같은 튜플)", got[1] == cap_ok)
+        chk("양성: 순수 함수 — 공백 머리 줄 캡션의 위 끝만 첫 글줄로 내린다",
+            got[2][1] == 458.9 and got[2][0] == cap_bh[0] and got[2][2:] == cap_bh[2:])
+        chk("⛔음성: 글줄이 블록 밖 (가운데가 단 밖) 이면 안 내린다",
+            tighten_caption_tops([cap_bh], [fitz.Rect(560.0, 458.9, 590.0, 472.1)])[0] == cap_bh)
+        chk("⛔음성: 위 끝은 내리기만 한다 — 첫 글줄이 블록 위 끝보다 위면 그대로",
+            tighten_caption_tops([cap_ok], [fitz.Rect(54.0, 457.0, 300.0, 470.0)])[0] == cap_ok)
+
+        # (f) 원소 기호 'In' 캡션 (2026-11-16 · liu2026 SI Fig. S3 · warren2026 Fig. 2 — 종전 탈락)
+        for txt, want, why in (
+            ("Figure S3  In 3d XPS spectra of the Li metal surface after cycling", True, "★원소 기호 In (liu2026 SI 실측)"),
+            ("Fig. 3 In situ Raman spectra of the precursor solution over time", True, "★'In situ' 캡션 (Springer · Nature 꼴)"),
+            ("Figure 4 In-doped samples were annealed at 500 °C for 2 h", True, "★'In-doped' 캡션"),
+            ("Figure 3 in the main text compares the two compositions directly", False, "⛔음성: 소문자 in 은 여전히 본문"),
+            ("Figure 2 And the corresponding EDS maps are shown in the inset", False, "⛔음성: 대문자 And 는 여전히 본문 (VERBS 그대로)"),
+            ("Figure 4 We compare the cycling of the two cells in detail here", False, "⛔음성: 대문자 We 는 여전히 본문"),
+            ("Figure 5 Into the cathode we add carbon additive for this test", True, "Into 는 VERBS 낱말이 아니다 (종전과 같음)"),
+        ):
+            chk(f"캡션판정 {why}", (is_caption(txt) is not None) == want)
+
+        # (g) 표 캡션이 표 아래에 붙는 문서 (2026-11-16 · warren2026 SI) — 다수결 · 위 영역 · 몫 판정
+        def cap(y0, y1, lab, kind="Table", x0=85.0, x1=530.0):
+            t = f"{kind} {lab}. A synthetic {kind.lower()} caption for the vote test."
+            return ((x0, y0, x1, y1, t, 0, 0), is_caption(t))
+        below_doc = [([cap(300, 312, "S1")], [(85, 150, 530, 285)]),          # 표 끝 285 → 캡션 300 (15 pt)
+                     ([cap(400, 412, "S2")], [(85, 250, 530, 385)]),
+                     ([cap(200, 212, "S3")], [(85, 60, 530, 185)])]
+        chk("★다수결: 표 바로 위 (15 pt) 에 붙은 표 캡션 3 개 → 아래 캡션 문서", table_caption_below(below_doc) == (True, 3, 0))
+        above_doc = [([cap(140, 152, "S1")], [(85, 50, 530, 95), (85, 162, 530, 300)]),   # 앞 표와 45 pt · 자기 표 10 pt
+                     ([cap(140, 152, "S2")], [(85, 162, 530, 300)]),
+                     ([cap(140, 152, "S3")], [(85, 165, 530, 300)])]
+        chk("⛔음성: 표가 캡션 바로 아래 (10–13 pt) · 앞 표는 45 pt 위 → 종전대로 (아래 캡션 아님)",
+            table_caption_below(above_doc) == (False, 0, 3))
+        chk("⛔음성: 위 붙음 1 개뿐이면 바꾸지 않는다 (≥ 2 · 과반)", table_caption_below(below_doc[:1])[0] is False)
+        chk("⛔음성: 위 붙음 = 아래 붙음 (2 대 2) 이면 바꾸지 않는다",
+            table_caption_below(below_doc[:2] + above_doc[1:3])[0] is False)
+        chk("⛔음성: 그림 캡션은 세지 않는다 (표 위에 붙은 Figure 캡션 3 개)",
+            table_caption_below([([cap(300, 312, f"S{i}", kind="Figure")], [(85, 150, 530, 285)])
+                                 for i in (1, 2, 3)]) == (False, 0, 0))
+        chk("⛔음성: 다른 단 (가로 겹침 없음) 의 표는 세지 않는다",
+            table_caption_below([([cap(300, 312, f"S{i}", x0=85, x1=290)], [(310, 150, 530, 285)])
+                                 for i in (1, 2, 3)]) == (False, 0, 0))
+        tp = fitz.open(); tpg = tp.new_page(width=595, height=842)
+        r = table_rect_above(tpg, (85, 600, 530, 612), [(85, 100, 530, 280), (85, 420, 530, 585), (85, 640, 530, 760)],
+                             start_y=300.0)
+        chk("★위 영역: 이 캡션과 위 캡션 (아래 끝 300) 사이의 표만 + 캡션 — 그 위 표 · 아래 표는 안 붙인다",
+            r is not None and 410 < r.y0 < 420 and 612 < r.y1 < 620)
+        chk("⛔음성: 캡션 위에 표가 없으면 None", table_rect_above(tpg, (85, 600, 530, 612), [(85, 640, 530, 760)]) is None)
+        tp.close()
+        own_blocks = [(85.0, 300.0, 530.0, 312.0, "Table S9. The caption that owns the grid right above it.", 0, 0)]
+        chk("★몫 판정: 표 바로 아래 (15 pt) 에 표 캡션 → 그 캡션의 표", _owned_by_caption_below((85, 150, 530, 285), own_blocks))
+        chk("⛔음성: 바로 아래가 표 캡션이 아닌 제목이면 주인 없음",
+            not _owned_by_caption_below((85, 150, 530, 285),
+                                        [(85.0, 300.0, 530.0, 312.0, "Reduction series and spin-density analysis", 0, 0)]))
+
+        # (h) 합성 PDF 로 extract 경로 전체 (첫 바퀴 다수결 → 위 영역 · 섞인 위 캡션 표 · 몫 · 종전 문서 불변)
+        def _grid(p, y0, y1, x0=100, x1=500):
+            # ⚠ 칸마다 글자가 있어야 PyMuPDF 가 표로 잡는다 — 2×2 칸에 글자 하나면 lines · text 둘 다 0 개였다 (2026-11-16 실측)
+            nr, nc = 4, 3
+            xs = [x0 + (x1 - x0) * i / nc for i in range(nc + 1)]
+            ys = [y0 + (y1 - y0) * j / nr for j in range(nr + 1)]
+            sh = p.new_shape()
+            for y in ys:
+                sh.draw_line((x0, y), (x1, y))
+            for x in xs:
+                sh.draw_line((x, y0), (x, y1))
+            sh.finish(color=(0, 0, 0), width=0.8)
+            sh.commit()
+            words = (("Compound", "Calc (ppm)", "Exp (ppm)"), ("P4S10", "236.4", "56.8"),
+                     ("P4S3", "251.8", "64.6"), ("H3PO4", "304.7", "0.0"))
+            for j in range(nr):
+                for i in range(nc):
+                    p.insert_text((xs[i] + 5, ys[j] + (y1 - y0) / nr / 2 + 3), words[j][i], fontsize=9)
+
+        def _cap(p, y, lab):
+            p.insert_textbox(fitz.Rect(100, y, 500, y + 26), f"Table {lab}. Calculated shielding of the reference "
+                                                             f"standards used for scaling (synthetic).", fontsize=9)
+
+        def _mdoc(name, builds):
+            d = fitz.open()
+            for b in builds:
+                b(d.new_page(width=595, height=842))
+            path = str(Path(td) / name); d.save(path); d.close()
+            return path
+
+        bdoc = _mdoc("capbelow.pdf", [
+            lambda p: (_grid(p, 120, 260), _cap(p, 272, "S1")),
+            lambda p: (_grid(p, 100, 220), _cap(p, 232, "S2"),                    # 한 쪽에 표 둘 (start_y)
+                       _grid(p, 330, 470), _cap(p, 482, "S3")),
+            lambda p: (p.insert_textbox(fitz.Rect(100, 90, 500, 150), PROSE, fontsize=9),
+                       _cap(p, 160, "S4"), _grid(p, 200, 330),                    # 섞인 위 캡션 표 (warren S2 꼴)
+                       p.insert_textbox(fitz.Rect(100, 360, 500, 380), "Reduction series and spin-density "
+                                                                          "analysis", fontsize=10)),
+            lambda p: (p.insert_textbox(fitz.Rect(100, 90, 500, 170), PROSE, fontsize=9),
+                       _cap(p, 176, "S5"),                                         # 자기 표가 검출 안 된 캡션
+                       _grid(p, 240, 380), _cap(p, 392, "S6")),
+        ])
+        m, sk = extract([bdoc], "capbelow_test", dry=True)
+        got = {f["key"]: f for f in m["figures"]}
+        vote = m["table_caption_vote"][0]
+        chk("★합성 아래 캡션 문서: 다수결 caption_below=True (위 붙음 ≥ 2 · 아래 붙음보다 많다)",
+            vote["caption_below"] is True and vote["above_adjacent"] >= 3)
+        chk("★tS1: 캡션 **위** 격자 (120–260) + 캡션 — 종전처럼 캡션 아래를 자르지 않는다",
+            "tS1" in got and got["tS1"]["bbox"][1] < 125 and 284 < got["tS1"]["bbox"][3] < 300)   # 캡션 블록 272–284.4 (한 줄)
+        chk("★tS3: 같은 쪽 위 캡션 (S2 · 아래 끝 ≈258) 위의 격자는 안 붙인다 (start_y)",
+            "tS3" in got and got["tS3"]["bbox"][1] > 300 and got["tS3"]["bbox"][3] > 482)
+        chk("★tS4: 아래 캡션 문서 안의 **위 캡션 표** (warren S2 꼴) 도 잡는다 — 위에 표가 없으면 아래 표",
+            "tS4" in got and got["tS4"]["bbox"][1] < 165 and got["tS4"]["bbox"][3] > 325)
+        chk("⛔음성: tS5 (자기 표 미검출) 는 아래 격자 (S6 몫 · 바로 아래에 S6 캡션) 를 가져가지 않는다",
+            "tS5" not in got or got["tS5"]["bbox"][3] < 245)
+        chk("★tS6: 그 격자는 제 주인 (S6) 에게 간다", "tS6" in got and got["tS6"]["bbox"][1] < 245)
+        adoc = _mdoc("capabove.pdf", [
+            lambda p: (_cap(p, 100, "S1"), _grid(p, 138, 278)),
+            lambda p: (_cap(p, 100, "S2"), _grid(p, 138, 278)),
+            lambda p: (_cap(p, 100, "S3"), _grid(p, 138, 278)),
+        ])
+        m, sk = extract([adoc], "capabove_test", dry=True)
+        got = {f["key"]: f for f in m["figures"]}
+        chk("⛔음성: 위 캡션 문서는 다수결 False · 종전처럼 캡션 아래 격자를 자른다 (tS1–S3)",
+            m["table_caption_vote"][0]["caption_below"] is False
+            and all(k in got and got[k]["bbox"][1] < 105 and got[k]["bbox"][3] > 275 for k in ("tS1", "tS2", "tS3")))
+
+        # 로마 숫자 표 캡션 (2026-11-24 lepley2015 · APS 꼴 `TABLE I.`) — 표만 받고 아라비아 키로
+        for txt, want in (("TABLE I. Computed lattice constants of the phases", ("table", "1", False)),
+                          ("TABLE IV: Energies of the interface models", ("table", "4", False)),
+                          ("Table S-II. Fitted parameters of the strain model", ("table", "S2", False)),
+                          ("Table SII. Fitted values of the strain energy", ("table", "S2", False))):
+            chk(f"★로마 숫자 표 캡션 {txt[:16]!r} → {want}", is_caption(txt) == want)
+        for txt in ("Figure II. Something big happened in the cell", "TABLE IIII. Wrong numeral form in this text",
+                    "Table I shows the data in the main text here", "Table It is clear that the values agree"):
+            chk(f"⛔음성: {txt[:22]!r} 는 캡션이 아니다", is_caption(txt) is None)
+        chk("★_near_key 도 같은 키 (TABLE III. → t3 · 번호 공백 대조가 같은 키를 쓴다)",
+            _near_key("TABLE III. Interface energies of the models", False) == "t3")
+
+        # 표 캡션 아래가 거의 백지 (2026-11-24 choi2025 SI — 표를 못 찾은 문서의 아래 캡션 표)
+        def _rows(p, y0):
+            rows = (("Metal", "CCD", "R_int"), ("Cu", "0.26", "7.78"), ("Au", "1.13", "4.38"),
+                    ("Ag", "0.65", "17.06"), ("Pt", "1.16", "1.27"))
+            for j, row in enumerate(rows):
+                for i, w in enumerate(row):
+                    p.insert_text((110 + 130 * i, y0 + 18 * j), w, fontsize=9)
+
+        fdoc = _mdoc("blankbelow.pdf", [
+            lambda p: (p.insert_textbox(fitz.Rect(100, 80, 500, 140), PROSE, fontsize=9), _rows(p, 170), _cap(p, 272, "S1")),
+            lambda p: (_cap(p, 100, "S2"), _rows(p, 150)),
+            lambda p: (p.insert_textbox(fitz.Rect(100, 80, 500, 140), PROSE, fontsize=9), _cap(p, 300, "S3")),
+        ])
+        m, sk = extract([fdoc], "blankbelow_test", dry=True)
+        got = {f["key"]: f for f in m["figures"]}
+        chk("★표 캡션 아래가 거의 백지 → 캡션 위 (표 글자 ≈160–242) 를 잡고 auto_fallback 을 단다 (tS1)",
+            "tS1" in got and got["tS1"]["bbox"][1] < 165 and 272 < got["tS1"]["bbox"][3] < 300   # 캡션 272–284 까지 · 그 아래 빈칸은 안 든다
+            and "auto_fallback" in got["tS1"])
+        chk("⛔음성: 보통 위 캡션 표 (tS2) 는 종전대로 아래 표를 자르고 표시가 없다",
+            "tS2" in got and got["tS2"]["bbox"][3] > 215 and "auto_fallback" not in got["tS2"])
+        chk("⛔음성: 위 · 아래 다 비면 (tS3) 종전대로 '거의 백지' 로 뺀다",
+            "tS3" not in got and any(s[0] == "tS3" and "백지" in s[2] for s in sk))
+
+    print(f"\nselftest: {ok} 통과 / {fail} 실패")
+    return 1 if fail else 0
+
+
+def audit():
+    """이미 잘라둔 것 전체 점검 — 53편을 눈으로 다 볼 수는 없으니 **의심스러운 것만** 띄운다.
+
+    잡아내는 것
+      · 그림 0개                     → 캡션 형식이 특이하거나 스캔 PDF
+      · 번호 구멍 (Fig 1,2,4 …)      → 그 번호를 놓쳤다 (전면 그림·캡션 아래 배치 등)
+      · 본문 없이 SI 만              → SI 오분류(원소기호 Si 등) 또는 본문 PDF 누락
+      · 거의 백지 (그림만, blank ≥ 0.965) → 영역을 잘못 잡았다 (표는 원래 흰 바탕이라 제외)
+      · 극단 세로비 (h/w ≥ 4.5)      → 두 그림을 한 장에 물었을 수 있다
+      · 중복 크롭 (바이트 동일)      → 그 번호 중 하나는 안 잘렸다 (`--dedupe` 로 정리)
+    """
+    rows, warn = [], 0
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        try:
+            m = json.loads(j.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            print(f"⛔ {j.parent.name}: figures.json 을 못 읽는다")
+            warn += 1
+            continue
+        figs = m.get("figures", [])
+        slug = m.get("slug", j.parent.name)
+        main = [r for r in figs if r["kind"] != "table" and not r["label"].startswith("S")]
+        si = [r for r in figs if r["kind"] != "table" and r["label"].startswith("S")]
+        tab = [r for r in figs if r["kind"] == "table"]
+        flags = []
+        if not figs:
+            flags.append("그림 0개 — 캡션을 못 찾음 (원고형 PDF: 캡션이 뒤쪽 "
+                         "'Figure captions' 절에 몰려 있거나 / OCR 이 심하게 깨졌거나)")
+        if not main and si:
+            flags.append(f"본문 없이 SI {len(si)}장뿐")
+
+        def gaps(lst, pre=""):
+            # 번호 구멍은 **그림 번호** 에만 뜻이 있다.  글 · 식 크롭 (kind text · equation) 의 라벨은 쪽 번호와
+            # 값이 섞인 긴 숫자열이라 (예: 'p2728-dry-0p59-expansion-0p550' → 27,280,590,550) 번호로 읽으면
+            # range() 가 수백억이 되어 MemoryError 로 --audit 전체가 죽는다 (2026-11-12 정본에서 실제로 남).
+            # ⇒ kind 가 figure 이고 라벨이 그림 번호 꼴 ('3' · '3a' · 'S5') 인 것만 센다.
+            ns = sorted({int(mm.group(1)) for r in lst if r.get("kind") == "figure"
+                         for mm in [re.fullmatch(r"S?(\d{1,3})[A-Za-z]?", str(r.get("label", "")))] if mm})
+            if not ns:
+                return []
+            return [f"{pre}{k}" for k in range(1, max(ns)) if k not in ns]
+        g = gaps(main) + gaps(si, "S")
+        if g:
+            flags.append("번호 구멍 " + ",".join(g[:6]) + ("…" if len(g) > 6 else ""))
+        # ⚠ '거의 백지' 검사는 뺐다 (2026-08-06 실물 확인): 추출 단계가 이미 blank > 0.985 를
+        #   버리므로, audit 이 0.965 로 잡던 건 **성긴 선그래프뿐**이었다 — 실제로 열어 보니
+        #   liu2013 f4(3점 직선)·fujimura2013 f2(아레니우스 산점도) 전부 정상 크롭.
+        #   경보가 다 거짓이면 진짜를 가린다.
+        tall = [r["key"] for r in figs if r["kind"] != "table"
+                and r.get("w") and r["h"] / r["w"] >= 4.5]
+        if tall:
+            flags.append("극단 세로비 " + ",".join(tall[:4]))
+        dg = dup_groups(j.parent)
+        if dg:
+            flags.append(f"중복 크롭 {sum(len(g) - 1 for g in dg)}장 "
+                         + ",".join(g[0].name for g in dg[:3]) + " (--dedupe)")
+        # 항목 둘이 **같은 파일**을 가리키는 경우 — 파일은 하나뿐이라 --dedupe 가 못 잡는다.
+        # (webapp 은 그림을 두 번 그리고 파일명→키 사전에서는 하나가 지워진다)
+        seen_f = {}
+        for r in figs:
+            if r.get("file"):
+                seen_f.setdefault(r["file"], []).append(r.get("key"))
+        shared = {f: ks for f, ks in seen_f.items() if len(ks) > 1}
+        if shared:
+            flags.append("한 파일을 여러 항목이 가리킴 "
+                         + ",".join(f"{f}({'/'.join(map(str, ks))})"
+                                    for f, ks in list(shared.items())[:2]))
+        rows.append((slug, len(main), len(si), len(tab), flags))
+        warn += bool(flags)
+
+    print(f"=== 점검: {len(rows)}편 · 그림 "
+          f"{sum(r[1] for r in rows)}(본문) + {sum(r[2] for r in rows)}(SI) + "
+          f"{sum(r[3] for r in rows)}(표)\n")
+    print(f"{'slug':<48} 본문  SI  표   확인할 것")
+    for slug, nm, ns, nt, flags in rows:
+        mark = "⚠" if flags else " "
+        print(f"{mark} {slug[:46]:<46} {nm:>4} {ns:>3} {nt:>3}   {'; '.join(flags)}")
+    ok = sum(1 for r in rows if not r[4])
+    print(f"\n깨끗 {ok}편 / 확인 필요 {len(rows)-ok}편")
+    print("※ '번호 구멍'은 대개 정상이다 — 전면 그림, 캡션이 그림 아래인 배치, PDF 에 그림이")
+    print("  아예 안 들어간 쪽. 해당 논문만 --slug <slug> --clean 으로 다시 돌려 보고 판단한다.")
+    return 0
+
+
+def drop_blank(slug, apply_it=False):
+    """사람이 **확정한** 백지 슬롯의 PNG 만 지운다 (2026-08-25 codex E 판정).
+
+    규칙 — 이 셋이 이 함수의 존재 이유다:
+      · 대상은 `content_status == "blank_confirmed"` 뿐이다. 자동 분류인
+        `blank_candidate` 는 **절대 지우지 않는다** (unreviewed 삭제 금지).
+      · manifest 행은 남긴다. 파일이 사라져도 슬롯이 있었다는 사실은 남아야 한다.
+      · `--apply` 없이는 지우지 않는다 (이중 의도).
+
+    ⛔ 이 함수가 못 하는 것: 백지인지 아닌지 **판단하지 않는다.** 사람이
+      figures.json 에서 `blank_confirmed` + `reviewed:true` 로 바꿔 둔 것만 따른다.
+    """
+    if not slug:
+        raise SystemExit("⛔ --drop-blank 는 slug 가 필요하다")
+    d = OUT_ROOT / slug
+    fj = d / "figures.json"
+    if not fj.is_file():
+        raise SystemExit(f"⛔ {fj} 가 없다")
+    meta = json.loads(fj.read_text(encoding="utf-8"))
+    figs = meta.get("figures", [])
+    cand = [f for f in figs if f.get("content_status") == "blank_candidate"]
+    conf = [f for f in figs if f.get("content_status") == "blank_confirmed"]
+    unrev = [f for f in conf if not f.get("reviewed")]
+    if unrev:
+        raise SystemExit(
+            f"⛔ blank_confirmed 인데 reviewed 가 아닌 슬롯 {len(unrev)}건 "
+            f"({', '.join(f.get('slot_id', f.get('label', '?')) for f in unrev[:6])}) — "
+            "사람이 열어본 표시 없이 확정만 바뀌었다. 삭제하지 않는다.")
+    print(f"{slug}: 슬롯 {len(figs)} · 백지후보 {len(cand)}(검토대기, 대상 아님) "
+          f"· 확정 {len(conf)}(삭제 대상)")
+    if not conf:
+        print("  삭제할 것 없음 — 확정은 사람만 한다 (figures.json 의 "
+              "content_status 를 blank_confirmed 로, reviewed 를 true 로).")
+        return 0
+    n = 0
+    for f in conf:
+        p = d / f.get("file", "")
+        if apply_it and p.is_file():
+            p.unlink()
+            n += 1
+        f["artifact_retained"] = bool(not apply_it)
+        f["digest_included"] = False
+    if apply_it:
+        fj.write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"  PNG {n}건 삭제 · manifest 행 {len(conf)}건은 그대로 남겼다")
+    else:
+        print(f"  (dry) --apply 를 붙이면 PNG {len(conf)}건을 지운다. 행은 남는다.")
+    return 0
+
+
+def main():
+    ap = argparse.ArgumentParser(
+        description="논문 PDF 에서 그림·표를 캡션 기준으로 잘라 litdb/figures/<slug>/ 에 넣는다.")
+    # nargs="+" 와 append 를 같이 — `--pdf a.pdf b.pdf` (글로브 `01.*.pdf`) 와
+    # `--pdf a.pdf --pdf b.pdf` 둘 다 되게. 글로브가 2개를 잡으면 두 번째가
+    # 위치인수로 새서 usage 오류가 났다 (2026-08-06 1저자 신고).
+    ap.add_argument("--pdf", action="append", nargs="+", metavar="PDF",
+                    help="본문 PDF. 여러 개면 그냥 이어 쓰거나 글로브 (SI 는 파일명에 sup/SI 가 있으면 S 번호로)")
+    ap.add_argument("--slug", help="litdb/papers/<slug>.md 의 slug")
+    ap.add_argument("--inbox", action="store_true",
+                    help="litdb/inbox/ 를 훑어 digest 와 자동 매칭 (기본은 매칭표만, --run 이면 실행)")
+    ap.add_argument("--run", action="store_true", help="--inbox 에서 실제로 추출까지")
+    ap.add_argument("--inbox_dir", default="", help="inbox 위치를 바꿔서 (기본 litdb/inbox)")
+    ap.add_argument("--only", default="", help="--inbox 에서 slug 에 이 문자열이 든 것만")
+    ap.add_argument("--skip-done", action="store_true",
+                    help="--inbox 에서 이미 figures.json 이 있는 논문은 건너뛴다")
+    # ⚠ 기본값을 None 으로 두고 아래에서 모드별로 푼다 — 덱(--slides)은 **쪽 통째로** 렌더라
+    #   같은 3000 px 를 쓰면 21장에 11 MB 가 된다(2026-08-25 실측). repo 에 커밋하는 파일이므로
+    #   덱 기본은 1600 px. 사용자가 명시하면 그 값이 이긴다.
+    ap.add_argument("--dpi", type=int, default=None, help="기본: 논문 300 · 덱(--slides) 150")
+    ap.add_argument("--maxpx", type=int, default=None,
+                    help="긴 변 픽셀 상한. 0 이면 --dpi 그대로. 기본: 논문 3000 · 덱(--slides) 1600")
+    ap.add_argument("--dry", action="store_true", help="파일 안 쓰고 표만 출력")
+    ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
+    ap.add_argument("--force_clean", action="store_true",
+                    help="'되살릴 수 없는 그림' 가드(원본 빠짐 + 손작업 manual_crop·recrop)를 넘긴다 — "
+                         "--clean · --inbox --run · --refresh --apply 공통 (정말 버릴 때만)")
+    ap.add_argument("--audit-src", dest="audit_src", action="store_true",
+                    help="남의 논문 그림이 섞였는지 점검 (그림의 src ↔ 논문 제목 대조)")
+    ap.add_argument("--audit", action="store_true",
+                    help="이미 잘라둔 것 전체 점검 (구멍·백지·SI만 등 의심스러운 것만)")
+    ap.add_argument("--dedupe", action="store_true",
+                    help="바이트 동일 중복 크롭을 정리 (기본 미리보기, --apply 로 실제 삭제)")
+    ap.add_argument("--selftest", action="store_true",
+                    help="자체 점검 (양성 + 음성 경로)")
+    ap.add_argument("--refresh", action="store_true",
+                    help="추출기를 고친 뒤 **장수가 달라지는 논문만** 골라 재추출 (--apply 로 실행)")
+    ap.add_argument("--apply", action="store_true", help="--refresh 에서 실제로 덮어쓴다")
+    ap.add_argument("--suggest", action="store_true",
+                    help="그림 없는 digest × 미매칭 PDF 후보표 (pdf_map.tsv 채우기용)")
+    ap.add_argument("--why", action="store_true",
+                    help="--slug 과 함께: 각 캡션이 왜 살았는지/버려졌는지 좌표째로")
+    ap.add_argument("--slides", action="store_true",
+                    help="발표 덱(PPT→PDF): 캡션이 없으므로 **슬라이드 1장 = 그림 1장**으로 렌더 "
+                         "(litdb/talks 용. --slug --pdf 와 함께)")
+    ap.add_argument("--drop-blank", dest="drop_blank", action="store_true",
+                    help="사람이 blank_confirmed 로 확정한 슬롯의 PNG 만 지운다. "
+                         "manifest 행은 남는다. 실제 삭제에는 --apply 도 필요.")
+    ap.add_argument("--nup", type=int, default=1,
+                    help="한 쪽에 슬라이드 N 장인 인쇄 자료집을 나눈다 (심포지엄 자료집은 "
+                         "대개 2). 라벨이 <쪽>a/<쪽>b 가 된다. --slides 와 함께.")
+    a = ap.parse_args()
+    if a.pdf:                       # [[a,b],[c]] → [a,b,c]
+        a.pdf = [x for grp in a.pdf for x in grp]
+    if a.dpi is None:               # 모드별 기본값 (위 주석 참고)
+        a.dpi = 150 if a.slides else 300
+    if a.maxpx is None:
+        a.maxpx = 1600 if a.slides else 3000
+
+    if a.selftest:
+        return selftest()
+
+    if a.audit_src:
+        return audit_src()
+
+    if a.audit:
+        return audit()
+
+    if a.dedupe:
+        return dedupe(apply_it=a.apply)
+
+    if a.drop_blank:
+        return drop_blank(a.slug, apply_it=a.apply)
+
+    if a.refresh:
+        box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
+        if not box.is_dir():
+            raise SystemExit(f"⛔ {box} 가 없다 — --inbox_dir 로 지정")
+        return refresh(box, apply_it=a.apply, dpi=a.dpi, maxpx=a.maxpx, force=a.force_clean)
+
+    if a.suggest:
+        box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
+        if not box.is_dir():
+            raise SystemExit(f"⛔ {box} 가 없다 — --inbox_dir 로 지정")
+        return suggest(box)
+
+    if a.inbox:
+        box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
+        if not box.is_dir():
+            # litdb/inbox/ 는 .gitignore 대상이라 clone 한 머신에는 없다 (2026-08-06 실측).
+            # PDF 가 있을 만한 곳을 뒤져 후보를 알려준다 — WSL 이면 보통 윈도 Downloads.
+            cands, seen = [], set()
+            for base in [Path.home(), Path("/mnt/c/Users"), Path("/mnt/d")]:
+                if not base.is_dir():
+                    continue
+                try:
+                    for f in base.glob("*/[Dd]ownload*/*.pdf"):
+                        if f.parent not in seen:
+                            seen.add(f.parent); cands.append(f.parent)
+                    for f in base.glob("*/*.pdf"):
+                        if f.parent not in seen:
+                            seen.add(f.parent); cands.append(f.parent)
+                except (PermissionError, OSError):
+                    pass
+            msg = [f"⛔ {box} 가 없다.",
+                   "   litdb/inbox/ 는 .gitignore 대상이라 clone 한 머신에는 안 따라온다.",
+                   "   ① PDF 를 거기에 모으거나  ② --inbox_dir 로 있는 곳을 가리킨다:",
+                   "        litfig --inbox --inbox_dir '/mnt/c/Users/<계정>/Downloads'"]
+            if cands:
+                msg.append("\n   PDF 가 보이는 폴더 (개수순):")
+                for d in sorted(cands, key=lambda p: -len(list(p.glob('*.pdf'))))[:8]:
+                    msg.append(f"      {len(list(d.glob('*.pdf'))):>4}개  {d}")
+            raise SystemExit("\n".join(msg))
+        assign, orphan = match_inbox(box)
+        if a.only:
+            assign = {k: v for k, v in assign.items() if a.only.lower() in k.lower()}
+        if a.skip_done:
+            assign = {k: v for k, v in assign.items()
+                      if not (OUT_ROOT / k / "figures.json").exists()}
+        print(f"=== inbox 매칭: 논문 {len(assign)}편 / 짝 못 찾은 PDF {len(orphan)}개\n")
+        for slug, v in sorted(assign.items()):
+            warn = "  ⚠ 본문 후보 2개 이상 — 표를 보고 아닌 건 --pdf 로 따로 돌린다" \
+                   if len(v["main"]) > 1 else ""
+            print(f"  {slug}  [{v['why']}]{warn}")
+            for p in v["main"]:
+                print(f"      본문 {_show(p, box)}")
+            for p in v["si"]:
+                print(f"      SI   {_show(p, box)}")
+        if orphan:
+            print("\n--- 짝 못 찾음 (digest 가 없거나 제목이 많이 다른 것)")
+            for p, si in orphan[:30]:
+                print(f"  {'SI ' if si else '본문'} {_show(p, box)}")
+            if len(orphan) > 30:
+                print(f"  … 외 {len(orphan)-30}개")
+        if not a.run:
+            print("\n※ 매칭표만 냈다. 실제로 자르려면 뒤에 --run 을 붙인다:")
+            print("     python3 tools/litdb/extract_figures.py --inbox --run")
+            return 0
+        print()
+        guarded = []
+        for i, (slug, v) in enumerate(sorted(assign.items()), 1):
+            pdfs = [str(p) for p in v["main"] + v["si"]]
+            print(f"[{i}/{len(assign)}] {slug}")
+            # ⛔ 이 경로엔 가드가 없었다 (2026-09-27) — 손작업·빠진 원본이 있으면 이 논문만 건너뛴다.
+            lost, hand = clean_blockers(slug, pdfs)
+            if (lost or hand) and not a.force_clean:
+                names = ", ".join(f for f, _w in (hand + lost)[:3])
+                print(f"   ⛔ 건너뜀 — 지우면 되살릴 수 없는 그림: 손작업 {len(hand)} · 원본 빠짐 "
+                      f"{len(lost)} ({names}{' …' if len(hand) + len(lost) > 3 else ''})\n")
+                guarded.append(slug)
+                continue
+            shutil.rmtree(OUT_ROOT / slug, ignore_errors=True)
+            try:
+                meta, skipped = extract(pdfs, slug, dpi=a.dpi, maxpx=a.maxpx, relto=box)
+            except Exception as e:                 # 한 편이 깨져도 나머지는 계속
+                print(f"   ⛔ 실패: {type(e).__name__}: {e}\n")
+                continue
+            _report(slug, meta, skipped, dry=False)
+            print()
+        if guarded:
+            print(f"⛔ 손작업·빠진 원본 때문에 건너뛴 논문 {len(guarded)}편 — 목록은 "
+                  "`--slug <slug> --clean` 으로, 정말 버릴 때만 `--force_clean`.")
+        _write_sources_index()
+        return 0
+
+    if a.slug and not a.pdf:
+        # 에이전트가 경로를 안 찾아도 되게: slug 만 주면 스스로 찾는다.
+        #   litdb/inbox/ → 채팅 업로드 폴더 순으로, 먼저 걸리는 곳에서 쓴다.
+        roots = pdf_roots(a.inbox_dir)
+        near = []
+        for box in roots:
+            found, _o = match_inbox(box)
+            v = found.get(a.slug)
+            if v:
+                a.pdf = [str(q) for q in v["main"] + v["si"]]
+                print(f"※ PDF 자동 탐색 성공 [{v['why']}] — {box}")
+                for q in v["main"] + v["si"]:
+                    print(f"   {_show(q, box)}")
+                break
+            near += [k for k in found if a.slug.split("_")[0] in k]
+        if not a.pdf:
+            raise SystemExit(
+                f"⛔ '{a.slug}' 의 PDF 를 못 찾았다. 뒤진 곳:\n"
+                + "".join(f"     {d}\n" for d in roots)
+                + "   --pdf 로 직접 주거나, 어디에 있는지 --inbox --inbox_dir <폴더> 로 확인한다.\n"
+                + (f"   비슷한 slug: {', '.join(sorted(set(near))[:3])}\n" if near else ""))
+
+    if not a.pdf or not a.slug:
+        raise SystemExit(
+            "⛔ --pdf 와 --slug 가 둘 다 필요하다 (또는 --inbox 로 자동 매칭).\n"
+            "   ⚠ <slug> 는 자리표시자다 — litdb/papers/ 의 실제 파일 이름을 넣는다. 예:\n"
+            "     python3 tools/litdb/extract_figures.py --inbox            # 뭐가 뭔지 먼저 보기\n"
+            "     python3 tools/litdb/extract_figures.py --inbox --run      # 전부 자르기\n"
+            "     python3 tools/litdb/extract_figures.py --clean \\\n"
+            "         --slug kraft2017_lattice_polarizability_argyrodite_Li6PS5X \\\n"
+            "         --pdf 'litdb/inbox/31. Influence of Lattice Polarizability….pdf'")
+    for p in a.pdf:
+        if not Path(p).exists():
+            raise SystemExit(f"⛔ PDF 없음: {p}")
+    if a.clean and not a.dry:
+        lost, hand = clean_blockers(a.slug, a.pdf)
+        if (lost or hand) and not a.force_clean:
+            raise SystemExit(_clean_refusal(lost, hand))
+        shutil.rmtree(OUT_ROOT / a.slug, ignore_errors=True)
+
+    if a.why:
+        return why(a.slug, a.pdf)
+
+    if a.slides:
+        if len(a.pdf) > 1:
+            raise SystemExit("⛔ --slides 는 덱 1개만 받는다 (덱마다 슬라이드 번호가 다르다).")
+        meta, skipped = extract_slides(a.pdf[0], a.slug, dpi=a.dpi,
+                                       dry=a.dry, maxpx=a.maxpx, nup=a.nup)
+        _report(a.slug, meta, skipped, a.dry)
+        if not a.dry:
+            _write_sources_index()
+        return 0
+
+    meta, skipped = extract(a.pdf, a.slug, dpi=a.dpi, dry=a.dry, maxpx=a.maxpx)
+    _report(a.slug, meta, skipped, a.dry)
+    if not a.dry:
+        # ⚠ --inbox --run 경로만 이걸 부르고 있었다 — 논문 하나를 --slug/--pdf 로 자르면
+        #   litdb/figures/_sources.json 이 그 논문만 빠진 채 낡는다 (2026-08-05 발견).
+        #   웹앱 배지는 figures.json 을 직접 읽어 영향 없지만, 출처 색인은 어긋난다.
+        _write_sources_index()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

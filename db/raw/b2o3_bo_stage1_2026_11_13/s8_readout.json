@@ -1,0 +1,145 @@
+{
+ "kind": "b2o3_bo_anneal_readout/v1",
+ "inputs": {
+  "screen_verdict": {
+   "path": "s6_verdict.json",
+   "sha256": "6889935781b9390e5297dac28db635cf1f9fbf9d3eb73ae332b0a68e4e0dc587"
+  },
+  "pilot_receipt": {
+   "path": "s7_receipt.json",
+   "sha256": "92d5b76380b9a992c03995280f03a8642f9b13d1503447afb38722338d540a07"
+  },
+  "anneal_results": {
+   "path": "s8_anneal/anneal_results.json",
+   "sha256": "338e6015e60fe4df63ca0e7f713bf3e12eeec538bf5b499b449df2c3702fb5f6"
+  }
+ },
+ "t_a_ps": 100,
+ "M": 18,
+ "plan_n": 54,
+ "plan_no_start": [],
+ "contract": {
+  "families": {
+   "bo4": "F_B",
+   "distributed": "F_P",
+   "free_s": "F_free"
+  },
+  "unit_B2O3": 1,
+  "k_f": 6,
+  "k_f_shortfall": "hold",
+  "r_bond_A": 1.8,
+  "r_grey_A": 2.3,
+  "g1_frac": "ceil(5M/6)",
+  "g3_rule": "changed / n_success > 1/3",
+  "margin_uma_eV": 0.2,
+  "pair_min": 3,
+  "pair_frac": 0.8333333333333334,
+  "pilot_times_ps": [
+   20,
+   50,
+   100
+  ],
+  "pilot_spread_eV": 0.05,
+  "margin_dft_eV": 0.1,
+  "B_range_GPa": [
+   21.7,
+   32.5
+  ],
+  "eos_P_max_GPa": 2.0,
+  "model": "uma-s-1p1/omat",
+  "relax_fmax": 0.05,
+  "cell_relax": true,
+  "relax_steps": 1500,
+  "dt_fs": 2.0,
+  "friction": 0.01,
+  "anneal_T_K": 500.0,
+  "purpose_pilot": "b2o3_bo/pilot_run",
+  "purpose_stage8": "b2o3_bo/stage8_anneal"
+ },
+ "families": {
+  "F_B": {
+   "M": 18,
+   "n_success": 18,
+   "need_G1": 15,
+   "G1": true,
+   "failed": [],
+   "n_end_changed": 0,
+   "G3_mixed": false,
+   "G3": "0/18",
+   "min": {
+    "rank": 40,
+    "name": "cfg0040_E-2252.241_O-bo4",
+    "E": -544.0193729994543,
+    "end_motif": "F_B"
+   }
+  },
+  "F_P": {
+   "M": 18,
+   "n_success": 18,
+   "need_G1": 15,
+   "G1": true,
+   "failed": [],
+   "n_end_changed": 0,
+   "G3_mixed": false,
+   "G3": "0/18",
+   "min": {
+    "rank": 15,
+    "name": "cfg0015_E-2254.436_O-distributed",
+    "E": -543.5009940229478,
+    "end_motif": "F_P"
+   }
+  },
+  "F_free": {
+   "M": 18,
+   "n_success": 18,
+   "need_G1": 15,
+   "G1": true,
+   "failed": [],
+   "n_end_changed": 1,
+   "G3_mixed": false,
+   "G3": "1/18",
+   "min": {
+    "rank": 39,
+    "name": "cfg0039_E-2252.471_O-free_s",
+    "E": -540.2829263042622,
+    "end_motif": "mixed"
+   }
+  }
+ },
+ "G2_same_composition": true,
+ "common_success_pairs": [
+  3,
+  5,
+  7,
+  8,
+  11,
+  15,
+  17,
+  19,
+  20,
+  24,
+  28,
+  32,
+  35,
+  36,
+  37,
+  39,
+  40,
+  44
+ ],
+ "n_pairs": 18,
+ "order": [
+  "F_B",
+  "F_P",
+  "F_free"
+ ],
+ "winner_runner_up_gap_eV": 0.518378976506483,
+ "winner": "F_B",
+ "decision": "승자 F_B (차저 F_P 와 0.518 ≥ 0.2)",
+ "pairs": {
+  "n": 18,
+  "same_sign_as_order": 14,
+  "같은_방향": false
+ },
+ "G3_mixed_families": []
+}

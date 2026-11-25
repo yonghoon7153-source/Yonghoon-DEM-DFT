@@ -1,0 +1,275 @@
+{
+ "slug": "larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-14",
+ "sources": [
+  "ae5c00020.pdf",
+  "ae5c00020_si_001.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC.png",
+   "caption": "Abstract (TOC) graphic — no caption in the PDF. Text inside the graphic: 'Cold pressed pellets have poor fusion between grains, high pressure dependence for κ' (panel: K [mS cm-1] vs P [MPa], 'Δκ > 0.5 mS cm-1', 'Ascending P') · 'Hot pressed pellets show improved grain fusion with low pressure dependence for κ' (panel: 'Δκ < 0.1 mS cm-1', 'Ascending P').",
+   "rotated_deg": 0,
+   "bbox": [
+    331.5,
+    250.1,
+    557.4,
+    389.0
+   ],
+   "w": 942,
+   "h": 579,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.611,
+   "note": "abstract graphic on PDF p.1 (journal p.3754); embedded raster 925x562 px; data = same as Fig 5c/5d (visual match)"
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) A schematic of different argyrodite compaction methods (1) representing the typical high-pressure compaction at TFabrication = 20 °C (i.e., “cold” pressing) followed by pressure-free sintering, (2) representing the typical “cold” pressing, and (3) representing the approach in this work with a single compaction step with both pressure and elevated temperature (i.e., “hot” pressing). (b) A plot of literature results of ionic conductivities and their associated fabrication temperature and pressure.22−34 Here, the fabrication temperature shown is the highest temperature used in either the sintering or pressing steps. (c) Schematic of our proposed mechanism for the differences in grain morphology, ionic conductivity, and mechanical properties for pressing at 20 °C (“cold pressing”) vs 150 °C (“hot pressing”). Potential surface contaminants, either from unreacted precursors or from moisture degradation products, are represented by the shading around the grains.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.5,
+    58.4,
+    293.5,
+    353.8
+   ],
+   "w": 1017,
+   "h": 1232,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.705
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. XRD of the Li6PS5Cl pellets. (a) Stacked and (b) overlaid normalized XRD patterns of Li6PS5Cl pellets pressed at 20 and 150 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    396.0,
+    557.4,
+    511.4
+   ],
+   "w": 1018,
+   "h": 481,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. XPS of Li6PS5Cl pellets. (a) P 2p, (b) S 2p, and (c) Cl 2p high-resolution XPS spectra of Li6PS5Cl pellets pressed at 20 °C and (d) P 2p, (e) S 2p, and (f) Cl 2p high-resolution XPS spectra of Li6PS5Cl pellets pressed at 150 °C. Both pellets were made of 0.24 g of Li6PS5Cl powder and pressed at 300 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.5,
+    58.4,
+    293.5,
+    241.0
+   ],
+   "w": 1017,
+   "h": 762,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. SEM cross-sectional images of hand-fractured pellets. Images of 150 °C pressed pellets near the pellet surface with scale bars of (a) 500 μm, (b) 10 μm, and (c) 5 μm. Images of 150 °C pressed pellets near the pellet center with scale bars of (d) 100 μm, (e) 30 μm, and (f) 10 μm. Images of 20 °C pressed pellets near the pellet center with scale bars of (g) 500 μm, (h) 30 μm, and (i) 10 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.5,
+    373.6,
+    557.5,
+    710.4
+   ],
+   "w": 2117,
+   "h": 1405,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.092
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Ionic conductivity of pellets at room temperature (∼20 °C). (a) Nyquist plot at 0.8 MPa increments ascending from ∼0.12 to ∼8 MPa for a pellet pressed at 150 °C. (b) Nyquist plot at 0.8 MPa increments ascending from ∼0.12 to ∼8 MPa for a pellet pressed at 20 °C. (c) Ionic conductivity of pellets pressed at 150 °C vs operating pressure. (d) Ionic conductivity of pellets pressed at 20 °C vs operating pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    58.4,
+    557.4,
+    269.5
+   ],
+   "w": 1018,
+   "h": 881,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Initial and final ionic conductivities at ∼20 °C and ∼0.12 MPa operating pressure across samples (the numbered columns) for the (a) 20 °C pressed samples and (b) 150 °C pressed samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    594.9,
+    557.4,
+    710.4
+   ],
+   "w": 1018,
+   "h": 483,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.745
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Temperature-dependent ionic conductivity results at an operating pressure of 0.6 MPa with (a) the Nyquist plots of the pellets pressed 150 °C and tested at 0 to 40 °C at 10 °C increments and (b) the Arrhenius plot of the ionic conductivity vs 1/T. A line is regressed to the data, with the slope giving the activation energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.5,
+    411.0,
+    293.5,
+    522.2
+   ],
+   "w": 1017,
+   "h": 464,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Young’s modulus and hardness results for 20 and 150 °C pressed pellets measured at ∼20 °C. A set of 33 indents were done for testing the 150 °C pressed pellet, and 66 indents were done for the 20 °C pressed pellet. (a) Load−displacement nanoindentation curves from all indents performed at 100 mN for the two cases. (b) Cumulative probability functions of the modulus and hardness values. The shape of the fitted curve denotes variation over multiple measurements arising from nonhomogeneity in the samples. (c) Schematic of portions of the pellets directly under the nanoindenter tip showing differences in hypothesized elastic grain−grain sliding during nanoindentation. (d) Representative nanoindentation curves showing the plastic and elastic deformations in the two cases. dt is the total or maximum deformation, and dp and de are plastic and elastic deformations, respectively. The shaded area under the load−displacement curves denotes the total deformation energy and elastic deformation energy (We). Subscripts c and h represent 20 and 150 °C pellets, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    141.8,
+    58.4,
+    465.0,
+    349.9
+   ],
+   "w": 1348,
+   "h": 1216,
+   "dpi": 300,
+   "src": "ae5c00020.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "S1. Miller Indices for XRD data for the argyrodite pellet (hot pressed).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    391.7,
+    578.0,
+    604.7
+   ],
+   "w": 2118,
+   "h": 888,
+   "dpi": 300,
+   "src": "ae5c00020_si_001.pdf",
+   "blank": 0.894,
+   "note": "SI p.S-1; red index labels are not explained in the SI"
+  },
+  {
+   "key": "fS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "S2 Physical parameters of all samples tested for ionic conductivity. Theoretical density was calculated from XRD derived lattice parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    70.0,
+    603.2,
+    164.2
+   ],
+   "w": 2223,
+   "h": 393,
+   "dpi": 300,
+   "src": "ae5c00020_si_001.pdf",
+   "blank": 0.74,
+   "note": "SI labels items S1-S4 without 'Figure'/'Table'; S2 content is a table (raster image 1462x249 px) -> kind 'table', file named fig_S2 per batch brief"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "S3. a.) Z-fit (Black line) of a cold pressed pellet data set for 15 N (red circles) with the equivalent circuit used inset into the figure. b.) Comparison of Z-fit derived ionic conductivities (sum of the two resistor values) and the estimated ionic conductivity from the method used in the paper.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    205.9,
+    574.7,
+    411.8
+   ],
+   "w": 2104,
+   "h": 858,
+   "dpi": 300,
+   "src": "ae5c00020_si_001.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "S4. High resolution SEM of the as made argyrodite powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    70.0,
+    523.3,
+    379.3
+   ],
+   "w": 1890,
+   "h": 1290,
+   "dpi": 300,
+   "src": "ae5c00020_si_001.pdf",
+   "blank": 0.105
+  }
+ ]
+}

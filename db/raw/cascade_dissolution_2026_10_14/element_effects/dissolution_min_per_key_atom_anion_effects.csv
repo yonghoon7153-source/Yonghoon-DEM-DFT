@@ -1,0 +1,9 @@
+# label from db/raw/cascade_dissolution_2026_10_14/result/label_dissolution_min_per_key_atom.csv
+# label dissolution_min_per_key_atom · additive model · effects centred
+anion,effect,band5,band95
+I,-1.1484,,
+Br,-1.0571,,
+O,-0.56384,,
+S,0.44476,,
+Cl,0.47738,,
+F,1.8472,,

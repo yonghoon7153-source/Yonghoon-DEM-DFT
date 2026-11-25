@@ -1,0 +1,432 @@
+{
+ "slug": "landesfeind2016_tortuosity_eis_electrodes_separators",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Equivalent circuit for non-electronically conducting porous separa- tors in a blocking electrode conﬁguration.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    61.2,
+    556.0,
+    103.1
+   ],
+   "w": 1080,
+   "h": 175,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Equivalent circuit of the general transmission-line model for a porous electrode. The charge transfer process between the solid and the liquid phase through faradaic or capacitive charge transfer reactions is represented by zS. Electrons are moving in the solid phase (brown region), while ions are moving in the electrolyte phase (blue region).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    621.6,
+    556.0,
+    705.3
+   ],
+   "w": 1080,
+   "h": 349,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.266
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Simpliﬁed form of the transmission-line model for porous elec- trodes with rEl << rIon and for blocking conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    61.5,
+    288.2,
+    145.1
+   ],
+   "w": 1080,
+   "h": 349,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.235
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Simulated Nyquist plots of Eq. 11 with RIon = 300 \u0003, Q = 100 μF · sγ−1, and γ = 1 (solid) or γ = 0.9 (dashed); the dotted red line indicates a 45◦slope.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    539.0,
+    555.2,
+    723.2
+   ],
+   "w": 1081,
+   "h": 769,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Sketch of copper block setup for the determination of the ionic resistance of electrolyte-ﬁlled separators. The upper copper electrode has a height of 10 mm and a diameter of 20 mm; the lower copper electrode has a height of 15 mm, a diameter of 50 mm, and the electrolyte reservoir has a depth of 5 mm (typically ﬁlled to a height of ≈2 mm) and an inner diameter of 45 mm; the diameter of the sandwiched separator is ≥25 mm.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    614.7,
+    289.1,
+    696.3
+   ],
+   "w": 1081,
+   "h": 341,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.729
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Schematic of pouch bag cell setup for symmetrical impedance mea- surements of transmission-line model of porous electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    604.8,
+    556.0,
+    732.2
+   ],
+   "w": 1080,
+   "h": 531,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.521
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. High frequency resistance of multiple layers of Celgard 2325 (with 1 M LiPF6 in EC:EMC (3:7 w:w) + 2% VC) or Celgard 2500 (with 0.05 MLiClO4 EC:DEC (1:1 w:w) separators, in copper block setup with a. non- insulated upper electrode and b. an insulated upper electrode to avoid stray ﬁelds and currents. Three independent repeat experiments (crosses, squares, diamonds) are shown for each experimental conﬁguration (one, two and three separators, highlighted by colors).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.9,
+    288.2,
+    423.1
+   ],
+   "w": 1080,
+   "h": 1510,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. High frequency areal resistance of multiple layers of Celgard 2325 separators soaked with 1 M LiPF6 in EC:EMC (3:7 w:w) + 2% VC using both the copper block setup (four repeat experiments per stacking) and pouch cells (one experiment per stacking). The line represents a least-squares ﬁt of all the data to RIon · A = x1 · #Sep + x0, yielding x0 = 0.10 \u0003cm2 and R2 = 0.998.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    61.6,
+    555.2,
+    234.1
+   ],
+   "w": 1081,
+   "h": 720,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Tortuosities of a Celgard 2325 separator based on high frequency resistance measurements (copper block setup) versus electrolyte conductivity, spanning a range of 0.41 to 12.5 mS/cm (the speciﬁc electrolytes are listed in the ﬁgure). Tortuosities are based on a porosity of ε = 0.39 and a thickness of d = 25 μm as speciﬁed by the manufacturer, and are calculated using Eq. 8. The blue dashed line indicates the τ-value based on the Bruggeman estimation for spherical particles (Eq. 6, with α = 0.5).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    514.6,
+    289.1,
+    687.2
+   ],
+   "w": 1081,
+   "h": 720,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Tortuosities of porous separators (Celgard is abbreviated with CG) and their standard deviations determined via high frequency resistance mea- surements (data from Table II). Fits with Eq. 6 using α = 2.5 (dotted line, i.e., = ε−2.5) and α = 3.1 (dashed-dotted line, i.e., τ = ε−3.1) vs. the conven- tionally used Bruggeman coefﬁcient for spherical particles of α = 0.5 (blue dashed line).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.9,
+    288.2,
+    247.1
+   ],
+   "w": 1080,
+   "h": 777,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Exemplary impedance spectrum (200 kHz to 0.5 Hz) of two elec- trodes (graphite-1 (Table I) with thickness of 63.2 μm, porosity of 0.41, and effective area of 2.37 cm2) assembled in a symmetrical pouch cell with one Celgard 2325 separator using 50 mM TBAClO4 in EC:DMC (1:1 w:w) with a bulk conductivity of 1.74 mS/cm (light blue solid circles). The data are ﬁtted to either the TLM-C model (red open circles) or the TLM-Q model (blue open circles); linear extrapolations to the high and low frequency branches of the TLM-Q model are indicated by the dashed lines. The inset is a magniﬁed view of the high frequency range.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    61.3,
+    555.2,
+    245.1
+   ],
+   "w": 1081,
+   "h": 767,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Exemplary Nyquist plots, subtracted by the HFR for better com- parability, of LFP electrodes with low conductive carbon content (LFP-highC electrodes, see Table I) after different compressions: 50 MPa, 150 MPa, and 400 MPa, yielding porosities of 0.49, 0.34, and 0.27. The frequency maxima of the semi-circles are fmax(50 MPa) ≈4 kHz and fmax(150 MPa) ≈10 kHz. Measured in symmetrical T-cells with one glass ﬁber separator using 10 mM TBAClO4 in EC:DMC (1:1 w:w) with a bulk conductivity of 0.46 mS/cm.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.9,
+    289.1,
+    241.1
+   ],
+   "w": 1081,
+   "h": 752,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 11,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Impedance spectra and ﬁts with Eq. 11 of four symmetrical graphite pouch cells (graphite-1 electrodes with ε = 0.42 ± 0.02, see Ta- ble I) with EC:DMC (1:1 w:w) containing 10, 50, 200, and 700 mM TBAClO4 (electrolyte conductivities κ are listed in the ﬁgure). Impedance data were recorded between 200 kHz and 0.5 Hz; the 5 kHz, 50 Hz, and 5 Hz data are indicated by the black symbols.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.8,
+    288.2,
+    405.1
+   ],
+   "w": 1080,
+   "h": 1435,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 11,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Inﬂuence of electrolyte conductivity on the determined tortuosities in symmetrical pouch and T-Cells with graphite electrodes (graphite-1, see Table I, with dCoating = 58 ± 2 μm, ε ≈0.43 ± 0.02) using four different electrolytes, viz., EC:DMC (1:1 w:w) with 10, 50, 200, and 700 mM TBAClO4 (see Figure 13 for electrolyte conductivity values). The Bruggeman estimation for spherical particles with α = 0.5 is represented by the dashed horizontal line. Error bars indicate the standard deviation of two T-Cells per electrolyte or a constant error of 0.3 for the pouch cells, which was estimated using the Gaussian variance with experimental deviations of effective area, electrolyte conductivity and determined electrode thickness and porosity.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    61.3,
+    555.2,
+    249.1
+   ],
+   "w": 1081,
+   "h": 783,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 12,
+   "file": "fig_15.png",
+   "caption": "Figure 15. MacMullin numbers of electrodes with active material contents ≥90% as speciﬁed in Table I and compressed to porosities ranging between 0.27 and 0.37. Results are obtained from measurements in pouch cells and T-Cells using EC:DMC (1:1 w:w) with 10 mM TBAClO4 as an electrolyte. The Bruggeman prediction for spherical particles (α = 0.5, NM(B) = ε−1.5) is indicated by the blue dashed line.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.1,
+    289.0,
+    403.1
+   ],
+   "w": 1081,
+   "h": 1426,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 12,
+   "file": "fig_16.png",
+   "caption": "Figure 16. SEM top-view (upper ﬁgures) and cross-sectional-view (lower ﬁgures) micrographs of graphite-1 (ε ≈0.29) and NMC (ε ≈0.34) electrodes (composition see Table I), with a schematic representation of the particle morphology. The scale bar applies for both the top-views and the cross-sections.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    484.5,
+    556.0,
+    732.2
+   ],
+   "w": 2193,
+   "h": 1033,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.365
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 13,
+   "file": "fig_17.png",
+   "caption": "Figure 17. SEM top view and cross section micrographs of LNMO (ε ≈0.31) and LTO (ε ≈0.30) electrodes (composition see Table I), with schematic representation of particle morphology. The scale bar applies for both the top-views and the cross-sections.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    62.0,
+    555.2,
+    299.9
+   ],
+   "w": 2193,
+   "h": 992,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.367
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 13,
+   "file": "fig_18.png",
+   "caption": "Figure 18. SEM top-view and cross-sectional-view of LFP-highC (ε ≈0.27) and LFP-lowC (ε ≈0.27) electrodes speciﬁed in Table I. Inset of LFP-highC depicts active material powder. The scale bar applies for both the top-views and the cross-sectional-views.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    537.3,
+    555.2,
+    732.2
+   ],
+   "w": 2193,
+   "h": 813,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.382
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 14,
+   "file": "fig_19.png",
+   "caption": "Figure 19. MacMullin numbers of LFP electrodes with an active material content of 70% (LFP-highC, see Table I) or 90% (LFP-lowC, see Table I) as well as of graphite electrodes (graphite-1, see Table I). Results are obtained from measurements in pouch cells and T-Cells using EC:DMC (1:1 w:w) with 10 mM TBAClO4 as electrolyte. Data are ﬁtted with a combination of Eq. 5 and Eq. 7: NM = 4.7 ε−1.1 (graphite-1), NM = 3.1 ε−1.6 (LFP-lowC), and NM = 3.0 ε−1.2 (LFP-highC). The Bruggeman prediction for spherical particles (α = 0.5, NM(B) = ε−1.5) is indicated by the blue dashed line. and tortuosities with the generalized Bruggeman equation (Eq. 7). For all types of electrodes shown in these ﬁgures, the experimental data of NM or τ vs. ε could only be properly represented when a variable prefactor f was used in the ﬁts. We would like to emphasize that the experimental data could not be represented ",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.6,
+    289.0,
+    246.1
+   ],
+   "w": 1081,
+   "h": 770,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 14,
+   "file": "fig_20.png",
+   "caption": "Figure 20. Tortuosities of LFP electrodes with 70% or 90% active material and graphite electrodes at different compositions and porosities. Results are obtained from measurements in pouch cells and T-Cells using EC:DMC (1:1 w:w) with 10 mM TBAClO4 as an electrolyte. Dashed lines are based on the ﬁtting results from Figure 19: τ = 4.7 ε−0.1 (graphite-1), τ = 3.1 ε−0.6 (LFP- lowC), τ = 3.0 ε−0.2 (LFP-highC). The Bruggeman prediction for spherical particles (α = 0.5, τ = ε−0.5) is indicated by the blue dashed line.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    500.6,
+    289.1,
+    687.3
+   ],
+   "w": 1081,
+   "h": 779,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 15,
+   "file": "fig_21.png",
+   "caption": "Figure 21. Comparison of the MacMullin numbers vs. porosity for the LFP electrodes studied in this work (LFP-lowC with 90/5/5 AM/binder/C and LFP- highC with 70/15/15 AM/binder/C, taken from Figure 19) with literature values from Thorat et al.18 (LFP with 84/8/8 AM/binder/C, potato shaped, 300–600 nm length), Cooper et al.12 (LFP, electrode composition unknown), Ender et al.34 (LFP with 70/6/24 AM/binder/C, potato shaped, 200–600 nm length), Ebner and Wood16 (LCO with ∼94/3/3 AM/binder/C, non-spherical, 10 μm) and Ebner et al.32(NMC with 96/2/2 AM/binder/C, spherical, 20 μm). The Bruggeman prediction for spherical particles (α = 0.5, NM(B) = ε−1.5) is indicated by the blue dashed line.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    61.6,
+    288.2,
+    403.1
+   ],
+   "w": 1080,
+   "h": 1424,
+   "dpi": 300,
+   "src": "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf",
+   "blank": 0.888
+  }
+ ],
+ "missing_labels": []
+}

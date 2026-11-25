@@ -1,0 +1,213 @@
+{
+ "schema": "sdcp_c12_v41_partial/v1",
+ "생성": "2026-09-15",
+ "무엇인가": "번들 sdcp_c12_v41 (19잡) 1단계 부분 회신 — 수행측(mirae)이 2잡 완료 시점에 운영상 판단으로 러너를 멈췄다",
+ "0_지위": {
+  "판정": "⛔ **보고량 D 는 아직 없다.** 네 항 중 둘만 있다.",
+  "⛔_인용_금지": "E_C_sdcp − E_C_control = -27.70434 eV 를 단독으로 인용하지 않는다. 두 복합체는 **조성이 다르다** (Li48Ni48O96C10F22 224원자 vs Li48Ni48O102S2C11H16 227원자) — 기체 기준을 빼기 전에는 물리량이 아니다. claim_policy: '조각별 값을 단독으로 인용하지 않는다'",
+  "RESULTS_STAGE1_PASS_없음": "러너가 판정 단계에 도달하지 않았다. 이 기록은 원자료에서 내가 직접 읽은 값이고 **번들 분석기의 판정이 아니다**"
+ },
+ "1_무엇이_됐나": {
+  "완료_2잡": {
+   "prospective/ptfe_c10__b00__afm2424_pm1": {
+    "역할": "E_C_control",
+    "원자": 224,
+    "조성": "Li48 Ni48 O96 C10 F22",
+    "전자스텝": 95,
+    "벽시계_h": 31.9,
+    "TOTEN_eV": -1123.59345187,
+    "E0_eV": -1123.59334184,
+    "TOTEN_Ry": -82.582596,
+    "Edisp_D3_eV": -28.97637,
+    "총자화_muB": 0.0004018,
+    "external_pressure_kB": -18.27,
+    "max_F_eV_A": {
+     "전체": 1.3773,
+     "분자만": 0.4404
+    },
+    "source_pose": "ptfe_c10__Ni_top__fib05__r270",
+    "anchor": [
+     "F",
+     "Ni",
+     2.538
+    ],
+    "height_A": 4.208
+   },
+   "prospective/sdcp_neutral__b00__afm2424_pm1": {
+    "역할": "E_C_sdcp",
+    "원자": 227,
+    "조성": "Li48 Ni48 O102 S2 C11 H16",
+    "전자스텝": 106,
+    "벽시계_h": 34.1,
+    "TOTEN_eV": -1151.29778848,
+    "E0_eV": -1151.29228248,
+    "TOTEN_Ry": -84.618827,
+    "Edisp_D3_eV": -28.80731,
+    "총자화_muB": 0.0801562,
+    "external_pressure_kB": -18.48,
+    "max_F_eV_A": {
+     "전체": 1.3732,
+     "분자만": 0.5574
+    },
+    "source_pose": "sdcp_neutral__O_top__fib08__r000",
+    "anchor": [
+     "H",
+     "O",
+     1.827
+    ],
+    "height_A": 5.072
+   }
+  },
+  "★_이_둘이_무엇이냐": "estimand 네 항 중 **복합체 두 항**이고, 19잡 중 **가장 비싼 둘**이다. 우연이 아니라 러너의 경로 사전순 FIFO 가 그렇게 돌았다",
+  "⚠_Ry_는_단위환산일_뿐": "VASP PAW 전에너지는 QE 유사퍼텐셜 전에너지와 **절대값으로 비교되지 않는다**. Ry 표기는 단위 환산이고, 우리 QE 기반 원장 값과 같은 표에 놓지 않는다"
+ },
+ "2_무결성_내가_확인한_것": {
+  "수렴": "둘 다 NELM 200 미달 (95 / 106), EDIFF 1e-6 도달",
+  "KPOINTS_되울림": "phase=static k=3 4 1 shift=0 0 0 · NKPTS 7 — job.json 의 kpoints_expected 와 일치 (회신 AT P0-2 가 요구한 정확 일치)",
+  "ENCUT": "520 eV (기대값)",
+  "LDAUU": "Ni 만 6.2 eV (기대값)",
+  "NUPDOWN": "-1 (선언된 자유)",
+  "⛔_내가_못_한_것": "POTCAR 동일성·실행파일 해시 대조는 번들 분석기(analyze_results.py)의 일이고 그 파일이 회신에 없다. EXECUTABLE_RECEIPT.tsv·POTCAR_PROVENANCE.json 은 받았지만 root seal 과 **대조하지 않았다**"
+ },
+ "3_자화_판정": {
+  "질문": "sdcp 총자화 0.0801 μB (ptfe 0.0004) — 두 복합체가 다른 자기 basin 에 앉았나?",
+  "답": "⛔ 아니다. AFM 24/24 부격자가 **둘 다 그대로 유지**됐다.",
+  "근거": {
+   "부호_뒤집힌_Ni": {
+    "ptfe": 0,
+    "sdcp": 0
+   },
+   "Ni_사이트별_|m_ptfe − m_sdcp|": {
+    "최대_muB": 0.054,
+    "평균_muB": 0.0036,
+    "n": 48
+   },
+   "실현_|m|_범위_muB": {
+    "ptfe": [
+     1.223,
+     1.329
+    ],
+    "sdcp": [
+     1.22,
+     1.33
+    ]
+   },
+   "구_투영_합_muB": {
+    "ptfe": {
+     "Ni": 0.218,
+     "Li": 0.0,
+     "O_슬랩": -0.186,
+     "분자": 0.005,
+     "합": 0.037
+    },
+    "sdcp": {
+     "Ni": 0.264,
+     "Li": 0.002,
+     "O_슬랩": -0.22,
+     "분자": 0.047,
+     "합": 0.093
+    }
+   },
+   "해석": "차이 0.056 μB 는 ΔNi +0.046 · ΔO −0.034 · Δ분자 +0.042 로 갈린다. SDCP 조각(O·S 포함, anchor H···O 1.827 Å)이 유도 모멘트를 조금 갖고 PTFE(F···Ni 2.538 Å)는 거의 안 갖는다 — **조각이 다르니 당연한 차이**이지 부격자가 바뀐 것이 아니다"
+  },
+  "왜_이_검사가_필요했나": "회신 O — 고치는 법은 '전 계에 같은 NUPDOWN 값'이 아니라 같은 **state-selection policy** 다. 정책이 같아도 realized basin 이 갈리면 D 에 그 차가 실린다. 여기서는 정책도 같고 realized 도 같다",
+  "⚠_한계": "구 투영 합(0.0370/0.0930)은 OUTCAR 총자화(0.0004/0.0802)와 다르다 — 구 밖 간극 밀도를 안 센다. 부호·크기는 일관된다"
+ },
+ "4_D_까지_남은_것": {
+  "formula": "D = (E_C_sdcp - E_G_sdcp) - (E_C_control - E_G_control)",
+  "확정된_부분": {
+   "E_C_sdcp - E_C_control_eV": -27.70434,
+   "⛔": "이 값 자체는 인용 금지 (§0). D 의 한 조각일 뿐이다"
+  },
+  "남은_식": "D = -27.70434 - (E_G_sdcp - E_G_control)   [δ_gas 하나만 있으면 D 가 선다]",
+  "대수적_최소집합_2잡": [
+   "refs/mol__ptfe_c10__box24",
+   "refs/mol__sdcp_neutral__box24"
+  ],
+  "⚠_게이트는_더_요구할_수_있다": {
+   "왜_모르나": "게이트 정의는 번들 안 analyze_results.py 에 있고 **부분 회신에 그 파일이 없다**. MANIFEST 만으로는 gas 쪽 hard block 의 정확한 목록을 확정할 수 없다",
+   "의심되는_추가": [
+    "refs/mol__*__box20 (AR-3 box20/24 공통 내부기하 cross-job gate)",
+    "refs/mol__*__box24__nzmag (MANIFEST.molecular_spin_controls 에 선언됨)",
+    "refs/clean_slab__afm2424_pm1 (E_ads **절대값**에만 필요 · D 에는 소거)"
+   ],
+   "확정_주체": "번들 생성 세션이 analyze_results.py 를 읽고 최소 완결 집합을 확정해야 한다"
+  },
+  "선언된_hard_gate_별건": "vacuum_convergence — |D(c2) − D(c1)| ≤ 0.005 eV. vacconv 2잡(+clean_slab c2)이 필요하고 이들은 c=40.66 Å 풀 슬랩이라 **이미 돈 잡만큼 비싸다**. 실패시 Figure 2e 제거(추가 셀 탐색 없음)"
+ },
+ "5_hold_판정": {
+  "⛔_마감은_안_된다": "보고량이 없다. 그리고 마감 규율: 닫힘 조건을 **먼저** 박고 그게 채워졌으므로 닫는다. 값을 보고 '괜찮으니 닫자' 는 금지다 — SDCP 는 조건 없이 두 번 닫았다가 두 번 물렸다 (2026-07-17 doped v1 철회 · 2026-08-28 회신 M 마감보류)",
+  "✅_일시정지는_된다": "가장 비싼 두 잡이 끝났고 무결성·자화가 통과했다. 남은 것은 훨씬 싼 참조들이다",
+  "재개_조건_이것만": [
+   "refs/mol__ptfe_c10__box24 와 refs/mol__sdcp_neutral__box24 가 같은 번들 계약으로 돌아온다",
+   "또는 번들 생성 세션이 analyze_results.py 로 최소 완결 집합을 확정해 새 번들(v42)을 낸다"
+  ],
+  "⛔_재개_조건_밖의_이유로_열지_않는다": "'자세를 하나 더 봤다'·'net4 도 궁금하다' 는 재개 사유가 아니다"
+ },
+ "6_수행측_운영_사실": {
+  "장비": "SGE 123690 · 64core.q@n33 노드1 · 물리코어 64 · RAM 503 GB · h_rt 무제한",
+  "실측_s_per_전자스텝": {
+   "잡1": 1209,
+   "잡2": 1261,
+   "비고": "64랭크 1노드. 192랭크 4노드 프로브는 682 s (2026-09-08)"
+  },
+  "실측_maxvmem_GB": 268,
+  "우리_모형_GB": 177,
+  "⚠_모형이_1.5배_낮다": "memory_model 을 실측으로 갱신해야 한다",
+  "⛔_우리가_준_적_없는_수": "'잡당 91 h' 는 수행측이 준 값이 아니다 — cost_frozen.queue_cap_h 의 출처를 다시 확인할 것",
+  "수행측_요청": "완료 잡 사이에서 이어갈 수 있는 재개 모드. 없으면 4노드/잡(192랭크) 배치로 단계를 짧게 끝내는 쪽을 검토하겠다고 함 (2026-09-11 에 정전으로 한 번 전부 다시 돈 이력)"
+ },
+ "7_동봉_산출물": {
+  "vesta": [
+   "vesta/<job>.vesta (ASCII·CRLF · 구조 전용)",
+   "vesta/<job>.vasp (POSCAR 원본)",
+   "vesta/<job>.xyz (extxyz · Lattice 포함)"
+  ],
+  "생성": "tools/electronic/cube_to_vesta_cdd.py --poscar",
+  "⚠": "원소색·결합상한은 표시용 관례다. 이 그림으로 결합 유무를 주장하지 않는다"
+ },
+ "files_sha256_16": {
+  "HANDOFF_c12_partial.md": "d18bea3d94ef3c54",
+  "MANIFEST.json": "fd5e4488cc097af9",
+  "PLACEMENT_PROBE.json": "92ba590452e734ee",
+  "POTCAR_ROOT_SEAL.json": "93425f7f49f2047f",
+  "RUN_LOG_stage1.log": "f98baa72307a0eb3",
+  "ZIP_SHA256.txt": "c4a87478a9d706c3",
+  "prospective/ptfe_c10__b00__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": "63a1f164cc40c925",
+  "prospective/ptfe_c10__b00__afm2424_pm1/POSCAR": "4daf62fd8cf1e3c9",
+  "prospective/ptfe_c10__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh": "aceecec42ecac315",
+  "prospective/ptfe_c10__b00__afm2424_pm1/POTCAR_PROVENANCE.json": "2f7083f40c2a0dcc",
+  "prospective/ptfe_c10__b00__afm2424_pm1/_placement.tsv": "9777c7c0a9e93757",
+  "prospective/ptfe_c10__b00__afm2424_pm1/job.json": "25fc3e73d6eff522",
+  "prospective/ptfe_c10__b00__afm2424_pm1/run_job.sh": "33db42ccf85b0500",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/CONTCAR": "fa9e0ebad28cda4a",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/INCAR": "f9fc63a2b1407156",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/KPOINTS": "07be29af896b425b",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/OSZICAR": "5f4285d9f969da44",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/OUTCAR.gz": "96f64e4156ecf0ae",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/POSCAR": "4daf62fd8cf1e3c9",
+  "prospective/ptfe_c10__b00__afm2424_pm1/static/vasp.out": "84016a48caee69fa",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": "d965d7a500ebbae7",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/POSCAR": "4780e416a2d803dc",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh": "02769a79783112f4",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/POTCAR_PROVENANCE.json": "8b84b5c8aac7a969",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/_placement.tsv": "c262f82d4be816c6",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/job.json": "1995dc5ea228a5ef",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/run_job.sh": "33db42ccf85b0500",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/CONTCAR": "69b60c44c84d4fab",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR": "a83650c276dce85e",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/KPOINTS": "07be29af896b425b",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/OSZICAR": "9efe4d999cd3142c",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/OUTCAR.gz": "a168ffd15d6657f2",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/POSCAR": "4780e416a2d803dc",
+  "prospective/sdcp_neutral__b00__afm2424_pm1/static/vasp.out": "3dca24ae5b6c2ac9",
+  "vesta/ptfe_c10__b00__afm2424_pm1.vasp": "4daf62fd8cf1e3c9",
+  "vesta/ptfe_c10__b00__afm2424_pm1.vesta": "0d54d06eae47c52a",
+  "vesta/ptfe_c10__b00__afm2424_pm1.xyz": "7b310abb8121531b",
+  "vesta/sdcp_neutral__b00__afm2424_pm1.vasp": "4780e416a2d803dc",
+  "vesta/sdcp_neutral__b00__afm2424_pm1.vesta": "1043de23b18c2544",
+  "vesta/sdcp_neutral__b00__afm2424_pm1.xyz": "11da74c807651b49"
+ },
+ "원본_zip_sha256": "07125d5edf0657788ac5f19cfe6f735e4e5c33651e1139e608e0716386e3ccad (내부 tgz)",
+ "번들_repo_commit": "d82b7a4ce42cf7b4d2e8f68e378289f16c58e96c"
+}

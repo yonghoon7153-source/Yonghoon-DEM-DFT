@@ -1,0 +1,52 @@
+{
+ "slug": "shapeev2016_moment_tensor_potentials",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-26",
+ "sources": [
+  "67. Shapeev2016_Moment_Tensor_Potentials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Fig. 3.1. Illustration of V_delta (black square) and E_rho (blue ellipse) on the complex plane for R = 1, delta = 0.4, rho = 1.4. Both regions contain [-1,1] (red line) and for this choice of parameters E_rho subset V_delta.",
+   "rotated_deg": 0,
+   "bbox": [
+    108.0,
+    98.0,
+    398.0,
+    203.0
+   ],
+   "w": 1209,
+   "h": 438,
+   "dpi": 300,
+   "src": "67. Shapeev2016_Moment_Tensor_Potentials.pdf",
+   "blank": null,
+   "note": "수동 bbox — 벡터 그래픽이라 자동 추출에서 제외됐다 (draw3/img0)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 19,
+   "file": "fig_5.png",
+   "caption": "Fig. 5.1. RMS ﬁtting error in forces as a function of the size of AN and A′ N. An algebraic convergence can be observed.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    68.2,
+    447.0,
+    234.8
+   ],
+   "w": 1588,
+   "h": 695,
+   "dpi": 300,
+   "src": "67. Shapeev2016_Moment_Tensor_Potentials.pdf",
+   "blank": 0.956
+  }
+ ]
+}

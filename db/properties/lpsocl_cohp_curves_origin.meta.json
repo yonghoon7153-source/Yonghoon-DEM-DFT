@@ -1,0 +1,71 @@
+{
+  "source": "/data/work/runs/lpsocl_dft/lobster_ext/COHPCAR.lobster",
+  "smooth_eV": 0.1,
+  "window_eV": [
+    -12.0,
+    6.0
+  ],
+  "stride": 1,
+  "pairs": {
+    "P-S": {
+      "N": 19,
+      "ICOHP_per_bond_eV": -6.0401,
+      "ICOHP_in_window_eV": -4.8604,
+      "window_coverage": 0.8047,
+      "integral_to_EF_eV": 4.8604,
+      "dmax_A": 2.6,
+      "exclude": [
+        "Li"
+      ]
+    },
+    "P-O": {
+      "N": 1,
+      "ICOHP_per_bond_eV": -8.4127,
+      "ICOHP_in_window_eV": -2.5355,
+      "window_coverage": 0.3014,
+      "integral_to_EF_eV": 2.5355,
+      "dmax_A": null,
+      "exclude": []
+    },
+    "Li-S": {
+      "N": 106,
+      "ICOHP_per_bond_eV": -1.7672,
+      "ICOHP_in_window_eV": -1.5781,
+      "window_coverage": 0.893,
+      "integral_to_EF_eV": 1.5781,
+      "dmax_A": null,
+      "exclude": []
+    },
+    "Li-Cl": {
+      "N": 42,
+      "ICOHP_per_bond_eV": -2.1067,
+      "ICOHP_in_window_eV": -0.9479,
+      "window_coverage": 0.45,
+      "integral_to_EF_eV": 0.9479,
+      "dmax_A": null,
+      "exclude": []
+    },
+    "Li-O": {
+      "N": 5,
+      "ICOHP_per_bond_eV": -1.1545,
+      "ICOHP_in_window_eV": -0.5446,
+      "window_coverage": 0.4717,
+      "integral_to_EF_eV": 0.5446,
+      "dmax_A": null,
+      "exclude": []
+    },
+    "S-S": {
+      "N": 54,
+      "ICOHP_per_bond_eV": -0.1112,
+      "ICOHP_in_window_eV": -0.1414,
+      "window_coverage": 1.271,
+      "integral_to_EF_eV": 0.1414,
+      "dmax_A": null,
+      "exclude": [
+        "P",
+        "Li",
+        "Cl"
+      ]
+    }
+  }
+}

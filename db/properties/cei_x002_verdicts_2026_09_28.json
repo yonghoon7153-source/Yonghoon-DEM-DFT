@@ -1,0 +1,2275 @@
+{
+  "schema": "cei_x002_verdicts/v1",
+  "amendment": "db/properties/cathode_cei_x002_amendment_2026_09_28.json",
+  "base": "modelc",
+  "missing_labels": [],
+  "G0_reproduce": {
+    "verdict": "REPRODUCED",
+    "ok": true,
+    "max_abs_delta": 0.0,
+    "n_compared": 240
+  },
+  "sites": {
+    "Li": {
+      "x": 0.02,
+      "labels": {
+        "nd": "nd_li_002",
+        "o": "o_only_003",
+        "both": "ndo_li_002"
+      },
+      "n_common_cells": 23,
+      "delta_mean_eV_per_atom": {
+        "nd": 0.004437,
+        "o": 0.002173,
+        "both": 0.006604
+      },
+      "delta_by_V": {
+        "nd": {
+          "2.50": 0.001513,
+          "3.00": 0.00164,
+          "3.50": 0.002672,
+          "4.00": 0.00539,
+          "4.30": 0.00845,
+          "4.50": 0.007797
+        },
+        "o": {
+          "2.50": 0.002095,
+          "3.00": 0.00219,
+          "3.50": 0.00223,
+          "4.00": 0.002135,
+          "4.30": 0.002215,
+          "4.50": 0.00217
+        },
+        "both": {
+          "2.50": 0.003583,
+          "3.00": 0.003827,
+          "3.50": 0.004835,
+          "4.00": 0.00755,
+          "4.30": 0.010688,
+          "4.50": 0.009987
+        }
+      },
+      "G2_additivity": {
+        "residual_mean": 6e-06,
+        "tol": 0.001,
+        "pass": true
+      },
+      "within_resolution_band": true,
+      "li_matched": {
+        "nd": {
+          "pair": [
+            "nd_li_002",
+            "lim_li_002"
+          ],
+          "n_cells": 23,
+          "nd_term_by_V_eV_per_atom": {
+            "2.50": 1.8e-05,
+            "3.00": -0.00176,
+            "3.50": -0.002995,
+            "4.00": -0.003497,
+            "4.30": -0.0041,
+            "4.50": -0.004267
+          }
+        }
+      }
+    },
+    "P": {
+      "x": 0.02,
+      "labels": {
+        "nd": "nd_p_002",
+        "o": "o_only_003",
+        "both": "nd_p_002_asused"
+      },
+      "n_common_cells": 22,
+      "delta_mean_eV_per_atom": {
+        "nd": -0.007139,
+        "o": 0.00219,
+        "both": -0.00496
+      },
+      "delta_by_V": {
+        "nd": {
+          "2.50": 0.00059,
+          "3.00": -0.00348,
+          "3.50": -0.006625,
+          "4.00": -0.009923,
+          "4.30": -0.012517,
+          "4.50": -0.01392
+        },
+        "o": {
+          "2.50": 0.002095,
+          "3.00": 0.00219,
+          "3.50": 0.00223,
+          "4.00": 0.002135,
+          "4.30": 0.002353,
+          "4.50": 0.00217
+        },
+        "both": {
+          "2.50": 0.002678,
+          "3.00": -0.00129,
+          "3.50": -0.004405,
+          "4.00": -0.007805,
+          "4.30": -0.01019,
+          "4.50": -0.011753
+        }
+      },
+      "G2_additivity": {
+        "residual_mean": 1e-05,
+        "tol": 0.001,
+        "pass": true
+      },
+      "within_resolution_band": true,
+      "li_matched": {
+        "nd": {
+          "pair": [
+            "nd_p_002",
+            "lim_p_002"
+          ],
+          "n_cells": 22,
+          "nd_term_by_V_eV_per_atom": {
+            "2.50": 2.3e-05,
+            "3.00": -0.001777,
+            "3.50": -0.003135,
+            "4.00": -0.003537,
+            "4.30": -0.00429,
+            "4.50": -0.004447
+          }
+        },
+        "both": {
+          "pair": [
+            "nd_p_002_asused",
+            "lim_p_002_asused"
+          ],
+          "n_cells": 23,
+          "nd_term_by_V_eV_per_atom": {
+            "2.50": 2e-05,
+            "3.00": -0.001775,
+            "3.50": -0.003147,
+            "4.00": -0.003545,
+            "4.30": -0.00422,
+            "4.50": -0.004453
+          }
+        }
+      }
+    },
+    "Li_x020": {
+      "x": 0.2,
+      "labels": {
+        "nd": "nd_only",
+        "o": "o_only_03",
+        "both": "modelc_nd"
+      },
+      "n_common_cells": 23,
+      "delta_mean_eV_per_atom": {
+        "nd": 0.042146,
+        "o": 0.021933,
+        "both": 0.063958
+      },
+      "delta_by_V": {
+        "nd": {
+          "2.50": 0.014733,
+          "3.00": 0.016232,
+          "3.50": 0.02403,
+          "4.00": 0.051535,
+          "4.30": 0.075448,
+          "4.50": 0.080483
+        },
+        "o": {
+          "2.50": 0.021333,
+          "3.00": 0.02261,
+          "3.50": 0.021602,
+          "4.00": 0.021237,
+          "4.30": 0.022618,
+          "4.50": 0.022287
+        },
+        "both": {
+          "2.50": 0.036285,
+          "3.00": 0.039197,
+          "3.50": 0.044067,
+          "4.00": 0.07287,
+          "4.30": 0.09698,
+          "4.50": 0.10448
+        }
+      },
+      "G2_additivity": {
+        "residual_mean": 0.000121,
+        "tol": 0.01,
+        "pass": true
+      },
+      "within_resolution_band": false,
+      "li_matched": {
+        "nd": {
+          "pair": [
+            "nd_only",
+            "lim_li_020"
+          ],
+          "n_cells": 23,
+          "nd_term_by_V_eV_per_atom": {
+            "2.50": 1e-05,
+            "3.00": -0.017772,
+            "3.50": -0.025203,
+            "4.00": -0.031638,
+            "4.30": -0.032593,
+            "4.50": -0.037037
+          }
+        }
+      }
+    }
+  },
+  "G1_linearity": {
+    "both": {
+      "pair": [
+        "modelc_nd",
+        "ndo_li_002"
+      ],
+      "n_cells": 23,
+      "delta_x020": 0.063958,
+      "delta_x002": 0.006604,
+      "residual": -0.002081,
+      "pass": true,
+      "gated": true
+    },
+    "o": {
+      "pair": [
+        "o_only_03",
+        "o_only_003"
+      ],
+      "n_cells": 23,
+      "delta_x020": 0.021933,
+      "delta_x002": 0.002173,
+      "residual": 0.000207,
+      "pass": true,
+      "gated": true
+    },
+    "nd": {
+      "pair": [
+        "nd_only",
+        "nd_li_002"
+      ],
+      "n_cells": 23,
+      "delta_x020": 0.042146,
+      "delta_x002": 0.004437,
+      "residual": -0.002223,
+      "pass": true,
+      "gated": false
+    }
+  },
+  "p_share": {
+    "nd_li_002": {
+      "LiCoO2": {
+        "2.50": {
+          "dopant_phosphate": 0.019997,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979779,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999776,
+          "dopant_products": [
+            "0.006329 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020003,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.980087,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.00009,
+          "dopant_products": [
+            "0.006429 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.08,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.920135,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000135,
+          "dopant_products": [
+            "0.006536 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.1,
+          "tm_phosphate": 0.900076,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000076,
+          "dopant_products": [
+            "0.007866 NdP5O14"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.1,
+          "tm_phosphate": 0.900048,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000048,
+          "dopant_products": [
+            "0.008412 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.1,
+          "tm_phosphate": 0.900048,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000048,
+          "dopant_products": [
+            "0.008412 NdP5O14"
+          ]
+        }
+      },
+      "LiNiO2": {
+        "2.50": {
+          "dopant_phosphate": 0.019996,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979882,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999878,
+          "dopant_products": [
+            "0.005069 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.02,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979829,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999829,
+          "dopant_products": [
+            "0.005156 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.08,
+          "tm_phosphate": 0.92026,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.00026,
+          "dopant_products": [
+            "0.004916 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.060011,
+          "tm_phosphate": 0.940503,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000515,
+          "dopant_products": [
+            "0.005245 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.06,
+          "tm_phosphate": 0.939852,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999852,
+          "dopant_products": [
+            "0.007282 Nd(PO3)3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.1,
+          "tm_phosphate": 0.899809,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999809,
+          "dopant_products": [
+            "0.007326 NdP5O14"
+          ]
+        }
+      },
+      "LiMnO2": {
+        "2.50": {
+          "dopant_phosphate": 0.019997,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979779,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999776,
+          "dopant_products": [
+            "0.006329 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020004,
+          "tm_phosphate": 0.980132,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000136,
+          "dopant_products": [
+            "0.005135 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.006508 NdCl3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.008 NdCl3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.116373,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.883721,
+          "other": 0.0,
+          "sum": 1.000094,
+          "dopant_products": [
+            "0.01703 NdCl3"
+          ]
+        }
+      },
+      "NMC811": {
+        "2.50": {
+          "dopant_phosphate": 0.019996,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.980023,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000019,
+          "dopant_products": [
+            "0.005205 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.02,
+          "tm_phosphate": 0.312712,
+          "li_phosphate": 0.667189,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999901,
+          "dopant_products": [
+            "0.004846 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.08,
+          "tm_phosphate": 0.920098,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000098,
+          "dopant_products": [
+            "0.004916 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.06,
+          "tm_phosphate": 0.939797,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999797,
+          "dopant_products": [
+            "0.007282 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.099987,
+          "tm_phosphate": 0.899922,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999909,
+          "dopant_products": [
+            "0.007701 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.099987,
+          "tm_phosphate": 0.899922,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999909,
+          "dopant_products": [
+            "0.007701 NdP5O14"
+          ]
+        }
+      }
+    },
+    "ndo_li_002": {
+      "LiCoO2": {
+        "2.50": {
+          "dopant_phosphate": 0.019997,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979874,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999871,
+          "dopant_products": [
+            "0.006359 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.02,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.980186,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000186,
+          "dopant_products": [
+            "0.00646 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.08,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.919915,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999915,
+          "dopant_products": [
+            "0.006568 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.100013,
+          "tm_phosphate": 0.900101,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000114,
+          "dopant_products": [
+            "0.007913 NdP5O14"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.1,
+          "tm_phosphate": 0.899976,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999976,
+          "dopant_products": [
+            "0.008466 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.1,
+          "tm_phosphate": 0.899976,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999976,
+          "dopant_products": [
+            "0.008466 NdP5O14"
+          ]
+        }
+      },
+      "LiNiO2": {
+        "2.50": {
+          "dopant_phosphate": 0.02,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979984,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999984,
+          "dopant_products": [
+            "0.005096 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.02,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979938,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999938,
+          "dopant_products": [
+            "0.005184 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.080016,
+          "tm_phosphate": 0.920146,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000162,
+          "dopant_products": [
+            "0.004935 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.059989,
+          "tm_phosphate": 0.939613,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999601,
+          "dopant_products": [
+            "0.005265 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.06,
+          "tm_phosphate": 0.94018,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.00018,
+          "dopant_products": [
+            "0.007322 Nd(PO3)3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.1,
+          "tm_phosphate": 0.89981,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.99981,
+          "dopant_products": [
+            "0.007366 NdP5O14"
+          ]
+        }
+      },
+      "LiMnO2": {
+        "2.50": {
+          "dopant_phosphate": 0.019997,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979874,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999871,
+          "dopant_products": [
+            "0.006359 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020004,
+          "tm_phosphate": 0.98021,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000213,
+          "dopant_products": [
+            "0.005155 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.00654 NdCl3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.008048 NdCl3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.127281,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.872766,
+          "other": 0.0,
+          "sum": 1.000047,
+          "dopant_products": [
+            "0.01701 NdCl3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.014999,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.912351,
+          "other": 0.072648,
+          "sum": 0.999998,
+          "dopant_products": [
+            "0.01985 NdCl3"
+          ]
+        }
+      },
+      "NMC811": {
+        "2.50": {
+          "dopant_phosphate": 0.02,
+          "tm_phosphate": 0.315455,
+          "li_phosphate": 0.664728,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000183,
+          "dopant_products": [
+            "0.004814 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.02,
+          "tm_phosphate": 0.310509,
+          "li_phosphate": 0.669458,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999967,
+          "dopant_products": [
+            "0.004872 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.079983,
+          "tm_phosphate": 0.919689,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999672,
+          "dopant_products": [
+            "0.004631 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.06,
+          "tm_phosphate": 0.940126,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000126,
+          "dopant_products": [
+            "0.007322 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.100013,
+          "tm_phosphate": 0.900129,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000142,
+          "dopant_products": [
+            "0.007743 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.100013,
+          "tm_phosphate": 0.900129,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000142,
+          "dopant_products": [
+            "0.007743 NdP5O14"
+          ]
+        }
+      }
+    },
+    "nd_p_002": {
+      "LiCoO2": {
+        "2.50": {
+          "dopant_phosphate": 0.020405,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979566,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999971,
+          "dopant_products": [
+            "0.006345 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020405,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979237,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999642,
+          "dopant_products": [
+            "0.006443 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.081645,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.918492,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000137,
+          "dopant_products": [
+            "0.006549 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.102028,
+          "tm_phosphate": 0.897897,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999925,
+          "dopant_products": [
+            "0.007905 NdP5O14"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.102053,
+          "tm_phosphate": 0.898055,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000108,
+          "dopant_products": [
+            "0.008511 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.102053,
+          "tm_phosphate": 0.898055,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000108,
+          "dopant_products": [
+            "0.008511 NdP5O14"
+          ]
+        }
+      },
+      "LiNiO2": {
+        "2.50": {
+          "dopant_phosphate": 0.020404,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979463,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999868,
+          "dopant_products": [
+            "0.005083 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020404,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.97975,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000154,
+          "dopant_products": [
+            "0.005169 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.081616,
+          "tm_phosphate": 0.918243,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999859,
+          "dopant_products": [
+            "0.004933 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.061224,
+          "tm_phosphate": 0.939054,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000279,
+          "dopant_products": [
+            "0.005268 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.102027,
+          "tm_phosphate": 0.898048,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000075,
+          "dopant_products": [
+            "0.007371 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.102027,
+          "tm_phosphate": 0.898048,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000075,
+          "dopant_products": [
+            "0.007371 NdP5O14"
+          ]
+        }
+      },
+      "LiMnO2": {
+        "2.50": {
+          "dopant_phosphate": 0.020405,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979566,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999971,
+          "dopant_products": [
+            "0.006345 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.979478,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999886,
+          "dopant_products": [
+            "0.005734 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.999995,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999995,
+          "dopant_products": [
+            "0.008097 NdCl3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.999995,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999995,
+          "dopant_products": [
+            "0.008097 NdCl3"
+          ]
+        }
+      },
+      "NMC811": {
+        "2.50": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979357,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999765,
+          "dopant_products": [
+            "0.00522 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.318053,
+          "li_phosphate": 0.66148,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999941,
+          "dopant_products": [
+            "0.004858 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.081616,
+          "tm_phosphate": 0.918243,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999859,
+          "dopant_products": [
+            "0.004933 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.061224,
+          "tm_phosphate": 0.93862,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999844,
+          "dopant_products": [
+            "0.007326 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.102028,
+          "tm_phosphate": 0.897822,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.99985,
+          "dopant_products": [
+            "0.007747 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.102053,
+          "tm_phosphate": 0.898055,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000108,
+          "dopant_products": [
+            "0.008511 NdP5O14"
+          ]
+        }
+      }
+    },
+    "nd_p_002_asused": {
+      "LiCoO2": {
+        "2.50": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979438,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999846,
+          "dopant_products": [
+            "0.006376 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020411,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979743,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000154,
+          "dopant_products": [
+            "0.006475 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.08162,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.918398,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000019,
+          "dopant_products": [
+            "0.006581 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.102041,
+          "tm_phosphate": 0.898041,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000082,
+          "dopant_products": [
+            "0.007952 NdP5O14"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.102029,
+          "tm_phosphate": 0.897902,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999931,
+          "dopant_products": [
+            "0.008565 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.102029,
+          "tm_phosphate": 0.897902,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999931,
+          "dopant_products": [
+            "0.008565 NdP5O14"
+          ]
+        }
+      },
+      "LiNiO2": {
+        "2.50": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979672,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.00008,
+          "dopant_products": [
+            "0.00511 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020412,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.97956,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999973,
+          "dopant_products": [
+            "0.005197 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.081633,
+          "tm_phosphate": 0.918202,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999835,
+          "dopant_products": [
+            "0.004952 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.061236,
+          "tm_phosphate": 0.93859,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999826,
+          "dopant_products": [
+            "0.005289 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.102041,
+          "tm_phosphate": 0.898157,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000198,
+          "dopant_products": [
+            "0.007412 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.102041,
+          "tm_phosphate": 0.898157,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000198,
+          "dopant_products": [
+            "0.007412 NdP5O14"
+          ]
+        }
+      },
+      "LiMnO2": {
+        "2.50": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.979438,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999846,
+          "dopant_products": [
+            "0.006376 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020404,
+          "tm_phosphate": 0.979088,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999492,
+          "dopant_products": [
+            "0.005185 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000115,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000115,
+          "dopant_products": [
+            "0.008147 NdCl3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000115,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000115,
+          "dopant_products": [
+            "0.008147 NdCl3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.015305,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.91884,
+          "other": 0.065721,
+          "sum": 0.999866,
+          "dopant_products": [
+            "0.01985 NdCl3"
+          ]
+        }
+      },
+      "NMC811": {
+        "2.50": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.320663,
+          "li_phosphate": 0.658996,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000068,
+          "dopant_products": [
+            "0.004828 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.020408,
+          "tm_phosphate": 0.315817,
+          "li_phosphate": 0.663809,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000033,
+          "dopant_products": [
+            "0.004884 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.081633,
+          "tm_phosphate": 0.918285,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999918,
+          "dopant_products": [
+            "0.004952 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.061224,
+          "tm_phosphate": 0.939064,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000288,
+          "dopant_products": [
+            "0.007366 Nd(PO3)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.102028,
+          "tm_phosphate": 0.897802,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.99983,
+          "dopant_products": [
+            "0.007789 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.102029,
+          "tm_phosphate": 0.897807,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999836,
+          "dopant_products": [
+            "0.008565 NdP5O14"
+          ]
+        }
+      }
+    },
+    "nd_only": {
+      "LiCoO2": {
+        "2.50": {
+          "dopant_phosphate": 0.199968,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.8,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999968,
+          "dopant_products": [
+            "0.06329 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.8,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.0641 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.8,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.2,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.06536 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.99988,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.99988,
+          "dopant_products": [
+            "0.08333 NdP5O14"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.99988,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.99988,
+          "dopant_products": [
+            "0.08333 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.99988,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.99988,
+          "dopant_products": [
+            "0.08333 NdP5O14"
+          ]
+        }
+      },
+      "LiNiO2": {
+        "2.50": {
+          "dopant_phosphate": 0.199961,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.8,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999961,
+          "dopant_products": [
+            "0.05069 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.8,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.0514 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.00041,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.00041,
+          "dopant_products": [
+            "0.02439 Nd2(SO4)3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.02542 Nd2(SO4)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.600109,
+          "tm_phosphate": 0.400073,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000182,
+          "dopant_products": [
+            "0.05505 Nd(PO3)3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.6,
+          "tm_phosphate": 0.4,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.07792 Nd(PO3)3"
+          ]
+        }
+      },
+      "LiMnO2": {
+        "2.50": {
+          "dopant_phosphate": 0.199968,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.8,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999968,
+          "dopant_products": [
+            "0.06329 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.199962,
+          "tm_phosphate": 0.8,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999962,
+          "dopant_products": [
+            "0.05319 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000107,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000107,
+          "dopant_products": [
+            "0.03738 NdCl3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.08 NdCl3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.08 NdCl3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.08 NdCl3"
+          ]
+        }
+      },
+      "NMC811": {
+        "2.50": {
+          "dopant_phosphate": 0.200042,
+          "tm_phosphate": 0.317711,
+          "li_phosphate": 0.482456,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000209,
+          "dopant_products": [
+            "0.04789 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.314079,
+          "li_phosphate": 0.485963,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000041,
+          "dopant_products": [
+            "0.0483 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.800161,
+          "tm_phosphate": 0.2,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000161,
+          "dopant_products": [
+            "0.04973 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000157,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000157,
+          "dopant_products": [
+            "0.02542 Nd2(SO4)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.6,
+          "tm_phosphate": 0.4,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.07792 Nd(PO3)3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.694567,
+          "tm_phosphate": 0.305433,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.01871 NdP5O14",
+            "0.06043 Nd(PO3)3"
+          ]
+        }
+      }
+    },
+    "modelc_nd": {
+      "LiCoO2": {
+        "2.50": {
+          "dopant_phosphate": 0.20003,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.80012,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000151,
+          "dopant_products": [
+            "0.06645 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.800119,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000119,
+          "dopant_products": [
+            "0.06734 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.800116,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.200029,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000146,
+          "dopant_products": [
+            "0.06873 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 1.000113,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000113,
+          "dopant_products": [
+            "0.08889 NdP5O14"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 1.000113,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000113,
+          "dopant_products": [
+            "0.08889 NdP5O14"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 1.000113,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000113,
+          "dopant_products": [
+            "0.08889 NdP5O14"
+          ]
+        }
+      },
+      "LiNiO2": {
+        "2.50": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.800224,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000224,
+          "dopant_products": [
+            "0.05346 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.800224,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000224,
+          "dopant_products": [
+            "0.05346 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.0183 Nd2(SO4)3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.02166 Nd2(SO4)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000378,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000378,
+          "dopant_products": [
+            "0.02643 Nd2(SO4)3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.6,
+          "tm_phosphate": 0.4,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.05742 Nd(PO3)3"
+          ]
+        }
+      },
+      "LiMnO2": {
+        "2.50": {
+          "dopant_phosphate": 0.20003,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 0.80012,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000151,
+          "dopant_products": [
+            "0.06645 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.8,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.0554 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.03846 NdCl3"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000235,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000235,
+          "dopant_products": [
+            "0.08511 NdCl3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000235,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000235,
+          "dopant_products": [
+            "0.08511 NdCl3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000235,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000235,
+          "dopant_products": [
+            "0.08511 NdCl3"
+          ]
+        }
+      },
+      "NMC811": {
+        "2.50": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.29557,
+          "li_phosphate": 0.504351,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999921,
+          "dopant_products": [
+            "0.05056 NdPO4"
+          ]
+        },
+        "3.00": {
+          "dopant_phosphate": 0.2,
+          "tm_phosphate": 0.29185,
+          "li_phosphate": 0.50815,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.05104 NdPO4"
+          ]
+        },
+        "3.50": {
+          "dopant_phosphate": 0.799835,
+          "tm_phosphate": 0.2,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999835,
+          "dopant_products": [
+            "0.04841 LiNd(PO3)4"
+          ]
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000409,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000409,
+          "dopant_products": [
+            "0.02443 Nd2(SO4)3"
+          ]
+        },
+        "4.30": {
+          "dopant_phosphate": 0.492607,
+          "tm_phosphate": 0.507464,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000071,
+          "dopant_products": [
+            "0.005061 Nd2(SO4)3",
+            "0.04642 Nd(PO3)3"
+          ]
+        },
+        "4.50": {
+          "dopant_phosphate": 0.6,
+          "tm_phosphate": 0.4,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": [
+            "0.08276 Nd(PO3)3"
+          ]
+        }
+      }
+    },
+    "modelc": {
+      "LiCoO2": {
+        "2.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 1.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "3.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 1.000311,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000311,
+          "dopant_products": []
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 1.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.999949,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999949,
+          "dopant_products": []
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000237,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000237,
+          "dopant_products": []
+        },
+        "4.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000237,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000237,
+          "dopant_products": []
+        }
+      },
+      "LiNiO2": {
+        "2.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 1.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "3.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 1.000388,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000388,
+          "dopant_products": []
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.00041,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.00041,
+          "dopant_products": []
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.999617,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999617,
+          "dopant_products": []
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "4.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        }
+      },
+      "LiMnO2": {
+        "2.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 1.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "3.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.127284,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.872693,
+          "other": 0.0,
+          "sum": 0.999976,
+          "dopant_products": []
+        }
+      },
+      "NMC811": {
+        "2.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.0,
+          "li_phosphate": 1.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "3.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.312541,
+          "li_phosphate": 0.687294,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999835,
+          "dopant_products": []
+        },
+        "3.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.0,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.0,
+          "dopant_products": []
+        },
+        "4.00": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000332,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000332,
+          "dopant_products": []
+        },
+        "4.30": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 1.000053,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 1.000053,
+          "dopant_products": []
+        },
+        "4.50": {
+          "dopant_phosphate": 0.0,
+          "tm_phosphate": 0.999949,
+          "li_phosphate": 0.0,
+          "thiophosphate": 0.0,
+          "other": 0.0,
+          "sum": 0.999949,
+          "dopant_products": []
+        }
+      }
+    }
+  },
+  "G4_bound": {
+    "k_max": 5,
+    "pass": false,
+    "violations": [
+      {
+        "label": "ndo_li_002",
+        "cathode": "LiCoO2",
+        "V": "4.00",
+        "dopant_phosphate": 0.100013,
+        "bound": 0.100001
+      },
+      {
+        "label": "ndo_li_002",
+        "cathode": "NMC811",
+        "V": "4.30",
+        "dopant_phosphate": 0.100013,
+        "bound": 0.100001
+      },
+      {
+        "label": "ndo_li_002",
+        "cathode": "NMC811",
+        "V": "4.50",
+        "dopant_phosphate": 0.100013,
+        "bound": 0.100001
+      },
+      {
+        "label": "nd_p_002",
+        "cathode": "LiCoO2",
+        "V": "4.30",
+        "dopant_phosphate": 0.102053,
+        "bound": 0.102042
+      },
+      {
+        "label": "nd_p_002",
+        "cathode": "LiCoO2",
+        "V": "4.50",
+        "dopant_phosphate": 0.102053,
+        "bound": 0.102042
+      },
+      {
+        "label": "nd_p_002",
+        "cathode": "NMC811",
+        "V": "4.50",
+        "dopant_phosphate": 0.102053,
+        "bound": 0.102042
+      },
+      {
+        "label": "modelc_nd",
+        "cathode": "LiCoO2",
+        "V": "4.00",
+        "dopant_phosphate": 1.000113,
+        "bound": 1.000001
+      },
+      {
+        "label": "modelc_nd",
+        "cathode": "LiCoO2",
+        "V": "4.30",
+        "dopant_phosphate": 1.000113,
+        "bound": 1.000001
+      },
+      {
+        "label": "modelc_nd",
+        "cathode": "LiCoO2",
+        "V": "4.50",
+        "dopant_phosphate": 1.000113,
+        "bound": 1.000001
+      }
+    ]
+  },
+  "G3_esw": {
+    "edges": {
+      "comp1": {
+        "composition": "Li6PS5Cl",
+        "oxidation_onset_V": 2.14,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li6PS5Cl -> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li",
+        "neutral_rxn": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+      },
+      "modelc": {
+        "composition": "Li5.4PS4.4Cl1.6",
+        "oxidation_onset_V": 2.14,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li",
+        "neutral_rxn": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+      },
+      "lpsocl": {
+        "composition": "Li27P5S21OCl8",
+        "oxidation_onset_V": 2.14,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li27P5S21Cl8O -> 4.75 Li3PS4 + 0.5 LiS4 + 0.25 Li3PO4 + 8 LiCl + 3.5 Li",
+        "neutral_rxn": "Li27P5S21Cl8O -> 4.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 8 LiCl"
+      },
+      "modelc_nd": {
+        "composition": "Li48Nd2P10O3S41Cl16",
+        "oxidation_onset_V": 1.92,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li48Nd2P10S41Cl16O3 -> 0.2 Nd10S19 + 9.25 Li3PS4 + 0.2 Li2S + 0.75 Li3PO4 + 16 LiCl + 1.6 Li",
+        "neutral_rxn": "Li48Nd2P10S41Cl16O3 -> 9.25 Li3PS4 + Nd2S3 + Li2S + 0.75 Li3PO4 + 16 LiCl"
+      },
+      "ndo_li_002": {
+        "composition": "Li5.34Nd0.02P1S4.37Cl1.6O0.03",
+        "oxidation_onset_V": 1.92,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.002 Nd10S19 + 0.9925 Li3PS4 + 0.362 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.016 Li",
+        "neutral_rxn": "Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.01 Nd2S3 + 0.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl"
+      },
+      "nd_li_002": {
+        "composition": "Li5.34Nd0.02P1S4.4Cl1.6",
+        "oxidation_onset_V": 1.92,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li5.34Nd0.02P1S4.4Cl1.6 -> 0.002 Nd10S19 + Li3PS4 + 0.362 Li2S + 1.6 LiCl + 0.016 Li",
+        "neutral_rxn": "Li5.34Nd0.02P1S4.4Cl1.6 -> Li3PS4 + 0.01 Nd2S3 + 0.37 Li2S + 1.6 LiCl"
+      },
+      "o_only_003": {
+        "composition": "Li5.4P1S4.37Cl1.6O0.03",
+        "oxidation_onset_V": 2.14,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li5.4P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.1 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 0.7 Li",
+        "neutral_rxn": "Li5.4P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.4 Li2S + 0.0075 Li3PO4 + 1.6 LiCl"
+      },
+      "nd_p_002_asused": {
+        "composition": "Li5.44Nd0.02P0.98S4.37Cl1.6O0.03",
+        "oxidation_onset_V": 1.92,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.002 Nd10S19 + 0.9725 Li3PS4 + 0.442 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.016 Li",
+        "neutral_rxn": "Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.9725 Li3PS4 + 0.01 Nd2S3 + 0.45 Li2S + 0.0075 Li3PO4 + 1.6 LiCl"
+      },
+      "nd_p_002": {
+        "composition": "Li5.44Nd0.02P0.98S4.4Cl1.6",
+        "oxidation_onset_V": 1.92,
+        "reduction_edge_V_zero_exchange": 1.717,
+        "oxidation_onset_rxn": "Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.002 Nd10S19 + 0.98 Li3PS4 + 0.442 Li2S + 1.6 LiCl + 0.016 Li",
+        "neutral_rxn": "Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.98 Li3PS4 + 0.01 Nd2S3 + 0.45 Li2S + 1.6 LiCl"
+      }
+    },
+    "predictions": {
+      "ndo_li_002": {
+        "predicted_V": 1.92,
+        "measured_V": 1.92,
+        "premise_holds": true,
+        "pass": true,
+        "note": null,
+        "first_release_has_Nd10S19": true,
+        "reduction_edge_V": 1.717,
+        "reduction_pred_V": 1.717,
+        "reduction_pass": true
+      },
+      "nd_li_002": {
+        "predicted_V": 1.92,
+        "measured_V": 1.92,
+        "premise_holds": true,
+        "pass": true,
+        "note": null,
+        "first_release_has_Nd10S19": true,
+        "reduction_edge_V": 1.717,
+        "reduction_pred_V": 1.717,
+        "reduction_pass": true
+      },
+      "o_only_003": {
+        "predicted_V": 2.14,
+        "measured_V": 2.14,
+        "premise_holds": true,
+        "pass": true,
+        "note": null,
+        "first_release_has_Nd10S19": false,
+        "reduction_edge_V": 1.717,
+        "reduction_pred_V": 1.717,
+        "reduction_pass": true
+      },
+      "nd_p_002_asused": {
+        "predicted_V": 1.92,
+        "measured_V": 1.92,
+        "premise_holds": true,
+        "pass": true,
+        "note": null,
+        "first_release_has_Nd10S19": true,
+        "reduction_edge_V": 1.717,
+        "reduction_pred_V": 1.717,
+        "reduction_pass": true
+      },
+      "nd_p_002": {
+        "predicted_V": 1.92,
+        "measured_V": 1.92,
+        "premise_holds": true,
+        "pass": true,
+        "note": null,
+        "first_release_has_Nd10S19": true,
+        "reduction_edge_V": 1.717,
+        "reduction_pred_V": 1.717,
+        "reduction_pass": true
+      }
+    },
+    "⚠": "P 자리는 중성 조합에 Nd2S3 + Li2S 가 없으면 예측의 전제가 안 선다 — 틀림이 아니라 전제 불성립으로 읽는다 (개정문 G3)."
+  },
+  "source": {
+    "interface": "db/properties/cei_interface_V_x002_2026_09_28.json",
+    "esw": "db/properties/cei_esw_Li_x002_2026_09_28.json"
+  }
+}

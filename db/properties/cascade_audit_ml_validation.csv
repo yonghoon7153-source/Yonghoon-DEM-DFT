@@ -1,0 +1,6 @@
+panel,metric,value,p_value,interpretation
+generalization,pair LOOCV weighted R2,0.0892,,dopant leakage
+generalization,LODO weighted R2,-0.1805,,worse than mean
+generalization,L2DO weighted R2,-0.2548,,worse than mean
+acquisition,global discovery enrichment,1.22,0.42574257425742573,not significant
+acquisition,ordering enrichment within listed 40,3.35,0.009900990099009901,retrospective signal

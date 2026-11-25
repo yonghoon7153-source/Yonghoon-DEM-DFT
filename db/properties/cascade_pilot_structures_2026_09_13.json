@@ -1,0 +1,75 @@
+{
+  "schema": "property_record_v1",
+  "kind": "structure_set",
+  "date": "2026-09-13",
+  "status": "proposed",
+  "citable": false,
+  "제목": "cascade 파일럿 구조 5종 — 공통 부모 배열 A·B × {P1, P2} + H0",
+  "카드": "db/properties/cascade_rebuild_estimand_card_v4_2026_09_13.json §1b",
+  "결정": "D-2026-09-13-cascade-pilot-estimand-v4 (active)",
+  "⛔_이것은_결과가_아니다": "입력 구조다. 값·판정 없음. 0 K 완화도 아직 안 했다 (§4b 셀 정책은 GPU 단계).",
+
+  "host": {
+    "파일": "db/structures/comp1_V0_k444.cif",
+    "확장": "2×2×1 → 208원자 Li96P16S80Cl16 (= 카드 H0)",
+    "부모_자리_지도_sha256": "f6989858c6bbbcc6…",
+    "동결_지도": {"Cl_4d": 16, "Li_any": 96, "P_4b": 16, "S_16e": 64, "S_4a": 16}
+  },
+
+  "생성": {
+    "도구": "tools/doping/substitute_compound.py (selftest 31/31)",
+    "플래그": "--supercell 2 2 1 --cation_site Li_24g --anion_site S_16e --x_compound 0.0625 --distinct_anion_parent --method spread --emit_plan_shape positional",
+    "P1": "--compound Al2O3",
+    "P2": "--compound Al2S3 --index_plan <부모>/plan.json  (O 집합을 S 그대로 = 명시된 no-op)",
+    "seed": {"부모A": 1, "부모B": 2}
+  },
+
+  "구조": [
+    {"이름": "H0_host", "원자": 208, "조성": "Li96P16S80Cl16",
+     "sha256": "5bca9a4f1d9bc119000ac93b48b7e1524490a4bc109d53f9ed4e99f849398d96",
+     "역할": "공통 진단 기준 1구조. P1−P2 에서 소거되므로 구조 수를 맞추지 않는다"},
+    {"이름": "P1_Al2O3_A", "원자": 204, "조성": "Li90Al2P16S77O3Cl16",
+     "sha256": "a2191fb738a1bbb75307da345dbb262c40d85a344901f2e4ab63559c4f2d82cb"},
+    {"이름": "P2_Al2S3_A", "원자": 204, "조성": "Li90Al2P16S80Cl16",
+     "sha256": "76987138d77d9e630df05375786db16aa6048b023086eb422fdf3915fb00381c"},
+    {"이름": "P1_Al2O3_B", "원자": 204, "조성": "Li90Al2P16S77O3Cl16",
+     "sha256": "7a1cbb11d6199c95288d54a7b13fbda867c763b0dbe979cbc7aaaa1be7a100da"},
+    {"이름": "P2_Al2S3_B", "원자": 204, "조성": "Li90Al2P16S80Cl16",
+     "sha256": "98c16677d8f0a1994f03c8a19ced42f0bfb84d6f9239644053a70b0a9817f6ed"}
+  ],
+
+  "인덱스_대응표": {
+    "부모A": {"파일": "db/structures/cascade_pilot/plan_A.json",
+              "sha256": "f839cdcf5cf7cebc52f1c5bf38aeebcda405158280a5660f0a676f340ea54abd",
+              "O_자리": [113, 123, 162], "부모_P": {"113": 1, "123": 159, "162": 158},
+              "Al_자리": [93, 145], "Li_공공": [27, 41, 76, 127]},
+    "부모B": {"파일": "db/structures/cascade_pilot/plan_B.json",
+              "sha256": "7c2444aa730a9abf81c98cadff9e22a483fb9f7bc1e28aced6e1096a0d77af05",
+              "O_자리": [19, 120, 121], "부모_P": {"19": 55, "120": 104, "121": 105},
+              "Al_자리": [27, 184], "Li_공공": [80, 141, 142, 182]},
+    "index_basis": "치환 전 host 원자 순서 · 공공은 삭제 전 인덱스",
+    "_shape": "positional (원소 무관) — P1/P2 가 **같은 파일**을 쓴다"
+  },
+
+  "검증_실측_2026_09_13": [
+    "✅ 각 부모에서 P1 과 P2 의 심볼 차이가 **정확히 3** 이고, 그 3자리가 P1 은 O · P2 는 S 다 (나머지 201자리 동일)",
+    "✅ O 3개가 **서로 다른 P** 에 붙었다 — A {1, 159, 158} · B {55, 104, 105} (카드 §1b · BO 조건 2)",
+    "✅ 부모 A 와 B 는 O 자리·Al 자리·공공 자리가 **하나도 안 겹친다**",
+    "✅ 전하 수지: Al 2개가 Li 자리에 들어가 dq_total +4 → Li 공공 4. O 3개는 S 자리라 dq 0",
+    "✅ 조성이 카드 처방표와 일치 (P1 Li90Al2P16S77O3Cl16 · P2 Li90Al2P16S80Cl16 · H0 208원자)"
+  ],
+
+  "⛔_도구_간극_하나_고쳤다": {
+    "무엇": "`--emit_index_plan` 이 **by_element** 형식(`{\"O\": [...]}`)만 떨궜다. 그 표는 원소가 O 로 굳어 있어 **no-op S₃ 짝(P2)이 계약거부로 막혔다** — 즉 그 플래그가 자기 목적(*\"P1/P2 짝은 같은 파일을 준다\"*)을 못 하고 있었다.",
+    "언제_드러났나": "파일럿 구조를 실제로 만들다가. 도구 docstring 은 리스트 형식이 원소 무관이라고 **이미 적어 두었다** — 떨구는 쪽만 그 형식을 안 냈다.",
+    "고친_것": "`--emit_plan_shape {by_element,positional}` 추가(기본은 by_element 라 기존 동작 불변) + 거부 문구가 positional 경로를 **이름으로 대도록** 수정(막다른 골목이 아니게).",
+    "안전장치": "자리 하나에 원소가 둘 이상이면 positional 판을 **안 만든다** — 리스트로 접으면 어느 인덱스가 어느 원소였는지 잃는다. 요청하면 거부한다.",
+    "selftest": "25 → 31 (음성 3 추가: by_element 표 + 다른 원소 → 거부하고 positional 을 이름으로 댄다 · 혼합 음이온이면 positional 판 없음 · positional 로 실제 O↔S 짝이 만들어지는 양성 경로)"
+  },
+
+  "다음": [
+    "⛔ **§4b 셀 정책 선결조건** — H0·P1·P2 셋에 같은 형상 정책 · 각자 V₀ 적용 · 그 V₀ 에서 고정셀 원자완화 · 잔류 평균압과 편차응력 별도 기록. `run_mlip_postproc.py --apply_eos_v0 --fixed_shape_relax` (GPU 필요)",
+    "그 다음 MD 30런 (처방 2 × 부모 2 × 온도 3 × 속도 2 = 24 + H0 6)",
+    "⚠ **BO#3 미결** — 홉 사건 정의가 카드(미구현) vs A5(비준됨)로 갈려 있다. 분석 단계 게이트라 런 실행은 막지 않지만, **결과를 보기 전에** 정해야 한다 (hop_event_definition_crosscheck_2026_09_13.json)"
+  ]
+}

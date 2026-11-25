@@ -1,0 +1,28 @@
+{
+ "cation_sites": [
+  34,
+  178
+ ],
+ "anion_sites": [
+  112,
+  173,
+  174
+ ],
+ "vacancy_sites": [
+  30,
+  38,
+  177,
+  185
+ ],
+ "index_basis": "치환 전 host 원자 순서 · 공공은 삭제 전 인덱스",
+ "from_plan": false,
+ "_shape": "positional — 원소 무관. 같은 자리에 다른 원소를 놓는 짝 처방용",
+ "_emitted_for": {
+  "cation": [
+   "Al"
+  ],
+  "anion": [
+   "O"
+  ]
+ }
+}

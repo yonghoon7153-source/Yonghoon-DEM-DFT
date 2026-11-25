@@ -1,0 +1,14 @@
+[2026-10-05 20:48:40] START @ 17aced0b6 · 변경 0 · 기계 gabia · 공존 1 (D-2026-10-05-gabia-uma-coexist-elastic-li2s-control · 가드 46000/3500/8192 · ELW /data/work/runs/elastic_modelc_2x) · RUN /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05 · 시드 3 4 5 · 인자 --system B --n_fu 15 --quench_rate 1e12 --melt_ps 100 --hold_ps 50 --dt_fs 2 --save_ps 1.0 --turbo
+[2026-10-05 20:48:40] seed3 시작 · GPU 사용 41392 MiB · host 47483 MiB · 공존 가드 켬
+   [B seed3] 120 원자 · 셀 15.52 Å · 담금질 900 ps (450000 스텝) → /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed3
+   UMA inference mode: turbo
+[2026-10-07 20:19:25] seed3 끝 · 171044 s · 게이트 입력 rc 0 (판정은 repo)
+[2026-10-07 20:19:25] seed4 시작 · GPU 사용 41392 MiB · host 47600 MiB · 공존 가드 켬
+   [B seed4] 120 원자 · 셀 15.52 Å · 담금질 900 ps (450000 스텝) → /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed4
+   UMA inference mode: turbo
+[2026-10-09 20:05:48] seed4 끝 · 171982 s · 게이트 입력 rc 0 (판정은 repo)
+[2026-10-09 20:05:48] seed5 시작 · GPU 사용 41392 MiB · host 47517 MiB · 공존 가드 켬
+   [B seed5] 120 원자 · 셀 15.52 Å · 담금질 900 ps (450000 스텝) → /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed5
+   UMA inference mode: turbo
+[2026-10-11 19:39:47] seed5 끝 · 171239 s · 게이트 입력 rc 0 (판정은 repo)
+[2026-10-11 19:39:47] ✅ 끝 — 시드 3 4 5 · 다음: 회수(새 worktree) → repo 에서 시드 게이트 · T₅₀ 스캔 → 600 K 러너

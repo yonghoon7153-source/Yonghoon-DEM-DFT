@@ -1,0 +1,31 @@
+{
+ "schema": "potcar_provenance/v1",
+ "species_order": [
+  "O",
+  "S",
+  "C",
+  "H"
+ ],
+ "expected_variants": [
+  "O",
+  "S",
+  "C",
+  "H"
+ ],
+ "titel_lines": [
+  "TITEL  = PAW_PBE O 08Apr2002",
+  "TITEL  = PAW_PBE S 06Sep2000",
+  "TITEL  = PAW_PBE C 08Apr2002",
+  "TITEL  = PAW_PBE H 15Jun2001"
+ ],
+ "source_sha256": {
+  "O": "818f92134a0a090dccd8ba1447fa70422a3b330e708bb4f08108d8ae51209ddf",
+  "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+  "C": "253f7b50bb8d59471dbedb8285d89021f4a42ed1a2c5d38a03a736e69125dd95",
+  "H": "030f79b5d3ab3cf0e668861823c8fb652ff669f3e15e46930bd03bfd63a607b6"
+ },
+ "allowlist": "/home/kgy/projects/sdcp_c12_v41_2026_09_11/site_allow.txt",
+ "allowlist_sha256": "8d192587cf8b1b7cec52804d0aff311a99a5c25c471dae230f0b90b8ce13dc49",
+ "allowlist_waived": false,
+ "assembled_sha256": "d5484980820ab6f319aaf584436460673bbf419a8756955f29add4492dac08c2"
+}

@@ -1,0 +1,1649 @@
+{
+  "provenance": {
+    "timestamp_iso": "2026-10-16T07:25:51.522189+09:00",
+    "python_version": "3.11.15",
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+    "machine": "x86_64",
+    "hostname": "esp-Z590-AORUS-MASTER",
+    "ase_version": "3.29.0",
+    "numpy_version": "2.4.6",
+    "scipy_version": "1.17.1",
+    "fairchem_version": "unknown",
+    "torch_version": "2.8.0+cu128",
+    "uma_model_name": "uma-s-1p1",
+    "uma_task_name": "omat",
+    "git_commit": "unknown",
+    "git_branch": "unknown",
+    "git_dirty": null
+  },
+  "temperature_K": 500.0,
+  "time_ps": 20.0,
+  "n_done": 25,
+  "results": [
+    {
+      "name": "BMLi_00",
+      "seed": 20310309,
+      "rng_streams": {
+        "velocities": 20310309,
+        "langevin": 21310312
+      },
+      "struct_sha256": {
+        "input": "801a1510518eb8ff",
+        "post_md": "c2837fd5919319d1",
+        "post_relax": "81e1fe56308e6862"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MLi/BMLi_00.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -499.1536658340981,
+      "E_md_final": -507.8933555116307,
+      "E_post_relax": -515.6387745129808,
+      "delta_E_anneal_meV_per_atom": -137.37590565735616,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.063155838839371,
+          -0.011370043114630687,
+          3.504086495863983
+        ],
+        [
+          2.0115205077698395,
+          5.705106765717552,
+          3.5020290245506622
+        ],
+        [
+          -0.07746738125527428,
+          -0.07998272725775632,
+          70.21600532005475
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2433.130631910735,
+      "t_md_s": 2836.1815705299377,
+      "t_relax_s": 30.65126061439514,
+      "n_relax_steps": 104,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_00/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_00/post_relax.xyz"
+    },
+    {
+      "name": "BMLi_01",
+      "seed": 20322479,
+      "rng_streams": {
+        "velocities": 20322479,
+        "langevin": 21322482
+      },
+      "struct_sha256": {
+        "input": "72b42527e12dbe04",
+        "post_md": "709941e1716e2e95",
+        "post_relax": "5da3f31325638238"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MLi/BMLi_01.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -499.3138996374187,
+      "E_md_final": -509.1492408608819,
+      "E_post_relax": -517.519828767735,
+      "delta_E_anneal_meV_per_atom": -151.71607608596958,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.024680728094172,
+          -0.0025418275541512596,
+          3.4743298454715776
+        ],
+        [
+          1.9991688463354678,
+          5.668365441553337,
+          3.4858642469410768
+        ],
+        [
+          0.051650985260116196,
+          0.17755833498138515,
+          69.39718378005604
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2366.759535696378,
+      "t_md_s": 3044.578803539276,
+      "t_relax_s": 51.27977108955383,
+      "n_relax_steps": 150,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_01/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_01/post_relax.xyz"
+    },
+    {
+      "name": "BMLi_02",
+      "seed": 20302393,
+      "rng_streams": {
+        "velocities": 20302393,
+        "langevin": 21302396
+      },
+      "struct_sha256": {
+        "input": "07c240a0dd8f8762",
+        "post_md": "5f2f5c26b69e1ff9",
+        "post_relax": "497a60f5b744a606"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MLi/BMLi_02.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -498.64585685998907,
+      "E_md_final": -506.41863419610513,
+      "E_post_relax": -515.3998510305277,
+      "delta_E_anneal_meV_per_atom": -139.6166180878216,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.04485221566814,
+          -0.005300087397948217,
+          3.507190077556799
+        ],
+        [
+          2.013859714986041,
+          5.676574331721042,
+          3.500457452998146
+        ],
+        [
+          0.17519109559077947,
+          0.04124917245451591,
+          69.8401502013051
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2393.1714796824217,
+      "t_md_s": 3233.4800934791565,
+      "t_relax_s": 64.2834095954895,
+      "n_relax_steps": 192,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_02/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_02/post_relax.xyz"
+    },
+    {
+      "name": "BMLi_03",
+      "seed": 20298187,
+      "rng_streams": {
+        "velocities": 20298187,
+        "langevin": 21298190
+      },
+      "struct_sha256": {
+        "input": "cc6ffcf258abd5a0",
+        "post_md": "b60c711bf9511d74",
+        "post_relax": "982e2ca9efd342c1"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MLi/BMLi_03.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -497.4347361985918,
+      "E_md_final": -507.2192651734796,
+      "E_post_relax": -514.6446202115834,
+      "delta_E_anneal_meV_per_atom": -143.4157001082634,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.061939264817248,
+          0.0040539644812831585,
+          3.50199254600824
+        ],
+        [
+          2.022392554724288,
+          5.731611947072235,
+          3.5055880234539707
+        ],
+        [
+          -0.0423686015765753,
+          0.014069567323184677,
+          70.1132971978563
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2436.1399645747756,
+      "t_md_s": 3181.146905899048,
+      "t_relax_s": 26.70135235786438,
+      "n_relax_steps": 78,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_03/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_03/post_relax.xyz"
+    },
+    {
+      "name": "BMLi_04",
+      "seed": 20262188,
+      "rng_streams": {
+        "velocities": 20262188,
+        "langevin": 21262191
+      },
+      "struct_sha256": {
+        "input": "5ea5294cc2954822",
+        "post_md": "a0b66cbc57a69ed7",
+        "post_relax": "98b96a494d68dcca"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MLi/BMLi_04.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -498.5600642477268,
+      "E_md_final": -508.3566519361853,
+      "E_post_relax": -517.0098785781558,
+      "delta_E_anneal_meV_per_atom": -153.7484527535753,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.008216443940252,
+          0.03086140643392076,
+          3.4938760369720616
+        ],
+        [
+          2.0253940975021694,
+          5.6603352943519,
+          3.5050317081844473
+        ],
+        [
+          -0.3173414337311693,
+          -0.08742538482600035,
+          70.42730858743737
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2398.1903444323134,
+      "t_md_s": 3262.724963903427,
+      "t_relax_s": 94.16994595527649,
+      "n_relax_steps": 274,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_04/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_04/post_relax.xyz"
+    },
+    {
+      "name": "BMLi_05",
+      "seed": 20274326,
+      "rng_streams": {
+        "velocities": 20274326,
+        "langevin": 21274329
+      },
+      "struct_sha256": {
+        "input": "bdacc32423a4c38e",
+        "post_md": "0118e77194d9693d",
+        "post_relax": "18f1a1e96c7a9ce3"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MLi/BMLi_05.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -496.49442365395646,
+      "E_md_final": -506.33503149510784,
+      "E_post_relax": -515.3737891908088,
+      "delta_E_anneal_meV_per_atom": -157.3280461404361,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.030416244401609,
+          0.020746373487198086,
+          3.476767884878863
+        ],
+        [
+          2.014033843118998,
+          5.6503651576586575,
+          3.5039263561166805
+        ],
+        [
+          -0.4426976232090983,
+          0.018730082173789964,
+          70.30354564667991
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2400.989244924066,
+      "t_md_s": 3343.5248329639435,
+      "t_relax_s": 80.18256759643555,
+      "n_relax_steps": 228,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_05/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMLi_05/post_relax.xyz"
+    },
+    {
+      "name": "BMP_00",
+      "seed": 20324066,
+      "rng_streams": {
+        "velocities": 20324066,
+        "langevin": 21324069
+      },
+      "struct_sha256": {
+        "input": "cb2acbfcfa702908",
+        "post_md": "4e9e6615bce00fab",
+        "post_relax": "94b955e8e4c563f9"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MP/BMP_00.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -528.2696798275799,
+      "E_md_final": -533.4230815946357,
+      "E_post_relax": -542.2420226280813,
+      "delta_E_anneal_meV_per_atom": -109.1589281289167,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.043804439719203,
+          0.0039482972903433135,
+          3.482153238930023
+        ],
+        [
+          2.013750047726596,
+          5.7220225429542975,
+          3.4900685858350085
+        ],
+        [
+          -0.17715923737795597,
+          -0.02827263509801953,
+          69.94989607633885
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2422.4316300590463,
+      "t_md_s": 3548.563850402832,
+      "t_relax_s": 54.570290327072144,
+      "n_relax_steps": 148,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_00/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_00/post_relax.xyz"
+    },
+    {
+      "name": "BMP_01",
+      "seed": 20311920,
+      "rng_streams": {
+        "velocities": 20311920,
+        "langevin": 21311923
+      },
+      "struct_sha256": {
+        "input": "573df626386b16c8",
+        "post_md": "c9248f583827a41d",
+        "post_relax": "ce25d63aa90e7904"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MP/BMP_01.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -528.6495312412769,
+      "E_md_final": -534.2093009413688,
+      "E_post_relax": -542.5340571732761,
+      "delta_E_anneal_meV_per_atom": -108.47285884374358,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.0378345347376765,
+          0.005191893718216779,
+          3.481226825182637
+        ],
+        [
+          2.00906319148586,
+          5.706820174247418,
+          3.495858111020658
+        ],
+        [
+          -0.13795405003882885,
+          0.08153801924157505,
+          69.8636382201002
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2408.1385965153618,
+      "t_md_s": 3462.8943564891815,
+      "t_relax_s": 38.77965426445007,
+      "n_relax_steps": 109,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_01/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_01/post_relax.xyz"
+    },
+    {
+      "name": "BMP_02",
+      "seed": 20299766,
+      "rng_streams": {
+        "velocities": 20299766,
+        "langevin": 21299769
+      },
+      "struct_sha256": {
+        "input": "0e4eaf193f70b63a",
+        "post_md": "3c2c2131b6848d3e",
+        "post_relax": "6d84b3789b56a3ac"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MP/BMP_02.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -527.2536832610781,
+      "E_md_final": -534.4883150416541,
+      "E_post_relax": -542.606978531799,
+      "delta_E_anneal_meV_per_atom": -119.94761930250687,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.0316437689381805,
+          -0.008956615094788643,
+          3.482159880208165
+        ],
+        [
+          1.9999684849349744,
+          5.706072498065965,
+          3.4858442002207455
+        ],
+        [
+          -0.19965321458480814,
+          -0.09597119245971047,
+          69.98893404373787
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2415.3853158031925,
+      "t_md_s": 3326.908806324005,
+      "t_relax_s": 63.49244952201843,
+      "n_relax_steps": 184,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_02/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_02/post_relax.xyz"
+    },
+    {
+      "name": "BMP_03",
+      "seed": 20304012,
+      "rng_streams": {
+        "velocities": 20304012,
+        "langevin": 21304015
+      },
+      "struct_sha256": {
+        "input": "1b6c61c797d16501",
+        "post_md": "93cd0420e01087be",
+        "post_relax": "7c3cd2e3a252b4b5"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MP/BMP_03.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -528.5116323477479,
+      "E_md_final": -533.9297936914678,
+      "E_post_relax": -542.3469145462485,
+      "delta_E_anneal_meV_per_atom": -108.08814217578622,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.037958827616985,
+          -0.008380153891697953,
+          3.4762297414268235
+        ],
+        [
+          2.0243174929633336,
+          5.618462473928717,
+          3.442316193308991
+        ],
+        [
+          -0.21559845620149096,
+          -0.5670916442948521,
+          69.89828536520932
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2384.4315652074397,
+      "t_md_s": 3332.578474998474,
+      "t_relax_s": 73.43696999549866,
+      "n_relax_steps": 207,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_03/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_03/post_relax.xyz"
+    },
+    {
+      "name": "BMP_04",
+      "seed": 20273899,
+      "rng_streams": {
+        "velocities": 20273899,
+        "langevin": 21273902
+      },
+      "struct_sha256": {
+        "input": "e1c0b7fb98c441ed",
+        "post_md": "b2dcf87656b7f1ac",
+        "post_relax": "e503b4c029253131"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MP/BMP_04.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -527.0207809452295,
+      "E_md_final": -534.9908581799854,
+      "E_post_relax": -542.8207379111375,
+      "delta_E_anneal_meV_per_atom": -123.43716379615621,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          5.9852566558877,
+          0.0035216194897767536,
+          3.4674288046610036
+        ],
+        [
+          1.9967962781472388,
+          5.686524513014303,
+          3.4701996475181724
+        ],
+        [
+          -0.542975776931201,
+          -0.3507086859883183,
+          70.29061977897538
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2407.4242284856073,
+      "t_md_s": 3384.53733420372,
+      "t_relax_s": 89.57172417640686,
+      "n_relax_steps": 253,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_04/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_04/post_relax.xyz"
+    },
+    {
+      "name": "BMP_05",
+      "seed": 20261721,
+      "rng_streams": {
+        "velocities": 20261721,
+        "langevin": 21261724
+      },
+      "struct_sha256": {
+        "input": "f1714638d3ec5fdd",
+        "post_md": "caadd3e38ea44a0f",
+        "post_relax": "dd904209cb2bf844"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/MP/BMP_05.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -525.2469937266699,
+      "E_md_final": -534.5109235246947,
+      "E_post_relax": -542.6463483103338,
+      "delta_E_anneal_meV_per_atom": -135.93245768487438,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.035586655754174,
+          -0.012505228787328695,
+          3.4784413839756314
+        ],
+        [
+          2.000418805593776,
+          5.687942757394095,
+          3.4778433526529122
+        ],
+        [
+          -0.24674436854682386,
+          -0.1818541937665595,
+          69.99608775319179
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2412.166169582773,
+      "t_md_s": 3421.6755254268646,
+      "t_relax_s": 76.47699522972107,
+      "n_relax_steps": 215,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_05/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/BMP_05/post_relax.xyz"
+    },
+    {
+      "name": "Bhost_00",
+      "seed": 20287624,
+      "rng_streams": {
+        "velocities": 20287624,
+        "langevin": 21287627
+      },
+      "struct_sha256": {
+        "input": "d52b11600f319c29",
+        "post_md": "ebdf99e72f891568",
+        "post_relax": "01d148d8b545418d"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/b2o3_site_2026_10_14/candidates_modelc10/host/Bhost_00.xyz",
+      "n_atoms": 124,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -516.5184044507041,
+      "E_md_final": -507.1757157227838,
+      "E_post_relax": -516.081594188808,
+      "delta_E_anneal_meV_per_atom": 3.5226634023877805,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.042943137060259,
+          -0.012489974905492628,
+          3.5052534182812853
+        ],
+        [
+          2.011558078521768,
+          5.681845268247034,
+          3.4896130334238937
+        ],
+        [
+          -0.17421603442446576,
+          -0.3145458055208675,
+          70.40726464701874
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2427.099603532281,
+      "t_md_s": 3389.019583463669,
+      "t_relax_s": 41.770652055740356,
+      "n_relax_steps": 120,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/Bhost_00/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/Bhost_00/post_relax.xyz"
+    },
+    {
+      "name": "NdMLi_00",
+      "seed": 20268407,
+      "rng_streams": {
+        "velocities": 20268407,
+        "langevin": 21268410
+      },
+      "struct_sha256": {
+        "input": "8c2f2d6accf55312",
+        "post_md": "e1ee37c5118224bc",
+        "post_relax": "218a720b4379c50c"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MLi/NdMLi_00.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -506.52166617952344,
+      "E_md_final": -513.591314853716,
+      "E_post_relax": -521.6974729950714,
+      "delta_E_anneal_meV_per_atom": -126.46505679623299,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.072545430842334,
+          0.008059041876728172,
+          3.5153636602370635
+        ],
+        [
+          2.0240688549030814,
+          5.66048344600172,
+          3.5287099504497332
+        ],
+        [
+          0.09710421878964706,
+          0.23226287375385588,
+          70.13925445400463
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2404.536715005762,
+      "t_md_s": 3305.1777606010437,
+      "t_relax_s": 64.09352040290833,
+      "n_relax_steps": 186,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_00/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_00/post_relax.xyz"
+    },
+    {
+      "name": "NdMLi_01",
+      "seed": 20272397,
+      "rng_streams": {
+        "velocities": 20272397,
+        "langevin": 21272400
+      },
+      "struct_sha256": {
+        "input": "2b3d267873dedc9e",
+        "post_md": "ea69d164f912084e",
+        "post_relax": "4c48b832d98b93a0"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MLi/NdMLi_01.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -507.46854172822174,
+      "E_md_final": -513.5710075623796,
+      "E_post_relax": -521.6274904934792,
+      "delta_E_anneal_meV_per_atom": -117.99123971047862,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.055502397473227,
+          0.00928954294656996,
+          3.5027654068300658
+        ],
+        [
+          2.0295894876721445,
+          5.696891178928493,
+          3.498736233936279
+        ],
+        [
+          0.055280668517011425,
+          -0.01026180492317883,
+          69.95962296077352
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2411.158886967896,
+      "t_md_s": 3296.096905708313,
+      "t_relax_s": 40.64302206039429,
+      "n_relax_steps": 120,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_01/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_01/post_relax.xyz"
+    },
+    {
+      "name": "NdMLi_02",
+      "seed": 20293219,
+      "rng_streams": {
+        "velocities": 20293219,
+        "langevin": 21293222
+      },
+      "struct_sha256": {
+        "input": "06c5cbf3926220f5",
+        "post_md": "3325f143e8cde17e",
+        "post_relax": "449171d2cb766aef"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MLi/NdMLi_02.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -506.76564702981756,
+      "E_md_final": -512.9221103189934,
+      "E_post_relax": -521.0613297294541,
+      "delta_E_anneal_meV_per_atom": -119.13068916363774,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.04534922530379,
+          0.010472034116477255,
+          3.4894676815855403
+        ],
+        [
+          2.0174016510895547,
+          5.707049990950667,
+          3.502606862026053
+        ],
+        [
+          -0.0950114085045756,
+          0.09379947122981624,
+          69.95391157698312
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2412.57253494945,
+      "t_md_s": 3225.951873064041,
+      "t_relax_s": 28.64711856842041,
+      "n_relax_steps": 84,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_02/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_02/post_relax.xyz"
+    },
+    {
+      "name": "NdMLi_03",
+      "seed": 20280817,
+      "rng_streams": {
+        "velocities": 20280817,
+        "langevin": 21280820
+      },
+      "struct_sha256": {
+        "input": "b9bfaec70e546ef1",
+        "post_md": "238bf1d17e7ec4a7",
+        "post_relax": "da47b63830734f17"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MLi/NdMLi_03.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -507.41512537317084,
+      "E_md_final": -512.484829736617,
+      "E_post_relax": -520.9531044765419,
+      "delta_E_anneal_meV_per_atom": -112.8164925280918,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.06604040672349,
+          0.0011100474251923133,
+          3.493873090780076
+        ],
+        [
+          2.0148440931446574,
+          5.696837659480272,
+          3.508099999370774
+        ],
+        [
+          -0.12862709637781822,
+          0.08327130580086055,
+          70.10019829342279
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2423.6869708383897,
+      "t_md_s": 3175.3285439014435,
+      "t_relax_s": 46.677056074142456,
+      "n_relax_steps": 137,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_03/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_03/post_relax.xyz"
+    },
+    {
+      "name": "NdMLi_04",
+      "seed": 20316558,
+      "rng_streams": {
+        "velocities": 20316558,
+        "langevin": 21316561
+      },
+      "struct_sha256": {
+        "input": "49131a3c644b6551",
+        "post_md": "67c65ddabcbea7b5",
+        "post_relax": "3761a2d5d7c20f5f"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MLi/NdMLi_04.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -505.6355824956504,
+      "E_md_final": -514.2746885367118,
+      "E_post_relax": -521.4543098879635,
+      "delta_E_anneal_meV_per_atom": -131.822728269276,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.035206984797455,
+          0.008854682126171975,
+          3.47570790459793
+        ],
+        [
+          2.0176989781486263,
+          5.706052943030851,
+          3.479840376568148
+        ],
+        [
+          -0.19093970061074664,
+          -0.08428745858721035,
+          69.84480491000038
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2408.9724091675066,
+      "t_md_s": 3221.992385864258,
+      "t_relax_s": 41.21659517288208,
+      "n_relax_steps": 122,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_04/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_04/post_relax.xyz"
+    },
+    {
+      "name": "NdMLi_05",
+      "seed": 20320516,
+      "rng_streams": {
+        "velocities": 20320516,
+        "langevin": 21320519
+      },
+      "struct_sha256": {
+        "input": "e462eeef5acf40b5",
+        "post_md": "1818cffd297ef858",
+        "post_relax": "fe2dd366b3d6cbce"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MLi/NdMLi_05.xyz",
+      "n_atoms": 120,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -509.31580969466546,
+      "E_md_final": -513.0365042068269,
+      "E_post_relax": -520.8573979603169,
+      "delta_E_anneal_meV_per_atom": -96.17990221376213,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.012460687570832,
+          -0.010291486435002016,
+          3.465554417481655
+        ],
+        [
+          1.9837390786921316,
+          5.687458475465293,
+          3.4841134865490258
+        ],
+        [
+          -0.3686813816458121,
+          -0.033323409603584334,
+          69.9496333613416
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2401.1481556210706,
+      "t_md_s": 3285.2851746082306,
+      "t_relax_s": 88.01842832565308,
+      "n_relax_steps": 257,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_05/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMLi_05/post_relax.xyz"
+    },
+    {
+      "name": "NdMP_00",
+      "seed": 20285748,
+      "rng_streams": {
+        "velocities": 20285748,
+        "langevin": 21285751
+      },
+      "struct_sha256": {
+        "input": "6079ba8611dc90c0",
+        "post_md": "6c25f71effa9b4f2",
+        "post_relax": "061ffae491703941"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MP/NdMP_00.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -505.1334494491931,
+      "E_md_final": -535.71214782577,
+      "E_post_relax": -546.3021836021624,
+      "delta_E_anneal_meV_per_atom": -321.63073557007226,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.014191044193859,
+          0.006997737594498194,
+          3.4817166159782187
+        ],
+        [
+          2.0117161534236114,
+          5.663014320361985,
+          3.4810634721150313
+        ],
+        [
+          -0.8043759169943484,
+          -0.5792693352040021,
+          71.03083939449141
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2442.1107759826523,
+      "t_md_s": 3501.4410009384155,
+      "t_relax_s": 115.10578274726868,
+      "n_relax_steps": 316,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_00/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_00/post_relax.xyz"
+    },
+    {
+      "name": "NdMP_01",
+      "seed": 20281502,
+      "rng_streams": {
+        "velocities": 20281502,
+        "langevin": 21281505
+      },
+      "struct_sha256": {
+        "input": "44c4252e93d07023",
+        "post_md": "deab6e830b7165e5",
+        "post_relax": "c02ffe6b59e4d987"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MP/NdMP_01.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -505.02174179759186,
+      "E_md_final": -536.2168886891697,
+      "E_post_relax": -545.6771002350158,
+      "delta_E_anneal_meV_per_atom": -317.6199877923747,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          5.974726725662639,
+          -0.011166264846616397,
+          3.487496956521215
+        ],
+        [
+          1.9984566907474588,
+          5.645636543778909,
+          3.45734930659162
+        ],
+        [
+          -0.9207124955561412,
+          -1.0146249244013437,
+          71.33535368099952
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2439.865214255417,
+      "t_md_s": 3491.6449735164642,
+      "t_relax_s": 137.11746382713318,
+      "n_relax_steps": 386,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_01/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_01/post_relax.xyz"
+    },
+    {
+      "name": "NdMP_02",
+      "seed": 20261448,
+      "rng_streams": {
+        "velocities": 20261448,
+        "langevin": 21261451
+      },
+      "struct_sha256": {
+        "input": "841eb08e2c4522ae",
+        "post_md": "dddd5d43f2a22d4f",
+        "post_relax": "ae51df7c9714ef2d"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MP/NdMP_02.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -503.62948595390503,
+      "E_md_final": -537.6550056526958,
+      "E_post_relax": -546.1395174767738,
+      "delta_E_anneal_meV_per_atom": -332.10962127241214,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          5.991796862579678,
+          0.023661245544246916,
+          3.4578190892064673
+        ],
+        [
+          2.0043320290461444,
+          5.725632839278405,
+          3.484288672927552
+        ],
+        [
+          -0.7120780738825847,
+          -0.17906956446745376,
+          70.38919279632741
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2428.0283453563798,
+      "t_md_s": 3344.7603430747986,
+      "t_relax_s": 86.4500424861908,
+      "n_relax_steps": 252,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_02/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_02/post_relax.xyz"
+    },
+    {
+      "name": "NdMP_03",
+      "seed": 20273594,
+      "rng_streams": {
+        "velocities": 20273594,
+        "langevin": 21273597
+      },
+      "struct_sha256": {
+        "input": "f9acbfc4fe3455ee",
+        "post_md": "24a596c06b3427dd",
+        "post_relax": "ddc5e4e8969ab517"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MP/NdMP_03.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -505.6714325263857,
+      "E_md_final": -537.2828642620046,
+      "E_post_relax": -545.3454339129626,
+      "delta_E_anneal_meV_per_atom": -309.953135832632,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.084543478447598,
+          0.0024620218302147845,
+          3.496396152793386
+        ],
+        [
+          2.035756705948976,
+          5.72529098987806,
+          3.4872919800183295
+        ],
+        [
+          -0.12074453692771417,
+          -0.1969292247613128,
+          70.1370709574875
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2448.121045261057,
+      "t_md_s": 3303.8398129940033,
+      "t_relax_s": 39.91490197181702,
+      "n_relax_steps": 115,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_03/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_03/post_relax.xyz"
+    },
+    {
+      "name": "NdMP_04",
+      "seed": 20303133,
+      "rng_streams": {
+        "velocities": 20303133,
+        "langevin": 21303136
+      },
+      "struct_sha256": {
+        "input": "2c70332a42c92bc8",
+        "post_md": "5f791b66ba78271c",
+        "post_relax": "21e26f442e4defbb"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MP/NdMP_04.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -503.1233426108059,
+      "E_md_final": -536.7333984079484,
+      "E_post_relax": -545.7819556604932,
+      "delta_E_anneal_meV_per_atom": -333.2704144506819,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.007502852197065,
+          0.026332256700431916,
+          3.4635037347636
+        ],
+        [
+          2.0160783284041712,
+          5.687780287580894,
+          3.483060313834732
+        ],
+        [
+          -0.8015092314425009,
+          -0.3279249790501675,
+          70.6587758585919
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2430.90156509673,
+      "t_md_s": 3360.373456954956,
+      "t_relax_s": 94.96813035011292,
+      "n_relax_steps": 272,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_04/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_04/post_relax.xyz"
+    },
+    {
+      "name": "NdMP_05",
+      "seed": 20298919,
+      "rng_streams": {
+        "velocities": 20298919,
+        "langevin": 21298922
+      },
+      "struct_sha256": {
+        "input": "42e85eda2bb87831",
+        "post_md": "b6ac560c95546edf",
+        "post_relax": "40bdd93b61f639f1"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/home/kgy/work/runs/ndo_site_2026_10_14/src10/db/inputs/ndo_site_2026_10_14/candidates_modelc10/MP/NdMP_05.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -502.1079695171928,
+      "E_md_final": -536.670832223906,
+      "E_post_relax": -544.3451814784642,
+      "delta_E_anneal_meV_per_atom": -329.97821844743225,
+      "cell_pre": [
+        [
+          6.068323323041438,
+          0.0,
+          3.5035497376181044
+        ],
+        [
+          2.0227744410138127,
+          5.7212757002319385,
+          3.5035497376181044
+        ],
+        [
+          0.0,
+          0.0,
+          70.07102278075999
+        ]
+      ],
+      "cell_post": [
+        [
+          6.039472649045459,
+          -0.015278670068498508,
+          3.513431283525044
+        ],
+        [
+          2.022972001807721,
+          5.702672369384311,
+          3.4714637887181854
+        ],
+        [
+          0.049800148456709256,
+          -0.47858230711442323,
+          70.18235519939988
+        ]
+      ],
+      "volume_pre": 2432.7643618683305,
+      "volume_post": 2424.960977476307,
+      "t_md_s": 3400.528990507126,
+      "t_relax_s": 53.31924366950989,
+      "n_relax_steps": 151,
+      "converged": true,
+      "post_md_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_05/post_md.xyz",
+      "post_relax_xyz": "/home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal_modelc10/NdMP_05/post_relax.xyz"
+    }
+  ]
+}

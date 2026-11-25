@@ -1,0 +1,351 @@
+{
+ "slug": "ahn2026_cej_agno3_pvp_li3n_anodefree",
+ "dpi": "native (docx-embedded)",
+ "maxpx": 3000,
+ "generated": "2026-09-07",
+ "extraction": "docx word/media/* direct extract (one PNG per figure; caption anchored by document order, figure precedes its caption). Not PDF-cropped.",
+ "sources": [
+  "/root/.claude/uploads/82ea256b-12bc-5a75-994e-7718d79c71ba/95146a32-Manuscript_CEJ.docx",
+  "/root/.claude/uploads/82ea256b-12bc-5a75-994e-7718d79c71ba/4ab7c149-Supplementary_Material_CEJ.docx",
+  "/root/.claude/uploads/82ea256b-12bc-5a75-994e-7718d79c71ba/3f3c5dbd-Graphical_Abstract_CEJ.docx"
+ ],
+ "note": "Table S1/S2 are real Word tables (not images) -> transcribed as text in the digest, no tab_*.png. Source PNGs carry alpha/palette transparency; all figures are composited onto a white background (a plain RGB convert renders them black-on-black and hides every axis label).",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Comparison of conventional physically mixed Ag–C and PVP-assisted AgNO3-based interlayers. (b) SEM image of the Ag particles used to fabricate the Ag–C 25 interlayer. (c) Surface SEM image and corresponding Ag elemental map of the Ag–C 25 interlayer. (d) Schematic illustration of the slurry-based fabrication process for the AgNO3–C–PVP interlayer.",
+   "w": 3000,
+   "h": 2981,
+   "src_native": [
+    5058,
+    5027
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Surface SEM images, corresponding Ag elemental maps and (b) HAADF-STEM images of the AgNO3–C 25 and AgNO3–C–PVP 25 interlayers. (c) XRD patterns, (d) Raman spectra, and (e) N 1s XPS spectra of the Ag–C 25, AgNO3–C 25, and AgNO3–C–PVP 25 interlayers.",
+   "w": 2296,
+   "h": 2060,
+   "src_native": [
+    2296,
+    2060
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Simulated initial charge profiles, (b) Li nucleation rate, (c) amount of Li nuclei, and (d) creep-equivalent areal current densities for interlayers with Ag-domain sizes of 10, 50, and 100 nm. (e) Pressure-temperature contour maps of the residual Li fraction (Q_res,Li/Q_charge) calculated using the creep-based descriptor at 0.5C for Ag-domain sizes of 10, 50, and 100 nm.",
+   "w": 2601,
+   "h": 1302,
+   "src_native": [
+    2601,
+    1302
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Cross-sectional SEM images and corresponding C and Ag elemental maps of cells employing (a) Ag–C 25, (b) AgNO3–C 25, and (c) AgNO3–C–PVP 25 interlayers after the initial charge.",
+   "w": 2034,
+   "h": 1830,
+   "src_native": [
+    2034,
+    1830
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) XRD patterns after the initial charge and (b) N 1s XPS spectra after the initial charge and subsequent discharge of the Ag–C 25, AgNO3–C 25, and AgNO3–C–PVP 25 interlayers. (c) Adsorption energies of a Li adatom at the adsorption minimum and the adjacent saddle-region configuration on the Li3N (001) surface, with the corresponding atomic models, and (d) calculated diffusion-energy profiles and (e) corresponding diffusion barriers for a Li adatom on the LiC6 (0001) and Li3N (001) surfaces.",
+   "w": 2298,
+   "h": 1686,
+   "src_native": [
+    2298,
+    1686
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) GITT profiles and (b) corresponding within-pulse polarizations (dE_t) of the Ag–C 25, AgNO3–C 25, and AgNO3–C–PVP 25 half-cells at 45 C. (c) Nyquist plots and (d) corresponding DRT spectra after the initial charge. (e) Initial Li-deposition profiles and (f) corresponding nucleation overpotentials and lithiation capacities. CCD measurements at (g) 60 C and (h) 45 C.",
+   "w": 2648,
+   "h": 2075,
+   "src_native": [
+    2648,
+    2075
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Schematic illustration of the operando pressure-monitoring setup and (b) simultaneously recorded stack pressure changes and voltage profiles of full cells employing Ag–C 25, AgNO3–C 25, and AgNO3–C–PVP 25 interlayers during cycling at 0.2C. (c, e) Initial charge–discharge voltage profiles at 0.1C and (d, f) long-term cycling performance at 0.2C and 45 C of full cells employing interlayers with nominal Ag contents of (c, d) 25 wt% and (e, f) 15 wt%.",
+   "w": 2447,
+   "h": 1839,
+   "src_native": [
+    2447,
+    1839
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Schematic illustration of the proposed mechanism for the AgNO3–C–PVP interlayer.",
+   "w": 3000,
+   "h": 1161,
+   "src_native": [
+    3044,
+    1179
+   ],
+   "src": "Manuscript_CEJ.docx"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. SEM image of the carbon black used for interlayer fabrication.",
+   "w": 650,
+   "h": 446,
+   "src_native": [
+    650,
+    446
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Photograph of the Ag–C 25 interlayer after fabrication.",
+   "w": 562,
+   "h": 549,
+   "src_native": [
+    562,
+    549
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Photographs of the AgNO3–C 25 and AgNO3–C–PVP 25 interlayers after fabrication.",
+   "w": 1136,
+   "h": 549,
+   "src_native": [
+    1136,
+    549
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Surface SEM images and corresponding Ag elemental maps of Ag–C 15, AgNO3–C 15, and AgNO3–C–PVP 15 interlayers.",
+   "w": 1934,
+   "h": 897,
+   "src_native": [
+    1934,
+    897
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. FT-IR spectra of pristine PVP and the AgNO3–PVP mixture.",
+   "w": 807,
+   "h": 642,
+   "src_native": [
+    807,
+    642
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. HAADF-STEM images and corresponding size distributions of AgNO3 domains in AgNO3–C 25 and AgNO3–C–PVP 25 interlayers.",
+   "w": 1304,
+   "h": 1019,
+   "src_native": [
+    1304,
+    1019
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. XRD patterns of the Ag–C 15, AgNO3–C 15, and AgNO3–C–PVP 15 interlayers after fabrication.",
+   "w": 757,
+   "h": 987,
+   "src_native": [
+    757,
+    987
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. Schematic illustration of the electrochemical model describing sequential carbon lithiation, Ag-assisted Li nucleation and growth, and diffusional creep of deposited Li toward the current collector within the Ag–C interlayer.",
+   "w": 3000,
+   "h": 1556,
+   "src_native": [
+    3522,
+    1827
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. Representative voltage and current profiles during a GITT pulse, illustrating the determination of the within-pulse polarization (dE_t = E_0+ - E_tau) over the pulse duration tau.",
+   "w": 861,
+   "h": 633,
+   "src_native": [
+    861,
+    633
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. Representative initial Li-deposition voltage profile illustrating the determination of the lithiation capacity (Q_lithiation) and Li nucleation overpotential (eta_nucleation).",
+   "w": 788,
+   "h": 632,
+   "src_native": [
+    788,
+    632
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. Initial Li-deposition voltage profiles of Li | LPSCl | interlayer half-cells containing the Ag–C 15, AgNO3–C 15, and AgNO3–C–PVP 15 interlayers at 0.1C and 45 C.",
+   "w": 766,
+   "h": 625,
+   "src_native": [
+    766,
+    625
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. Nyquist plots of Li | LPSCl | interlayer half-cells containing the Ag–C 15, AgNO3–C 15, and AgNO3–C–PVP 15 interlayers measured after the initial charge.",
+   "w": 854,
+   "h": 647,
+   "src_native": [
+    854,
+    647
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. DRT spectra of the Ag–C 15, AgNO3–C 15, and AgNO3–C–PVP 15 half-cells after the initial charge.",
+   "w": 841,
+   "h": 641,
+   "src_native": [
+    841,
+    641
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "file": "fig_S14.png",
+   "caption": "Fig. S14. Selected charge–discharge voltage profiles of NCA | LPSCl | interlayer full cells containing Ag–C 25, AgNO3–C 25, and AgNO3–C–PVP 25 interlayers during cycling at 0.2C and 45 C.",
+   "w": 2382,
+   "h": 626,
+   "src_native": [
+    2382,
+    626
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "file": "fig_S15.png",
+   "caption": "Fig. S15. Selected charge–discharge voltage profiles of NCA | LPSCl | interlayer full cells containing AgNO3–C 15 and AgNO3–C–PVP 15 interlayers during cycling at 0.2C and 45 C.",
+   "w": 1687,
+   "h": 659,
+   "src_native": [
+    1687,
+    659
+   ],
+   "src": "Supplementary_Material_CEJ.docx"
+  },
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "file": "fig_GA.png",
+   "caption": "Graphical Abstract (single image, no text in document body).",
+   "w": 584,
+   "h": 420,
+   "src_native": [
+    584,
+    420
+   ],
+   "src": "Graphical_Abstract_CEJ.docx"
+  }
+ ]
+}

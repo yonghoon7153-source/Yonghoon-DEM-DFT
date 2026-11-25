@@ -1,0 +1,787 @@
+{
+ "slug": "zhou2026_high_entropy_lgps_multicationic",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DFT 먹인 논문/49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+  "DFT 먹인 논문/49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+  "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Design and X-ray diffraction patterns of Li10MP2S12 electrolytes. a, Prototype composition design of Li10MP2S12 electrolytes with different element species. b, X-ray diffraction patterns of as-synthesized Li10MP2S12. Except for L10WP2S12 which exhibits an amorphous state, all reflections correspond to the cor­ responding Li10GeP2S12 phase. c, Cell volume and the configurational entropy of Li10MP2S12. 2",
+   "bbox": [
+    31.6,
+    418.0,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1225,
+   "dpi": 300,
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Arrhenius plot and crystal structure of Li10MP2S12. a, Arrhenius plots for the Li10MP2S12 ionic conductivity with temperature. b, Cyclic voltammogram curve of Li|LM0.2PS|stainless steel cell. The decomposition potential of the LM0.2PS phase exceeds 5 V. c, Rietveld refinements of XRD of LM0.2PS in this work. LM0.2PS crystallizes in the tetragonal P42/nmc space group and the inset is SEM image. d, Time-dependent mean square displacement (MSD) Li+ ions in LM0.2PS at different temperatures. e, Li+ probability density, yellow isosurfaces are lithium trajectory density in the LM0.2PS lattice at 300 K, obtained from AIMD simulations at the isosurface level of 2 × 10−5 Å−3. 3",
+   "bbox": [
+    31.6,
+    463.5,
+    565.8,
+    692.6
+   ],
+   "w": 2227,
+   "h": 955,
+   "dpi": 300,
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Entropy-induced modulation of electron localization and Li+ migration in LGPS-based solid electrolytes. a. Electron Localization Function (ELF)maps on the (001) plane for pristine LGPS and the LM0.2PS composition. b. The migration energy barrier was obtained by theoretical calculation for the models. (c) Potential energy as a function of the migration distance along the Li migration pathway. 4",
+   "bbox": [
+    31.6,
+    460.6,
+    565.8,
+    708.5
+   ],
+   "w": 2227,
+   "h": 1034,
+   "dpi": 300,
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. a, Raman spectrum of pristine LGPS and LM0.2PS electrolytes. b-c, 7Li and 31P MAS Nuclear Magnetic Resonance (NMR) spectra of pristine LGPS and LM0.2PS. d-k, X-ray photoelectron spectroscopy (XPS) spectra of the (d-h) pristine LGPS and (h-k) LM0.2PS. 5",
+   "bbox": [
+    31.6,
+    343.5,
+    565.8,
+    720.7
+   ],
+   "w": 2227,
+   "h": 1572,
+   "dpi": 300,
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Nanocrystalline characteristic analysis of LM0.2PS. a, HRTEM image of LM0.2PS showing lattice fringes in nanocrystalline domains; the inset shows an enlarged view of a representative region. b, FFT pattern of the selected HRTEM region. c, Corresponding line-scan intensity profiles of lattice fringes. d-k, HAADF- STEM and corresponding homogeneous distribution of Ge, Si, Sn, Ti, W, P and S elements in LM0.2PS. 6",
+   "bbox": [
+    31.6,
+    437.0,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1145,
+   "dpi": 300,
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.334
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Electrochemical performance of high-entropy LM0.2PS at 25 ◦C. a, Potential response of Li|LM0.2PS|Li symmetric cells undergoing a CCD measurement at 25 ◦C. b, Long-term galvanostatic cycling of the Li|LM0.2PS|Li symmetric cell at 0.5 mA cm−2. The inset shows selected Nyquist plots collected after representative cycling stages, illustrating the evolution of the interfacial impedance response. converted into the instantaneous galvanostatic polarization voltage, the overall evolution of the interfacial response suggests an initial interfacial rearrangement followed by a relatively stable impedance behavior at extended cycling times. Taken together, these results show that LM0.2PS not only exhibits a higher CCD, but also enables a more durable Li-metal interface than pristine LGPS, thereby improving tolerance against long- term Li plating/stripping. LNO@NCM721/LGPS/LiIn full cell sho",
+   "bbox": [
+    31.6,
+    49.7,
+    566.0,
+    376.0
+   ],
+   "w": 2228,
+   "h": 1360,
+   "dpi": 300,
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. The electrochemical performance of battery devices based on the LM0.2PS solid electrolyte. a, Rate performance of an LNO@NCM721/LM0.2PS/LiIn cell at 0.1, 0.5, 1.0, 2.0 and 3.0C. b, dQ/dV curves of the LNO@NCM721/LM0.2PS /LiIn cell within the voltage window of 2.0–4.2 V for the first, second and third cycles at 0.1C. c, Coulombic efficiency, Charge and Discharge capacity of the LNO@NCM721/LM0.2PS/LiIn cell cycled at 1C at 25 ◦C. 3. Conclusions analysis, Data curation. Wenzheng Li: Visualization, Software, Re­ sources, Data curation. Jingjing Luo: Visualization, Validation, Soft­ ware, Resources, Methodology. Chuanzhou Long: Writing – review & editing, Visualization, Validation, Formal analysis, Data curation. Suzhu Yu: Writing – review & editing, Supervision, Resources, Meth­ odology, Investigation. Jun Wei: Writing – review & editing, Supervi­ sion, Resources, Project administrat",
+   "bbox": [
+    31.6,
+    49.7,
+    566.0,
+    348.0
+   ],
+   "w": 2228,
+   "h": 1245,
+   "dpi": 300,
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1. Schematic of the PXRD testing device with quartz holder and Kapton polyimide film. b. The characteristic peak (203) within the 28 to 32° range",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.7,
+    550.2,
+    272.5
+   ],
+   "w": 2093,
+   "h": 830,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.857,
+   "recrop": "replaced 2026-10-13: the old crop under this key was SI Fig 2 (contour) - the 27-pp SI rendition split figure/caption across page breaks (S1 image on p4 bottom, caption on p5 top), so the tool cropped the next figure; re-extracted (tool crop) from the 28-pp rendition p5",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Fig. 2. Contour plot highlighting the evolution of the Bragg peaks of 28–32°.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.6,
+    477.1,
+    320.0
+   ],
+   "w": 1788,
+   "h": 1028,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.489,
+   "manual_crop": "added 2026-10-13 (tool crop from the 28-pp SI rendition p6); the 27-pp run had mislabeled this figure as S1 and never produced fS2",
+   "viewed": true
+  },
+  {
+   "key": "fS3-1",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3-1.png",
+   "caption": "Supplementary Fig. 3-1. Nyquist impedance plots of Li10GeP2S12 powder measured from −50 °C to 100 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.9,
+    71.7,
+    541.1,
+    212.1
+   ],
+   "w": 2031,
+   "h": 586,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.869,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-1.'), reported as missing fS3; clip = embedded raster xref 65 (1336x373 px) + 3 pt, 300 dpi, 28-pp SI p8",
+   "note": "SI Fig. 3-1 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)",
+   "viewed": true
+  },
+  {
+   "key": "fS3-2",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3-2.png",
+   "caption": "Supplementary Fig. 3-2. Nyquist impedance plots of Li10SiP2S12 powder measured from −50 °C to 100 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.3,
+    273.0,
+    538.0,
+    412.2
+   ],
+   "w": 2004,
+   "h": 581,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.869,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-2.'), reported as missing fS3; clip = embedded raster xref 67 (1318x370 px) + 3 pt, 300 dpi, 28-pp SI p8",
+   "note": "SI Fig. 3-2 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)"
+  },
+  {
+   "key": "fS3-3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3-3.png",
+   "caption": "Supplementary Fig. 3-3. Nyquist impedance plots of Li10SnP2S12 powder measured from −50 °C to 100 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.2,
+    473.2,
+    538.6,
+    613.3
+   ],
+   "w": 2012,
+   "h": 585,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.877,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-3.'), reported as missing fS3; clip = embedded raster xref 69 (1323x372 px) + 3 pt, 300 dpi, 28-pp SI p8",
+   "note": "SI Fig. 3-3 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)"
+  },
+  {
+   "key": "fS3-4",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3-4.png",
+   "caption": "Supplementary Fig. 3-4. Nyquist impedance plots of Li10TiP2S12 powder measured from 0 °C to 100 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.2,
+    70.5,
+    535.8,
+    245.0
+   ],
+   "w": 1987,
+   "h": 729,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.879,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-4.'), reported as missing fS3; clip = embedded raster xref 73 (1307x468 px) + 3 pt, 300 dpi, 28-pp SI p9",
+   "note": "SI Fig. 3-4 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)",
+   "viewed": true
+  },
+  {
+   "key": "fS3-5",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3-5.png",
+   "caption": "Supplementary Fig. 3-5. Nyquist impedance plots of Li10WP2S12 powder measured from 20 °C to 100 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    121.3,
+    303.1,
+    474.0,
+    476.0
+   ],
+   "w": 1471,
+   "h": 722,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.889,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-5.'), reported as missing fS3; clip = embedded raster xref 75 (963x463 px) + 3 pt, 300 dpi, 28-pp SI p9",
+   "note": "SI Fig. 3-5 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)",
+   "viewed": true
+  },
+  {
+   "key": "fS3-6",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3-6.png",
+   "caption": "Supplementary Fig. 3-6. Nyquist impedance plots of Li10Si1/3Ge1/3Sn1/3P2S12 powder measured from -50 °C to",
+   "rotated_deg": 0,
+   "bbox": [
+    63.3,
+    533.4,
+    531.8,
+    662.2
+   ],
+   "w": 1954,
+   "h": 538,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.88,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-6.'), reported as missing fS3; clip = embedded raster xref 77 (1284x341 px) + 3 pt, 300 dpi, 28-pp SI p9",
+   "note": "SI Fig. 3-6 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)"
+  },
+  {
+   "key": "fS3-7",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3-7.png",
+   "caption": "Supplementary Fig. 3-7. Nyquist impedance plots of Li10Si0.25Ge0.25Sn0.25Ti0.25P2S12 powder measured from -",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    69.9,
+    544.2,
+    198.9
+   ],
+   "w": 2056,
+   "h": 538,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.874,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-7.'), reported as missing fS3; clip = embedded raster xref 81 (1353x341 px) + 3 pt, 300 dpi, 28-pp SI p10",
+   "note": "SI Fig. 3-7 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)"
+  },
+  {
+   "key": "fS3-8",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3-8.png",
+   "caption": "Supplementary Fig. 3-8. Nyquist impedance plots of Li10Si0.25Ge0.25Sn0.25W0.25P2S12 powder measured from -",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    276.9,
+    547.2,
+    413.5
+   ],
+   "w": 2069,
+   "h": 570,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.875,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-8.'), reported as missing fS3; clip = embedded raster xref 83 (1361x362 px) + 3 pt, 300 dpi, 28-pp SI p10",
+   "note": "SI Fig. 3-8 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)"
+  },
+  {
+   "key": "fS3-9",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3-9.png",
+   "caption": "Supplementary Fig. 3-9. Nyquist impedance plots of Li10Si0.25Sn0.25W0.25Ti0.25P2S12 powder measured from -",
+   "rotated_deg": 0,
+   "bbox": [
+    61.4,
+    495.3,
+    533.9,
+    616.6
+   ],
+   "w": 1970,
+   "h": 507,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.87,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-9.'), reported as missing fS3; clip = embedded raster xref 85 (1295x320 px) + 3 pt, 300 dpi, 28-pp SI p10",
+   "note": "SI Fig. 3-9 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)"
+  },
+  {
+   "key": "fS3-10",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3-10.png",
+   "caption": "Supplementary Fig. 3-10. Nyquist impedance plots of Li10Si0.2Ge0.2Sn0.2W0.2Ti0.2P2S12 powder measured from",
+   "rotated_deg": 0,
+   "bbox": [
+    64.3,
+    71.4,
+    530.8,
+    196.7
+   ],
+   "w": 1944,
+   "h": 523,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.869,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-10.'), reported as missing fS3; clip = embedded raster xref 89 (1279x331 px) + 3 pt, 300 dpi, 28-pp SI p11",
+   "note": "SI Fig. 3-10 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3-11.png",
+   "caption": "Supplementary Fig. 3-11. Nyquist impedance plots of Li10Si0.2Ge0.2Sn0.2W0.2Ti0.2P2S12 hot-pressed powder",
+   "rotated_deg": 0,
+   "bbox": [
+    147.6,
+    279.4,
+    447.6,
+    535.3
+   ],
+   "w": 1251,
+   "h": 1067,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.885,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-11.'), reported as missing fS3; clip = embedded raster xref 91 (816x694 px) + 3 pt, 300 dpi, 28-pp SI p11",
+   "note": "SI Fig. 3-11 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)",
+   "viewed": true
+  },
+  {
+   "key": "fS3-12",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3-12.png",
+   "caption": "Supplementary Fig. 3-12. Pictures of the hot-pressed pellets was obtained by isothermal pressing at 400 °C",
+   "rotated_deg": 0,
+   "bbox": [
+    218.6,
+    594.7,
+    376.7,
+    714.8
+   ],
+   "w": 660,
+   "h": 501,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.09,
+   "manual_crop": "added 2026-10-13: extractor cannot parse sub-numbered SI labels ('Supplementary Fig. 3-12.'), reported as missing fS3; clip = embedded raster xref 93 (422x316 px) + 3 pt, 300 dpi, 28-pp SI p11",
+   "note": "SI Fig. 3-12 (label kept 'S3' so audit gap logic stays numeric; key fS3 = 3-11 so that 'Fig. S3-11' mentions link here)",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 12,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig. 4. Evaluation of electronic conductivity for LM0.2PS. a, DC polarization curves of LM0.2PS using symmetric cell configuration with blocking electrodes at different voltages from 300-500 mV. b, The relationship between the applied voltage and constant current is shown. Supplementary Fig. 3b depicts the linear relationship between the applied voltage and the steady-state current of LM0.2PS. The perfect linearity confirms that the electronic conduction process of the electrolyte obeys Ohm's law (U=IR) within the tested voltage range, indicating a constant electronic resistance and no non-linear electrochemical side reactions (e.g., electrolyte decomposition, ionic current interference). This result further verifies that the steady-state current in Supplementary Fig. 3a is dominated purely by electronic conduction, ensuring the reliability of the electronic conductivity ca",
+   "bbox": [
+    48.0,
+    196.6,
+    547.8,
+    580.7
+   ],
+   "w": 2083,
+   "h": 1601,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 15,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Fig. 5. Different views of the structure of LM0.2PS. The black lines represent the unit cell.",
+   "bbox": [
+    56.8,
+    171.4,
+    538.5,
+    288.5
+   ],
+   "w": 2008,
+   "h": 489,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.716
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 16,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Fig. 6. Linear plot of ln(퐷푇) vs. 1/T used to extract the activation energy for Li+ diffusion from the AIMD simulation.",
+   "bbox": [
+    48.0,
+    175.7,
+    547.3,
+    487.1
+   ],
+   "w": 2081,
+   "h": 1299,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 17,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Fig. 7. Li+ probability density, yellow isosurfaces are lithium trajectory density in the LM0.2PS lattice, obtained from AIMD simulations at 300 K.",
+   "bbox": [
+    48.0,
+    70.2,
+    547.3,
+    259.2
+   ],
+   "w": 2081,
+   "h": 789,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.618
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 18,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Fig.8. XPS spectra of the LM0.2PS.",
+   "bbox": [
+    48.0,
+    71.2,
+    538.3,
+    398.6
+   ],
+   "w": 2043,
+   "h": 1365,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 19,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Fig.9. Micro-morphology and elemental analysis of the LM0.2PS electrolyte. a, SEM image of the synthesized LM0.2PS powder. b, Corresponding element mappings of LM0.2PS, indicating homogeneous dispersion of all constituent elements within the particle. Elemental mapping images based on EDS analysis demonstrate the homogeneous distribution of the high-entropy dopants (Si, Ge, Sn, Ti, W) throughout the particle, without observable phase segregation or local enrichment. Furthermore, the P and S maps show consistent spatial overlap, supporting the structural integrity of the PS43- tetrahedral framework. These results confirm the successful incorporation of multiple cations into the LGPS-type lattice, forming a chemically uniform high-entropy LM0.2PS solid-state electrolyte.",
+   "bbox": [
+    48.0,
+    70.4,
+    547.3,
+    352.6
+   ],
+   "w": 2081,
+   "h": 1177,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.159
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 20,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Fig. 10. Representative nanocrystalline domains in LM0.2PS. a,b, HRTEM images showing lattice fringes with representative interplanar spacings. c, TEM image indicating the selected-area electron diffraction (SAED) region. d, Indexed SAED pattern confirming the polycrystalline LGPS-type character of LM0.2PS.",
+   "bbox": [
+    48.0,
+    65.6,
+    547.3,
+    404.1
+   ],
+   "w": 2081,
+   "h": 1411,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.08
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 21,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Fig. 11. Schematic diagram of a symmetric cell configuration with lithium metal as the electrode and LM0.2PS as the solid electrolyte.",
+   "bbox": [
+    48.0,
+    69.0,
+    547.3,
+    338.4
+   ],
+   "w": 2081,
+   "h": 1123,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.668
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 23,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Fig. 12. Electrochemical performance of high-entropy LGPS at 25 °C. a, Potential response of Li|LGPS|Li symmetric cells undergoing a CCD measurement at 25 °C. b, Electrochemical performance of the symmetric all-solid-state Li|LGPS|Li cell at 0.1 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.0,
+    550.1,
+    445.3
+   ],
+   "w": 2093,
+   "h": 1552,
+   "dpi": 300,
+   "src": "Sup) Zhou2026 ChemEngJ A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.888,
+   "recrop": "replaced 2026-10-13: the old crop under this key was SI Fig 13 (ASSB schematic, near-duplicate of fig_S13.png); re-extracted (tool crop) from the 28-pp rendition p23 = Li|LGPS|Li CCD + 0.1 mA cm-2 cycling",
+   "viewed": true
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 22,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Fig. 13. Schematic illustration of the ASSB configuration, with LiIn as the anode, LM0.2PS as the solid electrolyte for the cathode composite and separator. The cathode composite of LiNbO3-coated LiNi0.7Co0.2Mn0.1O2 powder, solid sulfide electrolyte LM0.2PS powder, and VGCF were mixed in a mass ratio of 80:20:3 using a mortar and pestle.",
+   "bbox": [
+    48.0,
+    391.4,
+    549.7,
+    661.8
+   ],
+   "w": 2091,
+   "h": 1128,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.671
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 23,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Fig. 14. Coulombic efficiency, charge capacity, and discharge capacity of the LNO@NCM721/LGPS/LiIn cell cycled at 1C (voltage window, 2.0–4.2 V vs. Li+/Li at 25 °C).",
+   "bbox": [
+    48.0,
+    380.8,
+    547.3,
+    621.1
+   ],
+   "w": 2081,
+   "h": 1002,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 24,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Fig.15. Impedance measurement for the LNO@NCM721/LM0.2PS/Li-In cell.",
+   "bbox": [
+    48.0,
+    250.2,
+    542.0,
+    444.1
+   ],
+   "w": 2059,
+   "h": 809,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. Configuration entropy of materials with different doping elements",
+   "bbox": [
+    90.0,
+    70.7,
+    505.3,
+    751.4
+   ],
+   "w": 1732,
+   "h": 2837,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.978
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 11,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2. Comparison of ionic conductivity and activation energy for LGPS-based solid electrolytes with different configurational complexities.",
+   "bbox": [
+    49.0,
+    70.7,
+    546.1,
+    790.5
+   ],
+   "w": 2072,
+   "h": 3000,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 13,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3. The electronic conductivity of the LM0.2PS pellet employed for the DC polarization test was derived from the data presented in Supplementary Fig. 2 at 25 °C.",
+   "bbox": [
+    49.0,
+    201.1,
+    546.3,
+    461.6
+   ],
+   "w": 2073,
+   "h": 1087,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 14,
+   "file": "tab_S4.png",
+   "caption": "Supplementary Table 4. Atomic coordinates, occupation factor and isotropic displacement parameters of LM0.2PS obtained from Rietveld refinement of XRD data (space group P42/nmc), a=b=8.70078 Å, c=12.59562 Å at 298 K.",
+   "bbox": [
+    49.0,
+    201.0,
+    548.7,
+    574.4
+   ],
+   "w": 2083,
+   "h": 1557,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 25,
+   "file": "tab_S5.png",
+   "caption": "Supplementary Table 5. Comparison of the electrochemical performance of this work with previously reported high-entropy sulfide electrolytes",
+   "bbox": [
+    49.0,
+    253.2,
+    546.3,
+    752.9
+   ],
+   "w": 2073,
+   "h": 2084,
+   "dpi": 300,
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.963
+  }
+ ],
+ "missing_labels": [],
+ "note": "2026-10-13 seminar-copy check (digest §22): main crops f1-f7 + tables + fS4-fS11,fS13-fS15 kept from the 2026-08-05 run (main PDF = same edition, pixel-identical re-render; SI content identical). Fixed: fS1 (was SI Fig 2) and fS12 (was SI Fig 13) replaced from the 28-pp SI rendition; fS2 + SI Fig 3-1..3-12 added (manual_crop). Old-rendition entries keep their old page numbers; 28-pp page = old page + 1 for S4-S11/tables S1-S4, +2 for S13/S14/S15/Table S5."
+}

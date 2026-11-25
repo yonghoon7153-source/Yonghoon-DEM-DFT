@@ -1,0 +1,8 @@
+﻿# VGCF confinement-vs-substrate 판정 — Origin-ready
+# 같은 변화(그래핀 벽 1L→2L)를 표면/갤러리 두 배치에 각각 가한 결과
+# ⚠ NEB 에너지 허용오차 ~20 meV (path_thr 0.05 eV/A × 이미지간격 0.41 A).
+#   표면 쪽 변화는 이 안이라 **0 과 구별되지 않는다** — '약간 악화'로 읽지 말 것.
+# kT(300 K) = 25.69 meV
+setting,Ea_1L_meV,Ea_2L_meV,delta_meV,within_tolerance
+Li on free graphene surface,272.95,284.81,+11.86,yes
+Li confined in gallery (hBN wall 1L),356.72,149.54,-207.18,no

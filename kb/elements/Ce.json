@@ -1,0 +1,47 @@
+{
+  "symbol": "Ce",
+  "name": "Cerium",
+  "Z": 58,
+  "role": "란타나이드 aliovalent 도펀트(CeO2/Ce2O3) — 우리 Nd/La/Gd/Sm RE³⁺ 도판트 계열의 동족이나, 계열 중 유일하게 Ce³⁺(4f¹)/Ce⁴⁺(4f⁰) redox 커플을 가진 변수: ceria(CeO2)는 산소저장(OSC)·redox buffer로 유명. Ce³⁺면 다른 Ln³⁺처럼 P 자리 aliovalent 치환+O 동반(P-O-Ce 가정), Ce⁴⁺면 4f⁰ 닫힌껍질(La³⁺ 유사). redox 활성이라 Li 금속 계면서 Ce⁴⁺→Ce³⁺ 환원 가능 — inert La/Nd/Gd과 다른 SEI 변수.",
+  "oxidation_states": ["+3", "+4"],
+  "electronegativity": 1.12,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹ 5s² 5p⁶ 5d¹ 6s²",
+    "electron_config": "[Xe] 4f¹ 5d¹ 6s²",
+    "valence_orbitals": "4f¹ 5d¹ 6s²(중성; Ln 중 드물게 5d¹ 동반) — Ce³⁺면 4f¹(개방껍질, S=1/2, ²F₅/₂), Ce⁴⁺면 4f⁰(빈 f, 닫힌껍질)",
+    "band_character": "Ce는 f-전자 물리의 교과서 사례. Ce³⁺=4f¹ 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~5-6 eV) 필수(Nd 프로토콜과 동일); 단일 4f 전자가 밴드갭 내 국재준위. Ce⁴⁺=4f⁰ 자체는 clean(La³⁺ 유사, 빈 4f는 전도대)이나 CeO2는 환원/산소공공 시 여분 전자가 Ce 4f에 국재(Ce³⁺ 폴라론) → +U 없으면 PBE가 비국재 오류 → ceria가 DFT+U 대표 벤치마크. O 2p→빈 Ce 4f 엣지(~3 eV), Ce 5d 더 위",
+    "bonding": "Ce–O 이온성(CeO2 fluorite CN8 / Ce2O3, hard-산 친산소 앵커), Ce–Cl/Ce–S(도핑·SEI); 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f¹ 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Ce3+_VI": 1.01,
+    "Ce3+_VIII": 1.143,
+    "Ce3+_IX": 1.196,
+    "Ce4+_VI": 0.87,
+    "Ce4+_VIII": 0.97,
+    "_note": "Shannon 1976: Ce³⁺ VI 1.01 A, VIII 1.143, IX 1.196; Ce⁴⁺ VI 0.87, VIII 0.97(CeO2 fluorite CN8). 란탄족 수축상 La(1.032)>Ce(1.01)>Pr(0.99); Ce⁴⁺는 Ce³⁺보다 훨씬 작음(산화 시 수축). Li⁺(0.76)보다 큼."
+  },
+  "representative_compounds": [
+    {"formula": "CeO2 (ceria)", "context": "도펀트 전구체/산소저장체", "battery_role": "Ce⁴⁺ 산화물; redox buffer·O 공급원; 산소공공 형성 시 2 Ce³⁺ 생성", "note": "fluorite 구조; 산소저장능(OSC)으로 촉매서 유명; Ce 3d u''' ~916.7 eV가 Ce⁴⁺ 지문(Ce⁴⁺%=u'''/14×100)"},
+    {"formula": "Ce2O3", "context": "환원형 산화물", "battery_role": "Ce³⁺ 산화물; Ce³⁺(4f¹) 국재전자·hard-산 O 앵커", "note": "A-type hexagonal; Li 금속 환원 분위기서 CeO2→Ce2O3(Ce³⁺) 경향 → redox 완충"},
+    {"formula": "Ce-O in doped argyrodite (P-O-Ce bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Ce와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; 단 Ce는 redox 활성이라 원자가 고정 안 될 수 있음"},
+    {"formula": "CeCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Ce³⁺ 염화물; 대체 Ce 원료·분해생성물", "note": "Ce³⁺ 안정 염화물(Ce⁴⁺ 염화물은 불안정) → 염화물 계면상은 Ce³⁺로 고정"}
+  ],
+  "sei_relevance": "Ce는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Ce³⁺가 친산소 hard-산 앵커(P-O-Ce 가정) — 여기까지는 Nd/La 계보와 동일. 단 Ce의 결정적 차이는 redox 활성: CeO2(Ce⁴⁺)는 Li 금속 환원서 Ce2O3/Ce³⁺로 환원되며 산소공공+전자를 완충(ceria OSC 그대로) → inert wide-gap 부동태(La/Nd/Gd)와 달리 '완전 비활성 절연 SEI'로 보긴 어려움. 이 redox 완충은 양날: H2S/O2 게터·자기치유엔 유리하나 전자상태를 갭에 넣거나 Li를 소모할 수 있음. XPS Ce 3d u''' 916.7 eV가 Ce⁴⁺ 생존 프로브. 정직히: Ce-argyrodite 직접 문헌 부재 → Nd/La 유비하되 redox 단서 병기.",
+  "xps": [
+    {"core": "Ce 3d5/2 (v)", "BE_eV": 882.5, "assignment": "Ce⁴⁺ in CeO2 주선(3d⁹4f⁰ 계열 v/v''/v''' 다중구조의 v)", "ref": "CeO2 XPS 표준 문헌 / xpsdatabase"},
+    {"core": "Ce 3d3/2 (u''') 위성", "BE_eV": 916.7, "assignment": "Ce⁴⁺ 지문 위성(3d⁹4f⁰ 최종상태); Ce⁴⁺%=u'''%/14×100로 원자가 정량", "ref": "CeO2 Ce 3d XPS 표준(u''' 916.3-916.8 eV 보고)"},
+    {"core": "Ce 3d5/2 (v0/v')", "BE_eV": 880.6, "assignment": "Ce³⁺ in Ce2O3 성분(3d⁹4f¹/4f² 최종상태, ~880.6/885.4 eV); Ce³⁺/Ce⁴⁺ 혼합 판별", "ref": "Ce2O3 XPS 문헌"}
+  ],
+  "raman": [
+    {"cm1": 465, "assignment": "CeO2 fluorite F2g 모드(주 라만선; 산소공공·입경·Ce³⁺ 함량에 민감)", "ref": "CeO2 Raman 표준"}
+  ],
+  "dos_character": "Ce³⁺는 4f¹(S=1/2) 개방껍질 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~5-6 eV) 필수(Nd 프로토콜과 동일); 단일 4f 전자가 갭 내 국재. CeO2(Ce⁴⁺, 형식상 4f⁰)는 O 2p->빈 Ce 4f로 좁은 갭(~3 eV), Ce 5d 더 위 — 그러나 환원/O-공공 시 여분 전자가 Ce 4f에 국재(Ce³⁺ 폴라론)하는데 PBE는 이를 비국재화(자기상호작용 오류)해 금속처럼 만듦 -> ceria가 DFT+U(및 hybrid) 필요성의 대표 케이스. 4f는 5s5p에 가려 결합은 5d/6s이므로 4f 국소상태는 명시 투영(projwfc 스핀분해).",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Ce³⁺ VI 1.01 / Ce⁴⁺ VI 0.87)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~5-6 eV) on 4f; ceria(CeO2)는 Ce³⁺ 폴라론 국재의 대표 벤치마크",
+    "CeO2 산소저장능(OSC)·redox buffer 문헌 — Ce⁴⁺/Ce³⁺ 커플과 산소공공 화학(우리 redox 단서의 근거)",
+    "CeO2 Ce 3d XPS 표준 — u''' ~916.7 eV = Ce⁴⁺ 지문, Ce⁴⁺%=u'''/14 (xpsdatabase)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · CeO2 XPS/Raman 표준 · DFT+U ceria 벤치마크); Ce는 계열 유일 redox-활성 RE라 inert La/Nd 유비에 Ce⁴⁺/Ce³⁺ redox 단서를 부기 — 우리 db 절대값과 분리."
+}

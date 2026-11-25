@@ -1,0 +1,181 @@
+# Wheatcroft 2023 Batteries & Supercaps 6 e202300032 — figure readout. ALL VALUES DIGITIZED (not stated in text). tools/litdb/wheatcroft2023_digitize.py
+figure,series,x_name,x_value,x_unit,y_name,y_value,y_unit,sigma_PfD2_MPa,flag,provenance
+2f,flat platen,D,7.168,um,P_f,11.355,mN,221.0,,digitized
+2f,flat platen,D,7.187,um,P_f,10.051,mN,194.6,,digitized
+2f,flat platen,D,7.327,um,P_f,10.965,mN,204.2,,digitized
+2f,flat platen,D,8.337,um,P_f,13.218,mN,190.2,,digitized
+2f,flat platen,D,8.791,um,P_f,18.104,mN,234.3,,digitized
+2f,flat platen,D,9.543,um,P_f,24.914,mN,273.6,,digitized
+2f,flat platen,D,9.986,um,P_f,29.741,mN,298.2,,digitized
+2f,flat platen,D,10.263,um,P_f,26.550,mN,252.1,,digitized
+2f,flat platen,D,10.281,um,P_f,19.593,mN,185.4,,digitized
+2f,flat platen,D,10.592,um,P_f,21.127,mN,188.3,,digitized
+2f,flat platen,D,10.593,um,P_f,17.872,mN,159.3,,digitized
+2f,flat platen,D,13.708,um,P_f,43.997,mN,234.1,,digitized
+2f,flat platen,D,14.502,um,P_f,37.452,mN,178.1,,digitized
+2f,flat platen,D,15.470,um,P_f,49.236,mN,205.7,,digitized
+2f,flat platen,D,18.373,um,P_f,28.809,mN,85.3,,digitized
+2f,cono-spherical,D,6.216,um,P_f,3.747,mN,97.0,,digitized
+2f,cono-spherical,D,6.603,um,P_f,4.387,mN,100.6,,digitized
+2f,cono-spherical,D,7.031,um,P_f,4.708,mN,95.2,,digitized
+2f,cono-spherical,D,7.985,um,P_f,3.893,mN,61.1,,digitized
+2f,cono-spherical,D,8.781,um,P_f,7.189,mN,93.2,,digitized
+2f,cono-spherical,D,8.836,um,P_f,5.152,mN,66.0,,digitized
+2f,cono-spherical,D,9.777,um,P_f,6.875,mN,71.9,,digitized
+2f,cono-spherical,D,10.060,um,P_f,4.733,mN,46.8,,digitized
+2f,cono-spherical,D,10.448,um,P_f,8.200,mN,75.1,,digitized
+2f,cono-spherical,D,10.605,um,P_f,7.901,mN,70.3,,digitized
+2f,cono-spherical,D,11.353,um,P_f,6.753,mN,52.4,,digitized
+2f,cono-spherical,D,15.837,um,P_f,10.448,mN,41.7,,digitized
+2f,cono-spherical,D,16.000,um,P_f,13.390,mN,52.3,,digitized
+2f,cono-spherical,D,17.226,um,P_f,12.176,mN,41.0,,digitized
+2f,cono-spherical,D,17.380,um,P_f,13.143,mN,43.5,,digitized
+3e,flat platen,D,6.855,um,P_f/D2,238.022,MPa,238.0,ok,digitized
+3e,flat platen,D,7.557,um,P_f/D2,193.910,MPa,193.9,ok,digitized
+3e,flat platen,D,7.827,um,P_f/D2,161.968,MPa,162.0,ok,digitized
+3e,flat platen,D,9.179,um,P_f/D2,155.601,MPa,155.6,ok,digitized
+3e,flat platen,D,9.843,um,P_f/D2,184.389,MPa,184.4,split-pair,digitized
+3e,flat platen,D,10.283,um,P_f/D2,184.389,MPa,184.4,split-pair,digitized
+3e,flat platen,D,10.200,um,P_f/D2,203.012,MPa,203.0,ok,digitized
+3e,flat platen,D,10.535,um,P_f/D2,161.078,MPa,161.1,ok,digitized
+3e,flat platen,D,11.343,um,P_f/D2,192.485,MPa,192.5,ok,digitized
+3e,flat platen,D,11.766,um,P_f/D2,213.858,MPa,213.9,ok,digitized
+3e,flat platen,D,14.004,um,P_f/D2,223.051,MPa,223.1,ok,digitized
+3e,flat platen,D,14.151,um,P_f/D2,185.726,MPa,185.7,ok,digitized
+3e,flat platen,D,16.276,um,P_f/D2,184.835,MPa,184.8,ok,digitized
+3e,flat platen,D,17.854,um,P_f/D2,89.339,MPa,89.3,ok,digitized
+3e,cono-spherical,D,6.166,um,P_f/D2,97.637,MPa,97.6,ok,digitized
+3e,cono-spherical,D,6.591,um,P_f/D2,100.938,MPa,100.9,ok,digitized
+3e,cono-spherical,D,7.006,um,P_f/D2,94.922,MPa,94.9,ok,digitized
+3e,cono-spherical,D,7.967,um,P_f/D2,60.883,MPa,60.9,ok,digitized
+3e,cono-spherical,D,8.758,um,P_f/D2,92.883,MPa,92.9,ok,digitized
+3e,cono-spherical,D,8.816,um,P_f/D2,65.970,MPa,66.0,ok,digitized
+3e,cono-spherical,D,9.748,um,P_f/D2,71.898,MPa,71.9,ok,digitized
+3e,cono-spherical,D,10.042,um,P_f/D2,46.868,MPa,46.9,ok,digitized
+3e,cono-spherical,D,10.502,um,P_f/D2,73.027,MPa,73.0,ok,digitized
+3e,cono-spherical,D,11.341,um,P_f/D2,51.936,MPa,51.9,ok,digitized
+3e,cono-spherical,D,15.825,um,P_f/D2,41.961,MPa,42.0,ok,digitized
+3e,cono-spherical,D,15.972,um,P_f/D2,51.914,MPa,51.9,ok,digitized
+3e,cono-spherical,D,17.363,um,P_f/D2,42.951,MPa,43.0,ok,digitized
+3e,FE node,D,5.000,um,P_f/D2,254.829,MPa,,px=17,digitized
+3e,FE node,D,10.000,um,P_f/D2,228.895,MPa,,px=17,digitized
+3e,FE node,D,5.000,um,P_f/D2,214.136,MPa,,px=41 (merged nodes),digitized
+3e,FE node,D,15.000,um,P_f/D2,213.691,MPa,,px=17,digitized
+3e,FE node,D,20.000,um,P_f/D2,205.385,MPa,,px=16,digitized
+3e,FE node,D,10.000,um,P_f/D2,198.022,MPa,,px=19,digitized
+3e,FE node,D,5.000,um,P_f/D2,195.928,MPa,,px=17,digitized
+3e,FE node,D,10.000,um,P_f/D2,192.842,MPa,,px=37 (merged nodes),digitized
+3e,FE node,D,20.000,um,P_f/D2,192.587,MPa,,px=22,digitized
+3e,FE node,D,10.000,um,P_f/D2,144.640,MPa,,px=18,digitized
+3e,FE node,D,5.000,um,P_f/D2,133.303,MPa,,px=17,digitized
+3e,FE node,D,15.000,um,P_f/D2,112.721,MPa,,px=17,digitized
+3e,FE node,D,5.000,um,P_f/D2,94.131,MPa,,px=17,digitized
+3e,FE node,D,10.000,um,P_f/D2,92.198,MPa,,px=20,digitized
+3e,FE node,D,10.000,um,P_f/D2,84.780,MPa,,px=16,digitized
+3e,FE node,D,5.000,um,P_f/D2,82.720,MPa,,px=16,digitized
+3e,FE node,D,15.000,um,P_f/D2,81.899,MPa,,px=39 (merged nodes),digitized
+3e,FE node,D,10.000,um,P_f/D2,80.015,MPa,,px=15,digitized
+3e,FE node,D,20.000,um,P_f/D2,77.255,MPa,,px=59 (merged nodes),digitized
+3e,FE node,D,15.000,um,P_f/D2,77.088,MPa,,px=16,digitized
+3c,cono-spherical max,z/D,0.442,-,sigma_tt/(P/D2),4.768,-,,x=z/D,digitized
+3c,flat platen max,z/D,0.367,-,sigma_tt/(P/D2),1.375,-,,x=z/D,digitized
+3c,centre z/D=0 (both),z/D,0.000,-,sigma_tt/(P/D2),0.786,-,,red over blue,digitized
+5,P,,,,Q3,93.257,MPa,,box,digitized
+5,P,,,,median,66.018,MPa,,box,digitized
+5,P,,,,Q1,46.882,MPa,,box,digitized
+5,E,,,,Q3,71.420,MPa,,box,digitized
+5,E,,,,median,62.416,MPa,,box,digitized
+5,E,,,,Q1,47.783,MPa,,box,digitized
+5,Ex,,,,Q3,101.136,MPa,,box,digitized
+5,Ex,,,,median,76.373,MPa,,box,digitized
+5,Ex,,,,Q1,59.939,MPa,,box,digitized
+5,3.0V,,,,Q3,47.783,MPa,,box,digitized
+5,3.0V,,,,median,36.189,MPa,,box,digitized
+5,3.0V,,,,Q1,28.873,MPa,,box,digitized
+5,3.4V,,,,Q3,50.259,MPa,,box,digitized
+5,3.4V,,,,median,38.440,MPa,,box,digitized
+5,3.4V,,,,Q1,34.726,MPa,,box,digitized
+5,3.9V,,,,Q3,23.920,MPa,,box,digitized
+5,3.9V,,,,median,18.968,MPa,,box,digitized
+5,3.9V,,,,Q1,12.214,MPa,,box,digitized
+5,4.3V,,,,Q3,14.690,MPa,,box,digitized
+5,4.3V,,,,median,10.413,MPa,,box,digitized
+5,4.3V,,,,Q1,7.036,MPa,,box,digitized
+6,P,D,6.211,um,P_f/D2,98.003,MPa,,ok,digitized
+6,P,D,6.589,um,P_f/D2,100.614,MPa,,ok,digitized
+6,P,D,7.011,um,P_f/D2,95.546,MPa,,ok,digitized
+6,P,D,7.979,um,P_f/D2,61.602,MPa,,ok,digitized
+6,P,D,8.761,um,P_f/D2,93.492,MPa,,ok,digitized
+6,P,D,8.821,um,P_f/D2,66.133,MPa,,ok,digitized
+6,P,D,9.759,um,P_f/D2,71.969,MPa,,ok,digitized
+6,P,D,10.043,um,P_f/D2,46.852,MPa,,ok,digitized
+6,P,D,10.434,um,P_f/D2,75.666,MPa,,ok,digitized
+6,P,D,10.600,um,P_f/D2,70.354,MPa,,kmeans-split,digitized
+6,P,D,11.347,um,P_f/D2,52.543,MPa,,ok,digitized
+6,P,D,15.818,um,P_f/D2,41.788,MPa,,ok,digitized
+6,P,D,15.978,um,P_f/D2,52.381,MPa,,ok,digitized
+6,P,D,17.199,um,P_f/D2,41.125,MPa,,kmeans-split,digitized
+6,P,D,17.369,um,P_f/D2,43.532,MPa,,kmeans-split,digitized
+6,E,D,8.400,um,P_f/D2,103.618,MPa,,ok,digitized
+6,E,D,8.622,um,P_f/D2,115.066,MPa,,ok,digitized
+6,E,D,9.190,um,P_f/D2,69.010,MPa,,ok,digitized
+6,E,D,9.235,um,P_f/D2,89.658,MPa,,kmeans-split,digitized
+6,E,D,10.436,um,P_f/D2,49.275,MPa,,ok,digitized
+6,E,D,10.456,um,P_f/D2,72.406,MPa,,kmeans-split,digitized
+6,E,D,10.988,um,P_f/D2,65.474,MPa,,ok,digitized
+6,E,D,11.347,um,P_f/D2,70.569,MPa,,ok,digitized
+6,E,D,11.402,um,P_f/D2,66.421,MPa,,ok,digitized
+6,E,D,11.958,um,P_f/D2,59.516,MPa,,ok,digitized
+6,E,D,12.550,um,P_f/D2,46.294,MPa,,ok,digitized
+6,E,D,13.811,um,P_f/D2,49.542,MPa,,ok,digitized
+6,E,D,13.873,um,P_f/D2,41.087,MPa,,kmeans-split,digitized
+6,E,D,14.043,um,P_f/D2,40.437,MPa,,kmeans-split,digitized
+6,E,D,15.234,um,P_f/D2,50.761,MPa,,ok,digitized
+6,E,D,18.274,um,P_f/D2,41.386,MPa,,ok,digitized
+6,Ex,D,7.318,um,P_f/D2,101.243,MPa,,ok,digitized
+6,Ex,D,9.080,um,P_f/D2,92.069,MPa,,kmeans-split,digitized
+6,Ex,D,11.061,um,P_f/D2,76.355,MPa,,ok,digitized
+6,Ex,D,11.993,um,P_f/D2,63.351,MPa,,ok,digitized
+6,Ex,D,13.955,um,P_f/D2,59.736,MPa,,ok,digitized
+6,Ex,D,14.991,um,P_f/D2,59.730,MPa,,ok,digitized
+6,3.0V,D,6.040,um,P_f/D2,48.809,MPa,,ok,digitized
+6,3.0V,D,7.320,um,P_f/D2,55.567,MPa,,kmeans-split,digitized
+6,3.0V,D,8.350,um,P_f/D2,46.527,MPa,,ok,digitized
+6,3.0V,D,9.876,um,P_f/D2,41.699,MPa,,kmeans-split,digitized
+6,3.0V,D,13.943,um,P_f/D2,5.798,MPa,,ok,digitized
+6,3.0V,D,13.973,um,P_f/D2,27.783,MPa,,kmeans-split,digitized
+6,3.0V,D,14.191,um,P_f/D2,30.544,MPa,,kmeans-split,digitized
+6,3.0V,D,15.294,um,P_f/D2,29.765,MPa,,ok,digitized
+6,3.4V,D,6.428,um,P_f/D2,92.294,MPa,,ok,digitized
+6,3.4V,D,7.559,um,P_f/D2,57.541,MPa,,kmeans-split,digitized
+6,3.4V,D,7.672,um,P_f/D2,40.092,MPa,,ok,digitized
+6,3.4V,D,8.388,um,P_f/D2,33.527,MPa,,kmeans-split,digitized
+6,3.4V,D,8.623,um,P_f/D2,36.952,MPa,,kmeans-split,digitized
+6,3.4V,D,8.856,um,P_f/D2,35.817,MPa,,kmeans-split,digitized
+6,3.4V,D,10.106,um,P_f/D2,43.102,MPa,,kmeans-split,digitized
+6,3.4V,D,11.432,um,P_f/D2,28.963,MPa,,ok,digitized
+6,3.9V,D,8.006,um,P_f/D2,20.625,MPa,,kmeans-split,digitized
+6,3.9V,D,8.381,um,P_f/D2,19.998,MPa,,kmeans-split,digitized
+6,3.9V,D,8.416,um,P_f/D2,31.413,MPa,,kmeans-split,digitized
+6,3.9V,D,8.533,um,P_f/D2,23.821,MPa,,kmeans-split,digitized
+6,3.9V,D,8.630,um,P_f/D2,25.642,MPa,,kmeans-split,digitized
+6,3.9V,D,9.868,um,P_f/D2,19.064,MPa,,ok,digitized
+6,3.9V,D,10.423,um,P_f/D2,12.037,MPa,,ok,digitized
+6,3.9V,D,10.479,um,P_f/D2,58.356,MPa,,ok,digitized
+6,3.9V,D,11.048,um,P_f/D2,17.282,MPa,,ok,digitized
+6,3.9V,D,11.943,um,P_f/D2,18.829,MPa,,kmeans-split,digitized
+6,3.9V,D,11.972,um,P_f/D2,21.030,MPa,,kmeans-split,digitized
+6,3.9V,D,12.216,um,P_f/D2,9.499,MPa,,kmeans-split,digitized
+6,3.9V,D,12.351,um,P_f/D2,7.323,MPa,,kmeans-split,digitized
+6,3.9V,D,12.900,um,P_f/D2,15.242,MPa,,ok,digitized
+6,3.9V,D,16.248,um,P_f/D2,8.826,MPa,,ok,digitized
+6,4.3V,D,6.325,um,P_f/D2,10.620,MPa,,ok,digitized
+6,4.3V,D,6.421,um,P_f/D2,7.414,MPa,,ok,digitized
+6,4.3V,D,7.549,um,P_f/D2,13.462,MPa,,ok,digitized
+6,4.3V,D,7.569,um,P_f/D2,17.665,MPa,,ok,digitized
+6,4.3V,D,8.161,um,P_f/D2,16.192,MPa,,ok,digitized
+6,4.3V,D,8.241,um,P_f/D2,6.497,MPa,,ok,digitized
+6,4.3V,D,9.400,um,P_f/D2,6.232,MPa,,ok,digitized
+6,4.3V,D,10.938,um,P_f/D2,10.027,MPa,,ok,digitized
+1d,peak,displacement,0.917,um,P,13.397,mN,,x=displacement µm,digitized
+2e,peak,displacement,0.559,um,P,49.614,mN,,x=displacement µm,digitized

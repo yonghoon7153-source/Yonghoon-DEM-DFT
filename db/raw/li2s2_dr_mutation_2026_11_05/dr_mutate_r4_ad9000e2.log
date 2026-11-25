@@ -1,0 +1,12 @@
+변이 436 개 (DQ 판 368 − 뺌 1 · 자리 옮김 12 · DR 69) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 2 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_drr4_w*
+DR61_anchor_off                  ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ70_prior_nonsci_changed_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR62_after_anchor_ignored        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR63_anchor_first_not_last       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR65_chain_dup_prev              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 4차 리뷰 P1 · P2: 폴더 판정 기록은 쓴 순서대로 (겹침 없이 · 판정 밖에서 바뀐 앞 판정도 그 자리에) · 다른 카드 값으로 낸 과학적 판정 기록 (손 판정 · 다른 checkout) 은 판독 불가 — 그 결과 · 닫힘을 장부로 옮기지
+DR66_chain_oob_prev_dropped      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 4차 리뷰 P1 · P2: 폴더 판정 기록은 쓴 순서대로 (겹침 없이 · 판정 밖에서 바뀐 앞 판정도 그 자리에) · 다른 카드 값으로 낸 과학적 판정 기록 (손 판정 · 다른 checkout) 은 판독 불가 — 그 결과 · 닫힘을 장부로 옮기지
+DR67_chain_current_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DR68_alien_card_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DR 전 4차 리뷰 P1 · P2: 폴더 판정 기록은 쓴 순서대로 (겹침 없이 · 판정 밖에서 바뀐 앞 판정도 그 자리에) · 다른 카드 값으로 낸 과학적 판정 기록 (손 판정 · 다른 checkout) 은 판독 불가 — 그 결과 · 닫힘을 장부로 옮기지
+DR69_immediate_melt_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DR 전 3차 리뷰 P2 · 4차 P3: 첫 시드의 녹음 fail · 계 닫힘이 이력 줄에만 남은 폴더 (정본 없음) — 시작 점검이 장부에 fail 과 closes_system 을 적고 그 자리에서 닫는 STOP melt (발사 0 · 확인으로 못 넘김
+끝: 빨강 9 / 9

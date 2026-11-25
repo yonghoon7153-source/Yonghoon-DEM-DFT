@@ -1,0 +1,54 @@
+[2026-09-28 22:36:48] START @ 61e41bc67f25669bfbbf063e4760d98f10597ca6 · PY=python3 · RUN=/home/ubuntu/runs/wad_cc_graphite_2026_09_28 · PWX=/home/ubuntu/apps/qe-7.4.1-gpu/bin/pw.x
+[2026-09-28 22:37:17] START @ 61e41bc67f25669bfbbf063e4760d98f10597ca6 · PY=python3 · RUN=/home/ubuntu/runs/wad_cc_graphite_2026_09_28 · PWX=/home/ubuntu/apps/qe-7.4.1-gpu/bin/pw.x
+[2026-09-28 22:39:38] selftest: ✅ cc_graphite selftest 52/52 통과
+[2026-09-28 22:39:38] ① 1단계 제약 이완 9 (맨 아래층 고정 · 나머지 z 만)
+[2026-09-28 22:39:49] DRY_RUN — 1단계 점검만 하고 끝낸다
+[2026-09-28 22:40:10] START @ 61e41bc67f25669bfbbf063e4760d98f10597ca6 · PY=python3 · RUN=/home/ubuntu/runs/wad_cc_graphite_2026_09_28 · PWX=/home/ubuntu/apps/qe-7.4.1-gpu/bin/pw.x
+[2026-09-28 22:42:30] selftest: ✅ cc_graphite selftest 52/52 통과
+[2026-09-28 22:42:30] ① 1단계 제약 이완 9 (맨 아래층 고정 · 나머지 z 만)
+[2026-09-30 09:28:02] ② 2단계 입력 생성 (이완 좌표 → 끝점 10 Å · far8 · E(d) · G3 · G4)
+{
+ "status": {
+  "CC_S33_AB": "OK",
+  "CC_S33_SP": "OK",
+  "CC_S33_AA": "OK",
+  "CC_M41_AB": "OK",
+  "CC_M41_SP": "OK",
+  "CC_M41_AA": "OK",
+  "CC_S44_AB": "OK",
+  "CC_M61_AB": "OK",
+  "CC_M41_AB_V2a": "OK"
+ },
+ "n_jobs": 44,
+ "d0_A": {
+  "CC_S33_AB": 3.35,
+  "CC_S33_SP": 3.35,
+  "CC_S33_AA": 3.4632,
+  "CC_M41_AB": 3.35,
+  "CC_M41_SP": 3.35,
+  "CC_M41_AA": 3.5162,
+  "CC_S44_AB": 3.35,
+  "CC_M61_AB": 3.35,
+  "CC_M41_AB_V2a": 3.35
+ }
+}
+→ /home/ubuntu/runs/wad_cc_graphite_2026_09_28/stage2_pkg/qe/jobs.json
+[2026-09-30 09:29:36] ③ 2단계 SCF
+[2026-09-30 22:01:18] ④ 집계 (ATM 제외 — repo 에서 --atm)
+model                d0        W   W_Eint    W_PBE     ΔD3   meV/C
+CC_S33_AB         3.350   0.3501   0.3523  -0.0840  0.4341    57.5
+CC_S33_SP         3.350   0.3435   0.3465  -0.0905  0.4340    56.5
+CC_S33_AA         3.463   0.2984   0.3030  -0.1001  0.3985    49.0
+CC_M41_AB         3.350   0.3190   0.3165  -0.0818  0.4008    52.4
+CC_M41_SP         3.350   0.3129   0.3129  -0.0878  0.4007    51.4
+CC_M41_AA         3.516   0.2740   0.2739  -0.0769  0.3509    45.0
+CC_S44_AB         3.350   0.3500   0.3487  -0.0869  0.4368    57.5
+CC_M61_AB         3.350   0.3200   0.3180  -0.0811  0.4011    52.6
+CC_M41_AB_V2a     3.350   0.3080   0.3055  -0.0828  0.3907    51.7
+대조 S33_AB 0.3501 · 허용대 [0.31, 0.47] → IN_BAND
+G3 {'CC_S33_AB': 'PASS', 'CC_M41_AB': 'PASS'} · G4 {'CC_S33_AB': 'PASS', 'CC_M41_AB': 'PASS'} · 두께 {'CC_S44_AB−CC_S33_AB': 'PASS', 'CC_M61_AB−CC_M41_AB': 'PASS'}
+S33: W_inc 2성 0.3322 · 1성 0.3329 · σ0 0.0179 · 괄호 [0.2984, 0.3501] · r 0.128 (1/9 = 0.111)
+M41: W_inc 2성 0.3032 · 1성 0.3040 · σ0 0.0158 · 괄호 [0.274, 0.319] · r 0.134 (1/9 = 0.111)
+미완 잡 []
+-> /home/ubuntu/runs/wad_cc_graphite_2026_09_28/cc_collect_v100.json
+[2026-09-30 22:03:11] ⑤ 회수 묶음 (tmp 제외)

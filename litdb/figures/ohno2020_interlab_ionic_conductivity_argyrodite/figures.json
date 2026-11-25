@@ -1,0 +1,655 @@
+{
+ "slug": "ohno2020_interlab_ionic_conductivity_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-25",
+ "sources": [
+  "nz9b02764_si_001.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Powder X-ray diffraction patterns of all the synthesized materials after homogenization. All synthesized materials were confirmed to be uniform and sufficiently pure before the Round Robin test.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.6,
+    36.6,
+    792.0,
+    488.8
+   ],
+   "w": 2993,
+   "h": 1779,
+   "dpi": 283,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 10,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Nyquist plots and Arrhenius behavior of all samples in dataset A. Values above 1 MHz were not used for fitting the spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.2,
+    54.4,
+    724.9,
+    490.9
+   ],
+   "w": 2825,
+   "h": 1820,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Nyquist plots and Arrhenius behavior of all samples in dataset B. S-11",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.2,
+    526.0
+   ],
+   "w": 2830,
+   "h": 1920,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 12,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Nyquist plots and Arrhenius behavior of all samples in dataset C.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    54.1,
+    728.5,
+    496.4
+   ],
+   "w": 2823,
+   "h": 1844,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 13,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Nyquist plots and Arrhenius behavior of all samples in dataset D. Reported conductivities correspond to the resistance at the axis intercept.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    48.5,
+    728.5,
+    490.9
+   ],
+   "w": 2823,
+   "h": 1844,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 14,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Nyquist plots and Arrhenius behavior of all samples in dataset E. Values above 1 MHz were not used for fitting the spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    47.3,
+    728.5,
+    490.4
+   ],
+   "w": 2823,
+   "h": 1848,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 15,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Nyquist plots and Arrhenius behavior of selected samples in dataset F.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    48.5,
+    728.5,
+    490.4
+   ],
+   "w": 2823,
+   "h": 1842,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 16,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Nyquist plots and Arrhenius behavior of all samples in dataset G.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    49.2,
+    727.4,
+    486.1
+   ],
+   "w": 2818,
+   "h": 1822,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 17,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Nyquist plots and Arrhenius behavior of selected samples in dataset H. Values above 1 MHz were not used for fitting the spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    55.4,
+    724.5,
+    491.6
+   ],
+   "w": 2806,
+   "h": 1819,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 18,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Comparison of the Nyquist plots at room temperature. All the values are normalized to reflect the resistivity (Ohm cm) using the reported cell constants. S-18",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    45.9,
+    730.2,
+    506.4
+   ],
+   "w": 2830,
+   "h": 1920,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 20,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Dependence of the reported total ionic conductivity of Sample 1 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    466.4
+   ],
+   "w": 2832,
+   "h": 1672,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.678
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 21,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Dependence of the reported activation barrier of Sample 1 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    469.7
+   ],
+   "w": 2832,
+   "h": 1685,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.714
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 22,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Dependence of the reported total ionic conductivity of Sample 2 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    462.1
+   ],
+   "w": 2832,
+   "h": 1654,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.7
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 23,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Dependence of the reported activation barrier of Sample 2 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    468.7
+   ],
+   "w": 2832,
+   "h": 1681,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.737
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 24,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Dependence of the reported total ionic conductivity of Sample 3 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    464.6
+   ],
+   "w": 2832,
+   "h": 1664,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.702
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 25,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Dependence of the reported activation barrier of Sample 3 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    442.7
+   ],
+   "w": 2832,
+   "h": 1573,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 26,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Dependence of the reported total ionic conductivity of Sample 4 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    451.8
+   ],
+   "w": 2832,
+   "h": 1611,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.771
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 27,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Dependence of the reported activation barrier of Sample 4 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    461.0
+   ],
+   "w": 2832,
+   "h": 1649,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.692
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 28,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Dependence of the reported total ionic conductivity of Sample 5 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    456.4
+   ],
+   "w": 2832,
+   "h": 1630,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.752
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 29,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Dependence of the reported activation barrier of Sample 5 against (a) pelletizing pressure, (b) relative density of the sample, (c) cell constant of the sample, (d) thickness of the pellet, (e) excitation voltage used during the measurement and (f) applied pressure during measurement. For completeness, in the case of (f), if pressure during measurement was unknown it was assumed to be < 1 MPa. The dashed line represents the average value and the shaded area the standard deviation from the average.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    465.4
+   ],
+   "w": 2832,
+   "h": 1668,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.714
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 30,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. (left) Ionic conductivity vs. inverse temperature plot for Sample 2 as measured by Group F. At temperatures below -75 C it is possible to de-convolute the bulk and grain boundary contributions in the impedance spectra. (right) Exemplary impedance spectrum measured at -100 C, where the grain impedance features are evident. Direct extrapolation of the grain conductivity vs. inverse temperature data estimates the upper-bound values of reported total ionic conductivities by other groups (see diamond-shaped data points at room temperature). As such, these results suggest that applied pressure during measurement is one of the main contributors for the reported spreads in ionic conductivities in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.1,
+    65.4,
+    730.7,
+    326.9
+   ],
+   "w": 2832,
+   "h": 1090,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Sample identification, lattice parameters and theoretical densities based on the crystallographic information Sample ID (1) (2) (3) (4) (5) Chemical Formula Li6.6P0.4Ge0.6S5I Li6PS5Cl Li6PS5Br0.75I0.25 Li6PS5Br0.25I0.75 Li6PS5I Lattice parameters (Å) 10.2613(2) 9.85910(10) 10.0536(2) 10.1197(2) 10.14190(7) Theoretical densities (g cm-3) 2.42 1.86 2.12 2.24 2.29",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    363.4,
+    719.3,
+    464.6
+   ],
+   "w": 2783,
+   "h": 422,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Sample preparation and measuring conditions Dataset A B C D E F G H Pressing Method Uniaxial Uniaxial Uniaxial Uniaxial Isostatic Uniaxial Uniaxial Uniaxial Pre-pressing pressure (MPa) 380 375 370 720 325 275 441 see Table S9 Electrode diameter (mm) 10 10 6 see Table S5 8.2 6 12.7 5 7 MHz 0.1 Hz 1 MHz 0.1 Hz 7 MHz 10 Hz 10 MHz 0.1 Hz 7 MHz 0.1 Hz 1 MHz 0.1 Hz 2 MHz 1 Hz 3 MHz 0.1 Hz Excitation Voltage Frequency (max) (min) (mV) 10 10 100 50 10 5 50 see Table S10 Contacting material Stainless Stainless steel Ti Au (sputtered) Au (sputtered) Au (sputtered) Stainless steel Stainless steel steel -40 to 60 °C -10 to 60 °C -40 to 60 °C -140 to 60 °C 30 to 100 °C 15 degrees (*) -20 to 90 °C 20 to 100 °C 5 degrees Temperature range 10 degrees incl. 25 °C 10 degrees incl. 25 °C 10 degrees incl. 25 °C 20 degrees incl. 25 °C see Table S10 Tstep 5 degrees Pressure during measurement (MPa) ",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    67.0,
+    726.7,
+    416.7
+   ],
+   "w": 2811,
+   "h": 1458,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Dataset A – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    151.9,
+    539.3,
+    289.5
+   ],
+   "w": 2033,
+   "h": 574,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 6,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Dataset B – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    304.6,
+    539.3,
+    429.0
+   ],
+   "w": 2033,
+   "h": 519,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 7,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Dataset C – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    67.0,
+    539.3,
+    191.6
+   ],
+   "w": 2033,
+   "h": 520,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 7,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Dataset D – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    219.6,
+    737.3,
+    395.0
+   ],
+   "w": 2859,
+   "h": 731,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.908,
+   "note": "bbox manually corrected by curator 2026-09-25 — auto-crop cut off the table footnotes 1-7 (density/relative-density definitions, kJ/mol->eV conversion, cooling-Ea bracket)"
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 7,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Dataset E – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    414.7,
+    539.3,
+    539.4
+   ],
+   "w": 2033,
+   "h": 520,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 8,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Dataset F – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    88.0,
+    539.3,
+    416.1
+   ],
+   "w": 2034,
+   "h": 1368,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": null,
+   "note": "manual crop 2026-09-25 (extract_figures.py dropped it: page 8 has 0 vector graphics under this caption -> '영역 없음'); same x-extent/dpi as auto tS9 on the same page"
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 8,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Dataset G – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    415.7,
+    539.3,
+    546.1
+   ],
+   "w": 2033,
+   "h": 544,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 9,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Dataset H – Reported values",
+   "rotated_deg": 0,
+   "bbox": [
+    52.1,
+    67.0,
+    660.7,
+    426.0
+   ],
+   "w": 2536,
+   "h": 1496,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.916,
+   "note": "bbox manually corrected by curator 2026-09-25 — auto-crop cut off the last rows (sample (5) Average/St Dev); table rules end at y=422 pt"
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 19,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Summary of the reported ionic conductivities and activations barriers used for the statistical analysis Sample 1 2 3 4 5 Group σ25 (S/cm) Ea (eV) σ25 (S/cm) Ea (eV) σ25 (S/cm) Ea (eV) σ25 (S/cm) Ea (eV) σ25 (S/cm) Ea (eV) A 0.00328 0.235 0.00179 0.411 0.000382 0.363 0.000009450 0.379 0.00000129 0.395 B 0.00557 0.198 0.00153 0.399 0.000268 0.332 0.000009300 0.451 0.00000127 0.433 C 0.0057 0.260 0.0026 0.390 0.00056 0.400 0.000013000 0.430 0.0000016 0.400 D 0.0029 0.259 0.0019 0.342 0.00031 0.342 0.000009700 0.394 0.00000065 0.487 E 0.0026 0.278 0.00214 0.383 0.000333 0.334 0.000012200 0.376 0.0000015 0.397 F 0.00137 0.326 0.0004435 0.394 0.000164 0.37 0.000005895 0.37 6.275E-07 0.400 G 0.00585 0.236 0.00298 0.352 0.00056 0.329 0.000016200 0.374 0.00000296 0.393 H 0.00291 0.241 0.000633 0.456 0.00019 0.341 0.000005613 0.373 0.000002246 0.419 Average 0.004 0.254 0.0018 0.391 0.00",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    67.0,
+    727.0,
+    434.0
+   ],
+   "w": 2816,
+   "h": 1530,
+   "dpi": 300,
+   "src": "nz9b02764_si_001.pdf",
+   "blank": 0.907,
+   "note": "bbox manually corrected by curator 2026-09-25 — extended to include the note below the table (Figs S11-S20 use individual F/H values -> 8 to 11 points)"
+  }
+ ]
+}

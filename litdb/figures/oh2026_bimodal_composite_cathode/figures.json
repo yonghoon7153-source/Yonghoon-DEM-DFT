@@ -1,0 +1,677 @@
+{
+ "slug": "oh2026_bimodal_composite_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/12. Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+  "이용민 교수님/12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Two-dimensional image characterization of composite cathodes. (a) Cross-sectional scanning electron microscopy (SEM) images of each composite cathode (scale bars: 20 μm). (b) Pore size and distribution within the composite cathodes, where the red regions represent pore structures. (c) Composite cathode−pore overlay images. Each column corresponds to one type of composite cathode. of single-crystalline CAMs\u0001primarily attributed to their superior mechanical robustness\u0001has attracted considerable attention, positioning them as promising candidates for ASSB cathodes.27 Their small particle size also enables short and efficient Li+ diffusion paths, resulting in excellent rate performance.28 Conversely, polycrystalline CAMs remain attractive due to their cost-effective manufacturability and high packing density, which contribute to elevated volumetric energy density.29−31 Moreover, ap",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    270.2
+   ],
+   "w": 2151,
+   "h": 900,
+   "dpi": 300,
+   "src": "12. Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.467
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical characterization of composite cathodes. (a) First charge/discharge profiles of ASSB cells at 0.1 C. (b) First charge/ discharge profiles at 0.5 C. (c) Cycling stability over 200 galvanostatic cycles at 0.5 C. (d) Volumetric energy densities of each composite cathode at 0.1 and 0.5 C, and the percentage decrease in energy density with increasing C-rate (volumetric energy density refers only to the composite cathode). (e) Rate performance of ASSBs at various C-rates from 0.1 to 3 C. The numbers at the top indicate the C-rate applied at each rate step. (f) Volume fractions of materials and pores, and tortuosity values derived from these volume fractions. Colors in the columns represent the material volume fractions for each composite cathode, and the overlaid dots indicate the corresponding ionic tortuosity factors. (g) Nyquist plots of AC impedance for electron-bl",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    450.4
+   ],
+   "w": 2151,
+   "h": 1651,
+   "dpi": 300,
+   "src": "12. Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Electrochemical impedance spectroscopy (EIS) analysis and surface characterization of the composite cathodes. Distribution of relaxation time (DRT) curves obtained (a) before and (b) after galvanostatic cycling, with peaks D1−D4 assigned to distinct kinetic processes. X-ray photoelectron spectra of (c) S 2p and (d) P 2p acquired after galvanostatic cycling. Time-of-flight secondary ion mass spectrometry (ToF-SIMS) spectra of negatively charged interfacial fragments: (e) PS4 3−-related fragment PS−(m/z = 62.9458) and phosphate-related fragment PO2 −(m/z = 62.9636); (f) polysulfide-related fragment S2 −(m/z = 63.9441) and sulfite/sulfate-related fragment SO2 −(m/z = 63.9619).",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    661.8
+   ],
+   "w": 2151,
+   "h": 2532,
+   "dpi": 300,
+   "src": "12. Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. X-ray diffraction (XRD) analysis of CAMs and mechanical characterization of composite cathodes. (a) First charge/discharge profiles obtained during operando XRD of a LIB. (b) Powder XRD patterns of NCWA and NCM. (c) Contour plots of operando XRD patterns during the first cycle (right) with corresponding charge/ discharge curves (left). The upper plots correspond to NCWA, and the lower to NCM. Peaks that remain stationary throughout cycling\u0001 appearing near 2θ ≈46°, 51°, 53°, 71°, and 85°\u0001originate from the Be window of the operando XRD cell kit (PDF #01-072-2381), while the additional peaks near 65° and 78° arise from the Al current collector (PDF #00-004-0787). (d) Variations in the a- and c-axis lattice parameters and (e) unit-cell volume with respect to cell voltage for NCWA and NCM. (f) Electrochemical pressiometry results for each composite cathode, showing the average pres",
+   "bbox": [
+    309.4,
+    54.4,
+    561.5,
+    586.3
+   ],
+   "w": 1051,
+   "h": 2217,
+   "dpi": 300,
+   "src": "12. Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.615
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Cross-sectional SEM images from Figure 1 were utilized to reconstruct three-dimensional electrode structures (40 × 40 × thickness μm3), as shown in Figure 5a. The thickness of each reconstructed model was determined from the tap density values listed in Table S1 to accurately reflect experimental variations in packing density and porosity. To more accurately model mechanical degradation resulting from CAM volume contraction, multiphysics simulations incorporated the experimentally obtained unit-cell volume change data shown in Figure 4e. (a) Three- dimensional reconstructed structures for each composite cathode as a function of CAM fraction. Colors denote materials as follows: gray, NCM; dark gray, NCWA; dark yellow, SSE; black, CC. (b) Elastic strain energy density in the composite cathodes during charging to 4.3 V (Li+/Li), simulated by accounting for CAM contraction and poro",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    523.4
+   ],
+   "w": 2151,
+   "h": 1955,
+   "dpi": 300,
+   "src": "12. Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.658
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 14,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Cross-sectional SEM images of (a) CAM10:0, (b) CAM8:2, (c) CAM7:3, (d) CAM6:4,",
+   "bbox": [
+    66.0,
+    79.0,
+    549.0,
+    590.9
+   ],
+   "w": 2013,
+   "h": 2133,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.49
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 16,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Each composite cathode pellet used for He pycnometry measurements. Interestingly,",
+   "bbox": [
+    66.0,
+    79.1,
+    543.5,
+    271.2
+   ],
+   "w": 1990,
+   "h": 801,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.366
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 19,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Cross-sectional SEM images of the NCWA. At each magnification, Secondary",
+   "bbox": [
+    66.0,
+    79.0,
+    549.0,
+    370.9
+   ],
+   "w": 2013,
+   "h": 1217,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.406
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 23,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Chronoamperometry curves for each composite cathode were measured over 0.1–0.5",
+   "bbox": [
+    66.0,
+    79.0,
+    549.0,
+    561.6
+   ],
+   "w": 2013,
+   "h": 2011,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 24,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Nyquist plots from electrochemical impedance spectroscopy (EIS) before and after",
+   "bbox": [
+    66.0,
+    79.1,
+    549.0,
+    250.6
+   ],
+   "w": 2013,
+   "h": 715,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 25,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. (a)–(e) correspond to CAM10:0, CAM8:2, CAM7:3, CAM6:4, and CAM0:10 and",
+   "bbox": [
+    66.0,
+    79.1,
+    549.0,
+    333.8
+   ],
+   "w": 2013,
+   "h": 1062,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 26,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. XPS spectra measured prior to galvanostatic cycling are presented for CAM10:0 and",
+   "bbox": [
+    66.0,
+    79.1,
+    549.0,
+    301.5
+   ],
+   "w": 2013,
+   "h": 928,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 27,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Rietveld refinement of XRD data of (a) NCWA and (b) NCM.",
+   "bbox": [
+    66.0,
+    79.1,
+    530.7,
+    264.0
+   ],
+   "w": 1937,
+   "h": 771,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 29,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Operando electrochemical pressiometry results for each composite cathode. Panels (a)",
+   "bbox": [
+    66.0,
+    79.1,
+    549.0,
+    550.3
+   ],
+   "w": 2013,
+   "h": 1964,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 38,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Shown for S-LPSCl1.5 are (a) a Nyquist plot from electrochemical impedance",
+   "bbox": [
+    66.0,
+    79.1,
+    549.0,
+    221.0
+   ],
+   "w": 2013,
+   "h": 592,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.786
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 39,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. (a) and (b) show particle size distribution results for NCWA and NCM, respectively,",
+   "bbox": [
+    66.0,
+    79.1,
+    549.0,
+    385.4
+   ],
+   "w": 2013,
+   "h": 1277,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.616
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 40,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. SEM images of LTO. (a) Low-magnification overview of particle morphology. (b)",
+   "bbox": [
+    66.0,
+    79.1,
+    549.0,
+    239.7
+   ],
+   "w": 2013,
+   "h": 670,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.338
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 41,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Li6PS5Cl (LPSCl1.0) used for ASSB fabrication and effective ionic conductivity measurements. (a) A Nyquist plot from electrochemical impedance spectroscopy (EIS) of",
+   "bbox": [
+    66.0,
+    99.7,
+    549.0,
+    246.4
+   ],
+   "w": 2013,
+   "h": 612,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.782
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 42,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Variation of the Young’s modulus of layered oxides with lithium concentration.",
+   "bbox": [
+    66.0,
+    79.1,
+    523.2,
+    289.1
+   ],
+   "w": 1906,
+   "h": 876,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 15,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Tap density as a function of SSE presence and CAM ratio. Porosity from SEM images",
+   "bbox": [
+    67.0,
+    80.6,
+    548.0,
+    306.3
+   ],
+   "w": 2005,
+   "h": 942,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 17,
+   "file": "tab_S2.png",
+   "caption": "Table S2. 1st cycle charge capacity, discharge capacity, and coulombic efficiency for each",
+   "bbox": [
+    67.0,
+    80.5,
+    548.0,
+    273.1
+   ],
+   "w": 2005,
+   "h": 803,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.616
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 18,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Cycling stability characteristics, volumetric energy density, and the rate of decrease in",
+   "bbox": [
+    67.0,
+    103.5,
+    548.0,
+    648.1
+   ],
+   "w": 2005,
+   "h": 2270,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.565
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 20,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Discharge capacity at various C rates for each composite cathode.",
+   "bbox": [
+    67.0,
+    80.6,
+    527.9,
+    417.3
+   ],
+   "w": 1921,
+   "h": 1404,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.548
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 21,
+   "file": "tab_S5.png",
+   "caption": "Table S5. EIS results and effective ionic/electronic conductivity for each composite cathode.",
+   "bbox": [
+    67.0,
+    80.6,
+    527.9,
+    324.3
+   ],
+   "w": 1921,
+   "h": 1017,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.581
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 22,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Ionic tortuosity of each composite cathode and the volume of each material within the",
+   "bbox": [
+    67.0,
+    80.6,
+    548.0,
+    433.8
+   ],
+   "w": 2005,
+   "h": 1473,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.67
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 28,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Rietveld refinement results for the NCWA and NCM.",
+   "bbox": [
+    67.0,
+    95.5,
+    527.9,
+    486.5
+   ],
+   "w": 1921,
+   "h": 1631,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.551
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 30,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Pressure change for each composite cathode. Pressure change was measured during",
+   "bbox": [
+    67.0,
+    94.4,
+    548.0,
+    266.3
+   ],
+   "w": 2005,
+   "h": 717,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.63
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 31,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Experimentally measured effective ionic conductivity, simulated effective ionic",
+   "bbox": [
+    67.0,
+    80.6,
+    548.0,
+    397.0
+   ],
+   "w": 2005,
+   "h": 1320,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.61
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 32,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Simulated mean pore size and the specific contact area between CAM and SSE.",
+   "bbox": [
+    67.0,
+    80.6,
+    527.9,
+    204.3
+   ],
+   "w": 1921,
+   "h": 517,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.651
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 33,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Experimentally measured effective electronic conductivity, simulated effective",
+   "bbox": [
+    67.0,
+    80.6,
+    548.0,
+    328.8
+   ],
+   "w": 2005,
+   "h": 1035,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 34,
+   "file": "tab_S12.png",
+   "caption": "Table S12. For each composite cathode: the number of contact points between CAM, and the",
+   "bbox": [
+    67.0,
+    80.6,
+    548.0,
+    235.0
+   ],
+   "w": 2005,
+   "h": 645,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.724
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 35,
+   "file": "tab_S13.png",
+   "caption": "Table S13. The volume fractions for each component in the 3D reconstructed electrode are shown",
+   "bbox": [
+    67.0,
+    80.6,
+    548.0,
+    259.8
+   ],
+   "w": 2005,
+   "h": 748,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "tS14",
+   "kind": "table",
+   "label": "S14",
+   "page": 36,
+   "file": "tab_S14.png",
+   "caption": "Table S14. Material parameters for each component.",
+   "bbox": [
+    67.0,
+    80.6,
+    528.1,
+    238.7
+   ],
+   "w": 1922,
+   "h": 660,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.54
+  },
+  {
+   "key": "tS15",
+   "kind": "table",
+   "label": "S15",
+   "page": 37,
+   "file": "tab_S15.png",
+   "caption": "Table S15. Symbols, values, units, and descriptions for each parameter. Symbol Value Unit Description 𝜎𝑆𝐸 10 mS cm−1 Ionic conductivity of solid electrolyte 𝜎𝑁𝐶𝑊𝐴 13.7 mS cm−1 Electronic conductivity of NCWA 𝜎𝑁𝐶𝑀 2.45 mS cm−1 Electronic conductivity of NCM 𝜎𝐶𝐵 1000 mS cm−1 Electronic conductivity of carbon black 𝑅𝑐,𝑆𝐸|𝑆𝐸 4.5×10−6 Ω m2 Area-specific interparticle contact resistance of the solid electrolyte 𝑅𝑐,𝑁𝐶𝑊𝐴|𝑁𝐶𝑊𝐴 1.0×10−7 Ω m2 Area-specific interparticle contact resistance of NCWA 𝑅𝑐,𝑁𝐶𝑀|𝑁𝐶𝑀 1.0×10−7 Ω m2 Area-specific interparticle contact resistance of NCM 𝑅𝑐,𝑁𝐶𝑊𝐴|𝑁𝐶𝑀 1.5×10−7 Ω m2 Area-specific interparticle contact resistance between NCWA and NCM 𝜈𝑆𝐸 0.30 - Poisson’s ratio of solid electrolyte 𝜈𝐴𝑀 0.25 - Poisson’s ratio of active material 𝐸𝑆𝐸 22 GPa Young’s modulus of solid electrolyte",
+   "bbox": [
+    67.0,
+    80.6,
+    537.5,
+    384.2
+   ],
+   "w": 1961,
+   "h": 1266,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.525
+  },
+  {
+   "key": "tS16",
+   "kind": "table",
+   "label": "S16",
+   "page": 43,
+   "file": "tab_S16.png",
+   "caption": "Table S16. Checklist of experimental details in this work.",
+   "bbox": [
+    67.0,
+    80.6,
+    545.2,
+    670.4
+   ],
+   "w": 1993,
+   "h": 2459,
+   "dpi": 300,
+   "src": "12. Sup) Bimodal Composite Cathodes Advancing the Chemo-Mechanical Integrity and Kinetics for All-Solid-State Batteries.pdf",
+   "blank": 0.913
+  }
+ ]
+}

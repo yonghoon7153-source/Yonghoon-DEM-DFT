@@ -1,0 +1,163 @@
+{
+ "slug": "kogutetsion2002_ep_sphere_rigid_flat",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 A deformable sphere pressed by a rigid ﬂat",
+   "bbox": [
+    76.2,
+    30.8,
+    284.4,
+    143.9
+   ],
+   "w": 868,
+   "h": 472,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Model description",
+   "bbox": [
+    337.3,
+    30.8,
+    526.2,
+    218.0
+   ],
+   "w": 788,
+   "h": 781,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Evolution of the plastic region in the sphere tip for 12 ÏvÕvcÏ110",
+   "bbox": [
+    54.5,
+    30.8,
+    306.0,
+    268.8
+   ],
+   "w": 1049,
+   "h": 993,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Evolution of the plastic region in the sphere tip for 1 ÏvÕvcÏ11",
+   "bbox": [
+    306.0,
+    30.8,
+    556.8,
+    296.2
+   ],
+   "w": 1047,
+   "h": 1107,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 3,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Dimensionless radial location, rÕacc , of the inner elastic-plastic boundary on the sphere surface showing its shrinkage for 6ÏvÕvcÏ68 Journal of Applied Mechanics SEPTEMBER 2002, Vol. 69 Õ 659",
+   "bbox": [
+    54.5,
+    615.0,
+    557.5,
+    701.3
+   ],
+   "w": 2096,
+   "h": 361,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 4,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Radial location of inner and outer elastic-plastic bound- aries on the sphere surface for 6ÏvÕvcÏ110",
+   "bbox": [
+    54.5,
+    30.8,
+    314.0,
+    313.9
+   ],
+   "w": 1082,
+   "h": 1180,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.972
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 4,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Dimensionless mean contact pressure, pÕY, as a func- tion of the dimensionless interference, vÕvc , in the elastic- plastic regime",
+   "bbox": [
+    306.0,
+    30.8,
+    557.5,
+    242.7
+   ],
+   "w": 1049,
+   "h": 884,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Dimensionless contact area, AÕAc , as a function of the dimensionless interference, vÕvc , in the elastic-plastic regime",
+   "bbox": [
+    54.5,
+    30.8,
+    306.1,
+    251.5
+   ],
+   "w": 1049,
+   "h": 921,
+   "dpi": 300,
+   "src": "09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf",
+   "blank": 0.964
+  }
+ ]
+}

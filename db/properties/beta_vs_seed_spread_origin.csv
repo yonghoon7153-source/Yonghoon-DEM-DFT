@@ -1,0 +1,28 @@
+# beta vs seed-to-seed D spread, 9 multiseed MD conditions (UMA-s-1p1/omat, STO seed-mean beta, window 2-50 ps).
+# n_hop = 6*D_mean*t_prod/d_hop^2, d_hop 3 A (hops_per_ion.py convention, upper-bound estimate).
+# CAUTION: CV from 3-4 seeds is itself noisy (~50% relative error); ranks, not absolute CVs, are the signal.
+# b2o3 rows: Li-transport axis RETIRED 2026-08-25 (anion-sublattice mobility) - rows kept as ESTIMATOR statistics only, never quote as transport.
+# Sources: beta = db/properties/msd_3sys_200ps_origin.csv headers; seeds = b2o3_vs_lpscl16_conductivity.csv (modelc, b2o3), lpsocl_md_arrhenius.json (lpsocl).
+# ⛔ RETRACTED CLAIM 2026-08-27 (Codex reply F). The original header claimed 'variance follows EVENT COUNT (He 2018 scaling), not the beta value'. That claim is WITHDRAWN.
+# Why: n_hop here is MSD@50/d_hop^2, which is essentially mean D -- Spearman(n_hop, mean D) = +0.95. And CV = sd(D)/mean(D) puts that same mean D in the DENOMINATOR.
+#   Substituting mean D for n_hop reproduces the correlation (-0.73 vs -0.78), so most of it is mechanical, not evidence of an event-count law.
+#   The difference between the two correlations is NOT established: Williams/Steiger t=2.026, df=6, p~0.089; bootstrap 95% CI on the difference spans -0.82..+0.14; leave-one-system-out flips the ordering (excluding modelc gives -0.943 for both).
+#   Exact permutation p: rho(beta,CV) = -0.5000 p=0.1777 (n.s.) ; rho(n_hop,CV) = -0.77825 p=0.0180.
+# Allowed wording: 'in an exploratory summary of 9 conditions an MSD-derived displacement proxy showed a stronger negative rank correlation with seed CV than beta did'. NOT 'predicts', NOT 'reproduces He 2018', NOT 'hop count is the cause'.
+# To actually test the event-count law: count real site transitions independently of D, correct for back-jumps and collective hops, and check that N_eff predicts seed variance in HELD-OUT conditions.
+# Column name n_hop_per_ion is kept for continuity but should be read as 'MSD-derived displacement proxy', not a jump count.
+# EVIDENCE SCOPE (2026-08-27, reply H Q15): within-argyrodite compositional transfer. NOT a cross-material law.
+#   comp1 (Li6PS5Cl) and comp2 (Br) are held-out COMPOSITIONS inside the same argyrodite framework, not a new structure family.
+#   Allowed: 'a frozen analysis was applied prospectively to argyrodite compositions it had not seen'.
+#   NOT allowed: 'a material-general law that also holds for solid electrolytes of different structure'.
+#   b2o3 is excluded from this validation entirely - its Li-transport endpoint was retracted 2026-08-25.
+system_T,beta_ensemble,n_seeds,traj_ps,n_hop_per_ion,CV_D_pct,D_max_over_min,D_seeds_1e5_cm2_s
+modelc/600K,0.868,3,199,13.8,25.3,1.64,"1.1718;1.2037;0.7351"
+modelc/800K,0.934,3,99,18.8,32.3,1.95,"2.8320;3.7720;1.9320"
+modelc/1000K,0.924,3,99,31.2,5.6,1.11,"5.0300;4.6210;4.5330"
+lpsocl/600K,0.615,4,199,8.3,33.4,2.31,"0.3887;0.6405;0.5820;0.8970"
+lpsocl/800K,0.856,4,199,32.1,20.7,1.53,"2.0850;2.7888;1.8962;2.8950"
+lpsocl/1000K,1.016,4,199,75.7,18.3,1.57,"5.5250;6.9621;4.4276;5.9217"
+b2o3_ESTIMATOR_ONLY/600K,0.806,3,199,13.8,24.4,1.63,"0.7980;1.3040;1.0210"
+b2o3_ESTIMATOR_ONLY/800K,0.828,3,99,14.3,23.1,1.51,"1.9410;2.7350;1.8140"
+b2o3_ESTIMATOR_ONLY/1000K,0.974,3,99,33.5,22.2,1.49,"4.6140;6.3670;4.2610"

@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'NiP2O6_mp-aaaabchz'
+  outdir = './tmp'
+  filpdos = 'NiP2O6_mp-aaaabchz'
+  degauss = 0.007
+  ngauss = 0
+/

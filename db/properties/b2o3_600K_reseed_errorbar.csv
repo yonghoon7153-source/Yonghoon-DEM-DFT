@@ -1,0 +1,9 @@
+seed,D_600_cm2_s,Ea_eV,D0_cm2_s,D_300K_cm2_s,sigma_300K_mS_cm
+s2,7.9813e-06,0.2425,9.0684e-04,7.6418e-08,11.27
+s3,1.3043e-05,0.1752,3.8492e-04,4.3929e-07,64.81
+s4,1.0211e-05,0.2087,5.9000e-04,1.8374e-07,27.11
+mean,1.0412e-05,0.2061,5.7029e-04,1.9693e-07,29.05
+std,2.5366e-06,,,,
+"# 3-seed 600K reseed (200ps, 2-50ps window, uma-s-1p1); high-T anchor D800=3.009e-05 D1000=5.067e-05 (deck-validated, single-seed)"
+# RESULT: Ea = 0.206 (+0.038/-0.030) eV ; D_600 = 1.041e-05 +/- 2.537e-06 (24%)
+# NOTE: 600K seed noise dominates the Ea uncertainty (single-seed swing 0.223 vs 0.172 was pure 600K variation). High-T still single-seed (2nd-order).

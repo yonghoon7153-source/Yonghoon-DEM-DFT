@@ -1,0 +1,324 @@
+{
+ "slug": "jang2025_thioarsenate_argyrodite_mlip_mechanism",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+  "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Crystal structure of argyrodite Li6MS5X with variable compositions enabled by substitution of pnictogen M (P, As, Sb) and halogen X (Cl, Br, I), highlighting anion disorder arising from site inversion between the Wyckoﬀ4a and 4d positions.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    537.7,
+    558.8,
+    706.7
+   ],
+   "w": 2177,
+   "h": 705,
+   "dpi": 300,
+   "src": "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Phase stability of argyrodite Li6MS5X (M = P, As, Sb; X = Cl, Br, I): (a) violin plots of Ehull values including all site inversion conﬁgurations; (b) Ehull values as a function of site inversion from 0% to 100% in 25% intervals, highlighting the synthetic feasibility of metastable phases with Ehull < 30 meV per atom.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    239.0
+   ],
+   "w": 2177,
+   "h": 811,
+   "dpi": 300,
+   "src": "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.721
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Li-ion trajectories (light blue) viewed along the [001] direction and in the focused region (0.55 < z < 0.6) from MD simulations at 300 K for Li6AsS5Br with varying levels of site inversion: (a) 0%, (b) 12.5%, (c) 25%, (d) 50%, (e) 75%, (f) 87.5%, and (g) 100%.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    488.5,
+    558.8,
+    706.7
+   ],
+   "w": 2177,
+   "h": 910,
+   "dpi": 300,
+   "src": "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.645
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Li-ion trajectories (light blue) viewed along the [110] direction from MD simulations at 300 K for Li6AsS5Br with varying levels of site inversion: (a) 0%, (b) 25%, (c) 50%, and (d) 100%.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    208.6
+   ],
+   "w": 2177,
+   "h": 685,
+   "dpi": 300,
+   "src": "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.505
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Li-ion conductivity in Li6AsS5Br as a function of anion disorder induced by site inversion. (b) Conﬁgurational entropy as a function of the degree of S/Br site inversion (c) ionic conductivity plotted as a function of conﬁgurational entropy. The colors of the dots correspond to the degree of site inversion, with identical colors in (a)–(c) indicating the same inversion level.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    252.7,
+    558.8,
+    389.2
+   ],
+   "w": 2177,
+   "h": 569,
+   "dpi": 300,
+   "src": "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 The self-part of the van Hove correlation function from MD simulations at 300 K for Li6AsS5Br with varying levels of site inversion: (a) 0%, (b) 12.5%, (c) 25%, (d) 50%, (e) 75%, (f) 87.5%, and (g) 100%.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    40.0,
+    558.8,
+    280.0
+   ],
+   "w": 2177,
+   "h": 1001,
+   "dpi": 300,
+   "src": "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.669,
+   "note": "캡션앵커 자동추출이 놓쳐 쪽 좌표로 재렌더 (2026-09-09)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) Contour map of Ehull values for Li6−xAsS5−xBr1+x as a function of Br content and degree of site inversion, illustrating the interplay between composition, disorder, and phase stability; (b) ionic conductivity of a composition within the synthetically feasible region.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    546.0,
+    558.8,
+    706.7
+   ],
+   "w": 2177,
+   "h": 671,
+   "dpi": 300,
+   "src": "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematic overview of the workflow used to develop machine-learned interatomic potentials (MLIPs).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    95.0,
+    530.0,
+    452.0
+   ],
+   "w": 1909,
+   "h": 1489,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.341,
+   "note": "캡션앵커 자동추출이 놓쳐 쪽 좌표로 재렌더 (2026-09-09)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Ehull values of thioarsenate argyrodites with varying Br content in Li6-xAsS5-xBr1+x (x = 0, 0.25, 0.5, 0.75, 1), shown as a function of site inversion in 25% intervals, highlighting the synthetic feasibility of metastable phases.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    98.0,
+    530.0,
+    296.0
+   ],
+   "w": 1909,
+   "h": 826,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.755,
+   "note": "캡션앵커 자동추출이 놓쳐 쪽 좌표로 재렌더 (2026-09-09)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Comparison of (a) energy and (b) force predictions from MLIP and DFT for Li6AsS5Br. Root-mean-square error (RMSE) values are included to quantify prediction accuracy.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    306.0
+   ],
+   "w": 1944,
+   "h": 947,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Li-ion MSD values for Li6AsS5Br at 300 K, obtained from MD simulations using (a) a unit cell, (b) a 2×2×2 supercell, (c) a 3×3×3 supercell, and (d) a 4×4×4 supercell. MSD values were calculated from five independent MD simulations, with each run represented by a different color (black, red, blue, green, and purple).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    84.6,
+    532.4,
+    473.1
+   ],
+   "w": 1944,
+   "h": 1620,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Li-ion trajectories (light blue) from MD simulations at 300 K for 10 ns for Li6AsS5Br with 12.5% site inversion: (a) full simulation region, and (b) a focused region with a z-axis range of 0.55 < z < 0.6, selected to capture trajectories within a single cage layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    83.9,
+    532.1,
+    378.9
+   ],
+   "w": 1943,
+   "h": 1230,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.745
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Li-ion trajectories (light blue) viewed along the [110] direction from MD simulations at 300 K for 10 ns for Li6AsS5Br with varying levels of site inversion: (a) 0%, (b) 12.5%, (c) 25%, (d) 50%, (e) 75%, (f) 87.5%, and (g) 100%.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    104.5,
+    532.4,
+    483.3
+   ],
+   "w": 1944,
+   "h": 1579,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.513
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Experimental and theoretical ionic conductivities of thioarsenate argyrodites, Li6−xAsS5−xBr1+x.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    532.1,
+    399.1
+   ],
+   "w": 1939,
+   "h": 1329,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Synthesizability and ionic conductivities of thioarsenate argyrodites, Li6−xAsS5−xBr1+x. Experimental values are taken from Ref. 1. Metastable phases with Ehull < 30 meV/atom are assumed to be synthesizable. Site inversion Ionic Conductivity Ehull (meV/atom) Phase stability x Composition Data (mS/cm) (%) Experiment 9 N/A Synthesized 2 0 17.6 Meta-stable 0.9 0 Li6AsS5Br Calculation 25 20.0 Meta-stable 33.7 50 28.4 Unstable 46.1 0.25 Li5.75AsS4.75Br1.25 Calculation 25 18.8 Meta-stable 15.8 50 22.8 Meta-stable 46.1 0.3 Li5.7AsS4.7Br1.3 Experiment 39 N/A Synthesized 6.6 0.4 Li5.6AsS4.6Br1.4 Experiment 46 N/A Synthesized 10.4 Experiment 56 N/A Synthesized 15.4 0.5 Li5.5AsS4.5Br1.5 Calculation 50 25.2 Meta-stable 51.3",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    538.7,
+    414.1
+   ],
+   "w": 1966,
+   "h": 1391,
+   "dpi": 300,
+   "src": "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
+   "blank": 0.912
+  }
+ ],
+ "manual_rerender": {
+  "date": "2026-09-09",
+  "keys": [
+   "f6",
+   "fS1",
+   "fS2"
+  ],
+  "why": "f6: 캡션이 'The' 로 시작해 본문문단 필터(VERBS)에 걸려 탈락 / fS1·fS2: 그림 안 라벨이 텍스트블록이라 캡션 위 영역이 잘려 '그래픽 없음' 판정. 쪽 좌표로 재렌더."
+ }
+}

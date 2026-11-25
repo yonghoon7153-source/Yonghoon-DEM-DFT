@@ -1,0 +1,32 @@
+# Onoda & Liniger, Phys. Rev. Lett. 64 (1990) 2727-2730 — Fig. 1 (printed p.2728): packing fraction eta vs effective gravitational acceleration "Delta g" (axis 0-1.2, unit not printed)
+# READ-OFF VALUES (not printed in the paper). Source = native 1-bit page scan embedded in the PDF (5060 x 6898 px, PDF page 2).
+# Calibration: inner tick marks on the four frame sides (left 0.54/0.56-0.61, right 0.54-0.61, bottom/top 0.2-1.0), bilinear; max tick residual 1.2 px (eta 0.00007) / 0.5 px (Delta g 0.0004).
+# line_vertex = polyline vertex from straight-line fits of the adjoining segments evaluated at the error-bar x; bar caps = centre rows of the horizontal cap strokes.
+# Reading uncertainty about +-0.0002 in eta and +-0.001 in Delta g. The bars are NOT symmetric about the line vertices at several points (see the card, section 3-3).
+# Cap assignment at Delta g ~ 0 and 0.3: the two bars overlap on one vertical stroke; the middle cap is read as shared (A bottom = B top). Alternative noted in the card.
+# Curve A = random loose packings from settling in a 500-ml graduated cylinder; curve B = expanded packings from the shear cell (wall-effect correction of about +1 % NOT applied).
+series,point,feature,x_px,y_px,delta_g_axis,eta,note
+A,dg~0,line_vertex,2946.5,1855.8,0.0104,0.55497,mean of the straight-line fits of the adjoining segments (spread 0.0 px)
+A,dg~0,bar_top_cap,2946.5,1782.5,0.0104,0.55902,cap centre row
+A,dg~0,bar_bottom_cap,2946.5,1891.5,0.0104,0.553,cap centre row
+A,dg~0.3,line_vertex,3339.5,1781.4,0.2997,0.55901,mean of the straight-line fits of the adjoining segments (spread 0.1 px)
+A,dg~0.3,bar_top_cap,3339.5,1727.0,0.2997,0.56201,cap centre row
+A,dg~0.3,bar_bottom_cap,3339.5,1854.5,0.2997,0.55497,cap centre row
+A,dg~0.7,line_vertex,3882.0,1598.2,0.6992,0.56902,mean of the straight-line fits of the adjoining segments (spread 0.6 px)
+A,dg~0.7,bar_top_cap,3882.0,1525.5,0.6992,0.57304,cap centre row
+A,dg~0.7,bar_bottom_cap,3882.0,1634.0,0.6992,0.56704,cap centre row
+A,dg~1.0,line_vertex,4290.0,1081.9,1.0004,0.59746,mean of the straight-line fits of the adjoining segments (spread 0.0 px)
+A,dg~1.0,bar_top_cap,4290.0,1035.0,1.0004,0.60005,cap centre row
+A,dg~1.0,bar_bottom_cap,4290.0,1125.0,1.0004,0.59508,cap centre row
+B,dg~0,line_vertex,2946.5,1947.6,0.0103,0.5499,mean of the straight-line fits of the adjoining segments (spread 0.0 px)
+B,dg~0,bar_top_cap,2946.5,1891.5,0.0103,0.553,cap centre row
+B,dg~0,bar_bottom_cap,2946.5,2036.5,0.0103,0.54498,cap centre row
+B,dg~0.3,line_vertex,3339.5,1908.0,0.2995,0.55201,mean of the straight-line fits of the adjoining segments (spread 0.4 px)
+B,dg~0.3,bar_top_cap,3339.5,1854.5,0.2995,0.55497,cap centre row
+B,dg~0.3,bar_bottom_cap,3339.5,1981.5,0.2995,0.54795,cap centre row
+B,dg~0.7,line_vertex,3882.0,1743.2,0.6989,0.56101,mean of the straight-line fits of the adjoining segments (spread 1.9 px)
+B,dg~0.7,bar_top_cap,3882.0,1670.0,0.6989,0.56505,cap centre row
+B,dg~0.7,bar_bottom_cap,3882.0,1815.5,0.6989,0.55702,cap centre row
+B,dg~1.0,line_vertex,4290.0,1272.8,1.0,0.58692,mean of the straight-line fits of the adjoining segments (spread 0.0 px)
+B,dg~1.0,bar_top_cap,4290.0,1199.0,1.0,0.59099,cap centre row
+B,dg~1.0,bar_bottom_cap,4290.0,1346.0,1.0,0.58287,cap centre row

@@ -1,0 +1,47 @@
+{
+ "schema": "ndo_site_v0_read_root/v1",
+ "date": "2026-10-23",
+ "무엇": "site_dg.py --qe 판독 폴더 — G3 V₀ relax 두 셀 (kgy 회수 1fdf43b9b) + Q1 기준상 Li2S · Li3PS4 (40a1b6aa4 · 다시 안 돌림 · eos_plan.json 3단계 '폴더' 규칙)",
+ "files": [
+  {
+   "file": "MLi_04/scf.in",
+   "from": "db/raw/ndo_site_eos_v0_2026_10_23/MLi_04/scf.in",
+   "sha256": "ca048e38a3e8fd4205027e8a0844a35646f0d27f0e338d21869744ed98c53695"
+  },
+  {
+   "file": "MLi_04/scf.out",
+   "from": "db/raw/ndo_site_eos_v0_2026_10_23/MLi_04/scf.out",
+   "sha256": "7e078332078ca15bc78c298ad987cfb07cdb521955b29c4a2cdf2f3487089806"
+  },
+  {
+   "file": "MP_07/scf.in",
+   "from": "db/raw/ndo_site_eos_v0_2026_10_23/MP_07/scf.in",
+   "sha256": "47adf2eb8e2c461ee05b5f4b6611610fdf7128d672c22a51c8c8161ef4807409"
+  },
+  {
+   "file": "MP_07/scf.out",
+   "from": "db/raw/ndo_site_eos_v0_2026_10_23/MP_07/scf.out",
+   "sha256": "f7c7580152044b4b0852d01bc7134ab0dabcb2b44cd27a332827177d4611e62e"
+  },
+  {
+   "file": "Li2S/scf.in",
+   "from": "db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/Li2S/scf.in",
+   "sha256": "991583979641fc9b0912113525acfcf6b4066b1e280a109ec16f035097e02ca1"
+  },
+  {
+   "file": "Li2S/scf.out",
+   "from": "db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/Li2S/scf.out",
+   "sha256": "ae3d3d798a9eedc95aea78dc21762c16ac5e48d515756eb9dd1e86e4eb336631"
+  },
+  {
+   "file": "Li3PS4/scf.in",
+   "from": "db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/Li3PS4/scf.in",
+   "sha256": "7cde1de461874133268f0da65f2ea3a04df19cd1367d67cfb2dbf25483459f0e"
+  },
+  {
+   "file": "Li3PS4/scf.out",
+   "from": "db/raw/ndo_site_dft_2026_10_15/q1_singlepoint_2026_10_16/Li3PS4/scf.out",
+   "sha256": "2e01d103b6b87f987daa55c45e8653bfefcaefbe511779966f503d03b3aeda7c"
+  }
+ ]
+}

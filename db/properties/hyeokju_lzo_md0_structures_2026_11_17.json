@@ -1,0 +1,24 @@
+{
+ "제목": "[혁주] MD-0 계면 시작 구조 (카드 개정 1 B_계면 · 결과 전)",
+ "written_on": "2026-11-17",
+ "slab": {
+  "명령": "python3 tools/wad/se_sym_slab.py --layers 2 --vacuum 0 --out db/structures/hyeokju_md0_2026_11_17",
+  "쓰는_파일": "db/structures/hyeokju_md0_2026_11_17/comp1_001_li_outer_L2.vasp",
+  "sha256": "f75ea6ed522d36facf2b1870d1e92a912b126f33af1d9385ec7a51cb48a9fb2e",
+  "조성": "Li20Cl4P4S18 · 46 원자 · 두께 8.20 Å · PS4 온전 · 양면 대칭 (검증 7/7)",
+  "함께_나온_s_outer": "comp1_001_s_outer_L2.* (Li28Cl4P4S22 · 58 원자) — 빌더가 둘 다 만든다 · MD-0 에는 안 쓴다"
+ },
+ "sandwich": {
+  "명령": "python3 tools/oxidation/build_li_interface.py --sandwich db/structures/hyeokju_md0_2026_11_17/comp1_001_li_outer_L2.vasp --block Li:32,Zr:16,O:48 --block_density 4.0 --gap_sandwich 2.0 --min_dist 1.6 --seed 20261117 --out db/structures/hyeokju_md0_2026_11_17/I142_liouter_aLZO16_init",
+  "파일": [
+   "db/structures/hyeokju_md0_2026_11_17/I142_liouter_aLZO16_init.xyz",
+   "db/structures/hyeokju_md0_2026_11_17/I142_liouter_aLZO16_init.vasp",
+   "db/structures/hyeokju_md0_2026_11_17/I142_liouter_aLZO16_init_freeze.json",
+   "db/structures/hyeokju_md0_2026_11_17/I142_liouter_aLZO16_init_manifest.json"
+  ],
+  "sha256_xyz": "7ce9c94a0ab8cf69bbfbbd93ab6c6bc085dd41f0713b5e578815f8b4ab41918c",
+  "요약": "Cl4Li52O48P4S18Zr16 · 142 원자 · c 22.26 Å · 블록 10.06 Å · 실제 최소 거리 1.62 Å · 고정 = 슬랩 46 원자"
+ },
+ "⚠": "블록은 무작위 배치다 — 비정질 구조는 kgy UMA 담금질 (run_li_interface_md.py --schedule hold:2500:10,ramp:2500:600:19) 이 만든다",
+ "by": "claude · 2026-11-17"
+}

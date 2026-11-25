@@ -1,0 +1,4 @@
+﻿# PMF free-energy barriers - B2O3@LPSCl1.6, T = 600 K, dF_perc 0.1607 eV. barrier_eV = dF(saddle) - dF(preceding valley).
+segment,hop_type,s_valley_A,s_saddle_A,dF_valley_eV,dF_saddle_eV,barrier_eV,valley_site,nearest_Li_A,saddle_window,window_r_A
+1,intra,0.000,1.850,-0.0000,0.1344,0.1344,Li site 1Cl+3S,nan,SClS window 1.92 Å,1.920
+2,intra,4.318,5.838,0.0049,0.0845,0.0796,Li site 3S,nan,SSS window 1.86 Å,1.860

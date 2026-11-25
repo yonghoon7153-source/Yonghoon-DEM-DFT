@@ -1,0 +1,15 @@
+&control
+  calculation='scf', prefix='dojo_conv', outdir='./tmp_dojo_conv', pseudo_dir='./pp', tstress=.true., tprnfor=.true.
+/
+&system
+  ibrav=2, celldm(1)=9.75, nat=1, ntyp=1, ecutwfc=60, ecutrho=240, occupations='smearing', smearing='mv', degauss=0.02
+/
+&electrons
+  conv_thr=1e-11
+/
+ATOMIC_SPECIES
+  Nd 144.24 Nd_dojo_conv.upf
+ATOMIC_POSITIONS crystal
+  Nd 0.0 0.0 0.0
+K_POINTS automatic
+  6 6 6 1 1 1

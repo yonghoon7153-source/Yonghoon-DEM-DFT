@@ -1,0 +1,32 @@
+anion_class,group,site,bader_net_e,shift_from_li_only_mean_e
+Free S²⁻,li_only,atom 54,-1.6901,-0.0003
+Free S²⁻,li_only,atom 115,-1.6896,0.0002
+Free S²⁻,next_to_nd,atom 112,-1.4948,0.195
+Free S²⁻,next_to_nd,atom 51,-1.4459,0.2439
+PS₄ unit (P + 4 S),li_only,P 90 unit,-2.6514,-0.0288
+PS₄ unit (P + 4 S),li_only,P 28 unit,-2.6352,-0.0126
+PS₄ unit (P + 4 S),li_only,P 89 unit,-2.6333,-0.0107
+PS₄ unit (P + 4 S),li_only,P 29 unit,-2.627,-0.0044
+PS₄ unit (P + 4 S),li_only,P 27 unit,-2.6034,0.0192
+PS₄ unit (P + 4 S),li_only,P 88 unit,-2.5854,0.0372
+PS₄ unit (P + 4 S),next_to_nd,P 87 unit,-2.442,0.1806
+PS₄ unit (P + 4 S),next_to_nd,P 86 unit,-2.4073,0.2153
+Cl⁻,li_only,atom 120,-0.9331,-0.0198
+Cl⁻,li_only,atom 59,-0.9312,-0.0179
+Cl⁻,li_only,atom 119,-0.9174,-0.0041
+Cl⁻,li_only,atom 114,-0.9163,-0.003
+Cl⁻,li_only,atom 111,-0.9141,-0.0008
+Cl⁻,li_only,atom 57,-0.914,-0.0007
+Cl⁻,li_only,atom 118,-0.9134,-0.0001
+Cl⁻,li_only,atom 58,-0.9124,0.0009
+Cl⁻,li_only,atom 55,-0.9119,0.0014
+Cl⁻,li_only,atom 113,-0.9096,0.0037
+Cl⁻,li_only,atom 116,-0.9081,0.0052
+Cl⁻,li_only,atom 50,-0.9044,0.0089
+Cl⁻,li_only,atom 52,-0.9028,0.0105
+Cl⁻,li_only,atom 53,-0.8979,0.0154
+Cl⁻,next_to_nd,atom 117,-0.8331,0.0802
+Cl⁻,next_to_nd,atom 56,-0.8324,0.0809
+O bonded to P,li_only,atom 30,-1.8984,0.0
+O bonded to P,next_to_nd,atom 35,-1.8522,0.0462
+O bonded to P,next_to_nd,atom 41,-1.8477,0.0507

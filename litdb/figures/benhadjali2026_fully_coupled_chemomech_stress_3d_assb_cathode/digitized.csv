@@ -1,0 +1,93 @@
+figure,panel,series,x_name,x,x_unit,y_name,y,y_unit,note
+3,b,one-way,specific capacity,0,mAh/g,overpotential,-53.78,mV,curve start
+3,b,one-way,specific capacity,10,mAh/g,overpotential,-51.96,mV,
+3,b,one-way,specific capacity,20,mAh/g,overpotential,-51.09,mV,
+3,b,one-way,specific capacity,40,mAh/g,overpotential,-50.62,mV,
+3,b,one-way,specific capacity,60,mAh/g,overpotential,-51.44,mV,
+3,b,one-way,specific capacity,80,mAh/g,overpotential,-50.96,mV,
+3,b,one-way,specific capacity,100,mAh/g,overpotential,-50.60,mV,
+3,b,one-way,specific capacity,110,mAh/g,overpotential,-50.53,mV,
+3,b,one-way,specific capacity,120,mAh/g,overpotential,-49.87,mV,
+3,b,one-way,specific capacity,140,mAh/g,overpotential,-44.82,mV,
+3,b,one-way,specific capacity,155.6,mAh/g,overpotential,-39.31,mV,curve end (rightmost pixel)
+3,b,one-way,specific capacity,40-110,mAh/g,overpotential (column mean),-50.97,mV,plateau mean
+3,b,full,specific capacity,0,mAh/g,overpotential,-56.04,mV,curve start
+3,b,full,specific capacity,10,mAh/g,overpotential,-54.16,mV,
+3,b,full,specific capacity,20,mAh/g,overpotential,-53.40,mV,
+3,b,full,specific capacity,40,mAh/g,overpotential,-53.11,mV,
+3,b,full,specific capacity,60,mAh/g,overpotential,-53.71,mV,
+3,b,full,specific capacity,80,mAh/g,overpotential,-53.20,mV,
+3,b,full,specific capacity,100,mAh/g,overpotential,-52.89,mV,
+3,b,full,specific capacity,110,mAh/g,overpotential,-52.62,mV,
+3,b,full,specific capacity,120,mAh/g,overpotential,-51.47,mV,
+3,b,full,specific capacity,140,mAh/g,overpotential,-45.51,mV,
+3,b,full,specific capacity,151.9,mAh/g,overpotential,-41.80,mV,curve end (rightmost pixel)
+3,b,full,specific capacity,40-110,mAh/g,overpotential (column mean),-53.27,mV,plateau mean
+3,c,one-way,depth of discharge,1,%,SOC of AM,0.281,-,
+3,c,one-way,depth of discharge,10,%,SOC of AM,0.461,-,
+3,c,one-way,depth of discharge,20,%,SOC of AM,0.567,-,
+3,c,one-way,depth of discharge,40,%,SOC of AM,0.749,-,
+3,c,one-way,depth of discharge,60,%,SOC of AM,0.900,-,
+3,c,one-way,depth of discharge,77.9,%,SOC of AM,0.991,-,curve end
+3,c,full,depth of discharge,0,%,SOC of AM,0.242,-,curve start
+3,c,full,depth of discharge,1,%,SOC of AM,0.317,-,
+3,c,full,depth of discharge,10,%,SOC of AM,0.515,-,
+3,c,full,depth of discharge,20,%,SOC of AM,0.640,-,
+3,c,full,depth of discharge,40,%,SOC of AM,0.828,-,
+3,c,full,depth of discharge,60,%,SOC of AM,0.945,-,
+3,c,full,depth of discharge,75.7,%,SOC of AM,1.000,-,curve end
+4,a,sigma_zz,time,0.4,h,sigma_zz (CC/cathode interface average),-77,MPa,cycle 1 start
+4,a,sigma_zz,time,10.08,h,sigma_zz,35.1,MPa,cycle 1 maximum (end of charge)
+4,a,sigma_zz,time,20.08,h,sigma_zz,-109.4,MPa,cycle 1 minimum (end of discharge)
+4,a,sigma_zz,time,21.0,h,sigma_zz,-76.1,MPa,cycle 2 after the step at the cycle boundary
+4,a,sigma_zz,time,30.23,h,sigma_zz,35.1,MPa,cycle 2 maximum
+4,a,sigma_zz,time,40.55,h,sigma_zz,-109.8,MPa,cycle 2 minimum
+4,a,sigma_zz,time,41.3,h,sigma_zz,-76.3,MPa,cycle 3 after the step
+4,a,sigma_zz,time,50.70,h,sigma_zz,35.5,MPa,cycle 3 maximum
+4,a,sigma_zz,time,60.86,h,sigma_zz,-109.8,MPa,cycle 3 minimum
+4,a,sigma_zz,time,61.6,h,sigma_zz,-76.5,MPa,cycle 4 after the step
+4,a,sigma_zz,time,71.02,h,sigma_zz,35.5,MPa,cycle 4 maximum
+4,a,sigma_zz,time,81.17,h,sigma_zz,-109.8,MPa,cycle 4 minimum
+4,a,sigma_zz,time,81.9,h,sigma_zz,-76.5,MPa,cycle 5 after the step
+4,a,sigma_zz,time,91.48,h,sigma_zz,35.5,MPa,cycle 5 maximum
+4,b,sigma_zz,time,0.15,h,sigma_zz,-78.0,MPa,start (printed -78)
+4,b,sigma_zz,time,10.16,h,sigma_zz,35.1,MPa,peak (printed 35)
+4,b,Li concentration,time,0.15,h,Li concentration,48.1,10^3 mol/m3,axis label '10^3 X mol m^-3'
+4,b,Li concentration,time,1.0,h,Li concentration,44.3,10^3 mol/m3,
+4,b,Li concentration,time,10.15,h,Li concentration,-0.5,10^3 mol/m3,minimum (end of charge)
+4,b,Li concentration,time,20.3,h,Li concentration,48.8,10^3 mol/m3,end of discharge
+4,c,thickness,time,0.2,h,thickness change,-0.70,%,cycle 1 start (printed -0.68)
+4,c,thickness,time,10.15,h,thickness change,-3.32,%,minimum each cycle (printed -3.29)
+4,c,thickness,time,20.4,h,thickness change,0.04,%,end of discharge; vertical step to -0.70 at the boundary
+4,c,thickness,time,20.8,h,thickness change,-0.71,%,cycle 2 start after the step
+4,c,thickness,time,41.2,h,thickness change,-0.71,%,cycle 3 start after the step
+4,c,thickness,time,61.5,h,thickness change,-0.71,%,cycle 4 start after the step
+4,c,thickness,time,81.8,h,thickness change,-0.71,%,cycle 5 start after the step
+4,c,thickness,time,9.99-10.46,h,thickness change at minimum,-3.32,%,flat-at-minimum span cycle 1 (0.5 h)
+4,c,thickness,time,30.29-30.91,h,thickness change at minimum,-3.32,%,flat-at-minimum span cycle 2 (0.6 h)
+4,c,thickness,time,50.59-51.68,h,thickness change at minimum,-3.32,%,flat-at-minimum span cycle 3 (1.1 h)
+4,c,thickness,time,71.04-73.85,h,thickness change at minimum,-3.32,%,flat-at-minimum span cycle 4 (2.8 h)
+4,c,thickness,time,91.18-94.15,h,thickness change at minimum,-3.32,%,flat-at-minimum span cycle 5 (3.0 h)
+4,d,delithiation,specific capacity,1,mAh/g,thickness change,-0.70,%,branch start
+4,d,delithiation,specific capacity,40,mAh/g,thickness change,-0.83,%,
+4,d,delithiation,specific capacity,80,mAh/g,thickness change,-1.00,%,
+4,d,delithiation,specific capacity,120,mAh/g,thickness change,-1.19,%,
+4,d,delithiation,specific capacity,180,mAh/g,thickness change,-2.74,%,
+4,d,delithiation,specific capacity,195,mAh/g,thickness change,-3.13,%,
+4,d,both,specific capacity,203.7,mAh/g,thickness change,-3.30,%,end of charge (printed -3.29)
+4,d,lithiation,specific capacity,195,mAh/g,thickness change,-2.76,%,
+4,d,lithiation,specific capacity,180,mAh/g,thickness change,-2.46,%,
+4,d,lithiation,specific capacity,120,mAh/g,thickness change,-2.15,%,
+4,d,lithiation,specific capacity,80,mAh/g,thickness change,-1.97,%,
+4,d,lithiation,specific capacity,40,mAh/g,thickness change,-1.52,%,
+4,d,lithiation,specific capacity,1,mAh/g,thickness change,0.03,%,branch end ('irreversible height change' 0.73 %p; printed 0.725)
+6,1st,model,specific capacity,203.2,mAh/g,voltage,4.317,V vs Li/Li+,end of charge
+6,1st,model,specific capacity,203.5,mAh/g,voltage,2.832,V vs Li/Li+,end of discharge
+6,1st,experiment,specific capacity,201.3,mAh/g,voltage,4.316,V vs Li/Li+,end of charge (shifted +0.65 V by the authors)
+6,1st,experiment,specific capacity,191.7,mAh/g,voltage,2.917,V vs Li/Li+,end of discharge
+6,1st,model,specific capacity,120,mAh/g,voltage,3.745,V vs Li/Li+,discharge branch
+6,1st,experiment,specific capacity,120,mAh/g,voltage,3.707,V vs Li/Li+,discharge branch
+6,5th,model,specific capacity,186.8,mAh/g,voltage,4.248,V vs Li/Li+,end of charge
+6,5th,model,specific capacity,187.1,mAh/g,voltage,2.764,V vs Li/Li+,end of discharge
+6,5th,experiment,specific capacity,182.2,mAh/g,voltage,4.283,V vs Li/Li+,end of charge
+6,5th,experiment,specific capacity,182.8,mAh/g,voltage,2.726,V vs Li/Li+,end of discharge

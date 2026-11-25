@@ -1,0 +1,120 @@
+{
+ "slug": "deiseroth2008_li6ps5x_argyrodite_high_li_mobility",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "127._Li_PS_X_A_Class_of_Crystalline_Li_Rich_Solids_With_an_Unusually_High_Li__Mobility.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) A section of the crystal structure of Li6PS5I showing the distribution of PS4 tetrahedra and single S2− (S2, in four octants of the cell) and I− ions (corners and faces of the cell). b) A face-sharing S3I2 double tetrahedron containing Li1 (above and below the common face) and Li2 (center of the common face).",
+   "rotated_deg": 0,
+   "bbox": [
+    43.5,
+    53.9,
+    299.8,
+    196.6
+   ],
+   "w": 1069,
+   "h": 596,
+   "dpi": 300,
+   "src": "127._Li_PS_X_A_Class_of_Crystalline_Li_Rich_Solids_With_an_Unusually_High_Li__Mobility.pdf",
+   "blank": 0.754,
+   "caption_cleaned": "2026-11-10: PDF font artefacts fixed (minus signs, delta, hyphenation, page footer)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Static 7Li NMR full widths at half height for Li6PS5Cl, Li6PS5Br, and Li6PS5I as a function of temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    504.0,
+    298.5,
+    714.8
+   ],
+   "w": 1047,
+   "h": 879,
+   "dpi": 300,
+   "src": "127._Li_PS_X_A_Class_of_Crystalline_Li_Rich_Solids_With_an_Unusually_High_Li__Mobility.pdf",
+   "blank": 0.973,
+   "px": 920313,
+   "recrop": "recrop 2026-11-10: auto bbox spanned both columns (pulled in Fig. 3b + its caption); clipped to the left column = embedded raster (55.5, 510.1, 293.5, 713.1) pt + axis labels",
+   "caption_cleaned": "2026-11-10: PDF font artefacts fixed (minus signs, delta, hyphenation, page footer)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 2,
+   "file": "fig_3.png",
+   "caption": "Figure 3. A section of the crystal structure of Li6PS5X showing the coordination around phosphorus and the mutual substitution of S and Br/Cl on the respective crystallographic positions. a) Li6PS5I: S1, S2, and I ordered without any significant mutual substitution. b) Li6PS5Br: minor substitution (1–2%) of S1 by Br (not shown), mutual substitution of S and Br on the S2 site (84% S, 16% Br) and on the X site (40% S, 60% Br). No quantitative information can be given for Li6PS5Cl (see text).",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    407.1,
+    546.2,
+    654.8
+   ],
+   "w": 1039,
+   "h": 1033,
+   "dpi": 300,
+   "src": "127._Li_PS_X_A_Class_of_Crystalline_Li_Rich_Solids_With_an_Unusually_High_Li__Mobility.pdf",
+   "blank": 0.891,
+   "caption_cleaned": "2026-11-10: PDF font artefacts fixed (minus signs, delta, hyphenation, page footer)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Figure 4. 31P MAS-NMR spectra of Li6PS5Cl, Li6PS5Br, and Li6PS5I.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    140.3,
+    296.5,
+    395.1
+   ],
+   "w": 1043,
+   "h": 1063,
+   "dpi": 300,
+   "src": "127._Li_PS_X_A_Class_of_Crystalline_Li_Rich_Solids_With_an_Unusually_High_Li__Mobility.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 3,
+   "file": "fig_5.png",
+   "caption": "Figure 5. 35Cl, 79Br, and 127I MAS-NMR spectra of Li6PS5Cl, Li6PS5Br, and Li6PS5I. Minor peaks are spinning sidebands. The resonance at δ = 384 ppm in the 127I spectrum is probably due to an impurity.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    50.0,
+    541.0,
+    347.0
+   ],
+   "w": 980,
+   "h": 1238,
+   "dpi": 300,
+   "src": "127._Li_PS_X_A_Class_of_Crystalline_Li_Rich_Solids_With_an_Unusually_High_Li__Mobility.pdf",
+   "blank": 0.961,
+   "px": 1213240,
+   "recrop": "recrop 2026-11-10: auto bbox reached the journal header (Angewandte Chemie logo, y<=41 pt); top moved below it = embedded raster (316.8, 59.9, 530.9, 342.9) pt",
+   "caption_cleaned": "2026-11-10: PDF font artefacts fixed (minus signs, delta, hyphenation, page footer)"
+  }
+ ],
+ "missing_labels": []
+}

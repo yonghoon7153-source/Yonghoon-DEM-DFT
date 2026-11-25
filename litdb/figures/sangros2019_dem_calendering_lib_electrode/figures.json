@@ -1,0 +1,277 @@
+{
+ "slug": "sangros2019_dem_calendering_lib_electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Exemplary force displacement curve (F-d) of a NMC particle during a nanoindentation experiment; (b) SEM image of a NMC particle subjected to a low compression force under the yield point; (c) SEM image of a NMC particle subjected to a high compression force beyond the yield point.",
+   "bbox": [
+    36.5,
+    47.2,
+    567.5,
+    280.3
+   ],
+   "w": 2213,
+   "h": 972,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Determination of the yield ratio (YR) on the basis of the correlation between the critical normal displacement and the particle size.",
+   "bbox": [
+    27.7,
+    47.2,
+    290.9,
+    244.6
+   ],
+   "w": 1097,
+   "h": 824,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. a) Outline of the calendering process. The symmetry of the system is taken into consideration and only one side of the electrode is displayed. Likewise, half of the roll is presented. The electrode thickness is magniﬁed to better discern the geometrical parameters; b) Simulation set-up and outline of positions A,B and C.",
+   "bbox": [
+    295.7,
+    47.2,
+    558.8,
+    254.4
+   ],
+   "w": 1097,
+   "h": 864,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.592
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Schematic of the simulation procedure. Cross-section SEM images of the ﬁnal calendered electrodes and their analogous numerically generated structures (C1 to C4). The colors of the simulated assemblies are accounted for the particle radii ranging from red (coarser particles) to blue (smaller particles). Bonds between particles are not displayed.",
+   "bbox": [
+    36.5,
+    554.4,
+    567.6,
+    714.9
+   ],
+   "w": 2214,
+   "h": 670,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Evolution of porosity along the simulation for the calendered electrodes.",
+   "bbox": [
+    29.2,
+    47.2,
+    289.3,
+    239.7
+   ],
+   "w": 1085,
+   "h": 803,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.769
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Final electrode porosity obtained experimentally after the calendering process (εC,Exp), via simulations with the elasto-plastic contact model combined with the bond model (εC,EP) and via the Hertz contact model combined with the bond model (εC,Hertz).",
+   "bbox": [
+    27.7,
+    510.3,
+    290.8,
+    714.9
+   ],
+   "w": 1097,
+   "h": 853,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Contact model comparison. Colored lines represent the proposed elasto-plastic contact model with bonds and black dotted lines correspond to the porosity course using the Hertz contact model with bonds. Same input parameters were used in both cases.",
+   "bbox": [
+    295.7,
+    504.5,
+    558.8,
+    697.7
+   ],
+   "w": 1097,
+   "h": 805,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Speciﬁc elastic recovery, ER, for each numerically calendered structure. Fig. 9. Change in the speciﬁc free surface area (FSA) for the calendered electrodes at position B (calendering stress is reached) and C (ﬁnal structure) related to the initial FSA.",
+   "bbox": [
+    38.0,
+    47.2,
+    567.5,
+    254.8
+   ],
+   "w": 2207,
+   "h": 866,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.751
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Coordination number for the calendered electrodes at position B (calendering stress is reached) and C (ﬁnal structure) and resulting number of broken bonds per particle.",
+   "bbox": [
+    304.5,
+    523.2,
+    567.5,
+    714.9
+   ],
+   "w": 1097,
+   "h": 799,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.655
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Ratio of current collector surface in contact with NMC particles at position B (calendering stress is reached) and C (ﬁnal structure).",
+   "bbox": [
+    27.7,
+    47.2,
+    290.8,
+    244.9
+   ],
+   "w": 1097,
+   "h": 825,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.629
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Deviatoric diagonal components for the calendered electrodes at position C (ﬁnal structure).",
+   "bbox": [
+    295.7,
+    520.5,
+    558.7,
+    723.5
+   ],
+   "w": 1097,
+   "h": 847,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.665
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Diagonal components and total magnitude of the mechanical stress within the electrode at position B (calendering stress is reached) for the calendered electrodes.",
+   "bbox": [
+    304.5,
+    47.2,
+    567.6,
+    239.3
+   ],
+   "w": 1097,
+   "h": 802,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.699
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Relevant structural and process parameters of the produced non-calendered and calen- dered electrodes.",
+   "bbox": [
+    28.7,
+    32.7,
+    557.9,
+    750.3
+   ],
+   "w": 2206,
+   "h": 2991,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Input parameters for the characterization of NMC particles. Parameter Value Source Young's modulus [GPa] 142 [19,20] Poisson ratio [−] 0.25 [21] Coefﬁcient of restitution [−] 0.25 [21] Density [g cm−3] 4.75 [21] Particle size [μm] Measured x10,3 4.96 x50,3 9.35 x90,3 16.59 Yield ratio [−] 8.59·10−3 Measured",
+   "bbox": [
+    28.7,
+    32.7,
+    557.9,
+    750.3
+   ],
+   "w": 2206,
+   "h": 2991,
+   "dpi": 300,
+   "src": "17. Numerical simulation of the behavior of lithium-ion battery electrodes during the calendaring process via the discrete element method.pdf",
+   "blank": 0.829
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "tag": "SO2_mp-aaaabpak",
+ "structure": "db/structures/cei_gap_tm/SO2_mp-aaaabpak.vasp",
+ "structure_sha256": "ada1fe99be9b80a3cef17142ac38284e9d27da6783f0479ef0515589dc775d9c",
+ "species": [
+  "O",
+  "S"
+ ],
+ "nspin": 1,
+ "tm_state": null,
+ "tm_moment_rule": null,
+ "magmom_sidecar": null,
+ "starting_magnetization": null,
+ "tot_magnetization_initial": null,
+ "hubbard": null,
+ "hubbard_policy": null,
+ "ecut_wfc_rho": [
+  60.0,
+  480.0
+ ],
+ "cell_policy": "fixed",
+ "pseudo": {
+  "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+  "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  5,
+  5,
+  4
+ ],
+ "k_gap": [
+  10,
+  10,
+  8
+ ],
+ "nbnd_gap": 32,
+ "gap_step": "03_nscf_gap.in"
+}

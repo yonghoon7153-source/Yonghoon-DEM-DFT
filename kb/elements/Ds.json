@@ -1,0 +1,34 @@
+{
+  "symbol": "Ds",
+  "name": "Darmstadtium",
+  "Z": 110,
+  "role": "초중원소(합성·초단수명, 배터리 완전 무관 — 주기율표 완성용). 10족, Pt 아래 동족 예측. 화학 데이터 없음(초단수명). 상대론 효과로 6d/7s 안정화 예측. SSB 무관",
+  "oxidation_states": [
+    "+4",
+    "+2",
+    "+6",
+    "0"
+  ],
+  "electronegativity": null,
+  "ionic_radius_A": {
+    "_note": "신뢰할 만한 실측/예측 이온반경 없음 — 생략(초중원소, 추정 금지)"
+  },
+  "representative_compounds": [],
+  "sei_relevance": "해당 없음 (배터리/SEI 완전 무관 — 초단수명 합성 원소, 응집상 화학 자체가 성립 안 함)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "해당 없음 — 벌크 고체/PDOS 데이터 없음(합성 원자 수개~수천 개 수준, 초단수명). SSB 전자구조 논의 대상 아님",
+  "key_references": [
+    "Hoffman, Lee, Pershina — The Chemistry of the Superheavy Elements (Springer)",
+    "Pershina — 초중원소 상대론적 전자구조·화학 예측 리뷰"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 5f¹⁴ 6s² 6p⁶ 6d⁸ 7s²",
+    "electron_config": "[Rn] 5f¹⁴ 6d⁸ 7s² (예측)",
+    "valence_orbitals": "6d⁸ 7s² (5f¹⁴ 채움) — 예측(Pt와 달리 7s² 유지 예측); 10족",
+    "band_character": "예측치만 — 10족 유사(Pt/Pd 동족) 6d/7s 원자가; 상대론 효과로 7s 안정·스핀-궤도 분리 큼. 고체 밴드구조/DOS 데이터 없음 — SSB 완전 무관",
+    "bonding": "예측 — Pt/Pd 동족 외삽만; 화학·응집상·SSB 결합 데이터 없음"
+  },
+  "_provenance": "예측치(초중원소, 실측 제한적); SSB 무관 — 배터리 db 절대값과 완전 분리. 전자배치·산화수는 문헌 예측/주기율표 외삽, 응집상 화학이 사실상 성립 안 함"
+}

@@ -1,0 +1,56 @@
+phase,label,h,k,l,two_theta_deg,d_A,multiplicity,I_rel_percent
+Cu,Cu (fcc),1,1,1,43.3181,2.08706,8,100.00
+Cu,Cu (fcc),2,0,0,50.4508,1.80745,6,46.80
+Cu2O,Cu$_2$O (cuprite),1,1,0,29.5644,3.01906,12,4.14
+Cu2O,Cu$_2$O (cuprite),1,1,1,36.4184,2.46505,8,100.00
+Cu2O,Cu$_2$O (cuprite),2,0,0,42.3023,2.13480,6,38.22
+Cu2O,Cu$_2$O (cuprite),2,1,1,52.4534,1.74306,24,1.10
+Cu2O,Cu$_2$O (cuprite),2,2,0,61.3663,1.50953,12,35.96
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),1,1,0,14.0964,6.27769,12,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),2,0,0,19.9862,4.43900,6,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),2,1,1,24.5413,3.62443,24,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),2,2,0,28.4119,3.13885,12,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),3,1,0,31.8495,2.80747,24,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),2,2,2,34.9828,2.56286,8,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),3,2,1,37.8881,2.37275,48,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),4,0,0,40.6152,2.21950,6,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),4,1,1,43.1985,2.09256,36,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),4,2,0,45.6633,1.98518,24,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),3,3,2,48.0285,1.89280,24,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),4,2,2,50.3089,1.81221,24,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),5,1,0,52.5163,1.74112,72,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),5,2,1,56.7488,1.62089,48,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),4,4,0,58.7885,1.56942,12,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),5,3,0,60.7852,1.52256,48,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),6,0,0,62.7436,1.47967,30,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),6,1,1,64.6681,1.44020,72,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),6,2,0,66.5625,1.40374,24,
+Cu5Zn8_gamma,Cu$_5$Zn$_8$ ($\gamma$-brass),5,4,1,68.4302,1.36991,48,
+CuI,CuI ($\gamma$; marshite),1,1,1,25.4759,3.49355,8,100.00
+CuI,CuI ($\gamma$; marshite),2,0,0,29.5000,3.02550,6,7.76
+CuI,CuI ($\gamma$; marshite),2,2,0,42.2080,2.13935,12,70.44
+CuI,CuI ($\gamma$; marshite),3,1,1,49.9484,1.82445,24,46.20
+CuI,CuI ($\gamma$; marshite),2,2,2,52.3334,1.74677,8,2.13
+CuI,CuI ($\gamma$; marshite),4,0,0,61.2217,1.51275,6,11.31
+CuI,CuI ($\gamma$; marshite),3,3,1,67.4066,1.38819,24,18.39
+CuI,CuI ($\gamma$; marshite),4,2,0,69.4039,1.35304,24,3.00
+CuZn5_eps,CuZn$_5$ ($\varepsilon$),1,0,0,37.9357,2.36988,6,24.96
+CuZn5_eps,CuZn$_5$ ($\varepsilon$),0,0,2,42.1379,2.14275,2,24.59
+CuZn5_eps,CuZn$_5$ ($\varepsilon$),1,0,1,43.6072,2.07389,12,100.00
+CuZn5_eps,CuZn$_5$ ($\varepsilon$),1,0,2,57.9787,1.58940,12,13.71
+CuZn5_eps,CuZn$_5$ ($\varepsilon$),2,-1,0,68.5244,1.36825,6,15.93
+CuZn_beta,CuZn ($\beta'$; CsCl),1,1,0,43.2820,2.08872,12,100.00
+CuZn_beta,CuZn ($\beta'$; CsCl),2,0,0,62.8722,1.47695,6,15.33
+Zn,Zn (hcp),0,0,2,36.2897,2.47350,2,36.67
+Zn,Zn (hcp),1,0,0,38.9940,2.30796,6,22.46
+Zn,Zn (hcp),1,0,1,43.2208,2.09154,12,100.00
+Zn,Zn (hcp),1,0,2,54.3208,1.68746,12,16.51
+ZnO,ZnO (wurtzite),1,0,0,31.7719,2.81415,6,51.44
+ZnO,ZnO (wurtzite),0,0,2,34.4202,2.60345,2,39.41
+ZnO,ZnO (wurtzite),1,0,1,36.2563,2.47570,12,100.00
+ZnO,ZnO (wurtzite),1,0,2,47.5408,1.91107,12,22.94
+ZnO,ZnO (wurtzite),2,-1,0,56.6019,1.62475,6,35.06
+ZnO,ZnO (wurtzite),1,0,3,62.8573,1.47726,12,33.09
+ZnO,ZnO (wurtzite),2,0,0,66.3841,1.40707,6,5.12
+ZnO,ZnO (wurtzite),2,-1,2,67.9530,1.37836,12,28.90
+ZnO,ZnO (wurtzite),2,0,1,69.0942,1.35835,12,14.84

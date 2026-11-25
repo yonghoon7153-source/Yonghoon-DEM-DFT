@@ -1,0 +1,732 @@
+{
+ "slug": "shin2026_bh4_reorientation_li_transport_li6ps5x",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-26",
+ "sources": [
+  "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+  "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Structural characterization by MAS NMR spectroscopy: (a) Schematic illustration of the coupling between polyanion rotation and Li+ ion migration. (b) XRD patterns. (c) Crystal structure of the argyrodite Li5PS4(BH4)2 with BH4−occupancy at the 4a and 4d sites marked in different colors. (d) 7Li, (e) 31P, and (f) 11B MAS NMR spectra of SE-high (red), SE-inter (blue), and SE-low (green).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    564.2,
+    426.3
+   ],
+   "w": 2153,
+   "h": 1631,
+   "dpi": 300,
+   "src": "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Dynamics on a microscopic scale by solid-state NMR spectroscopy: Logarithmic plots of the 7Li, 31P, and 11B SLR rates (1/T1) as a function of inverse temperature for (a) SE-high, (b) SE-inter, and (c) SE-low. Normalized correlation rates of the motional processes derived from 7Li, 31P, and 11B SLR data for (d) SE-high, (e) SE-inter, and (f) SE-low.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    564.2,
+    361.3
+   ],
+   "w": 2153,
+   "h": 1358,
+   "dpi": 300,
+   "src": "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Structural and dynamic effects by First-principles calculations: (a) Crystal structure of argyrodite Li5PS4(BH4)2 with BH4−tetrahedra occupying both 4a and 4d sites. Arrhenius plots of Li+ ion diffusivities from AIMD simulations of (b) Li5PS4(BH4)2 (500–900 K) and (c) Li6PS5Cl (600–1200 K) extrapolated to 300 K. Four structural models with different site-disorder configurations are compared. (Figure S5) (d) Isosurface of Li+ ion probability density for Li5PS4(BH4)2. (e) Self part of the van Hove correlation indicating inter-cage diffusion. (f) Trajectories of a single H atom within a BH4−tetrahedron and P and S atoms in a PS43−tetrahedron. (g) Definition of BH4−rotation angle (θ) and the Li-BH4 distance and their time evolution. The selected Li-BH4 distance (black, Li#14–B#20) and BH4−rotation angles (dashed red lines) referenced to t = 0. Distance and angle data are smoothed wi",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    522.3
+   ],
+   "w": 2153,
+   "h": 2031,
+   "dpi": 300,
+   "src": "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Dynamics on a macroscopic scale by PFG NMR spectroscopy: Logarithmic plots of NMR signal intensities versus the gradient factor, B, obtained at 298 K with varying diffusion times (Δ) for (a) SE-high and (b) SE-high-hp. (c) Schematic illustration of Li+ diffusion occurring within the individual grain interior (intragranular diffusion) and involving grain boundary crossing (intergranular diffusion). (d) Comparison of diffusion coefficients and the fraction of intergranular diffusion. (e) Activation energies for Li+ diffusion derived from the temperature dependence of the diffusion coefficients. (f) Comparison of SEM images of SE-high (top) and SE-high-hp (bottom). For SE-high-hp, the hot-pressed pellet was fractured, and the image was taken from the cross-sectional side view.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    564.2,
+    343.3
+   ],
+   "w": 2153,
+   "h": 1285,
+   "dpi": 300,
+   "src": "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Behavior at the cathode and electrolyte interphase: (a) Cycling performance of ASSB composed of NCM811 cathode/SE-high electrolyte/ Li-In anode for 100 cycles at 1C rate and 30◦C. Active material loading is 8 mg/cm2. Cut-off voltage is between 2.0 and 3.7 V (versus Li+/Li–In). (b) Voltage profile of the ASSB composed of LCO cathode/SE-high electrolyte/ Li-In anode designed for ex situ NMR measurements. Active material loading is 40.7 mg/cm2 for a sufficient signal-to noise ratio in the NMR analysis. State of charge at which the cells were stopped for ex situ NMR measurements is marked with the star symbols. (c) Schematic of the ASSB configuration. Samples from the cathode area and the solid electrolyte (SE) area were separately extracted for subsequent NMR measurements. The cathode area contains both LCO and argyrodite (SE-high). (d) Ex situ 7Li MAS NMR spectra of the SE area at",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    564.3,
+    582.3
+   ],
+   "w": 2154,
+   "h": 2283,
+   "dpi": 300,
+   "src": "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 10,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) 7Li, (b) 31P and (c) 11B static NMR spectra of SE-high acquired at various temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.4,
+    357.1
+   ],
+   "w": 1944,
+   "h": 1160,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 10,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) 7Li, (b) 31P and (c) 11B static NMR spectra of SE-inter acquired at various temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    408.6,
+    532.4,
+    660.3
+   ],
+   "w": 1944,
+   "h": 1050,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) 7Li, (b) 31P and (c) 11B static NMR spectra of SE-low acquired at various temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.4,
+    327.5
+   ],
+   "w": 1944,
+   "h": 1036,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 17,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Representative Li+–BH4− radial distribution functions (RDFs), g(r). The Li+–BH4− separation was evaluated using the Li+–B distance. The Li-cage size was defined as the position of the dominant first peak in each RDF, as indicated by the vertical dashed lines. The same procedure was consistently applied to all BH4− units at the 4a and 4d sites. Li-cage sizes were obtained from Li+–BH4− radial distribution functions (RDFs) derived from additional AIMD trajectories at 300 K over 20 ps, ensuring consistency with the comparison of the 300 K ionic conductivity. The Li+–BH4− separation was evaluated using the Li+–B distance, and the Li-cage size was defined as the position of the dominant first peak in each RDF, as marked by the vertical dashed lines in Figure S4. Using this procedure, the sizes of the eight BH4−-centered Li cages in the simulation cell, comprising four 4a cages and ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.6,
+    532.4,
+    274.5
+   ],
+   "w": 1944,
+   "h": 813,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 18,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Configurations of BH4⁻ orientational combinations (O1–O1, O1–O2, O2–O1, O2– O2) in the Li5PS4(BH4)2 argyrodite structure, where both Wyckoff 4a and 4d sites are fully substituted with BH4⁻ anions. Each label indicates the specific orientation assigned to BH4⁻ units at the 4a and 4d sites, respectively (e.g., O1–O2 denotes O1 at 4a and O2 at 4d). O1 (red) indicates BH4⁻ tetrahedron aligned with the neighboring PS43⁻ unit, whereas O2 (green) denotes anti-alignment. PS43⁻ tetrahedra are shown with P in blue and S in yellow, and Li ions as purple spheres.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.4,
+    492.4
+   ],
+   "w": 1944,
+   "h": 1723,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.682
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 20,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Calculated bulk Li+ ion conductivity (𝜎bulk ) of Li5PS4(BH4)2 as a function of crystallinity (𝜒𝑐). The conductivity follows the empirical relation σbulk = σcalc ⋅χ𝑐 7.14 derived from halide-substituted argyrodite systems, showing exponential growth with increasing crystallinity. In this study, 𝜒𝑐 = 0.6 was assumed, yielding corrected conductivity of 7.2 mScm1.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.4,
+    338.5
+   ],
+   "w": 1944,
+   "h": 1082,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.977
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 23,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Schematic illustration of a representative Li+ ion inter-cage diffusion pathway between 4a and 4d cages in argyrodite, with the diffusion trajectory shown in black arrow.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.4,
+    280.7
+   ],
+   "w": 1944,
+   "h": 841,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 27,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. (a) Probability distribution of BH4− rotation angle evaluated over Δt = 0.1 ps for the most stable Li5PS4(BH4)2 configuration (O1–O1). The distribution comprises 1,598,400 samples collected from all B–H bonds during the 100 ps AIMD trajectory at 500 K. Red bars denote the probability histogram, and dashed lines indicate the cumulative probability. (b) Schematic illustration of the BH4⁻ reorientation–Li⁺ hopping correlation. A distance of 2.6 Å was adopted as the cage-boundary criterion.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    159.8,
+    532.5,
+    325.2
+   ],
+   "w": 1944,
+   "h": 691,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 29,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Logarithmic plots of NMR signal intensities versus the gradient factor, B obtained at 298 K with varying diffusion times (Δ) for the samples: (a) SE-high, (b) SE-inter, (c) SE- high-cp, and (d) SE-high-hp.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.6,
+    532.4,
+    497.7
+   ],
+   "w": 1944,
+   "h": 1743,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 30,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Logarithmic plots of NMR signal intensities versus the gradient factor, B obtained at 298 K with Δ =50 ms for the samples: (a) SE-high and (b) SE-high-hp. Diffusion coefficients were extracted using a least-squares fitting approach (shown as dashed lines) with multiple components of different motional regimes. Diffusion coefficients and relative fractions of each motion are indicated in the figure.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.4,
+    532.5,
+    300.0
+   ],
+   "w": 1944,
+   "h": 920,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 32,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Logarithmic plots of NMR signal intensities versus the gradient factor, B for the sample SE-high, obtained at various temperatures ranging from 298 K to 343 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.6,
+    537.3,
+    270.8
+   ],
+   "w": 1964,
+   "h": 798,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 32,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Logarithmic plots of NMR signal intensities versus the gradient factor, B for the sample SE-inter, obtained at various temperatures ranging from 298 K to 343 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    312.6,
+    532.8,
+    468.7
+   ],
+   "w": 1946,
+   "h": 651,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 32,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Logarithmic plots of NMR signal intensities versus the gradient factor, B for the sample SE-low, obtained at various temperatures ranging from 323 K to 343 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    512.3,
+    535.5,
+    669.8
+   ],
+   "w": 1957,
+   "h": 657,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 33,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Logarithmic plots of NMR signal intensities versus the gradient factor, B for the sample SE-high-cp (cold-pressed), obtained at various temperatures ranging from 298K to 343K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    536.0,
+    241.6
+   ],
+   "w": 1959,
+   "h": 678,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 33,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Logarithmic plots of NMR signal intensities versus the gradient factor, B for the sample SE-high-hp (hot-pressed), obtained at various temperatures ranging from 298K to 343K.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    298.2,
+    536.0,
+    455.5
+   ],
+   "w": 1959,
+   "h": 656,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 34,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. SEM images of the samples: (a), (b) SE-high and (c), (d) SE-inter.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.7,
+    524.5,
+    418.3
+   ],
+   "w": 1911,
+   "h": 1412,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.27
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 35,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Ex-situ 31P and 11B MAS NMR spectra of (a), (b) the SE area and (c), (d) the cathode area at different states of charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.4,
+    676.4
+   ],
+   "w": 1944,
+   "h": 2490,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 36,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. 7Li NMR spectra of selected slices along the F2 dimension of the EXSY spectrum in Figure 5(h), along with reference spectra of standard samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    124.2,
+    532.2,
+    422.8
+   ],
+   "w": 1943,
+   "h": 1245,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 Sample characteristics.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.5
+   ],
+   "w": 2154,
+   "h": 2998,
+   "dpi": 278,
+   "src": "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "TABLE 2 Individual BPP fit results for 7Li, 31P, and 11B spin-lattice relaxation rates (1/T1). 7Li 31P 11B Sample Ea (eV) β τ0 −1(s−1) Tmax (K) Ea (eV) β τ0 −1(s−1) Tmax (K) Ea (eV) β τ0",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.5
+   ],
+   "w": 2154,
+   "h": 2998,
+   "dpi": 278,
+   "src": "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystallographic data, Rietveld refinement results, atomic coordinates, and site occupancies for SE-high obtained from powder X-ray diffraction data.[3] Atom Site x y z Occ",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    103.5,
+    531.2,
+    184.9
+   ],
+   "w": 1935,
+   "h": 340,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 7,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Crystallographic data, Rietveld refinement results, atomic coordinates, and site occupancies for SE-inter obtained from powder X-ray diffraction data.[3] Atom Site x y z Occ",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.2,
+    148.2
+   ],
+   "w": 1935,
+   "h": 283,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.568
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 8,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Crystallographic data, Rietveld refinement results, atomic coordinates, and site occupancies for SE-low obtained from powder X-ray diffraction data.[4] Atom Site x y z Occ",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.2,
+    499.9
+   ],
+   "w": 1935,
+   "h": 1748,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 13,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Individual BPP Fit Results for 7Li, 31P, and 11B Spin-Lattice Relaxation Rates SE-high SE-inter SE-low",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    79.5,
+    528.2,
+    324.2
+   ],
+   "w": 1922,
+   "h": 1020,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.73
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 19,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Calculated relative stability (Erel, in meV/atom) and Li+ ion conductivity (mScm1 at 300 K) for various BH4⁻ orientational configurations in Li5PS4(BH4)2. The final bulk ionic conductivity (𝜎bulk) was obtained using a Boltzmann-weighted average and corrected for 60% crystallinity. Conductivitya Structure (BH4)@4a (BH4)@4d Erel (meV/atom) (mScm1) O1 O1 0 557.97 O1 O2 7.1 388.47 Li5PS4(BH4)2 O2 O1 14.8 265.72 O2 O2 7.3 319/43 0.6 = 7.2 𝜎𝑏𝑢𝑙𝑘 aThese values were obtained by extrapolation to 300 K from Arrhenius fitting.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.0,
+    531.4,
+    313.8
+   ],
+   "w": 1936,
+   "h": 975,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 21,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Calculated bulk ionic conductivities (σbulk) of Li5PS4(BH4)2 as a function of crystallinity (χc), compared with the experimental value (σexp[20]). The corrected value at χc = 0.6 (7.2 mScm1) closely matches the experimental conductivity (7.0 mScm1). Crystallinity (χc) σbulk (mScm1) σexp (mScm1) 1.0 274.5 0.9 129.4 0.8 55.8 7.0 (Ref 5) 0.7 21.5 0.6 7.2 0.5 1.9",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.4,
+    269.6
+   ],
+   "w": 1936,
+   "h": 789,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 22,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Calculated relative energies (Erel) and room-temperature Li+ ion conductivities (𝜎RT) of Li6PS5Cl for different halide (X⁻) occupancies at the 4c site. Site disorder is represented by Cl⁻ occupancies from 0% to 100% with corresponding space groups. The most stable configuration (50% in P2122) is taken as reference (Erel= 0). Bulk conductivity (𝜎bulk) was estimated by Boltzmann-weighted average and corrected for 80% crystallinity (𝜒𝑐 = 0.8), giving 𝜎𝑏𝑢𝑙𝑘 0.8 = 3.82 mScm1.[18] Structure Site occupancy (X @4c) Erel (meV/atom) σRT (mScm1) 0% (𝐹4̅3𝑚) 23 0.02 25% (𝑅3𝑚) 4 45 50% (𝑃2122) 0 115 Li6PS5Cl 50% (𝑃2𝑚𝑚) 11 183 75% (𝑅3𝑚) 13 60 100% (𝐹4̅3𝑚) 206 0.57 0.8 = 3.82 𝜎𝑏𝑢𝑙𝑘",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    79.8,
+    531.4,
+    362.2
+   ],
+   "w": 1936,
+   "h": 1178,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 24,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Average Li+ ion cage sizes at the 4a and 4d Wyckoff sites in Li5PS4(BH4)2 and their standard deviations (STDs), along with corrected Li+ ion conductivities at 60% crystallinity. The two sites show nearly identical cage sizes, while the O1–O1 configuration, with the smallest STD, yields the highest Li+ ion conductivity. Li-cage size (Ȧ) σ0.6 (mScm1) 4a 4d 4a-4d STD Structure (BH4)@4a (BH4)@4d 2.56 2.53 0.03 0.031 2.53 2.54 -0.01 0.037 Li5PS4(BH4)2 2.52 2.55 -0.03 0.040 2.58 2.54 0.04 0.054",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    79.5,
+    531.4,
+    274.5
+   ],
+   "w": 1936,
+   "h": 813,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 25,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Li+ ion diffusivities at 500 K (in 10⁻9 m2s1) for Li5PS4(BH4)2 with different BH4⁻ orientational configurations at the 4a and 4d sites by comparing rotatable and fixed BH4⁻ to highlight the impact of BH4⁻ rotational dynamics on Li+ ion transport. Structure (BH4⁻)@4a (BH4⁻)@4d Diffusivity500K (109 m²s1) BH4 (Rotatable) BH4 (Fixed)",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.1,
+    531.4,
+    216.7
+   ],
+   "w": 1936,
+   "h": 571,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 26,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Classification of Li+ hopping and neighboring BH4− reorientation from the 100 ps AIMD trajectory at 500 K for the most stable Li5PS4(BH4)2 configuration (O1–O1).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    108.2,
+    531.4,
+    235.8
+   ],
+   "w": 1936,
+   "h": 533,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 31,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Diffusion Coefficients at 298K and Activation Energies for Li+ ion diffusion Diffusion coefficientb (D, 1012 m2s1) Activation energy for Li diffusion (eV) Fast regionc Slow regionc Average Conductivitya Sample (mScm1)",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    79.5,
+    528.3,
+    428.0
+   ],
+   "w": 1923,
+   "h": 1453,
+   "dpi": 300,
+   "src": "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
+   "blank": 0.737
+  }
+ ]
+}

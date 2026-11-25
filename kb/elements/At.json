@@ -1,0 +1,57 @@
+{
+  "symbol": "At",
+  "name": "Astatine",
+  "Z": 85,
+  "role": "할로겐(group 17) 중 가장 무거운 원소 — argyrodite 할라이드 크기·분극성 계열(Cl < Br < I < At)의 형식적 최말단. At⁻(astatide)는 I⁻보다 더 크고 분극성·연한 결합이 예상되어 LiAt는 LiI의 무거운 유추상이나, 강방사성(At-211 등, 반감기 짧음)·극한 희소성(지각 최희소 원소)으로 실물 화학이 거의 없고 배터리엔 무관. 준금속 성향도 일부 보고. 백과사전 완결성·할라이드 트렌드 외삽용 참조종.",
+  "oxidation_states": [
+    "-1",
+    "+1",
+    "+3",
+    "+5",
+    "+7"
+  ],
+  "electronegativity": 2.2,
+  "ionic_radius_A": {
+    "At7+_VI": 0.62,
+    "At-_est": 2.3,
+    "_note": "Shannon 표에 At⁻ 없음(방사성). At⁷⁺ VI 0.62 A는 일부 확장표 인용. At⁻는 할라이드 트렌드(Cl⁻ 1.81 < Br⁻ 1.96 < I⁻ 2.20)에서 ~2.3 A로 외삽 추정 — 불확실. 크기·분극성 순 Cl < Br < I < At."
+  },
+  "representative_compounds": [
+    {
+      "formula": "LiAt (hypothetical)",
+      "context": "LiI의 무거운 유추상",
+      "battery_role": "없음(가설) — 할라이드 SEI/전도체 계열 최말단 유추",
+      "note": "LiF/LiCl/LiBr/LiI 계열의 형식적 연장이나 방사성·희소로 실물 없음"
+    },
+    {
+      "formula": "AgAt",
+      "context": "AgI 유추 astatide",
+      "battery_role": "없음 — 방사화학 추적 맥락",
+      "note": "은 astatide(soft-soft) 유추상; 실험은 무담체(carrier-free) 추적자 수준"
+    },
+    {
+      "formula": "At- (astatide) / HAt / AtI",
+      "context": "astatide 음이온·수소화물·인터할로겐",
+      "battery_role": "없음 — At-211은 표적 α치료(핵의학)로만 실용",
+      "note": "I⁻ 동족이나 더 분극성·준금속성; 실제 응용은 배터리 아닌 의료 방사성동위원소"
+    }
+  ],
+  "sei_relevance": "해당 없음. At는 강방사성·극희소로 argyrodite 할라이드 자리(Cl/Br/I)의 형식적 연장 개념으로만 의미가 있고 실물 계면·SEI 실험은 불가. 트렌드상 At⁻는 I⁻보다 더 크고 연해 격자 유연·Li 이동엔 유리할 방향이나(halide 분극성↑ 축), 방사성으로 검증 불가능. 실용 관련성 0 — 백과사전 완결성 항목.",
+  "xps": [],
+  "raman": [],
+  "dos_character": "At⁻는 I⁻(5p⁶)의 무거운 동족으로 6p⁶ closed-shell 음이온 — 원리적으로 halide 중 가장 얕은 p라 밴드엣지 기여 최대·가장 분극성일 것으로 외삽되나, At 원소 자체는 준금속/금속 성향이 커 halogen의 반도체적 성격이 약해진다. 무거운 원소라 SOC·상대론 효과 큼. 방사성으로 실측 밴드데이터 부재 → 트렌드 외삽만 가능.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁵",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵",
+    "valence_orbitals": "6s² 6p⁵ — 6p⁵ lone pair, At⁻(6p⁶). I 5p⁵의 가장 무거운 동족(4f¹⁴5d¹⁰ 반코어)",
+    "band_character": "(일반) At⁻=6p⁶면 halide 중 가장 얕은 p로 VBM 기여 최대·분극성 극대 예상(Cl<Br<I<At 트렌드 외삽); 단 At 준금속성·SOC로 halogen 반도체 성격 약화. 방사성으로 실측 부재",
+    "bonding": "이온성 Li–At(halide 중 가장 크고 분극성·연함, 외삽), 6p⁶ lone pair; At 준금속성으로 공유성 기여 가능"
+  },
+  "key_references": [
+    "무기화학 handbook (Greenwood & Earnshaw 등) — At = 최무거운 할로겐, 지각 최희소, At-211 α방출 반감기 7.2 h",
+    "할라이드 크기 트렌드(Shannon Cl⁻ 1.81 / Br⁻ 1.96 / I⁻ 2.20 A) — At⁻ ~2.3 A 외삽(불확실)",
+    "(XPS/Raman: 강방사성·무담체 수준으로 신뢰할 핸드북 데이터 부재 → 생략)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii · handbook). SSB 앵커 없음(비캠페인) — 백과사전 기본+orbital. 우리 db 절대값과 분리."
+}

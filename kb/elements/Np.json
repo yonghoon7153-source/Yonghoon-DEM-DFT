@@ -1,0 +1,38 @@
+{
+  "symbol": "Np",
+  "name": "Neptunium",
+  "Z": 93,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 5f⁴6d¹7s²로 첫 초우라늄(transuranic) 원소. Np-237(반감기 214만년)이 주 동위원소. 수용액에서 +5(NpO₂⁺)가 특히 안정하고 +3~+7까지 넓은 산화수를 가짐. 5f 편재↔국재 전환의 경계(U와 Pu 사이)에 위치. 전지와 무관, 데이터는 U/Pu보다 제한적.",
+  "oxidation_states": ["+7", "+6", "+5", "+4", "+3"],
+  "electronegativity": 1.36,
+  "ionic_radius_A": {
+    "Np3+_VI": 1.01,
+    "Np4+_VI": 0.87,
+    "Np4+_VIII": 0.98,
+    "Np5+_VI": 0.75,
+    "_note": "Shannon 1976: Np3+ VI 1.01, Np4+ VI 0.87 / VIII 0.98, Np5+ VI 0.75 A. 계열 수축으로 U 동일산화수보다 약간 작음."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f⁴ 6d¹ 7s²",
+    "electron_config": "[Rn] 5f⁴ 6d¹ 7s²",
+    "valence_orbitals": "5f⁴ 6d¹ 7s² — Np⁴⁺면 5f³, Np⁵⁺(NpO₂⁺)면 5f². 넓은 산화수 폭",
+    "band_character": "5f⁴ — 5f 편재↔국재 경계(U보다 국재 쪽으로 이동). NpO₂는 국재 5f로 강상관 절연체이고 낮은 온도에서 특이한 다극자(multipole) 정렬을 보임 → DFT+U/DMFT 대상. 악티나이드 Mott 전환(Pu/Am 부근)의 직전 단계.",
+    "bonding": "Np–O 이온성+5f/6d 공유성(NpO₂ fluorite), 네프투닐 NpO₂⁺/NpO₂²⁺는 축방향 다중결합."
+  },
+  "representative_compounds": [
+    {"formula": "NpO2", "context": "대표 산화물(+4)", "battery_role": "해당 없음(방사성)", "note": "fluorite형; 국재 5f 강상관 절연체, 저온 다극자 정렬"},
+    {"formula": "NpF4", "context": "할라이드(+4)", "battery_role": "해당 없음", "note": "금속 Np 제조 중간체"},
+    {"formula": "NpF6", "context": "휘발성 6가 불화물", "battery_role": "해당 없음", "note": "UF₆·PuF₆와 함께 휘발성 actinide hexafluoride"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "5f⁴ — U에서 Pu로 가는 길목의 5f 편재↔국재 경계. NpO₂는 국재 5f로 강상관 절연체이며 DFT+U/DMFT가 있어야 정성 재현되고, 저온에서 잘 알려진 다극자(magnetic multipole) 질서를 보임. 초우라늄이라 시료·실측이 제한적이라 계산 문헌 위주.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Np3+/Np4+/Np5+)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — Np 화학",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · CRC/Greenwood) — 우리 db 절대값과 분리."
+}

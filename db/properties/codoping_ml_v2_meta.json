@@ -1,0 +1,493 @@
+{
+ "property": "codoping_ml_v2_meta",
+ "date": "2026-07-27",
+ "status": "HYPOTHESIS GENERATOR — NOT VALIDATED (co-doping 라벨 부재; doping_cascade_verified.json 은 단일 도펀트만)",
+ "inputs": [
+  "cascade_v23_ranked.csv",
+  "oxidation_stability_cascade.csv",
+  "cascade_v23_litransport.csv",
+  "cascade_v23_themes.json",
+  "cascade_v23_synergy_pairs.csv (v1, 증류 타깃)"
+ ],
+ "stage1_single_dopant_ridge": {
+  "target": "cascade v23 score (합성 지표 — 물성 실측 아님)",
+  "n": 47,
+  "lambda": 0.07943282347242822,
+  "lambda_rule": "1se",
+  "loocv_r2": 0.9998,
+  "loocv_residual_std_score_units": 0.0018,
+  "loocv_note": "표준화(mu/sd)·y평균·λ선택은 전표본 고정(폴드 밖 재사용) — 폴드별 재계산으로 누수 정량화: σ_loo +3.4%(0.00178→0.00184), R² Δ<1e-4, λ 폴드별 재선택(nested)도 R²=0.9998 (타깃이 특징의 정확 선형합성이라 결과 왜곡 없음)",
+  "coefficients_std_units": {
+   "de": -0.0549,
+   "ox_V": 0.074,
+   "red_V": 0.0048,
+   "window_V": 0.0357,
+   "E_GPa": -0.0434,
+   "pugh": -0.0316,
+   "bvs_x002": -0.0002,
+   "bvs_x005": 0.0,
+   "bvs_x010": -0.0001,
+   "bvs_slope": -0.0001,
+   "blocking": -0.0,
+   "disorder_std": 0.0002,
+   "mass_per_cation": -0.0001,
+   "cost_tier": 0.0001,
+   "gap_lit_eV": -0.0002,
+   "air_hsab": -0.0002,
+   "group=TM": 0.0001,
+   "group=lanthanide": 0.0005,
+   "group=alk.earth": 0.0002,
+   "group=alkali": 0.0001
+  },
+  "note": "계수 = 표준화 특징 1σ당 score 변화. λ는 1-SE 규칙 — score가 5성분 정확 선형합성이라 min-λ에선 정확공선 트리오(window=ox-red, slope=x010-x002)에 스퓨리어스 가중이 새는 것 확인. one-hot 기준그룹=main-group."
+ },
+ "stage3_interaction_distillation": {
+  "target": "v1 synergy (top40 수록값 가중 1.0, 미수록 1041쌍=0 근사·가중 0.1)",
+  "n_pairs": 1081,
+  "lambda": 39.81071705534978,
+  "weighted_loocv_r2": 0.0892,
+  "weighted_loocv_residual_std_tz_units": 2.3273,
+  "loocv_note": "stage1과 동일 — 표준화·λ는 전표본 고정 (누수 영향 무시 수준, stage1 loocv_note 참조)",
+  "intercept_note": "특징·타깃 모두 sw-가중 중심화로 절편 정합 (2026-07-27 수정 — 비중심화 대비 계수 max|Δ|≈0.013, top10 집합 동일, top50 순위이동 ≤1계단)",
+  "interaction_coefficients": {
+   "air_max*gap_min": 0.0968,
+   "joint_window*transport_min": 0.1127,
+   "disorder_max*dose_slope_min": -0.1916,
+   "transport_min*blocking_max": 0.0659,
+   "joint_window*gap_min": -0.2122,
+   "group_cross*joint_window": -0.1681,
+   "de_avg*joint_window": -0.6259,
+   "air_max*transport_min": 0.0226
+  },
+  "interaction_rationale": {
+   "air_max*gap_min": "soft-acid 공기보호 <-> 전자절연 트레이드오프",
+   "joint_window*transport_min": "넓은 합동창이 수송 약한 고리와 동반되는가",
+   "disorder_max*dose_slope_min": "무질서 유도 <-> 농도 강건성",
+   "transport_min*blocking_max": "수송 약한 고리 x 채널 차단 최악치",
+   "joint_window*gap_min": "전기화학 창을 전자누설이 잠식하는가",
+   "group_cross*joint_window": "이종 그룹 조합의 창 상보성",
+   "de_avg*joint_window": "열역학 도핑 안정성이 동반된 합동창",
+   "air_max*transport_min": "공기보호와 수송의 겸비"
+  },
+  "diagnostics_on_listed_labels": {
+   "n_listed": 40,
+   "stage3_pearson_r": 0.5503,
+   "stage3_spearman_r": 0.4979,
+   "full_score_pearson_r": 0.6545,
+   "full_score_spearman_r": 0.6734,
+   "note": "weighted_loocv_r2(위)를 '실제 synergy 설명분산'으로 읽으면 안 된다 — 가중치의 ~72%(1041×0.1)가 v1 미수록 쌍의 0-근사에 실려 있어서, 그 값은 주로 '0 을 0 으로 맞추는' 성능이다. 실측 라벨에 대한 신호는 여기 상관/순위상관으로만 판단할 것 (원 synergy 와 z-단위 점수는 스케일이 달라 R² 자체가 정의상 무의미하므로 싣지 않는다). 상태: HYPOTHESIS GENERATOR."
+  },
+  "dopant_concentration": {
+   "top10_counts": {
+    "Sc2O3": 6,
+    "Cr2O3": 4,
+    "Gd2O3": 3,
+    "In2O3": 1,
+    "Y2O3": 1,
+    "Ta2O5": 1,
+    "Nb2O5": 1,
+    "HfO2": 1,
+    "WO3": 1,
+    "V2O5": 1
+   },
+   "top50_counts": {
+    "Sc2O3": 22,
+    "Cr2O3": 13,
+    "In2O3": 11,
+    "Y2O3": 8,
+    "Gd2O3": 6,
+    "Ta2O5": 3,
+    "Nb2O5": 3,
+    "HfO2": 3,
+    "WO3": 3,
+    "Al2O3": 3,
+    "Sm2O3": 3,
+    "Nd2O3": 3,
+    "Fe2O3": 2,
+    "ScF3": 2,
+    "LaF3": 2,
+    "La2O3": 2,
+    "V2O5": 1,
+    "CrO3": 1,
+    "YF3": 1,
+    "MnO": 1,
+    "MoO3": 1,
+    "B2O3": 1,
+    "ZrF4": 1,
+    "Ga2O3": 1,
+    "CaO": 1,
+    "Sb2O5": 1,
+    "ZrO2": 1
+   },
+   "distinct_in_top10": 10,
+   "note": "편중의 출처는 교호작용이 아니라 base_z(단일도펀트 cascade score)다 — base_z 단독 랭킹도 top10 중 7개를 그대로 재현하고 corr(base_z, ml_score)≈0.86. 다양성이 필요하면 '도펀트당 최상위 쌍' 목록을 따로 뽑을 것."
+  }
+ },
+ "vs_v1": {
+  "spearman_on_v1_top40_pairs": 0.672,
+  "top10_overlap_count": 2,
+  "corr_base_z_vs_v1_target": 0.215,
+  "v1_top10": [
+   [
+    "Cr2O3",
+    "HfO2"
+   ],
+   [
+    "Al2O3",
+    "Cr2O3"
+   ],
+   [
+    "HfO2",
+    "In2O3"
+   ],
+   [
+    "Ga2O3",
+    "HfO2"
+   ],
+   [
+    "AlF3",
+    "Cr2O3"
+   ],
+   [
+    "HfO2",
+    "Sc2O3"
+   ],
+   [
+    "Cr2O3",
+    "ScF3"
+   ],
+   [
+    "Gd2O3",
+    "In2O3"
+   ],
+   [
+    "Cr2O3",
+    "MgF2"
+   ],
+   [
+    "Cr2O3",
+    "MgO"
+   ]
+  ],
+  "v2_top10": [
+   [
+    "Cr2O3",
+    "Gd2O3"
+   ],
+   [
+    "Gd2O3",
+    "In2O3"
+   ],
+   [
+    "Gd2O3",
+    "Sc2O3"
+   ],
+   [
+    "Cr2O3",
+    "Sc2O3"
+   ],
+   [
+    "Cr2O3",
+    "Y2O3"
+   ],
+   [
+    "Sc2O3",
+    "Ta2O5"
+   ],
+   [
+    "Nb2O5",
+    "Sc2O3"
+   ],
+   [
+    "Cr2O3",
+    "HfO2"
+   ],
+   [
+    "Sc2O3",
+    "WO3"
+   ],
+   [
+    "Sc2O3",
+    "V2O5"
+   ]
+  ],
+  "interaction_lifted_pairs": [
+   {
+    "pair": [
+     "Fe2O3",
+     "Y2O3"
+    ],
+    "rank_v2": 45,
+    "rank_base_only": 174,
+    "lift": 129,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "Nb2O5",
+     "Y2O3"
+    ],
+    "rank_v2": 23,
+    "rank_base_only": 82,
+    "lift": 59,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "WO3",
+     "Y2O3"
+    ],
+    "rank_v2": 39,
+    "rank_base_only": 93,
+    "lift": 54,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "Ta2O5",
+     "Y2O3"
+    ],
+    "rank_v2": 33,
+    "rank_base_only": 80,
+    "lift": 47,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "In2O3",
+     "Y2O3"
+    ],
+    "rank_v2": 32,
+    "rank_base_only": 75,
+    "lift": 43,
+    "top_interaction": "disorder_max*dose_slope_min"
+   }
+  ]
+ },
+ "sendek2017_small_sample_defenses": {
+  "source": "litdb/papers/sendek2017_ml_screening_12k_conductors.md §4d (Sendek et al., Energy Environ. Sci. 2017, 10, 306 — DOI 10.1039/c6ee02697d)",
+  "why": "그들 훈련셋 40종 ≈ 우리 47 도펀트로 체급이 동일 — 소표본 ML의 방어 절차를 **절차만** 계승한다. 그들은 cross-material 이진분류(실측 σ), 우리는 within-host 회귀(휴리스틱 타깃) — 수치·특징 이식 금지.",
+  "determinism": {
+   "seed": 20260728,
+   "n_permutations": 100,
+   "note": "np.random.default_rng(고정 시드) — 2회 실행 산출물 md5 동일"
+  },
+  "headline": {
+   "stage1_enrichment_x": 79.29,
+   "stage3_ordering_enrichment_x": 3.35,
+   "stage3_discovery_enrichment_x": 1.22,
+   "stage3_cRp2": 0.1419,
+   "pairCV_minus_L2DO_weighted_r2": 0.344,
+   "n_pairs_outside_applicability_domain": 18,
+   "one_line": "stage1 은 랜덤 대비 79배 정확하지만 그건 타깃이 특징의 선형합성이라서다(항등식 복원). stage3 은 이미 알려진 40쌍의 **순서**는 랜덤 대비 3.4배 맞히지만(p=0.010), 1081쌍에서 그 40쌍을 **발굴**하는 능력은 랜덤과 구별 불가(1.22배, p=0.43) 이고 cR²_p=0.14 로 QSAR 문턱 0.5 미달. 게다가 pair-CV 는 도펀트 누수로 R² 를 +0.34 과대평가한다 (독립 폴드에선 R²<0). → 산출물 지위는 'HYPOTHESIS GENERATOR' 그대로가 맞다."
+  },
+  "honesty_framing": [
+   "우리 47 도펀트는 **큐레이션된 후보군**이지 대규모 발견 깔때기가 아니다 (Xiao 104,082 / Sendek 12,831 / Kahle 15,855 과 근본적으로 다름). 따라서 아래 농축배수는 '우리가 N만 개를 걸렀다'가 아니라 '이미 선별된 1081쌍 안에서 모델 랭킹이 랜덤 대비 얼마나 앞서나'다.",
+   "stage3 의 '양성 라벨'은 v1 휴리스틱 top40 — **실측/계산 라벨이 아니다.** 그러므로 precision@40·농축배수는 '휴리스틱 재현력'이지 물성 적중률이 아니다.",
+   "Sendek 화법 그대로: '정확도 XX%'가 아니라 'base rate 명시 + 랜덤 대비 N배 농축'."
+  ],
+  "stage1_score_regression": {
+   "label_shuffle_error_enrichment": 79.29,
+   "x_randomization_error_enrichment": 79.28,
+   "label_shuffle_r2_loo_mean": 0.0005,
+   "x_randomization_r2_loo_mean": 0.0007,
+   "label_shuffle_p_value": 0.009900990099009901,
+   "x_randomization_p_value": 0.009900990099009901,
+   "cRp2_vs_label_shuffle": 0.9812,
+   "cRp2_vs_x_randomization": 0.9807,
+   "r2_fit_true": 0.9999,
+   "cRp2_passes_qsar_threshold": true,
+   "interpretation": "stage1 타깃(cascade score)은 특징의 거의 정확한 선형합성이라 R²_loo=0.9998 이 나온다 — 이 수치는 '예측력'이 아니라 '항등식 복원'이다. 라벨셔플/X-rand 대비 오차가 ~79배로 벌어지는 것은 그 항등식이 실재함을 확인해줄 뿐, 물성 예측력의 증거가 아니다.",
+   "why_two_nulls_coincide": "라벨셔플 79.3x 와 X-randomization 79.3x 가 거의 동일한 것은 버그가 아니다 — 두 귀무모형 모두 신호를 완전히 파괴해 ridge 가 절편-only 로 수축하므로 σ_loo → std(y) 로 같은 값에 수렴한다. 즉 이 농축배수는 std(y)/σ_loo,true 의 다른 표현.",
+   "cRp2_threshold_note": "QSAR 관례 문턱 0.5 (Sendek 최적모델 0.59). cR²_p = R·√(R²−R²_rand), R²는 적합 R² (LOOCV 아님)."
+  },
+  "stage3_interaction_distillation": {
+   "positive_base_rate": 0.037,
+   "n_listed_positives": 40,
+   "stage3_precision_at_40": 0.1,
+   "stage3_rank_enrichment_vs_base_rate": 2.7,
+   "stage3_rank_enrichment_vs_label_shuffle": 1.22,
+   "deployed_ml_score_precision_at_40": 0.125,
+   "deployed_ml_score_rank_enrichment_vs_base_rate": 3.38,
+   "label_shuffle_precision_at_40_mean": 0.0823,
+   "x_randomization_precision_at_40_mean": 0.0845,
+   "stage3_spearman_on_listed": 0.4985,
+   "label_shuffle_spearman_abs_mean": 0.1489,
+   "spearman_enrichment_vs_label_shuffle": 3.35,
+   "label_shuffle_p_value_precision": 0.42574257425742573,
+   "label_shuffle_p_value_spearman": 0.009900990099009901,
+   "x_randomization_p_value_precision": 0.43564356435643564,
+   "label_shuffle_weighted_r2_loo_mean": 0.0001,
+   "cRp2_vs_label_shuffle": 0.1419,
+   "cRp2_vs_x_randomization": 0.1407,
+   "r2_fit_true": 0.15,
+   "interpretation": "stage3 의 weighted_loocv_r2(0.089)는 1041개 0-근사가 지배해 해석 불가. 정직한 지표는 랭킹 농축배수 — 'top-40 안에 v1 수록쌍이 몇 개' 를 base rate(40/1081 = 3.70%) 및 라벨셔플 귀무분포와 비교한 값이다.",
+   "cRp2_passes_qsar_threshold": false,
+   "caveat": "양성 라벨 = v1 휴리스틱 수록 여부이므로 이 농축은 **v1 재현 농축**이다. 물성 검증이 아니다.",
+   "verdict": "⚠ 두 지표가 갈린다 — 정직하게 둘 다 보고할 것. (a) **순서**: 이미 v1 이 수록한 40쌍 **안에서의 순위**는 랜덤 대비 유의하게 낫다 (Spearman 0.498 vs 셔플 0.149, 3.4x, p=0.0099). (b) **발굴**: 1081쌍 전체에서 그 40쌍을 top-40 으로 끌어올리는 능력은 랜덤과 구별되지 않는다 (precision@40 0.100 vs 셔플 0.0823, 1.22x, p=0.426 — 유의하지 않음). (c) **cR²_p = 0.142 < 0.5** = QSAR 관례 문턱 **미달**(Sendek 최적모델 0.59 대비). 결론: stage3 교호작용 증류는 '가설 순서 매기기' 용도로는 신호가 있으나 '새 쌍 발굴기'로 주장할 근거는 없다 — 산출물 지위(HYPOTHESIS GENERATOR)와 정합."
+  },
+  "applicability_domain": {
+   "definition": "Sendek §3.4. d = 훈련셋(47 도펀트) PCA-분산 정규화 중심거리를 훈련 평균으로 재정규화(훈련 점 평균 d=1); ε = leave-one-dopant-out 47 재적합 예측의 표준편차; A = (d <= 2).",
+   "space": "pair 를 단일도펀트 스케일러로 옮긴 이식 좌표 (Pz_s + PGz_s, 20차원)",
+   "pca_components_retained": 18,
+   "pca_eigenvalue_tolerance": 0.0001,
+   "degenerate_direction_handling": "훈련셋 정확 공선(window=ox−red, bvs_slope=x010−x002)으로 고유값 0 방향 2개 존재 (스펙트럼 4.10 … 7.83e-2 | 2.57e-7, 2.95e-16 — 8자릿수 간극이라 문턱 민감도 없음). pair 특징은 min/max 집계라 그 공선을 깨뜨려(min(slope) ≠ min(x010)−min(x002)) 0-분산 방향에 실제 성분이 생긴다 → 임의 ridge κ 대신 **잔존 최소 고유값(실측된 가장 좁은 분산)을 그 방향의 분산 하한**으로 사용(튜닝 없음, 보수적). 1e-8 문턱으로 수치 영공간(2.57e-7)을 '유효 성분'으로 잘못 남기면 d 가 중앙값 129·최대 837 로 폭발한다 — 채택 문턱은 필수 (2026-07-28 구현 노트).",
+   "offsubspace_residual_sigma_units": {
+    "train_max": 0.00128,
+    "pair_median": 0.283,
+    "pair_max": 1.838,
+    "note": "훈련셋은 정의상 ~0(공선 정확), pair 는 집계 때문에 유한 — 이 성분이 곧 'pair 이식의 진짜 외삽분'이며 위 floor 로 d 에 반영됨."
+   },
+   "d_threshold": 2.0,
+   "n_pairs": 1081,
+   "n_outside_domain": 18,
+   "frac_outside_domain": 0.0167,
+   "n_outside_in_top40": 0,
+   "n_outside_in_top10": 0,
+   "d_stats": {
+    "min": 0.572,
+    "median": 1.152,
+    "max": 2.386,
+    "train_mean_by_construction": 1.0,
+    "train_max": 1.293
+   },
+   "d_median_top40": 1.135,
+   "eps_stats": {
+    "min": 0.035,
+    "median": 0.105,
+    "max": 0.347,
+    "median_top40": 0.224,
+    "units": "배포 ml_score 와 같은 z 단위 — 같은 열의 uncertainty 와는 다른 양이다(uncertainty = stage1 LOOCV 잔차 전파 + stage3 계수 공분산 사영, ad_eps = 도펀트 제거 재적합 jackknife 산포)."
+   },
+   "outside_domain_dopant_counts": {
+    "Ag2O": 12,
+    "AlF3": 4,
+    "CaF2": 3,
+    "Cu2O": 2,
+    "Fe2O3": 2,
+    "In2O3": 2,
+    "B2O3": 1,
+    "CaO": 1,
+    "Gd2O3": 1,
+    "GeO2": 1,
+    "HfO2": 1,
+    "Nd2O3": 1,
+    "ScF3": 1,
+    "Sm2O3": 1,
+    "Y2O3": 1,
+    "YF3": 1,
+    "MgF2": 1
+   },
+   "sanity_check": "외삽 플래그가 걸린 쌍의 구성원은 47종 중 소수 화학(Ag2O·AlF3·CaF2·Cu2O)에 집중된다 — d 가 '훈련 분포에서 먼 화학'을 실제로 짚고 있다는 확인. 특정 상위 후보를 깎으려고 만든 지표가 아님.",
+   "eps_winners_curse_signal": "⚠ **상위 40쌍의 ε 중앙값(0.224)이 전체 중앙값(0.105)의 2.1배**다 — 높은 점수를 받은 쌍일수록 도펀트 하나를 빼면 점수가 더 크게 흔들린다. 이것이 정확히 winner's curse 의 서명이며, M3 역설계에서 top 후보를 고를 때 ml_score 단독이 아니라 ml_score − k·ad_eps 같은 벌점 형태를 쓸 근거.",
+   "finding": "pair 특징은 단일도펀트 특징의 min/max/avg 집계라 대부분 훈련 분포 **내부**에 떨어진다 — 외삽 판정은 18/1081쌍뿐이고 top40 에는 0개. 즉 우리 경우 winner's curse 의 주 위험은 '외삽(d)'이 아니라 '모델 불안정(ε)·도펀트 누수(cv_leakage 절)'다. d 는 그래도 배포 표에 병기해 Sendek 식 신뢰주석을 유지한다.",
+   "use": "M3 역설계 winner's curse 완화의 기성 구현체 — 후보 제시 시 ml_score 옆에 ad_d/ad_eps/ad_A 를 반드시 병기하고, ad_A=0 은 '외삽·저신뢰'로 라벨링할 것. Sendek Table 3 의 P_LR=1.000 4종이 전부 d=3.2–6.9 인공물이었던 사례가 근거.",
+   "columns_added_to_csv": [
+    "ad_d",
+    "ad_eps",
+    "ad_A"
+   ]
+  },
+  "cv_leakage_leave_one_dopant_out": {
+   "lambda_fixed": 39.81071705534978,
+   "note": "세 방식 모두 λ=λ3 고정·동일 가중(sw)·동일 평가집합(1081쌍) — 차이는 오직 훈련폴드 구성. stage1 은 행=도펀트라 LOOCV 가 이미 LODO 이며 pair 단위 적합이 없으므로(계수 이식) 누수 비교는 stage3 에만 정의된다.",
+   "pair_LOOCV": {
+    "weighted_r2": 0.0892,
+    "spearman_on_listed": 0.4441
+   },
+   "leave_one_dopant_out": {
+    "weighted_r2": -0.1805,
+    "spearman_on_listed": 0.3405
+   },
+   "leave_both_dopants_out": {
+    "weighted_r2": -0.2548,
+    "spearman_on_listed": 0.1141
+   },
+   "leakage_delta_weighted_r2": {
+    "pairCV_minus_LODO": 0.2697,
+    "pairCV_minus_L2DO": 0.344
+   },
+   "leakage_delta_spearman_listed": {
+    "pairCV_minus_LODO": 0.1036,
+    "pairCV_minus_L2DO": 0.33
+   },
+   "deployed_score_LODO": {
+    "spearman_on_listed_out_of_fold": 0.6482,
+    "spearman_on_listed_in_sample": 0.6718,
+    "top40_set_overlap_vs_in_sample": 36,
+    "note": "ml_lodo = stage1(46 도펀트 재적합)+stage3(해당 도펀트 포함쌍 제외) 로 만든 완전 out-of-fold 배포점수. 각 쌍은 2 폴드에서 held-out → 평균."
+   },
+   "lambda_leak_note": "세 방식 모두 λ3(전표본 선택)를 고정 사용 — λ 재선택까지 폴드 안으로 넣으면 LODO/L2DO 는 **더 나빠지므로** 아래 누수 크기는 하한이다.",
+   "verdict": "⚠ **현행 pair-CV 는 낙관 편의가 크다.** 같은 도펀트를 공유하는 쌍은 비독립인데 pair-LOOCV 는 그걸 무시한다: 가중 R² +0.0892 → LODO -0.1805 → L2DO -0.2548 (Δ_pairCV−L2DO = +0.3440). **독립 폴드에서는 R² < 0**, 즉 가중 평균 예측보다도 못하다. 실측 라벨 40개에 대한 Spearman 도 +0.444 → +0.341 → +0.114 로 무너진다. → **stage3 교호작용 계수는 도펀트 정체성에 상당히 얽혀 있고, 새 도펀트로의 일반화 근거는 없다.** 랩 PPT Group-CV 관행이 지적한 구멍이 실제로 이 크기(ΔR² 0.34, Δρ 0.33)로 존재함. 보고 시 pair-CV 수치 단독 인용 금지 — LODO/L2DO 병기."
+  }
+ },
+ "assumptions": [
+  "co-doping 상호작용은 단일도펀트 특징의 집계(min/max/avg)+2차 곱항으로 근사 가능",
+  "합동 ESW = max(ox) - min(red): 두 상이 각각 양극측/음극측을 커버한다는 상보 가정 (실제 계면상 형성/혼상 반응 미반영)",
+  "1단계 계수의 pair 이식: 단일도펀트 스케일러 유지 시 물리 방향성 보존 가정",
+  "v1 미수록 쌍 synergy=0 근사 (v1은 top40만 저장; 실제는 0~0.059 사이) — 0-근사 신뢰가 낮아 증류 가중 0.1 부여 (가중 1.0이면 0 홍수로 계수 전멸)",
+  "불확실성 ±는 모델 내부 적합 노이즈만 (stage1 LOOCV leverage 전파를 base_z 단위로 정합 + stage3 ridge 계수 공분산 사영, ridge 축소로 하한 추정) — 수치상 stage3 사영이 지배(stage1 성분 ~0.02 수준으로 무시 가능)이며 물리적 타당성 불확실성 아님",
+  "cost_tier/gap_lit_eV/air_hsab 는 큐레이션 값(문헌 전형/정성 등급) — 우리 계산 아님"
+ ],
+ "limitations": [
+  "타깃(cascade score, v1 synergy) 자체가 휴리스틱 합성 지표 — 이 모델은 그 휴리스틱의 해부+확장이지 물성 예측이 아님",
+  "co-doping 시 도펀트간 화학 상호작용(공석 보상, 상분리, 계면상)은 특징에 없음",
+  "검증 경로: top 후보 소수를 UMA cascade(공동 치환 슈퍼셀)로 직접 계산해 라벨 확보 후 재학습",
+  "ml_score 절대값은 무의미(z 단위 합성) — 순위와 ±만 사용",
+  "농축배수(sendek2017_small_sample_defenses)는 **v1 휴리스틱 라벨 재현 농축**이지 물성 적중률이 아니다. 우리 47 도펀트는 큐레이션 후보군 — 대규모 발견 깔때기(Sendek 12,831 등)와 직접 비교 금지",
+  "pair-CV(현행) 대비 leave-one-dopant-out/leave-both-dopants-out 성능차 = 같은 도펀트를 공유하는 쌍의 비독립성이 만든 낙관 편의 — 배포 순위 신뢰도는 LODO/L2DO 값을 기준으로 볼 것"
+ ],
+ "ablation_lodo": {
+  "왜": "4축/8상호작용 중 무엇이 실제로 일하는지 안 봤다 (tu2026 은 절제를 냈다)",
+  "규약": "항 하나를 빼고 **LODO 로** 재적합 — pair-CV 로 재면 우리가 지적한 누수를 반복한다",
+  "base_lodo_wr2": -0.1805,
+  "rows": [
+   {
+    "dropped": "de_avg*joint_window",
+    "lodo_wr2": -0.2692,
+    "delta_vs_full": -0.0886
+   },
+   {
+    "dropped": "disorder_max*dose_slope_min",
+    "lodo_wr2": -0.1867,
+    "delta_vs_full": -0.0061
+   },
+   {
+    "dropped": "transport_min*blocking_max",
+    "lodo_wr2": -0.1799,
+    "delta_vs_full": 0.0007
+   },
+   {
+    "dropped": "air_max*gap_min",
+    "lodo_wr2": -0.1785,
+    "delta_vs_full": 0.002
+   },
+   {
+    "dropped": "joint_window*gap_min",
+    "lodo_wr2": -0.1785,
+    "delta_vs_full": 0.002
+   },
+   {
+    "dropped": "group_cross*joint_window",
+    "lodo_wr2": -0.1779,
+    "delta_vs_full": 0.0027
+   },
+   {
+    "dropped": "air_max*transport_min",
+    "lodo_wr2": -0.1776,
+    "delta_vs_full": 0.003
+   },
+   {
+    "dropped": "joint_window*transport_min",
+    "lodo_wr2": -0.1774,
+    "delta_vs_full": 0.0031
+   },
+   {
+    "dropped": "[나머지 7항 전부] — de_avg*joint_window 만 남김",
+    "lodo_wr2": -0.1851,
+    "delta_vs_full": -0.0045
+   }
+  ]
+ },
+ "⛔_window_V_2026_09_22": "이 파일의 `window_V`·`reduction_limit_V` 는 **계통적으로 넓다** — 환원 가장자리를 한 계단 아래로 잡는 옛 식에서 나왔다. **재유도하지 않았다**(이 파일은 정본이 아니거나 superseded 다: status = HYPOTHESIS GENERATOR — NOT VALIDATED (co). 정본은 `oxidation_stability_cascade_v3_pinned.json` 이고 거기만 재유도했다. 원장 `HZ-esw-reduction-limit-label`(BLOCKED)."
+}

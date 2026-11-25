@@ -1,0 +1,140 @@
+[2026-10-04 09:27:27] ════ run_sese_gpu · IN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/stage2_pkg/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/stage2 · JOBS=[AGC_N3_top_fcc_dft_bound AGC_N3_top_fcc_dft_far AGC_N3_top_fcc_far8 AGC_N3_top_fcc_Ed_m03 AGC_N3_top_fcc_Ed_p03 AGC_N3_top_fcc_Ed_p06 AGC_N3_top_fcc_Ed_p10 AGC_N3_top_fcc_Ed_p15 AGC_N3_top_fcc_Ed_p20 AGC_N3_top_fcc_Ed_p30 AGC_N3_top_fcc_Ed_p45 AGC_N3_top_fcc_G3_c2_bound AGC_N3_top_fcc_G3_c2_far_i AGC_N3_top_fcc_G3_c2_far_ii AGC_N3_top_fcc_G4_e70_bound AGC_N3_top_fcc_G4_k9_bound AGC_N3_top_fcc_G4_s05_bound AGC_N3_top_fcc_G4_e70_far AGC_N3_top_fcc_G4_k9_far AGC_N3_top_fcc_G4_s05_far AGC_N3_top_hcp_dft_bound AGC_N3_top_hcp_dft_far AGC_N3_top_hcp_far8 AGC_N3_hollow_fcc_dft_bound AGC_N3_hollow_fcc_dft_far AGC_N3_hollow_fcc_far8 AGC_N3_s01_dft_bound AGC_N3_s01_dft_far AGC_N3_s01_far8 AGC_N4_top_fcc_dft_bound AGC_N4_top_fcc_dft_far]
+[2026-10-04 09:27:27] 공존 근거: D-2026-10-02-wad-agc-graphite · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-04 09:27:27] 공존 근거 D-2026-10-02-wad-agc-graphite — 원장에서 active
+[2026-10-04 09:27:27] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-04 09:27:28] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-04 09:27:29] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-04 09:27:29] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-04 09:27:29] 디스크 300G 남음 (66% 사용)
+[2026-10-04 09:27:29] ⚠ GPU 사용량 3363 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-04 09:27:29]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-04 09:27:29]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-04 09:27:29] GPU 합계 사용량 지금 3363 MiB · 호스트 MemAvailable 58930 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-04 09:27:29] ▶ AGC_N3_top_fcc_dft_bound (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58929 MiB
+[2026-10-04 09:27:30]    래퍼(mpirun) PID 2553057 · pw.x PID 2553075
+[2026-10-04 09:27:59]    ⚠ nvidia-smi 목록에 우리 pw.x(2553075) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 10:25:11] ■ AGC_N3_top_fcc_dft_bound rc=0 완료=1 벽시계 3461s · 피크 합계 7842 MiB · 자기 — MiB · 호스트 최저 57812 MiB · 중단=0
+[2026-10-04 10:25:11] ▶ AGC_N3_top_fcc_dft_far (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58925 MiB
+[2026-10-04 10:25:12]    래퍼(mpirun) PID 2597858 · pw.x PID 2597876
+[2026-10-04 10:25:41]    ⚠ nvidia-smi 목록에 우리 pw.x(2597876) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 10:57:39] ■ AGC_N3_top_fcc_dft_far rc=0 완료=1 벽시계 1947s · 피크 합계 7840 MiB · 자기 — MiB · 호스트 최저 57814 MiB · 중단=0
+[2026-10-04 10:57:39] ▶ AGC_N3_top_fcc_far8 (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58925 MiB
+[2026-10-04 10:57:40]    래퍼(mpirun) PID 2622536 · pw.x PID 2622554
+[2026-10-04 10:58:09]    ⚠ nvidia-smi 목록에 우리 pw.x(2622554) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 11:37:52] ■ AGC_N3_top_fcc_far8 rc=0 완료=1 벽시계 2412s · 피크 합계 7840 MiB · 자기 — MiB · 호스트 최저 57791 MiB · 중단=0
+[2026-10-04 11:37:52] ▶ AGC_N3_top_fcc_Ed_m03 (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58912 MiB
+[2026-10-04 11:37:53]    래퍼(mpirun) PID 2653668 · pw.x PID 2653686
+[2026-10-04 11:38:22]    ⚠ nvidia-smi 목록에 우리 pw.x(2653686) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 12:57:10] ■ AGC_N3_top_fcc_Ed_m03 rc=0 완료=1 벽시계 4758s · 피크 합계 7843 MiB · 자기 — MiB · 호스트 최저 57796 MiB · 중단=0
+[2026-10-04 12:57:10] ▶ AGC_N3_top_fcc_Ed_p03 (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58902 MiB
+[2026-10-04 12:57:11]    래퍼(mpirun) PID 2715485 · pw.x PID 2715503
+[2026-10-04 12:57:40]    ⚠ nvidia-smi 목록에 우리 pw.x(2715503) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 14:06:21] ■ AGC_N3_top_fcc_Ed_p03 rc=0 완료=1 벽시계 4150s · 피크 합계 7842 MiB · 자기 — MiB · 호스트 최저 57791 MiB · 중단=0
+[2026-10-04 14:06:21] ▶ AGC_N3_top_fcc_Ed_p06 (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58896 MiB
+[2026-10-04 14:06:22]    래퍼(mpirun) PID 2768039 · pw.x PID 2768057
+[2026-10-04 14:06:51]    ⚠ nvidia-smi 목록에 우리 pw.x(2768057) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 14:55:48] ■ AGC_N3_top_fcc_Ed_p06 rc=0 완료=1 벽시계 2967s · 피크 합계 7842 MiB · 자기 — MiB · 호스트 최저 57779 MiB · 중단=0
+[2026-10-04 14:55:48] ▶ AGC_N3_top_fcc_Ed_p10 (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58897 MiB
+[2026-10-04 14:55:49]    래퍼(mpirun) PID 2805787 · pw.x PID 2805805
+[2026-10-04 14:56:18]    ⚠ nvidia-smi 목록에 우리 pw.x(2805805) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 15:43:10] ■ AGC_N3_top_fcc_Ed_p10 rc=0 완료=1 벽시계 2841s · 피크 합계 7842 MiB · 자기 — MiB · 호스트 최저 57788 MiB · 중단=0
+[2026-10-04 15:43:10] ▶ AGC_N3_top_fcc_Ed_p15 (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58910 MiB
+[2026-10-04 15:43:11]    래퍼(mpirun) PID 2841582 · pw.x PID 2841600
+[2026-10-04 15:43:39]    ⚠ nvidia-smi 목록에 우리 pw.x(2841600) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 17:22:55] ■ AGC_N3_top_fcc_Ed_p15 rc=0 완료=1 벽시계 5985s · 피크 합계 7842 MiB · 자기 — MiB · 호스트 최저 57761 MiB · 중단=0
+[2026-10-04 17:22:55] ▶ AGC_N3_top_fcc_Ed_p20 (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58919 MiB
+[2026-10-04 17:22:56]    래퍼(mpirun) PID 2919701 · pw.x PID 2919719
+[2026-10-04 17:23:25]    ⚠ nvidia-smi 목록에 우리 pw.x(2919719) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 18:23:35] ■ AGC_N3_top_fcc_Ed_p20 rc=0 완료=1 벽시계 3640s · 피크 합계 7842 MiB · 자기 — MiB · 호스트 최저 57675 MiB · 중단=0
+[2026-10-04 18:23:36] ▶ AGC_N3_top_fcc_Ed_p30 (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58942 MiB
+[2026-10-04 18:23:37]    래퍼(mpirun) PID 2968159 · pw.x PID 2968177
+[2026-10-04 18:24:05]    ⚠ nvidia-smi 목록에 우리 pw.x(2968177) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 19:01:59] ■ AGC_N3_top_fcc_Ed_p30 rc=0 완료=1 벽시계 2302s · 피크 합계 7840 MiB · 자기 — MiB · 호스트 최저 57812 MiB · 중단=0
+[2026-10-04 19:01:59] ▶ AGC_N3_top_fcc_Ed_p45 (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58926 MiB
+[2026-10-04 19:02:00]    래퍼(mpirun) PID 2997794 · pw.x PID 2997812
+[2026-10-04 19:02:29]    ⚠ nvidia-smi 목록에 우리 pw.x(2997812) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 19:47:10] ■ AGC_N3_top_fcc_Ed_p45 rc=0 완료=1 벽시계 2711s · 피크 합계 7842 MiB · 자기 — MiB · 호스트 최저 57803 MiB · 중단=0
+[2026-10-04 19:47:10] ▶ AGC_N3_top_fcc_G3_c2_bound (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58910 MiB
+[2026-10-04 19:47:11]    래퍼(mpirun) PID 3033258 · pw.x PID 3033276
+[2026-10-04 19:47:40]    ⚠ nvidia-smi 목록에 우리 pw.x(3033276) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 20:41:37] ■ AGC_N3_top_fcc_G3_c2_bound rc=0 완료=1 벽시계 3266s · 피크 합계 8100 MiB · 자기 — MiB · 호스트 최저 57236 MiB · 중단=0
+[2026-10-04 20:41:37] ▶ AGC_N3_top_fcc_G3_c2_far_i (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58957 MiB
+[2026-10-04 20:41:38]    래퍼(mpirun) PID 3076374 · pw.x PID 3076392
+[2026-10-04 20:42:07]    ⚠ nvidia-smi 목록에 우리 pw.x(3076392) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 21:24:40] ■ AGC_N3_top_fcc_G3_c2_far_i rc=0 완료=1 벽시계 2582s · 피크 합계 8100 MiB · 자기 — MiB · 호스트 최저 57760 MiB · 중단=0
+[2026-10-04 21:24:40] ▶ AGC_N3_top_fcc_G3_c2_far_ii (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58927 MiB
+[2026-10-04 21:24:41]    래퍼(mpirun) PID 3109460 · pw.x PID 3109478
+[2026-10-04 21:25:10]    ⚠ nvidia-smi 목록에 우리 pw.x(3109478) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 22:02:06] ■ AGC_N3_top_fcc_G3_c2_far_ii rc=0 완료=1 벽시계 2246s · 피크 합계 8100 MiB · 자기 — MiB · 호스트 최저 57770 MiB · 중단=0
+[2026-10-04 22:02:06] ▶ AGC_N3_top_fcc_G4_e70_bound (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58958 MiB
+[2026-10-04 22:02:07]    래퍼(mpirun) PID 3138155 · pw.x PID 3138173
+[2026-10-04 22:02:36]    ⚠ nvidia-smi 목록에 우리 pw.x(3138173) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-04 23:23:12] ■ AGC_N3_top_fcc_G4_e70_bound rc=0 완료=1 벽시계 4865s · 피크 합계 9790 MiB · 자기 — MiB · 호스트 최저 57458 MiB · 중단=0
+[2026-10-04 23:23:12] ▶ AGC_N3_top_fcc_G4_k9_bound (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58931 MiB
+[2026-10-04 23:23:13]    래퍼(mpirun) PID 3199871 · pw.x PID 3199889
+[2026-10-04 23:23:42]    ⚠ nvidia-smi 목록에 우리 pw.x(3199889) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 00:48:21] ■ AGC_N3_top_fcc_G4_k9_bound rc=0 완료=1 벽시계 5109s · 피크 합계 7845 MiB · 자기 — MiB · 호스트 최저 57760 MiB · 중단=0
+[2026-10-05 00:48:22] ▶ AGC_N3_top_fcc_G4_s05_bound (scf) 시작 · GPU 합계 3364 MiB · 호스트 여유 58913 MiB
+[2026-10-05 00:48:23]    래퍼(mpirun) PID 3270099 · pw.x PID 3270117
+[2026-10-05 00:48:51]    ⚠ nvidia-smi 목록에 우리 pw.x(3270117) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 02:12:38] ■ AGC_N3_top_fcc_G4_s05_bound rc=0 완료=1 벽시계 5055s · 피크 합계 7840 MiB · 자기 — MiB · 호스트 최저 57767 MiB · 중단=0
+[2026-10-05 02:12:38] ▶ AGC_N3_top_fcc_G4_e70_far (scf) 시작 · GPU 합계 3362 MiB · 호스트 여유 58888 MiB
+[2026-10-05 02:12:39]    래퍼(mpirun) PID 3336778 · pw.x PID 3336796
+[2026-10-05 02:13:08]    ⚠ nvidia-smi 목록에 우리 pw.x(3336796) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 02:47:22] ■ AGC_N3_top_fcc_G4_e70_far rc=0 완료=1 벽시계 2084s · 피크 합계 9790 MiB · 자기 — MiB · 호스트 최저 57448 MiB · 중단=0
+[2026-10-05 02:47:22] ▶ AGC_N3_top_fcc_G4_k9_far (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58883 MiB
+[2026-10-05 02:47:23]    래퍼(mpirun) PID 3364436 · pw.x PID 3364454
+[2026-10-05 02:47:52]    ⚠ nvidia-smi 목록에 우리 pw.x(3364454) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 03:58:44] ■ AGC_N3_top_fcc_G4_k9_far rc=0 완료=1 벽시계 4281s · 피크 합계 7844 MiB · 자기 — MiB · 호스트 최저 57749 MiB · 중단=0
+[2026-10-05 03:58:44] ▶ AGC_N3_top_fcc_G4_s05_far (scf) 시작 · GPU 합계 3363 MiB · 호스트 여유 58921 MiB
+[2026-10-05 03:58:45]    래퍼(mpirun) PID 3423569 · pw.x PID 3423587
+[2026-10-05 03:59:13]    ⚠ nvidia-smi 목록에 우리 pw.x(3423587) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 04:29:58] ■ AGC_N3_top_fcc_G4_s05_far rc=0 완료=1 벽시계 1874s · 피크 합계 7596 MiB · 자기 — MiB · 호스트 최저 57686 MiB · 중단=0
+[2026-10-05 04:29:59] ▶ AGC_N3_top_hcp_dft_bound (scf) 시작 · GPU 합계 3117 MiB · 호스트 여유 58924 MiB
+[2026-10-05 04:30:00]    래퍼(mpirun) PID 3449846 · pw.x PID 3449864
+[2026-10-05 04:30:28]    ⚠ nvidia-smi 목록에 우리 pw.x(3449864) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 05:28:52] ■ AGC_N3_top_hcp_dft_bound rc=0 완료=1 벽시계 3532s · 피크 합계 7596 MiB · 자기 — MiB · 호스트 최저 56816 MiB · 중단=0
+[2026-10-05 05:28:52] ▶ AGC_N3_top_hcp_dft_far (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58909 MiB
+[2026-10-05 05:28:53]    래퍼(mpirun) PID 3503056 · pw.x PID 3503081
+[2026-10-05 05:29:22]    ⚠ nvidia-smi 목록에 우리 pw.x(3503081) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 05:57:48] ■ AGC_N3_top_hcp_dft_far rc=0 완료=1 벽시계 1736s · 피크 합계 7596 MiB · 자기 — MiB · 호스트 최저 57787 MiB · 중단=0
+[2026-10-05 05:57:48] ▶ AGC_N3_top_hcp_far8 (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58900 MiB
+[2026-10-05 05:57:49]    래퍼(mpirun) PID 3528432 · pw.x PID 3528450
+[2026-10-05 05:58:18]    ⚠ nvidia-smi 목록에 우리 pw.x(3528450) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 06:34:32] ■ AGC_N3_top_hcp_far8 rc=0 완료=1 벽시계 2204s · 피크 합계 7590 MiB · 자기 — MiB · 호스트 최저 57758 MiB · 중단=0
+[2026-10-05 06:34:32] ▶ AGC_N3_hollow_fcc_dft_bound (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58902 MiB
+[2026-10-05 06:34:33]    래퍼(mpirun) PID 3561348 · pw.x PID 3561366
+[2026-10-05 06:35:02]    ⚠ nvidia-smi 목록에 우리 pw.x(3561366) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 07:33:39] ■ AGC_N3_hollow_fcc_dft_bound rc=0 완료=1 벽시계 3547s · 피크 합계 7596 MiB · 자기 — MiB · 호스트 최저 57783 MiB · 중단=0
+[2026-10-05 07:33:39] ▶ AGC_N3_hollow_fcc_dft_far (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58889 MiB
+[2026-10-05 07:33:40]    래퍼(mpirun) PID 3612662 · pw.x PID 3612680
+[2026-10-05 07:34:09]    ⚠ nvidia-smi 목록에 우리 pw.x(3612680) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 08:02:19] ■ AGC_N3_hollow_fcc_dft_far rc=0 완료=1 벽시계 1720s · 피크 합계 7596 MiB · 자기 — MiB · 호스트 최저 57786 MiB · 중단=0
+[2026-10-05 08:02:19] ▶ AGC_N3_hollow_fcc_far8 (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58900 MiB
+[2026-10-05 08:02:21]    래퍼(mpirun) PID 3636302 · pw.x PID 3636320
+[2026-10-05 08:02:49]    ⚠ nvidia-smi 목록에 우리 pw.x(3636320) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 08:44:29] ■ AGC_N3_hollow_fcc_far8 rc=0 완료=1 벽시계 2530s · 피크 합계 7594 MiB · 자기 — MiB · 호스트 최저 57786 MiB · 중단=0
+[2026-10-05 08:44:29] ▶ AGC_N3_s01_dft_bound (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58895 MiB
+[2026-10-05 08:44:30]    래퍼(mpirun) PID 3670069 · pw.x PID 3670087
+[2026-10-05 08:44:59]    ⚠ nvidia-smi 목록에 우리 pw.x(3670087) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 10:22:38] ■ AGC_N3_s01_dft_bound rc=0 완료=1 벽시계 5888s · 피크 합계 7595 MiB · 자기 — MiB · 호스트 최저 57771 MiB · 중단=0
+[2026-10-05 10:22:38] ▶ AGC_N3_s01_dft_far (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58900 MiB
+[2026-10-05 10:22:39]    래퍼(mpirun) PID 3744584 · pw.x PID 3744602
+[2026-10-05 10:23:08]    ⚠ nvidia-smi 목록에 우리 pw.x(3744602) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 10:50:23] ■ AGC_N3_s01_dft_far rc=0 완료=1 벽시계 1665s · 피크 합계 7596 MiB · 자기 — MiB · 호스트 최저 57782 MiB · 중단=0
+[2026-10-05 10:50:23] ▶ AGC_N3_s01_far8 (scf) 시작 · GPU 합계 3116 MiB · 호스트 여유 58902 MiB
+[2026-10-05 10:50:24]    래퍼(mpirun) PID 3765523 · pw.x PID 3765541
+[2026-10-05 10:50:53]    ⚠ nvidia-smi 목록에 우리 pw.x(3765541) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 11:37:12] ■ AGC_N3_s01_far8 rc=0 완료=1 벽시계 2809s · 피크 합계 7594 MiB · 자기 — MiB · 호스트 최저 57766 MiB · 중단=0
+[2026-10-05 11:37:12] ▶ AGC_N4_top_fcc_dft_bound (scf) 시작 · GPU 합계 3117 MiB · 호스트 여유 58877 MiB
+[2026-10-05 11:37:13]    래퍼(mpirun) PID 3800787 · pw.x PID 3800805
+[2026-10-05 11:37:42]    ⚠ nvidia-smi 목록에 우리 pw.x(3800805) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 12:57:19] ■ AGC_N4_top_fcc_dft_bound rc=0 완료=1 벽시계 4806s · 피크 합계 9380 MiB · 자기 — MiB · 호스트 최저 57649 MiB · 중단=0
+[2026-10-05 12:57:19] ▶ AGC_N4_top_fcc_dft_far (scf) 시작 · GPU 합계 3117 MiB · 호스트 여유 58888 MiB
+[2026-10-05 12:57:20]    래퍼(mpirun) PID 3862826 · pw.x PID 3862845
+[2026-10-05 12:57:49]    ⚠ nvidia-smi 목록에 우리 pw.x(3862845) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-05 13:35:27] ■ AGC_N4_top_fcc_dft_far rc=0 완료=1 벽시계 2288s · 피크 합계 9380 MiB · 자기 — MiB · 호스트 최저 57658 MiB · 중단=0
+[2026-10-05 13:35:27] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/stage2 --qe_in /home/kgy/work/runs/wad_agc_graphite_2026_10_02/stage2_pkg/qe

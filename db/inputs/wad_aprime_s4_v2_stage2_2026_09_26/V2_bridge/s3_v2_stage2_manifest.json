@@ -1,0 +1,186 @@
+{
+ "schema": "aprime_s3_v2_stage2/v1",
+ "model": "V2_bridge",
+ "pw_out_sha256": "2b64c0d1e19213a8a6328aac4f9b9810231eade035ce12331ffd2bdc1b135bae",
+ "d0_A": 3.3017,
+ "endpoints": {
+  "c_A": 24.0527,
+  "delta_A": 4.6983,
+  "d0_A": 3.3017,
+  "gap_rule_A": 8.0,
+  "bound_gap_direct_image_A": [
+   3.3017,
+   13.6983
+  ],
+  "far_gap_direct_image_A": [
+   8.0,
+   9.0
+  ],
+  "dipfield": {
+   "tefield": true,
+   "dipfield": true,
+   "edir": 3,
+   "eamp": 0.0,
+   "emaxpos": 0.81291,
+   "eopreg": 0.04158,
+   "region_A": [
+    19.553,
+    20.553
+   ],
+   "clearance_A": {
+    "to_top_atom": 4.0,
+    "to_substrate_bottom_image": 4.0
+   },
+   "min_clear_rule_A": 4.0,
+   "width_A": 1.0,
+   "empty_in_both_endpoints": true,
+   "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+  }
+ },
+ "structures_sha256": {
+  "V2_bridge_dft_bound": "2ff655dde17e9ff5414279099ce7aa661e0adc54b0252c27fe9c86f9ec9c9269",
+  "V2_bridge_dft_far": "2fc5b53713965461b2063ba85d509649c1d95a9ed2411929823c8794552f26a4",
+  "V2_bridge_Ed_m03": "908927d931302f49192763c364ddf1a175c9c1c487b6485633db12e4dc2c3f13",
+  "V2_bridge_Ed_p03": "f91c18b366f4e8a6531e3932b632fb4598906bf04a90e14b4e9fc4ce6f67d9cd",
+  "V2_bridge_Ed_p06": "cbcdc4e21669cb6e8b195d08a4d42e3f84a18e8e091b3784b9dfdc205a02c9a0"
+ },
+ "jobs": [
+  {
+   "dir": "V2_bridge_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "84279a56672145cf14f3dd61ea4648198b488e7b874c81019b011875e498fee3",
+   "structure": "V2_bridge_dft_bound",
+   "tags": {
+    "structure": "V2_bridge_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.3017
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_bridge_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "efc7b84dcaceee14180206835a2dc144af591acd1685befd7f889a160b35833e",
+   "structure": "V2_bridge_dft_far",
+   "tags": {
+    "structure": "V2_bridge_dft_far",
+    "endpoint": "far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_bridge_Ed_m03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "583e523007f89c068965a014bd3627d8db423c227c5664cbcb26221091b40797",
+   "structure": "V2_bridge_Ed_m03",
+   "tags": {
+    "structure": "V2_bridge_Ed_m03",
+    "E(d)": "d0-0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_bridge_Ed_p03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "b747a469d58c1b9b14716c42475c95afd613fc7e6f92c268b3b8e34930a01a0c",
+   "structure": "V2_bridge_Ed_p03",
+   "tags": {
+    "structure": "V2_bridge_Ed_p03",
+    "E(d)": "d0+0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_bridge_Ed_p06",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "864e36f842b4541e4e93633d3d8939d0f4c24d4677454174e1176106bae2d656",
+   "structure": "V2_bridge_Ed_p06",
+   "tags": {
+    "structure": "V2_bridge_Ed_p06",
+    "E(d)": "d0+0.6"
+   },
+   "machine": "V100 (≈3 GB)"
+  }
+ ],
+ "rule": "카드 v5 V2: d₀ = 제약 아래 DFT 국소 이완 간격 · E(d) = d₀−0.3 · +0.3 · +0.6 · far (≥ 8/8) · G3 (i)(ii) · G4 (e70 · k 7×7×1 · smearing ½)"
+}

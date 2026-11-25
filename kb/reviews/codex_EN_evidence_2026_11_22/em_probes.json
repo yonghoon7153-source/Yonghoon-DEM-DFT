@@ -1,0 +1,155 @@
+{
+ "p1_rerun_after_ok.py": {
+  "script_rc": 1,
+  "log": [
+   "first run rc 0 dirs ['V5_s_outer_A_G4_e70_far_a5_A5', 'V5_s_outer_A_G4_e70_far_a5_c1']",
+   "A5 WAVECAR present after first run: False",
+   "check after first run: OK 주 기준 수렴 (c1)",
+   "second run rc 0 dirs ['V5_s_outer_A_G4_e70_far_a5_A5', 'V5_s_outer_A_G4_e70_far_a5_c1']",
+   "",
+   "check after re-run: OK | 주 기준 수렴 (c1)",
+   "c1: OK c2: MISSING ",
+   "Traceback (most recent call last):",
+   "  File \"/tmp/tmpe0nyx31l/probes/p1_rerun_after_ok.py\", line 16, in <module>",
+   "    print(\"c2 src sha == W0:\", json.load(open(os.path.join(w, \"run\", B.JOB + \"_c2\", \"WAVECAR.info\")))[\"src_sha256\"] == E[\"w0\"][\"sha256\"])",
+   "                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpe0nyx31l/probes/../T_p1/w_p1/run/V5_s_outer_A_G4_e70_far_a5_c2/WAVECAR.info'"
+  ]
+ },
+ "p2_launch_failure.py": {
+  "script_rc": 1,
+  "log": [
+   "rc 7 dirs ['V5_s_outer_A_G4_e70_far_a5_A5']",
+   "status.tsv: [('A5c', '127', 'SCF_UNVERIFIED', 'no_rows')]",
+   "▶ A5 (A5c · LDIPOL 끔 · MAXMIX 200 · AMIX 0.1 · AMIN 0.01 · NELM 300)",
+   "Traceback (most recent call last):",
+   "  File \"/tmp/tmpe0nyx31l/probes/p2_launch_failure.py\", line 10, in <module>",
+   "    r, _ = chk(E, w)",
+   "           ^^^^^^^^^",
+   "  File \"/tmp/tmpe0nyx31l/probes/harness.py\", line 66, in chk",
+   "    with tarfile.open(os.path.join(w, \"a5_return.tgz\")) as tf:",
+   "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "  File \"/usr/lib/python3.12/tarfile.py\", line 1882, in open",
+   "    return func(name, \"r\", fileobj, **kwargs)",
+   "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "  File \"/usr/lib/python3.12/tarfile.py\", line 1950, in gzopen",
+   "    fileobj = GzipFile(name, mode + \"b\", compresslevel, fileobj)",
+   "              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "  File \"/usr/lib/python3.12/gzip.py\", line 192, in __init__",
+   "    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')",
+   "                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpe0nyx31l/probes/../T_p2/w_p2/a5_return.tgz'"
+  ]
+ },
+ "p3_cap_then_adopt.py": {
+  "script_rc": 0,
+  "log": [
+   "rc 5 dirs ['V5_s_outer_A_G4_e70_far_a5_A5', 'V5_s_outer_A_G4_e70_far_a5_c1']",
+   "c1 → SCF_NOT_CONVERGED (전자 반복행 400)",
+   "⏸ a5 누적 0 h > 상한 0.001 h — 다음 단을 띄우지 않는다 (1저자)",
+   "■ 끝 [5 CAP] 누적 상한 0.001 h — c2 를 띄우지 않았다 (1저자)",
+   "⏸ 누적 상한 — 다음 단을 띄우지 않았다. 반송해 주시고 1저자 결정을 기다려 주세요",
+   "check: LADDER_INCOMPLETE | c1 이 SCF_NOT_CONVERGED 로 끝났는데 c2 가 없다 (run_aborted 에만 있어도 같다) — 사다리가 끝나지 않았다 (c1 보조 자동 채택 없음 · 리뷰 P0-1) | violations []",
+   "adopt_a5 -> None None None "
+  ]
+ },
+ "p3b_c2_aborted.py": {
+  "script_rc": 0,
+  "log": [
+   "rc 7 status [('A5c', 'OK', '-'), ('c1', 'SCF_NOT_CONVERGED', '-'), ('c2', 'SCF_UNVERIFIED', 'no_rows')]",
+   "infra-abort c2: 0 r_A_G4_e70_far_a5_c2 → run_aborted/V5_s_outer_A_G4_e70_far_a5_c2_1 (0 스텝 인프라 중단 1/2) — 다시 돌리면 같은 단부터",
+   "PACK_ONLY: 0 ✅ 포장만 다시 했다 (계산은 다시 돌리지 않았다)",
+   "check: LADDER_INCOMPLETE | aborted [['c2@aborted1', 'SCF_UNVERIFIED']] | violations []",
+   "adopt_a5 -> None None "
+  ]
+ },
+ "p4_w0_path.py": {
+  "script_rc": 1,
+  "log": [
+   "relative W0 path (exists from cwd): round2pkg/run/V5_s_outer_A_G4_e70_far_a4_a4/stageA/WAVECAR True",
+   "(a) rc 0 | w0 verified 1 | - | A5 variant ['A5c']",
+   "Traceback (most recent call last):",
+   "  File \"/tmp/tmpe0nyx31l/probes/p4_w0_path.py\", line 13, in <module>",
+   "    j = json.load(open(os.path.join(w, \"run\", \"w0_check.json\")))",
+   "                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpe0nyx31l/probes/../T_p4/w_p4b/run/w0_check.json'"
+  ]
+ },
+ "p5_real_parse.py": {
+  "script_rc": 0,
+  "log": [
+   "a4B as c1 judge5: SCF_NOT_CONVERGED rows 300 why - | row_gate (300, None)",
+   "   secondary: computed n=300",
+   "   hist_max 44 | rms_jumps n 0",
+   "   audit5 missing [] | bad ['NELM', 'AMIX', 'MAXMIX'] | echo {'NELM': 300.0, 'IALGO': 38.0, 'AMIX': 0.4, 'AMIN': 0.01, 'MAXMIX': -45.0, 'TIME': 0.4}",
+   "   energies parsed: {'TOTEN_eV': True, 'E_sigma0_eV': True, 'Edisp_eV': True} | version vasp.5.4.4.18Apr17-6-g9f103f2a",
+   "   restart_evidence: istart 1 icharg 0 not_read False regex hit True",
+   "   outcar_dims {'NKPTS': '4', 'NBANDS': '872', 'ENCUT': '650.0'}",
+   "a4A as A5 judge5: SCF_NOT_CONVERGED rows 200 why - | row_gate (200, None)",
+   "   secondary: 보조 기준은 a5 의 c1 · c2 에만 (단 'A5' — A5 · a4 ⓐ · 옛 시도에는 소급하지 않는다)",
+   "   hist_max 44 | rms_jumps n 0",
+   "   audit5 missing [] | bad ['NELM', 'AMIX', 'AMIN', 'MAXMIX'] | echo {'NELM': 200.0, 'IALGO': 38.0, 'AMIX': 0.4, 'AMIN': 0.1, 'MAXMIX': -45.0, 'TIME': 0.4}",
+   "   energies parsed: {'TOTEN_eV': True, 'E_sigma0_eV': True, 'Edisp_eV': True} | version vasp.5.4.4.18Apr17-6-g9f103f2a",
+   "   restart_evidence: istart 0 icharg 2 not_read True regex hit False",
+   "   outcar_dims {'NKPTS': '4', 'NBANDS': '872', 'ENCUT': '650.0'}"
+  ]
+ },
+ "p6_c1_zero_then_abort.py": {
+  "script_rc": 0,
+  "log": [
+   "run 1 rc 7 [('A5c', 'OK', '-'), ('c1', 'SCF_UNVERIFIED', 'no_rows')] | A5 WAVECAR kept: True",
+   "infra-abort c1: 0 _far_a5_c1 → run_aborted/V5_s_outer_A_G4_e70_far_a5_c1_1 (0 스텝 인프라 중단 1/2) — 다시 돌리면 같은 단부터",
+   "run 2 rc 0 [('A5c', 'OK'), ('c1', 'SCF_UNVERIFIED'), ('c1', 'OK')]",
+   "시작점 A5 (기록 · sha 4b451f9e9e862cb017bb9da2dd67d08e8d741775b9b173bdcab4dd1027007483 · 다시 정하지 않는다)",
+   "▶ c1 (Davidson · MAXMIX 200 · AMIX 0.1 · AMIN 0.01 · NELM 400 · 시작점 A5)",
+   "c1 → OK (전자 반복행 30)",
+   "check: OK | 주 기준 수렴 (c1)",
+   "  start_point A5 | c1 OK | c2 MISSING",
+   "adopt_a5 -> a5_c1 primary None"
+  ]
+ },
+ "p7_prep_fail.py": {
+  "script_rc": 0,
+  "log": [
+   "c2 prep-failed: check LADDER_INCOMPLETE | c2 INCOMPLETE_ATTEMPT | viol []",
+   "   adopt -> None None",
+   "c1 prep-failed: check LADDER_INCOMPLETE | c1 INCOMPLETE_ATTEMPT",
+   "   adopt -> None | note: a5 검사 LADDER_INCOMPLETE — 자동 채택 없음 · 1저자 (c1 준비만 있다 (VASP 를 띄운 흔적 없음))",
+   "W0 original unchanged across all probes: True"
+  ]
+ },
+ "p8_a5_zero_late_abort.py": {
+  "script_rc": 0,
+  "log": [
+   "run 1 rc 7 [('A5c', 'SCF_UNVERIFIED', 'no_rows')]",
+   "late infra-abort A5 (c1 already done): 0 rted/V5_s_outer_A_G4_e70_far_a5_A5_1 (0 스텝 인프라 중단 1/2) — 다시 돌리면 같은 단부터",
+   "run 2 rc 0 [('A5c', 'SCF_UNVERIFIED'), ('A5c', 'OK'), ('c1', 'OK')]",
+   "check: OK | start A5 | c1 OK | c2 MISSING | viol []",
+   "adopt_a5 -> a5_c1 primary"
+  ]
+ },
+ "p9_colocated.py": {
+  "script_rc": 1,
+  "log": [
+   "rc 2 | a5 dirs []",
+   "[]",
+   "Traceback (most recent call last):",
+   "  File \"/tmp/tmpe0nyx31l/probes/p9_colocated.py\", line 14, in <module>",
+   "    r, _ = chk(E, w); print(\"check:\", r[\"status\"], \"|\", r[\"why\"][:100])",
+   "           ^^^^^^^^^",
+   "  File \"/tmp/tmpe0nyx31l/probes/harness.py\", line 66, in chk",
+   "    with tarfile.open(os.path.join(w, \"a5_return.tgz\")) as tf:",
+   "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "  File \"/usr/lib/python3.12/tarfile.py\", line 1882, in open",
+   "    return func(name, \"r\", fileobj, **kwargs)",
+   "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "  File \"/usr/lib/python3.12/tarfile.py\", line 1950, in gzopen",
+   "    fileobj = GzipFile(name, mode + \"b\", compresslevel, fileobj)",
+   "              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "  File \"/usr/lib/python3.12/gzip.py\", line 192, in __init__",
+   "    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')",
+   "                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+   "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpe0nyx31l/probes/../T_p9/w_p9/a5_return.tgz'"
+  ]
+ }
+}

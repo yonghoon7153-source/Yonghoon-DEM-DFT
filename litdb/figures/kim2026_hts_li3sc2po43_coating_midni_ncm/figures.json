@@ -1,0 +1,278 @@
+{
+ "slug": "kim2026_hts_li3sc2po43_coating_midni_ncm",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이상욱 교수님/1. High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+  "이상욱 교수님/1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Hierarchical computational screening workflow for discovering promising cathode coating materials. Candidates are sequentially down-selected based on a series of filtering criteria. The number of screened compositions at each stage is indicated alongside the corresponding process. The Materials Project version used in this study is 2025.02.12 ionic conductivity, respectively [58]. Adopting the crite­ rion established in previous research, we regarded can­ didates with ∆Erxn ≥ − 100 meV/atom as interracially compatible with both NCM523 and LPSC [30]. As shown in Fig. 2c, a total of 154 materials satisfy this threshold, representing approximately a 50% reduction from the previous screening step and highlighting the stringency of the applied criterion. Notably, while many materials exhibited stable interfaces with the NCM523, a substan­ tial fraction fail to maintain stability agains",
+   "bbox": [
+    50.7,
+    78.0,
+    546.9,
+    571.4
+   ],
+   "w": 2068,
+   "h": 2056,
+   "dpi": 300,
+   "src": "1. High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.614
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Representative Li3Sc2(PO4)3 crystal structures: a α-phase (space group: inline-eq-IEq 2 ) and b γ-phase (space group: inline-eq-IEq3). c Isosurface α-phase and d γ-phase for Li-ion probability density distribution at 900 K for obtained from AIMD simulation. e Li-ion MSD plot of according to two Li3Sc2(PO4)3 phase. f Arrhenius plot of Li-ion diffusivities calculated from AIMD simulation in the temperature range of 800–1200 K, with extrapolation to estimate diffusivity at 300 K diffusivity in γ-phase. Building on these findings, we per­ formed AIMD simulations for the α-phase and γ-phase at temperatures ranging from 800 to 1200 K in 100 K inter­ vals and estimated the ionic conductivity at 300 K using an Arrhenius relationship (Fig. 4f). The γ-phase exhibits high ionic conductivity (0.2 mS/cm [0.01, 2.4]) compared to the α-phase structure (0.006 mS/cm [0.0008, 0.4]). This performanc",
+   "bbox": [
+    50.7,
+    78.0,
+    546.9,
+    500.9
+   ],
+   "w": 2068,
+   "h": 1762,
+   "dpi": 300,
+   "src": "1. High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Interface modeling and MD simulation over 500 ps for a NCM523 (104) || LPSC (100), b NCM523 (104) || Li3Sc2(PO4)3 (101), and c Li3Sc2(PO4)3 (101) || LPSC (100) heterostructures. Top images show the initial interface models, middle images correspond to the structures after 500 ps of MD simulation, and bottom images display enlarged view of the interfacial regions consisting of NCM523, Li3Sc2(PO4)3, and LPSC surfaces, and performed large-scale dynamic simulations. the (100) surface of LPSC, determined from our surface stability calculations (Fig. S7); and the (101) surface of Li3Sc2(PO4)3, chosen to minimize lattice mismatch along the a direction with the other two surfaces. The corre­ sponding structural parameters of the interface models are detailed in Table S4. All simulations were conducted for 500 ps, where the interfacial region within 20 Å of the center was performed under t",
+   "bbox": [
+    50.7,
+    78.0,
+    546.9,
+    450.8
+   ],
+   "w": 2068,
+   "h": 1554,
+   "dpi": 300,
+   "src": "1. High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.446
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Categorized elements in the periodic table used for compositional classification in this",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    395.6
+   ],
+   "w": 2013,
+   "h": 1374,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.513
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Representative solid-state electrolyte crystal structures (top) with high ionic",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    358.2
+   ],
+   "w": 2013,
+   "h": 1218,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.66
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Histogram showing the number of candidates in each elemental category that pass",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    308.0
+   ],
+   "w": 2013,
+   "h": 1009,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Mean squared displacement (MSD) of Li and framework atoms for 8 representative",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    271.2
+   ],
+   "w": 2013,
+   "h": 855,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.685
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Li-ion networks pathway in two crystal structures for 𝛼- and 𝛾-phases. The purple",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    225.6
+   ],
+   "w": 2013,
+   "h": 665,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Crystal structure of LiNi0.5Co0.2Mn0.3O2 (NCM523) used in this study for molecular",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    249.3
+   ],
+   "w": 2013,
+   "h": 764,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.763
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Calculated surface energies and models of Li6PS5Cl according to its surface indices.",
+   "bbox": [
+    66.0,
+    66.0,
+    543.5,
+    396.7
+   ],
+   "w": 1990,
+   "h": 1378,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 12,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Representative 88 crystal structures screened in high-throughput screening process",
+   "bbox": [
+    67.0,
+    67.6,
+    548.0,
+    690.4
+   ],
+   "w": 2005,
+   "h": 2596,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 18,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Representative 8 crystal structures screened in high-throughput screening process along",
+   "bbox": [
+    67.0,
+    67.6,
+    548.0,
+    786.9
+   ],
+   "w": 2005,
+   "h": 2998,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.977
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 19,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Chemical reaction products of 8 representative candidates from the most favorable",
+   "bbox": [
+    67.0,
+    67.6,
+    548.0,
+    555.1
+   ],
+   "w": 2005,
+   "h": 2033,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 20,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Lattice parameters and energy/atom of Li3Sc2(PO4)3 according to crystal structure",
+   "bbox": [
+    67.0,
+    67.6,
+    548.0,
+    331.2
+   ],
+   "w": 2005,
+   "h": 1099,
+   "dpi": 300,
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.968
+  }
+ ]
+}

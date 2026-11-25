@@ -1,0 +1,86 @@
+{
+ "schema": "campaign_prereg_amendment/v1",
+ "date": "2026-09-11",
+ "status": "ratified",
+ "⚠_관측_후_개정": true,
+ "개정_대상": "db/properties/shear_b2o3_vs_lpscl16_2x_prereg_2026_09_10.json (relaxed-ion Cij 쌍 · 판정 네 갈래 봉인)",
+ "제목": "V0_relax 가 forc_conv_thr 1e-4 에 닿지 못한다 — 두 계 모두 1e-3 으로 올려 재시작",
+ "0_관측_2026_09_11": {
+  "modelc_2x_V0_relax": "BFGS 21 스텝 · SCF 809회 · 12 h (GPU 41 GB) · |F| 노름 마지막 4 스텝 0.002730 → 0.002533 → 0.002847 → 0.003235 Ry/Bohr — **진동, 하강 아님**. 재점검 규칙 2번 갈래(2.5–3.3e-3 → 6 h 더)가 16:30 만료. strain 0/12.",
+  "설정": "forc_conv_thr 1e-4 · etot_conv_thr 1e-6 · conv_thr 1e-10 (V0_relax.in)",
+  "정지": "2026-09-11 18:50 박제 /data/work/runs/elastic_modelc_2x/PAUSED_0911_1850/ (V0_relax.in/out · mc2xv0.bfgs · LAST_FORCE · SHA256: out 76939485b3fe… · in ee52a5bba78f… · bfgs 9571becdf54e…). 이후 GPU 는 Li₂S 1층(UMA)에 쓴다 — 사전등록 무효조건 'pw.x·UMA 동시' 를 지키기 위한 정지다.",
+  "b2o3": "아직 시작 안 함 (같은 설정 예정이었다)."
+ },
+ "1_바꾸는_것": {
+  "forc_conv_thr": "1e-4 → **1e-3 Ry/Bohr** (QE 기본값) — **두 계 모두**. 한쪽만 바꾸면 사전등록 무효조건 1('두 계의 설정이 다르다')에 걸린다.",
+  "etot_conv_thr": "1e-6 → **1e-5 Ry** — |F| ~1e-3 에서 BFGS 한 스텝의 에너지 변화가 ~1e-5 Ry 급이라 1e-6 은 힘 조건을 만족해도 에너지 조건이 안 닫혀 같은 정체를 만든다.",
+  "재시작_기하": "PAUSED 의 V0_relax.out 마지막 ATOMIC_POSITIONS 를 승계(verified-carry: 스플라이스 + 원자수·종·셀 검증). 809회 SCF 의 진행을 버리지 않는다.",
+  "바꾸지_않는_것": "ecut · k · smearing · conv_thr 1e-10 · mixing · nosym · strain 0.005 · 12 strain 점 · BM-EOS V0 출발 · 두 계 동일 설정."
+ },
+ "2_대가와_게이트": {
+  "대가": "relaxed-ion 응력의 잔류힘 오염이 커진다 — strain 0.005 의 응력 신호 ~C·ε ≈ 0.15 GPa 급인데 잔류힘 1e-3 Ry/Bohr 는 그보다 작은 응력 잡음을 남긴다고 **본다**(정량은 안 했다). 이 한계를 결과 파일에 적는다.",
+  "게이트_결과_보기_전": "각 strain 점 relax 가 **60 BFGS 스텝 안에** 수렴해야 한다. 하나라도 넘기면 그 계는 '이 설정에서 측정 불가' 로 닫고 12점 fit 을 하지 않는다 (사전등록 무효조건 3 '11점 fit 금지' 유지).",
+  "판정_문구": "사전등록의 네 갈래 그대로. 이 개정은 문턱을 바꾸지 판정 문구를 바꾸지 않는다."
+ },
+ "3_1저자_결정_요청": [
+  "① forc 1e-3 · etot 1e-5 두 계 동일 — 비준?",
+  "② 재시작 시점: Li₂S 1층 뒤(GPU 순차) — 확인?",
+  "③ 60 BFGS 게이트 — 비준?"
+ ],
+ "출처": [
+  "db/properties/shear_b2o3_vs_lpscl16_2x_prereg_2026_09_10.json",
+  "tools/elastic/run_elastic_relaxedion_gabia.sh:146 (forc_conv_thr 1e-4 설정 위치)",
+  "kb/open_items.md ⏭-NOW 2026-09-11"
+ ],
+ "status_history": [
+  {
+   "at": "2026-09-11",
+   "state": "proposed",
+   "by": "agent",
+   "note": "관측 후 개정 — V0 정체 12 h 관측 뒤 작성. 1저자 비준 전 재시작하지 않는다."
+  },
+  {
+   "at": "2026-09-11",
+   "state": "ratified",
+   "note": "1저자 지시 2026-09-11 ('영률 켜보자 안되면 안되는거고' · '이거 이어서 하자고'). 관측 후 개정임을 알고 비준 — forc 1e-4 로는 12 h 에 수렴 못 했고 그 문턱으로 재시작하면 같은 정체를 반복한다. 60 BFGS 게이트 포함."
+  },
+  {
+   "at": "2026-09-11",
+   "state": "amended_2nd",
+   "by": "1저자",
+   "note": "동시실행 무효조건을 조건부(완주·12/12)로 개정. 1저자 'B로 하자'. 에이전트 권고(A: 기계 분리)와 다른 결정임을 명시."
+  },
+  {
+   "at": "2026-09-11",
+   "state": "ratified",
+   "note": "2차 개정 비준 — 1저자 'B로 하자'(2026-09-11): gabia 동시 실행을 조건부 허용(완주·12/12·부분 fit 금지). 에이전트 권고는 A(기계 분리)였음을 기록."
+  }
+ ],
+ "4_추가개정_2026_09_11b_동시실행_무효조건": {
+  "⚠_관측_후_개정_2차": true,
+  "1저자_결정": "**B — gabia 에서 탄성(pw.x)과 1층(UMA)을 같이 돌린다** (2026-09-11). 에이전트는 A(기계 분리)를 권고했고 1저자가 B 를 택했다. 이 문단이 그 기록이다.",
+  "무엇을_바꾸나": "사전등록 §무효조건의 *'gabia 에서 pw.x 와 UMA 를 동시에 돌렸다'* 를 **삭제하지 않고 조건부로 바꾼다** — 동시 실행 자체는 허용하되, **각 잡이 OOM·중단 없이 완주하고 12/12 를 채울 것**을 요구한다. 하나라도 OOM·중단이면 그 계는 **처음부터 다시 돌린다**(부분 결과를 fit 에 넣지 않는다).",
+  "왜_이_형태인가": "원 조건이 막으려던 것은 **자원 경합으로 잡이 죽는 것**이지 물리가 아니다 — 같은 입력의 SCF 결과는 GPU 를 누가 같이 쓰든 결정적이다. 그래서 물리에 대한 요구는 그대로 두고(설정 동일·12점 전건·BM-EOS V0 출발), **실패 모드에 대한 보호만** 남긴다.",
+  "⛔_그래도_바뀌지_않는_것": [
+   "두 계(b2o3·modelc_2x)의 설정이 다르면 무효 — 그대로.",
+   "12 strain 중 하나라도 미수렴이면 11점 fit 금지 — 그대로.",
+   "clamped-ion 을 섞지 않는다 — 그대로.",
+   "2026-07-03 b2o3 판과 직접 대조하지 않는다 — 그대로."
+  ],
+  "⚠_실측_위험_던지기_전_기록": "modelc_2x pw.x 가 단독 실행 시 **41.2 GB** 를 찍었다(2026-09-11 nvidia-smi). 1층이 turbo 로 10.1 GB 를 쓰면 가용은 **38.4 GB** 다 — 부족할 수 있다. 러너 가드 `MINFREE=32000` 은 통과하므로 **가드가 이 위험을 막지 못한다.** 그래서 발사 전에 `Estimated max dynamical RAM` 실측을 읽고 대조한다(아래). OOM 이 나면 위 규칙대로 그 계를 처음부터 다시 돌린다.",
+  "선행_점검_발사_전": "① `grep -a 'Estimated max dynamical RAM' PAUSED_0911_1850/V0_relax.out` 의 값과 `nvidia-smi memory.free` 를 나란히 본다 ② 1층의 UMA 실행모드(turbo 10 GB vs 기본)에 따라 가용이 달라지므로 그 시점의 free 로 판단한다 ③ 모자라면 1층을 turbo 없이 돌려 자리를 만든다(느려지지만 두 축이 다 산다).",
+  "status_history_note": "1저자 B 선택 · 에이전트 권고는 A 였다"
+ },
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-11",
+  "by": "1저자",
+  "content_digest": "7d704c41252e705d0a7c75a20a8eb1d2330868429e4379ebe151cb595847cda7",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-11T12:56:21Z",
+  "commit": "6cddcb6cb97c9c2ac5d7aff0f7c7dc23c0427efa",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
+  "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
+ }
+}

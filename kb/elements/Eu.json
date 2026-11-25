@@ -1,0 +1,47 @@
+{
+  "symbol": "Eu",
+  "name": "Europium",
+  "Z": 63,
+  "role": "란타나이드 aliovalent 도펀트(Eu2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. Sm처럼 +3/+2 혼합원자가: Eu³⁺(4f⁶)/Eu²⁺(4f⁷ 반충만, 특히 안정)이 XPS로 뚜렷이 구분(~10 eV). Eu²⁺는 대표적 발광 활성종(청색 형광체, 예 BaMgAl10O17:Eu²⁺), Eu³⁺는 적색 형광체(Y2O3:Eu ⁵D₀→⁷F₂ 611 nm). Eu³⁺면 P 자리 치환+O 동반(P-O-Eu 가정); Li 계면서 Eu³⁺→Eu²⁺ 환원이 진단 레버.",
+  "oxidation_states": ["+3", "+2"],
+  "electronegativity": 1.20,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f⁷ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f⁷ 6s²",
+    "valence_orbitals": "4f⁷ 6s² — Eu³⁺면 4f⁶(개방껍질, S=3, ⁷F₀; J=0 바닥항이나 Van Vleck 상자성), Eu²⁺면 4f⁷ 반충만(S=7/2, ⁸S₇/₂, Gd³⁺ 유사)",
+    "band_character": "Eu³⁺=4f⁶ 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd/Sm 프로토콜과 동일). Eu²⁺=4f⁷ 반충만은 majority 채워지고 minority 비어 잘 분리된 큰 모멘트(S=7/2, Gd³⁺-유사) — 자성이라 ISPIN=2 필수·+U는 표준(4f⁷ 정확 배치). O 2p→Eu 4f/5d 엣지; EuO(Eu²⁺)는 강자성 반도체로 유명",
+    "bonding": "Eu–O 이온성(Eu2O3 Eu³⁺ / EuO Eu²⁺, hard-산 친산소 앵커), Eu–Cl/Eu–S; 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f⁶/4f⁷ 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Eu3+_VI": 0.947,
+    "Eu3+_VIII": 1.066,
+    "Eu2+_VI": 1.17,
+    "Eu2+_VIII": 1.25,
+    "Eu2+_IX": 1.30,
+    "_note": "Shannon 1976: Eu³⁺ VI 0.947 A, VIII 1.066; Eu²⁺ VI 1.17, VIII 1.25, IX 1.30(Sr²⁺급으로 훨씬 큼). 란탄족 수축상 Sm(0.958)>Eu(0.947)>Gd(0.938); Eu²⁺는 Eu³⁺보다 크게 팽창(환원 시 국소 케이지 확장). Li⁺(0.76)보다 큼."
+  },
+  "representative_compounds": [
+    {"formula": "Eu2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Eu³⁺ + O 공급원", "note": "cubic C-type; Eu 3d5/2 ~1135 eV(Eu³⁺), Eu²⁺ 성분 ~1125 eV로 원자가 구분(~10 eV)"},
+    {"formula": "EuO / Eu3O4", "context": "환원형/혼합 산화물", "battery_role": "Eu²⁺(EuO) 또는 Eu²⁺/Eu³⁺ 혼합(Eu3O4); 환원 분위기 지표", "note": "EuO는 강자성 반도체(Tc~69 K); Li 금속 환원서 Eu³⁺→Eu²⁺ 경로 시사"},
+    {"formula": "Eu-O in doped argyrodite (P-O-Eu bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Eu와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Eu는 +2 환원 가능"},
+    {"formula": "EuCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Eu³⁺ 염화물; 대체 Eu 원료", "note": "환원 시 EuCl2(Eu²⁺)로 갈 수 있음 → 염화물 계면상도 원자가 변동 주의"}
+  ],
+  "sei_relevance": "Eu는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Eu³⁺가 친산소 hard-산 앵커(P-O-Eu 가정) — Nd/La 계보와 동일. Sm과 마찬가지로 +2/+3 혼합원자가라, Li 금속 계면 환원서 Eu³⁺→Eu²⁺(4f⁷ 안정)가 XPS(~10 eV 이동)로 뚜렷이 추적됨 — inert La/Nd/Gd엔 없는 진단·redox 레버. Eu²⁺ 4f⁷의 특별한 안정성이 환원을 촉진할 수 있어 '완전 비활성 절연막' 가정은 약화. 정직히: Eu-argyrodite 직접 문헌 부재 → Nd/La 유비 + Sm식 혼합원자가 진단 병기.",
+  "xps": [
+    {"core": "Eu 3d5/2", "BE_eV": 1135.0, "assignment": "Eu³⁺ in Eu2O3 (4f⁶ 최종상태 계열의 주선)", "ref": "Eu2O3 XPS 문헌 / xpsdatabase"},
+    {"core": "Eu 3d5/2 (Eu²⁺ 성분)", "BE_eV": 1125.0, "assignment": "Eu²⁺(4f⁷; ~10 eV 낮은 위치) — Eu³⁺/Eu²⁺ 원자가 판별 지표(3d3/2 ~1155.8 eV)", "ref": "EuO/Eu 혼합원자가 XPS 문헌"},
+    {"core": "Eu 4d", "BE_eV": 135.0, "assignment": "Eu 4d 다중구조(broad; 원자가·이온성에 민감, 보조 프로브)", "ref": "Eu(III) 화합물 XPS(Eu 4d) 문헌"}
+  ],
+  "raman": [
+    {"cm1": 340, "assignment": "Eu2O3 cubic C-type 격자모드(주 라만선 대역)", "ref": "Eu2O3 Raman 문헌"}
+  ],
+  "dos_character": "Eu³⁺는 4f⁶(S=3, ⁷F₀) 개방껍질 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd/Sm 프로토콜과 동일); 부분점유 4f⁶가 갭 내/근처 국재. Eu²⁺는 4f⁷ 반충만(S=7/2)으로 majority 깊이 채워지고 minority 비어 잘 분리 -> 큰 국소모멘트라 ISPIN=2 필수, +U는 4f⁷ 정확 배치에 표준(Gd³⁺-유사). O 2p->Eu 5d/4f 엣지. +2/+3 유연성으로 4f 점유가 환경(환원 분위기)에 민감 -> 명시 4f 투영(projwfc 스핀분해) 권장.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Eu³⁺ VI 0.947 / Eu²⁺ VI 1.17)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Eu 4f⁶/4f⁷ 스핀분극 프로토콜)",
+    "Eu²⁺ 청색 형광체(BaMgAl10O17:Eu²⁺)·Eu³⁺ 적색 형광체(Y2O3:Eu ⁵D₀→⁷F₂) — 4f 발광/원자가 응용 맥락",
+    "Eu2O3/EuO XPS — Eu 3d5/2 ~1135 eV(Eu³⁺)/~1125 eV(Eu²⁺), ~10 eV 원자가 분리 (xpsdatabase)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Eu2O3/EuO XPS 표준 · DFT+U 4f 프로토콜); Eu는 Sm처럼 +2/+3 혼합원자가라 inert La/Nd 유비에 Eu³⁺/Eu²⁺ 진단 레버를 부기 — 우리 db 절대값과 분리."
+}

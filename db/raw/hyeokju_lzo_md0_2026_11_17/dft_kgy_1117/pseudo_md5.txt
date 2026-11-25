@@ -1,0 +1,6 @@
+daecd58dfbed9f74c5ea20c0112c952a  pseudo/Cl.pbe-nl-kjpaw_psl.1.0.0.UPF
+4449e4b2026dd225cbf03a6cd6c9364f  pseudo/Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+0234752ac141de4415c5fc33072bef88  pseudo/O.pbe-n-kjpaw_psl.0.1.UPF
+06b8cad1975795032ee26009bb7624c7  pseudo/P.pbe-n-kjpaw_psl.1.0.0.UPF
+a0db168fa6a42edaf368e88c1856b871  pseudo/S.pbe-nl-kjpaw_psl.1.0.0.UPF
+5db81b1e868ab7776c4564c113de050b  pseudo/Zr_pbe_v1.uspp.F.UPF

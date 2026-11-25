@@ -1,0 +1,132 @@
+{
+ "slug": "xu2026_xlsdft_linear_scaling_100m_atoms",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. The length-scale barrier in ab initio simulation for battery interfaces. Conventional KS-DFT is typically confined to the nanometer scale, whereas experimentally relevant interfacial regions extend to tens of nanometers and beyond, containing millions of atoms that are beyond the practical reach of cubic-scaling DFT.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    136.6,
+    306.0,
+    307.3
+   ],
+   "w": 1097,
+   "h": 712,
+   "dpi": 300,
+   "src": "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf",
+   "blank": 0.628
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Self-consistent field (SCF) flowchart for XLSDFT. Each row shows the algorithmic step (left) and its asymptotic cost per SCF iteration (right). All phases scale as O(N) or better. (K: total number of subsystems; Kloc: subsystems assigned per MPI process.)",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    366.6,
+    343.8,
+    679.8
+   ],
+   "w": 1254,
+   "h": 1306,
+   "dpi": 300,
+   "src": "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf",
+   "blank": 0.67
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Divide-and-conquer domain partitioning in XLSDFT. The simulation cell Ωis partitioned into non-overlapping core subdomains {Ωα C}; each core is extended by a buffer region Ωα",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    406.5,
+    569.0,
+    605.6
+   ],
+   "w": 1097,
+   "h": 831,
+   "dpi": 300,
+   "src": "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf",
+   "blank": 0.622
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Architecture of the LX2 processor: two compute dies (304 cores total), eight on-package HBM stacks in a single package.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    210.0,
+    306.0,
+    340.3
+   ],
+   "w": 1097,
+   "h": 544,
+   "dpi": 300,
+   "src": "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf",
+   "blank": 0.294
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Weak (left) and strong (right) scalability and SCF wall-time breakdown of XLSDFT on the silicon crystal on LineShine. Left: atom count and node count scaled proportionally from 5,242,880 atoms on 1,024 nodes to 104,857,600 atoms on 20,480 nodes (5,120 atoms/node); efficiency referenced to 1,024 nodes. Right: fixed 5,242,880-atom silicon crystal scaled from 1,024 to 20,480 nodes; efficiency referenced to 1,024 nodes. Stacked bars show component wall times, solid lines show total measured wall time, and dashed lines show ideal scaling. Endpoint efficiencies are 96.6% for weak scaling and 81.3% for strong scaling. Labels above each point report total SCF wall time and parallel efficiency.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    45.0,
+    572.0,
+    262.0
+   ],
+   "w": 2218,
+   "h": 905,
+   "dpi": 300,
+   "src": "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf",
+   "blank": 0.0,
+   "note": "수동 bbox — 자동 크로퍼가 '영역 없음' 으로 제외했다(p9 벡터 그림). 2026-09-22 손으로 잘랐다. --clean 재추출 시 사라진다."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Experimental and computational characterization of spatially heterogeneous low-valence-state formation at the Li/LGPS interface. (a) XPS depth- profiling schematic. (b) Depth-dependent Ge and P XPS spectra from interfacial, sub-interface, and bulk-like LGPS regions. (c) The 11,325,600-atom Li/LGPS/Li model, approximately 90 × 44 × 57 nm. (d) Computed interface-normal distributions and xy-plane projections of occupied-PDOS integrals for Ge and P. Larger integrals indicate lower local valence; both representations show low-valence Ge and P enriched near the interfaces and spatially heterogeneous in-plane.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    71.5,
+    569.0,
+    456.2
+   ],
+   "w": 2192,
+   "h": 1604,
+   "dpi": 300,
+   "src": "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf",
+   "blank": 0.729
+  }
+ ]
+}

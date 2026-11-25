@@ -1,0 +1,80 @@
+{
+ "schema": "qe_upf_equivalence_check/v1",
+ "date": "2026-10-19",
+ "where": "클라우드 샌드박스 (CPU · 이 검사는 사용자 기계 run 이 아니다)",
+ "qe": "Quantum ESPRESSO 6.7MaX (Ubuntu 24.04 패키지 quantum-espresso 6.7-2build4) · 직렬",
+ "⚠_shim": "Ubuntu QE 6.7 이 pseudo md5 계산에서 fortify 'buffer overflow' 로 죽는다 (md5 문자열 끝 NUL) → 샌드박스에서만 LD_PRELOAD nochk.c (__snprintf_chk 크기 검사 생략) · gabia QE 7.4.1 은 ELF 러너의 메모리 프로브가 같은 UPF 를 읽는 것으로 확인한다",
+ "계": "fcc Nd 1 원자 · celldm 9.75 bohr · ecut 60/240 Ry · k 6×6×6 (1 1 1) · mv 0.02 · conv 1e-11 · tstress",
+ "runs": {
+  "401_orig": {
+   "뜻": "ONCVPSP 4.0.1 이 직접 쓴 UPF (17.55 bohr 격자)",
+   "E_tot_Ry": -76.19089657,
+   "E_F_eV": 10.9931,
+   "P_kbar": 7.21,
+   "scf_iter": 8
+  },
+  "401_conv": {
+   "뜻": "같은 실행의 psp8 → --to_upf (5.99 bohr 격자)",
+   "E_tot_Ry": -76.18634164,
+   "E_F_eV": 10.9974,
+   "P_kbar": 8.74,
+   "scf_iter": 7
+  },
+  "401_origcoul": {
+   "뜻": "401_orig 의 PP_LOCAL 을 r ≥ 6.00 bohr 에서 −2Zv/r 로 바꾼 것 (꼬리 효과 분리)",
+   "E_tot_Ry": -76.1863869,
+   "E_F_eV": 10.9973,
+   "P_kbar": 8.69,
+   "scf_iter": 8
+  },
+  "dojo_conv": {
+   "뜻": "배포본 psp8 → --to_upf (ELF 에 쓸 파일 · 다른 pseudo 라 절대 에너지 비교 대상 아님)",
+   "E_tot_Ry": -76.43696642,
+   "E_F_eV": 10.9976,
+   "P_kbar": 8.91,
+   "scf_iter": 8
+  }
+ },
+ "판독": {
+  "orig_minus_conv": {
+   "dE_mRy": -4.555,
+   "dEF_meV": -4.3,
+   "dP_kbar": -1.53
+  },
+  "origcoul_minus_conv": {
+   "dE_mRy": -0.045,
+   "dEF_meV": -0.1,
+   "dP_kbar": -0.05
+  },
+  "말": "차이는 거의 전부 r 6–10 bohr 의 국소 퍼텐셜 꼬리 (원본 UPF 에만 있음 · 쿨롱과 ≤8.8e-5 Ry · QE 는 10 bohr 까지 적분 → G=0 상수항) — psp8 에는 그 구간이 없고 ABINIT 도 쿨롱으로 본다 (배포본이 검증된 방식). 남는 0.05 mRy 는 투영자 꼬리 · 시작값."
+ },
+ "density_ELF_orig_vs_conv": {
+  "ELF": {
+   "grid": [
+    36,
+    36,
+    36
+   ],
+   "max_abs_diff": 0.00017000000000000348,
+   "mean_abs_diff": 1.6929314557616784e-05,
+   "value_range": [
+    0.0068412,
+    0.86842
+   ]
+  },
+  "valence_rho": {
+   "grid": [
+    36,
+    36,
+    36
+   ],
+   "max_abs_diff": 2.0000000000020002e-05,
+   "mean_abs_diff": 1.1767618312761292e-06,
+   "value_range": [
+    0.012069,
+    0.31767
+   ]
+  }
+ },
+ "결론": "변환본은 밀도 · ELF 에 쓸 수 있다 (ELF 최대 차 1.7e-4 < 호스트 표 소수 셋째 자리) · 절대 에너지는 같은 pseudo 의 ONCVPSP UPF 와 수 mRy 다르다 → 에너지 비교에 섞지 않는다"
+}

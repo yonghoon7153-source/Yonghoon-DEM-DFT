@@ -1,0 +1,3 @@
+====================================================================
+Total: 66923.2s
+Results: /home/kgy/work/runs/ndo_site_2026_10_14/uma_anneal/anneal_results.json

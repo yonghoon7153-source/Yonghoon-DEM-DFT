@@ -1,0 +1,152 @@
+{
+ "slug": "maurer2015_mbd_adsorbates_metal_surfaces",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Binding energy curve showing the adsorption energy Eads as a function of vertical distance d for Xe on Ag(111) calculated with the HSE +vdWsurf (blue line) and HSE+MBD (green line) methods. The distance d is evaluated with respect to the position of the unrelaxed topmost metal layer. The results from the binding energy curve and their comparison to experiment can be found in Table I.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    43.3,
+    294.0,
+    218.3
+   ],
+   "w": 1071,
+   "h": 730,
+   "dpi": 300,
+   "src": "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Differential static polarizability ∆¯α0 of Xe on Ag(111) [see Eq. (6)] as a function of the vertical distance d of the Xe monolayer as calculated with the HSE+MBD method. Shown are the components parallel (blue curve) and perpendicular (red curve) to the surface plane.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    536.5,
+    294.0,
+    710.7
+   ],
+   "w": 1072,
+   "h": 727,
+   "dpi": 300,
+   "src": "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. PTCDA overlayer adsorbed to Ag(111) surface with the supercell geometry shown as a dotted line.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    588.8,
+    557.0,
+    730.5
+   ],
+   "w": 1071,
+   "h": 591,
+   "dpi": 300,
+   "src": "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf",
+   "blank": 0.242
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Binding energy curve showing the adsorption energy Eads as a function of vertical distance d for PTCDA on Ag(111) calculated with the PBE+vdWsurf (blue line) and PBE+MBD (green line) methods. The distance d is evaluated with respect to the position of the unrelaxed topmost metal layer. The results from the binding energy curve and their comparison to experiments can be found in Table II.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    514.5,
+    557.0,
+    692.7
+   ],
+   "w": 1071,
+   "h": 744,
+   "dpi": 300,
+   "src": "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Graphene sheet adsorbed to Ag(111) in a",
+   "rotated_deg": 0,
+   "bbox": [
+    301.6,
+    43.3,
+    535.5,
+    212.4
+   ],
+   "w": 976,
+   "h": 705,
+   "dpi": 300,
+   "src": "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf",
+   "blank": 0.248
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Visualization of MBD eigenmodes for graphene on Ag(111). Orange spheres represent QHOs at the positions of the atoms, and arrows depict the polarization direction. Shown are a lateral polarization mode within the graphene sheet for the isolated (a) and adsorbed sheet (b) and a vertical polarization mode, again, for the isolated (c) and adsorbed sheet (d). Contributions from the underlying metal surface are omitted.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    46.0,
+    406.0,
+    237.0
+   ],
+   "w": 1526,
+   "h": 797,
+   "dpi": 300,
+   "src": "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf",
+   "blank": 0.638,
+   "note": "manual crop (auto-detect dropped as img0/draw0: caption sits in the right column beside the figure; bbox = embedded raster xref 444 + 3 pt margin) — 2026-09-23 digest 작성 중 복구"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. Quasiparticle DOS of MBD eigenstates for graphene adsorbed on Ag(111) (left), isolated graphene and the projected DOS of graphene (center, red and blue curves), and a clean Ag(111) surface and the projected Ag(111) DOS (right, green and magenta curves) contributions.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    596.6,
+    557.0,
+    730.5
+   ],
+   "w": 2167,
+   "h": 559,
+   "dpi": 300,
+   "src": "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf",
+   "blank": 0.903
+  }
+ ]
+}

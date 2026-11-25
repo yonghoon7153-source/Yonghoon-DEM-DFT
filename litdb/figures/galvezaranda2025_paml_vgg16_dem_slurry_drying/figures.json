@@ -1,0 +1,272 @@
+{
+ "slug": "galvezaranda2025_paml_vgg16_dem_slurry_drying",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-11",
+ "sources": [
+  "da1aad1a-67PHYS1.PDF",
+  "db3b4ca3-am4c23103_si_001.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Diagram illustrating the initial stages of the manufacturing process of lithium-ion battery electrodes and the granular approach and parameters that we use to simulate it in our ARTISTIC framework. (b) Schematic representation of our Deep Learning (DL) model for 3D electrode microstructure prediction for the slurry drying process simulation. The approach predicts a time-series of the microstructure evolution during the slurry drying until obtaining the dried electrode microstructure. CBD particles are colored with red and realistic shape AM particles are colored differently for a better recognition of them. residual solvents in the produced electrode, which may result in chemical instability, reduced capacity, and an accelerated degradation during cycling.5,6 Furthermore, a properly executed drying helps achieve optimal electrode density and uniform distribution of AM, carb",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    657.7
+   ],
+   "w": 2151,
+   "h": 2515,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.715
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Three different local environments: (a) primary AM particle inside a secondary AM particle, (b) CBD particle surrounded by purely CBD particles, and (c) CBD particle at the edge surrounded by primary AM and CBD particles. CBD particles are colored red; all the other colors refer to primary AM particles belonging to different secondary AM particles. electrode properties, it is necessary to enhance our under- standing of the drying dynamics (Figure 1b).8 Different drying techniques are being employed to study how they can affect the final performance and efficiency of LIB electrodes. Besides conventional heat drying, other advanced methods such as scalable dry printing9 or laser drying10 are being proposed to reduce production costs, decrease environmental fingerprint, and increase the energy efficiency. parameters, such as formulation, solid content, AM particle size distributio",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    238.0
+   ],
+   "w": 2151,
+   "h": 766,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.735
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Workflow behind our DL-DEM approach to accelerate the slurry drying stage simulation process.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    453.0,
+    496.0,
+    734.4
+   ],
+   "w": 1878,
+   "h": 1173,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.758
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) MSE and (b) MAE during training of the VGG16 CNN.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    51.4,
+    410.0,
+    216.2
+   ],
+   "w": 1520,
+   "h": 687,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.96
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Radial Distribution Functions (RDFs) of the dried electrode microstructure Test I (96% AM and 4% CBD) at the end of the drying simulation and (b) R2 score calculated all along the slurry drying simulation carried out with the DEM + DL approach. The R2 score is the result of comparing the corresponding RDFs of the DEM + DL approach for the different DEM values (nDEM = 0, 5000, 7000, 10,000) versus the pure DEM. considered the diffusion coefficient in the pores bulk equal to 1, the Bruggeman relationship41 gives us the diffusion coefficient in the micropores of the CBD as ξ1.5, where ξ is the microporosity and is assumed to be equal in fraction to 0.5 for both simulated and predicted dried electrode microstructures. The boundary conditions are defined as periodical in the tangential directions x and y, while in the z direction, a Dirichlet condition is considered, with 0 and ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    235.5,
+    561.5,
+    546.0
+   ],
+   "w": 2151,
+   "h": 1294,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.948
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Heat map showing the percentage error in the prediction of (a) porosity and (b) tortuosity factor for the different combinations of Test microstructures using the 96% AM and 4% CBD formulation and nDEM steps for the dried electrode. microstructure (TF = 21). This framework is summarized in Figure 3. the interactions to allow a reasonable prediction of the RDF. In general, as nDEM increases, the RDF predictions converge to the DEM one. A more detailed analysis shows that the position, height, and width of the first peaks are well reproduced. In addition, although there are some minor differences for long distances, all RDFs tend to oscillate around a value of 1, which is the expected behavior for this type of microstructures. The incorporation of DEM steps is crucial to mitigate the potential unphysical predictions generated by our DL model that has been trained to predict parti",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    234.9
+   ],
+   "w": 2151,
+   "h": 753,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.728
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) RDF of the dried electrode microstructure Test I (94% AM and 6% CBD) at the end of the drying simulation and (b) R2 score calculated all along the slurry drying simulation carried out with the DEM + DL approach. The R2 score is the result of comparing the corresponding RDFs of the DEM + DL approach for the different DEM values (nDEM = 0, 5000, 7000, 10,000) versus the pure DEM.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    364.1
+   ],
+   "w": 2151,
+   "h": 1292,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.944
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Heat map showing the percentage error in the prediction of (a) porosity, and (b) tortuosity factor for the different combinations of Test microstructures using the 94% AM and 6% CBD formulation and nDEM steps for the dried electrode. To see the potential of our PAML model, we also test its performance by evaluating a test data set consisting of a different formulation in which the model has not been trained for: 94% NMC−3% C65−3% PVdF (94% AM and 6% CBD); according to eq 6, X[16] = Test I, X[17] = Test II, X[18] = Test III, and X[19] = Test IV. Similarly, as in the previous formulation (96% AM and 4% CBD), we calculate the RDF comparing the DEM target versus the prediction of our PAML model (nDEM = 0, 5000, 7000, 10,000) at the end of the drying process (21 TF). In all cases, Test I (Figure 7a) and Test II, III, and IV (Figure S3), we see that the noninclusion of DEM steps (nDE",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    404.5,
+    561.5,
+    584.4
+   ],
+   "w": 2151,
+   "h": 751,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.73
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Radial distribution functions (RDF) of the dried electrode microstructure at the end of the slurry drying simulation, with the 96 % AM and 4 % CBD formulation. (a) Test II, (b) Test III, and (c) Test IV.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    64.8,
+    531.1,
+    692.2
+   ],
+   "w": 1942,
+   "h": 2615,
+   "dpi": 300,
+   "src": "db3b4ca3-am4c23103_si_001.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. R2 score calculated all along the slurry drying simulation carried out with the DEM + DL approach. The R2 score is the result of comparing the corresponding RDFs of the DEM + DL approach for the different DEM values (𝑛𝐷𝐸𝑀= 0, 5000, 7000, 10000) versus the pure DEM. (a) Test II, (b) Test III, and (c) Test IV. All 3 Tests correspond to the 96 % AM and 4 % CBD formulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.1,
+    64.8,
+    530.0,
+    654.4
+   ],
+   "w": 1926,
+   "h": 2457,
+   "dpi": 300,
+   "src": "db3b4ca3-am4c23103_si_001.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Radial distribution functions (RDF) of the dried electrode microstructure (a) Test II, (b) Test III, and (c) Test IV. All 3 Tests correspond to the 94 % AM and 6 % CBD formulation at the end of the slurry drying simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    64.8,
+    529.5,
+    692.2
+   ],
+   "w": 1936,
+   "h": 2615,
+   "dpi": 300,
+   "src": "db3b4ca3-am4c23103_si_001.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. R2 score calculated all along the slurry drying simulation carried out with the DEM + DL approach. The R2 score is the result of comparing the corresponding RDFs of the DEM + DL approach for the different DEM values (𝑛𝐷𝐸𝑀= 0, 5000, 7000, 10000) versus the pure DEM. (a) Test II, (b) Test III, and (c) Test IV. All 3 Tests correspond to the 94 % AM and 6 % CBD formulation. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    530.5,
+    673.1
+   ],
+   "w": 1941,
+   "h": 2535,
+   "dpi": 300,
+   "src": "db3b4ca3-am4c23103_si_001.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of the VGG16 Adapted Architecture for Our DL Model",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    55.7,
+    296.5,
+    105.4
+   ],
+   "w": 1043,
+   "h": 208,
+   "dpi": 300,
+   "src": "da1aad1a-67PHYS1.PDF",
+   "blank": 0.687
+  }
+ ]
+}

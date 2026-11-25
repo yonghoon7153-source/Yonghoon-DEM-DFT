@@ -1,0 +1,639 @@
+{
+ "slug": "lee2026_mechanical_halogen_argyrodite_drycoating",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-19",
+ "sources": [
+  "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+  "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Conceptual comparison between a conventional composite cathode and an SE-coated NCM cathode. Schematic illustrations of (b) the dry coating mechanism by which conformal SE layers are formed on NCM particle surfaces, and (c) the particle collision-driven dry coating process based on resonant acoustic mixing with vertical oscillation. type SEs have attracted considerable attention owing to their high ionic conductivity (∼10−3 S cm−1 at room temperature) and superior processability.4−6 These advantages arise from the polarizable nature of sulfur anions, which allows for facile Li+ ionic conductivity and ductility, sulfide SE coatings are expected to facilitate efficient ionic conduction across the interface and promote conformal contact between CAM and catholyte particles.31−37 Kim et al. reported a sulfide SE coating via a solution process using acetonitrile, resulting in imp",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    364.0
+   ],
+   "w": 2151,
+   "h": 1291,
+   "dpi": 300,
+   "src": "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.72
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) XRD patterns for LPSC1.0, LPSC0.5B0.5, LPSC1.0B0.6, LPSC0.8B0.8, and LPSC0.6B1.0. (b) Rietveld refinement of the XRD pattern and (c) the corresponding crystal structure of LPSC0.8B0.8. (d) Lattice parameters of the investigated SEs as refined from XRD data. (e) Ionic conductivity at 25 °C and activation energy as a function of SE composition. properties and coating quality is essential for maximizing ASSB cathode performance. spatially homogeneous interfacial reactions, thereby enhancing the electrochemical performance. In this study, we systematically investigate how the mechanical properties of sulfide-based SEs affect coating quality and electrochemical performance in dry-coated composite cathodes. Argyrodite-type SEs with controlled Cl/ Br ratios were synthesized via halogen substitution to modulate their mechanical properties and applied to Ni-rich layered oxide partic",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    337.8
+   ],
+   "w": 2151,
+   "h": 1182,
+   "dpi": 300,
+   "src": "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Modulus map of LPSC0.8B0.8 obtained in AFM-FS mode. (b) Representative F−D curve of LPSC0.8B0.8, indicating the extracted E and Wad. (c) Surface topography and (d) load−depth curves with the corresponding residual penetration depth profiles of LPSC0.8B0.8 obtained by nanoindentation. (e) E, σys, and Wad for all investigated SE compositions. further ground to 3−5 μm (Figure S1). SEs retain a pure argyrodite structure without secondary phases both before and after grinding, as confirmed by the diffraction patterns (Figures 2a and S2). To characterize the crystal structure of the synthesized SEs in detail, Rietveld refinements were carried out based on X-ray diffraction (XRD) data. As a representative example, the refinement result of LPSC0.8B0.8 is shown in Figure 2b. LPSC0.8B0.8 possesses a cubic argyrodite structure with space group F4̅3m, with unit cell parameters of a = b",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    401.7
+   ],
+   "w": 2151,
+   "h": 1448,
+   "dpi": 300,
+   "src": "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) SEM image of a bare NCM particle. (b) SEM image of an NCM@LPSC0.8B0.8 particle and the corresponding EDS elemental maps (S, P, Ni, and Co), showing uniform distribution of the sulfide SE coating on the NCM surface. (c) TEM image of NCM@LPSC0.8B0.8, revealing a conformal SE coating layer on the NCM surface. (d) XRD patterns of bare NCM and NCM@LPSC0.8B0.8; the magnified regions highlight the characteristic diffraction peaks of the argyrodite SE, marked with asterisks (*). σys. The resulting σys value of LPSC0.8B0.8 was 102 ± 15 MPa (Figure 3c and d). The residual depth analyses for the other compositions are provided in Figure S9. All measured mechanical parameters, including E, σys, and Wad for each SE, are summarized in Figure 3e. As shown, E, σys, and Wad are substantially higher for the halogen-rich Li5.4PS4.4X1.6 compo- sitions than for the stoichiometric Li6PS5X compos",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    356.8
+   ],
+   "w": 2151,
+   "h": 1261,
+   "dpi": 300,
+   "src": "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.52
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) SEM images of NCM@LPSC0.5B0.5 and NCM@LPSC0.8B0.8 showing residual SE particles that remained unadhered to the NCM surface after the dry coating process. (b) Representative automated image analysis workflow for quantifying residual SE particles, based on SEM/EDS data. (c) Residual SE particle counts normalized to the number of NCM particles across all investigated SE compositions, reflecting coating quality. (d) FEM simulation results showing the time-dependent von Mises stress evolution and the spatial stress distribution within an LPSC0.5B0.5 particle and an LPSC0.8B0.8 particle upon collision with a rigid NCM particle, highlighting regions where the stress exceeds the σys of each composition. radius or polarizability. The observed trend in Wad suggests that halogen substitution modifies the local surface structure and bonding characteristics of the SEs. To examine the in",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    506.3
+   ],
+   "w": 2151,
+   "h": 1884,
+   "dpi": 300,
+   "src": "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.601
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (A−e) Calculated Wad as a function of interfacial separation distance for SE−NCM interface models with varying halogen compositions: (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6, (d) LPSC0.8B0.8, and (e) LPSC0.6B1.0. Insets show the corresponding optimized SE−NCM interface structures. (f) Comparison of the calculated Wad values and interfacial Li−O bond densities for the investigated SE compositions. the experimentally measured σys values (78−120 MPa), indicating localized plastic deformation and fracture within the SE particles. The simulated von Mises stress exceeds σys for all SE compositions, indicating that fracture readily occurs irrespective of SE composition. This confirms that particle fracture\u0001corresponding to the initial step of the coating mechanism in Figure 1b\u0001is unlikely to be a limiting factor for coating quality. Instead, subsequent interfacial processes, part",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    350.4
+   ],
+   "w": 2151,
+   "h": 1234,
+   "dpi": 300,
+   "src": "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) Schematic illustration of the ASSB cell configuration used for electrochemical characterization. (b) Initial voltage profiles of ASSBs employing bare NCM, NCM@LPSC0.5B0.5, and NCM@LPSC0.8B0.8 cathodes at 0.33C. (c) Rate capability of the bare NCM and NCM@SE cathodes measured at C-rates ranging from 0.33C to 2C. (d) EIS spectra of NCM@LPSC0.5B0.5 and NCM@LPSC0.8B0.8 cells measured after the initial charging. (e) Rion and Rint extracted from the transmission line model. Cycling performance and coulombic efficiency of the ASSB cells measured at 0.5C under operating stack pressures of (f) 250 MPa and (g) 5 MPa for bare NCM and NCM@SE cathodes. (h) Postcycling cross-sectional SEM images of composite cathodes employing bare NCM and NCM@LPSC0.8B0.8 cathodes. minimum. As summarized in Figure 6f, the calculated Wad values follow a systematic trend: halogen-rich compositions exhibit ",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    570.7
+   ],
+   "w": 2151,
+   "h": 2152,
+   "dpi": 300,
+   "src": "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. SEM images of synthesized SEs corresponding to (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6, (d) LPSC0.8B0.8 and (e) LPSC0.6B1.0 after grinding.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    307.3
+   ],
+   "w": 2013,
+   "h": 1006,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.583
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. XRD spectra of SEs before grinding.",
+   "bbox": [
+    183.5,
+    66.0,
+    428.5,
+    230.3
+   ],
+   "w": 1022,
+   "h": 685,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Rietveld refinement results of (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6 and (d) LPSC0.6B1.0.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    335.7
+   ],
+   "w": 2013,
+   "h": 1124,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Nyquist plots of SUS | SE | SUS symmetric cells with (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6, (d) LPSC0.8B0.8 and (e) LPSC0.6B1.0 measured at different temperatures.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    358.6
+   ],
+   "w": 2013,
+   "h": 1220,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Arrhenius plots derived from temperature-dependent ionic conductivity measurements for the investigated SEs.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    225.3
+   ],
+   "w": 2013,
+   "h": 664,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. DC polarization profiles and corresponding electronic conductivities of SUS | SE | SUS symmetric cells measured under a constant bias of 0.5 V for (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6, (d) LPSC0.8B0.8 and (e) LPSC0.6B1.0.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    309.7
+   ],
+   "w": 2013,
+   "h": 1016,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (a–c) AFM-based mechanical property characterization of sulfide SEs: (a) AFM measurement setup, (b) force spectroscopy approach–retract curves used to extract E and Wad, and (c) nanoindentation procedure for evaluation of σys.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    188.8
+   ],
+   "w": 2013,
+   "h": 512,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. AFM-based mechanical property characterization of sulfide SEs. Two-dimensional modulus distributions, histograms of E and Wad, and representative F–D curves of (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6, (d) LPSC0.8B0.8, and (e) LPSC0.6B1.0.",
+   "bbox": [
+    66.0,
+    79.8,
+    549.0,
+    526.1
+   ],
+   "w": 2013,
+   "h": 1860,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.755
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Surface topography and load–depth curves with corresponding residual penetration depth profiles are presented in (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6, (d) LPSC0.8B0.8, and (e) LPSC0.6B1.0.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    556.8
+   ],
+   "w": 2013,
+   "h": 2045,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.809
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Schematic illustration comparing the local bonding environments of Li6PS5X and halogen-rich Li5.4PS4.4X1.6, demonstrating how halogen substitution induces structural changes, thereby tuning the mechanical properties of argyrodite-type SEs.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    230.2
+   ],
+   "w": 2013,
+   "h": 685,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.631
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Simulation of SE coating behavior on NCM particle surfaces. (a) Comparison of experimentally obtained AFM surface depth profile and the reconstructed model profile, confirming the accuracy of the 3D NCM surface model. (b) Calculated coating coverage as a function of coating ratio (NCM-to-SE weight ratio). (c) Simulated 3D surface morphology at varying coating ratios (100:0, 100:0.2, 100:0.5, and 100:2), illustrating the progressive coverage of the NCM surface by the coating SE layer.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    324.9
+   ],
+   "w": 2013,
+   "h": 1079,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. SEM and EDS mapping of two representative NCM@LPSC0.8B0.8 particles, showing reproducible coating morphology and elemental distribution.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    356.1
+   ],
+   "w": 2013,
+   "h": 1209,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.208
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Low-magnification SEM images and EDS mapping of NCM@LPSC0.8B0.8 particles.",
+   "bbox": [
+    66.2,
+    66.0,
+    545.8,
+    220.9
+   ],
+   "w": 2000,
+   "h": 646,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.242
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 18,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Finite element simulation results of (a) LPSC1.0, (b) LPSC1.0B0.6 and (c) LPSC0.6B1.0.",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    358.9
+   ],
+   "w": 2001,
+   "h": 1221,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 19,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Cross-sectional stress distributions obtained from finite element simulations for (a) LPSC1.0, (b) LPSC0.5B0.5, (c) LPSC1.0B0.6, (d) LPSC0.8B0.8, and (e) LPSC0.6B1.0.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    285.6
+   ],
+   "w": 2013,
+   "h": 915,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Representative cropped views of the optimized NCM–SE interface structures within an identical interfacial area for (a) LPSC0.5B0.5 and (b) LPSC0.8B0.8. The figure highlights the difference in the number of interfacial Li–O bonds formed between the SE and the NCM surface.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    187.1
+   ],
+   "w": 2013,
+   "h": 505,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 22,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Cross-sectional SEM images of composite cathodes employing (d) bare NCM and (e) NCM@LPSC0.8B0.8 after cell fabrication.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    220.0
+   ],
+   "w": 2013,
+   "h": 642,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.376
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 23,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. (a) Nyquist plots of cathode symmetric cells. (b) Quantified ionic and electronic resistances of bare NCM, NCM@LPSC0.5B0.5, and NCM@LPSC0.8B0.8 cathodes.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    227.1
+   ],
+   "w": 2013,
+   "h": 672,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 24,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. (a) Initial voltage profiles of ASSBs employing NCM@LNO cathodes at 0.33C. (b) Rate capability of the bare NCM and NCM@SE cathodes measured at C-rates ranging from 0.33C to 2C.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    202.7
+   ],
+   "w": 2013,
+   "h": 570,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 25,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. (a) EIS spectra of NCM@LNO cell measured after the initial charging. (b) Rion and Rint extracted from the transmission line model.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    206.0
+   ],
+   "w": 2013,
+   "h": 584,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 26,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. CV curves of (a) LPSC1.0, (b) LPSC0.5B0.5, (a) LPSC1.0B0.6, (b) LPSC0.8B0.8, and (e) LPSC0.6B1.0, showing oxidative voltage onset and peak current, along with integrated charge indicating the extent of oxidative decomposition.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    310.8
+   ],
+   "w": 2013,
+   "h": 1020,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 27,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. UPS spectra of (a) LPSC0.5B0.5 and (b) LPSC0.8B0.8.",
+   "bbox": [
+    73.2,
+    66.0,
+    538.8,
+    192.9
+   ],
+   "w": 1940,
+   "h": 529,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 28,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Initial voltage profiles of ASSBs employing bare NCM and NCM@SE cathodes, measured at 0.5C under an operating stack pressure of 5 MPa.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    229.6
+   ],
+   "w": 2013,
+   "h": 682,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 29,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. XRD spectra of composite cathodes employing bare NCM and NCM@LPSC0.8B0.8 (a) before cycling and (b) after 200 cycles.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    211.1
+   ],
+   "w": 2013,
+   "h": 605,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Quantitative analysis of residual SE particles after coating, categorized by particle size range. Values represent the number of residual SE particles in each size range, normalized to the number of NCM particles, obtained from SEM image analysis across all investigated SE compositions.",
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    426.4
+   ],
+   "w": 2005,
+   "h": 1496,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 20,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Interfacial bond densities for possible bonding pairs in optimized SE–NCM interface structures.",
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    348.2
+   ],
+   "w": 2005,
+   "h": 1170,
+   "dpi": 300,
+   "src": "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
+   "blank": 0.963
+  }
+ ]
+}

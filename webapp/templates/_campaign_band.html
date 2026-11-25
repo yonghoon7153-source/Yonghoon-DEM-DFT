@@ -1,0 +1,194 @@
+{# ══ 캠페인 지위 밴드 ═══════════════════════════════════════════════════════
+   이 화면이 감사하는 캠페인이 **지금 어떤 지위인가** 를 한 덩어리로 말한다:
+     지위(NO-GO hold) · 비준된 보고량 · 남은 해제조건 · 봉인.
+
+   ⛔ 값은 하나도 여기서 짓지 않는다 — `data.cascade_campaign_band()` 가 비준 카드와
+      봉인 파일에서 읽어 온 것을 옮기기만 한다. 대시보드 `_closure_and_prereg_cards()`
+      와 **같은 JSON** 이라 두 화면이 갈라질 수 없다.
+   ⛔ 카드가 없거나 비준 전이면 숫자를 만들지 않고 **왜 못 그리는지**를 적는다
+      (fail-closed — 빈 밴드로 '없음' 을 흉내내지 않는다).
+   CSS 는 A 묶음 소유 `.v3-band` / `.v3-fold` 를 그대로 쓴다. 새 클래스 안 만든다.
+   쓰는 곳: `cascade.html`. 다른 캠페인 화면이 같은 밴드를 원하면 band dict 만 넘기면 된다.
+   ══════════════════════════════════════════════════════════════════════════ #}
+{# ── 마감 카드 모드 (`closure` 를 넘겼을 때) ────────────────────────────────
+   마감 문서의 **상태 · 닫는 범위 · 허용/금지 서술 · 재개 조건**을 그대로 싣는다.
+   ⛔ 확정값(절대 E_ads 8개)은 **싣지 않는다** — hazard 원장이 BLOCKED 로 잡아 둔 축이라
+      마감 카드가 그걸 헤드라인으로 다시 띄우면 화면 둘이 같은 값에 정반대 지위를 준다.
+      data.sdcp_closure_card() docstring 에 사유가 있다. #}
+{% if closure is defined %}
+{% if not closure or not closure.ok %}
+<div class="v3-band is-hold"><div class="v3-band-cell" style="flex-basis:100%">
+  <span class="v3-band-t">마감 상태</span>
+  <span class="v3-band-v">⛔ 마감 문서를 못 읽었다 — {{ closure.why if closure else '경로 미지정' }}</span>
+</div></div>
+{% else %}
+<div class="v3-band is-blocked" id="closure-card">
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">마감 상태 <span class="muted" style="font-weight:400;text-transform:none">
+      {{ closure.state_at }} · 상태 이력 {{ closure.n_history }}건</span></span>
+    <span class="v3-band-v"><span class="mono">{{ closure.state }}</span></span>
+    {% if closure.state_note %}
+    <div class="muted" style="font-size:.78rem;margin-top:3px">{{ closure.state_note|bold }}</div>{% endif %}
+  </div>
+  {% if closure.scope %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">닫는 범위</span>
+    <span class="v3-band-v" style="font-weight:400">{{ closure.scope|bold }}</span></div>
+  {% endif %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">허용 서술 — 이대로만 쓴다</span>
+    <ul style="margin:2px 0 0;padding-left:18px;font-size:.82rem;line-height:1.6">
+      {% for k, v in closure.allowed.items() %}<li><b>{{ k }}</b> — {{ v|bold }}</li>{% endfor %}</ul>
+  </div>
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t" style="color:var(--red)">금지 서술 {{ closure.forbidden|length }}건</span>
+    <ul style="margin:2px 0 0;padding-left:18px;font-size:.82rem;line-height:1.6">
+      {% for s in closure.forbidden %}<li>⛔ {{ s|bold }}</li>{% endfor %}</ul>
+  </div>
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">재개 조건 — 이것들만</span>
+    <ul style="margin:2px 0 0;padding-left:18px;font-size:.82rem;line-height:1.6">
+      {% for k, v in closure.reopen.items() %}<li><b>{{ k }}</b> — {{ v|bold }}</li>{% endfor %}</ul>
+    {% if closure.reopen_only %}
+    <div style="font-size:.82rem;margin-top:5px;color:var(--red)"><b>{{ closure.reopen_only|bold }}</b></div>
+    {% endif %}
+  </div>
+  <div class="muted mono" style="flex-basis:100%;font-size:.72rem">출처: {{ closure.record }}</div>
+</div>
+{% endif %}
+{% else %}
+{% if not band or not band.ok %}
+<div class="v3-band is-hold" role="status">
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">캠페인 지위</span>
+    <span class="v3-band-v">⛔ 지위를 표시하지 않는다 — {{ (band.why if band else '지위 원장을 못 읽었다') }}</span>
+  </div>
+</div>
+{% else %}
+<div class="v3-band is-{{ band.state_kind }}" id="campaign-band" role="status"
+     aria-label="캠페인 지위 밴드">
+  <div class="v3-band-cell" style="flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline">
+    <span class="v3-band-t" style="margin:0">캠페인 지위</span>
+    <b style="font-size:1rem;color:var(--red)">{{ band.state }}</b>
+    <a class="v3-chip" href="/governance#{{ band.decision }}"
+       title="판정 원장에서 이 결정 보기">⚖ 판정 원장 →</a>
+  </div>
+  {% if band.nogo_text %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-v" style="font-weight:400">{{ band.nogo_text|bold }}</span>
+  </div>
+  {% endif %}
+
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">비준된 보고량 <span class="muted" style="font-weight:400;text-transform:none">
+      {{ band.ratified_at }} · {{ band.ratified_by }} · digest {{ band.digest }}…</span></span>
+    <span class="v3-band-v">{{ band.estimand|bold }}</span>
+    {% if band.estimand_note %}
+    <div class="muted" style="font-size:.78rem;margin-top:3px;font-weight:400">
+      {{ band.estimand_note|bold }}</div>{% endif %}
+  </div>
+
+  {# ── 원장 판정 — 2026-09-19. 화면을 렌더해 보니 아래 문장들이 한 글자도 없었다.
+        그런데 화면은 3,615 · 681 · 91종을 큰 숫자로 띄우고 있었다.
+        ⛔ 문장을 여기서 짓지 않는다. `data.cascade_verdicts()` 가 원장에서 옮겨 온다.
+        ⛔ 원장에 없는 판정은 **구멍으로 싣는다** — 조용히 빼지 않는다. #}
+  {% if band.verdicts %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">이 캠페인에 걸린 판정 {{ band.verdicts|length }}건</span>
+    <ul style="margin:2px 0 0;padding-left:18px;font-size:.82rem;line-height:1.65">
+      {% for v in band.verdicts %}
+      <li data-verdict="{{ v.label }}">
+        {% if v.ok %}<b>{{ v.label }}</b> — {{ v.text|bold }}
+          <div class="muted" style="font-size:.76rem">{{ v.status }} · <span class="mono">{{ v.record }}</span></div>
+        {% else %}<b style="color:var(--red)">⛔ {{ v.label }}</b> — 화면에 실을 원장 기록이 없다: {{ v.why }}
+          {% if v.see %}<a class="v3-chip" href="{{ v.see }}">→ 출처 보기</a>{% endif %}
+        {% endif %}
+      </li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {# ── 카드 계보 — 2026-09-19. 1저자: "앞으로 12/13 처럼 혼동하는 일 없게".
+        09-12 에 카드 셋 · 09-13 에 둘이 나란히 있었고 화면은 어느 게 지금 것인지
+        말하지 않았다. ⛔ ★말단은 **그래프 사실**이지 유효 판정이 아니다 —
+        그 구분을 화면 텍스트로 적는다 (CSS content: 로 그리면 복사에 안 따라간다). #}
+  {% if band.lineage %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">보고량 카드 계보 {{ band.lineage|length }}판</span>
+    <div class="muted" style="font-size:.76rem;margin:1px 0 5px">
+      <b>★ 말단</b> = 이 카드를 <span class="mono">supersedes</span> 로 가리키는 카드가 없다는
+      <b>그래프 사실</b>이다. <b>유효하다는 판정이 아니다</b> — 말단이면서
+      <span class="mono">proposed</span> 일 수 있다.
+    </div>
+    <ul style="margin:2px 0 0;padding-left:18px;font-size:.82rem;line-height:1.65">
+      {% for c in band.lineage %}
+      <li data-card="{{ c.ver }}" data-tip="{{ 'yes' if c.tip else 'no' }}">
+        {% if c.ok %}
+        {% if c.tip %}<b>★ {{ c.ver }}</b>{% else %}<span class="muted">{{ c.ver }} · 대체됨</span>{% endif %}
+        <span class="muted">{{ c.date }}</span> — {{ c.title|bold }}
+        <div class="muted" style="font-size:.76rem">{{ c.status|bold }}
+          · <span class="mono">{{ c.record }}</span></div>
+        {% else %}<b style="color:var(--red)">⛔ {{ c.ver }}</b> — 화면에 실을 카드를 못 읽었다: {{ c.why }}
+        {% endif %}
+      </li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if band.remaining %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">남은 해제조건</span>
+    <span class="v3-band-v" style="font-weight:400">{{ band.remaining|bold }}</span>
+    {% if band.not_released %}
+    <div class="muted" style="font-size:.78rem;margin-top:3px">{{ band.not_released|bold }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if band.seal %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">봉인</span>
+    <span class="v3-band-v"><span class="mono">{{ band.seal.label }}</span>
+      <span style="font-weight:400">· {{ band.seal.at }} · 도구 {{ band.seal.n_sources }}종 sha256 ·
+      규칙 {{ band.seal.rules|join(' · ') }}</span></span>
+  </div>
+  {% endif %}
+
+  {# 아래는 **접되 지우지 않는다** — 금지 서술·무효 조건은 카드 본문이다. #}
+  <details class="v3-fold" style="flex-basis:100%;margin-top:2px">
+    <summary style="font-size:.8rem;font-weight:700">
+      허용 서술 {{ band.allowed|length }} · 금지 서술 {{ band.forbidden|length }} ·
+      무효 조건 {{ band.invalid_if|length }} · 구조적 공백 — 펼치기</summary>
+    <div style="font-size:.82rem;line-height:1.6;margin-top:6px">
+      {% if band.allowed %}
+      <div style="margin-bottom:8px"><b>✅ 허용 서술 (이대로만 쓴다)</b>
+        <ul style="margin:4px 0 0;padding-left:18px">
+          {% for s in band.allowed %}<li>{{ s|bold }}</li>{% endfor %}</ul></div>
+      {% endif %}
+      {% if band.forbidden %}
+      <div style="margin-bottom:8px"><b style="color:var(--red)">금지 서술</b>
+        <ul style="margin:4px 0 0;padding-left:18px">
+          {% for s in band.forbidden %}<li>{{ s|bold }}</li>{% endfor %}</ul></div>
+      {% endif %}
+      {% if band.invalid_if %}
+      <div style="margin-bottom:8px"><b>무효 조건 (하나라도 걸리면 판정에 쓰지 않는다)</b>
+        <ul style="margin:4px 0 0;padding-left:18px">
+          {% for s in band.invalid_if %}<li>{{ s|bold }}</li>{% endfor %}</ul></div>
+      {% endif %}
+      {% if band.gap %}
+      <div style="margin-bottom:8px"><b>🕳 구조적 공백</b>
+        <span class="muted" style="font-size:.76rem">— 신설 해제조건으로 올릴지는 1저자·리뷰 판단(카드가 유보)</span>
+        <div style="margin-top:3px">{{ band.gap|bold }}</div></div>
+      {% endif %}
+      {% if band.seal and band.seal.not_guaranteed %}
+      <div><b>봉인이 보장하지 않는 것</b>
+        <ul style="margin:4px 0 0;padding-left:18px">
+          {% for s in band.seal.not_guaranteed %}<li>{{ s|bold }}</li>{% endfor %}</ul></div>
+      {% endif %}
+      <div class="muted mono" style="font-size:.72rem;margin-top:8px">
+        출처: {{ band.record }}{% if band.seal %} · {{ band.seal.record }}{% endif %}</div>
+    </div>
+  </details>
+</div>
+{% endif %}
+{% endif %}

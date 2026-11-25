@@ -1,0 +1,154 @@
+{
+ "property": "sdcp_nseries_doped_spin_partition",
+ "date": "2026-09-08",
+ "schema": "spin_partition_series/v1",
+ "status": "measured — n=6 신규 · n=1·2·3 은 2026-07 정본 전사",
+ "citable": true,
+ "제목": "SDCP 도핑 상태(더블렛) Loewdin 스핀 분포 — SO₃ vs 백본 π, n=1·2·3·6",
+ "방법": {
+  "코드": "ORCA r2SCAN-3c · Opt (전 n 동일 — SP 값과 섞어 인용 금지)",
+  "상태": "H-제거 도핑 모델 D• · charge 0 · doublet · fresh SCF (seed·MORead·Rotate 개입 없음)",
+  "분할_정의": {
+   "sulfonate": "SO₃ 그룹 원자",
+   "backbone_july": "고리 원자만 (고리 H 제외 · 에테르 O 제외) — **7월과 같은 정의, 표에 올리는 것은 이것뿐**",
+   "backbone_strict": "backbone_july + 고리 H (참고)",
+   "backbone_extended": "backbone_strict + 에테르 O (참고)"
+  },
+  "백분율_분해": {
+   "규칙": "SO₃ + 아릴 고리(backbone_july) + 에테르 O + 기타(고리 H·알킬 링커·말단 H) = 100.0 % — 네 칸이 전 원자를 덮는다. 두 칸(SO₃·백본)만 더하면 100 이 아닌 것이 정상이다.",
+   "n6_에테르_O": "extended 91.6 − strict 79.5 = +12.1",
+   "n6_기타": "고리 H −0.2 (strict 79.5 − july 79.7) + 알킬/말단 H +0.7 = +0.5",
+   "n1_n2_n3_한계": "7월 값은 SO₃·백본 두 칸만 있어 나머지를 에테르 O 와 H 로 **가르지 못한다** — 그림에서는 한 칸(unresolved remainder)으로 두고 빗금으로 표시한다. n=1 은 모노머라 에테르가 없어 나머지가 0 이다."
+  },
+  "도구": "tools/sdcp/nseries_n6.py --analyze (LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS 마지막 블록)",
+  "n6_실행": {
+   "경로": "gabia:/data/work/runs/sdcp_n6b",
+   "원자수": 199,
+   "cycles": 66,
+   "HURRAY": 1,
+   "총_스핀": 1.0,
+   "최종_E_Eh": -10051.064688600258,
+   "sha256": {
+    "n6_doped.xyz": "0863121ad11639da5c576e48b76166774cd00628c530a729603f2ae7ecaf27e1",
+    "n6_doped_trj.xyz": "168191ee39d55ac80cb4e75790c152e624cade86d12eeb6c521a2930a57372df",
+    "n6_doped.out": "ec8b8ba1350bc5b1e137ed0053a3a5bf69ac25d012d3b692497f7d541ce80059",
+    "groups.json": "429faff3098824d26b77eab71230537cf2f5ab126b1e187be4aff7d9227a53b0"
+   },
+   "로컬_회수": "C:\\Users\\Administrator\\Downloads\\ (2026-09-08 09:15 · 해시 대조 완료)"
+  }
+ },
+ "값": [
+  {
+   "n": 1,
+   "site": "-",
+   "SO3_pct": 65.0,
+   "backbone_pct": 35.0,
+   "remainder_pct": 0.0,
+   "remainder_resolved": true,
+   "ring_split": "O 론페어 우세",
+   "source": "kb/results/sdcp_master_summary_2026_07_16.md §3",
+   "note": "~65/~35 (7월 표기)"
+  },
+  {
+   "n": 2,
+   "site": "A-ring",
+   "SO3_pct": 62.3,
+   "backbone_pct": 32.6,
+   "remainder_pct": 5.1,
+   "remainder_resolved": false,
+   "ring_split": "A 17.4 / B 15.2",
+   "source": "kb/results/sdcp_master_summary_2026_07_16.md §3"
+  },
+  {
+   "n": 3,
+   "site": "end(A)",
+   "SO3_pct": 54.6,
+   "backbone_pct": 39.8,
+   "remainder_pct": 5.6,
+   "remainder_resolved": false,
+   "ring_split": "B 15.3 > A 13.9 > C 10.6",
+   "source": "kb/results/sdcp_master_summary_2026_07_16.md §3"
+  },
+  {
+   "n": 3,
+   "site": "mid(B)",
+   "SO3_pct": 42.3,
+   "backbone_pct": 50.1,
+   "remainder_pct": 7.6,
+   "remainder_resolved": false,
+   "ring_split": "A 14.0 / B 21.3 / C 14.9",
+   "source": "kb/results/sdcp_master_summary_2026_07_16.md §3",
+   "note": "크로스오버"
+  },
+  {
+   "n": 6,
+   "site": "(pilot 봉인 자리 — groups.json source_manifest 참조)",
+   "SO3_pct": 7.7,
+   "backbone_pct": 79.7,
+   "ether_O_pct": 12.1,
+   "other_pct": 0.5,
+   "other_pct_분해": "고리 H −0.2 (스핀 분극) + 알킬 링커·말단 H +0.7",
+   "remainder_resolved": true,
+   "ring_split": "ring0 3.8 / ring1 7.3 / ring2 9.4 / ring3 15.9 / ring4 23.3 / ring5 20.0 — 합 79.7 (= backbone_july · 7월 정의 = 고리 원자만). 폴라론은 ring3–5 에 몰리고 ring4 가 최대. (참고 +고리H: ring5 19.8 — 말단 α-H 가 −0.2 스핀 분극 · ring0 의 α-H 는 0.0)",
+   "ring_profile_pct": {
+    "ring0": 3.8,
+    "ring1": 7.3,
+    "ring2": 9.4,
+    "ring3": 15.9,
+    "ring4": 23.3,
+    "ring5": 20.0
+   },
+   "ring_profile_정의": "고리 원자만 (7월 정의) · 합 79.7 = backbone_july — 2026-09-08 symbols 폴백 반영 재분석(analyze_n6_v2.log · 재계산 없음). +고리H 값은 참고(합 79.5 = strict)",
+   "source": "gabia:/data/work/runs/sdcp_n6b/analyze_n6_v2.log (2026-09-08 · symbols 폴백 · 7월 정의 per-ring 확정)",
+   "backbone_strict_pct": 79.5,
+   "backbone_extended_pct": 91.6,
+   "note": "이번 (7월과 같은 분할: 고리 원자만)",
+   "ring_profile_incl_ringH_pct": {
+    "ring0": 3.8,
+    "ring1": 7.3,
+    "ring2": 9.4,
+    "ring3": 15.9,
+    "ring4": 23.3,
+    "ring5": 19.8
+   }
+  }
+ ],
+ "★_판정": {
+  "1": "n=3 mid 에서 넘은 크로스오버(백본 50.1 %)가 n=6 에서 **79.7 %** 로 크게 진행 — 홀이 SO₃ 라디칼에서 백본 π 로 이동한다는 7월 외삽('n↑ 백본 지배 예상')과 방향 일치.",
+  "2": "SO₃ 지분은 65 → 62 → 55/42 → **7.7 %** 로 단조 감소.",
+  "3": "SO₃ 7.7 + backbone_july 79.7 = 87.4 % — 100 이 아닌 이유는 분할이 두 그룹만 이름 붙였기 때문. 나머지 12.6 % 의 분해: 에테르 O **+12.1** (extended 91.6 − strict 79.5) · 고리 H **−0.2** (strict 79.5 − july 79.7 · π 라디칼 옆 H 의 음의 스핀 분극) · 기타(알킬 링커·말단 H) 0.7. 총 스핀 1.000 이라 스핀 오염 아님. 7월도 같은 이유로 n=2 94.9 · n=3mid 92.4 (n=1 은 모노머라 에테르 없음 → 100)."
+ },
+ "허용_서술": [
+  "H-제거 도핑 모델(D•)에서 Loewdin 스핀의 백본 π 지분은 n=1 35 → n=2 32.6 → n=3(mid) 50.1 → n=6 79.7 % 로 증가한다 (ORCA r2SCAN-3c Opt, 같은 분할).",
+  "n=6 에서 SO₃ 지분은 7.7 % 다.",
+  "이 계열은 같은 방법·같은 분할(고리 원자만)로 비교 가능하다.",
+  "n=6 에서 고리별 스핀(고리 원자만)은 ring0 3.8 → ring4 23.3 → ring5 20.0 % 로 사슬 한쪽(ring3–5, 합 59.2 %)에 치우친다 — 도핑 자리 확인 후 '자리 근방' 여부를 말한다."
+ ],
+ "금지_서술": [
+  "⛔ '자가도핑이 일어난다' 의 증거로 인용 — 산화된 상태를 **주고** 그 안의 스핀 위치를 본 것. 자발성은 열역학(sdcp_v7c_li_binding.csv DPE·PA)·FT-IR 몫.",
+  "⛔ '전역 최소 스핀 상태' — fresh SCF 한 번. 어느 해로 갔는지 보증 없음 (7월과 같은 한계).",
+  "⛔ backbone_strict(79.5)·extended(91.6) 를 7월 값 옆에 놓기 — 분할이 다르다.",
+  "⛔ SP 계산값과 같은 표에 놓기 — 폴라론은 격자 완화와 얽혀 SP 는 국재화를 과소평가한다.",
+  "⛔ '백본 79.7 + SO₃ 7.7 이 100 이 아니니 계산이 이상하다' — 분할 정의의 결과. 에테르 O 12.1 % 를 백본에 넣으면 91.6 (extended) 이지만 7월과 자가 달라 표에는 안 올린다.",
+  "⛔ 고리별 값을 '폴라론이 ring4 에 **국재**한다' 로 읽기 — ring3–5 에 59 % 가 퍼져 있고(15.9+23.3+20.0) 어느 한 고리도 25 % 를 넘지 않는다. '3–5번 고리에 걸친 폴라론, ring4 최대' 까지만. fresh SCF 한 번이라 다른 해(다른 자리)가 없다는 보증도 없다."
+ ],
+ "다음_단계": [
+  "✅ ① gabia 재분석(2026-09-08 analyze_n6_v2.log) → 7월 정의 per-ring 확정: 3.8/7.3/9.4/15.9/23.3/20.0 (합 79.7)",
+  "② n=6 자리(도핑 위치 = 떼어낸 H 가 붙어 있던 SO₃H 의 고리 번호)를 groups.json source_manifest / source_xyz 에서 확인해 site 필드 채움 → ring4–5 치우침이 '자리 근방' 인지 판정",
+  "✅ ③ 그림: tools/figures/fig_sdcp_nseries_spin.py (2026-09-08 · (c) 7월 정의로 갱신)"
+ ],
+ "출처": [
+  "kb/results/sdcp_master_summary_2026_07_16.md §3",
+  "tools/sdcp/nseries_n6.py",
+  "db/properties/sdcp_polaron_pilot_prereg_S0_2026_08_31.json (n=6 D• 정본 명칭)"
+ ],
+ "그림": {
+  "png": "docs/figures/sdcp_nseries_spin/sdcp_nseries_spin_partition.png",
+  "도구": "tools/figures/fig_sdcp_nseries_spin.py (--selftest 17/17 · 음성 4)",
+  "csv": [
+   "db/properties/sdcp_nseries_spin_partition_fig.csv",
+   "db/properties/sdcp_n6_ring_profile_fig.csv"
+  ],
+  "패널": "(a) n=6 네 칸 100 % 막대 · (b) n=1·2·3end·3mid·6 같은 분할(7월 나머지는 빗금 unresolved) · (c) n=6 고리별(7월 정의 · 합 79.7)"
+ }
+}

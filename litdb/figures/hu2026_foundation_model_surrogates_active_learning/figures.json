@@ -1,0 +1,231 @@
+{
+ "slug": "hu2026_foundation_model_surrogates_active_learning",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Foundation models resolve the surrogate modeling dilemma in active learning. (a) Conventional surrogate models used in active learning face a trade-off between predictive capacity and reliable uncertainty estimation. Gaussian processes provide principled uncertainty but limited modeling flexibility, while high-capacity models such as random forests and neural networks can capture complex relationships but often produce poorly calibrated uncertainty in small-data regimes. (b) Foundation models trained to approximate Bayesian inference over tabular data combine expressive prediction with calibrated uncertainty through meta-learned priors. (c) Active learning with foundation-model surrogates identifies achieve good balance of modeling capacity and uncertainty estimation capability. (d) FM-based AL can find optimal materials with fewer experimental evaluations.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    127.2,
+    546.0,
+    330.7
+   ],
+   "w": 2003,
+   "h": 849,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Pool-based active learning pipeline for discovering new materials. F: EI can be replaced with any other acquisition functions. G: k=1 is used for maximum sample efficiency. H: Top-1 task can be replaced with discovering Any of All of Top-K tasks.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.6,
+    110.7,
+    546.2,
+    336.8
+   ],
+   "w": 2003,
+   "h": 943,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.31
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Performance of ICAL on Cu_hardness dataset compared to GP and RF based AL. (a-b) Tabpfn against GP; (c-d): Tabpfn against RF.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.7,
+    66.0,
+    546.8,
+    477.1
+   ],
+   "w": 2006,
+   "h": 1713,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4: Performance of ICAL on (a) (c) Cu_electric dataset and (b) (d) Glass_DS3 dataset compared to GP and RF based AL.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    101.0,
+    546.3,
+    466.7
+   ],
+   "w": 2002,
+   "h": 1525,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Figure 5: Performance of ICAL on LTC_conc dataset with element concentration features compared to GP and RF based AL. Figure 5 presents active learning results on the ltc_conc dataset targeting the lattice thermal conductivity (LTC) of crystal materials described by concentration features. Several distinctive and noteworthy patterns emerge that set this dataset apart from the others. TabPFN (UCB_hybrid) achieves a 75% win rate against GP (UCB) and a remarkable 95% win rate against RF (UCB) (the highest RF win rate across all datasets tested),indicating that RF is particularly ill-suited for navigating the LTC–composition landscape of crystal materials when only concentration features are used. The most striking observation in this dataset is the dramatic collapse to fewer than 10 extra evaluations beyond init_ratio ≈0.20: both GP and TabPFN achieve this near-perfect convergence all the w",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    199.1,
+    546.3,
+    610.1
+   ],
+   "w": 2002,
+   "h": 1714,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1: Summary of Active Learning Acquisition Functions Acquisition Strategy Mathematical Formulation Description & Scaling Notes Standard UCB µ(x) + βσ(x) Balances mean and uncertainty using raw, unnormalized values (prone to scale issues). Normalized UCB µnorm(x) + βσnorm(x) Scale-invariant. Both µ and σ are normalized to [0, 1] before scaling with β. Hybrid UCB µnorm(x) + βσGP _norm(x) Uses normalized mean from TabPFN and normalized un- certainty from a Gaussian Process. Standard EI (µ(x) −fbest)Φ(Z) + σ(x)ϕ(Z) Calculates Expected Improvement using raw units without a trade-off parameter. Normalized EI (ˆµ(x) −ˆfbest −ξ)Φ(Z) + ˆσ(x)ϕ(Z) Calculates Expected Improvement using min-max nor- malized predictions and a trade-off parameter ξ, where Z = ˆµ(x)−ˆ fbest−ξ ˆσ(x) . Hybrid EI Same as Normalized EI Computes Normalized EI ξ utilizing the mean from TabPFN and the uncertainty from the",
+   "rotated_deg": 0,
+   "bbox": [
+    67.2,
+    74.1,
+    579.3,
+    292.8
+   ],
+   "w": 2135,
+   "h": 913,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2: Summary of Predictive Mean and Uncertainty Estimation by Surrogate Models",
+   "rotated_deg": 0,
+   "bbox": [
+    66.5,
+    31.0,
+    546.7,
+    727.4
+   ],
+   "w": 2002,
+   "h": 2903,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3: Summary of 25 Benchmark Datasets Dataset Code Dataset Samples Features Opt. Objective LTC_C LTC Concentration 3,148 62 LTC LTC_M LTC Magpie 3,148 126 LTC LTC_S LTC Structure 3,148 146 LTC Cu_HD_C Cu Alloy Hardness Concentration 1,614 34 Hardness [54] Cu_HD_M Cu Alloy Hardness Magpie 1,614 132 Hardness [54] Cu_EC_C Cu Alloy Elect. Conduct. Concentration 1,826 34 Electrical Conductivity [54] Cu_EC_M Cu Alloy Elect. Conduct. Magpie 1,826 132 Electrical Conductivity [54] Glass_DS1 Bulk glass forming alloy Concentration 495 22 glass forming [55] Glass_DS2 Bulk glass forming alloy Physical 495 14 glass forming [55] Glass_DS3 Bulk glass forming alloy Magpie 495 145 glass forming [55]",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    31.0,
+    546.7,
+    727.4
+   ],
+   "w": 2003,
+   "h": 2903,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 12,
+   "file": "tab_4.png",
+   "caption": "Table 4: Mean number of extra evaluations per surrogate model averaged across all 19 init_ratio levels (5%–95%), using each model’s best acquisition function for that dataset. Percentage of extra evaluation saving achieved by TabPFN relative to GP and RF are shown in the final two columns; negative values indicate TabPFN underperforms the baseline (only for the inappropriate magppie feature sets). Dataset Gauss GP RF TabPFN Winner Best Acq (TabPFN) % Saving. % Saving. (vs GP) (vs RF) cu_electric 58.5 37.5 [30.1] TabPFN ei 48.5% 19.7% cu_electric_magpie 82.5 90.3 83.9 Gauss ucb_norm −1.7% 7.1% cu_hardness 31.3 18.8 [8.8] TabPFN ucb 71.9% 53.2% cu_hardness_magpie 21.9 23.5 24.1 Gauss ei_hybrid −10.0% −2.6% glass_ds1_conc 72.4 66.0 48.8 TabPFN ucb_norm 32.6% 26.1% glass_ds2_physical 37.6 43.7 32.6 TabPFN ucb_norm 13.3% 25.4% glass_ds3_magpie 67.5 31.6 [28.2] TabPFN ucb 58.2% 10.8% ltc_conc ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    31.0,
+    550.8,
+    727.4
+   ],
+   "w": 2019,
+   "h": 2903,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 14,
+   "file": "tab_5.png",
+   "caption": "Table 5: Uncertainty Quantification & Regression Performance Comparison. Values are reported as Mean ± Standard Deviation. Arrows indicate whether lower (↓) or higher (↑) values are better. All are 5-Fold Cross-Validation Results for Cu-alloy Electrical Conductivity dataset (%IACS). Best results are highlighted in bold. Model RMSE ↓ R2 ↑ Spearman ↑ NLL ↓ PICP (0.95) MPIW ↓ AUSE ↓ Gaussian Process 8.38 ± 0.51 0.73 ± 0.04 0.81 ± 0.02 3.46 ± 0.03 0.93 ± 0.01 32.50 ± 1.02 5.58 ± 0.16 Random Forest 5.86 ± 0.28 0.87 ± 0.02 0.89 ± 0.02 3.11 ± 0.25 0.87 ± 0.02 15.93 ± 0.35 1.77 ± 0.42 TabPFN 5.56 ± 0.42 0.88 ± 0.03 0.92 ± 0.01 2.34 ± 0.15 0.88 ± 0.02 11.16 ± 0.34 0.83 ± 0.12",
+   "rotated_deg": 0,
+   "bbox": [
+    65.7,
+    31.0,
+    546.2,
+    727.4
+   ],
+   "w": 2004,
+   "h": 2903,
+   "dpi": 300,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 15,
+   "file": "tab_6.png",
+   "caption": "Table 6: Five-fold cross-validation results on the LTC dataset with concentration features. Values are reported as mean ± standard deviation across folds. Arrows indicate whether lower (↓) or higher (↑) values are better. PICP: prediction interval coverage probability; MPIW: mean prediction interval width; AUSE: area under the sparsification error curve. Best results are highlighted in bold. Model RMSE ↓ R2 ↑ Spearman ↑ NLL ↓ PICP (95%) MPIW ↓ AUSE ↓ Gaussian Process 53.26 ± 33.75 −0.01 ± 0.01 0.61 ± 0.04 5.81 ± 1.08 0.99 ± 0.00 237.23 ± 39.87 10.80 ± 3.56 Random Forest 48.62 ± 32.22 0.18 ± 0.06 0.83 ± 0.01 7.53 ± 3.42 0.86 ± 0.02 24.37 ± 2.74 4.50 ± 1.84 TabPFN 48.86 ± 32.78 0.18 ± 0.06 0.86 ± 0.01 3.22 ± 0.32 0.94 ± 0.01 33.16 ± 3.47 2.16 ± 0.43",
+   "rotated_deg": 0,
+   "bbox": [
+    66.7,
+    31.0,
+    571.6,
+    757.3
+   ],
+   "w": 2084,
+   "h": 2997,
+   "dpi": 297,
+   "src": "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf",
+   "blank": 0.861
+  }
+ ]
+}

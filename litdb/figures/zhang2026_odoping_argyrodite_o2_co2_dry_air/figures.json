@@ -1,0 +1,733 @@
+{
+ "slug": "zhang2026_odoping_argyrodite_o2_co2_dry_air",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+  "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Ionic conductivities of (a) Li6PS5Cl and (b) Li5.4PS4.4Cl1.6 before and after exposure to N2 (9.6 mL min−1), O2 (9.6 mL min−1), and CO2 (9.6 or 3 mL min−1) for 1 h. (c) CO gas production rate of Li6PS5Cl and Li5.4PS4.4Cl1.6. P 2p XPS spectra of Li6PS5Cl (d) before and after (e) O2, (f) CO2 exposure. P 2p XPS spectra of Li5.4PS4.4Cl1.6 (g) before and after (h) O2, (i) CO2 exposure. Optimized (001) facets of (j) Li6PS5Cl and (k) Li5.4PS4.4Cl1.6 in simulation. (l) The oxidation reaction free energies (∆Goxidation) of PS4 and PS3Cl motifs. The oxidation reaction sites are emphasized with red dashed circles.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    564.2,
+    526.5
+   ],
+   "w": 2153,
+   "h": 2048,
+   "dpi": 300,
+   "src": "Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 (a) XRD patterns of Li5.4-xPS4.4-2xO2xCl1.6-x (0 ≤x ≤0.125) solid electrolytes. (b) Ionic conductivities of Li5.3PS4.2O0.2Cl1.5 before and after exposed to N2 (9.6 mL min−1), O2 (9.6 mL min−1) and CO2 (9.6 or 3 mL min−1) for 1 h. (c) ∆Goxidation of PS3Cl and PS2OCl motifs. The oxidation reaction sites are emphasized with red dashed circles. P 2p XPS spectra of Li5.3PS4.2O0.2Cl1.5 (d) before and after (e) O2, (f) CO2 exposure. (g) CO gas production rate of Li5.4PS4.4Cl1.6 and Li5.3PS4.2O0.2Cl1.5. (h) Ionic conductivities of Li5.4PS4.4Cl1.6 and Li5.3PS4.2O0.2Cl1.5 before and after exposure in dry room. (i) Raman spectra of Li5.4PS4.4Cl1.6 and Li5.3PS4.2O0.2Cl1.5 before and after exposure in dry room.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    564.2,
+    386.4
+   ],
+   "w": 2153,
+   "h": 1465,
+   "dpi": 300,
+   "src": "Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Galvanostatic cycling of (a) Li|Li5.4PS4.4Cl1.6|Li and (b) Li|Li5.3PS4.2O0.2Cl1.5|Li at step-increased current densities. (c) Galvanostatic pro- files of Li|Li5.4PS4.4Cl1.6|Li and Li|Li5.3PS4.2O0.2Cl1.5|Li cells at 0.1 mA cm−2/0.1 mAh cm−2. (d) Cyclic performances of LiNbO3@LiCoO2|Li5.4PS4.4Cl1.6|Li and LiNbO3@LiCoO2|Li5.3PS4.2O0.2Cl1.5|Li batteries at 1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    564.2,
+    394.0
+   ],
+   "w": 2153,
+   "h": 1494,
+   "dpi": 300,
+   "src": "Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 (a) Ionic conductivities of Li5.4PS4.4Cl1.6 and Li5.3PS4.2O0.2Cl1.5 before and after soaked in toluene or sec-butyl acetate. (b) Raman spectra of Li5.4PS4.4Cl1.6 and Li5.3PS4.2O0.2Cl1.5 before and after soaked in sec-butyl acetate. (c) Cross-sectional morphologies of Li5.3PS4.2O0.2Cl1.5 membranes with different thicknesses. (d) Nyquist plot of Li5.3PS4.2O0.2Cl1.5 membrane at 25◦C. (e) Cycling stability of LiNbO3@LiCoO2|Li5.3PS4.2O0.2Cl1.5 membrane|Li pouch cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    434.3
+   ],
+   "w": 2154,
+   "h": 1663,
+   "dpi": 300,
+   "src": "Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.804
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) Li6PS5Cl and (b) Li5.4PS4.4Cl1.6 before and after exposure to N2 (9.6 ml",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    104.7,
+    514.4,
+    429.2
+   ],
+   "w": 1794,
+   "h": 1353,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The real-time curves of CO production rate in Li6PS5Cl and Li5.4PS4.4Cl1.6.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    86.8,
+    510.2,
+    244.4
+   ],
+   "w": 1776,
+   "h": 658,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Optimized facet of Li6PS5Cl after oxidation.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    84.9,
+    439.5,
+    243.3
+   ],
+   "w": 1482,
+   "h": 661,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.785
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Optimized facet of Li5.4PS4.4Cl1.6 after oxidation at S site.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    84.9,
+    471.0,
+    243.3
+   ],
+   "w": 1613,
+   "h": 661,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Optimized facet of Li5.4PS4.4Cl1.6 after oxidation at Cl site.",
+   "rotated_deg": 0,
+   "bbox": [
+    125.1,
+    84.9,
+    473.4,
+    243.3
+   ],
+   "w": 1452,
+   "h": 661,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.781
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. XRD patterns of Li5.4PS4.4Cl1.6 before and after O2 and CO2 exposure.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.3,
+    83.1,
+    501.1,
+    247.5
+   ],
+   "w": 1683,
+   "h": 686,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Ionic conductivities of Li5.4-xPS4.4-2xO2xCl1.6-x (0 ≤ x ≤ 0.2) solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    103.2,
+    514.4,
+    274.8
+   ],
+   "w": 1794,
+   "h": 715,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Arrhenius plots of Li5.4PS4.4Cl1.6 and Li5.3PS4.2O0.2Cl1.5 solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    85.3,
+    502.2,
+    261.5
+   ],
+   "w": 1743,
+   "h": 735,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Nyquist plots of (a, b) Li5.4PS4.4Cl1.6 and (c, d) Li5.3PS4.2O0.2Cl1.5 solid",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    84.3,
+    514.4,
+    387.3
+   ],
+   "w": 1794,
+   "h": 1263,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Nyquist plot of pellet-sintered Li5.3PS4.2O0.2Cl1.5 at 25 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.1,
+    87.3,
+    474.2,
+    243.9
+   ],
+   "w": 1459,
+   "h": 654,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. (a) SEM, (b) TEM images and STEM-EDS mapping images of",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    82.8,
+    514.5,
+    466.7
+   ],
+   "w": 1794,
+   "h": 1600,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.512
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Nyquist plots of Li5.3PS4.2O0.2Cl1.5 before and after exposure to N2 (9.6 ml",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    88.3,
+    514.4,
+    242.9
+   ],
+   "w": 1794,
+   "h": 646,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Optimized (001) facet of Li5.3PS4.2O0.2Cl1.5 in simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.7,
+    84.8,
+    473.7,
+    262.0
+   ],
+   "w": 1455,
+   "h": 739,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Optimized facet of Li5.3PS4.2O0.2Cl1.5 after oxidation.",
+   "rotated_deg": 0,
+   "bbox": [
+    135.5,
+    84.9,
+    462.9,
+    261.9
+   ],
+   "w": 1365,
+   "h": 739,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. The real-time curves of CO production rate in Li5.4PS4.4Cl1.6 and",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    86.1,
+    514.4,
+    244.6
+   ],
+   "w": 1794,
+   "h": 662,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Ionic conductivities of Li6+xPS5-2xO2xCl1+x (0 ≤ x ≤ 0.1) solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.5,
+    84.3,
+    511.8,
+    246.9
+   ],
+   "w": 1773,
+   "h": 678,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 18,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Optimized (001) facet of Li6.05PS4.9O0.1Cl1.05 in simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    120.6,
+    84.8,
+    477.7,
+    262.0
+   ],
+   "w": 1489,
+   "h": 739,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 19,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Optimized facet of Li6.05PS4.9O0.1Cl1.05 after oxidation.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.4,
+    84.8,
+    466.9,
+    262.0
+   ],
+   "w": 1399,
+   "h": 739,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 20,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. The oxidation reaction free energies (∆Goxidation) of PS4 and PS3O motifs.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    83.8,
+    514.4,
+    247.4
+   ],
+   "w": 1794,
+   "h": 682,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 21,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. (a) Ionic conductivities and (b) Nyquist plots of Li6.05PS4.9O0.1Cl1.05 before",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    85.8,
+    514.4,
+    432.5
+   ],
+   "w": 1794,
+   "h": 1446,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 22,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. P 2p XPS spectra of Li6.05PS4.9O0.1Cl1.05 (a) before and after (b) O2, (c) CO2",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    88.2,
+    514.4,
+    585.6
+   ],
+   "w": 1794,
+   "h": 2073,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 23,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. (a) CO gas production rate of Li6PS5Cl and Li6.05PS4.9O0.1Cl1.05. (b) The",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    98.5,
+    514.4,
+    419.9
+   ],
+   "w": 1794,
+   "h": 1340,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 24,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Nyquist plots of (a) Li5.4PS4.4Cl1.6 and (b) Li5.3PS4.2O0.2Cl1.5 before and",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    89.2,
+    514.4,
+    413.6
+   ],
+   "w": 1794,
+   "h": 1353,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 25,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. (a) Amount of H2S gas curves of Li5.4PS4.4Cl1.6 and Li5.3PS4.2O0.2Cl1.5 with",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    84.6,
+    514.4,
+    418.2
+   ],
+   "w": 1794,
+   "h": 1391,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 26,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Charge-discharge curves of (a) LiNbO3@LiCoO2|Li5.4PS4.4Cl1.6|Li and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    86.4,
+    514.4,
+    416.4
+   ],
+   "w": 1794,
+   "h": 1375,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 27,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Charge curve of LiNbO3@LiCoO2|Li5.4PS4.4Cl1.6|Li battery at 64th cycle",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    87.6,
+    514.4,
+    243.6
+   ],
+   "w": 1794,
+   "h": 650,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 28,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. Rate performances of (a) LiNbO3@LiCoO2|Li5.4PS4.4Cl1.6|Li and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    82.8,
+    514.4,
+    388.8
+   ],
+   "w": 1794,
+   "h": 1275,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 29,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. Nyquist plots of (a) Li5.4PS4.4Cl1.6 and (b) Li5.3PS4.2O0.2Cl1.5 solid",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    89.2,
+    514.4,
+    413.6
+   ],
+   "w": 1794,
+   "h": 1353,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 30,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. HAADF-STEM images and EDS spectra of Li5.3PS4.2O0.2Cl1.5 (a, b) before",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    83.6,
+    514.4,
+    356.8
+   ],
+   "w": 1794,
+   "h": 1139,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.711
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 31,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. XRD patterns of Li5.3PS4.2O0.2Cl1.5 power and membrane.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.0,
+    105.0,
+    474.3,
+    272.9
+   ],
+   "w": 1461,
+   "h": 701,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 32,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. Charge-discharge curves of LiNbO3@LiCoO2|Li5.3PS4.2O0.2Cl1.5",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    85.3,
+    514.4,
+    245.9
+   ],
+   "w": 1794,
+   "h": 670,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 33,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. Charge-discharge curves of LiNbO3@LiCoO2|Li5.3PS4.2O0.2Cl1.5",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    100.0,
+    514.4,
+    262.4
+   ],
+   "w": 1794,
+   "h": 678,
+   "dpi": 300,
+   "src": "Sup) Zhang2026 AdvMater Argyrodite Sulfide Electrolytes with Dry Atmospheric Stability for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.944
+  }
+ ],
+ "missing_labels": []
+}

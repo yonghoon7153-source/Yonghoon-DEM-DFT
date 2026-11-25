@@ -1,0 +1,96 @@
+No protocol specified
+
+     Program NEB v.7.4.1 starts on 10Oct2026 at 11:23:35 
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+         "P. Giannozzi et al., J. Chem. Phys. 152 154105 (2020);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Parallel version (MPI & OpenMP), running on       1 processor cores
+     Number of MPI processes:                 1
+     Threads/MPI process:                     1
+
+     MPI processes distributed on     1 nodes
+     3877 MiB available memory on the printing compute node when the environment starts
+ 
+
+     Parsing file: neb.in
+     Reading input from pw_1.in
+     Reading input from pw_2.in
+
+     reading file 'li2s.path'
+
+ 
+     string_method                 =    neb
+     restart_mode                  =    restart
+     opt_scheme                    =    broyden
+     num_of_images                 =    7
+     nstep_path                    =    100
+     CI_scheme                     =    auto
+     first_last_opt                =    F
+     use_freezing                  =    F
+     ds                            =    1.0000 a.u.
+     k_max                         =    0.3000 a.u.
+     k_min                         =    0.2000 a.u.
+     suggested k_max               =    0.6169 a.u.
+     suggested k_min               =    0.4112 a.u.
+     path_thr                      =    0.0500 eV / A
+
+     ------------------------------ iteration  19 ------------------------------
+
+     tcpu =      0.5    self-consistency for image   2
+     Message from routine setup:
+     using ibrav=0 with symmetry is DISCOURAGED, use correct ibrav instead
+     tcpu =    433.3    self-consistency for image   3
+     Message from routine setup:
+     using ibrav=0 with symmetry is DISCOURAGED, use correct ibrav instead
+     tcpu =    855.6    self-consistency for image   4
+     Message from routine setup:
+     using ibrav=0 with symmetry is DISCOURAGED, use correct ibrav instead
+     tcpu =   1301.4    self-consistency for image   5
+     Message from routine setup:
+     using ibrav=0 with symmetry is DISCOURAGED, use correct ibrav instead
+     tcpu =   1753.7    self-consistency for image   6
+     Message from routine setup:
+     using ibrav=0 with symmetry is DISCOURAGED, use correct ibrav instead
+
+     activation energy (->) =   0.347185 eV
+     activation energy (<-) =   0.347185 eV
+
+     image        energy (eV)        error (eV/A)        frozen
+
+         1      -5603.6913059            0.014196            T
+         2      -5603.5831911            0.034216            F
+         3      -5603.4102974            0.041980            F
+         4      -5603.3441211            0.013901            F
+         5      -5603.4102999            0.041915            F
+         6      -5603.5831960            0.034366            F
+         7      -5603.6913059            0.014279            T
+
+     climbing image =  4
+
+     path length          =  5.156 bohr
+     inter-image distance =  0.859 bohr
+
+     ---------------------------------------------------------------------------
+
+
+     neb: convergence achieved in  19 iterations
+ 
+     NEB          :  37m 8.51s CPU  37m14.28s WALL
+
+ 
+   This run was terminated on:  12: 0:50  10Oct2026            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
+Warning: ieee_invalid is signaling
+Warning: ieee_divide_by_zero is signaling
+Warning: ieee_inexact is signaling
+FORTRAN STOP

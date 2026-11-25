@@ -1,0 +1,672 @@
+{
+ "slug": "lee2025_dual_fibrous_ptfe_dry_electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-04",
+ "sources": [
+  "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+  "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Structure-forming mechanism of dual-type PTFE fibrous structure. (a) Schematic illustration of comparison of the fabrication procedure between multi-step grinding/kneading process for DDE and conventional single-step fibrillation for SDE. Inset images show schematic representation of PTFE fibrous structure. Right images show schematic representation of SDE and DDE. (b)–(e) Photographs for DDE according to fabrication steps: (b) powder mixing of sc-NCM811 and CB with 1 wt% PTFE, (c) first kneading step, (d) grinding/mixing after the addition of 2 wt% PTFE, and (e) second kneading step. (f) SEM images showing PTFE rope and PTFE fibre in the DDE. (g) Photograph and (h) cross-sectional SEM image of as-roll pressed DDE.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    459.5
+   ],
+   "w": 2176,
+   "h": 1733,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "blank": 0.341
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Physical characterization for electrode homogeneity (a) Pore size distribution by mercury-intrusion porosimetry and (b) volumetric electronic resistivity of SDE and DDE. Surface roughness images showing electrode uniformity of (c) SDE and (d) DDE (338 mm \u0003 283 mm). Top-view SEM images and corresponding EDS elemental mapping images of (e) SDE and (f) DDE.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    55.8,
+    558.7,
+    458.5
+   ],
+   "w": 2177,
+   "h": 1679,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "blank": 0.718
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Micro-structural analyses of thick dry electrode. (a) 3D reconstructed electrode images of the SDE measured by micro-CT, and (b) its corresponding volume fraction mapping image. (c) 3D reconstructed electrode images of the DDE, and (d) its corresponding volume fraction mapping image. Localized charge transfer resistance (Rl,ct) at 50% SOC of (e) SDE and (f) DDE measured by LEIS analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    615.4
+   ],
+   "w": 2177,
+   "h": 2383,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "blank": 0.717
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Mechanical characterization of thick dry electrode. (a) Digital photographs of electrode edge after roll pressing. (b) Edge roughness calculation of as-roll pressed freestanding electrode film. (c) Tensile stress–strain curves of as-roll pressed freestanding electrodes film. The plotted data represent the median result among three independent tests. (d) Cohesion force measured by 1801 peel-off test of the freestanding electrode films. Inset shows a photograph of DDE during the peel-off test. (e) Horizontal force and depth profiles measured by SAICAS. Dash-dot lines in (c) and (e) denote background trendlines used for visual guidance.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    319.6,
+    558.8,
+    666.5
+   ],
+   "w": 2177,
+   "h": 1447,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Electrochemical characterization of thick dry electrode. (a) Cycle retention of SDE and DDE at a current density of 0.2C/0.2C. (b) Bulk resistance (Rb) and charge transfer resistance (Rct) from EIS measurements as a function of cycle number. Inset shows an associated equivalent circuit diagram to calculate the Rb and Rct. (c) Change of electrode thickness after the electrolyte stability test. (d) Cycle retention of Gr||SDE and Gr||DDE coin full cell at current density of 0.1C/0.1C and (e) corresponding capacity loss during first 40 cycles. (f) Diﬀerence of cell voltage of Gr||SDE and Gr||DDE coin full cells between 1st cycle and Nth cycle (at 10-cycle intervals).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    562.6
+   ],
+   "w": 2177,
+   "h": 2163,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Post-mortem investigation of electrode stability after cycling. Ion-milled cross-sectional SEM images of (a) SDE and (b) DDE after 50 cycles in half cells. Red arrows and yellow arrows indicate particle cracks and isolation of active materials from PTFE-CB domain, respectively. Raman spectroscopy of (c) SDE and (d) DDE at the surface after 50 cycles in half cells. (e) XRD patterns corresponding to (003) and (104) planes of SC-NCM811, investigated through cycled electrodes of full cells pairing with graphite negative electrode. Calculated results to confirm electrode degradation through the comparison of (f) areal ratio (003)/(104) and (g) degree of heterogeneity.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    190.8,
+    558.8,
+    666.5
+   ],
+   "w": 2177,
+   "h": 1983,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Practical demonstration of DDE using 1.2 Ah-class pouch cell. (a) Photograph of 1.2 Ah-class Li||DDE pouch full cell. (b) Initial galvanostatic charge/discharge formation profile of Li||DDE pouch full cell. (c) A photograph comparing side view of 1.2 Ah-class jelly rolls composed of Gr||DDE and conventional slurry electrodes. Inset represents the corresponding schematic image showing cell stack configuration. (d) Comparison of the mass and thickness of individual components in Slurry-based and DDE-based pouch cells. (e) Cycle retention of Gr||DDE pouch full cell at 0.2C/0.2C. Inset shows a photograph of Gr||DDE pouch full cell. (f) Performance comparison of dry electrode using pouch-type cell configuration in terms of four parameters: cell capacity (x-axis), cyclability at 80% of retention (y-axis), areal capacity of the electrode (diameter), and gravimetric energy density (heatma",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    521.0
+   ],
+   "w": 2177,
+   "h": 1989,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) A flowchart representing electrode fabrication of DDE, SDE and control samples. (b-g) Corresponding SEM (or with photograph images) of electrode powder at various stage: (b) After second kneading without CB (i.e., A/B/C = 90/3/0 (w/w/w)) (c) After first kneading of DDE, (d) after grinding and mixing with an additional 2 wt% of PTFE in the DDE, (e) after first kneading of SDE, (f) after grinding and (g) second kneading of the control sample (h) after extended first kneading (10 min) of control sample without grinding.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    655.2
+   ],
+   "w": 2091,
+   "h": 2455,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.597
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Quantitative characterisation of PTFE fibres and ropes. Distribution of (a) diameter and (b) length. (c) Summary table comparing diameter and length parameter of PTFE fibres and ropes based on a total of 100 measured fibrils. (d) Distribution of number of inter-windings in PTFE ropes.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    499.3
+   ],
+   "w": 2091,
+   "h": 1806,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Optimizing weight ratio of PTFE and carbon black in DDE. (a) SEM images after 2",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    528.0,
+    559.6
+   ],
+   "w": 2001,
+   "h": 2057,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. SEM images of (a) DDE and (b) SDE.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    399.8,
+    346.8
+   ],
+   "w": 1466,
+   "h": 1170,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.625
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Photographs of DDE (a) after roll pressing and (b) lamination onto current collector. (c) Photograph of SDE after roll pressing. Yellow arrows indicate dark spot showing non-uniform distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    531.3
+   ],
+   "w": 2091,
+   "h": 1939,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.657
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Ion-milled cross-sectional SEM images and corresponding EDS elemental mapping images of (a) SDE and (b) DDE.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    551.6,
+    284.7
+   ],
+   "w": 2099,
+   "h": 912,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.491
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (a) Real-time measurement of the kneading torque change of SDE and DDE granules and (b) photographs of before and after the measurement.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    547.3,
+    251.4
+   ],
+   "w": 2081,
+   "h": 773,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Ion-milled cross-sectional SEM images of (a) SDE and (b) DDE after lamination process.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    498.4,
+    193.2
+   ],
+   "w": 1877,
+   "h": 530,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.39
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. (a) Schematic representation of the SAICAS measurement. Snapshot of video clip showing the electrode scraping during SAICAS analysis featuring the difference between (b) SDE and (c) DDE.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.7,
+    373.5
+   ],
+   "w": 2091,
+   "h": 1282,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.623
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10 (a) Galvanostatic charge/discharge profile of SDE and DDE coin half cells under a voltage range of 3.0 – 4.3 V (vs. Li/Li+) at 0.1 C/0.1 C. (b) Areal capacity distribution of DDE coin half cells, demonstrating the uniformity of the electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    476.7
+   ],
+   "w": 2091,
+   "h": 1712,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11 Comparison with conventional slurry electrode. (a) Galvanostatic charge/discharge voltage profiles of the DDE and conventional slurry electrode with varying areal mass loading. (b) Summary of fabrication details for slurry electrodes with varying areal mass loading. Photographs of the slurry electrode corresponding to (c) 55.1 mg cm -2 after drying and (d) 50.0 mg cm -2 after roll press.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    595.2
+   ],
+   "w": 2091,
+   "h": 2206,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Figure S12 SEM images and surface topology of (a, d) pristine Li metal, and Li metal after 3 cycles paired with (b, e) the SDE and (c, f) the DDE",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.7,
+    329.4
+   ],
+   "w": 2091,
+   "h": 1098,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.515
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Figure S13 Nyquist plots of (a) SDE and (b) DDE as a function of the number of cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    440.1,
+    514.4
+   ],
+   "w": 1634,
+   "h": 1869,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Discharge rate capability of SDE and DDE over a wide range of discharge current densities (0.1 –0.5 C) at a fixed charge current density of 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    271.1
+   ],
+   "w": 2091,
+   "h": 855,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Figure S15 Galvanostatic charge/discharge profiles of (a) DDE and (b) SDE coin half cell at every 10 cycles at 0.2 C/0.2 C. Electrochemical profiles of differential capacities for the (c) SDE and (d) DDE at initial cycle and 60th cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    426.2
+   ],
+   "w": 2091,
+   "h": 1501,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Figure S16 Electrolyte stability test of the (a) SDE and (b) DDE. Red arrows indicate partially broken electrodes from SDE after soaking and vortexing.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    276.3
+   ],
+   "w": 2091,
+   "h": 877,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 18,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Photograph and corresponding cross-sectional SEM images of double-cast graphite anodes: (a) Single-side coating for coin cells and (b) double-side coating for pouch cells. (c) Galvanostatic charge/discharge profile of the double- cast graphite half cell under a voltage range of 0.005 – 1.5 V (vs. Li/Li+) at 0.1 C/0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    480.1
+   ],
+   "w": 2091,
+   "h": 1726,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 19,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Galvanostatic charge/discharge profiles (a) Gr||SDE and (b) Gr||DDE full cells in potential window of 2.7 – 4.25 V at every 10 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    458.7
+   ],
+   "w": 2091,
+   "h": 1637,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 20,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Cross-sectional SEM images of the electrodes after 50 cycles in half cells. Top views (a-ⅰ – ⅲ) and bottom views (a-ⅳ – ⅵ) of SDE. Top views (b-ⅰ – ⅲ) and bottom views (b-ⅳ – ⅵ) of DDE. (scale bars = 5 μm) The red arrows indicate particle cracks. The SDE exhibited larger and more numerous particle cracks compared to the DDE.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    403.2
+   ],
+   "w": 2091,
+   "h": 1406,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.282
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 21,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Peak deconvolution assigned to the (003) plane in XRD patterns of (a) SDE and (b) DDE cathodes after cycle, paired with Gr anode to confirm degree of heterogeneity by electrochemical degradation.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    260.7
+   ],
+   "w": 2091,
+   "h": 812,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 22,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Galvanostatic charge/discharge profile of (a) Li||DDE pouch full cell and at 0.2 C/0.2 C in potential window of 2.75– 4.3 V (vs. Li/Li +). (b) Photographs of the disassembled DDE, Li metal, and separator of Li||DDE pouch full cel after 15 cycles. (c) Initial galvanostatic charge/discharge profiles of two reassembled DDE half coin cells at 0.05 C/0.05 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    565.2
+   ],
+   "w": 2091,
+   "h": 2081,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 23,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Comparison of (a) thickness and (b) mass of 1.2 Ah-class jelly roll composed of DDE and conventional slurry- based NCM811 cathode, paired with graphite anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    547.3,
+    463.3
+   ],
+   "w": 2081,
+   "h": 1656,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.532
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 24,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Galvanostatic charge/discharge profile of Gr||DDE pouch full cell for initial formation cycles in potential window of 2.5 – 4.29 V at 0.1 C/0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    534.1,
+    313.2
+   ],
+   "w": 2026,
+   "h": 1031,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 25,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Galvanostatic charge/discharge profile of Gr||DDE pouch full cell at every 20 cycles in potential window of 2.5 – 4.25 V at 0.2 C/0.2 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    549.8,
+    304.4
+   ],
+   "w": 2091,
+   "h": 994,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 27,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Comparison of the DDE and previously reported dry electrode-based pouch full cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    73.1,
+    521.1,
+    380.2
+   ],
+   "w": 1968,
+   "h": 1281,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 28,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Comparison of the DDE and previously reported various dry electrode strategies.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    77.6,
+    496.6,
+    720.8
+   ],
+   "w": 1866,
+   "h": 2681,
+   "dpi": 300,
+   "src": "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf",
+   "blank": 0.951
+  }
+ ]
+}

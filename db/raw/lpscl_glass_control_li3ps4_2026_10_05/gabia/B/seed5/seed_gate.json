@@ -1,0 +1,49 @@
+{
+ "run": "/data/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed5",
+ "raw": {
+  "source": "traj.xyz",
+  "frame": 1050,
+  "t_ps": 1050.0,
+  "PS4_fraction": 1.0,
+  "P_S_coord_hist": {
+   "4": 15
+  },
+  "bridging_S_P2S7_like": 0,
+  "P_P_bonds_P2S6_like": 0,
+  "density_g_cm3": 1.5177674190628945,
+  "n_atoms": 120,
+  "min_pair_A": 1.9546129678793434,
+  "min_pair_kind": "P-S",
+  "min_pair_excl_PS_A": 2.204260279529442,
+  "min_pair_excl_PS_kind": "Li-S",
+  "frames_expected": 1051
+ },
+ "relaxed": {
+  "source": "final.xyz",
+  "PS4_fraction": 1.0,
+  "P_S_coord_hist": {
+   "4": 15
+  },
+  "bridging_S_P2S7_like": 0,
+  "P_P_bonds_P2S6_like": 0,
+  "density_g_cm3": 1.5177674190628945,
+  "n_atoms": 120,
+  "min_pair_A": 2.0256327579258797,
+  "min_pair_kind": "P-S",
+  "min_pair_excl_PS_A": 2.373289376455452,
+  "min_pair_excl_PS_kind": "Li-S"
+ },
+ "raw_vs_relaxed": {
+  "disp_max_A": 1.0039884620839634,
+  "disp_rms_A": 0.3112117375924938,
+  "cell_max_abs_diff_A": 0.0
+ },
+ "warnings": [],
+ "⛔": "판정 아님 — 게이트를 어느 판으로 잴지는 카드·사람 몫 (이 도구의 final.xyz 는 relax 본이다)",
+ "final_xyz_is": "relax 본 (plan.json 게이트_입력.final_relax: kind=FIRE, fmax_eV_A=0.05, cell=fixed)",
+ "md_init_raw": {
+  "path": "/data/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed5/md_init_raw.xyz",
+  "status": "썼다",
+  "sha256": "d3a8d4678d26139b7fe45caf71250074b82d070f25b51f4390ae049c236b6d65"
+ }
+}

@@ -1,0 +1,197 @@
+[
+  {
+    "claim_id": "fc-claim-v2-breaking",
+    "statement": "Fair-Chem v2 is a breaking redesign rather than an in-place continuation of the v1 trainer/calculator stack.",
+    "claim_type": "official_fact",
+    "allowed_use": "background_and_methods",
+    "caveat": "Pin major version and migration assumptions in all project provenance.",
+    "sources": [
+      {
+        "source_path": "docs/core/fairchemv1_v2.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fairchemv1_v2.md",
+        "sha256": "2435cdf002d6fd49fa54a10cf3eecc6d896e9a1de86120f44b08ce629baacd64"
+      },
+      {
+        "source_path": "docs/core/install.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/install.md",
+        "sha256": "2aef1a6e446850d7e47607bafcc2bc22ef57cc0bcc4519aef5bf26fc781b2400"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-gated-model-access",
+    "statement": "Pretrained checkpoints are fetched from gated Hugging Face repositories and require license acceptance/authentication.",
+    "claim_type": "official_fact",
+    "allowed_use": "setup_and_reproducibility",
+    "caveat": "Repository MIT licensing does not imply identical licensing for every model or dataset.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "docs/core/install.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/install.md",
+        "sha256": "2aef1a6e446850d7e47607bafcc2bc22ef57cc0bcc4519aef5bf26fc781b2400"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-task-is-method-identity",
+    "statement": "UMA task labels encode different data domains and electronic-structure conventions; they are not interchangeable application tags.",
+    "claim_type": "project_inference_from_official_contract",
+    "allowed_use": "methods_and_limitations",
+    "caveat": "Record task ID with every value and never pool energies across tasks without an explicit bridge.",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-omat-mp-incompatibility",
+    "statement": "OMat/UMA total energies are not directly compatible with Materials Project total energies or MP2020 corrections.",
+    "claim_type": "official_caution",
+    "allowed_use": "limitations_and_workflow_design",
+    "caveat": "Do not mix UMA-OMat energies into MP hull or grand-potential tables as if they shared a reference.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "docs/inorganic_materials/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/models.md",
+        "sha256": "6d65aa43d4bae84de2672f22f8d76d055afe154d5aca56741113bd19ade6fedc"
+      },
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "sha256": "73e70e526c3a978b7c0ef732f2ff51c90814946d72d29a68feb2cca290cc4ae4"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-md-rng",
+    "statement": "The prediction-unit construction path sets a global NumPy seed, so independent MD trajectories need explicitly distinct seeds.",
+    "claim_type": "official_caution",
+    "allowed_use": "methods_and_reproducibility",
+    "caveat": "A different directory label is not evidence of an independent stochastic trajectory.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-code-doc-oc22-drift",
+    "statement": "At the pinned source commit, OC22 is documented as a UMA 1.2 task but is absent from the public UMATask enum.",
+    "claim_type": "code_documentation_drift_observation",
+    "allowed_use": "engineering_audit_only",
+    "caveat": "Recheck on upgrade; do not present this snapshot observation as a permanent product limitation.",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "docs/core/quickstart.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/quickstart.md",
+        "sha256": "df39f4007080dcf0286c85b2ceb1e52990216959bc198c97eadc685732d91fc2"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-registry-doc-model-drift",
+    "statement": "The code-registered pretrained model inventory can be newer or broader than models highlighted in prose documentation.",
+    "claim_type": "code_documentation_drift_observation",
+    "allowed_use": "engineering_audit_only",
+    "caveat": "Show docs-advertised and code-registered states separately in the webapp.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+        "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-capability-not-validation",
+    "statement": "Availability of a relaxation, MD, elasticity, phonon or fine-tuning workflow does not validate that workflow for a new chemistry or observable.",
+    "claim_type": "project_policy",
+    "allowed_use": "all_project_outputs",
+    "caveat": "Store capability, project validation and approved use as separate fields.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/workflows.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/workflows.md",
+        "sha256": "829b7a6e0fc990c01f7314e7e288377979851c36bf06fee0a06e3f8923a994a1"
+      },
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/elastic.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/elastic.md",
+        "sha256": "05ef089bb15e1565dd79e55b7104498b03e809d3b64500336a4eb1436d325920"
+      },
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/phonons.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/phonons.md",
+        "sha256": "3b0dbcbf9191e7fd9d742b72c744b716e87a9faaac424a5adc653a7c22d75187"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-batch-not-replicate",
+    "statement": "Batch inference improves throughput but does not turn multiple inputs into controlled replicates or concentration points.",
+    "claim_type": "project_policy",
+    "allowed_use": "screening_design",
+    "caveat": "Experimental-design identity must come from structure/composition/seed provenance.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/batch_inference.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/batch_inference.md",
+        "sha256": "9780bd7ed61fffc67eb55e579a7540e4152df5edff3fd6efe8e0c659cb220d43"
+      },
+      {
+        "source_path": "docs/core/common_tasks/inference_batcher.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/inference_batcher.md",
+        "sha256": "11796b111210c7910eb5450c270827503acbdb82338b42437186c784d1831937"
+      }
+    ]
+  },
+  {
+    "claim_id": "fc-claim-paper-index-not-endorsement",
+    "statement": "The FAIR Chemistry papers page is a curated index, not proof that every method is suitable for LPSCl.",
+    "claim_type": "project_policy",
+    "allowed_use": "literature_discovery",
+    "caveat": "Each paper added to litdb still needs figure inspection and an explicit comparison-vs-ours note.",
+    "sources": [
+      {
+        "source_path": "docs/core/fair_chemistry_papers.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+        "sha256": "02bcb0c2b23eddd15b7c541364482ab35cd51fd90565c7e6581455014f53e9fb"
+      }
+    ]
+  }
+]

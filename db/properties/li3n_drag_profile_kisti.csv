@@ -1,0 +1,18 @@
+# Li3N (100) adatom straight-line DRAG profile — constrained relax (xy pinned, z+all free), 136-atom slab, PBE.
+# Path: adatom pulled along x from p0 (x=8.2125 A, 2N-bridge POCKET) toward p8 (x=2.7375 A), y fixed 1.58054864, dx=0.684375 A.
+# SI landscape ONLY — this is a straight-path constrained scan, NOT the reported barrier.
+#   Reported migration barrier = 0.118 eV (on-N hop, 2-point min4/saddle3; matches Cui 0.133). The drag span
+#   (max-min) mixes on-N hop + pocket depth + straight-path suboptimality and OVERESTIMATES the true barrier.
+# Source machine: KISTI neuron (x3430a02), drag_p{0..5}.out snapshot 2026-07-20 before scratch wipe.
+# p4/p5 KISTI runs UNCONVERGED (|F| 0.0069 / 0.026) -> UPPER BOUNDS; being re-run FRESH to convergence on kgy.
+# 1 Ry = 13605.693 meV. dE_meV_vs_p0 = (E_Ry - E_p0)*13605.693, E_p0 = -2176.45100463 Ry.
+point,x_ang,E_Ry,dE_meV_vs_p0,force_Ry_bohr,converged,source,note
+p0,8.212500,-2176.45100463,0.0,0.002457,yes,kisti,2N-bridge pocket (reference)
+p1,7.528125,-2176.43742826,184.7,0.002236,yes,kisti,hump between pockets
+p2,6.843750,-2176.45342596,-32.9,0.002126,yes,kisti,shallow pocket
+p3,6.159375,-2176.45659512,-76.1,0.002325,yes,kisti,deepest sampled point
+p4,5.475000,-2176.43925335,159.9,0.006924,no,kisti,UNCONVERGED upper bound; kgy fresh redo pending
+p5,4.790625,-2176.41269044,521.2,0.026149,no,kisti,UNCONVERGED (junk |F|); kgy fresh redo pending
+p6,4.106250,,,,,pending,kgy fresh run
+p7,3.421875,,,,,pending,kgy fresh run
+p8,2.737500,,,,,pending,kgy fresh run

@@ -1,0 +1,64 @@
+figure,series,x_name,x,y_name,y,note
+fig2b,"annealed (black, quenched/annealed sample)",time_min,0.02,K_Ic_MPa_m0.5,0.179,"axis map from the native raster (xref 35, 2162x1002 px): t = (x - 1282.85)/27.46 min (frame 0 -> 1283.5 px, 30 -> 2107.5 px, top-frame ticks 10 -> 1557, 20 -> 1831 px); K = (808.6 - y)/1251.75 MPa m^1/2 (frame 0 -> 809.5, 0.6 -> 58, ticks 0.2 -> 557, 0.4 -> 308 px; least-squares residual <= 1.2 px = 0.001); marker = filled circle ~27 px; centre = centroid after binary opening (disk r 5 px) that removes the ~4 px fit lines and the frame"
+fig2b,"annealed (black, quenched/annealed sample)",time_min,1.02,K_Ic_MPa_m0.5,0.279,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,1.02,K_Ic_MPa_m0.5,0.189,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,2.99,K_Ic_MPa_m0.5,0.194,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,4.01,K_Ic_MPa_m0.5,0.262,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,5.01,K_Ic_MPa_m0.5,0.174,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,6.01,K_Ic_MPa_m0.5,0.252,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,7.00,K_Ic_MPa_m0.5,0.232,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,9.00,K_Ic_MPa_m0.5,0.235,hidden under the orange marker at t 8.98; centre from the visible lower chord (width 25-26 px at y 514-517 px) -> K ~0.235 +- 0.01
+fig2b,"annealed (black, quenched/annealed sample)",time_min,11.99,K_Ic_MPa_m0.5,0.203,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,13.98,K_Ic_MPa_m0.5,0.308,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,17.96,K_Ic_MPa_m0.5,0.255,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,18.93,K_Ic_MPa_m0.5,0.239,"partly hidden by the orange marker at t 18.95 and crossed by the black fit line; centroid of the visible part (bbox 29x18 px) -> biased, +- 0.01"
+fig2b,"annealed (black, quenched/annealed sample)",time_min,20.95,K_Ic_MPa_m0.5,0.288,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,22.95,K_Ic_MPa_m0.5,0.184,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,24.95,K_Ic_MPa_m0.5,0.216,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,25.93,K_Ic_MPa_m0.5,0.206,
+fig2b,"annealed (black, quenched/annealed sample)",time_min,27.93,K_Ic_MPa_m0.5,0.279,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,0.00,K_Ic_MPa_m0.5,0.459,marker centred on the left frame line (split by it); centroid of the right-hand fragment; t set to 0
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,2.01,K_Ic_MPa_m0.5,0.364,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,5.02,K_Ic_MPa_m0.5,0.273,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,7.02,K_Ic_MPa_m0.5,0.441,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,8.98,K_Ic_MPa_m0.5,0.240,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,10.99,K_Ic_MPa_m0.5,0.296,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,12.97,K_Ic_MPa_m0.5,0.267,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,15.96,K_Ic_MPa_m0.5,0.374,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,18.95,K_Ic_MPa_m0.5,0.255,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,20.94,K_Ic_MPa_m0.5,0.316,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,26.96,K_Ic_MPa_m0.5,0.351,
+fig2b,"non-annealed (orange, quenched/non-annealed sample)",time_min,28.91,K_Ic_MPa_m0.5,0.475,
+fig2b,annealed summary,quantity,n,count,18,printed n = 18 (p.12 / PDF p.13); 17 resolved markers + 1 hidden under an orange marker
+fig2b,annealed summary,quantity,mean,K_Ic_MPa_m0.5,0.2319,card arithmetic from the digitized points; printed 0.23 +/- 0.04 (p.4 / PDF p.5)
+fig2b,annealed summary,quantity,sd (n-1),K_Ic_MPa_m0.5,0.0411,
+fig2b,annealed summary,quantity,min..max,K_Ic_MPa_m0.5,0.174..0.308,
+fig2b,non-annealed summary,quantity,n,count,12,printed n = 12
+fig2b,non-annealed summary,quantity,mean,K_Ic_MPa_m0.5,0.3426,card arithmetic; printed 0.34 +/- 0.08
+fig2b,non-annealed summary,quantity,sd (n-1),K_Ic_MPa_m0.5,0.0820,
+fig2b,non-annealed summary,quantity,min..max,K_Ic_MPa_m0.5,0.240..0.475,
+fig2b,"Welch t-test (card arithmetic, scipy.stats.ttest_ind equal_var=False)",quantity,t statistic,value,4.33,p = 6.2e-4 two-sided; printed p < 0.001 and difference 0.11 (card 0.111)
+fig2b,black fit line (drawn),quantity,endpoints,t_min;K,0.48;0.2189 -> 27.79;0.2468,traced thin-run centroids (115 columns); slope +0.00102 per min; least-squares line through the 18 digitized points = 0.2203 + 0.00094 t (p 0.38) - the drawn line matches within 0.002; the paper does not say what the lines are
+fig2b,orange fit line (drawn),quantity,endpoints,t_min;K,0.48;0.3377 -> 28.67;0.3459,traced (127 columns); slope +0.00029 per min; least-squares through the 12 points = 0.3383 + 0.00032 t (p 0.91)
+fig2a,scale bar,quantity,length,px,196,native raster xref 35; bar x 71..266 px (rows 861-869) = 100 um -> 0.5102 um/px
+fig2a,dashed diamond (authors' outline of the Vickers impression),quantity,corners,px,"top (564,391.5) right (655,556.5) bottom (501.5,638) left (415,482.5)",read on a 2x zoom with a 20 px grid; +- 3 px
+fig2a,dashed diamond,quantity,diagonals,um,129.7; 128.1,254.3 / 251.1 px; mean diagonal 2a = 128.9 um -> half-diagonal a = 64.5 um
+fig2a,radial cracks (centre-to-tip),quantity,left; right,um,246; 217,"centre = mean of the four corners (533.9, 517.1) px; tips (65, 405) and (945, 625) px = ends of the straight dark traces through the left and right corners; +- 8 um"
+fig2a,radial cracks (centre-to-tip),quantity,top; bottom,um,146; 143,"tips (600, 238) and (470, 790) px; faint traces, ends uncertain +- 10-15 um"
+fig3a,annealed (black),quantity,broad peak top,two_theta_deg,30.3,page render 300 dpi (fig_3a.png); axis 10..40 deg = x 205..858 px; top-of-curve pixel; flat top 30.0-30.7; hump 18.2 deg (17.0-19.4); tick marks and the 'Annealed' label masked; +- 0.5 deg
+fig3a,non-annealed (orange),quantity,broad peak top,two_theta_deg,30.5,flat top 30.0-31.0; hump 19.0 deg (17.6-21.3)
+fig3a,"reference (green, Minami et al. [24])",quantity,broad peak top,two_theta_deg,29.9,hump 19.1 deg (17.5-20.6); no sharp peaks in any of the three
+fig3b,non-annealed (orange) at -Z''=0,quantity,high-frequency intercept,Z_re_ohm,300,"page render 300 dpi (fig_3b.png); axis Z' 0..600 = x 210..856.5 px, -Z'' 500..-100 = y 37.5..623 px; Z''=0 line at y 523 px; orange marker band on that line spans Z' 295-305 ohm; black (annealed) markers are hidden behind the orange ones near the intercept; +- 5 ohm"
+fig3b,non-annealed (orange) markers,Z_re_ohm,293.7,minus_Z_im_ohm,-90.2,
+fig3b,non-annealed (orange) markers,Z_re_ohm,298.7,minus_Z_im_ohm,-37.6,merged blob of several overlapping markers near the intercept - centroid only
+fig3b,non-annealed (orange) markers,Z_re_ohm,308.6,minus_Z_im_ohm,36.7,merged blob of several overlapping markers near the intercept - centroid only
+fig3b,non-annealed (orange) markers,Z_re_ohm,321.5,minus_Z_im_ohm,81.5,
+fig3b,non-annealed (orange) markers,Z_re_ohm,327.5,minus_Z_im_ohm,96.7,
+fig3b,non-annealed (orange) markers,Z_re_ohm,333.3,minus_Z_im_ohm,116.0,
+fig3b,non-annealed (orange) markers,Z_re_ohm,341.2,minus_Z_im_ohm,139.8,
+fig3b,non-annealed (orange) markers,Z_re_ohm,349.1,minus_Z_im_ohm,165.8,
+fig3b,non-annealed (orange) markers,Z_re_ohm,359.1,minus_Z_im_ohm,200.6,
+fig3b,non-annealed (orange) markers,Z_re_ohm,370.7,minus_Z_im_ohm,239.6,
+fig3b,non-annealed (orange) markers,Z_re_ohm,384.6,minus_Z_im_ohm,287.2,
+fig3b,non-annealed (orange) markers,Z_re_ohm,402.2,minus_Z_im_ohm,345.4,
+fig3b,non-annealed (orange) markers,Z_re_ohm,423.9,minus_Z_im_ohm,417.1,

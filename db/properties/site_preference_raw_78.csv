@@ -1,0 +1,88 @@
+﻿# Dopant site preference, antisite swap (same composition), all-UMA (uma-s-1p1/omat).
+# dE_per_dopant = [E(M@P) - E(M@Li)] / n_dopant.  dE<0 -> framework P site; dE>0 -> Li site.
+# 78 systems (26 dopant oxides x 3 nominal x) + 3 Li2O skipped (anion dopant, swap N/A).
+# Source: gabia /data/work/runs/site_preference/<sys>/site_pref.json (2026-06-19 batch),
+#   recovered to repo 2026-08-04.  Tool: tools/doping/site_preference_swap.py
+# converged=n -> M@P did not reach fmax (big cation on P is high strain); dE is an UPPER
+#   bound, the SIGN stays trustworthy for large cations.
+# CAVEAT: same-composition swap includes the displaced-host antisite penalty. Coarse,
+#   semi-quantitative screen -- the robust signal is the EXTREMES and the cross-element order.
+rank_P_to_Li,system,dopant_oxide,M,x_nominal,ionic_radius_6coord_A,valence,dE_per_dopant_eV,preferred_site,converged
+1,SnO2_x002,SnO2,Sn,0.02,0.69,4,-2.017,P_framework,y
+2,SiO2_x010,SiO2,Si,0.10,0.4,4,-1.925,P_framework,y
+3,SnO2_x010,SnO2,Sn,0.10,0.69,4,-1.701,P_framework,y
+4,GeO2_x002,GeO2,Ge,0.02,0.53,4,-1.301,P_framework,y
+5,GeO2_x005,GeO2,Ge,0.05,0.53,4,-0.797,P_framework,y
+6,Al2O3_x010,Al2O3,Al,0.10,0.535,3,-0.787,P_framework,y
+7,NiO_x002,NiO,Ni,0.02,0.69,2,-0.660,P_framework,y
+8,Cr2O3_x010,Cr2O3,Cr,0.10,0.615,3,-0.633,P_framework,y
+9,SiO2_x002,SiO2,Si,0.02,0.4,4,-0.580,P_framework,y
+10,B2O3_x005,B2O3,B,0.05,0.27,3,-0.413,P_framework,y
+11,SiO2_x005,SiO2,Si,0.05,0.4,4,-0.332,P_framework,y
+12,B2O3_x010,B2O3,B,0.10,0.27,3,-0.213,P_framework,y
+13,GeO2_x010,GeO2,Ge,0.10,0.53,4,0.023,Li_site,y
+14,SnO2_x005,SnO2,Sn,0.05,0.69,4,0.032,Li_site,y
+15,CoO_x002,CoO,Co,0.02,0.745,2,0.064,Li_site,y
+16,Sm2O3_x010,Sm2O3,Sm,0.10,0.958,3,0.263,Li_site,y
+17,Al2O3_x002,Al2O3,Al,0.02,0.535,3,0.304,Li_site,n
+18,Nd2O3_x002,Nd2O3,Nd,0.02,0.983,3,0.330,Li_site,y
+19,Sm2O3_x005,Sm2O3,Sm,0.05,0.958,3,0.354,Li_site,y
+20,Gd2O3_x010,Gd2O3,Gd,0.10,0.938,3,0.356,Li_site,y
+21,Sm2O3_x002,Sm2O3,Sm,0.02,0.958,3,0.368,Li_site,y
+22,In2O3_x010,In2O3,In,0.10,0.8,3,0.369,Li_site,y
+23,Sc2O3_x010,Sc2O3,Sc,0.10,0.745,3,0.404,Li_site,y
+24,ZnO_x002,ZnO,Zn,0.02,0.74,2,0.423,Li_site,y
+25,Y2O3_x002,Y2O3,Y,0.02,0.9,3,0.465,Li_site,y
+26,SrO_x002,SrO,Sr,0.02,1.18,2,0.638,Li_site,y
+27,MnO_x005,MnO,Mn,0.05,0.83,2,0.657,Li_site,y
+28,La2O3_x005,La2O3,La,0.05,1.032,3,0.671,Li_site,y
+29,B2O3_x002,B2O3,B,0.02,0.27,3,0.760,Li_site,y
+30,Ga2O3_x002,Ga2O3,Ga,0.02,0.62,3,0.769,Li_site,y
+31,Ag2O_x010,Ag2O,Ag,0.10,1.15,1,0.883,Li_site,n
+32,Fe2O3_x010,Fe2O3,Fe,0.10,0.645,3,0.910,Li_site,y
+33,MnO_x002,MnO,Mn,0.02,0.83,2,0.912,Li_site,y
+34,MnO_x010,MnO,Mn,0.10,0.83,2,0.912,Li_site,y
+35,Nd2O3_x005,Nd2O3,Nd,0.05,0.983,3,0.924,Li_site,y
+36,Cr2O3_x002,Cr2O3,Cr,0.02,0.615,3,0.949,Li_site,y
+37,Gd2O3_x002,Gd2O3,Gd,0.02,0.938,3,0.985,Li_site,y
+38,Cu2O_x010,Cu2O,Cu,0.10,0.77,1,0.988,Li_site,y
+39,Sc2O3_x005,Sc2O3,Sc,0.05,0.745,3,1.020,Li_site,y
+40,CoO_x005,CoO,Co,0.05,0.745,2,1.027,Li_site,y
+41,La2O3_x002,La2O3,La,0.02,1.032,3,1.056,Li_site,y
+42,NiO_x010,NiO,Ni,0.10,0.69,2,1.142,Li_site,y
+43,In2O3_x002,In2O3,In,0.02,0.8,3,1.176,Li_site,y
+44,Fe2O3_x002,Fe2O3,Fe,0.02,0.645,3,1.182,Li_site,y
+45,Ga2O3_x005,Ga2O3,Ga,0.05,0.62,3,1.290,Li_site,y
+46,Ga2O3_x010,Ga2O3,Ga,0.10,0.62,3,1.292,Li_site,y
+47,CaO_x002,CaO,Ca,0.02,1.0,2,1.344,Li_site,y
+48,Al2O3_x005,Al2O3,Al,0.05,0.535,3,1.445,Li_site,y
+49,Cu2O_x002,Cu2O,Cu,0.02,0.77,1,1.488,Li_site,y
+50,Cr2O3_x005,Cr2O3,Cr,0.05,0.615,3,1.599,Li_site,y
+51,CoO_x010,CoO,Co,0.10,0.745,2,1.653,Li_site,y
+52,ZnO_x005,ZnO,Zn,0.05,0.74,2,1.721,Li_site,y
+53,ZnO_x010,ZnO,Zn,0.10,0.74,2,1.723,Li_site,y
+54,La2O3_x010,La2O3,La,0.10,1.032,3,1.784,Li_site,y
+55,MgO_x010,MgO,Mg,0.10,0.72,2,1.817,Li_site,y
+56,In2O3_x005,In2O3,In,0.05,0.8,3,1.824,Li_site,y
+57,NiO_x005,NiO,Ni,0.05,0.69,2,1.824,Li_site,y
+58,CaO_x005,CaO,Ca,0.05,1.0,2,1.829,Li_site,y
+59,Gd2O3_x005,Gd2O3,Gd,0.05,0.938,3,1.833,Li_site,y
+60,Na2O_x005,Na2O,Na,0.05,1.02,1,1.887,Li_site,y
+61,MgO_x005,MgO,Mg,0.05,0.72,2,1.942,Li_site,y
+62,Na2O_x002,Na2O,Na,0.02,1.02,1,1.947,Li_site,y
+63,Sc2O3_x002,Sc2O3,Sc,0.02,0.745,3,1.988,Li_site,y
+64,SrO_x005,SrO,Sr,0.05,1.18,2,2.030,Li_site,y
+65,CaO_x010,CaO,Ca,0.10,1.0,2,2.205,Li_site,y
+66,SrO_x010,SrO,Sr,0.10,1.18,2,2.260,Li_site,y
+67,Y2O3_x005,Y2O3,Y,0.05,0.9,3,2.306,Li_site,y
+68,Nd2O3_x010,Nd2O3,Nd,0.10,0.983,3,2.420,Li_site,y
+69,BaO_x005,BaO,Ba,0.05,1.35,2,2.432,Li_site,y
+70,Ag2O_x005,Ag2O,Ag,0.05,1.15,1,2.443,Li_site,y
+71,Ag2O_x002,Ag2O,Ag,0.02,1.15,1,2.480,Li_site,n
+72,Y2O3_x010,Y2O3,Y,0.10,0.9,3,2.506,Li_site,y
+73,Cu2O_x005,Cu2O,Cu,0.05,0.77,1,2.616,Li_site,y
+74,MgO_x005,MgO,Mg,0.05,0.72,2,2.712,Li_site,y
+75,BaO_x010,BaO,Ba,0.10,1.35,2,2.814,Li_site,y
+76,BaO_x002,BaO,Ba,0.02,1.35,2,2.850,Li_site,y
+77,Na2O_x010,Na2O,Na,0.10,1.02,1,2.910,Li_site,y
+78,Fe2O3_x005,Fe2O3,Fe,0.05,0.645,3,3.383,Li_site,y

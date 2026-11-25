@@ -1,0 +1,24 @@
+# Appendix — counts per 5 % bin (left edge inclusive) for the two-panel histogram; same structures in both panels.
+# kept / removed = Stage-1 decision (|dV_stage1| > 25 %), kept in colour across both panels.
+bin_left_pct,bin_right_pct,stage1_ref_kept,stage1_ref_removed,dft_ref_kept,dft_ref_removed
+-40,-35,0,0,0,0
+-35,-30,0,12,0,0
+-30,-25,0,88,0,0
+-25,-20,346,0,0,0
+-20,-15,979,0,0,0
+-15,-10,1095,0,0,0
+-10,-5,594,0,0,6
+-5,0,301,0,0,9
+0,5,107,0,0,74
+5,10,54,0,179,11
+10,15,39,0,477,0
+15,20,0,0,796,0
+20,25,0,0,779,0
+25,30,0,0,558,0
+30,35,0,0,281,0
+35,40,0,0,210,0
+40,45,0,0,134,0
+45,50,0,0,29,0
+50,55,0,0,33,0
+55,60,0,0,36,0
+60,65,0,0,3,0

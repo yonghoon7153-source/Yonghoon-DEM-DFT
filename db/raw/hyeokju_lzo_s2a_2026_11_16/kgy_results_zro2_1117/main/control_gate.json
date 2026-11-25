@@ -1,0 +1,14 @@
+{
+ "card": "/home/kgy/wt_hj2a_zro2/db/properties/cei_product_gap_card_2026_10_27.json",
+ "pass": true,
+ "rows": [
+  {
+   "tag": "P2O5_mp-aaaaadqi",
+   "ref_eV": 5.186,
+   "gap_eV": 5.1864,
+   "delta_eV": 0.0004,
+   "nk": 304,
+   "verdict": "통과"
+  }
+ ]
+}

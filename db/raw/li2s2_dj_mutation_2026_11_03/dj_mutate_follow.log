@@ -1,0 +1,9 @@
+변이 7 개 · 자리 모두 한 번씩
+K11b_ack_unvalidated           ⭕ 빨강 ·   ⛔ ⛔음성 DJ Q1: 선언 없는 확인은 재시도 영수증이 아니다 (그 run_id 에 묶여 멈춤) · 허용 밖 사유 (Ctrl-C) · 상한 아닌 런에 상한 사유 · 선언자 없음 → 확인 자체를 거부 (STOP 그대로 · 발사 0)
+J3_retry_kind_unchecked        ⭕ 빨강 ·   ⛔ ⛔음성 DJ P0-1 · P0-2 · Q1 · Q2 (소비자 · 맞는 이력에서 한 가지씩): 양성 대조 통과 · 두 번 재시도 → 한도 · retry_kind 를 지워도 한도 (앞 실행 종류로 셈) · 장부 재시도 필드 + STOP 이력 지움 · 실행 전 기록까
+J22_heartbeat_at_attest        ⭕ 빨강 ·   ⛔ ⛔음성 DJ P0-3 (소비자): 증언 상한 0 h 에 하한이 null · NaN · −1 이면 비용 0 으로 통과시키지 않고 무효 · 하한이 맞아도 0 h < 하한이면 무효 · 고아 런이 아닌 행 (정상 끝) 을 증언 상한으로 바꾸면 무효 · 증언 때 적은 h
+K12b_ack_rejudge_off           ⭕ 빨강 ·   ⛔ ⛔음성 DJ P0-2: 끝까지 돈 invalid 런 (final.xyz 5 원자) 은 '다시 판정 못 하는 이유' 없이는 재시도 선언을 안 받고 (STOP 그대로) · 이유를 적으면 다시 돌아 1 단계를 마친다
+K28_ack_kind_from_code         ⭕ 빨강 ·   ⛔ ⛔음성 DJ Q1: 확인 때 영수증 종류는 멈춤 code 가 아니라 그 실행에서 정한다 — 끊긴 런에 묶인 invalid 멈춤에 '원인 고침' 선언 → 거부 (STOP 그대로)
+K29_orphan_declaration_dropped ⭕ 빨강 ·   ⛔ ⛔음성 DJ Q1: 확인할 멈춤이 없는데 재시도 선언만 주면 조용히 버리지 않고 거부 (발사 0)
+K30_ack_binding_off            ⭕ 빨강 ·   ⛔ ⛔음성 DJ Q1 (확인 때 선언 검사 단위): run_id 없음 · 장부에 없는 런 · 끊긴 런에 invalid code · invalid 런에 resume code · 끝까지 돈 invalid 런에 이유 없음 · 상한 런에 정전 사유 → 문제 / 맞는 조합은
+끝: 빨강 7 / 7

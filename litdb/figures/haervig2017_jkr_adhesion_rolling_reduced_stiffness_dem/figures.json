@@ -1,0 +1,1807 @@
+{
+ "slug": "haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Illustration of contact forces upon collision of two adhesive particles shown with solid black lines. The particles are still approaching each other so that the normal damping force points in the direction opposite of motion.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.9,
+    547.1,
+    561.1,
+    709.1
+   ],
+   "w": 1080,
+   "h": 725,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.974,
+   "auto_bbox": [
+    305.5,
+    535.0,
+    573.1,
+    719.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box was cut to the column width, so the side margins were uneven), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "접촉 힘 분해 (식 5 · 6): 법선 = 스프링 + JKR + 감쇠 · 접선 = 스프링 + 감쇠.  그림의 'α' 는 본문이 '(see Fig. 1)' 로 가리키는 접촉 반지름 a 로 읽힌다 [추정 — 글자가 다르다]."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Adhesive particle in contact with a wall and in normal equilibrium (F_jkr,n = F_spring,n): (a) Zero force applied results in particle centre of mass and centre of contact being coincident; (b) An external force applied F_ext ≠ 0 results in a non-coincident projected centre of mass and centre of contact.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.9,
+    577.5,
+    550.9,
+    700.2
+   ],
+   "w": 1079,
+   "h": 561,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.967,
+   "auto_bbox": [
+    295.7,
+    607.1,
+    558.8,
+    706.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box started below the three text labels and their arrows ('Coincident projected centre of contact and mass' · 'Projected centre of contact' · 'Projected centre of mass'), which were cut off), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 저항의 정의: 외력 없으면 접촉 중심 = 질량 중심 투영 (ξ = 0) · 외력 F_ext 가 있으면 어긋남 ξ ≠ 0 → 되돌리는 토크 M_r (식 18–22)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Comparison of force-displacement relations using the original JKR model and different modified versions: —— Original Hertz and JKR model [1]; · · · · · · Reduced Young's modulus but unaltered surface energy density; - - - - Reduced Young's modulus and modified surface energy density given by the criterion in Eq. (24).",
+   "rotated_deg": 0,
+   "bbox": [
+    149.3,
+    512.9,
+    457.7,
+    716.2
+   ],
+   "w": 1335,
+   "h": 897,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.964,
+   "manual_crop": "not extracted by tools/litdb/extract_figures.py (excluded by the tool's geometry check: 'no graphic (img0/draw4)' — the plot is vector paths the check did not count); cut by hand from the vector page at 300 dpi (= tool default): clip box between the text-layer line boxes of the body text above and the caption below → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 힘–겹침 곡선 셋 (원래 · 강성만 낮춤 · 강성 + γ 낮춤).  벡터 격자선으로 잰 비: δ_n,0,mod2/δ_n,0 = 2.5119 · δ_n,0,mod1/δ_n,0 = 4.6416 · F_c,mod2/F_c = 0.3981 = E_mod/E = 0.1 의 정확한 (2/5) · (2/3) · (−2/5) 거듭제곱 [판독 · 카드 산술].  강성만 낮추면 떼는 힘은 같고 (−(8/9)F_c) 평형 겹침만 4.64 배 · γ 도 낮추면 떼는 힘이 0.398 배."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Comparison of torque-rolling distance relations using the original JKR model and different modified versions: —— Original adhesive rolling resistance torque model by [2-4]; · · · · · · Reduced Young's modulus but unaltered surface energy density; - - - - Reduced Young's modulus and modified surface energy density given by the criterion in Eq. (24).",
+   "rotated_deg": 0,
+   "bbox": [
+    138.1,
+    58.6,
+    449.1,
+    266.5
+   ],
+   "w": 1346,
+   "h": 916,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.962,
+   "auto_bbox": [
+    26.7,
+    100.4,
+    558.8,
+    273.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box cut off the upper half of the plot (legend, M_r,mod1 level, the dashed line above M_r) and had uneven side margins), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 구름 저항 토크–거리 (E_mod/E = 0.1 로 그림).  꺾이는 점의 비: 강성만 낮춤 ξ_crit · M_r 모두 ×2.154 (= 10^{1/3}) · 강성 + γ 는 ξ_crit ×1.585 (10^{1/5}) · M_r ×0.631 (10^{−1/5}) [판독].  ⚠ 그림 안 범례 (긴 점선 = Reduced stiffness · 짧은 점선 = Reduced stiffness and adhesiveness) 와 캡션의 선 꼴 설명이 반대 — 물리 (γ 같으면 F_C 같음 → 원래와 같은 기울기 · 더 높은 토크) 와 맞는 쪽은 범례."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Overview of the different stages of a particle-particle collision: (a) Particles approaching each other; (b) Just prior to contact the particles are still unaffected and move with velocity v; (c) particles reach maximum normal overlap δn; (d) Particles begin to separate; (e1-e2) Depending on the strength of the adhesive force the particles will either remain in contact (e1) or separate completely (e2).",
+   "rotated_deg": 0,
+   "bbox": [
+    35.8,
+    578.2,
+    281.0,
+    691.3
+   ],
+   "w": 1072,
+   "h": 521,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.971,
+   "auto_bbox": [
+    26.7,
+    571.7,
+    289.8,
+    697.7
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box was cut to the column width, so the side margins were uneven), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자–입자 정면 충돌의 단계 (a)–(e2) 개념도 — 붙음 (e1) / 튕김 (e2)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Comparison to experiment by Dahneke [27] with PSL spheres colliding with a plane wall of polished quartz. Collision properties are d_p = 1.27 µm, E = 271 MPa, γ = 0.11 J/m², ρ_p = 1026 kg/m³ and e = 0.86 (fitted to experimental data at high velocities), see Krijt et al. [28] and supplementary online material for collision properties. When a reduced particle stiffness is introduced in the simulations, the surface energy density is modified using the criterion proposed in (24).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.4,
+    526.4,
+    550.6,
+    683.4
+   ],
+   "w": 1072,
+   "h": 704,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.939,
+   "manual_crop": "not extracted by tools/litdb/extract_figures.py (excluded by the tool: 'no region' — the caption sits right under the plot in the right column); cut by hand from the vector page at 300 dpi (= tool default): clip box between the text-layer line boxes of the body text above and the caption below → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 검증: Dahneke 실험 (PSL ⌀1.27 µm · 연마 석영 벽) e_eff(v) 138 점 ↔ 계산 E_mod/E = 1 · 0.1 · 0.01 (세 계산의 차 ≤ 0.0001) [판독 · 벡터].  계산의 붙음 문턱 2.40–2.50 m/s · 5 m/s 에서 0.7186 · 16 m/s 0.8345.  입력 E · γ · e 는 Krijt [28] 의 '맞춘 값 (fitted values)' — 재료 물성으로 읽지 않는다."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Numerical simulations showing head-on particle-particle adhesive collisions by the non-modified model showing the effective coefficient of restitution as function of the elasticity parameter at various adhesive parameters Ad = γ/(ρ_p v² R) for a coefficient of restitution e = 0.3.",
+   "rotated_deg": 0,
+   "bbox": [
+    144.4,
+    58.9,
+    461.9,
+    264.1
+   ],
+   "w": 1373,
+   "h": 905,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.902,
+   "auto_bbox": [
+    36.5,
+    53.0,
+    568.6,
+    270.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box was cut to the caption/column width, so the side margins were uneven), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "e_eff/e (λ) — 원래 모델 (γ 고정 · E 만 바꿈) · e = 0.3 · Ad 5 · 10 · 20 · 40.  붙음 문턱 (0.1 decade 표본): 10^3.7–3.8 · 10^4.5–4.6 · 10^5.2–5.3 · 10^6.0–6.1 [판독].  네 곡선이 λ/Ad^{5/2} 하나로 겹친다 (e_eff/e = 0.5 에서 219.7–220.7) [카드 산술].  λ = 10^6 값 0.936 · 0.865 · 0.698 · 0.  ⚠ 캡션의 Ad = γ/(ρ_p v² R) ↔ 본문 5.1 절 Ad = 3γ/(ρ_p v² r_i)·(1+β³)/((1+β²)β)."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Numerical simulation showing head-on particle-particle adhesive collisions showing how the effective coefficient of restitution remains constant when the particle stiffness is reduced (or increased) when the surface energy density is changed using the criterion proposed in Eq. (24). Again, results are shown for coefficient of restitution e = 0.3.",
+   "rotated_deg": 0,
+   "bbox": [
+    143.9,
+    511.5,
+    462.4,
+    716.2
+   ],
+   "w": 1377,
+   "h": 903,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.966,
+   "manual_crop": "not extracted by tools/litdb/extract_figures.py (excluded by the tool: 'no region' (vector plot; the caption candidate on p.7 was body text)); cut by hand from the vector page at 300 dpi (= tool default): clip box between the text-layer line boxes of the body text above and the caption below → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 식 (24) 로 γ 를 같이 바꾸면 E_mod/E = 10^-3 – 10^3 (7 점) 에서 e_eff/e 가 평평: 0.8841 (Ad 5) · 0.7446 (10) · 0.3231 (20) · 0 (40) [판독 · 벡터].  ⚠ 본문은 '그림 7 의 λ = 10^6 값을 유지' 라 하지만 그림 7 의 λ = 10^6 값은 0.936 · 0.865 · 0.698 — 그림 8 의 세 값은 그림 7 곡선에서 λ = 2.499 · 2.501 · 2.504 ×10^5 의 값과 같다 (λ 가 정확히 4 배 차) [판독 · 카드 산술 · 원인 미확인]."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Overview of the different stages of the particle-wall collision: (a) The particle moving towards the wall; (b) Just prior to contact the particle is still unaffected by the wall and moves with velocity v at an angle ψ to the wall while affected by an external fluid/gravity force F_ext; (c)–(d) Particle in contact with the wall. If the particle stay in contact with the wall, the normal equilibrium is established here; (e1–e3) The particle will either rebound and move away from the surface (e1), stay at the surface but keep rolling with a constant angular velocity ω ≠ 0 (e2) or stay in place as a result of adhesiveness with shifted centre of contact and centre of mass ω = 0 (e3), see Fig. 2(b).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.7,
+    59.8,
+    281.4,
+    164.7
+   ],
+   "w": 1078,
+   "h": 487,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.965,
+   "auto_bbox": [
+    26.7,
+    77.3,
+    289.8,
+    171.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box was cut to the column width, so the side margins were uneven), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자–벽 비스듬 충돌의 단계 (a)–(e3) 개념도 — 튕김 (e1) / 구름 (e2) / 멈춤 (e3)."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. The three possible outcomes of an adhesive collision with a plane wall and the effect of increasing/decreasing adhesiveness parameter Ad = 3γ/(ρ_p v² sin²(ψ) r_p) and coefficient of restitution e. The particle is affected by a constant external force F_ext parallel to the wall (see Fig. 9) and the yield force is given by F_yield = 4F_C a_0(Δγ/γ)/12.",
+   "rotated_deg": 0,
+   "bbox": [
+    139.1,
+    519.2,
+    448.0,
+    716.2
+   ],
+   "w": 1337,
+   "h": 871,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.972,
+   "auto_bbox": [
+    26.7,
+    513.4,
+    558.8,
+    722.2
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box was cut to the caption width, so the side margins were uneven), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "충돌 결과 지도 (개념도 · 숫자 없음): λ > λ_crit 튕김 · λ < λ_crit 이고 F̂ ≥ 1 구름 · F̂ < 1 멈춤.  λ_crit 는 Ad 가 크거나 e 가 작을수록 커진다 (화살표)."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. The critical elasticity parameter describing the border between sticking/rolling and rebound behaviour from Fig. 10. Lines indicate increasing coefficient of restitution e from 0.1 to 0.9 at intervals of 0.1 as indicated by the arrow.",
+   "rotated_deg": 0,
+   "bbox": [
+    134.4,
+    59.8,
+    471.4,
+    231.4
+   ],
+   "w": 1454,
+   "h": 765,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.937,
+   "manual_crop": "not extracted by tools/litdb/extract_figures.py (not found by the tool (no caption candidate accepted on p.8)); cut by hand from the vector page at 300 dpi (= tool default): clip box between the text-layer line boxes of the body text above and the caption below → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ λ_crit (Ad) 선 9 개 (e = 0.1 → 0.9, 위 → 아래): log–log 기울기 2.5000–2.5003 = 식 (25) 의 5/2 [판독 · 벡터].  선마다 c = λ_crit/Ad^{5/2} 가 그림 12 값과 0.05 % 안에서 같다 (e = 0.3: 147.2)."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Coefficient c in Eq. (25) as function of coefficient of restitution e.",
+   "rotated_deg": 0,
+   "bbox": [
+    142.4,
+    530.1,
+    464.7,
+    725.4
+   ],
+   "w": 1393,
+   "h": 864,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.893,
+   "auto_bbox": [
+    149.9,
+    527.6,
+    470.8,
+    731.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto box was cut to the caption/column width, so the side margins were uneven), re-rendered by hand from the vector page at 300 dpi (= tool default; the figure is vector-only, no embedded raster): clip box set from the text-layer line boxes of the caption, running head and neighbouring body text → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 식 (25) 의 c(e) — 입자–벽: e = 0.1 → 0.9 에서 5365 · 584.6 · 147.3 · 50.96 · 20.44 · 8.666 · 3.613 · 1.336 · 0.3338 [판독 · 벡터 좌표 · 로그 축 잔차 < 1e-4 decade]."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Velocity as function of time during a collision for a PSL sphere colliding with a polished quartz wall with an impact velocity of 5 m/s. When the particle stiffness is reduced from E_mod/E = 10^0 to E_mod/E = 10^−1 and E_mod/E = 10^−2, the surface energy density is modified using the criterion proposed in Eq. (24).",
+   "rotated_deg": 0,
+   "bbox": [
+    133.9,
+    521.4,
+    451.7,
+    717.2
+   ],
+   "w": 1374,
+   "h": 866,
+   "dpi": 300,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.951,
+   "manual_crop": "not extracted by tools/litdb/extract_figures.py (excluded by the tool: 'no region' (vector plot under the nomenclature columns)); cut by hand from the vector page at 300 dpi (= tool default): clip box between the text-layer line boxes of the body text above and the caption below → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 5 m/s PSL 충돌 속도–시간 (E_mod/E = 1 · 0.1 · 0.01): 최대 5.615 · 최소 −4.879 · 분리 −3.593 m/s (세 경우 같음 → e_eff 0.7186) · 속도 0 시각 0.008855 · 0.022242 · 0.055870 µs (비 2.512 = 10^0.4) [판독 · 벡터].  이 카드의 독립 재계산 (식 7–13 · √(5/6) 감쇠) 이 같은 값을 낸다."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_tabor_parameter.png",
+   "caption": "Eq. (1) Tabor parameter λ_T = (4Rγ²/(E²D_min³))^{1/3}",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    282.8,
+    293.4,
+    309.2
+   ],
+   "w": 1458,
+   "h": 213,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "JKR (λ_T > 3) · DMT (< 0.1) · Maugis (사이) 를 가르는 수.  D_min 1.65 Å."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_effective_radius_modulus.png",
+   "caption": "Eq. (2) 1/R = 1/r_i + 1/r_j ; 1/E = (1−ν_i²)/E_i + (1−ν_j²)/E_j (effective radius and modulus)",
+   "rotated_deg": 0,
+   "bbox": [
+    43.8,
+    331.8,
+    293.4,
+    355.2
+   ],
+   "w": 1453,
+   "h": 196,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.974,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "유효 반지름 · 유효 영률 (= Hertz E*).  이 논문의 E (아래첨자 없음) 는 이 유효값."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 2,
+   "file": "eq_03_translational_motion.png",
+   "caption": "Eq. (3) m d²x/dt² = F_con + F_ext",
+   "rotated_deg": 0,
+   "bbox": [
+    312.1,
+    89.2,
+    562.4,
+    108.1
+   ],
+   "w": 1457,
+   "h": 171,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "병진 운동 (뉴턴)."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 2,
+   "file": "eq_04_rotational_motion.png",
+   "caption": "Eq. (4) I dω/dt = M_con + M_r",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    120.2,
+    562.4,
+    138.0
+   ],
+   "w": 1459,
+   "h": 165,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "회전 운동 · M_r = 구름 저항 토크."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 2,
+   "file": "eq_05_normal_contact_force_sum.png",
+   "caption": "Eq. (5) F_con,n = F_spring,n + F_jkr,n + F_damp,n",
+   "rotated_deg": 0,
+   "bbox": [
+    311.5,
+    248.6,
+    562.4,
+    257.7
+   ],
+   "w": 1460,
+   "h": 117,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "법선 접촉력 = 스프링 + JKR 점착 + 감쇠."
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 2,
+   "file": "eq_06_tangential_contact_force_sum.png",
+   "caption": "Eq. (6) F_con,t = F_spring,t + F_damp,t",
+   "rotated_deg": 0,
+   "bbox": [
+    311.5,
+    306.6,
+    562.4,
+    315.8
+   ],
+   "w": 1460,
+   "h": 117,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.97,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "접선 접촉력 = 스프링 + 감쇠."
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 3,
+   "file": "eq_07_jkr_equilibrium_contact_radius.png",
+   "caption": "Eq. (7) a_0 = (9πγR²/E)^{1/3}",
+   "rotated_deg": 0,
+   "bbox": [
+    33.1,
+    98.1,
+    283.6,
+    124.5
+   ],
+   "w": 1458,
+   "h": 213,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "JKR 무하중 평형 접촉 반지름.  γ = 면 하나의 표면 에너지 (F_C = 3πRγ 이므로 W = 2γ)."
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 3,
+   "file": "eq_08_jkr_adhesive_force.png",
+   "caption": "Eq. (8) F_jkr,n = 4√(πγE a³) n",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    176.2,
+    283.6,
+    190.2
+   ],
+   "w": 1460,
+   "h": 144,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.976,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "JKR 점착 (인력) 항."
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 3,
+   "file": "eq_09_hertz_spring_force.png",
+   "caption": "Eq. (9) F_spring,n = −(4E/(3R)) a³ n",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    201.2,
+    283.6,
+    218.8
+   ],
+   "w": 1460,
+   "h": 164,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Hertz 반발 항 (a² = Rδ 이면 (4/3)E√R δ^{3/2})."
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 3,
+   "file": "eq_10_contact_radius_overlap_relation.png",
+   "caption": "Eq. (10) a⁴ − 2Rδ_n a² − (4πγ/E)R²a + R²δ_n² = 0",
+   "rotated_deg": 0,
+   "bbox": [
+    33.1,
+    261.0,
+    283.6,
+    278.4
+   ],
+   "w": 1458,
+   "h": 163,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.968,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "JKR 의 a–δ 관계 (δ 에 대한 2 차식 → (A.9) δ = a²/R − 2√(πγa/E))."
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 3,
+   "file": "eq_11_normal_damping_force.png",
+   "caption": "Eq. (11) F_damp,n = −2(5/6)β√(S_n m) v_n (as printed — no radical over 5/6)",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    341.7,
+    283.6,
+    359.1
+   ],
+   "w": 1460,
+   "h": 163,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.975,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 인쇄본은 5/6 위에 √ 가 없다 ↔ 식 (16) 은 √(5/6).  이 카드의 재계산은 √(5/6) 일 때만 그림 6 · 13 을 재현한다 (√ 없으면 5 m/s e_eff 0.743 · 문턱 2.27 m/s) → (11) 의 인쇄 오기 [카드 산술]."
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 3,
+   "file": "eq_12_damping_beta_restitution.png",
+   "caption": "Eq. (12) β = ln(e)/√(ln²(e) + π²)",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    410.6,
+    283.6,
+    435.9
+   ],
+   "w": 1459,
+   "h": 207,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "반발 계수 e → 감쇠 계수 β (Tsuji 형)."
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 3,
+   "file": "eq_13_normal_damping_stiffness_Sn.png",
+   "caption": "Eq. (13) S_n = 2E√(Rδ_n)",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    456.7,
+    283.6,
+    466.8
+   ],
+   "w": 1459,
+   "h": 122,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "법선 감쇠의 강성 인자."
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 3,
+   "file": "eq_14_tangential_spring_force.png",
+   "caption": "Eq. (14) F_spring,t = −S_t Δs_t (S_t = 8G√(Rδ_n))",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    524.7,
+    283.6,
+    533.9
+   ],
+   "w": 1460,
+   "h": 117,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "접선 스프링 (Mindlin 형)."
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 3,
+   "file": "eq_15_effective_shear_modulus.png",
+   "caption": "Eq. (15) 1/G = (2−ν_i)/G_i + (2−ν_j)/G_j",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    577.2,
+    283.6,
+    597.7
+   ],
+   "w": 1453,
+   "h": 180,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.981,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "유효 전단 탄성률."
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq16",
+   "page": 3,
+   "file": "eq_16_tangential_damping_force.png",
+   "caption": "Eq. (16) F_damp,t = −2√(5/6)β√(S_t m) v_t",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    650.9,
+    283.6,
+    670.3
+   ],
+   "w": 1460,
+   "h": 174,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.975,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "접선 감쇠 (√(5/6) — 식 11 과 대조)."
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "eq17",
+   "page": 3,
+   "file": "eq_17_adhesive_friction_limit.png",
+   "caption": "Eq. (17) |F_con,t| ≤ µ_s |F_N + 2F_C|",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    714.5,
+    283.6,
+    724.2
+   ],
+   "w": 1453,
+   "h": 120,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.973,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "점착 접촉의 미끄럼 한계 (Thornton 1991)."
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq18",
+   "page": 3,
+   "file": "eq_18_critical_rolling_displacement.png",
+   "caption": "Eq. (18) ξ_crit = (a_0/12)(Δγ/γ)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    348.5,
+    552.4,
+    367.6
+   ],
+   "w": 1458,
+   "h": 172,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "임계 구름 변위 (Krijt 2014) — a_0 와 점착 이력 Δγ/γ."
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "eq19",
+   "page": 3,
+   "file": "eq_19_rolling_displacement_integral.png",
+   "caption": "Eq. (19) ξ = (∫_{t0}^{t1} v_L(t) dt)·t_r",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    410.1,
+    552.4,
+    431.5
+   ],
+   "w": 1458,
+   "h": 185,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 변위 = 구름 속도의 적분 (t_r 정의 [미확인])."
+  },
+  {
+   "key": "e20",
+   "kind": "equation",
+   "label": "eq20",
+   "page": 3,
+   "file": "eq_20_rolling_velocity.png",
+   "caption": "Eq. (20) v_L = R(ω_i − ω_j) × n + (1/2)(r_i − r_j)/(r_i + r_j) v_S",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    463.5,
+    552.4,
+    483.5
+   ],
+   "w": 1458,
+   "h": 177,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.97,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 속도."
+  },
+  {
+   "key": "e21",
+   "kind": "equation",
+   "label": "eq21",
+   "page": 3,
+   "file": "eq_21_rolling_resistance_torque.png",
+   "caption": "Eq. (21) M_r = k_r ξ (ξ < ξ_crit) ; k_r ξ_crit (ξ ≥ ξ_crit), with k_r = 4F_C(a/a_0)^{3/2}",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    536.9,
+    552.4,
+    561.0
+   ],
+   "w": 1459,
+   "h": 200,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.972,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 저항 토크 (Dominik–Tielens) · 강성 k_r = 4F_C(a/a_0)^{3/2} 는 p.4 첫 줄."
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "eq22",
+   "page": 4,
+   "file": "eq_22_rolling_displacement_truncation.png",
+   "caption": "Eq. (22) |ξ| ≤ |ξ_crit|",
+   "rotated_deg": 0,
+   "bbox": [
+    43.4,
+    102.9,
+    293.4,
+    111.3
+   ],
+   "w": 1455,
+   "h": 113,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 변위를 임계값에서 자른다."
+  },
+  {
+   "key": "e23",
+   "kind": "equation",
+   "label": "eq23",
+   "page": 4,
+   "file": "eq_23_separation_energy_criterion.png",
+   "caption": "Eq. (23) ∫_0^{δn,0} (F_jkr + F_spring) dδ_n = ∫_0^{δn,0,mod} (F_jkr,mod + F_spring,mod) dδ_n",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    274.4,
+    293.4,
+    294.7
+   ],
+   "w": 1459,
+   "h": 179,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.953,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 핵심 조건: 떼어내는 에너지 (δ = 0 ↔ 평형 겹침) 를 원래 = 무른 모델로 같게."
+  },
+  {
+   "key": "e24",
+   "kind": "equation",
+   "label": "eq24",
+   "page": 4,
+   "file": "eq_24_surface_energy_scaling.png",
+   "caption": "Eq. (24) γ_mod = γ (E_mod/E)^{2/5}",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    372.2,
+    293.4,
+    393.8
+   ],
+   "w": 1459,
+   "h": 186,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이 논문의 결론 식.  λ_T 는 (E/E_mod)^{2/5} 배로 커진다 (JKR 쪽으로) [카드 산술]."
+  },
+  {
+   "key": "e25",
+   "kind": "equation",
+   "label": "eq25",
+   "page": 8,
+   "file": "eq_25_critical_elasticity_parameter.png",
+   "caption": "Eq. (25) λ_crit = c·Ad^{5/2}",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    426.8,
+    293.4,
+    437.4
+   ],
+   "w": 1458,
+   "h": 125,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "붙음/튕김 경계 (입자–벽) · c = c(e) (그림 12).  v_crit ∝ γ^{5/6}E^{−1/3}ρ^{−1/2}r^{−5/6} 와 같은 지수 [카드 산술]."
+  },
+  {
+   "key": "eA1",
+   "kind": "equation",
+   "label": "eqA.1",
+   "page": 10,
+   "file": "eq_A01_separation_energy_in_contact_radius.png",
+   "caption": "Eq. (A.1) ∫_{a(δn=0)}^{a(δn=δn,0)} (F_jkr + F_spring) da = ∫_{a(δn=0)}^{a(δn=δn,0,mod)} (F_jkr,mod + F_spring,mod) da",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    363.6,
+    294.0,
+    396.3
+   ],
+   "w": 1462,
+   "h": 248,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.958,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(23) 을 접촉 반지름 a 로 바꾼 꼴 (인쇄는 'da' 만 — 실제는 (A.10) 의 dδ_n 을 넣는다)."
+  },
+  {
+   "key": "eA2",
+   "kind": "equation",
+   "label": "eqA.2",
+   "page": 10,
+   "file": "eq_A02_contact_radius_quartic_at_zero_overlap.png",
+   "caption": "Eq. (A.2) a⁴ − 2Rδ_n a² − (4πγ/E)R²a + R²δ_n² = 0",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    455.3,
+    293.4,
+    472.7
+   ],
+   "w": 1458,
+   "h": 163,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.967,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(10) 을 δ_n = 0 에 쓴다."
+  },
+  {
+   "key": "eA3",
+   "kind": "equation",
+   "label": "eqA.3",
+   "page": 10,
+   "file": "eq_A03_root_zero.png",
+   "caption": "Eq. (A.3) a_1 = 0",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    511.3,
+    293.4,
+    519.4
+   ],
+   "w": 1458,
+   "h": 111,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.987,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실근 1."
+  },
+  {
+   "key": "eA4",
+   "kind": "equation",
+   "label": "eqA.4",
+   "page": 10,
+   "file": "eq_A04_root_nonzero.png",
+   "caption": "Eq. (A.4) a_2 = (4πγR²/E)^{1/3}",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    537.0,
+    293.4,
+    563.3
+   ],
+   "w": 1458,
+   "h": 212,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실근 2 = 겹침 0 에서의 접촉 반지름."
+  },
+  {
+   "key": "eA5",
+   "kind": "equation",
+   "label": "eqA.5",
+   "page": 10,
+   "file": "eq_A05_lower_limit_contact_radius.png",
+   "caption": "Eq. (A.5) a(δ_n = 0) = (4πγR²/E)^{1/3}",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    609.7,
+    293.4,
+    636.1
+   ],
+   "w": 1458,
+   "h": 213,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.975,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "적분 아래 끝."
+  },
+  {
+   "key": "eA6",
+   "kind": "equation",
+   "label": "eqA.6",
+   "page": 10,
+   "file": "eq_A06_upper_limit_original.png",
+   "caption": "Eq. (A.6) a(δ_n = δ_n,0) = (9πγR²/E)^{1/3}",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    682.5,
+    293.4,
+    708.9
+   ],
+   "w": 1458,
+   "h": 213,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.974,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "적분 위 끝 (원래)."
+  },
+  {
+   "key": "eA7",
+   "kind": "equation",
+   "label": "eqA.7",
+   "page": 10,
+   "file": "eq_A07_upper_limit_modified.png",
+   "caption": "Eq. (A.7) a(δ_n = δ_n,0,mod) = (9πγ_mod R²/E_mod)^{1/3}",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    718.5,
+    293.4,
+    744.8
+   ],
+   "w": 1458,
+   "h": 212,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.967,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "적분 위 끝 (무른 모델)."
+  },
+  {
+   "key": "eA8",
+   "kind": "equation",
+   "label": "eqA.8",
+   "page": 10,
+   "file": "eq_A08_overlap_root_plus.png",
+   "caption": "Eq. (A.8) δ_n,1 = (Ea² + 2R√(Eγaπ))/(ER)",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    89.8,
+    562.4,
+    108.5
+   ],
+   "w": 1458,
+   "h": 170,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.971,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(10) 의 δ 해 1 (버림)."
+  },
+  {
+   "key": "eA9",
+   "kind": "equation",
+   "label": "eqA.9",
+   "page": 10,
+   "file": "eq_A09_overlap_root_minus.png",
+   "caption": "Eq. (A.9) δ_n,2 = (Ea² − 2R√(Eγaπ))/(ER)",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    132.1,
+    562.4,
+    150.8
+   ],
+   "w": 1458,
+   "h": 170,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.971,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(10) 의 δ 해 2 = a²/R − 2√(πγa/E) (씀)."
+  },
+  {
+   "key": "eA10",
+   "kind": "equation",
+   "label": "eqA.10",
+   "page": 10,
+   "file": "eq_A10_overlap_differential.png",
+   "caption": "Eq. (A.10) dδ_n = (2a/R − 2√(γπ)/√(Ea)) da (as printed)",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    207.0,
+    562.4,
+    226.4
+   ],
+   "w": 1458,
+   "h": 174,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.967,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ (A.9) 를 미분하면 둘째 항은 √(γπ)/√(Ea) (계수 1) — 인쇄본은 2 배.  (A.11) 의 지수는 차원상 그대로라 결론은 무관 (이 카드 수치 적분: 둘 다 비 1.000000) [카드 산술]."
+  },
+  {
+   "key": "eA11",
+   "kind": "equation",
+   "label": "eqA.11",
+   "page": 10,
+   "file": "eq_A11_invariant_gamma53_E23.png",
+   "caption": "Eq. (A.11) γ^{5/3}/E^{2/3} = γ_mod^{5/3}/E_mod^{2/3}",
+   "rotated_deg": 0,
+   "bbox": [
+    312.8,
+    282.8,
+    562.4,
+    309.6
+   ],
+   "w": 1453,
+   "h": 215,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band between the neighbouring prose lines (text-layer line boxes), split at the white gap measured on the rendered pixel rows when two numbered equations share a band → ink trim (min RGB < 240) → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 불변량 — 떼어내는 에너지 W = 14.61 γ^{5/3}R^{4/3}E^{−2/3} [카드 산술 · 수치 적분] 를 같게 = (24)."
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "PDF p.1 abstract: DEM with high stiffness 'require[s] time step sizes in the order of nanoseconds'; γ_mod = γ(E_mod/E)^{2/5} keeps 'the stick/rebound threshold'; rolling: modify (a/a0)^{3/2} to (a_mod/a0,mod)^{3/2} 'while keeping the other terms unaltered' (the inline torque is printed as M_r,mod = −4F_C(a/a0)^{3/2}ξ); Δt_col,mod = Δt_col(E/E_mod)^{2/5}; limitation: external force must be 'several orders of magnitude lower than the critical force required to separate particles'.",
+   "rotated_deg": 0,
+   "bbox": [
+    198.1,
+    294.4,
+    553.1,
+    532.2
+   ],
+   "w": 2038,
+   "h": 1387,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "초록 전문 — 결론 식 셋 (γ · 구름 · 충돌 시간) 과 한계 (외력 ≪ 떼는 힘)."
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-p2-intro-stiffness-reduction",
+   "page": 1,
+   "file": "txt_p1_p2_intro_stiffness_reduction_kobayashi_gu.png",
+   "caption": "PDF p.1 right column end → p.2 left column top: stiffness reduction is 'a widely used approach'; for non-adhesive particles stiffness 'can be reduced by several orders of magnitude without altering the collisions in terms of separating velocity' [7,8]; 'a reduced particle stiffness has to be balanced by a reduced adhesive force' — Kobayashi [9] F_ad,mod/F_ad = √(k_mod/k); Gu [8]; these assume particle deformation negligible.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    57.2,
+    552.9,
+    708.0
+   ],
+   "w": 1461,
+   "h": 1374,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "강성 낮추기 = 흔한 우회 · 비점착이면 몇 자릿수까지 괜찮다 · 점착이면 힘도 같이 낮춰야 한다 (선행 2 편).",
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      301.8,
+      605.7,
+      552.9,
+      708.0
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      42.6,
+      57.2,
+      293.7,
+      180.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-large-particle-tabor-jkr",
+   "page": 2,
+   "file": "txt_p2_large_particle_tabor_jkr_validity.png",
+   "caption": "PDF p.2 left column: 'When the particle diameter is large (typically d_p > 10 µm), particle deformation cannot be neglected'; Tabor parameter λ_T (D_min 1.65 Å); JKR valid for λ_T > 3, DMT for λ_T < 0.1, Maugis in between (Johnson & Greenwood [10]).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.8,
+    182.8,
+    293.7,
+    438.6
+   ],
+   "w": 1460,
+   "h": 966,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "적용 범위: 큰 (≳10 µm) · 무른 입자 = JKR (λ_T > 3).",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      43.0,
+      182.8,
+      293.7,
+      264.2
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      42.8,
+      368.1,
+      293.7,
+      438.6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-aim",
+   "page": 2,
+   "file": "txt_p2_aim_emphasise_reducing_adhesiveness.png",
+   "caption": "PDF p.2 left column: 'the aim of this paper is to emphasise the importance of reducing the particle adhesiveness when a reduced particle stiffness is introduced' — criterion for collisions in the JKR limit (λ_T > 3); two test cases (binary head-on collisions; single particles on a wall under a constant external force, rolling resistance).",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    441.3,
+    294.4,
+    691.0
+   ],
+   "w": 1463,
+   "h": 1453,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "논문의 목적 문장 + 시험 두 가지."
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2-p3-simplified-jkr",
+   "page": 2,
+   "file": "txt_p2_p3_simplified_jkr_model.png",
+   "caption": "PDF p.2 right column → p.3 left column top: 'the simplified JKR model … has the same force-displacement relation as the original model, requires the same 8/9 of the critical force F = (8/9)F_C = (8/9)3πRγ to break contact but assumes contact is broken as soon as the normal overlap becomes negative'.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    57.2,
+    562.5,
+    517.5
+   ],
+   "w": 1460,
+   "h": 968,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이 논문의 접촉 모델 정의 = 단순화 JKR (겹침 < 0 이면 끊음) — LIGGGHTS 'sjkr' (CED × 면적) 와 다른 모델.",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      311.6,
+      394.2,
+      562.5,
+      517.5
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      33.0,
+      57.2,
+      283.5,
+      86.2
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-p4-rolling-model",
+   "page": 3,
+   "file": "txt_p3_p4_rolling_resistance_model.png",
+   "caption": "PDF p.3 right column (§2.2) → p.4 left column top: twisting and sliding 'are less important than rolling' for micron-sized particles; rolled less than ξ_crit → rolls back, longer → irreversible; Krijt [4] relates ξ_crit to a0 and Δγ/γ; 'with rolling stiffness k_r = 4F_C(a/a0)^{3/2}' and truncation |ξ| ≤ |ξ_crit|.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.8,
+    57.2,
+    553.6,
+    336.7
+   ],
+   "w": 1465,
+   "h": 1730,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 저항 모델 (식 18–22) 의 문장 근거.",
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      301.8,
+      77.5,
+      553.6,
+      336.7
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      42.8,
+      57.2,
+      293.7,
+      87.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-sec31",
+   "page": 4,
+   "file": "txt_p4_sec31_reduced_stiffness_needs_reduced_gamma.png",
+   "caption": "PDF p.4 left column (§3.1): 'the particles will inevitably overlap more during collision. If the surface energy density γ is left unchanged, the result is a more adhesive collision as the kinetic energy lost upon collision is increased significantly. Therefore, a reduced particle stiffness has to be balanced by a reduced surface energy density'; criterion = constant separation energy (Eq. 23); δ_n,0 = (1/3)a0²/R.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    170.9,
+    294.4,
+    359.0
+   ],
+   "w": 1463,
+   "h": 906,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 보정값 (γ) 이 강성에 묶인다는 근거 문장 (질문 k).",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      43.0,
+      170.9,
+      294.4,
+      261.1
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      42.6,
+      308.1,
+      293.7,
+      359.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-eq24-consequences",
+   "page": 4,
+   "file": "txt_p4_eq24_gu_same_criterion_pulloff_reduced.png",
+   "caption": "PDF p.4 left column end → right column top: Eq. (24) is 'the same criterion Gu et al. [8] found for the contact independent van der Waals formulation'; reducing E only: 'the same force (F_N = −(8/9)F_C) is required to break contact' but δ_N,0,mod = (3π²γ²R/E_mod²)^{1/3}; reducing both: separation energy the same but 'the normal force required to break contact is reduced to F_N = −(8/9)F_C,mod … This can pose some impracticalities'.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    57.2,
+    562.7,
+    488.4
+   ],
+   "w": 1462,
+   "h": 1206,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 에너지를 맞추면 떼는 힘이 줄어든다 (힘 ↔ 에너지 동시 보존 불가).",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      42.2,
+      407.1,
+      293.5,
+      488.4
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      311.8,
+      57.2,
+      562.7,
+      170.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4-p5-sec32",
+   "page": 4,
+   "file": "txt_p4_p5_sec32_rolling_only_a_over_a0_modified.png",
+   "caption": "PDF p.4 right column (§3.2) → p.5 left column top: with reduced stiffness a0 and ξ_crit increase; 'the only way to retain the behaviour of the original model is to keep all terms but the (a/a0)^{3/2} term unaltered' — replaced by (a_mod/a0,mod)^{3/2}; particles travel longer distances upon collision ('typically not of importance in DEM simulations involving many particles').",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    218.8,
+    562.7,
+    488.5
+   ],
+   "w": 1461,
+   "h": 1897,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 구름 저항은 원래 F_C · ξ_crit 를 그대로 두고 비만 바꾼다 = 법선 (γ_mod) 과 구름 (γ) 이 서로 다른 값을 쓰는 혼성.",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      311.6,
+      218.8,
+      562.7,
+      488.5
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      33.0,
+      326.4,
+      283.7,
+      376.3
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-sec4-validation",
+   "page": 5,
+   "file": "txt_p5_sec4_validation_dahneke_krijt_fitted.png",
+   "caption": "PDF p.5 (§4): comparison to Dahneke [27]; 'expected collision outcomes typically differ slightly from experiments as even small imperfections in particle or wall material result in a non-perfect collision. Therefore, the fitted values suggested by Krijt et al. [28] are used when comparing to experiments'; reduced stiffness with Eq. (24): 'the exact same results are indeed obtained'.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.8,
+    326.4,
+    552.9,
+    558.7
+   ],
+   "w": 1461,
+   "h": 1491,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.835,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 검증 입력이 '맞춘 값' 이라는 문장 (질문 k).",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      32.8,
+      414.6,
+      283.9,
+      558.7
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      302.2,
+      326.4,
+      552.9,
+      428.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-p6-sec51",
+   "page": 5,
+   "file": "txt_p5_p6_sec51_dimensionless_lambda_ad.png",
+   "caption": "PDF p.5 right column end → p.6 left and right columns: governing parameters — elasticity λ = E/(ρ_p v²), adhesiveness Ad = 3γ/(ρ_p v² r_i)·(1 + β³)/((1 + β²)β) [29], e_eff = (v_i,f − v_j,f)/(v_j − v_i), ê = e_eff/e; wall at angle ψ: λ = E/(ρ_p v² sin²ψ), Ad = 3γ/(ρ_p v² sin²(ψ) r_p); F̂ = F_ext/F_yield, F_yield = M_r/R = 4F_C a0(Δγ/γ)/12.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    329.7,
+    562.7,
+    507.0
+   ],
+   "w": 1461,
+   "h": 1891,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 3 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "무차원수 정의 (λ · Ad · F̂).  ⚠ Ad 식의 β 는 정의 없음 (식 12 의 감쇠 β 와 같은 글자).",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      302.2,
+      488.4,
+      552.9,
+      507.0
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      42.6,
+      329.7,
+      293.7,
+      474.6
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      311.6,
+      329.8,
+      562.7,
+      474.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-sec52",
+   "page": 7,
+   "file": "txt_p7_sec52_restitution_changes_agglomerate_caveat.png",
+   "caption": "PDF p.7 (§5.2): 'decreasing the particle stiffness does, in most cases, result in a different effective coefficient of restitution'; Fig. 8 'retains the values from λ = 10^6 in Fig. 7'; 'studies by Kobayashi et al. [9] and Gu et al. [8] show that collisions involving larger agglomerates behave differently when the particle stiffness is reduced beyond a certain point. In this study, this phenomenon is addressed in the following section where particle deposition on both a clean surface and a surface with an initial layer of particles is investigated'.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    57.2,
+    552.9,
+    505.7
+   ],
+   "w": 1460,
+   "h": 1490,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ γ 를 안 바꾸면 결과가 달라진다 · 큰 응집체는 너무 무르면 달라진다 (선행) — 약속한 '입자 층 위 퇴적' 은 본문에 없다.",
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      33.0,
+      476.7,
+      283.9,
+      505.7
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      302.0,
+      57.2,
+      552.9,
+      274.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-bisection-eq25",
+   "page": 8,
+   "file": "txt_p8_bisection_lambda_crit_c_of_e.png",
+   "caption": "PDF p.8 left column: λ_crit found by bisection with convergence criterion |δ_n/r_p| = 10^−7; all lines of constant e in Fig. 11 follow λ_crit = c·Ad^{5/2} (Eq. 25) with c solely a function of e (Fig. 12).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.8,
+    334.0,
+    293.7,
+    501.4
+   ],
+   "w": 1460,
+   "h": 735,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.88,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "λ_crit 구하는 방법 (이분법 · 수렴 기준).",
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      43.0,
+      334.0,
+      293.7,
+      404.9
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      42.8,
+      461.9,
+      293.7,
+      501.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-p9-sec61",
+   "page": 8,
+   "file": "txt_p8_p9_sec61_summary.png",
+   "caption": "PDF p.8 right column (§6.1) → p.9 left column top: summary bullets — simplified JKR: E may be reduced to E_mod 'as long as the surface energy density is reduced as well using γ_mod = γ(E_mod/E)^{2/5}'; rolling: 'only the term (a/a0)^{3/2} should be changed to use modified values'; particles travel a longer distance before equilibrium.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.0,
+    57.2,
+    563.4,
+    502.9
+   ],
+   "w": 1464,
+   "h": 1227,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.873,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded; 2 parts of one reading-order passage stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결론 요약.",
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      311.8,
+      322.6,
+      563.4,
+      502.9
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      54.0,
+      57.2,
+      284.0,
+      75.8
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-sec62-time",
+   "page": 9,
+   "file": "txt_p9_sec62_timestep_collision_time_scaling.png",
+   "caption": "PDF p.9 left column (§6.2): separation velocity unaffected; collision over longer periods; Silbert et al. [30] suggest Δt_col/δt ≈ 50; 'it is found that Δt_col,mod = Δt_col(E/E_mod)^{2/5}' (Fig. 13) — estimate of the speed-up.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    110.6,
+    283.7,
+    263.6
+   ],
+   "w": 1459,
+   "h": 916,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 계산 비용 규칙: 충돌당 50 걸음 · 충돌 시간 ∝ E^{−2/5}."
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9-sec62-limits",
+   "page": 9,
+   "file": "txt_p9_sec62_critical_force_closepack_limit.png",
+   "caption": "PDF p.9 left column (§6.2): 'the critical force required to separate two agglomerated particles is reduced as well' — keep F_C = 3πRγ_mod 'significantly higher than typical external forces'; 'for collisions involving many particles with a local volume fraction approaching the closed-pack solution, the adhesive behaviour might be changed slightly if the particle stiffness is reduced too much, E_mod/E < 10^−3 [8,9]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.8,
+    267.6,
+    283.9,
+    390.9
+   ],
+   "w": 1461,
+   "h": 751,
+   "dpi": 400,
+   "src": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (text-layer line boxes) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions, equations (cropped separately as eq_*) and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ DEM 무른 강성의 한계 문장 둘 (떼는 힘 감소 · 조밀 충전에서 10^−3 아래 주의) — 질문 k."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) extracted 8 of the 13 printed figures (Fig. 1, 2, 4, 5, 7, 9, 10, 12) and flagged Fig. 3, 6, 8, 11, 13 as numbering gaps (vector plots: 'no graphic' / 'no region'); the paper has no tables (11 pp, main text only).  All 13 figures were opened: the 8 tool crops were re-cut by hand (Fig. 2 had lost its three top labels, Fig. 4 its upper half including the legend; the rest had uneven side margins) and the 5 missing figures were cut by hand from the vector pages.  Added by hand: 36 equation crops (Eqs. 1–25 and A.1–A.11, one per printed number) and 16 evidence-paragraph crops (txt_*).  The Fig. 6 caption points to 'supplementary online material for collision properties' — no SI file was supplied with the PDF, so no SI items could be cropped.  Digitized data (vector path coordinates, not raster reading): digitized.csv.",
+ "note_manual": "Printed inconsistencies visible in the crops: Fig. 4 in-figure legend (dashed = 'Reduced stiffness', dotted = 'Reduced stiffness and adhesiveness') is the reverse of the caption's line-style key — the legend agrees with the physics (same F_C → same slope as the original); Eq. (11) prints −2(5/6)β√(S_n m)v_n without the radical that Eq. (16) has (√(5/6)) — the card's re-simulation reproduces Figs. 6 and 13 only with √(5/6); Eq. (A.10) prints the second term as 2√(γπ)/√(Ea) whereas d/da of (A.9) gives √(γπ)/√(Ea) (does not change (A.11)); Fig. 7 caption Ad = γ/(ρ_p v² R) vs §5.1 Ad = 3γ/(ρ_p v² r_i)·(1+β³)/((1+β²)β) with β undefined there; the abstract writes the modified torque as −4F_C(a/a0)^{3/2}ξ (unmodified symbols) while §3.2 says (a_mod/a0,mod)^{3/2}; Fig. 8 plateaus equal Fig. 7 at λ = 2.50×10^5, not at the stated λ = 10^6; Fig. 1 labels the contact radius 'α' (text: a); §5.2 announces deposition 'on a surface with an initial layer of particles' that §5.3 does not contain.",
+ "key_note": "manual keys: f<N> = figure (8 recrop + 5 manual_crop); e<eq> = equation crop (kind 'equation'; eA<n> = Appendix A); x<page><letter> = evidence paragraph (kind 'text'; multi-part passages list their parts)"
+}

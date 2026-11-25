@@ -1,0 +1,209 @@
+[
+  {
+    "model_id": "uma-s-1p2p1",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/UMA",
+    "filename": "uma-s-1p2p1.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": {
+      "subfolder": "references",
+      "filename": "form_elem_refs.yaml"
+    },
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "uma-s-1p2",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/UMA",
+    "filename": "uma-s-1p2.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": {
+      "subfolder": "references",
+      "filename": "form_elem_refs.yaml"
+    },
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "uma-s-1p1",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/UMA",
+    "filename": "uma-s-1p1.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": {
+      "subfolder": "references",
+      "filename": "form_elem_refs.yaml"
+    },
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "uma-m-1p1",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/UMA",
+    "filename": "uma-m-1p1.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": {
+      "subfolder": "references",
+      "filename": "form_elem_refs.yaml"
+    },
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "esen-md-direct-all-omol",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/OMol25",
+    "filename": "esen_md_direct_all.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "esen-sm-conserving-all-omol",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/OMol25",
+    "filename": "esen_sm_conserving_all.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "esen-sm-direct-all-omol",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/OMol25",
+    "filename": "esen_sm_direct_all.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "allscaip-md-conserving-all-omol",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/OMol25",
+    "filename": "AllScAIP-OMol102M-md-cons.pt",
+    "subfolder": "checkpoints/AllScAIP",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "allscaip-md-direct-all-omol",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/OMol25",
+    "filename": "AllScAIP-OMol102M-md-d.pt",
+    "subfolder": "checkpoints/AllScAIP",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "esen-sm-conserving-all-oc25",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/OC25",
+    "filename": "esen_sm_conserve.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "esen-md-direct-all-oc25",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/OC25",
+    "filename": "esen_md_direct.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "iso_atom_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "esen-sm-filtered-odac25",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/ODAC25",
+    "filename": "esen_sm_odac25_filtered.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "odac_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  },
+  {
+    "model_id": "esen-sm-full-odac25",
+    "registry_status": "registered_in_main_snapshot",
+    "repo_id": "facebook/ODAC25",
+    "filename": "esen_sm_odac25_full.pt",
+    "subfolder": "checkpoints",
+    "atom_refs": {
+      "subfolder": "references",
+      "filename": "odac_elem_refs.yaml"
+    },
+    "form_elem_refs": null,
+    "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+    "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+  }
+]

@@ -1,0 +1,52 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-08-31",
+ "bundle": "sdcp_c12_v18.zip",
+ "zip_sha256": "b094a899cf08919b1be7285fb51715aa7ca8e8ef83687ae4eecd33e0f002529c",
+ "manifest_sha256": "d6ce4d943eee842f1307c0ff1b1a253ca93e535a24a57b25a83241dcb1478f00",
+ "generated_commit": "06902dcf9ca55beec7a3d5b3eb7a11bb0f95e6fb",
+ "⚠_git_dirty": "true 로 찍혔으나 **원인은 untracked `bundles/` 하나뿐**이다 (2026-08-31 gabia `git status --short` = `?? bundles/`, `git diff --stat` 비어 있음). 추적 파일 수정 0건이므로 생성기 소스는 깨끗했고, 봉인된 커밋 06902dcf 가 실제 생성 코드를 그대로 설명한다 — 재생성 불필요.",
+ "branch": "claude/friendly-meitner-lldvar",
+ "generated_on": "gabia (kserver116-27) · /data/work/runs/sdcp_c12_v18",
+ "generated_argv": "--from_basins db/properties/c12_poses_2026_08_30.json --frags sdcp_neutral ptfe_c10 --refs --refs_minimal --both_seeds --single_point --allow_no_pin --cell_c 36.6551 --cell_c2 40.6551 --min_vacuum 15.0 --roles primary sensitivity stress_sensitivity --out /data/work/runs/sdcp_c12_v18",
+ "⚠_argv_출처": "v17 MANIFEST 의 generated_argv 를 그대로 썼다 — 같은 입력이어야 v17↔v18 차이가 '우리가 고친 것' 만이 된다",
+ "상태": "리뷰 AU 발송 대기 — VASP 미실행",
+ "잡": 16,
+ "단계": {
+  "1": 10,
+  "2": 6
+ },
+ "검증": {
+  "verify_zip": "통과 (rc 0)",
+  "배포본_selftest": "274/274 PASS (v17 은 257)",
+  "비UTF8_로케일": "PASS (env -u PYTHONIOENCODING LC_ALL=C PYTHONUTF8=0)",
+  "estimand_판정_검사": "87건 — 배포본 안에서 실행된다",
+  "생성기_selftest": "exit 0",
+  "convention_check": "0 위반"
+ },
+ "v17_와_다른_점_회신_AT_이행": [
+  "P0-1 기체 3잡의 정본 분자 그래프를 POSCAR 순서(idx)로 — v17 은 항등 순서라 VASP 전부터 SOURCE_TOPOLOGY_CHANGED 로 영구 게이트였다. 빌드 preflight 에 **배포 POSCAR 되읽기 대조** 추가",
+  "P0-2 `incar_expected.dense` 추가 + KPOINTS 제목에 phase/k/shift 를 실어 **정확 대조** (종전 NKPTS 상한 검사는 coarse OUTCAR 를 dense 에 넣어도 통과했다)",
+  "P0-3 POTCAR 를 매번 PP 원본에서 **재조립** + variant 별 SHA·TITEL·allowlist 결박을 독립 재계산 (종전엔 provenance 의 allowlist 해시만 맞으면 건너뛰어, 가짜 POTCAR + 자기일관 provenance 가 통과했다)",
+  "P0-4 seal/attestation 의 schema 정확 대조 · `sealed_before_production`/`made_before_production` 을 **불리언으로** 검사 · evidence/시각 검사 · **root seal 없이는 attestation 사용 불가**",
+  "P0-5 launcher 허용목록 + 인자에 실행파일 금지 + 셸 메타문자 금지 · 잡마다 EXECUTABLE_RECEIPT.tsv",
+  "P0-6 INT/TERM 에서 프로세스 그룹 종료 후 실제로 나간다 (종전엔 lock 만 지우고 계속 돌았다) · SEAL/MAKE 도 같은 .lock_bundle 참여",
+  "해제7 README/SUBMIT 에서 `VASP_CMD=` 대입문·수동 run_job 경로·sbatch 배열 예시 삭제, EXPECT_ZIP/MANIFEST 를 필수로 명시",
+  "해제8 낡은 claim_policy(E_ads·dE_site) 삭제 · B_num 오차예산 · 자세 role 분리",
+  "Q1 분자-이미지 최단거리를 **자세별로** 분리 — primary sdcp 4.894 / ptfe 5.646, 4.613 은 대안 b12(stress_sensitivity)의 worst case. '공통 주기영상 항 소거' 근거 철회",
+  "Q2 B_num = |Δ_vac|+|δ_gas|+|δ_k| ≤ 5 meV (RSS 금지)",
+  "Q5 (a) pooled 최솟값·secondary_G **영구 비인용** — 추가 잡 0",
+  "D3-off 쌍둥이 **0개** (Edisp 로 계산 가능 — 회신 AT Q1)"
+ ],
+ "사전등록": [
+  "db/properties/sdcp_c12_protocol_2026_08_30.json",
+  "db/properties/sdcp_c12_claim_prereg_2026_08_31.json"
+ ],
+ "⛔_메일_본문에_반드시": "EXPECT_ZIP_SHA256 · EXPECT_MANIFEST_SHA256 둘 다. 러너가 없으면 시작하지 않는다 — 번들 안의 해시는 자기 자신을 증명하지 못하므로 ZIP 밖의 값이 유일한 앵커다.",
+ "git_dirty_원인": {
+  "untracked": [
+   "bundles/"
+  ],
+  "modified_tracked": []
+ }
+}

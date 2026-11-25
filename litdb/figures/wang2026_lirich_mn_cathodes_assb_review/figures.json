@@ -1,0 +1,351 @@
+{
+ "slug": "wang2026_lirich_mn_cathodes_assb_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-13",
+ "sources": [
+  "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) The crystal structure of the LRM cathode. (Reproduced with permission.14 Copyright 2023, John Wiley and Sons). (b) Experimental XRD spectra of LRM material. (Reproduced with permission.17 Copyright 2011, American Chemical Society). (c) Structural evolution of the Li@Mn6 superstructure unit during cycling. (Reproduced with permission.19 Copyright 2022, Elsevier). (d) SAED pattern of Li1.2Ni0.15Co0.1Mn0.55O2 material. (Reproduced with permission.21 Copyright 2013, John Wiley and Sons). (e) HAADF image of pristine Li1.2Ni0.15Co0.1Mn0.55O2 recorded along the [100] zone axis (based on the C2/m space group). Regions I and III exhibit continuous contrast, while regions II and IV exhibit discontinuous contrast. The discontinuous areas reflect the Li1/3(Mn)2/3 slabs, whereas the continuous areas reflect the TM (transition metal ion) slabs in the LiMO2 component. This clearly reveals th",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    510.1
+   ],
+   "w": 2177,
+   "h": 1944,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.527
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Charging and discharging curves for xLi2MnO3\u0003(1 \u0002 x)LiTMO2 and the corresponding reaction pathways. (a) Charging and discharging curves for the first cycle. (b) Reaction pathways during the first cycle. (c) Charging and discharging curves for the second cycle. (d) Reaction pathways during the second cycle. (Reproduced with permission.11 Copyright 2020, John Wiley and Sons). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    408.2,
+    558.7,
+    656.6
+   ],
+   "w": 1091,
+   "h": 1036,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Mass spectrometry analysis of O2 evolution from Li[Ni0.2Li0.2- Mn0.6]O2 during charging: ion current versus charging time and cell potential. (Reproduced with permission.27 Copyright 2006, American Chemical Society). (b) Phase diagram of the Li2MnO3–TMO2–LiTMO2– Li2TMO2 system. (Reproduced with permission.28 Copyright 2004, Amer- ican Chemical Society). (c) Schematic representation of the key processes taking place at the electrode/electrolyte interface. (Reproduced with permission.29 Copyright 2003, American Chemical Society). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    256.5
+   ],
+   "w": 1091,
+   "h": 887,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.768
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) The O1s spectrum shows two peaks at 529.5 eV (lattice O2\u0002) and 531.6 eV (weakly adsorbed surface species). (Reproduced with permission.31 \u0002 pair, along with the density of states diagram. (Reproduced with permission.34 Copyright 2016, Springer Nature). No changes have been made in any panel. Copyright 2013, Springer Nature). (b) The local coordination environment around oxygen atoms. (c) Redox coupling positions of the O\u0002/O2",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    311.1
+   ],
+   "w": 2177,
+   "h": 1115,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.803
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Oxygen local coordination in three Li–O–M configurations of stoichiometric layered LiMO2 and their respective bond structures. (b) Oxygen local coordination in one Li–O–Li and two Li–O–M configurations of non-stoichiometric layered Li-rich oxides and their respective bond structures. (Reproduced with permission.35 Copyright 2016, Springer Nature). Reaction pathways in bulk MnO3 toward oxygen dimerization and phase transformation (green spheres denote oxygen ions that undergo dimerization, and their separation distances are given in parentheses. Migrating Mn atoms are indicated by stars): (c) pathway A: O–O initially along the c-axis; (d) pathway B: O–O initially in the ab plane. (Reproduced with permission.36 Copyright 2016, American Chemical Society). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    511.8
+   ],
+   "w": 2177,
+   "h": 1951,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Illustration showing the hypothesis of manganese oxidation: (a) oxidation of Mn4+ to Mn7+; (b) formation of peroxide species or evolution of O2 molecules; (c) oxidation of Mn4+ to Mn7+ coupled with the spontaneous appearance of peroxide ions or molecular oxygen, and the concurrent reduction of Mn. (Reproduced with permission.38 Copy- right 2019, Springer Nature). No changes have been made in any panels.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    282.5
+   ],
+   "w": 1090,
+   "h": 996,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.699
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) CV plots of LRMs. Irreversible oxygen loss can clearly be observed. (Reproduced with permission.39 Copyright 2021, John Wiley and Sons). (b) Two structure domains coexist within a single grain. The black dotted line outlines the Li2MnO3-type domain on the left, while the blue dotted line indicates the LiTMO2-type domain on the right. (Reproduced with permission.40 Copyright 2018, American Chemical Society). (c) The ionic and electronic conductivities of LRMs increase with decreasing Li2MnO3 content, intuitively proving that the poor conductivity of LRMs is caused inherently by the Li2MnO3 phase. (Reproduced with permission.42 Copyright 2022, American Chemical Society). (d) The transformation of the R%3m and C2/m layered structures into spinel follows diﬀerent pathways. (Reproduced with permission.48 Copyright 2013, American Chemical Society). (e) Elemental contribution to capa",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    379.2
+   ],
+   "w": 2177,
+   "h": 1398,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.773
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Comparison of interfacial configurations in liquid-electrolyte and all-solid-state lithium batteries. (Reproduced with permission.55 Copyright 2023, John Wiley and Sons). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    145.6
+   ],
+   "w": 1091,
+   "h": 425,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.23
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 (a) Cell configuration (schematic) and corresponding cross- sectional STEM image. (Reproduced with permission.59 Copyright 2015, Elsevier). (b) Cross-sectional SEM views of the LBO-LMNC/LLZO inter- face: pristine (before cycling) and after 10 cycles. (Reproduced with permission.61 Copyright 2023, Elsevier). (c) The weight fraction of each crystalline phase in the sintered Ga-LLZO/LNM and Ga-LLZO/NMC811 mixtures (700–900 1C, 3 h). (Reproduced with permission.77 Copyright 2025, Springer Nature). Changes made: (b) cropped to suit the distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    382.7
+   ],
+   "w": 1090,
+   "h": 1413,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.626
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 (a) Schematic for high energy density of bulk-type all-solid-state batteries. (Reproduced with permission.82 Copyright 2020, The American Association for the Advancement of Science). (b) Dual modification strategy of Ru doping and surface sulfidation. (Reproduced with permission.66 Copyright 2023, John Wiley and Sons). (c) Structural comparison of single-crystal LRMs and polycrystalline LRMs before and after cycling. (Reproduced with permission.67 Copyright 2024, American Chemical Society). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    311.2,
+    558.8,
+    673.2
+   ],
+   "w": 2177,
+   "h": 1509,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.621
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 16,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 (a) ASSBs with carbon additives and LPO-infused LRMs. (Reproduced with permission.68 Copyright 2019, Springer Nature). (b) Schematic of the interface stabilized by the LiNbO3 coating. (Reproduced with permission.69 Copyright 2023, American Chemical Society). (c) Stabilization of LRMs/SE interface by S–O bonding. (Reproduced with permission.70 Copyright 2022, The American Association for the Advancement of Science). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    353.8,
+    558.7,
+    673.2
+   ],
+   "w": 2177,
+   "h": 1331,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.584
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 18,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 (a) Schematic illustration of the fabrication process for pure PVDF-HFP and BN-(PVDF-HFP) membranes with 0.5 and 10.0 wt% BN. (Reproduced with permission.73 Copyright 2019, Elsevier). (b) Schematic of Sn(Oct)2-catalyzed ring-opening polymerization of PS monomer to form chain-like PPS. (Reproduced with permission.72 Copyright 2023, Royal Society of Chemistry). (c) The electrochemical stability windows of PPS-PE and PEO-PE. (Reproduced with permission.72 Copyright 2023, Royal Society of Chemistry). (d) Schematic illustrating the crosslinking GPE design: additives enhance crosslink density and Li+ transference, while forming an F\u0002/B\u0002-rich inorganic CEI that stabilizes the interface and suppresses gas generation, thereby suppressing gel layer degradation. (Reproduced with permission.90 Copyright 2025, Springer Nature). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    475.2
+   ],
+   "w": 2177,
+   "h": 1798,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.759
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 20,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 (a) Cross-sectional SEM images of the pristine composite cathode, revealing loose contact and extensive voids among the components. (Reproduced with permission.83 Copyright 2024, John Wiley and Sons). (b) Schematic representation of the spatially asynchronous activation behavior of LRMs in ASSBs, depicting the fast and uniform oxidation of transition metals, while oxygen oxidation progresses sluggishly from the particle surface toward the bulk interior. (Reproduced with permission.83 Copyright 2024, John Wiley and Sons). (c) S K-edge and P K-edge XAS, tracking the chemical state of S and P in the composite cathode across the first cycle. (Reproduced with permission.94 Copyright 2023, American Chemical Society). (d) Time- of-flight secondary ion mass spectrometry (TOF-SIMS) mappings of ClO\u0002 and InO\u0002 in LRM cathodes after 1 and 100 cycles at a charge cutoﬀof 4.6 V (vs. Li/Li+). (Re",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    423.7
+   ],
+   "w": 2177,
+   "h": 1584,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.518
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 22,
+   "file": "fig_14.png",
+   "caption": "Fig. 14 (a) Schematic illustration of gradient doping to achieve a stable interface. (Reproduced with permission.102 Copyright 2026, John Wiley and Sons). (b) Structural diagrams of O3-type and O2-type LRM cathodes. (Reproduced with permission.104 Copyright 2020, Springer Nature). (c) Long-term cyclic performance at 1C. (Reproduced with permission.108 Copyright 2025, Elsevier). (d) Structure and corresponding initial charge–discharge curves of single-crystal LRM solid-state batteries. (Reproduced with permission.62 Copyright 2022, Royal Society of Chemistry). (e) Schematic illustration of various synthetic routes for synthesizing LMR single crystals. (Reproduced with permission.115 Copyright 2024, American Chemical Society). (f) Schematic depicting the effect of incorporating carbon conductive additives on electron/ion migration at the interface. The left-hand panel illustrates the addit",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    459.5
+   ],
+   "w": 2177,
+   "h": 1733,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 26,
+   "file": "fig_15.png",
+   "caption": "Fig. 15 (a) Schematic diagram of training the NGBoost model on literature data using 10-fold cross-validation. (Reproduced with permission.123 Copyright 2022, John Wiley and Sons). (b) Comparison of the fitting results for capacity retention predicted by diﬀerent machine-learning models. (Reproduced with permission.124 Copyright 2020, American Chemical Society). (c) Curves of the SOC estimation results and the corresponding error profiles of the LRMs under the aging state of 0.86. (Reproduced with permission.128 Copyright 2024, Elsevier). (d) The workflow for XANES calculations. The occupancy at diﬀerent atomic sites continuously changes, ultimately enabling structural prediction. (Reproduced with permission.132 Copyright 2021, American Chemical Society). No changes have been made in any panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    653.3
+   ],
+   "w": 2177,
+   "h": 2541,
+   "dpi": 300,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 12,
+   "file": "tab_1.png",
+   "caption": "Table 1 A summary of electrochemical performance for LRM-based ASSBs with diﬀerent solid electrolytes Initial Coulombic eﬃciency",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.9,
+    760.5
+   ],
+   "w": 2111,
+   "h": 3001,
+   "dpi": 292,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 19,
+   "file": "tab_2.png",
+   "caption": "Table 2 Comparison of oxide, sulfide, halide, and polymer solid electrolytes Properties Oxide Sulfide Halide Polymer Ionic con- ductivity/S cm\u00021 Moderate (B10\u00024 S cm\u00021) Highest (B10\u00023 S cm\u00021), known for high ionic con- ductivity at room temperature",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    20.8,
+    557.8,
+    760.5
+   ],
+   "w": 2111,
+   "h": 3001,
+   "dpi": 292,
+   "src": "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf",
+   "blank": 0.881
+  }
+ ]
+}

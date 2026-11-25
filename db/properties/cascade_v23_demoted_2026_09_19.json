@@ -1,0 +1,74 @@
+{
+ "schema": "campaign_status/v1",
+ "record_kind": "status",
+ "date": "2026-09-19",
+ "status": "ratified — 1저자 2026-09-19 (화면 구멍을 닫기 위해 원장화)",
+ "system": "lpscl_cascade",
+ "제목": "옛 cascade(v23) 는 **탐색 자료**다 — 판정 축이 아니다",
+ "왜_이_기록이_생겼나": "2026-09-19 에 `/cascade` 를 렌더해 보니 이 문장이 **화면에 한 글자도 없었다**. 그런데 화면은 3,615 · 681 · 91종을 큰 숫자로 띄우고 있었다. 강등 사실은 kb/projects/cascade_rebuild_log_2026_09.md §1 과 kb/reports/weekly_2026_09_14.md 에만 있었고 db 원장에 없어서, 화면이 원장에서 읽을 수가 없었다. CLAUDE.md §화면 규율 — '규율이 원장에만 있고 화면에 안 실리면 사람은 화면을 인용한다.'",
+ "1_무엇이_강등됐나": {
+  "대상": "v23 cascade 산출물 일체 — 3,615 행 · 4축(ΔE·탄성·BVSE·ESW) · Pareto front · `de_post_anneal` 랭킹 · champions · litransport · synergy",
+  "지위": "**탐색 자료(exploratory)**. 다음 계산을 무엇으로 제안할지 고르는 데 쓴다.",
+  "⛔_아닌_것": "판정 축이 아니다. 순위·Top-N·Pareto front 로 **물질 결론을 내지 않는다**."
+ },
+ "2_근거_셋": [
+  {
+   "무엇": "라벨이 농도가 아니었다",
+   "실측": "3,615 = 237 설계 × 15 반복인데 그 15 는 *3 fake-x × 5 seed* 이고 **셋 다 실제로는 x = 0.25** 다. 1×1×1 · 4 f.u. 셀은 P 가 4개뿐이라 최소 치환이 1/4.",
+   "출처": "kb/projects/cascade_rebuild_log_2026_09.md §1 · db/properties/cascade_label_scatter_audit.json"
+  },
+  {
+   "무엇": "게이트가 **가짜 basin** 을 기준으로 삼았다",
+   "실측": "스크리닝 앵커 27.478 Å³/atom 이 canonical 배치의 가짜 basin 이었다. 그 앵커로 dV 게이트가 후보를 잘랐다.",
+   "출처": "db/properties/cascade_reanchor_comp1k444_2026_09_12.json (정본) · cascade_base_strain_2026_09_12.json (superseded)"
+  },
+  {
+   "무엇": "4축이 **내부 검증도 실패한다**",
+   "실측": "탄성 축 within/between = **1.104** — 배치 잡음에 잠겼다. 순위 안정성: 88 종 중 **56–61 종**이 복제본을 어느 걸 고르냐에 따라 5 계단 이상 움직인다. (ΔE 축은 0.205 로 신호가 잡음보다 크다 — 축마다 다르다.)",
+   "출처": "db/properties/cascade_axis_global_audit_2026_09_12.json (ratified) · cascade_label_scatter_audit.json"
+  },
+  {
+   "무엇": "σ_300K · wad 가 **전부 결측**인데 그 열로 순위를 매긴 적이 있다",
+   "실측": "0 / 3,615",
+   "출처": "kb/projects/cascade_rebuild_log_2026_09.md §1"
+  }
+ ],
+ "3_허용_서술_이대로만": [
+  "'v23 는 다음 계산을 제안하기 위한 **탐색 자료**다' — 지위를 붙여서.",
+  "특정 축의 신호대잡음 비를 **축을 명시해** 인용한다 (ΔE 0.205 · 탄성 1.104).",
+  "'승인된 도펀트 랭킹은 **0건**이다. 승인 0 은 실패가 아니다.' (화면이 이미 이렇게 말한다)"
+ ],
+ "4_⛔_금지_서술": [
+  "⛔ v23 순위·Top-N·Pareto front 로 **어느 도펀트가 낫다**고 말하지 않는다.",
+  "⛔ 3,615 를 '계산한 설계 수' 로 읽지 않는다 — 237 × 15 이고 15 는 반복이 아니다.",
+  "⛔ x002/x005/x010 을 농도로 인용하지 않는다 — 셋 다 x = 0.25 다.",
+  "⛔ 강등된 축의 값을 새 캠페인 표에 **섞지 않는다**."
+ ],
+ "5_재개_조건": [
+  "① 기준점(앵커) 문제가 닫힌다 — 가짜 basin 이 아닌 앵커로 게이트를 다시 통과시킨다.",
+  "② 라벨이 실제 농도를 지정하도록 셀·치환 규칙을 다시 선언한다.",
+  "③ 축별 신호대잡음을 재고, 잡음에 잠긴 축은 판정에서 뺀다.",
+  "⛔ 위 셋 밖의 이유로 v23 을 판정 축으로 되돌리지 않는다."
+ ],
+ "⛔_이_기록이_하지_않는_것": [
+  "값을 담지 않는다 — 각 근거가 가리키는 원장이 정본이다.",
+  "v23 자료를 지우지 않는다. `?archive=1` · `?view=diagnostic` 으로 그대로 나간다.",
+  "새 캠페인(재건·E′)의 지위를 정하지 않는다 — 그건 그쪽 카드들이 한다."
+ ],
+ "출처": [
+  "kb/projects/cascade_rebuild_log_2026_09.md §1",
+  "kb/reports/weekly_2026_09_14.md",
+  "db/properties/cascade_axis_global_audit_2026_09_12.json",
+  "db/properties/cascade_reanchor_comp1k444_2026_09_12.json",
+  "db/properties/cascade_label_scatter_audit.json"
+ ],
+ "status_history": [
+  {
+   "at": "2026-09-19",
+   "state": "ratified",
+   "by": "1저자",
+   "note": "화면 구멍을 닫기 위해 원장화. 강등 자체는 2026-09 재건 시작 시점의 사실이고 이 기록이 새로 판정하는 것이 아니라 **옮겨 적는 것**이다."
+  }
+ ],
+ "by": "agent · 2026-09-19 · 계산 0"
+}

@@ -1,0 +1,380 @@
+{
+ "slug": "kasemchainan2019_critical_stripping_current_dendrite_on_plating",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "kasemchainan2019_critical_stripping_current_main.pdf",
+  "kasemchainan2019_critical_stripping_current_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Cell schematic and voltage versus charge passed for three-electrode cells on Li metal plating and stripping at the Li/Li6PS5Cl interface. a, Three-electrode cell schematic (WE, working electrode; RE, reference electrode; CE, counter electrode); b, 3 MPa–1.0 mA cm−2; c, 7 MPa–1.0 mA cm−2; d, 7 MPa–2.0 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    50.0,
+    515.0,
+    366.0
+   ],
+   "w": 1863,
+   "h": 1317,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_main.pdf",
+   "blank": 0.866,
+   "auto_bbox": [
+    36.8,
+    66.5,
+    550.9,
+    366.7
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop top (y 66.5) cut panel labels a,b (y 54.2), the 'Pressure' arrow (y 61.5) and the 140 mV tick (y 68.8); clip = vector drawings (72.8,60.3,510.9,339.9) + figure text (x 84.6-505.1, bottom y 360.7) + margin, above caption (y 371.0)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - schematic a + panels b-d, checked against text values 12/19/130 mV)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | SEM cross-sections of the Li metal/Li6PS5Cl interface. a, 1.0 mA cm−2–3 MPa; pristine, end of first plating, first stripping, sixth stripping and seventh plating. b, 1.0 mA cm−2–7 MPa; end of 100th stripping. c, 2.0 mA cm−2–7 MPa; end of first plating, first stripping, ninth plating and ninth stripping.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    49.5,
+    299.2,
+    519.1
+   ],
+   "w": 1095,
+   "h": 1957,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_main.pdf",
+   "blank": 0.227,
+   "auto_bbox": [
+    36.5,
+    64.6,
+    299.2,
+    519.1
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop top (y 64.6) cut panel label a (y 52.3); only the top edge moved to y 49.5 (rasters start y 68.7, drawings y 51.6), sides/bottom = auto",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - SEM a (5 tiles + dendrite inset), b, c (4 tiles))"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | In situ X-ray computed tomography images of the Li metal/ Li6PS5Cl interface of a cycled Li metal/Li6PS5Cl/Li metal cell. a–c, Current density of 1.0 mA cm−2 and capacity of 1.0 mAh cm−2 (3 MPa): after the first stripping (a), after the third stripping (b) and after the fifth stripping (c). The white pixels at the Li metal/Li6PS5Cl interface reveal the accumulation of voids (low X-ray attenuation) with increasing cycle number.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.6,
+    48.2,
+    558.4,
+    118.3
+   ],
+   "w": 1087,
+   "h": 293,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_main.pdf",
+   "blank": 0.402,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - 3 XCT slices a-c with 50 um bars)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Schematic of Li metal/Li6PS5Cl interface cycled at an overall current density above the CCS. Sequence from pristine to after several strippings and platings of Li metal: voids form on stripping; lateral growth of a thin Li film across the electrolyte surface (nucleating where void edges meet the electrolyte) on subsequent plating results in low plating polarization and formation of occluded voids. Some voids are eliminated on plating, but the occluded voids reopen on subsequent stripping leading to accumulation of voiding and increasing loss of contact with cycling. This increases stripping polarization and results in dendrites on plating.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.0,
+    52.0,
+    293.0,
+    297.0
+   ],
+   "w": 1063,
+   "h": 1022,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_main.pdf",
+   "blank": 0.587,
+   "manual_crop": "2026-11-24 litdb-curator: tool skipped f4 ('p4 영역 없음' - vector schematic, no raster); clip = union of left-column vector drawings (41.7,73.9,289.3,276.5) + in-figure labels (top 'After several' y 56.9, bottom 'Increase in contact loss' y 293.3) + margin, above caption (y 303.5)",
+   "auto_bbox": [
+    38.0,
+    52.0,
+    293.0,
+    297.0
+   ],
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (manual crop - all six schematic frames + arrows)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Voltage versus charge passed for three-electrode Li/Li6PS5Cl cells at different pressures and current densities. a, Plating at 3 MPa. b, Plating at 7 MPa. c, Stripping at 3 MPa. d, Stripping at 7 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    49.5,
+    508.0,
+    338.0
+   ],
+   "w": 1767,
+   "h": 1203,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_main.pdf",
+   "blank": 0.943,
+   "auto_bbox": [
+    36.3,
+    66.9,
+    551.0,
+    338.0
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop top (y 66.9) cut panel labels a,b (y 52.9), the 60 mV tick (y 57.4) and the first legend line '1.0 mA cm-2' (y 62.8); clip = figure text (x 87.5-501.1, y 52.9-332.0) + margin, above caption (y 342.2)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - panels a-d incl. 60 mV ticks and full legends)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Voltage versus charge passed for two-electrode Li/Li6PS5Cl/Li cells cycled at different pressures and current densities. a, 3 MPa–0.2 mA cm−2. b, 3 MPa–1.0 mA cm−2. c, 7 MPa–1.0 mA cm−2. d, 7 MPa–2.0 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.0,
+    383.0,
+    508.0,
+    666.0
+   ],
+   "w": 1776,
+   "h": 1180,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_main.pdf",
+   "blank": 0.919,
+   "auto_bbox": [
+    36.2,
+    609.6,
+    552.1,
+    668.4
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop kept only the bottom strip of panels c,d (bbox y 609.6-668.4); clip = union of lower-half vector drawings (116.0,395.5,493.8,642.7) + panel labels a/c (x 91.2, y 387.2) + x-axis titles (y 662.4) + margin, above caption (y 672.7)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - panels a-d)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 | Powder X-ray Diffraction (PXRD) of Li6PS5Cl: after sintering at 300 ˚C. ★ indicates Li6PS5Cl cubic phase.32",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    401.3,
+    529.2,
+    709.7
+   ],
+   "w": 1930,
+   "h": 1286,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.956,
+   "auto_bbox": [
+    66.0,
+    304.0,
+    529.2,
+    709.7
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop (y 304.0-709.7) also took the e-mail line (y 310.0) and the 'Supplementary Information' heading (y 374.1) above the plot; clip = embedded raster (72.0,407.3,523.2,703.7) + 6 pt margin (geometric, the raster is the whole figure)",
+   "viewed": false,
+   "viewed_how": "2026-11-24 litdb-curator: not opened as a crop - seen only as an SI page render in the first pass (Read pages 1-8); crop completeness checked geometrically (embedded raster inside the clip)",
+   "caption_raw": "Figure S1 | Powder X-ray Diffraction (PXRD) of Li6PS5Cl: after sintering at 300 ˚C indicates Li6PS5Cl cubic phase.32",
+   "caption_fix": "2026-11-24 litdb-curator: restored a symbol lost in text extraction (S1 star marker / S7 beta) - wording otherwise verbatim; caption_raw keeps the extracted text"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 | AC Impedance data from the cell Li / Li6PS5Cl / Li: (a) Nyquist plot at -1°C with the equivalent circuit (note that this equivalent circuit was also used to fit all room temperature EIS data), and b) the time-dependence plot of the interfacial resistances of the cell (the SEI and charge transfer) at 25°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    531.9,
+    245.4
+   ],
+   "w": 1942,
+   "h": 748,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.942,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Nyquist -1 C with circuit a, R_SEI+CT vs time b)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 | XPS spectra of the Li6PS5Cl pellet surface: P 2p a) pristine b) exposed to Li metal for 250 h, S 2p c) pristine d) exposed to Li metal for 250 h, Cl 2p e) pristine f) exposed to Li metal for 250 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.0,
+    74.0,
+    524.0,
+    580.0
+   ],
+   "w": 1876,
+   "h": 2109,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.932,
+   "auto_bbox": [
+    0.0,
+    408.3,
+    595.3,
+    582.3
+   ],
+   "recrop": "2026-11-24 litdb-curator: auto crop kept only row e,f (bbox y 408.3-582.3, full page width); clip = text extent of all six panels a-f (y-axis ticks x 79.6, top tick y 77.3, bottom axis title y 576.3) + margin, above caption (y 599.0)",
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (recropped full figure - XPS a-f)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 | Voltage vs time for a 3-electrode cell, the voltage of the Li working and counter electrodes were collected simultaneously at a current density of 1.0 mA·cm-2, capacity of 1.0 mAh·cm-2 on each ½ cycle, pressure 3 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    531.9,
+    244.6
+   ],
+   "w": 1942,
+   "h": 745,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.926,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - WE/CE voltage vs time; note 0 mV rest segments between half cycles)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 | Cycling under 4 MPa pressure, (a) Voltage vs charge passed for a 3-electrode cell, Li metal plating and stripping at the Li / Li6PS5Cl interface at a current density of 1.0 mA·cm-2 (b) SEM cross-section of the Li / Li6PS5Cl interface after the final stripping.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    531.9,
+    205.3
+   ],
+   "w": 1942,
+   "h": 581,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.588,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - a voltage, b SEM)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 | AC Impedance data measured from Li / Li6PS5Cl / Li, (a) cycled at 1.0 mA·cm-2 at 3 MPa for 7 cycles and (b) cycled at 1.0 mA·cm-2 at 7 MPa for 100 cycles. The impedance increases in (a) but not in (b) in accord with the data in Fig. 7, where the former showed an increase in polarisation but not the latter.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    531.9,
+    241.0
+   ],
+   "w": 1942,
+   "h": 730,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.931,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Nyquist a, b)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 | Voltage vs charge passed for Na / Na–β’’–Alumina cells, (a) 3-electrode cell, stripping at current densities of 0.2, 0.5, 1.0 and 1.5 mA·cm-2 at 4 MPa pressure, (b) 2-electrode cell cycled at 0.1 mA·cm-2 and 4 MPa for 100 cycles (below critical current for stripping) and (c) 2-electrode cell cycled at 1.5 mA·cm-2 and 4 MPa for 20 cycles (above critical current for stripping) showing increasing polarisation and short-circuiting. Note that the polarisation was limited to 3 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    531.9,
+    436.3
+   ],
+   "w": 1942,
+   "h": 1543,
+   "dpi": 300,
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "blank": 0.925,
+   "viewed": true,
+   "viewed_how": "2026-11-24 litdb-curator: Read (auto crop complete - Na cells a-c)",
+   "caption_raw": "Figure S7 | Voltage vs charge passed for Na / Na’’Alumina cells, (a) 3-electrode cell, stripping at current densities of 0.2, 0.5, 1.0 and 1.5 mA·cm-2 at 4 MPa pressure, (b) 2-electrode cell cycled at 0.1 mA·cm-2 and 4 MPa for 100 cycles (below critical current for stripping) and (c) 2-electrode cell cycled at 1.5 mA·cm-2 and 4 MPa for 20 cycles (above critical current for stripping) showing increasing polarisation and short-circuiting. Note that the polarisation was limited to 3 V.",
+   "caption_fix": "2026-11-24 litdb-curator: restored Symbol-font private-use characters (U+F02D hyphen, U+F062 beta, U+F020 space) lost in text extraction - wording otherwise verbatim; caption_raw keeps the extracted text"
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p4 영역 없음"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p3",
+    "p4"
+   ],
+   "resolved": "manual_crop fig_4.png (2026-11-24, litdb-curator) - see figures[f4].manual_crop"
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "kasemchainan2019_critical_stripping_current_main.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "kasemchainan2019_critical_stripping_current_SI.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

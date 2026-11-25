@@ -1,0 +1,394 @@
+{
+ "tool": "tools/wad/se_sym_slab.py",
+ "decision": "D-2026-09-23-wad-se-termination-symmetric",
+ "bulk": "db/structures/comp1_V0_k444.cif",
+ "bulk_sha256": "1ef12658d2c64346485da32038caf6503b037faa9b1355c03ed1a5b7961b3aa1",
+ "bulk_formula": "Li24Cl4P4S20",
+ "scan": {
+  "n_P": 4,
+  "n_free_S": 4,
+  "windows": [
+   {
+    "lo": 1.2431,
+    "hi": 3.7845,
+    "width": 2.5414,
+    "atoms": {
+     "Li": 8,
+     "S": 2
+    },
+    "cuts": [
+     {
+      "z": 1.415,
+      "gap_A": 0.3439,
+      "below": {},
+      "above": {
+       "Li": 8,
+       "S_free": 2
+      },
+      "q_below": 0,
+      "q_above": 4,
+      "kind": "polar"
+     },
+     {
+      "z": 1.9023,
+      "gap_A": 0.6305,
+      "below": {
+       "Li": 2
+      },
+      "above": {
+       "Li": 6,
+       "S_free": 2
+      },
+      "q_below": 2,
+      "q_above": 2,
+      "kind": "A"
+     },
+     {
+      "z": 2.3656,
+      "gap_A": 0.2962,
+      "below": {
+       "Li": 4
+      },
+      "above": {
+       "S_free": 2,
+       "Li": 4
+      },
+      "q_below": 4,
+      "q_above": 0,
+      "kind": "polar"
+     },
+     {
+      "z": 2.6619,
+      "gap_A": 0.2962,
+      "below": {
+       "Li": 4,
+       "S_free": 2
+      },
+      "above": {
+       "Li": 4
+      },
+      "q_below": 0,
+      "q_above": 4,
+      "kind": "polar"
+     },
+     {
+      "z": 3.1253,
+      "gap_A": 0.6305,
+      "below": {
+       "Li": 6,
+       "S_free": 2
+      },
+      "above": {
+       "Li": 2
+      },
+      "q_below": 2,
+      "q_above": 2,
+      "kind": "B"
+     },
+     {
+      "z": 3.6125,
+      "gap_A": 0.3438,
+      "below": {
+       "Li": 8,
+       "S_free": 2
+      },
+      "above": {},
+      "q_below": 4,
+      "q_above": 0,
+      "kind": "polar"
+     }
+    ]
+   },
+   {
+    "lo": 6.2706,
+    "hi": 8.812,
+    "width": 2.5414,
+    "atoms": {
+     "Li": 8,
+     "S": 2
+    },
+    "cuts": [
+     {
+      "z": 6.4425,
+      "gap_A": 0.3438,
+      "below": {},
+      "above": {
+       "Li": 8,
+       "S_free": 2
+      },
+      "q_below": 0,
+      "q_above": 4,
+      "kind": "polar"
+     },
+     {
+      "z": 6.9298,
+      "gap_A": 0.6305,
+      "below": {
+       "Li": 2
+      },
+      "above": {
+       "Li": 6,
+       "S_free": 2
+      },
+      "q_below": 2,
+      "q_above": 2,
+      "kind": "A"
+     },
+     {
+      "z": 7.3932,
+      "gap_A": 0.2962,
+      "below": {
+       "Li": 4
+      },
+      "above": {
+       "S_free": 2,
+       "Li": 4
+      },
+      "q_below": 4,
+      "q_above": 0,
+      "kind": "polar"
+     },
+     {
+      "z": 7.6894,
+      "gap_A": 0.2962,
+      "below": {
+       "Li": 4,
+       "S_free": 2
+      },
+      "above": {
+       "Li": 4
+      },
+      "q_below": 0,
+      "q_above": 4,
+      "kind": "polar"
+     },
+     {
+      "z": 8.1529,
+      "gap_A": 0.6305,
+      "below": {
+       "Li": 6,
+       "S_free": 2
+      },
+      "above": {
+       "Li": 2
+      },
+      "q_below": 2,
+      "q_above": 2,
+      "kind": "B"
+     },
+     {
+      "z": 8.6401,
+      "gap_A": 0.3438,
+      "below": {
+       "Li": 8,
+       "S_free": 2
+      },
+      "above": {},
+      "q_below": 4,
+      "q_above": 0,
+      "kind": "polar"
+     }
+    ]
+   }
+  ]
+ },
+ "slabs": {
+  "s_outer": {
+   "term": "s_outer",
+   "cut_kinds": [
+    "A",
+    "B"
+   ],
+   "n_layers": 6,
+   "vacuum_A": 20.0,
+   "z_cut_bottom_bulk": 1.9023,
+   "z_cut_top_bulk": 33.2906,
+   "thickness_A": 30.7579,
+   "c_A": 50.7579,
+   "nat": 162,
+   "formula": "Li76Cl12P12S62",
+   "area_A2": 101.1049,
+   "files": {
+    "vasp": "comp1_001_s_outer_L6.vasp",
+    "xyz": "comp1_001_s_outer_L6.xyz"
+   },
+   "sha256": {
+    "vasp": "6df1fec837f99f68c9796e263ac6281350a8a5f952d7bac7e5abe7713a2c618b",
+    "xyz": "2d253282bc72009a4ccfad4913536c8bec9bad2ba870750e60ed08cd068b1d97"
+   },
+   "validation": {
+    "ps4_intact_parent": {
+     "ok": true,
+     "n_P": 12,
+     "mismatched_P": []
+    },
+    "no_orphan_ps4_S": {
+     "ok": true,
+     "orphan_S": []
+    },
+    "composition": {
+     "ok": true,
+     "counts": {
+      "Li": 76,
+      "P": 12,
+      "S": 62,
+      "Cl": 12
+     },
+     "bulk_cells": 3.0,
+     "delta_Li2S": 2.0,
+     "want_delta_Li2S": 2,
+     "formula": "Li76Cl12P12S62"
+    },
+    "formal_charge_zero": {
+     "ok": true,
+     "q": 0
+    },
+    "faces_equivalent": {
+     "ok": true,
+     "max_dev_A": 9e-05,
+     "R": [
+      [
+       1,
+       0,
+       0
+      ],
+      [
+       0,
+       -1,
+       0
+      ],
+      [
+       0,
+       0,
+       -1
+      ]
+     ],
+     "t_A": [
+      -0.0,
+      10.0551,
+      50.7579
+     ],
+     "tol_A": 0.01
+    },
+    "face_composition_equal": {
+     "ok": true,
+     "bottom": {
+      "S": 2,
+      "Li": 6
+     },
+     "top": {
+      "S": 2,
+      "Li": 6
+     }
+    },
+    "min_distance": {
+     "ok": true,
+     "min_A": 2.0361
+    }
+   },
+   "c2_t_after_placement_A": [
+    -0.0,
+    10.0551,
+    50.7579
+   ]
+  },
+  "li_outer": {
+   "term": "li_outer",
+   "cut_kinds": [
+    "B",
+    "A"
+   ],
+   "n_layers": 6,
+   "vacuum_A": 20.0,
+   "z_cut_bottom_bulk": 3.1253,
+   "z_cut_top_bulk": 32.0676,
+   "thickness_A": 28.3117,
+   "c_A": 48.3117,
+   "nat": 150,
+   "formula": "Li68Cl12P12S58",
+   "area_A2": 101.1049,
+   "files": {
+    "vasp": "comp1_001_li_outer_L6.vasp",
+    "xyz": "comp1_001_li_outer_L6.xyz"
+   },
+   "sha256": {
+    "vasp": "51a917146308f1e3b2e0828ff9a64c2a52a24b6cd7f6a20c9d1d7c11e8a45c33",
+    "xyz": "8eb269f9ddc0df4bd88f8b24fe5b145f6e5717d2d19873c4533ec3679a33e9e0"
+   },
+   "validation": {
+    "ps4_intact_parent": {
+     "ok": true,
+     "n_P": 12,
+     "mismatched_P": []
+    },
+    "no_orphan_ps4_S": {
+     "ok": true,
+     "orphan_S": []
+    },
+    "composition": {
+     "ok": true,
+     "counts": {
+      "Li": 68,
+      "P": 12,
+      "S": 58,
+      "Cl": 12
+     },
+     "bulk_cells": 3.0,
+     "delta_Li2S": -2.0,
+     "want_delta_Li2S": -2,
+     "formula": "Li68Cl12P12S58"
+    },
+    "formal_charge_zero": {
+     "ok": true,
+     "q": 0
+    },
+    "faces_equivalent": {
+     "ok": true,
+     "max_dev_A": 9e-05,
+     "R": [
+      [
+       1,
+       0,
+       0
+      ],
+      [
+       0,
+       -1,
+       0
+      ],
+      [
+       0,
+       0,
+       -1
+      ]
+     ],
+     "t_A": [
+      -0.0,
+      10.0551,
+      48.3118
+     ],
+     "tol_A": 0.01
+    },
+    "face_composition_equal": {
+     "ok": true,
+     "bottom": {
+      "Li": 2
+     },
+     "top": {
+      "Li": 2
+     }
+    },
+    "min_distance": {
+     "ok": true,
+     "min_A": 2.0361
+    }
+   },
+   "c2_t_after_placement_A": [
+    -0.0,
+    10.0551,
+    48.3118
+   ]
+  }
+ },
+ "cleavage_identity": "W_cleave(Li 2|6, (001)) = γ(s_outer) + γ(li_outer) = [E(s_outer) + E(li_outer) − 6·E(bulk 셀)] / (2A) — Li₂S 과부족(+2/−2)이 상쇄돼 μ 가 필요 없다. Pustorino 2025 대응값 (0.74 + 0.20)/2 ≈ 0.47 J/m² (PBE · 이완)"
+}

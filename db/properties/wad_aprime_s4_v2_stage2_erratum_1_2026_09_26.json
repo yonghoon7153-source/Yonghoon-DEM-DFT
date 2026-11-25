@@ -1,0 +1,17 @@
+{
+ "schema": "prereg_stage_erratum/v1",
+ "record_kind": "erratum",
+ "date": "2026-09-26",
+ "errata_of": "db/properties/wad_aprime_s4_v2_stage2_seal_2026_09_26.json",
+ "errata_of_content_digest": "9085cb4aec2bf184de800e4b434cadae6f4615c916f00a0d2b4c3513529a97f1",
+ "title": "A′ V2 2단계 부록 정오 1 — V2_top_fcc_G4_k1_far SCF 미수렴 → mixing_beta 0.1 보조 잡으로 재실행 (1저자 (가) · 2026-09-26)",
+ "관찰": "V100 · 21:xx · 1212 s · 200 반복 후 'convergence NOT achieved' · estimated scf accuracy 가 1.1e-6 ↔ 5.3e-6 진동 (문턱 1e-8) · k 7×7×1 far 끝점만 · 6×6 far 4 개와 7×7 bound 는 수렴. 러너가 '미완료 · 뒤 잡 안 돌림' 으로 멈춰 G4_s05 두 잡 미실행.",
+ "읽기": "금속 슬랩 + 떨어진 그래핀에 k 를 촘촘히 하면서 생긴 전하 sloshing — 반복 상한 문제가 아니다(진동).",
+ "조치(1저자 '가')": {
+  "보조_잡": "db/inputs/wad_aprime_s4_v2_stage2_supp_2026_09_26/V2_top_fcc/qe/V2_top_fcc_G4_k1_far_b01/pw.in — 원 입력에서 **mixing_beta 0.3 → 0.1 만** (prefix 제외) · pw_in_sha256 efa41bc71a1c88765e348cffcd4a29c4f9632cbc6ce92bb132f7c2e6cfc57850",
+  "원_잡": "입력 불변 · 실패 출력 보관 (db/raw 로 회수) · 집계기는 원 잡 FAILED 를 그대로 적고 보조 잡 값을 'substituted_by' 로 쓴다",
+  "미실행_2": "V2_top_fcc_G4_s05_bound · V2_top_fcc_G4_s05_far — 입력 그대로 실행 (JOBS 지정)",
+  "왜_정당한가": "mixing_beta 는 SCF 반복의 섞기 계수 — 수렴한 에너지·힘은 그 값에 의존하지 않는다. 문턱·k·ecut·smearing·기하 불변. 재실행 사실과 바뀐 값을 기록한다(조용한 교체 금지)."
+ },
+ "status": "active — 1저자 '가 로 해' 2026-09-26 (수치 실행 설정 · 결과 미열람)"
+}

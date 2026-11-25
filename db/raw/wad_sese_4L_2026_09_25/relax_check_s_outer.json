@@ -1,0 +1,123 @@
+{
+ "n_atoms": 110,
+ "slab_z_A": [
+  7.5,
+  28.203
+ ],
+ "mid_band_A": [
+  6.9,
+  13.8
+ ],
+ "disp_max_A": 2.071,
+ "disp_rms_A": 0.793,
+ "mid_disp_max_A": 1.241,
+ "mid_disp_max_by_element_A": {
+  "Cl": 0.456,
+  "Li": 1.241,
+  "P": 0.291,
+  "S": 0.26
+ },
+ "layer_profile": [
+  {
+   "z_from_A": 0.0,
+   "z_to_A": 2.59,
+   "n": 14,
+   "disp_max_A": 1.22,
+   "disp_mean_A": 0.774
+  },
+  {
+   "z_from_A": 2.59,
+   "z_to_A": 5.18,
+   "n": 14,
+   "disp_max_A": 1.986,
+   "disp_mean_A": 0.615
+  },
+  {
+   "z_from_A": 5.18,
+   "z_to_A": 7.76,
+   "n": 12,
+   "disp_max_A": 2.071,
+   "disp_mean_A": 0.835
+  },
+  {
+   "z_from_A": 7.76,
+   "z_to_A": 10.35,
+   "n": 16,
+   "disp_max_A": 0.456,
+   "disp_mean_A": 0.197
+  },
+  {
+   "z_from_A": 10.35,
+   "z_to_A": 12.94,
+   "n": 14,
+   "disp_max_A": 0.456,
+   "disp_mean_A": 0.213
+  },
+  {
+   "z_from_A": 12.94,
+   "z_to_A": 15.53,
+   "n": 12,
+   "disp_max_A": 2.071,
+   "disp_mean_A": 0.835
+  },
+  {
+   "z_from_A": 15.53,
+   "z_to_A": 18.11,
+   "n": 14,
+   "disp_max_A": 1.986,
+   "disp_mean_A": 0.615
+  },
+  {
+   "z_from_A": 18.11,
+   "z_to_A": 20.7,
+   "n": 14,
+   "disp_max_A": 1.22,
+   "disp_mean_A": 0.774
+  }
+ ],
+ "top5": [
+  {
+   "i": 27,
+   "el": "Li",
+   "z0_rel_A": 5.62,
+   "disp_A": 2.071
+  },
+  {
+   "i": 65,
+   "el": "Li",
+   "z0_rel_A": 15.08,
+   "disp_A": 2.071
+  },
+  {
+   "i": 66,
+   "el": "Li",
+   "z0_rel_A": 15.08,
+   "disp_A": 2.071
+  },
+  {
+   "i": 26,
+   "el": "Li",
+   "z0_rel_A": 5.62,
+   "disp_A": 2.071
+  },
+  {
+   "i": 81,
+   "el": "Li",
+   "z0_rel_A": 16.31,
+   "disp_A": 1.986
+  }
+ ],
+ "ps4_broken": {},
+ "ps4_partner_changed": [],
+ "out_to_vacuum": [],
+ "flags": [
+  "속층 이완 신호 — 가운데 1/3 원자 변위 max 1.241 Å > 0.3 Å (원인 후보 ②)"
+ ],
+ "thresholds": {
+  "mid_disp_A": 0.3,
+  "vac_tol_A": 1.0,
+  "mid_frac": 0.3333333333333333,
+  "R_PS_A": 2.5
+ },
+ "⛔": "신호만 낸다 — 원인 분류·판정 아님 (경보 v2 는 원인 미분류)"
+}

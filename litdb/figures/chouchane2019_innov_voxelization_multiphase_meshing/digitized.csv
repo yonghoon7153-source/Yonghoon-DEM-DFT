@@ -1,0 +1,11 @@
+figure,series,x_name,x,y_name,y,note
+fig3,left slice — precision = 1 (no downsizing),phase,AM (green/teal),area_fraction_of_slice,0.5066,"native raster xref 212 (1000x456 px = 300 dpi over 240 x 109.4 pt, page 3); panels split at the white gap (cols 493-548 empty); each pixel -> nearest of 3 flat colours (teal (27,190,180) = AM, purple (61,38,168) = void, yellow (249,251,14) = CBD, white excluded) by RGB distance; panel box = bounding box of non-white pixels; anti-aliased pixels with distance > 60 to every palette colour = 2.9 % of each box (still assigned to the nearest); 2D AREA fraction of ONE slice (not a volume fraction); the purple frame along the box edges is counted as void as drawn (whether it is pore or outside-domain padding is not stated)"
+fig3,left slice — precision = 1 (no downsizing),phase,void (purple),area_fraction_of_slice,0.3293,box 492x455 px
+fig3,left slice — precision = 1 (no downsizing),phase,CBD (yellow),area_fraction_of_slice,0.1641,box 492x455 px
+fig3,right slice — precision = 5 (downsizing),phase,AM (green/teal),area_fraction_of_slice,0.5180,box 451x456 px
+fig3,right slice — precision = 5 (downsizing),phase,void (purple),area_fraction_of_slice,0.3188,box 451x456 px
+fig3,right slice — precision = 5 (downsizing),phase,CBD (yellow),area_fraction_of_slice,0.1632,box 451x456 px
+fig3,left slice — precision = 1 (no downsizing),phase,CBD (yellow),n_2D_components_ge30px,16,"same nearest-colour labels as the area rows; scipy.ndimage.label on each phase mask of the panel (4-connected; 8-connected gives the same counts for CBD); components < 30 px ignored as anti-aliasing debris; 2D connectivity of ONE figure slice (figure pixels, not mesh voxels) — 3D connectivity is not readable from it"
+fig3,right slice — precision = 5 (downsizing),phase,CBD (yellow),n_2D_components_ge30px,20,as above
+fig3,left slice — precision = 1 (no downsizing),phase,CBD (yellow),largest_component_area_fraction_of_slice,0.0769,17216 px / box 492x455
+fig3,right slice — precision = 5 (downsizing),phase,CBD (yellow),largest_component_area_fraction_of_slice,0.0494,10163 px / box 451x456

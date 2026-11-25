@@ -1,0 +1,99 @@
+{
+ "schema": "wad_aprime_fragment_result/v1",
+ "record_kind": "result",
+ "date": "2026-09-28",
+ "track": "W_ad A′ 파일럿 (DEM 협업) — 트랙 = 우리 DFT · 1저자 = 사용자",
+ "citable": false,
+ "status": "proposed",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (§2 식 V3_V4 · §4 G3/G4 대상군 V4 · 1a DFT@UMA_정의) + 결정 D-2026-09-26-wad-aprime-v2-report (조각 문턱 G3 5 meV · G4 10 meV) · S3v2 봉인 db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
+ "raw": {
+  "dir": "db/raw/wad_aprime_s4_v4_2026_09_27",
+  "collect": "db/raw/wad_aprime_s4_v4_2026_09_27/collect_v4_2026_09_28.json",
+  "collect_sha256": "8fbdabe6fa1f32c5d7bd8e33b3750c040e969a9522586aa194c83bf90fa9a878",
+  "ATM": "db/raw/wad_aprime_s4_v4_2026_09_27/d3_atm_column_2026_09_28.json",
+  "commit": "ebd0abe7a (사용자 · gabia)"
+ },
+ "보고량_정의": "ΔE_frag = E(slab+C₆H₆, far) − E(slab+C₆H₆, bound) [eV/조각] · E = QE `!` 자유에너지 F (E_int 병기) · 양수 = 결합 쪽이 낮다 · **J/m² 로 바꾸지 않는다** · bound = S2 UMA+D3 이완 기하 (고정기하) · far = 조각 강체 +z (직접 8 · 영상 8 Å)",
+ "이름": "「UMA+D3 로 생성한 지정 기하에서 평가한 PBE+D3(BJ) 고정기하 분리에너지」 (카드 1a DFT@UMA_정의) — 'DFT 평형 흡착에너지' 라 부르지 않는다",
+ "계": {
+  "모델": "V4_s_outer_A — comp1 (001) 정본 대칭 SE 4층 S 바깥 (Li₅₂P₈S₄₂Cl₈ · 110) + C₆H₆ 1 개 = 122 원자",
+  "registry": "A = 표면 S 원자 108 위 (규칙 registry_select)",
+  "셀": "10.0551 × 10.0551 Å (comp1 V0 입방 a · 변형 없음) · k 3×3×1 · 52/520 Ry · gaussian 0.005 · PBE+D3(BJ) 2체 · 쌍극자 개정 2",
+  "측방_영상": "조각–영상 최단 5.0669 Å — **주기 반복 조각** ('고립 조각' 이라 부르지 않는다)",
+  "라벨": "지정 comp1 셀 · 입방 고정 면내 · 법선 자유(슬랩) · 반대쪽 절반 고정(far_half) · 잔류 응력 조건 (카드 1b)",
+  "제외된_표본": "V4_li_outer_A = S2 후검 깃발로 INCOMPLETE (세고 제외 · 교체 없음 · 09-26)"
+ },
+ "값": {
+  "dE_frag_F_eV": 0.1915,
+  "dE_frag_Eint_eV": 0.1915,
+  "dE_frag_PBE_only_eV": -0.0618,
+  "dD3_2body_QE_eV": 0.2533,
+  "⚠_E_int": "−TS = 0 (띠간격 절연체 · 부분 점유 없음) → E_int = F",
+  "읽기": "PBE 만으로는 붙지 않는다 (−0.062 eV/조각 = 분리 쪽이 낮다) — 결합은 전부 분산항(+0.253 eV)에서 온다. V2 의 (iv) 와 같은 구조다."
+ },
+ "D3_2체_교차확인": {
+  "QE_dD3_eV": 0.253261,
+  "sdftd3_dD3_eV": 0.253254,
+  "차_meV": 0.0066,
+  "읽기": "0.007 meV 차 — 같은 구조·같은 매개변수 결박 확인 (V2 는 0.5 % 차였다 — 금속 셀 구현 차로 기록)"
+ },
+ "ATM_3체_별도_열": {
+  "dE_ATM_eV": -0.018204,
+  "dE_frag_2body_plus_ATM_eV": 0.1733,
+  "ATM_비율": -0.0951,
+  "컷오프": "(150,80,40) bohr 수렴값 · 기본 (60,40,40) 은 −18.29 meV",
+  "⛔": "헤드라인은 2체 (D-2026-09-23-wad-d3-twobody-atm-separate) · ATM 은 D3 모형 안의 보정"
+ },
+ "G3_끝점_조각": {
+  "i_영상_c+2": {
+   "d_dE_frag_meV": 3.546,
+   "문턱_meV": 5.0,
+   "판정": "통과"
+  },
+  "ii_직접_8→10": {
+   "d_dE_frag_meV": 6.726,
+   "문턱_meV": 5.0,
+   "판정": "초과"
+  },
+  "끝점_ΔE_meV_기록만": {
+   "bound": 3.788,
+   "far_i": 7.334,
+   "far_ii": 10.514
+  },
+  "상태": "FAIL",
+  "읽기": "직접 간격 8→10 Å 에서 ΔE_frag 가 +6.7 meV (3.5 %) — 분산 꼬리. V2 G3 FAIL (+0.0136 J/m²) 과 같은 원인·같은 방향. 무한 분리 값은 조금 더 클 수 있다 (외삽하지 않는다)."
+ },
+ "G4_수치_조각": {
+  "k1_4×4×1": {
+   "d_dE_frag_meV": 0.00014,
+   "판정": "PASS",
+   "확인": "실행 입력 K_POINTS 4 4 1 · pw.out k 점 10 (기준 5) — 실제로 촘촘했다 · 끝점 에너지 변화 6.5 µeV (큰 셀 절연체)"
+  },
+  "s05_degauss_0.0025": {
+   "d_dE_frag_meV": 0.0,
+   "판정": "PASS",
+   "확인": "실행 입력 degauss 0.0025 · 에너지 소수 8 자리 동일 — 띠간격 절연체라 부분 점유 0 (페르미 준위만 틈 안에서 0.66 → 0.39 eV 이동)"
+  },
+  "e70": {
+   "판정": "RESOURCE_BLOCKED",
+   "라벨": "'ecut 미검증' (CPU 추정 52.4 GB @70 Ry > 48 · S3v2 봉인에서 제외 — INCOMPLETE 와 구분)"
+  },
+  "상태": "PASS (k·smearing) · ecut 미검증"
+ },
+ "허용_문구": [
+  "「comp1 S 바깥 4층 슬랩 위 벤젠 한 개(주기 반복 · 최단 영상 5.07 Å)의 UMA+D3 기하에서 평가한 PBE+D3(BJ) 2체 고정기하 분리에너지는 0.19 eV/조각이다 (분리 끝점 8 Å).」",
+  "라벨 셋을 같이 단다: 「분리 끝점 검사 미통과 — 직접 8→10 Å 에서 +6.7 meV」 · 「ecut 민감도 미검증」 · 「PBE 단독으로는 결합하지 않는다 (결합은 분산항)」",
+  "3체(ATM) 별도 열: 「D3 3체를 넣으면 0.17 eV/조각 (−18 meV)」"
+ ],
+ "금지": [
+  "J/m² 환산 · 면적당 비교 (카드 V3_V4)",
+  "'고립 조각' (측방 영상 5.07 Å)",
+  "'DFT 평형 흡착에너지' (기하는 UMA+D3)",
+  "V2(Ag|그래핀)·C|C 와 값 대 값 비교 (다른 모델·다른 단위)",
+  "P2(LPSCl|흑연) W 로 쓰기 · SE 계면 기준선으로 쓰기 (DEM 5차 합의: 참고)",
+  "G3 통과 문장",
+  "ecut 수렴 주장"
+ ],
+ "DEM": "참고 인계 (5차 합의 — J/m² 기준선 아님) · 회신 7 초안 kb/projects/wad_dem_reply_draft_2026_09_23.md §회신 7 · 1저자 발송",
+ "⛔": "A′ 에서 DEM 에 남은 인계는 이것으로 끝이다 (SE 쌍 보류 · UMA 예측 내부 전용 그대로). 탄소–탄소는 WAD-CC 사전등록(D-2026-09-28-wad-cc-graphite)이 따로 간다."
+}

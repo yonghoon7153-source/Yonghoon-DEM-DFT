@@ -1,0 +1,131 @@
+# yano2024_eepa_binary_mixture_plasticity_compression_dem - values read from the PDF vector layer (PyMuPDF get_drawings; axes calibrated on tick lines / frame edges matched to numeric labels; markers = bbox centres; curves = path vertices grouped by stroke colour)
+# x = volume fraction of plastic particles Vp (blank where the series name carries the condition); all simulation values = 3D EDEM-EEPA DEM, 3077 monodisperse 50 um spheres, NCM-like properties with E halved (Table 1)
+figure,series,quantity,x_Vp,value,unit,note
+fig7,simulation,remaining strain after unloading,-0.001,-0.093411,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,simulation,remaining strain after unloading,0.249,-0.11759,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,simulation,remaining strain after unloading,0.499,-0.13691,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,simulation,remaining strain after unloading,0.749,-0.15912,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,simulation,remaining strain after unloading,0.999,-0.17555,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,experiment,remaining strain after unloading,-0.001,-0.32696,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,experiment,remaining strain after unloading,0.223,-0.33708,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,experiment,remaining strain after unloading,0.526,-0.3568,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig7,experiment,remaining strain after unloading,0.721,-0.36889,-,vector markers; x-cal n=6 resid 0.0001; y-cal n=7 resid 0.0001129
+fig8,FW frictional work,compression energy,-0.001,0.0017487,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,FW frictional work,compression energy,0.249,0.0019732,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,FW frictional work,compression energy,0.499,0.00212,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,FW frictional work,compression energy,0.749,0.0023412,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,FW frictional work,compression energy,0.999,0.0025175,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ep plastic energy,compression energy,0.000,0.0026183,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ep plastic energy,compression energy,0.250,0.0031275,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ep plastic energy,compression energy,0.500,0.0036116,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ep plastic energy,compression energy,0.750,0.0043782,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ep plastic energy,compression energy,1.000,0.0045009,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ee elastic energy,compression energy,-0.001,0.0022569,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ee elastic energy,compression energy,0.249,0.0020882,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ee elastic energy,compression energy,0.499,0.0019393,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ee elastic energy,compression energy,0.749,0.001913,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig8,Ee elastic energy,compression energy,0.999,0.001856,J,vector markers; x-cal n=6 resid 0.0002; y-cal n=6 resid 6.875e-07
+fig9,simulation,Ep/Ee,-0.001,1.1569,-,vector markers; x-cal n=6 resid 0.0002; y-cal n=4 resid 0.0007886
+fig9,simulation,Ep/Ee,0.249,1.4954,-,vector markers; x-cal n=6 resid 0.0002; y-cal n=4 resid 0.0007886
+fig9,simulation,Ep/Ee,0.499,1.8608,-,vector markers; x-cal n=6 resid 0.0002; y-cal n=4 resid 0.0007886
+fig9,simulation,Ep/Ee,0.749,2.288,-,vector markers; x-cal n=6 resid 0.0002; y-cal n=4 resid 0.0007886
+fig9,simulation,Ep/Ee,0.999,2.426,-,vector markers; x-cal n=6 resid 0.0002; y-cal n=4 resid 0.0007886
+fig12,Elastic-Elastic,total contact area (whole bed),-0.001,0.51405,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Elastic-Elastic,total contact area (whole bed),0.249,0.30785,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Elastic-Elastic,total contact area (whole bed),0.499,0.14315,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Elastic-Elastic,total contact area (whole bed),0.749,0.039172,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Elastic-Plastic,total contact area (whole bed),0.249,0.36071,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Elastic-Plastic,total contact area (whole bed),0.499,0.47299,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Elastic-Plastic,total contact area (whole bed),0.749,0.39959,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Plastic-Plastic,total contact area (whole bed),0.250,0.068006,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Plastic-Plastic,total contact area (whole bed),0.500,0.31047,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Plastic-Plastic,total contact area (whole bed),0.750,0.73249,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig12,Plastic-Plastic,total contact area (whole bed),1.000,1.3743,mm2,vector markers; x-cal n=6 resid 0.0000; y-cal n=3 resid 0.0002904
+fig10b,simulation,mean coordination number (central 0.8 region),-0.002,5.2606,-,x-cal n=6 resid 0.0004; y-cal n=3 (frame edges + tick) resid 0.0005
+fig10b,simulation,mean coordination number (central 0.8 region),0.248,5.5375,-,x-cal n=6 resid 0.0004; y-cal n=3 (frame edges + tick) resid 0.0005
+fig10b,simulation,mean coordination number (central 0.8 region),0.498,5.8449,-,x-cal n=6 resid 0.0004; y-cal n=3 (frame edges + tick) resid 0.0005
+fig10b,simulation,mean coordination number (central 0.8 region),0.748,6.0676,-,x-cal n=6 resid 0.0004; y-cal n=3 (frame edges + tick) resid 0.0005
+fig10b,simulation,mean coordination number (central 0.8 region),0.999,6.3995,-,x-cal n=6 resid 0.0004; y-cal n=3 (frame edges + tick) resid 0.0005
+fig10a,simulation (filled circle),void fraction (central 0.8 region),-0.002,0.37822,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,experiment (cross),void fraction (central 0.8 region),0.000,0.29271,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,experiment (cross),void fraction (central 0.8 region),0.223,0.29271,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,simulation (filled circle),void fraction (central 0.8 region),0.247,0.36274,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,simulation (filled circle),void fraction (central 0.8 region),0.496,0.36055,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,experiment (cross),void fraction (central 0.8 region),0.525,0.28835,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,experiment (cross),void fraction (central 0.8 region),0.719,0.25563,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,simulation (filled circle),void fraction (central 0.8 region),0.745,0.33459,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig10a,simulation (filled circle),void fraction (central 0.8 region),0.994,0.31104,-,y-cal n=5 resid 0.00018; x-cal from panel b
+fig11,Elastic-Elastic,"contact number (whole bed, stacked segment)",0.000,7419.7,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Elastic-Elastic,"contact number (whole bed, stacked segment)",0.250,4305.5,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Elastic-Elastic,"contact number (whole bed, stacked segment)",0.500,2007.3,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Elastic-Elastic,"contact number (whole bed, stacked segment)",0.750,520.6,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Elastic-Plastic,"contact number (whole bed, stacked segment)",0.250,3137.7,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Elastic-Plastic,"contact number (whole bed, stacked segment)",0.500,4155.4,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Elastic-Plastic,"contact number (whole bed, stacked segment)",0.750,3245.5,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Plastic-Plastic,"contact number (whole bed, stacked segment)",1.000,8887.7,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Plastic-Plastic,"contact number (whole bed, stacked segment)",0.750,4774.5,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Plastic-Plastic,"contact number (whole bed, stacked segment)",0.500,2077.7,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,Plastic-Plastic,"contact number (whole bed, stacked segment)",0.250,440.87,contacts,segment height x label-centre slope 86.85/pt (no tick lines; label-centre max resid 26)
+fig11,total,contact number (sum of segments),0.000,7419.7,contacts,card arithmetic from segments
+fig11,total,contact number (sum of segments),0.250,7884,contacts,card arithmetic from segments
+fig11,total,contact number (sum of segments),0.500,8240.5,contacts,card arithmetic from segments
+fig11,total,contact number (sum of segments),0.750,8540.6,contacts,card arithmetic from segments
+fig11,total,contact number (sum of segments),1.000,8887.7,contacts,card arithmetic from segments
+fig4,Vp 0,peak stress,,299.23,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0,strain at peak stress,,-0.18145,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0,strain where unloading meets the zero-stress line,,-0.094861,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647; plotted zero line = -0.81 MPa
+fig4,Vp 0,springback (strain recovered on unloading),,0.086586,-,card arithmetic from the two values above
+fig4,Vp 0.25,peak stress,,293.09,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0.25,strain at peak stress,,-0.19996,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0.25,strain where unloading meets the zero-stress line,,-0.11522,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647; plotted zero line = -0.80 MPa
+fig4,Vp 0.25,springback (strain recovered on unloading),,0.084737,-,card arithmetic from the two values above
+fig4,Vp 0.50,peak stress,,298.35,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0.50,strain at peak stress,,-0.22118,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0.50,strain where unloading meets the zero-stress line,,-0.1411,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647; plotted zero line = -0.80 MPa
+fig4,Vp 0.50,springback (strain recovered on unloading),,0.080088,-,card arithmetic from the two values above
+fig4,Vp 0.75,peak stress,,299.58,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0.75,strain at peak stress,,-0.24601,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 0.75,strain where unloading meets the zero-stress line,,-0.1632,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647; plotted zero line = -0.80 MPa
+fig4,Vp 0.75,springback (strain recovered on unloading),,0.082807,-,card arithmetic from the two values above
+fig4,Vp 1.00,peak stress,,299.4,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 1.00,strain at peak stress,,-0.25689,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647
+fig4,Vp 1.00,strain where unloading meets the zero-stress line,,-0.1772,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.647; plotted zero line = -0.80 MPa
+fig4,Vp 1.00,springback (strain recovered on unloading),,0.079684,-,card arithmetic from the two values above
+fig5,"lp,E-P 0.38",peak stress,,298.12,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600
+fig5,"lp,E-P 0.38",strain at peak stress,,-0.22136,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600
+fig5,"lp,E-P 0.38",strain where unloading meets the zero-stress line,,-0.12457,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600; plotted zero line = -0.81 MPa
+fig5,"lp,E-P 0.38",springback (strain recovered on unloading),,0.096786,-,card arithmetic from the two values above
+fig5,"lp,E-P 0.60",peak stress,,299.35,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600
+fig5,"lp,E-P 0.60",strain at peak stress,,-0.22127,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600
+fig5,"lp,E-P 0.60",strain where unloading meets the zero-stress line,,-0.14076,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600; plotted zero line = -0.81 MPa
+fig5,"lp,E-P 0.60",springback (strain recovered on unloading),,0.080516,-,card arithmetic from the two values above
+fig5,"lp,E-P 0.70",peak stress,,298.47,MPa,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600
+fig5,"lp,E-P 0.70",strain at peak stress,,-0.21723,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600
+fig5,"lp,E-P 0.70",strain where unloading meets the zero-stress line,,-0.14328,-,vector path; x-cal n=4 resid 0.0000; y-cal n=5 resid 0.600; plotted zero line = -0.81 MPa
+fig5,"lp,E-P 0.70",springback (strain recovered on unloading),,0.073951,-,card arithmetic from the two values above
+fig6,Vp 0,peak stress,,292.23,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0,strain at peak stress,,-0.34472,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0,"most compressed strain (after peak, jagged unloading)",,-0.36452,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0,residual-stress plateau after unloading,,7.9,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102; level with the longest horizontal run
+fig6,Vp 0.224,peak stress,,292.23,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.224,strain at peak stress,,-0.35661,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.224,"most compressed strain (after peak, jagged unloading)",,-0.37428,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.224,residual-stress plateau after unloading,,11.5,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102; level with the longest horizontal run
+fig6,Vp 0.527,peak stress,,290.54,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.527,strain at peak stress,,-0.36834,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.527,"most compressed strain (after peak, jagged unloading)",,-0.38488,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.527,residual-stress plateau after unloading,,18.1,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102; level with the longest horizontal run
+fig6,Vp 0.722,peak stress,,291.22,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.722,strain at peak stress,,-0.38545,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.722,"most compressed strain (after peak, jagged unloading)",,-0.39817,-,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102
+fig6,Vp 0.722,residual-stress plateau after unloading,,33.9,MPa,vector path; x-cal n=6 resid 0.0001; y-cal n=5 resid 0.102; level with the longest horizontal run
+fig1,lp 0 (elastic),normal force at max overlap (2 x 1e-6 mm),,1.4921,1e-4 N,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000; dashed curves sampled to overlap 2.000
+fig1,lp 0 (elastic),adhesive floor (minimum force),,-0.10419,1e-4 N,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000
+fig1,lp 0.38,normal force at max overlap (2 x 1e-6 mm),,0.86419,1e-4 N,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000; dashed curves sampled to overlap 1.983
+fig1,lp 0.38,adhesive floor (minimum force),,-0.10419,1e-4 N,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000
+fig1,lp 0.38,overlap where unloading reaches the floor,,1.0595,1e-6 mm,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000
+fig1,lp 0.70,normal force at max overlap (2 x 1e-6 mm),,0.37488,1e-4 N,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000; dashed curves sampled to overlap 2.000
+fig1,lp 0.70,adhesive floor (minimum force),,-0.10419,1e-4 N,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000
+fig1,lp 0.70,overlap where unloading reaches the floor,,1.5801,1e-6 mm,vector path; x-cal n=3 resid 0.0002; y-cal n=3 resid 0.000
+fig7,simulation,least-squares slope of remaining strain vs Vp,,-0.082335,-/Vp,card arithmetic (n=5 points); text p.150 prints experiment -0.0824 / simulation -0.0591
+fig7,experiment,least-squares slope of remaining strain vs Vp,,-0.059036,-/Vp,card arithmetic (n=4 points); text p.150 prints experiment -0.0824 / simulation -0.0591

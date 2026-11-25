@@ -1,0 +1,923 @@
+{
+ "slug": "choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic illustration of an ASSB cell showing the cell configuration, main component materials, and cell dimensions. (b) Charge/discharge profiles of an ASSB cell for selected cycles (1, 5, and 10) at a current density of 0.02 C-rate. (c) Cycle performance of an ASSB cell at 0.02 C-rate. All electrochemical performance tests were carried out at 25 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    259.2,
+    570.5,
+    419.7
+   ],
+   "w": 2151,
+   "h": 669,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.89,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption had swallowed the body paragraphs printed next to/below the figure ('component, will also be performed …' · '■EXPERIMENTAL SECTION' · 'ASSB composite cathodes, and only …'); cut back to the printed caption",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Flow diagram for quantitative analysis using three-dimensional (3D) reconstruction technique. Detailed analysis steps and additional information are listed in Figures S1−S5. (a) 3D reconstruction analysis area corresponds to the region indicated by the dashed rectangle (left) and a trench-shaped sectioning region of the composite cathode (right). The arrow indicates the FIB milling and SEM imaging directions. All scale bars correspond to 10 μm. (b) Images showing the segmented region labeled by color: solid electrolyte (yellow), cathode active material (blue), conductive additive (red), and pore (purple). (c) Full 3D reconstructed structure of the composite cathode. In the equation, V, k, and S indicate volume, expansion coefficient, and spatial structure, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    406.4
+   ],
+   "w": 2151,
+   "h": 1431,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.699,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption ran into the p.3 body text ('g−1 and the Coulombic efficiency was 64.38% …'); cut back to the printed caption",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. 3D-reconstructed rendering images of the composite cathode showing the connectivity of each component: (a) the solid electrolyte, (b) the cathode active material, (c) the conductive additive, and (d) the pore. Individual colors represent structures with connectivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    162.2,
+    570.6,
+    394.2
+   ],
+   "w": 2151,
+   "h": 968,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.634,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption ran into the p.4 body text ('between such point contact interfaces …'); cut back to the printed caption",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. 3D reconstructed rendering images of the decomposed pore structure derived from the (a) cathode active material and (b) solid electrolyte. Individual colors represent structures with connectivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    294.7
+   ],
+   "w": 1052,
+   "h": 966,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.602,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. 3D reconstructed rendering images of the composite cathode showing the effective TPBs of two components: (a) the solid electrolyte and the cathode active material (green), (b) the cathode active material and the conductive additive (orange), (c) the conductive additive and the solid electrolyte (purple), and (d) superimposition of all effective TPBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.6,
+    295.2
+   ],
+   "w": 2151,
+   "h": 967,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.699,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption ran into the p.6 body text (Conclusions); cut back to the printed caption",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. Detailed Processing Conditions for Our Wet-Casted ASSB Cell — footnote a: Nb/NCM622 and LPN821 denote LiNbO3-coated LiNi0.6Co0.2Mn0.2O2 and (Li2S)8(P2S5)2(Ni3S2)1, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    61.4,
+    569.5,
+    259.7
+   ],
+   "w": 2142,
+   "h": 827,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.877,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption carried the whole table body; kept title + footnote only (values = the crop and card §3-1)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Quantified Structural Properties Calculated from a 3D Reconstructed Composite Cathode of Our ASSB Cell",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    63.2,
+    569.5,
+    160.1
+   ],
+   "w": 2142,
+   "h": 404,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.679,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption carried the whole table body; kept the title only (values = the crop and card §3-3 · §3-4 · §3-6)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3. Decomposed Pore Structure Results Calculated from the Pore Analysis — footnote a: S_pore,i indicates the pore structure derived from component i (i = LPN, NCM).",
+   "rotated_deg": 0,
+   "bbox": [
+    319.5,
+    335.0,
+    569.5,
+    469.5
+   ],
+   "w": 1042,
+   "h": 562,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.672,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption carried the whole table body; kept title + footnote only (values = the crop and card §3-5)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC.png",
+   "caption": "Abstract (TOC) graphic — no caption in the PDF. Text inside the graphic: 'Quantitative Microstructure Analysis of All-Solid-State Batteries' · '• Slicing & Imaging • Segmentation • Reconstruction' · cell stack 'Composite Cathode / Electrolyte / Composite Anode' · 3D block 'Two-Phase Boundaries (left)' · 'Volumetric Distribution (right)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    313.5,
+    322.0,
+    557.5,
+    434.9
+   ],
+   "w": 1017,
+   "h": 472,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.532,
+   "manual_crop": "2026-11-12 수동 크롭 — 1 쪽 초록 오른쪽 래스터 (xref 53 · 1000×454 px) + 2 pt · 캡션 없는 그림이라 도구가 잡지 않음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e00a",
+   "kind": "equation",
+   "label": "eqF2a",
+   "page": 3,
+   "file": "eq_00a_fig2_volume_fraction_Vi.png",
+   "caption": "Fig. 2 (p.3) 'Volume Analysis' box: V_i (i = LPN, NCM, Pore, etc) — phase volume of each segmented component; volume ratio = V_i / 5263 µm³ (in-figure formula · no equation number)",
+   "rotated_deg": 0,
+   "bbox": [
+    97.0,
+    230.0,
+    217.0,
+    313.8
+   ],
+   "w": 501,
+   "h": 350,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.447,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 그림 2 래스터 (xref 126 · 1787×1380 px = 300 dpi) 안의 상자 하나 (테두리 전부 포함 · 상자 왼쪽 선 = 래스터 왼쪽 끝) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e00b",
+   "kind": "equation",
+   "label": "eqF2b",
+   "page": 3,
+   "file": "eq_00b_fig2_connectivity_max_Vi_over_sum.png",
+   "caption": "Fig. 2 (p.3) 'Connectivity Analysis' box: connectivity = Max(V_i) / ΣV_i — volume of the largest connected cluster of phase i over the total volume of phase i (in-figure formula)",
+   "rotated_deg": 0,
+   "bbox": [
+    109.5,
+    319.0,
+    231.0,
+    401.6
+   ],
+   "w": 507,
+   "h": 345,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.446,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 그림 2 래스터 안의 상자 하나 (테두리 네 변 확인) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e00c",
+   "kind": "equation",
+   "label": "eqF2c",
+   "page": 3,
+   "file": "eq_00c_fig2_tortuosity_L_over_H_centroid_path.png",
+   "caption": "Fig. 2 (p.3) 'Tortuosity Analysis' box: L/H = Σ d(i) / (z(n) − z(0)) — d(i) = distance between the centroids (red dots) of the phase section in successive slices z(i−1) → z(i); H = z(n) − z(0) along the slice stack (in-figure formula · centroid-path geometric ratio)",
+   "rotated_deg": 0,
+   "bbox": [
+    388.5,
+    319.0,
+    510.3,
+    401.6
+   ],
+   "w": 509,
+   "h": 345,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.63,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 그림 2 래스터 안의 상자 하나 (테두리 네 변 확인) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e00d",
+   "kind": "equation",
+   "label": "eqF2d",
+   "page": 3,
+   "file": "eq_00d_fig2_pore_decomposition_kSi_cap_Spore.png",
+   "caption": "Fig. 2 (p.3) 'Pore Analysis' box: S_Pore,i = (k · S_i) ∩ S_Pore — pore structure derived from component i = structure S_i scaled by the 'expansion coefficient' k, intersected with the pore structure (caption: V volume, k expansion coefficient, S spatial structure; k value not printed) (in-figure formula)",
+   "rotated_deg": 0,
+   "bbox": [
+    407.9,
+    230.0,
+    528.0,
+    313.8
+   ],
+   "w": 501,
+   "h": 350,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.453,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 그림 2 래스터 안의 상자 하나 (테두리 네 변 확인) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e00e",
+   "kind": "equation",
+   "label": "eq00e",
+   "page": 5,
+   "file": "eq_00e_p5_LH_bruggeman_sigma_eff.png",
+   "caption": "p.5 in-text relations (no equation numbers): tortuosity = L/H ('length of the curve (L) to the distance between the ends (H)') · Bruggeman 'generally, τ = ε−0.5' · 'σeff = (ε/τ)σ'",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    377.3,
+    303.5,
+    410.5
+   ],
+   "w": 1026,
+   "h": 479,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.833,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 본문 5 쪽 왼쪽 단 두 토막 (L/H 정의 3 줄 · Bruggeman + σeff 6 줄) 을 16 px 틈으로 위아래 이음 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.5,
+     377.3,
+     303.5,
+     410.5
+    ],
+    [
+     57.5,
+     454.9,
+     303.5,
+     532.4
+    ]
+   ]
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-title-authors-history-doi",
+   "page": 1,
+   "file": "txt_p1_title_authors_history_doi.png",
+   "caption": "PDF p.1 header + title + 12 authors (as printed, incl. 'Wo Dum Jung') + affiliations (KIST · Hanyang Univ. · Hyundai Motor) + Received 2018-03-14 / Accepted 2018-06-27 / Published 2018-07-09 + footer (© 2018 ACS · DOI 10.1021/acsami.8b04204 · ACS Appl. Mater. Interfaces 2018, 10, 23740−23747) — three parts stacked",
+   "rotated_deg": 0,
+   "bbox": [
+    56.5,
+    54.0,
+    568.5,
+    292.5
+   ],
+   "w": 2134,
+   "h": 1265,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.894,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 3 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     56.5,
+     54.0,
+     568.5,
+     292.5
+    ],
+    [
+     320.5,
+     723.3,
+     427.9,
+     760.4
+    ],
+    [
+     164.5,
+     767.0,
+     568.5,
+     786.5
+    ]
+   ]
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-abstract-23pct",
+   "page": 1,
+   "file": "txt_p1_abstract_23pct_total_volume.png",
+   "caption": "PDF p.1 abstract + keywords: '… effective two-phase boundaries were significantly suppressed to ∼23% of the total volume because of component dispersion and packing issues'",
+   "rotated_deg": 0,
+   "bbox": [
+    66.4,
+    322.0,
+    309.5,
+    444.9
+   ],
+   "w": 2052,
+   "h": 782,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.352,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     66.4,
+     322.0,
+     309.5,
+     444.9
+    ],
+    [
+     66.4,
+     444.7,
+     558.5,
+     505.2
+    ]
+   ]
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-intro-point-contacts",
+   "page": 1,
+   "file": "txt_p1_intro_point_contacts.png",
+   "caption": "PDF p.1 intro (right column): ASSB composite cathodes are 'prone to inhomogeneous mixing … or the formation of interface pore structures through point contacts' · percolated ionic/electronic pathway with high AM loading",
+   "rotated_deg": 0,
+   "bbox": [
+    321.5,
+    560.4,
+    567.5,
+    676.6
+   ],
+   "w": 1026,
+   "h": 485,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.83,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-p3-cell-fabrication-231MPa",
+   "page": 2,
+   "file": "txt_p2_p3_cell_fabrication_wetcast_231MPa.png",
+   "caption": "PDF p.2 Cell Fabrication + p.3 first lines: LPN821 = (Li2S)8(P2S5)2(Ni3S2)1 (ref 6) · Nb/NCM622 · Thinky 2000 rpm o-xylene slurries · cast on Ni foil · bilayer punched 15 mm / cathode 14 mm · 'laminated at a compression pressure of 231 MPa' → 2032 coin cell",
+   "rotated_deg": 0,
+   "bbox": [
+    321.5,
+    533.5,
+    567.5,
+    766.0
+   ],
+   "w": 1026,
+   "h": 1119,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.828,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     321.5,
+     533.5,
+     567.5,
+     766.0
+    ],
+    [
+     57.5,
+     477.9,
+     303.5,
+     509.6
+    ]
+   ]
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-electrochem-protocol",
+   "page": 3,
+   "file": "txt_p3_electrochem_protocol_178mAh_11mg.png",
+   "caption": "PDF p.3 Electrochemical Characterization: 100 cycles 2.5–4.2 V ('vs Li/Li+' as printed) · 178 mA h g−1 · AM 11.099 mg · CC–CV charge / CC discharge · 25 °C · 0.026 mA cm−2 (0.02 C) · CV 0.0052 mA cm−2",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    509.6,
+    303.5,
+    620.4
+   ],
+   "w": 1026,
+   "h": 463,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.828,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-results-capacity-fade",
+   "page": 3,
+   "file": "txt_p3_results_124mAh_64pct_75pct_fade.png",
+   "caption": "PDF p.3 results: wet-cast sheets 'compacted by uniaxial pressing' into a 15 mm 2032 coin · initial discharge 124.18 mA h g−1 · CE 64.38 % · ≈90 % after the 2nd cycle · ≥100 mA h g−1 in the first five cycles · 'After 40 cycles, an approximately 75% decrease from the initial discharge capacity'",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    641.0,
+    303.5,
+    766.5
+   ],
+   "w": 1026,
+   "h": 887,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.833,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.5,
+     641.0,
+     303.5,
+     766.5
+    ],
+    [
+     321.5,
+     477.0,
+     567.5,
+     560.0
+    ]
+   ]
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-p4-fibsem-procedure",
+   "page": 3,
+   "file": "txt_p3_p4_fibsem_state_procedure_5263um3.png",
+   "caption": "PDF p.3–4: FIB-SEM sample = same-process coin cell 'disassembled in its fully discharged state after a single cycle' · dual beam · milling perpendicular to the specimen · SEM at 52° · Pt cap · Π-shape trench · 100 slices × 100 nm (depth 10 µm) · gray-scale segmentation into 4 phases · 5263 µm³ (20.4 × 25.8 × 10 µm)",
+   "rotated_deg": 0,
+   "bbox": [
+    321.5,
+    707.7,
+    567.5,
+    766.5
+   ],
+   "w": 1026,
+   "h": 1439,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.83,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     321.5,
+     707.7,
+     567.5,
+     766.5
+    ],
+    [
+     57.5,
+     426.2,
+     303.5,
+     708.4
+    ]
+   ]
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-close-contact-micropores",
+   "page": 4,
+   "file": "txt_p4_close_contact_micropores_point_contact.png",
+   "caption": "PDF p.4: qualitative — electrolyte and AM 'in close contact'; 'Unnecessary micropores were also widely distributed in various interfacial regions'; point-contact interfaces + micropores act as a resistance element",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    708.4,
+    303.5,
+    766.5
+   ],
+   "w": 1026,
+   "h": 456,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.844,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.5,
+     708.4,
+     303.5,
+     766.5
+    ],
+    [
+     321.5,
+     426.2,
+     567.5,
+     473.2
+    ]
+   ]
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-p5-pore-15pct-volume-ratio",
+   "page": 4,
+   "file": "txt_p4_p5_pore_15pct_volume_ratio_errors.png",
+   "caption": "PDF p.4–5: 'pore content of approximately 15%' · pore-free volume ratios 50.01 / 47.11 / 2.87 % vs input 58.48 / 38.37 / 3.15 % · error sources (SEM resolution · gray-scale contrast · small volume · CA under- / pore over-estimated) · SE fraction 61.45 % → 42.52 % across the analysis",
+   "rotated_deg": 0,
+   "bbox": [
+    321.5,
+    596.3,
+    567.5,
+    766.4
+   ],
+   "w": 1026,
+   "h": 1298,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.834,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     321.5,
+     596.3,
+     567.5,
+     766.4
+    ],
+    [
+     57.5,
+     64.0,
+     303.5,
+     201.1
+    ]
+   ]
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-connectivity-tortuosity",
+   "page": 5,
+   "file": "txt_p5_connectivity_tortuosity_LH_bruggeman.png",
+   "caption": "PDF p.5: connectivity ≈0.99 (SE) · 0.98 (AM) ('a high volume ratio of >40% allows percolation') · CA ≈0.33 · tortuosity = L/H · SE & AM ≈6 · pore ≈13 · CA not listed · Bruggeman τ = ε−0.5 · σeff = (ε/τ)σ",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    200.7,
+    303.5,
+    631.8
+   ],
+   "w": 1026,
+   "h": 1797,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.827,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-pdp-bulk-modulus-plastic",
+   "page": 5,
+   "file": "txt_p5_pdp_bulk_modulus_plastic_deformation.png",
+   "caption": "PDF p.5: pore decomposition process (PDP) · d50 NCM 4 µm vs LPN 6 µm · 'powder elasticity (e.g., bulk modulus B)' · '43% of the total pore volume from LPN and 56% from NCM' · 'solid electrolyte with a low bulk modulus (B_Li3PS4 ≈20 GPa) has excellent plastic deformation characteristics … (B_NCM ≈140 GPa) is hard and induces more pore structure'",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    631.7,
+    303.5,
+    766.5
+   ],
+   "w": 1026,
+   "h": 1386,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.835,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.5,
+     631.7,
+     303.5,
+     766.5
+    ],
+    [
+     321.5,
+     483.0,
+     567.5,
+     676.5
+    ]
+   ]
+  },
+  {
+   "key": "x5c",
+   "kind": "text",
+   "label": "p5-p6-tpb-23pct-strategies",
+   "page": 5,
+   "file": "txt_p5_p6_tpb_definition_23pct_strategies.png",
+   "caption": "PDF p.5–6: TPB = 'two-phase boundary' (interface between two different materials) · three effective TPBs · AM–SE 1120 µm² / 0.213 µm−1 largest · total TPB incl. pores ≈7280 µm² / 1.38 µm−1 → effective ≈23 % of the total TPB · strategies (sub-µm · spherical · weak agglomeration; dispersion · gradient-free drying · multimodal packing · low-temperature isotropic densification)",
+   "rotated_deg": 0,
+   "bbox": [
+    321.5,
+    676.2,
+    567.5,
+    766.4
+   ],
+   "w": 1026,
+   "h": 1970,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.828,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     321.5,
+     676.2,
+     567.5,
+     766.4
+    ],
+    [
+     57.5,
+     337.1,
+     303.5,
+     715.4
+    ]
+   ]
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-conclusions",
+   "page": 6,
+   "file": "txt_p6_conclusions.png",
+   "caption": "PDF p.6 Conclusions: 124.18 mA h g−1 · 64.38 % · '∼78%' degradation after 100 cycles · 'rigid cathode active materials induce more pores than sulfide electrolytes' · effective reaction area (TPB AM–SE) '∼23% of the total volume' · connectivity ≈1 at ≈40 % volume ratio",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    723.9,
+    303.5,
+    766.4
+   ],
+   "w": 1026,
+   "h": 1984,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.835,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.5,
+     723.9,
+     303.5,
+     766.4
+    ],
+    [
+     321.5,
+     337.1,
+     567.6,
+     766.5
+    ]
+   ]
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-si-five-figures",
+   "page": 7,
+   "file": "txt_p7_si_five_figures_not_provided.png",
+   "caption": "PDF p.7 Associated Content: SI = 'Five supporting figures … (phase segmentation, volume analysis, connectivity analysis, tortuosity analysis, and pore analysis)' — the SI PDF was not supplied for this card",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    65.8,
+    303.5,
+    171.1
+   ],
+   "w": 1026,
+   "h": 440,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.865,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7-p8-refs-6-29-30-31",
+   "page": 7,
+   "file": "txt_p7_p8_refs_6_29_30_31.png",
+   "caption": "PDF p.7–8 references: (6) Park 2017 ACS Energy Lett. (LPN synthesis) · (29) Kehrwald 2011 JES (local tortuosity) · (30) Baranowski 2016 ACS AMI (Li3PS4 mechanics → B ≈20 GPa) · (31) Sun & Zhao 2017 JPCC (NCM → B ≈140 GPa)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    592.7,
+    303.5,
+    643.8
+   ],
+   "w": 1026,
+   "h": 607,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.845,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 16 px 틈으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.5,
+     592.7,
+     303.5,
+     643.8
+    ],
+    [
+     57.5,
+     116.9,
+     303.5,
+     207.2
+    ]
+   ]
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 2,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1a (panel): cell schematic — composite cathode (Nb/NCM622, LPN821 & Super C65) t = 79 µm, Ø 14 mm · electrolyte (LPN821) t = 90 µm, Ø 15 mm · composite anode (graphite, LPN821 & Super C65) t = 110 µm, Ø 15 mm · 'High-Pressure Lamination' of cathode tape + bilayer tape",
+   "rotated_deg": 0,
+   "bbox": [
+    96.6,
+    264.2,
+    200.3,
+    414.7
+   ],
+   "w": 433,
+   "h": 628,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.786,
+   "manual_crop": "2026-11-12 패널 크롭 — 본문 래스터 (xref 111 · 1791×619 px = 300 dpi) 의 (a) 칸 (래스터 0–428 px · 빈 열 419–436 의 가운데에서 자름) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 2,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1b (panel): charge/discharge profiles, cycles 1 · 5 · 10 (0.02 C, 25 °C) — 2.5–4.2 V · 0–200 mA h g−1 · readings = digitized.csv fig1b",
+   "rotated_deg": 0,
+   "bbox": [
+    200.3,
+    264.2,
+    351.5,
+    414.7
+   ],
+   "w": 631,
+   "h": 628,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.915,
+   "manual_crop": "2026-11-12 패널 크롭 — 같은 래스터의 (b) 칸 (428–1058 px · 빈 열 가운데) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f1c",
+   "kind": "figure",
+   "label": "1c",
+   "page": 2,
+   "file": "fig_1c.png",
+   "caption": "Fig. 1c (panel): specific capacity (black, left axis 0–150 mA h g−1) and Coulombic efficiency (red, right axis 0–120 %) over 100 cycles at 0.02 C — readings = digitized.csv fig1c",
+   "rotated_deg": 0,
+   "bbox": [
+    351.5,
+    264.2,
+    528.4,
+    414.7
+   ],
+   "w": 738,
+   "h": 628,
+   "dpi": 300,
+   "src": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+   "blank": 0.861,
+   "manual_crop": "2026-11-12 패널 크롭 — 같은 래스터의 (c) 칸 (1058–1791 px) + 오른쪽 1 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-11-12 — published version (ACS Appl. Mater. Interfaces 10, 23740–23747, 2018; 8 PDF pages; SI = five supporting figures, not supplied → [미확인]). Tool crops 8 (Fig. 1–5 · Table 1–3): all kept (none re-cut), 7 auto captions trimmed (caption_fix). Hand crops 24: TOC graphic 1 · Fig. 1 panels 3 (1a 1b 1c) · equations 5 (four in-figure formulas of Fig. 2 = eq_00a–d · p.5 in-text L/H · Bruggeman · σeff = eq_00e) · evidence paragraphs 15 (txt_*). The paper has no numbered equations. Readings of Fig. 1b · 1c = digitized.csv (method per row).",
+ "key_note": "manual keys: fTOC = abstract graphic · f1a/f1b/f1c = Fig. 1 panels · e00a–e00d = formulas printed inside Fig. 2 (Volume · Connectivity · Tortuosity · Pore analysis boxes) · e00e = p.5 in-text relations · x<PDF page><letter> = evidence paragraph (kind 'text'); page = PDF page = printed page − 23739"
+}

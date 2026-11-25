@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'Ni3S4_mp-aaaaabok'
+  outdir = './tmp'
+  filpdos = 'Ni3S4_mp-aaaaabok'
+  degauss = 0.007
+  ngauss = 0
+/

@@ -1,0 +1,6 @@
+&DOS
+    prefix='comp1'
+    outdir='./tmp'
+    fildos='comp1.dos'
+    DeltaE=0.01
+/

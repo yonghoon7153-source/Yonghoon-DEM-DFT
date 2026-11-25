@@ -1,0 +1,772 @@
+{
+ "slug": "aqib2026_multifidelity_active_learning_alloy_design",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+  "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Pearson Correlation Coefficient (PCC) matrix revealing multicollinearity patterns in the HEA dataset. The heatmap displays intercorrelations among compo­ sitional and physical characteristics, with correlation coefficients ranging from −1 to +1. Several elemental features exhibit strong positive correlations (r>0.8), demonstrating redundant information that necessitated feature engineering approaches. Feature descriptions are provided in Table S4. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    398.1,
+    567.3,
+    712.8
+   ],
+   "w": 2233,
+   "h": 1312,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.525
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Predicted versus actual thermal expansion coefficient values for machine learning models on the test dataset. (a) ANN demonstrates a strong correlation (R2 = 0.9052, RMSE = 1.3254), (b) SVR with competitive performance (R2 = 0.8663, RMSE = 1.5742), (c) XGBR demonstrating consistent generalization (R2 = 0.8967, RMSE = 1.3835), and (d) RFR with conservative performance (R2 = 0.8773, RMSE = 1.5080). The dashed line represents perfect prediction (y = x), with data points closer to this line indicating better model accuracy.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    52.7,
+    567.3,
+    399.6
+   ],
+   "w": 2233,
+   "h": 1447,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Convergence behavior of active learning (AL) frameworks for CTE minimization in high-entropy alloys (HEAs). Mean convergence trajectories over 100 independent optimization runs are shown for (a) Gaussian Process Regression (GPR) and (b) Random Forest Variance (RFV) surrogate models using Expected Improvement (EI) and Lower Confidence Bound (LCB) acquisition functions. Solid lines denote the mean coefficient of thermal expansion (CTE), while shaded regions represent the 10–90 percentile range across all runs, illustrating both convergence speed and robustness.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    446.4,
+    567.3,
+    571.6
+   ],
+   "w": 2233,
+   "h": 522,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Exploration–exploitation patterns in AL for CTE minimization using different surrogate model and acquisition function combinations. The spatial distribution of sampling points reveals distinct optimization strategies: (a) GPR with EI showing distributed exploration across the search space, (b) GPR with LCB demonstrating concentrated exploitation in promising low-CTE regions after approximately 50 iterations, (c) RFV with EI maintaining progressive exploration throughout optimiza­ tion cycles, and (d) RFV with LCB exhibiting focused sampling density in optimal zones. EI-based approaches maintain broader spatial exploration even in later cycles, while LCB strategies transition to concentrated exploitation once favorable regions are identified.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.3,
+    52.7,
+    566.0,
+    290.6
+   ],
+   "w": 2233,
+   "h": 992,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Simple regret comparison between AL approaches and CMA-ES evo­ lutionary strategy throughout the optimization process. The solid lines show mean simple regret across 100 runs, with shaded regions representing the 25th- 75th percentile range. CMA-ES consistently exhibits higher simple regret levels compared to both GPR-EI and GPR-LCB approaches. The active learning meth­ ods demonstrate superior consistency with significantly lower variability in solution quality, as evidenced by their standard deviations (GPR-LCB: 0.009, GPR-EI: 0.020) compared to CMA-ES (0.075), highlighting the exceptional sta­ bility and reliability of the AL framework for materials discovery applications where consistency is critical for resource-intensive validation processes.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    496.9,
+    566.0,
+    645.8
+   ],
+   "w": 1109,
+   "h": 622,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.588
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Convergence characteristics of the MFAL framework for HEA composi­ tion optimization targeting minimal CTE. The black line represents the average best performance across independent runs, with the shaded region indicating the ±1 std. dev. region. The framework demonstrates robust convergence behav­ ior, achieving near-optimal solutions within approximately 75 iterations. The consistent convergence pattern across multiple runs highlights the framework’s effectiveness in navigating the complex compositional space of high-entropy al­ loys while maintaining computational efficiency through multi-fidelity sampling strategies. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.3,
+    473.9,
+    567.3,
+    646.5
+   ],
+   "w": 1109,
+   "h": 720,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Single-run convergence dynamics of the MFAL framework illustrating the strategic balance between high and low-fidelity data points. The plot displays the best thermal expansion coefficient (CTE) values achieved over iterations, demonstrating characteristic step-wise improvement patterns that reflect the algorithm’s strategic learning process. The framework intelligently alternates between high-fidelity evaluations for exploitation of promising regions and low- fidelity sampling for exploration of the broader compositional landscape. This dual-fidelity approach enables efficient information gathering while maintaining consistent solution quality improvements throughout the optimization process.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.3,
+    52.7,
+    296.2,
+    225.5
+   ],
+   "w": 1109,
+   "h": 721,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Convergence comparison between MFAL and single-fidelity active learn­ ing at 1:20 cost ratio. MFAL achieves 56.4% cost reduction while maintaining comparable solution quality. Solid lines show mean values across 100 runs and the shaded regions indicate 10th-90th percentile range.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    52.7,
+    566.0,
+    237.6
+   ],
+   "w": 1109,
+   "h": 772,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Evolution of optimal alloy compositions, radar plots showing the progression of the best-found alloy compositions at iterations 5, 20, 40, and 60 for three methods: GPR-EI, GPR-LCB, and MFAL. Each axis represents the normalized fraction of the six alloying elements (Fe, Ni, Co, Cr, V, Cu) in the optimal composition identified at each iteration. The CTE values (×10−6 𝐾−1) for the best compositions are shown in the legends. Plots demonstrate the convergence behavior of different acquisition functions, with all methods converging to similar low-CTE compositions characterized by high Fe content and reduced fractions of other elements. Notably, the best value found and optimal composition remain largely unchanged after approximately 60 iterations. 11",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    288.4,
+    567.3,
+    693.7
+   ],
+   "w": 2233,
+   "h": 1690,
+   "dpi": 300,
+   "src": "27e9937a-99._A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 10,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: t-SNE plots with outliers detected using IsoltationForest(IF), Local-Outlier Factor(LOF) and One-class SVM",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    122.6,
+    505.4,
+    338.6
+   ],
+   "w": 1670,
+   "h": 901,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 10,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Pearson correlation coeﬃcient (PCC) matrix of HEA features after Variance Inﬂation Factor (VIF) analysis. The correlation heatmap illustrates the persistence of multicollinearity among compositional and physical descriptors despite VIF-based feature selection. Strong correlations remain evident between several elemental features, indicating that VIF analysis alone was insuﬃcient to eliminate redundant information",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    376.1,
+    505.4,
+    605.7
+   ],
+   "w": 1670,
+   "h": 957,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.524
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Pearson correlation coeﬃcient (PCC) matrix of HEA features after Recursive Feature Elimination (RFE). The correlation matrix demonstrates the feature relationships following RFE-based dimensionality reduction. While RFE successfully reduced the fea- ture space, signiﬁcant intercorrelations persist among the retained descriptors, highlight- ing the continued presence of multicollinearity that necessitates additional preprocessing approaches for optimal model performance.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    122.1,
+    505.4,
+    351.6
+   ],
+   "w": 1670,
+   "h": 958,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.523
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 11,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Training and validation loss curves for ANN. The convergence behavior shows the model’s learning progression over training epochs, with both training and validation losses decreasing consistently. The parallel decline of both curves indicates eﬀective learn- ing without signiﬁcant overﬁtting, demonstrating the ANN’s capability to generalize well to unseen data while maintaining low prediction error on the training set.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    435.8,
+    505.4,
+    606.3
+   ],
+   "w": 1670,
+   "h": 712,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 12,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Principal Component Analysis (PCA) explained variance distribution for HEA feature dimensionality reduction. The cumulative variance plot reveals that the ﬁrst ﬁve principal components capture 100% of the dataset’s variation, providing a complete orthogonal representation of the original feature space. This transformation successfully eliminates multicollinearity while preserving all informational content, establishing an op- timal foundation for subsequent ML and AL model development and ensuring robust predictive performance.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    136.4,
+    505.4,
+    311.6
+   ],
+   "w": 1670,
+   "h": 731,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.503
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 12,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Convergence analysis of random search for coeﬃcient of thermal expansion (CTE) minimization over 500 iterations, averaged across 100 independent runs.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    436.4,
+    505.4,
+    627.8
+   ],
+   "w": 1670,
+   "h": 798,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 18,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Actual versus predicted CTE values for the low-ﬁdelity GPR model trained on 30% of the complete dataset. The model achieves moderate predictive performance with a coeﬃcient of determination R2 = 0.5526, a root-mean-square error (RMSE) of 2.877, and a mean absolute error (MAE) of 2.011.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    119.8,
+    505.4,
+    349.4
+   ],
+   "w": 1670,
+   "h": 957,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 20,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Statistical distribution of ﬁnal best solutions obtained by diﬀerent opti- mization approaches across multiple optimization runs. The violin plot reveals signiﬁ- cant diﬀerences in solution consistency between active learning methods and CMA-ES evolutionary strategy. GPR-LCB demonstrates exceptional stability with the narrowest distribution (standard deviation: 0.009, coeﬃcient of variation: 8.34%), followed by GPR- EI (standard deviation: 0.020, coeﬃcient of variation: 18.39%). In contrast, CMA-ES exhibits substantially higher variability (standard deviation: 0.075, coeﬃcient of varia- tion: 62.88%), which is approximately 7.5 times greater than GPR-LCB. The solution range comparison further emphasizes this disparity: GPR-LCB achieves solutions within a tight range of 0.1-0.12 (range = 0.02), while CMA-ES produces solutions spanning 0.1- 0.7 (range = 0.6). This superior consi",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    228.7,
+    505.4,
+    403.9
+   ],
+   "w": 1670,
+   "h": 731,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 22,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Convergence trajectories comparison between AL approaches (GPR-EI, GPR-LCB) and evolutionary strategy (CMA-ES) over 200 optimization iterations. The solid lines represent mean performance across 100 independent runs, while the shaded re- gions indicate the 25th-75th percentile range, showing variability between runs. The upper panel shows the evolution of minimum CTE values, while the lower panel displays the percentage above the true minimum. All methods demonstrate rapid initial improvement during the ﬁrst 25-50 iterations with overlapping performance. However, distinct optimiza- tion behaviors emerge in mid-to-late stages: GPR-LCB exhibits superior and more stable convergence after 25-75 iterations, while CMA-ES shows ongoing oscillations and higher variability throughout the optimization process. By iteration 150, the AL approaches achieve stable convergence around the gl",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    183.5,
+    505.4,
+    463.7
+   ],
+   "w": 1670,
+   "h": 1169,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.798
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 23,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Computational runtime comparison for AL optimization across diﬀerent surrogate model and acquisition function combinations.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    134.6,
+    505.4,
+    282.9
+   ],
+   "w": 1670,
+   "h": 619,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.585
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 24,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: Cluster analysis of compositional space using t-SNE visualization and K- means clustering for diﬀerent AL strategies. a) GPR-EI b) GPR-LCB c) RFV-EI d) RFV-LCB",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    126.3,
+    505.4,
+    479.9
+   ],
+   "w": 1670,
+   "h": 1474,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 25,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Sampling patterns in compositional space for diﬀerent AL acquisition func- tions. a) GPR-EI b) GPR-LCB c) RFV-EI d) RFV-LCB",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    204.7,
+    505.4,
+    558.3
+   ],
+   "w": 1670,
+   "h": 1474,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 26,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Distribution of convergence speed across multiple MFAL optimization runs. The histogram shows the variability in convergence rates for achieving near-optimal ther- mal expansion coeﬃcient values in high-entropy alloy composition optimization. The distribution pattern indicates the framework’s consistent performance while highlighting natural variation in optimization trajectories due to the stochastic nature of the MFAL process and the complexity of the compositional search space.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    402.8,
+    505.4,
+    578.0
+   ],
+   "w": 1670,
+   "h": 731,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 27,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Distribution of high-ﬁdelity evaluation ratios in MFAL optimization runs. The histogram demonstrates the framework’s balanced ﬁdelity utilization strategy, with high-ﬁdelity ratios predominantly concentrated in the 0.55-0.65 range. This distribution reﬂects the algorithm’s eﬀective management of the cost-accuracy trade-oﬀ, where approx- imately 55-65% of evaluations utilize computationally expensive high-ﬁdelity models while the remainder employ eﬃcient low-ﬁdelity approximations for broader exploration. The consistent distribution pattern across runs indicates the robustness of the adaptive ﬁdelity selection mechanism.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    121.4,
+    505.4,
+    296.6
+   ],
+   "w": 1670,
+   "h": 730,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "fs16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 27,
+   "file": "fig_S16.png",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    396.0,
+    582.0,
+    570.24
+   ],
+   "w": 2300,
+   "h": 726,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "note": "manual: 자동 추출이 놓친 그림(캡션 앵커 미검출) — 손으로 영역 지정",
+   "caption": "Figure S16: onvergence behavior of the multi-fidelity active learning (MFAL) framework for CTE minimization. (a) Evolution of the best CTE value found over optimization iterations, averaged across 100 independent MFAL runs at a cost ratio of 1:20. (b) Corresponding convergence progress expressed as a percentage of the final converged value. The MFAL strategy achieves efficient convergence while utilizing approximately 42% high-fidelity evaluations."
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 28,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: Comparison of optimal high-entropy alloy compositions identiﬁed by diﬀer- ent approaches. The radar plot displays the atomic fractions of six constituent elements (Fe, Ni, Co, Cr, V, Cu) for the best-performing compositions discovered by GPR-EI, GPR-LCB, and MFAL optimization strategies, all achieving identical thermal expansion coeﬃcients (CTE = 0.1). Despite converging to the same optimal CTE value, the methods exhibit subtle variations in compositional preferences, particularly in the Ni-Co balance, with MFAL demonstrating intermediate behavior between the two GPR-based approaches The consistent dominance of Fe ( 63.5%) and Ni ( 30-32.5%) across all methods indicates robust identiﬁcation of key alloying elements for minimal thermal expansion, while the negligible presence of V and Cu suggests their limited contribution to CTE optimization in this compositional space.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.9,
+    251.3,
+    505.4,
+    452.0
+   ],
+   "w": 1670,
+   "h": 838,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Abbreviations used in the manuscript, organized alphabetically with their full forms and functional categories. Abbreviation Full Form Category AL Active Learning Methodology ANN Artiﬁcial Neural Network ML Model CMA-ES Covariance Matrix Adaptation Evo- lution Strategy Optimization CTE Coeﬃcient of Thermal Expansion Material Property EI Expected Improvement Acquisition Func- tion GPR Gaussian Process Regression ML Model HEA High-Entropy Alloy Material System KG Knowledge Gradient Acquisition Func- tion LCB Lower Conﬁdence Bound Acquisition Func- tion MAE Mean Absolute Error Performance Met- ric MFAL Multi-Fidelity Active Learning Methodology ML Machine Learning General MTGP Multi-Task Gaussian Process ML Model PCA Principal Component Analysis Feature Engineer- ing PCC Pearson Correlation Coeﬃcient Statistical Measure RFE Recursive Feature Elimination Feature Engineer- ing RFR R",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    504.4,
+    640.2
+   ],
+   "w": 1661,
+   "h": 2163,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Statistical summary of the high-entropy alloy dataset from Rao et al. (2022)[1] Property Minimum Maximum Mean Std. Dev. Dataset Size Total compositions 717 Elemental Composition (atomic fraction) Fe 0.000 1.000 – – Ni 0.000 1.000 – – Co 0.000 1.000 – – Cr 0.000 0.200 – – V 0.000 0.150 – – Cu 0.000 0.098 – – Target Variable: CTE (×10−6 K−1) CTE −1.07 23.20 9.74 4.31",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    504.6,
+    672.7
+   ],
+   "w": 1662,
+   "h": 2298,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 4,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Comprehensive Feature Selection Comparison",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    495.0,
+    665.5
+   ],
+   "w": 1622,
+   "h": 2268,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 9,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Material descriptors used for machine learning, active learning and multi- ﬁdelity active learning optimization of thermal expansion coeﬃcients in high-entropy al- loys. Each descriptor quantiﬁes a speciﬁc physical or chemical property that inﬂuences the thermal behavior of the alloy system. Category Descriptor Unit Fe (Iron) wt.% Ni (Nickel) wt.% Co (Cobalt wt.% Cr (Chromium) wt.% V (Vanadaium) wt.% Cu (Copper) wt.% Electronic Structure VEC (Valence Electron Concentration) Unitless Composition Atomic Size AR1 (Atomic Radius) pm AR2 (Covalent Radius) pm Chemical Bonding PE (Pauling Electronegativity) Pauling units Density kg/m3 Thermal Properties ThermalC (Thermal Conductivity) W/m·K MP (Melting Point) K FI (First Ionization Energy) kJ/mol SI (Second Ionization Energy) kJ/mol TI (Third Ionization Energy) kJ/mol Magnetic Property M (Magnetic Moment) µB Target Property CTE (Coeﬃc",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    123.2,
+    531.2,
+    662.5
+   ],
+   "w": 1773,
+   "h": 2248,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 13,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Hyperparameter ranges and purposes for the Random Forest model. Hyperparameter Range Purpose n_estimators [50, 1000] Controls the number of trees in the ensemble; more trees can improve performance but increase computational cost. max_depth [5, 50] Limits the depth of each tree to prevent overﬁtting and control complexity. min_samples_split [2, 20] Minimum number of samples required to split a node; helps prevent overﬁtting. min_samples_leaf [1, 10] Minimum number of samples at leaf nodes; aﬀects the smoothness and robustness of the model. max_features [0.1, 1.0] Fraction of features considered at each split; adds randomness and reduces overﬁtting.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    480.9,
+    415.3
+   ],
+   "w": 1563,
+   "h": 1226,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 14,
+   "file": "tab_S6.png",
+   "caption": "Table S6: Hyperparameter ranges and purposes for the XGBoost model. Hyperparameter Range Purpose n_estimators [50, 1000] Number of boosting rounds; more estimators can increase accuracy but risk overﬁtting. max_depth [3, 20] Maximum depth of each tree; deeper trees model complex patterns but can overﬁt. learning_rate [0.01, 0.3] Step size shrinkage in each boosting step; lower values slow learning but improve generalization. subsample [0.5, 1.0] Fraction of training data sampled for each tree; improves generalization through randomness. colsample_bytree [0.5, 1.0] Fraction of features sampled for each tree; helps prevent overﬁtting. gamma [0, 5] Minimum loss reduction required to make a split; higher values lead to more conservative models. min_child_weight [1, 10] Minimum sum of instance weights in a child node; regularizes tree complexity.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    480.0,
+    517.2
+   ],
+   "w": 1559,
+   "h": 1651,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 15,
+   "file": "tab_S7.png",
+   "caption": "Table S7: Hyperparameter ranges and purposes for the SVR model. Hyperparameter Range Purpose C [1e-3, 1e3] Regularization parameter; controls trade-oﬀbetween smooth decision boundary and classiﬁcation errors. Larger values allow more complex models. epsilon [0.01, 1.0] Deﬁnes the epsilon-insensitive zone; larger values allow more deviation without penalty, reducing model sensitivity. gamma [1e-4, 1] Kernel coeﬃcient for RBF; higher values lead to more complex and tightly ﬁtted models. kernel RBF Speciﬁes the kernel function; RBF enables modeling non-linear relationships.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    481.0,
+    414.9
+   ],
+   "w": 1564,
+   "h": 1224,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 16,
+   "file": "tab_S8.png",
+   "caption": "Table S8: Hyperparameters used in the ANN model and their respective purposes. Hyperparameter Value Purpose Input Dimensions 5 Number of PCA-derived features used as input to the model. Hidden Layer Dimensions [256, 256, 256, 64, 32] Deﬁnes the network’s capacity for hierarchical feature representation. Activation Function ReLU Introduces non-linearity and helps mitigate vanishing gradient issues. Dropout Rate 0.05 Prevents overﬁtting by randomly deactivating a fraction of neurons during training. Loss Function MSE Measures the average squared diﬀerence between predicted and actual values. Optimizer AdamW Performs adaptive learning rate optimization with weight decay regularization. Learning Rate 0.003 Sets the step size for parameter updates during training. Weight Decay 1e-4 Penalizes large weights to enhance generalization and reduce overﬁtting. Batch Size 64 Number of samples process",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    539.7,
+    590.7
+   ],
+   "w": 1808,
+   "h": 1957,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 17,
+   "file": "tab_S9.png",
+   "caption": "Table S9: Best Parameters for Each ML Model Model Best Parameters Random Forest Regressor (RFR) max_depth: 44, max_features: 0.558, min_samples_leaf: 1, min_samples_split: 2, n_estimators: 50 XGBoost colsample_bytree: 0.786, gamma: 0.105, learning_rate: 0.01, max_depth: 19, min_child_weight: 5, n_estimators: 1000, subsample: 0.705 Support Vector Regressor (SVR) C: 12.150, epsilon: 1.000, gamma: 0.447, kernel: ’RBF’ Gaussian Process Regressor (GPR) No speciﬁc hyperparameters tuned; used default GPR with kernel ﬁtting via BoTorch library Artiﬁcial Neural Network (ANN) Input dimensions: 5 (from PCA), Hidden layers: [256, 256, 256, 64, 32], Activation: ReLU, Optimizer: AdamW, Learning rate: 0.003, Dropout: 0.05, Epochs: 100",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    121.4,
+    485.5,
+    603.1
+   ],
+   "w": 1582,
+   "h": 2009,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 23,
+   "file": "tab_S10.png",
+   "caption": "Table S10: Convergence half-life parameters for AL framework combinations using dif- ferent surrogate models and acquisition functions.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    282.4,
+    504.4,
+    657.5
+   ],
+   "w": 1661,
+   "h": 1564,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 23,
+   "file": "tab_S11.png",
+   "caption": "Table S11: Exploration–exploitation balance across AL combinations over 20,000 itera- tions.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    282.4,
+    504.4,
+    657.5
+   ],
+   "w": 1661,
+   "h": 1564,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 24,
+   "file": "tab_S12.png",
+   "caption": "Table S12: Statistical summary of acquisition function values during optimization.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    289.1,
+    483.0,
+    665.8
+   ],
+   "w": 1572,
+   "h": 1571,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 26,
+   "file": "tab_S13.png",
+   "caption": "Table S13: Regret analysis for diﬀerent AL approaches showing optimization eﬃciency metrics. GPR-LCB demonstrates superior cumulative regret performance (81.38) com- pared to GPR-EI (95.74), indicating a 15% improvement in optimization eﬃciency with fewer wasted iterations on inferior compositions. Conversely, RFV-EI outperforms RFV- LCB in cumulative regret (95.34 vs. 111.62), suggesting that RFV-LCB follows a more convoluted optimization path despite achieving comparable ﬁnal performance. The equiv- alent ﬁnal simple regret values within each surrogate model family indicate that all ap- proaches converge to similar ultimate performance levels, with the primary distinction lying in their optimization eﬃciency and resource utilization during the search process.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.9,
+    139.9,
+    504.4,
+    657.3
+   ],
+   "w": 1661,
+   "h": 2157,
+   "dpi": 300,
+   "src": "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf",
+   "blank": 0.874
+  }
+ ]
+}

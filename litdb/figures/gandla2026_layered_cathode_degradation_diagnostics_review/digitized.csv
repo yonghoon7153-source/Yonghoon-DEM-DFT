@@ -1,0 +1,30 @@
+# gandla2026_layered_cathode_degradation_diagnostics_review — figure readings (판독) · 2026-10-13
+# ⚠ 이 총설의 그림은 원 논문 그림의 재수록이다 — 값의 주인은 원 논문 (Fig 5h = 참고문헌 [104] · Fig 5i = [50]) 이고 정밀도는 재수록 래스터 (300 dpi) 에 묶인다.
+# Fig 5h (본문 p.13): 패널 크롭 (fig_5.png 안 x 1235–1722 · y 1199–1568 px) 의 축 눈금을 픽셀로 보정 — x: CN 0 → 104.5 px · CN 20 → 451 px (17.32 px/CN) · y: 0.00 → 302 px · 0.20 → 12.5 px (0.05 = 72.4 px).
+#   세 분포가 반투명 채움으로 겹친다. 'envelope' = 그 열에서 가장 위 곡선 (색으로 어느 조성인지 확인) · 'hidden_top' = 위 곡선 아래에서 색이 바뀌는 높이 (겹침 색 전이) — 신뢰도 낮음.
+#   정밀도: CN ±0.5 · frequency ±0.005 (envelope) · ±0.01 (hidden_top). 조성비의 질량/부피 기준은 이 총설에 없다 [미확인].
+# Fig 5i (본문 p.13): 위치 축 눈금 0 µm → 583.5 px · 800 µm → 313 px (2.957 µm/px, 크롭 x 213–1722 · y 1710–2375 px 기준) · 점선 경계 = 526 px (양극/SE) · 281 px (SE/In-6Li). 정밀도 ±5 µm.
+figure,series,quantity,x,value,unit,note
+Fig 5h,NCM:SE 70:30,envelope_frequency,CN 3.0,0.150,-,rising flank
+Fig 5h,NCM:SE 70:30,envelope_frequency,CN 4.0,0.176,-,
+Fig 5h,NCM:SE 70:30,envelope_frequency,CN 4.5,0.177,-,mode plateau CN ~4.2-5.1
+Fig 5h,NCM:SE 70:30,envelope_frequency,CN 5.0,0.177,-,
+Fig 5h,NCM:SE 70:30,hidden_top_frequency,CN 6.5,0.10,-,colour transition (low confidence)
+Fig 5h,NCM:SE 70:30,hidden_top_frequency,CN 7.0,0.085,-,colour transition (low confidence)
+Fig 5h,NCM:SE 70:30,hidden_top_frequency,CN 7.5,0.068,-,colour transition (low confidence)
+Fig 5h,NCM:SE 70:30,tail_end,CN ~12,~0,-,eye reading on 2x zoom
+Fig 5h,NCM:SE 80:20,envelope_frequency,CN 5.5,0.156,-,mode CN ~5.3-5.5 (peak ~0.157)
+Fig 5h,NCM:SE 80:20,envelope_frequency,CN 6.0,0.152,-,
+Fig 5h,NCM:SE 80:20,envelope_frequency,CN 6.5,0.146,-,
+Fig 5h,NCM:SE 80:20,envelope_frequency,CN 7.0,0.140,-,
+Fig 5h,NCM:SE 80:20 (or 85:15),envelope_frequency,CN 8.0,0.115,-,near the 80:20 / 85:15 crossing
+Fig 5h,NCM:SE 80:20,tail_end,CN ~15,~0,-,eye reading on 2x zoom
+Fig 5h,NCM:SE 85:15,hidden_top_frequency,CN 5.0-6.5,0.127,-,broad flat top under the 80:20 envelope (colour transition)
+Fig 5h,NCM:SE 85:15,hidden_top_frequency,CN 7.0,0.122,-,colour transition
+Fig 5h,NCM:SE 85:15,hidden_top_frequency,CN 7.5,0.118,-,colour transition
+Fig 5h,NCM:SE 85:15,envelope_frequency,CN 9.0,0.104,-,85:15 on top from CN ~8.5
+Fig 5h,NCM:SE 85:15,envelope_frequency,CN 10.0,0.081,-,
+Fig 5h,NCM:SE 85:15,tail_end,CN ~17-18,~0,-,eye reading on 2x zoom
+Fig 5i,operando neutron cell,cathode_to_SE_boundary,position,170,um,printed text p.14 says ~180 um
+Fig 5i,operando neutron cell,SE_to_In-6Li_boundary,position,894,um,
+Fig 5i,operando neutron cell,SE_layer_thickness,derived,724,um,894 - 170 (our arithmetic from the two readings)

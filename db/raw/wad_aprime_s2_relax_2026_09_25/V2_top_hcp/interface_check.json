@@ -1,0 +1,39 @@
+{
+ "n_atoms": 20,
+ "n_substrate": 12,
+ "n_ads": 8,
+ "substrate_kind": "metal",
+ "normal_sign_declared_from_init": 1.0,
+ "fixed_policy": "far_half",
+ "fixed_n": 6,
+ "policy_expected_n": 6,
+ "mask_matches_policy": true,
+ "lateral_fixed_n": 8,
+ "z_ref_first_ads_layer_A": 10.853,
+ "n_first_layer_atoms": 8,
+ "penetration_max": {
+  "i": 11,
+  "el": "Ag",
+  "p_A": -3.308
+ },
+ "mixed_substrate_atoms": [],
+ "sub_ads_min_gap_A": 3.305,
+ "bonds_listed": 51,
+ "bonds_out_of_tol": [],
+ "ps4_broken": "해당 없음",
+ "ps4_partner_changed": "해당 없음",
+ "disp_max_A": 0.015,
+ "disp_rms_A": 0.006,
+ "fixed_moved": [],
+ "lateral_moved": [],
+ "flags": [],
+ "thresholds": {
+  "pen_thr_A": 1.5,
+  "bond_tol": 0.15,
+  "first_layer_A": 0.8,
+  "nn_fac": 1.15,
+  "fixed_tol_A": 0.001,
+  "R_PS_A": 2.5
+ },
+ "⛔": "구조 경보만 낸다 — 반응·전하이동 판정 아님 · 원인 분류 아님 · 측방 영상 효과 미측정"
+}

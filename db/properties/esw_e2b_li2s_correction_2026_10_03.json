@@ -1,0 +1,88 @@
+{
+ "schema": "diagnostic_result/v1",
+ "record_kind": "diagnostic",
+ "date": "2026-10-03",
+ "track": "ESW (1저자 = 사용자)",
+ "citable": false,
+ "citable_note": "진단이다. '보정끔' 값은 절대 전압으로 인용하지 않는다 (사전 선언 ④). 원장 문구 변경은 1저자 결정.",
+ "제목": "E2b — 우리 산화 onset 2.256 V 와 문헌 2.01 V 의 0.246 V 차이 분해: MP2020 황 음이온 보정 × 상 제외 (GG 3상)",
+ "입력": "db/inputs/esw_e2b_li2s_2026_10_03/e2b_block_gabia.sh (결과 전 읽는 법 ①–④ 포함)",
+ "실행": "gabia kserver116-27 · /data/apps/miniforge3/envs/uma/bin/python · mp_api ThermoDoc 107 entries (Li-P-S-Cl · GGA_GGA+U) · 2026-10-03 · 사용자 붙여넣기",
+ "결과": {
+  "MP2020_GG제외": {
+   "Li2S": [
+    2.256,
+    "Li2S -> S + 2 Li"
+   ],
+   "comp1": [
+    2.256,
+    "Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li"
+   ],
+   "modelc": [
+    2.256,
+    "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li"
+   ]
+  },
+  "MP2020_제외없음": {
+   "Li2S": [
+    2.14,
+    "Li2S -> 0.25 LiS4 + 1.75 Li"
+   ],
+   "comp1": [
+    2.14,
+    "Li6PS5Cl -> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li"
+   ],
+   "modelc": [
+    2.14,
+    "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li"
+   ]
+  },
+  "보정끔_GG제외": {
+   "Li2S": [
+    2.004,
+    "Li2S -> S + 2 Li"
+   ],
+   "comp1": [
+    2.004,
+    "Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li"
+   ],
+   "modelc": [
+    2.004,
+    "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li"
+   ]
+  },
+  "보정끔_제외없음": {
+   "Li2S": [
+    2.004,
+    "Li2S -> S + 2 Li"
+   ],
+   "comp1": [
+    2.004,
+    "Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li"
+   ],
+   "modelc": [
+    2.004,
+    "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li"
+   ]
+  },
+  "대조": "comp1 (MP2020·GG제외) = 2.256 V → OK (6 월 esw_lis4excluded.json 재현)",
+  "Li2S_보정": "mp-aaaaabsj (GGA) · MP2020 anion correction (S) −0.503 eV/fu"
+ },
+ "읽기_사전선언대로": {
+  "①_대조": "통과 — 해석 진행",
+  "②_onset_=_Li2S": "네 칸 모두 Li2S = comp1 = modelc onset ⇒ '우리 hull 에서 산화 onset = Li2S 산화 전위' 는 보정 · 상 제외 선택과 무관하게 성립 (각 칸 조건부)",
+  "③_분해": {
+   "Δ_보정 (GG제외)": "2.004 − 2.256 = −0.252 V = Li2S 의 S 음이온 보정 −0.503 eV/fu ÷ 2 전자 (차 0.0005 V)",
+   "Δ_LiS4 (MP2020)": "2.140 − 2.256 = −0.116 V (종전 기록 'LiS4 포함 시 2.14' 재현)",
+   "Δ_LiS4 (보정끔)": "0 — 보정을 끄면 LiS4 가 산화 경로에 끼지 않는다"
+  },
+  "④": "보정끔 2.004 V 는 원인 분해용 진단값 — 절대 전압 인용 금지"
+ },
+ "관찰": [
+  "문헌 [Zhu15] Li2S 2.00 · LPSCl 2.01 V · [Schw21] LPSC 2.01 V 는 우리 '보정끔' 2.004 V 와 0.01 V 안에서 맞는다 ⇒ 0.246 V 는 거의 전부 MP2020 황 음이온 보정 한 손잡이로 설명된다 (문헌 hull 에 같은 보정이 없었다는 것과 정합 — 원전의 보정 체계는 직접 확인 안 함).",
+  "MP2020 음이온 보정은 실험 생성엔탈피에 맞춘 보정이다 — 그래서 보정을 켠 2.256 V 쪽이 우리 기준계(MP2020)의 값이다. 실험 Li2S 열화학과의 직접 대조는 하지 않았다 (원전 확인 필요).",
+  "LiS4 는 보정을 켰을 때만 산화 경로에 낀다 — 다황화물의 S 원자마다 S²⁻ 보정이 붙어 과안정화됐을 가능성 (해석 후보 · 검증 안 함). GG 3상 제외(Gil-González 2022)의 근거를 보강하는 관찰이다."
+ ],
+ "⛔_못_하는_것": "2015 년 MP 판본 에너지를 되살리지 않았다 — '보정끔' 은 MP2020 음이온 보정의 몫만 뗀다. 문헌 원전의 보정 체계는 확인하지 않았다. 0 K · 엔트로피 없음.",
+ "결정_대기": "citation_hazards HZ-esw-reduction-limit-label 의 '산화 한 변 0.246 V 미해결' 문구를 이 결과로 갱신할지는 1저자(사용자) 결정"
+}

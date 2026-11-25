@@ -1,0 +1,562 @@
+{
+ "property": "sei_electronic_class",
+ "purpose": "상마다 **금속인가 절연체인가**를 한 곳에서 선언한다. NEB 전하 규약·갭 단계 실행 여부·회수기 차단 조건이 전부 이 값에서 갈린다. 도구마다 따로 판단하면 서로 어긋난다.",
+ "why": "우리 SEI 파이프라인은 **넓은 갭 절연체 전용**으로 설계돼 있다. Li₃Nd 같은 금속에 그대로 돌리면 (a) fixed-occ 갭 단계가 의미 없는 숫자를 내고 (b) tot_charge=−1 + jellium 이 물리적으로 틀리고 (c) 회수기가 옳은 계산을 '옛 규약'이라며 막는다. 2026-08-11 Li₃Nd 착수 결정으로 분기가 필요해졌다.",
+ "classes": {
+  "insulator": "갭이 열려 있다. Li 공공은 원자가띠에 정공을 만든다 → V_Li⁻ (tot_charge = −1) + jellium. 갭 단계 유효.",
+  "metal": "E_F 에 상태가 있다. 공공을 만들어도 전도전자가 스스로 가려준다 → **중성 공공 (tot_charge = 0)** + 금속용 smearing. ⛔ 갭 단계는 NOT_APPLICABLE — 숫자가 나와도 db 갭 표에 넣지 않는다.",
+  "undetermined": "우리 계산으로는 아직 판정할 수 없다. ⛔ **금속 선언이 아니다.** NEB·갭 **모두** 막는다 (갭은 --diagnose_undetermined 로만 진단 생성). DOS/PDOS 는 돈다."
+ },
+ "evidence_levels": {
+  "measured": "우리 fixed-occ nscf 고유값으로 갭이 실측됐다 (db/properties/sei_electronic.json).",
+  "declared": "문헌·조성 논거로 선언만 했다. **DOS/PDOS 로 E_F 상태를 확인하기 전에는 NEB 을 걸지 않는다.**",
+  "blocked": "방법 실패로 판정 불가."
+ },
+ "results": {
+  "li2o": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 4.986,
+   "source": "sei_electronic.json:li2o_mp-1960"
+  },
+  "li2s": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 3.4379,
+   "source": "sei_electronic.json:li2s_mp-1153"
+  },
+  "licl": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 6.2603,
+   "source": "sei_electronic.json:licl_mp-22905"
+  },
+  "li3p": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 0.7092,
+   "source": "sei_electronic.json:li3p_mp-736",
+   "note": "좁은 갭(0.709 eV)이지만 열려 있다 — 절연체 규약을 쓴다. SEI 6종 중 전자 절연이 가장 나쁜 상이다."
+  },
+  "li3po4g": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 5.8211,
+   "source": "sei_electronic.json:li3po4g_mp-2878"
+  },
+  "lindo2": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 3.698,
+   "basis": "LiNdO₂ 는 갭이 열린 산화물 — MP frozen-4f 참조값 기준 (db/properties/nd_gap_reference_mp.json).",
+   "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. Nd 4f 를 원자가에 둔 PP (z_valence=14) 로는 E_F 에 평평한 f 다중항이 얹혀 갭이 정의되지 않는다. 우리 실측 −0.0284 eV 는 **금속성이 아니라 방법의 실패**다 (E_F ±0.5 eV DOS 의 95–96% 가 Nd_f).",
+   "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+   "measured_2026_08_11": {
+    "gap_eV": 3.698,
+    "mp_reference_eV": 4.212,
+    "delta_pct": -12.2,
+    "source": "/data/work/runs/sei_dft_frozen4f (fixed-occ nscf · frozen-4f PP · zval 버그 수정판 nbnd)",
+    "note": "MP 대비 −12.2% — 코드/PP 계열 차이 범위. ⚠ Nd₂O₃(3.948)와 **순위가 MP 와 뒤집힌다**(MP: LiNdO₂ 4.212 > Nd₂O₃ 3.812) — 두 값 차 0.25 eV 는 교차코드 산포 안이라 판정엔 영향 없으나 인용 시 명시할 것."
+   }
+  },
+  "li3nd": {
+   "class": "metal",
+   "evidence": "measured",
+   "gap_eV": null,
+   "material_id": "mp-976264",
+   "spacegroup": "Fm-3m",
+   "e_above_hull_eV_per_atom": 0.197,
+   "theoretical": true,
+   "basis": "Li₃Nd 는 Li–희토류 금속간화합물이다 — 두 성분 모두 금속이고 전기음성도 차가 작아 이온 갭이 열릴 이유가 없다. Xu 2026 §2.6 이 주장하는 '전자 전도성 계면상' 이라는 것 자체가 금속이라는 주장이다.",
+   "blocker": "Nd frozen-4f PP (todo #27) — LiNdO₂ 와 **같은 PP 를 공유한다**. 하나 확보하면 둘 다 열린다.",
+   "cite_with": "⚠ 장벽을 단독으로 내면 우리 P2 판정(Li–Nd 안정 ordered 상 0개, hull +0.197 eV/atom · theoretical)과 모순돼 보인다. 반드시 '설령 동역학적으로 생겼다 치더라도' 조건절과 hull 거리를 같이 쓴다.",
+   "measured_2026_08_11": {
+    "N_EF_states_per_eV": 5.324,
+    "E_F_eV": 4.168,
+    "N_EF_pm0p5eV_avg": 4.374,
+    "source": "/data/work/runs/sei_dft_frozen4f/li3nd_mp-976264 (vc-relax → nscf → dos.x)",
+    "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11 · 4f-in-core · sha256 18a3835e…35101)",
+    "pdos_channels": "Li s/s/p ×3 · Nd s/s/p/p/d — **Nd_f 채널 부재는 방법의 정의**(4f core)",
+    "reading": "E_F 에 상태가 뚜렷하다(5.3 states/eV — 경계값이 아니다). **itinerant 상태(Li-s/Nd-spd)만으로 금속**이므로, 4f 를 더해도 이 방향의 결론은 뒤집히지 않는다. 반대로 '갭이 열렸다' 는 결론은 이 방법으로는 낼 수 없었을 것이다 — 그 비대칭이 이 판정을 안전하게 만든다.",
+    "remaining_robustness": "⚠ NEB 착수 전 확인 항목(Codex): degauss 0.02→0.01→0.005 Ry 사다리에서 N(E_F) 유지 · k 조밀화에서 유지. DOS 는 6·6·6 nosym + degauss 0.007 로 이미 조밀한 편이다."
+   },
+   "neb_gate": "열림 — metal·measured. 남은 선행: NEB 스택 재리뷰 확인 + degauss/k 사다리.",
+   "campaign_priority_2026_09_16": {
+    "필요성": "하",
+    "사유": "1저자 2026-09-16 — 논문 방향이 **양극 CEI** 로 옮겨갔다. Li₃Nd 음극계면 트랙은 우선순위를 내린다.",
+    "⛔_닫힌_것이_아니다": "**미결**이다. 해소돼서 내려가는 게 아니라 논문이 다른 것을 묻게 돼서 내려간다. ⏭-4 P0-2 control 은 r3 미착수이고 *\"같은 Nd 재배열이 공공 없이도 나오나\"* 는 아직 답이 없다. ⏭-4b 선행검사 체인은 재기동 안 됐고, cc333 은 08-27 중단(폐기 아님)이다.",
+    "⚠_neb_gate_와_헷갈리지_말_것": "위 `neb_gate: 열림` 은 **방법상 막을 이유가 없다**는 뜻이지 **하라는 뜻이 아니다**. 착수 여부는 이 필드가 말한다.",
+    "과학적_판정은_안_바뀐다": "class=metal(measured) · hull +0.197 eV/atom · `cite_with` 조건절 전부 그대로다. 바뀐 것은 **다음에 무엇을 하느냐** 뿐이다.",
+    "장부": "kb/open_items.md ⏭-NOW-k"
+   }
+  },
+  "nd2o3": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 3.9479,
+   "method_id": "gap-fixedocc-frozen4f-v1",
+   "measured_2026_08_11": {
+    "vbm": 9.8839,
+    "cbm": 13.8318,
+    "gap_eV": 3.9479,
+    "source_dir": "/data/work/runs/sei_dft_frozen4f/nd2o3_mp-2763",
+    "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, 4f-in-core, sha256 18a3835e…35101)",
+    "spin": "없음(불필요 — 4f 가 core)",
+    "hubbard_u": 0.0,
+    "wall_time": "체인 전체 ~3분 (스핀·U 부재의 실질 이점)",
+    "mp_check": "MP mp-2763(같은 구조 핀) 3.812 eV vs 우리 3.948 — +0.136 eV(3.6%), 합격"
+   },
+   "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −6.46 eV 는 ↑/↓ 점유수 불일치까지 겹친 값이라 더 무의미하다).",
+   "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+   "measured_2026_08_11_robustness": "nbnd 21(여유 0밴드) → 35(여유 15밴드) 재실행에서 **동일값 3.948 eV** — 여유-0밴드 우려 해소, 값 확정.",
+   "polymorph_warning_2026_09_17": "⛔ 위 measured 3.9479 eV 는 **P-3m1 (5원자, mp-2763)** 값이다. §C 표적은 **Ia-3 (40원자, mp-aaaaabof ≈ mp-1045, E_hull 0.0)** 로 **다른 다형**이다. 레지스트리 키가 조성뿐이라 두 구조가 같은 칸을 쓴다 — 갭 게이트에는 문제가 없지만 값을 인용할 때 헷갈린다. §C 는 바닥상(Ia-3)으로 다시 돌리고, 나오면 두 다형을 나눠 적을 것 (MP 쪽 참조: P-3m1 3.812 / Ia-3 3.708 eV).",
+   "sectionC_target_2026_09_17": {
+    "⚠": "이 칸의 measured 3.9479 는 **P-3m1(5원자)** 값이다 — §C 표적이 아니다.",
+    "our_target": "Ia-3 (40원자, mp-aaaaabof)",
+    "mp_reference_eV": 3.708,
+    "mp_reference": "mp-1045 Ia-3 (E_hull 0.0)",
+    "source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "할_일": "Ia-3 로 우리 nscf 를 돌려 두 다형을 나눠 적는다."
+   }
+  },
+  "nd2s3": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 0.77,
+   "basis": "Nd₂S₃ 는 좁은 갭 절연체 — MP frozen-4f 참조 0.760 eV (db/properties/nd_gap_reference_mp.json).",
+   "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −0.0213 eV).",
+   "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+   "measured_2026_08_11": {
+    "gap_eV": 0.77,
+    "mp_reference_eV": 0.76,
+    "delta_pct": 1.3,
+    "source": "/data/work/runs/sei_dft_frozen4f (fixed-occ nscf · frozen-4f PP · zval 버그 수정판 nbnd)",
+    "note": "MP 대비 +1.3% — 좁은 갭(가장 어려운 시험)이 거의 정확히 재현됐다."
+   }
+  },
+  "li_metal": {
+   "class": "metal",
+   "evidence": "measured",
+   "gap_eV": null,
+   "source": "우리 DOS 실측 (~/work/runs/sei_dft/li_metal_bcc). ⚠ 갭 단계(03)는 금속이라 NOT_APPLICABLE 로 건너뛰었다 — 정상이다.",
+   "why_metal": "알칼리 금속 단체. 공공을 만들어도 전도전자가 가려주므로 **중성 공공**(tot_charge 0) + 금속 smearing 을 쓰고 jellium 을 쓰지 않는다.",
+   "finite_size_note": "하전 결함의 1/L 이미지 항이 없어 절연체 상들보다 셀 크기에 훨씬 둔감하다. 게이트 통과 최소단위는 관용셀 3×3×3 (54원자 · λ₁ 10.53 Å).",
+   "registered": "2026-09-01 (1저자 요청 — 음극 본체 기준선)",
+   "E_F_eV": 0.9437,
+   "dos_at_EF": {
+    "window_eV": 0.2,
+    "n_points": 40,
+    "min": 0.4793,
+    "mean": 1.0648,
+    "unit": "states/eV/cell",
+    "판정": "E_F 에서 DOS 가 0 이 아니다 → 금속. 절연체면 이 창이 0 이다."
+   },
+   "measured_at": "2026-09-01 · kgy · QE 7.4.1(CPU) · PBE · vc-relax→scf→nscf(dos)→dos.x→projwfc.x"
+  },
+  "li_metal_bcc": {
+   "class": "metal",
+   "evidence": "measured",
+   "gap_eV": null,
+   "source": "우리 DOS 실측 (~/work/runs/sei_dft/li_metal_bcc). ⚠ 갭 단계(03)는 금속이라 NOT_APPLICABLE 로 건너뛰었다 — 정상이다.",
+   "why_metal": "알칼리 금속 단체. 공공을 만들어도 전도전자가 가려주므로 **중성 공공**(tot_charge 0) + 금속 smearing 을 쓰고 jellium 을 쓰지 않는다.",
+   "finite_size_note": "하전 결함의 1/L 이미지 항이 없어 절연체 상들보다 셀 크기에 훨씬 둔감하다. 게이트 통과 최소단위는 관용셀 3×3×3 (54원자 · λ₁ 10.53 Å).",
+   "registered": "2026-09-01 (1저자 요청 — 음극 본체 기준선)",
+   "⚠_별칭": "`li_metal` 과 같은 상이다. build_dft_inputs 는 파일명에서 태그를 만들어 `li_metal_bcc` 가 되고, build_neb_inputs 의 TARGETS 키는 `li_metal` 이다 — 두 도구의 태그 규약이 달라서 둘 다 등록한다 (2026-09-01 실측: 하나만 넣었더니 갭 단계가 '레지스트리 미등록' 으로 막혔다).",
+   "E_F_eV": 0.9437,
+   "dos_at_EF": {
+    "window_eV": 0.2,
+    "n_points": 40,
+    "min": 0.4793,
+    "mean": 1.0648,
+    "unit": "states/eV/cell",
+    "판정": "E_F 에서 DOS 가 0 이 아니다 → 금속. 절연체면 이 창이 0 이다."
+   },
+   "measured_at": "2026-09-01 · kgy · QE 7.4.1(CPU) · PBE · vc-relax→scf→nscf(dos)→dos.x→projwfc.x"
+  },
+  "ndpo4": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "모나자이트 오르토인산염 — PO₄³⁻ 는 닫힌 껍질이고 frozen-4f Nd³⁺ 는 원자가에 홀전자가 없다.",
+   "declared_2026_09_17": {
+    "formula": "NdPO4",
+    "material_id": "mp-aaaaafhw",
+    "n_atoms": 24,
+    "spacegroup": "P2_1/c",
+    "structure": "db/structures/cei_gap_targets/NdPO4_mp-aaaaafhw.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.679,
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "mp_reference": "mp-3584 P2_1/c (E_hull 0.0) — 우리 표적 공간군과 일치"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "ndcl3": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "이온성 삼염화물 — Cl⁻ 닫힌 껍질.",
+   "declared_2026_09_17": {
+    "formula": "NdCl3",
+    "material_id": "mp-aaaabihr",
+    "n_atoms": 8,
+    "spacegroup": "P6_3/m",
+    "structure": "db/structures/cei_gap_targets/NdCl3_mp-aaaabihr.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 4.3,
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "mp_reference": "mp-23183 P6_3/m (E_hull 0.0) — 우리 표적 공간군과 일치"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "nd2so43": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "황산염 — SO₄²⁻ 닫힌 껍질. S 는 +6 으로 완전산화라 S 3p 정공이 없다.",
+   "declared_2026_09_17": {
+    "formula": "Nd2(SO4)3",
+    "material_id": "mp-aaaabrhp",
+    "n_atoms": 34,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/cei_gap_targets/Nd2SO43_mp-aaaabrhp.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.433,
+    "mp_reference": "mp-29265 C2/c (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "ndpo33": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "메타인산염 사슬 — PO₃⁻ 닫힌 껍질.",
+   "declared_2026_09_17": {
+    "formula": "Nd(PO3)3",
+    "material_id": "mp-aaaaaktk",
+    "n_atoms": 26,
+    "spacegroup": "C222_1",
+    "structure": "db/structures/cei_gap_targets/NdPO33_mp-aaaaaktk.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.487,
+    "mp_reference": "mp-7264 C222_1 (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "nd3po7": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "산화물-인산염 혼합 — O²⁻·PO₄³⁻ 둘 다 닫힌 껍질.",
+   "declared_2026_09_17": {
+    "formula": "Nd3PO7",
+    "material_id": "mp-aaacqmbf",
+    "n_atoms": 66,
+    "spacegroup": "Cm",
+    "structure": "db/structures/cei_gap_targets/Nd3PO7_mp-aaacqmbf.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 4.284,
+    "mp_reference": "mp-1203311 Cm (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "ndp5o14": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "초인산염(P 과잉) — 사슬형 인산 골격, 닫힌 껍질.",
+   "declared_2026_09_17": {
+    "formula": "NdP5O14",
+    "material_id": "mp-aaabfxkr",
+    "n_atoms": 80,
+    "spacegroup": "Pmna",
+    "structure": "db/structures/cei_gap_targets/NdP5O14_mp-aaabfxkr.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 6.336,
+    "mp_reference": "mp-560681 Pmna (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "lindpo34": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Li 함유 메타인산염 — Li⁺·Nd³⁺·PO₃⁻ 전부 닫힌 껍질.",
+   "declared_2026_09_17": {
+    "formula": "LiNd(PO3)4",
+    "material_id": "mp-aaaabbrr",
+    "n_atoms": 36,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/cei_gap_targets/LiNdPO34_mp-aaaabbrr.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.979,
+    "mp_reference": "mp-18711 C2/c (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "⚠_다형_선택": "같은 공간군 다형이 2개 — E_hull 최소를 골랐다"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "ndps4": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "티오인산염 — PS₄³⁻ 닫힌 껍질. ⚠ 황화물이라 이 10종 중 갭이 제일 좁을 후보다.",
+   "declared_2026_09_17": {
+    "formula": "NdPS4",
+    "material_id": "mp-aaaaafmc",
+    "n_atoms": 48,
+    "spacegroup": "I4_1/acd",
+    "structure": "db/structures/cei_gap_targets/NdPS4_mp-aaaaafmc.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 2.252,
+    "mp_reference": "mp-3694 I4_1/acd (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "p2o5": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "분자성 산화물 — Nd 없는 **판별용 대조**. P 는 +5 완전산화.",
+   "declared_2026_09_17": {
+    "formula": "P2O5",
+    "material_id": "mp-aaaaadqi",
+    "n_atoms": 14,
+    "spacegroup": "Fdd2",
+    "structure": "db/structures/cei_gap_targets/P2O5_mp-aaaaadqi.cif",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.202,
+    "mp_reference": "mp-2452 Fdd2 (E_hull 0.0108) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "⚠_MP_바닥상_아님": "우리 표적 Fdd2 는 MP 바닥상이 아니다 (바닥상 Pnma 4.853 eV, 우리 쪽 E_hull +0.0108 eV/atom = 11 meV/atom). 차가 작아 MP 만으로 어느 쪽이 진짜 바닥상인지 못 가른다 — 재현 판정은 **같은 공간군 값**으로만 한다."
+   },
+   "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "li3po4": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 5.9121,
+   "source": "sei_electronic.json:li3po4_mp-13725",
+   "note": "β (Pmn2_1). 2026-10-27 등록 — 08 SEI 갭 체인 (GBRV USPP 세트 · build_dft_inputs) 이 잰 값이 sei_electronic.json 에 있었는데 레지스트리에 빠져 있었다 (08-11 미등록 차단 게이트 뒤 갭 단계가 막혔던 태그). CEI 생성물 갭 카드 개정 1 이 이 상을 09-19 PAW psl 세트로 다시 잰다."
+  },
+  "li2so4": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "닫힌 껍질 황산염 — 비자성",
+   "declared_2026_10_27": {
+    "formula": "Li2SO4",
+    "material_id": "mp-aaaaagtg",
+    "n_atoms": 28,
+    "spacegroup": "P2_1/c",
+    "structure": "db/structures/cei_gap_tm/Li2SO4_mp-aaaaagtg.vasp",
+    "mp_gap_eV": 6.0232,
+    "mp_gap_source": "aaadseub = GGA NSCF Uniform → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "scl": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "S₂Cl₂ 분자결정 — 닫힌 껍질",
+   "declared_2026_10_27": {
+    "formula": "SCl",
+    "material_id": "mp-aaaabpoq",
+    "n_atoms": 16,
+    "spacegroup": "Fdd2",
+    "structure": "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.vasp",
+    "mp_gap_eV": 2.8804,
+    "mp_gap_source": "aaafbokz = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "so2": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "SO₂ 분자결정 — 닫힌 껍질",
+   "declared_2026_10_27": {
+    "formula": "SO2",
+    "material_id": "mp-aaaabpak",
+    "n_atoms": 6,
+    "spacegroup": "Aea2",
+    "structure": "db/structures/cei_gap_tm/SO2_mp-aaaabpak.vasp",
+    "mp_gap_eV": 3.1539,
+    "mp_gap_source": "aaafbyhm = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "cos2": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "황철석형 Co 황화물 — MP GGA 갭 0 (실험으로도 금속)",
+   "declared_2026_10_27": {
+    "formula": "CoS2",
+    "material_id": "mp-aaaaadbq",
+    "n_atoms": 12,
+    "spacegroup": "Pa-3",
+    "structure": "db/structures/cei_gap_tm/CoS2_mp-aaaaadbq.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafcbbr = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "nis2": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "황철석형 Ni 황화물 — MP GGA 갭 0 (실험은 Mott 반도체 — PBE 상태의 금속이다)",
+   "declared_2026_10_27": {
+    "formula": "NiS2",
+    "material_id": "mp-aaaaadju",
+    "n_atoms": 12,
+    "spacegroup": "Pa-3",
+    "structure": "db/structures/cei_gap_tm/NiS2_mp-aaaaadju.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafwxve = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "nip2o6": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Ni²⁺ 메타인산염 — MP GGA+U FM 갭 1.486",
+   "declared_2026_10_27": {
+    "formula": "NiP2O6",
+    "material_id": "mp-aaaabchz",
+    "n_atoms": 36,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/cei_gap_tm/NiP2O6_mp-aaaabchz.vasp",
+    "mp_gap_eV": 1.4863,
+    "mp_gap_source": "aaafbhma = GGA+U NSCF Line → GGA+U",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "mnp2o6": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Mn²⁺ 메타인산염 — MP 갭 2.163 (GGA · U 없음 출처)",
+   "declared_2026_10_27": {
+    "formula": "MnP2O6",
+    "material_id": "mp-aaabevzn",
+    "n_atoms": 36,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/cei_gap_tm/MnP2O6_mp-aaabevzn.vasp",
+    "mp_gap_eV": 2.1631,
+    "mp_gap_source": "aaabvxoc = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "mns2": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "Pnnm MnS₂ (MP '관측' · 저스핀 FM) — MP GGA 갭 0",
+   "declared_2026_10_27": {
+    "formula": "MnS2",
+    "material_id": "mp-aaacfzcu",
+    "n_atoms": 6,
+    "spacegroup": "Pnnm",
+    "structure": "db/structures/cei_gap_tm/MnS2_mp-aaacfzcu.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafwwvc = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "ni3s4": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "스피넬 Ni₃S₄ — MP GGA 갭 0 (실험으로도 금속)",
+   "declared_2026_10_27": {
+    "formula": "Ni3S4",
+    "material_id": "mp-aaaaabok",
+    "n_atoms": 14,
+    "spacegroup": "Fd-3m",
+    "structure": "db/structures/cei_gap_tm/Ni3S4_mp-aaaaabok.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafimzz = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "li2zro3": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Li⁺ · Zr⁴⁺ (d⁰) · O²⁻ 닫힌 껍질 산화물.",
+   "declared_2026_11_16": {
+    "formula": "Li2ZrO3",
+    "material_id": "mp-aaaaagdw",
+    "n_atoms": 12,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/hyeokju_Li2ZrO3_mp-aaaaagdw.vasp",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "[혁주] 2a (D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap). 이 선언이 여는 것은 03 (fixed-occ 갭) 입력 생성뿐이다."
+   }
+  },
+  "zro2": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Zr⁴⁺ (d⁰) · O²⁻ 닫힌 껍질 산화물.",
+   "declared_2026_11_17": {
+    "formula": "ZrO2",
+    "material_id": "mp-aaaaaefy",
+    "n_atoms": 12,
+    "spacegroup": "P2_1/c",
+    "structure": "db/structures/hyeokju_ZrO2_mp-aaaaaefy.vasp",
+    "mp_reference_eV": 3.5322,
+    "mp_reference": "MP band_gap (es_calc_type 'GGA NSCF Line' · 관측 상 · E_hull 0) — 기록만 · 우리 db 갭 표에 안 들어간다",
+    "mp_reference_source": "db/properties/hyeokju_lzo_s2a_zro2_structures_provenance_2026_11_17.json",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "[혁주] 2a 개정 2 (D-2026-11-17-hyeokju-lzo-stage2a-amend2-zro2 · 카드 B3). 이 선언이 여는 것은 03 (fixed-occ 갭) 입력 생성뿐이다."
+   }
+  }
+ },
+ "provenance": {
+  "created": "2026-08-11",
+  "reason": "Codex 착수전 검토 + Li₃Nd 우선 착수 결정 (저자 요청). kb/methodology/li3nd_metal_protocol_note_2026_08_11.md §5 의 코드 수정 목록 1번.",
+  "consumers": [
+   "tools/sei/electronic_class.py (로더)",
+   "tools/sei/build_neb_inputs.py (전하 규약·smearing 분기 · protocol_hash)",
+   "tools/sei/collect_neb.py (차단 조건 분기)",
+   "tools/sei/build_dft_inputs.py (갭 단계 실행 여부)",
+   "tools/sei/extract_gap.py (db 등재 여부)",
+   "tools/sei/collect_results.py (DOS/PDOS 에너지 영점 — gap=None 이면 E_F 기준)",
+   "tools/sei/run_sei_dft.sh (03 입력 부재 처리)"
+  ]
+ },
+ "_history": {
+  "2026-09-01": "li_metal / li_metal_bcc 를 declared → **measured** 로 승격. E_F 0.9437 eV 에서 DOS 0.48–1.06 states/eV (0 이 아님). 이 규칙(‘DOS 로 E_F 상태를 확인하기 전엔 NEB 을 안 건다’)은 Li3Nd 함정에서 나온 것이라 Li 금속처럼 자명해 보여도 예외를 두지 않았고, 실측 1잡으로 닫았다.",
+  "2026-09-17": "§C 판별종 9상 등록 (insulator/declared) + nd2o3 다형 경고. 선언의 범위는 **03 갭 입력 생성 게이트**이지 갭 값이 아니다 — 미등록이면 build_dft_inputs 가 03 을 아예 안 만들어 캠페인이 조용히 비어 버린다. evidence=declared 를 고른 이유: 우리 nscf 를 아직 안 돌렸다. 7상은 MP 참조갭조차 없어 must_confirm 으로 남겼다.",
+  "2026-09-17-b": "§C 9상의 must_confirm 해소 — MP 참조갭을 **공간군까지 맞춰** 채웠다 (db/properties/cei_gap_targets_matched_2026_09_17.json). ⚠ 조성만 맞추면 안 된다: P₂O₅ 는 MP 바닥상이 Pnma(4.853)인데 우리 표적은 Fdd2(5.202) 다. Nd₂O₃ 도 같은 형태(P-3m1 실측 vs Ia-3 표적). 이 값들은 MP PBE 이고 **우리 db 갭 표에 안 들어간다** — 검증 표적이다.",
+  "2026-10-27": "CEI 생성물 11 종 갭 카드 (D-2026-10-27-cei-product-gaps) — 9 종 declared 등록 (MP 갭 > 0 → insulator: li2so4 · scl · so2 · nip2o6 · mnp2o6 / = 0 → metal: cos2 · nis2 · mns2 · ni3s4) · li3po4 (β) 를 measured 로 등록 (sei_electronic.json 값이 있었는데 레지스트리에 빠져 있었다). 금속 선언 넷은 03 을 안 만들고 04 DOS 로 확인한다 (R3: E_F ± 0.05 eV 상태 0 이면 절연체로 다시 등록하고 03 만).",
+  "2026-11-16": "li2zro3 declared insulator ([혁주] 2a 갭 단계를 여는 게이트 · 값 주장 아님)",
+  "2026-11-17": "zro2 declared insulator ([혁주] 2a 개정 2 B3 · ZrO₂ 띠틈 단계를 여는 게이트 · 값 주장 아님). li2zro3 는 11-17 우리 nscf 값 (3.9345 eV · 2a 카드 결과_2026_11_17) 이 나왔지만 declared 로 둔다 — 10-27 CEI 생성물 선례 (값은 카드 · 원자료에 · sei_electronic.json 등재는 extract_gap 경로)"
+ }
+}

@@ -1,0 +1,484 @@
+figure,panel,series,quantity,value,unit,note
+7.14,a (Δγ 8 J/m²),20 kPa,peak vertical stress,19.69,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),20 kPa,vertical strain at peak,0.2444,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),20 kPa,vertical strain at 5 kPa on unloading,0.2433,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),20 kPa,vertical strain after unloading (stress back to ~0),0.2369,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),20 kPa,strain recovered on unloading (peak - unloaded),0.007457,-,card arithmetic from the two values above
+7.14,a (Δγ 8 J/m²),40 kPa,peak vertical stress,39.97,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),40 kPa,vertical strain at peak,0.2923,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),40 kPa,vertical strain at 5 kPa on unloading,0.288,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),40 kPa,vertical strain after unloading (stress back to ~0),0.2822,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),40 kPa,strain recovered on unloading (peak - unloaded),0.0101,-,card arithmetic from the two values above
+7.14,a (Δγ 8 J/m²),60 kPa,peak vertical stress,59.66,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),60 kPa,vertical strain at peak,0.3217,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),60 kPa,vertical strain at 5 kPa on unloading,0.3157,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),60 kPa,vertical strain after unloading (stress back to ~0),0.3097,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),60 kPa,strain recovered on unloading (peak - unloaded),0.01199,-,card arithmetic from the two values above
+7.14,a (Δγ 8 J/m²),80 kPa,peak vertical stress,79.91,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),80 kPa,vertical strain at peak,0.3445,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),80 kPa,vertical strain at 5 kPa on unloading,0.3372,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),80 kPa,vertical strain after unloading (stress back to ~0),0.3317,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),80 kPa,strain recovered on unloading (peak - unloaded),0.01274,-,card arithmetic from the two values above
+7.14,a (Δγ 8 J/m²),100 kPa,peak vertical stress,99.66,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),100 kPa,vertical strain at peak,0.3635,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),100 kPa,vertical strain at 5 kPa on unloading,0.3557,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),100 kPa,vertical strain after unloading (stress back to ~0),0.3505,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,a (Δγ 8 J/m²),100 kPa,strain recovered on unloading (peak - unloaded),0.01303,-,card arithmetic from the two values above
+7.14,b (Δγ 23.5 J/m²),20 kPa,peak vertical stress,19.69,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),20 kPa,vertical strain at peak,0.2263,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),20 kPa,vertical strain at 5 kPa on unloading,0.2237,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),20 kPa,vertical strain after unloading (stress back to ~0),0.2114,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),20 kPa,strain recovered on unloading (peak - unloaded),0.01491,-,card arithmetic from the two values above
+7.14,b (Δγ 23.5 J/m²),40 kPa,peak vertical stress,39.69,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),40 kPa,vertical strain at peak,0.284,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),40 kPa,vertical strain at 5 kPa on unloading,0.2762,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),40 kPa,vertical strain after unloading (stress back to ~0),0.2668,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),40 kPa,strain recovered on unloading (peak - unloaded),0.01727,-,card arithmetic from the two values above
+7.14,b (Δγ 23.5 J/m²),60 kPa,peak vertical stress,60.05,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),60 kPa,vertical strain at peak,0.3213,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),60 kPa,vertical strain at 5 kPa on unloading,0.3115,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),60 kPa,vertical strain after unloading (stress back to ~0),0.3034,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),60 kPa,strain recovered on unloading (peak - unloaded),0.01794,-,card arithmetic from the two values above
+7.14,b (Δγ 23.5 J/m²),80 kPa,peak vertical stress,79.74,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),80 kPa,vertical strain at peak,0.3487,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),80 kPa,vertical strain at 5 kPa on unloading,0.3384,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),80 kPa,vertical strain after unloading (stress back to ~0),0.3308,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),80 kPa,strain recovered on unloading (peak - unloaded),0.01794,-,card arithmetic from the two values above
+7.14,b (Δγ 23.5 J/m²),100 kPa,peak vertical stress,100.2,kPa,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),100 kPa,vertical strain at peak,0.3709,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),100 kPa,vertical strain at 5 kPa on unloading,0.3611,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),100 kPa,vertical strain after unloading (stress back to ~0),0.3539,-,axis residual strain 4e-05 · stress 0.014 kPa
+7.14,b (Δγ 23.5 J/m²),100 kPa,strain recovered on unloading (peak - unloaded),0.01699,-,card arithmetic from the two values above
+6.4,a,G 2.5E06 Pa,peak vertical stress,100.1,kPa,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 2.5E06 Pa,vertical strain at peak,0.3808,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 2.5E06 Pa,vertical strain at 5 kPa on unloading,0.3654,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 2.5E06 Pa,vertical strain after unloading (stress back to ~0),0.3502,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 2.5E06 Pa,strain recovered on unloading (peak - unloaded),0.0306,-,card arithmetic from the two values above
+6.4,a,G 5E06 Pa,peak vertical stress,100.9,kPa,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 5E06 Pa,vertical strain at peak,0.3454,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 5E06 Pa,vertical strain at 5 kPa on unloading,0.334,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 5E06 Pa,vertical strain after unloading (stress back to ~0),0.3253,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 5E06 Pa,strain recovered on unloading (peak - unloaded),0.02016,-,card arithmetic from the two values above
+6.4,a,G 7.5E06 Pa,peak vertical stress,100,kPa,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 7.5E06 Pa,vertical strain at peak,0.3192,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 7.5E06 Pa,vertical strain at 5 kPa on unloading,0.3097,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 7.5E06 Pa,vertical strain after unloading (stress back to ~0),0.3028,-,axis residual strain 6e-05 · stress 0.016 kPa
+6.4,a,G 7.5E06 Pa,strain recovered on unloading (peak - unloaded),0.01632,-,card arithmetic from the two values above
+6.7,-,K2 = 10K1,peak vertical stress,101,kPa,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 10K1,vertical strain at peak,0.2072,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 10K1,vertical strain at 5 kPa on unloading,0.2018,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 10K1,vertical strain after unloading (stress back to ~0),0.1985,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 10K1,strain recovered on unloading (peak - unloaded),0.008732,-,card arithmetic from the two values above
+6.7,-,K2 = 25K1,peak vertical stress,100,kPa,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 25K1,vertical strain at peak,0.2076,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 25K1,vertical strain at 5 kPa on unloading,0.2039,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 25K1,vertical strain after unloading (stress back to ~0),0.2008,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 25K1,strain recovered on unloading (peak - unloaded),0.006799,-,card arithmetic from the two values above
+6.7,-,K2 = 50K1,peak vertical stress,101.5,kPa,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 50K1,vertical strain at peak,0.2129,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 50K1,vertical strain at 5 kPa on unloading,0.2101,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 50K1,vertical strain after unloading (stress back to ~0),0.2076,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.7,-,K2 = 50K1,strain recovered on unloading (peak - unloaded),0.005333,-,card arithmetic from the two values above
+6.12,a spherical,Kt 1,peak vertical stress,100.1,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 1,vertical strain at peak,0.3074,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 1,vertical strain at 5 kPa on unloading,0.2943,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 1,vertical strain after unloading (stress back to ~0),0.2897,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 1,strain recovered on unloading (peak - unloaded),0.0177,-,card arithmetic from the two values above
+6.12,a spherical,Kt 0.75,peak vertical stress,100,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.75,vertical strain at peak,0.3088,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.75,vertical strain at 5 kPa on unloading,0.2936,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.75,vertical strain after unloading (stress back to ~0),0.289,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.75,strain recovered on unloading (peak - unloaded),0.01973,-,card arithmetic from the two values above
+6.12,a spherical,Kt 0.5,peak vertical stress,100.3,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.5,vertical strain at peak,0.3115,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.5,vertical strain at 5 kPa on unloading,0.2945,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.5,vertical strain after unloading (stress back to ~0),0.2885,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.5,strain recovered on unloading (peak - unloaded),0.02304,-,card arithmetic from the two values above
+6.12,a spherical,Kt 0.25,peak vertical stress,100.4,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.25,vertical strain at peak,0.3185,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.25,vertical strain at 5 kPa on unloading,0.2948,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.25,vertical strain after unloading (stress back to ~0),0.2869,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.25,strain recovered on unloading (peak - unloaded),0.03157,-,card arithmetic from the two values above
+6.12,a spherical,Kt 0.1,peak vertical stress,99.94,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.1,vertical strain at peak,0.3379,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.1,vertical strain at 5 kPa on unloading,0.3,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.1,vertical strain after unloading (stress back to ~0),0.2874,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.1,strain recovered on unloading (peak - unloaded),0.05045,-,card arithmetic from the two values above
+6.12,a spherical,Kt 0.05,peak vertical stress,100.5,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.05,vertical strain at peak,0.3605,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.05,vertical strain at 5 kPa on unloading,nan,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.05,vertical strain after unloading (stress back to ~0),nan,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,a spherical,Kt 0.05,strain recovered on unloading (peak - unloaded),nan,-,card arithmetic from the two values above
+6.12,b paired,Kt 1,peak vertical stress,99.97,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 1,vertical strain at peak,0.3084,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 1,vertical strain at 5 kPa on unloading,0.2956,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 1,vertical strain after unloading (stress back to ~0),0.2899,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 1,strain recovered on unloading (peak - unloaded),0.01856,-,card arithmetic from the two values above
+6.12,b paired,Kt 0.75,peak vertical stress,100.2,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.75,vertical strain at peak,0.3152,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.75,vertical strain at 5 kPa on unloading,0.3017,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.75,vertical strain after unloading (stress back to ~0),0.2966,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.75,strain recovered on unloading (peak - unloaded),0.01856,-,card arithmetic from the two values above
+6.12,b paired,Kt 0.5,peak vertical stress,100.1,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.5,vertical strain at peak,0.3133,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.5,vertical strain at 5 kPa on unloading,0.2986,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.5,vertical strain after unloading (stress back to ~0),0.2922,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.5,strain recovered on unloading (peak - unloaded),0.02112,-,card arithmetic from the two values above
+6.12,b paired,Kt 0.25,peak vertical stress,100.1,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.25,vertical strain at peak,0.3213,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.25,vertical strain at 5 kPa on unloading,0.3019,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.25,vertical strain after unloading (stress back to ~0),0.2949,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.25,strain recovered on unloading (peak - unloaded),0.02645,-,card arithmetic from the two values above
+6.12,b paired,Kt 0.1,peak vertical stress,100.4,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.1,vertical strain at peak,0.323,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.1,vertical strain at 5 kPa on unloading,0.2973,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.1,vertical strain after unloading (stress back to ~0),0.2843,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.1,strain recovered on unloading (peak - unloaded),0.03872,-,card arithmetic from the two values above
+6.12,b paired,Kt 0.05,peak vertical stress,100.4,kPa,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.05,vertical strain at peak,0.3589,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.05,vertical strain at 5 kPa on unloading,0.33,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.05,vertical strain after unloading (stress back to ~0),0.3109,-,axis residual strain 4e-05 · stress 0.016 kPa
+6.12,b paired,Kt 0.05,strain recovered on unloading (peak - unloaded),0.04799,-,card arithmetic from the two values above
+6.16,a,SE 5 J/m2,peak vertical stress,100.6,kPa,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 5 J/m2,vertical strain at peak,0.2346,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 5 J/m2,vertical strain at 5 kPa on unloading,0.2257,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 5 J/m2,vertical strain after unloading (stress back to ~0),0.2189,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 5 J/m2,strain recovered on unloading (peak - unloaded),0.01573,-,card arithmetic from the two values above
+6.16,a,SE 15 J/m2,peak vertical stress,100.5,kPa,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 15 J/m2,vertical strain at peak,0.2227,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 15 J/m2,vertical strain at 5 kPa on unloading,0.213,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 15 J/m2,vertical strain after unloading (stress back to ~0),0.2041,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 15 J/m2,strain recovered on unloading (peak - unloaded),0.01866,-,card arithmetic from the two values above
+6.16,a,SE 25 J/m2,peak vertical stress,100.9,kPa,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 25 J/m2,vertical strain at peak,0.2176,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 25 J/m2,vertical strain at 5 kPa on unloading,0.2057,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 25 J/m2,vertical strain after unloading (stress back to ~0),0.1958,-,axis residual strain 2e-05 · stress 0.016 kPa
+6.16,a,SE 25 J/m2,strain recovered on unloading (peak - unloaded),0.0218,-,card arithmetic from the two values above
+3.16,a (JKR),100 kPa (legend),path: peak stress / strain at peak / last point strain,100.8 / 0.05449 / 0.02785,kPa / - / -,one MATLAB path chunk (n=227); axis residual stress 0.071 kPa
+3.16,a (JKR),200 kPa (legend; curve peaks at ~250 kPa),path: peak stress / strain at peak / last point strain,250.7 / 0.07509 / 0.03632,kPa / - / -,one MATLAB path chunk (n=296); axis residual stress 0.071 kPa
+3.16,a (JKR),200 kPa (legend; curve peaks at ~250 kPa),path: peak stress / strain at peak / last point strain,0.9396 / 0.0046 / 0.006536,kPa / - / -,one MATLAB path chunk (n=23); axis residual stress 0.071 kPa
+3.16,a (JKR),500 kPa (legend),path: peak stress / strain at peak / last point strain,501 / 0.09666 / 0.04335,kPa / - / -,one MATLAB path chunk (n=300); axis residual stress 0.071 kPa
+3.16,a (JKR),500 kPa (legend),path: peak stress / strain at peak / last point strain,11.09 / 0.02711 / 0.02954,kPa / - / -,one MATLAB path chunk (n=114); axis residual stress 0.071 kPa
+3.16,a (JKR),100 kPa (legend),peak stress,100.8,kPa,
+3.16,a (JKR),100 kPa (legend),strain at peak,0.05449,-,
+3.16,a (JKR),100 kPa (legend),min strain with stress < 1 kPa and strain > 0.025 (unloaded end),0.02785,-,same as the end point of the path chunk that carries the peak (rows above)
+3.16,a (JKR),200 kPa (legend),peak stress,250.7,kPa,
+3.16,a (JKR),200 kPa (legend),strain at peak,0.07509,-,
+3.16,a (JKR),200 kPa (legend),min strain with stress < 1 kPa and strain > 0.025 (unloaded end),0.03632,-,same as the end point of the path chunk that carries the peak (rows above)
+3.16,a (JKR),500 kPa (legend),peak stress,501,kPa,
+3.16,a (JKR),500 kPa (legend),strain at peak,0.09666,-,
+3.16,a (JKR),500 kPa (legend),min strain with stress < 1 kPa and strain > 0.025 (unloaded end),0.04335,-,same as the end point of the path chunk that carries the peak (rows above)
+6.4,b,G 2.5E06 Pa,porosity at max stress (98.6 kPa),0.4666,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05
+6.4,b,G 2.5E06 Pa,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4882,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05
+6.4,b,G 2.5E06 Pa,porosity at start of loading (loosest point at lowest stress),0.6672,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.4,b,G 5E06 Pa,porosity at max stress (99 kPa),0.4998,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05
+6.4,b,G 5E06 Pa,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.5127,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05
+6.4,b,G 5E06 Pa,porosity at start of loading (loosest point at lowest stress),0.6696,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.4,b,G 7.5E06 Pa,porosity at max stress (98.2 kPa),0.5165,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05
+6.4,b,G 7.5E06 Pa,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.5263,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05
+6.4,b,G 7.5E06 Pa,porosity at start of loading (loosest point at lowest stress),0.669,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 5e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,a spherical,Kt 1,porosity at max stress (99 kPa),0.3832,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 1,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3969,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 1,porosity at start of loading (loosest point at lowest stress),0.5705,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,a spherical,Kt 0.75,porosity at max stress (98.8 kPa),0.3821,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.75,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3975,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.75,porosity at start of loading (loosest point at lowest stress),0.57,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,a spherical,Kt 0.5,porosity at max stress (99.1 kPa),0.3791,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.5,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3972,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.5,porosity at start of loading (loosest point at lowest stress),0.5688,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,a spherical,Kt 0.25,porosity at max stress (99.1 kPa),0.3708,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.25,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3965,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.25,porosity at start of loading (loosest point at lowest stress),0.5649,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,a spherical,Kt 0.1,porosity at max stress (98.8 kPa),0.348,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.1,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.393,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.1,porosity at start of loading (loosest point at lowest stress),0.5589,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,a spherical,Kt 0.05,porosity at max stress (99.1 kPa),0.3202,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.05,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3864,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,a spherical,Kt 0.05,porosity at start of loading (loosest point at lowest stress),0.3864,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,b paired,Kt 1,porosity at max stress (98.6 kPa),0.3969,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 1,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4105,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 1,porosity at start of loading (loosest point at lowest stress),0.5814,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,b paired,Kt 0.75,porosity at max stress (99 kPa),0.3942,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.75,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4083,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.75,porosity at start of loading (loosest point at lowest stress),0.5809,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,b paired,Kt 0.5,porosity at max stress (98.6 kPa),0.393,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.5,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4092,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.5,porosity at start of loading (loosest point at lowest stress),0.5754,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,b paired,Kt 0.25,porosity at max stress (98.8 kPa),0.3803,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.25,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4016,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.25,porosity at start of loading (loosest point at lowest stress),0.5754,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,b paired,Kt 0.1,porosity at max stress (99.1 kPa),0.3589,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.1,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3901,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.1,porosity at start of loading (loosest point at lowest stress),0.5635,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.13,b paired,Kt 0.05,porosity at max stress (99.1 kPa),0.332,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.05,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3738,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05
+6.13,b paired,Kt 0.05,porosity at start of loading (loosest point at lowest stress),0.5585,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 3.4e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.16,b,SE 5 J/m2,porosity at max stress (98.6 kPa),0.3752,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.16,b,SE 5 J/m2,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3856,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.16,b,SE 5 J/m2,porosity at start of loading (loosest point at lowest stress),0.5162,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.16,b,SE 15 J/m2,porosity at max stress (98.6 kPa),0.3834,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.16,b,SE 15 J/m2,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3956,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.16,b,SE 15 J/m2,porosity at start of loading (loosest point at lowest stress),0.5189,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.16,b,SE 25 J/m2,porosity at max stress (99.1 kPa),0.3874,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.16,b,SE 25 J/m2,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4014,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.16,b,SE 25 J/m2,porosity at start of loading (loosest point at lowest stress),0.5192,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.37,b (own fills),no damping model,porosity at max stress (99.3 kPa),0.3481,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),no damping model,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3657,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),no damping model,porosity at start of loading (loosest point at lowest stress),0.5143,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16 · equals the unloaded value when the loading start lies outside the plotted range
+6.37,b (own fills),GD 0,porosity at max stress (98.8 kPa),0.3481,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),GD 0,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3656,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),GD 0,porosity at start of loading (loosest point at lowest stress),0.5059,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16 · equals the unloaded value when the loading start lies outside the plotted range
+6.37,b (own fills),GD 0.2,porosity at max stress (99 kPa),0.3671,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),GD 0.2,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3824,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),GD 0.2,porosity at start of loading (loosest point at lowest stress),0.5186,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16 · equals the unloaded value when the loading start lies outside the plotted range
+6.37,b (own fills),GD 0.75,porosity at max stress (98.2 kPa),0.4041,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),GD 0.75,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4142,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16
+6.37,b (own fills),GD 0.75,porosity at start of loading (loosest point at lowest stress),0.5494,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.2e-16 · equals the unloaded value when the loading start lies outside the plotted range
+6.38,b (same fill),no damping model,porosity at max stress (98.8 kPa),0.3456,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),no damping model,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3632,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),no damping model,porosity at start of loading (loosest point at lowest stress),0.506,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08 · equals the unloaded value when the loading start lies outside the plotted range
+6.38,b (same fill),GD 0,porosity at max stress (99 kPa),0.3475,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3652,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0,porosity at start of loading (loosest point at lowest stress),0.506,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08 · equals the unloaded value when the loading start lies outside the plotted range
+6.38,b (same fill),GD 0.2,porosity at max stress (99.1 kPa),0.3653,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0.2,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3808,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0.2,porosity at start of loading (loosest point at lowest stress),0.5063,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08 · equals the unloaded value when the loading start lies outside the plotted range
+6.38,b (same fill),GD 0.5,porosity at max stress (98.8 kPa),0.388,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0.5,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4008,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0.5,porosity at start of loading (loosest point at lowest stress),0.5065,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08 · equals the unloaded value when the loading start lies outside the plotted range
+6.38,b (same fill),GD 0.75,porosity at max stress (98.8 kPa),0.3993,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0.75,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.4098,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08
+6.38,b (same fill),GD 0.75,porosity at start of loading (loosest point at lowest stress),0.5066,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 6.2e-08 · equals the unloaded value when the loading start lies outside the plotted range
+6.43,b,CoR 0.2,porosity at max stress (99 kPa),0.3702,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.43,b,CoR 0.2,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3839,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.43,b,CoR 0.2,porosity at start of loading (loosest point at lowest stress),0.5254,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.43,b,CoR 0.5,porosity at max stress (99.1 kPa),0.3696,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.43,b,CoR 0.5,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3837,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.43,b,CoR 0.5,porosity at start of loading (loosest point at lowest stress),0.5217,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05 · equals the unloaded value when the loading start lies outside the plotted range
+6.43,b,CoR 0.8,porosity at max stress (98.8 kPa),0.3714,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.43,b,CoR 0.8,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3854,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05
+6.43,b,CoR 0.8,porosity at start of loading (loosest point at lowest stress),0.5145,-,log-x from 10^k label centres (decade fit residual 0.0003) · y residual 2.3e-05 · equals the unloaded value when the loading start lies outside the plotted range
+7.23,-,Δγ 8,porosity at max stress (98.6 kPa),0.3336,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 8,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3447,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 8,porosity at start of loading (loosest point at lowest stress),0.571,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05 · equals the unloaded value when the loading start lies outside the plotted range
+7.23,-,Δγ 12.5,porosity at max stress (98.9 kPa),0.3455,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 12.5,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3579,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 12.5,porosity at start of loading (loosest point at lowest stress),0.5848,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05 · equals the unloaded value when the loading start lies outside the plotted range
+7.23,-,Δγ 18.5,porosity at max stress (99 kPa),0.3486,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 18.5,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3618,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 18.5,porosity at start of loading (loosest point at lowest stress),0.5926,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05 · equals the unloaded value when the loading start lies outside the plotted range
+7.23,-,Δγ 23.5,porosity at max stress (99 kPa),0.3595,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 23.5,porosity after unloading (densest point at lowest stress 0.0999 kPa),0.3738,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05
+7.23,-,Δγ 23.5,porosity at start of loading (loosest point at lowest stress),0.5944,-,log-x from 10^k label centres (decade fit residual 1e-05) · y residual 4.1e-05 · equals the unloaded value when the loading start lies outside the plotted range
+7.15,-,Δγ 8,bulk density at max stress (98.7 kPa),2758,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+7.15,-,Δγ 8,bulk density after unloading (lowest stress 0.999 kPa),2718,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+7.15,-,Δγ 12.5,bulk density at max stress (98.9 kPa),2708,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+7.15,-,Δγ 12.5,bulk density after unloading (lowest stress 0.999 kPa),2665,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+7.15,-,Δγ 18.5,bulk density at max stress (99.3 kPa),2695,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+7.15,-,Δγ 18.5,bulk density after unloading (lowest stress 0.999 kPa),2649,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+7.15,-,Δγ 23.5,bulk density at max stress (99.2 kPa),2650,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+7.15,-,Δγ 23.5,bulk density after unloading (lowest stress 0.999 kPa),2599,kg/m3,log-x from 10^k label centres (decade fit residual 0.0002) · y residual 0.14
+6.5,-,G 2.5E06 Pa,peak unconfined vertical stress (max of curve),25.28,kPa,axis residual 7.2e-06 kPa · includes curve noise
+6.5,-,G 2.5E06 Pa,vertical strain at that peak,0.05864,-,
+6.5,-,G 5E06 Pa,peak unconfined vertical stress (max of curve),18.8,kPa,axis residual 7.2e-06 kPa · includes curve noise
+6.5,-,G 5E06 Pa,vertical strain at that peak,0.03111,-,
+6.5,-,G 7.5E06 Pa,peak unconfined vertical stress (max of curve),15.6,kPa,axis residual 7.2e-06 kPa · includes curve noise
+6.5,-,G 7.5E06 Pa,vertical strain at that peak,0.03453,-,
+6.8,-,K2 = 5K1,peak unconfined vertical stress (max of curve),3.955,kPa,axis residual 0.00067 kPa · includes curve noise
+6.8,-,K2 = 5K1,vertical strain at that peak,0.01982,-,
+6.8,-,K2 = 10K1,peak unconfined vertical stress (max of curve),4.899,kPa,axis residual 0.00067 kPa · includes curve noise
+6.8,-,K2 = 10K1,vertical strain at that peak,0.007621,-,
+6.8,-,K2 = 25K1,peak unconfined vertical stress (max of curve),5.547,kPa,axis residual 0.00067 kPa · includes curve noise
+6.8,-,K2 = 25K1,vertical strain at that peak,0.01101,-,
+6.8,-,K2 = 50K1,peak unconfined vertical stress (max of curve),5.4,kPa,axis residual 0.00067 kPa · includes curve noise
+6.8,-,K2 = 50K1,vertical strain at that peak,0.006394,-,
+6.9,-,K2 = 5K1 same fill,peak unconfined vertical stress (max of curve),6.306,kPa,axis residual 0.00064 kPa · includes curve noise
+6.9,-,K2 = 5K1 same fill,vertical strain at that peak,0.007284,-,
+6.9,-,K2 = 10K1,peak unconfined vertical stress (max of curve),6.199,kPa,axis residual 0.00064 kPa · includes curve noise
+6.9,-,K2 = 10K1,vertical strain at that peak,0.009059,-,
+6.9,-,K2 = 25K1,peak unconfined vertical stress (max of curve),5.678,kPa,axis residual 0.00064 kPa · includes curve noise
+6.9,-,K2 = 25K1,vertical strain at that peak,0.008523,-,
+6.9,-,K2 = 50K1,peak unconfined vertical stress (max of curve),5.399,kPa,axis residual 0.00064 kPa · includes curve noise
+6.9,-,K2 = 50K1,vertical strain at that peak,0.006396,-,
+6.14,a spherical,Kt 1,peak unconfined vertical stress (max of curve),8.295,kPa,axis residual 1.5e-06 kPa · includes curve noise
+6.14,a spherical,Kt 1,vertical strain at that peak,0.01895,-,
+6.14,a spherical,Kt 0.75,peak unconfined vertical stress (max of curve),8.492,kPa,axis residual 1.5e-06 kPa · includes curve noise
+6.14,a spherical,Kt 0.75,vertical strain at that peak,0.01881,-,
+6.14,a spherical,Kt 0.5,peak unconfined vertical stress (max of curve),8.846,kPa,axis residual 1.5e-06 kPa · includes curve noise
+6.14,a spherical,Kt 0.5,vertical strain at that peak,0.01993,-,
+6.14,a spherical,Kt 0.25,peak unconfined vertical stress (max of curve),8.778,kPa,axis residual 1.5e-06 kPa · includes curve noise
+6.14,a spherical,Kt 0.25,vertical strain at that peak,0.02721,-,
+6.14,a spherical,Kt 0.1,peak unconfined vertical stress (max of curve),8.101,kPa,axis residual 1.5e-06 kPa · includes curve noise
+6.14,a spherical,Kt 0.1,vertical strain at that peak,0.04853,-,
+6.14,a spherical,Kt 0.05,peak unconfined vertical stress (max of curve),7.201,kPa,axis residual 1.5e-06 kPa · includes curve noise
+6.14,a spherical,Kt 0.05,vertical strain at that peak,0.05894,-,
+6.14,b paired,Kt 1,peak unconfined vertical stress (max of curve),10.05,kPa,axis residual 0.0013 kPa · includes curve noise
+6.14,b paired,Kt 1,vertical strain at that peak,0.01508,-,
+6.14,b paired,Kt 0.75,peak unconfined vertical stress (max of curve),9.302,kPa,axis residual 0.0013 kPa · includes curve noise
+6.14,b paired,Kt 0.75,vertical strain at that peak,0.01417,-,
+6.14,b paired,Kt 0.5,peak unconfined vertical stress (max of curve),9.545,kPa,axis residual 0.0013 kPa · includes curve noise
+6.14,b paired,Kt 0.5,vertical strain at that peak,0.02087,-,
+6.14,b paired,Kt 0.25,peak unconfined vertical stress (max of curve),9.562,kPa,axis residual 0.0013 kPa · includes curve noise
+6.14,b paired,Kt 0.25,vertical strain at that peak,0.03401,-,
+6.14,b paired,Kt 0.1,peak unconfined vertical stress (max of curve),9.141,kPa,axis residual 0.0013 kPa · includes curve noise
+6.14,b paired,Kt 0.1,vertical strain at that peak,0.04665,-,
+6.14,b paired,Kt 0.05,peak unconfined vertical stress (max of curve),9.206,kPa,axis residual 0.0013 kPa · includes curve noise
+6.14,b paired,Kt 0.05,vertical strain at that peak,0.09009,-,
+6.17,a same filled sample,SE 5 J/m2,peak unconfined vertical stress (max of curve),2.834,kPa,axis residual 0.0034 kPa · includes curve noise
+6.17,a same filled sample,SE 5 J/m2,vertical strain at that peak,0.01433,-,
+6.17,a same filled sample,SE 15 J/m2,peak unconfined vertical stress (max of curve),8.706,kPa,axis residual 0.0034 kPa · includes curve noise
+6.17,a same filled sample,SE 15 J/m2,vertical strain at that peak,0.01921,-,
+6.17,a same filled sample,SE 25 J/m2,peak unconfined vertical stress (max of curve),13.95,kPa,axis residual 0.0034 kPa · includes curve noise
+6.17,a same filled sample,SE 25 J/m2,vertical strain at that peak,0.0335,-,
+6.17,b same consolidated sample,SE 5 J/m2,peak unconfined vertical stress (max of curve),2.834,kPa,axis residual 0.0034 kPa · includes curve noise
+6.17,b same consolidated sample,SE 5 J/m2,vertical strain at that peak,0.01432,-,
+6.17,b same consolidated sample,SE 15 J/m2,peak unconfined vertical stress (max of curve),9.827,kPa,axis residual 0.0034 kPa · includes curve noise
+6.17,b same consolidated sample,SE 15 J/m2,vertical strain at that peak,0.01748,-,
+6.17,b same consolidated sample,SE 25 J/m2,peak unconfined vertical stress (max of curve),16.92,kPa,axis residual 0.0034 kPa · includes curve noise
+6.17,b same consolidated sample,SE 25 J/m2,vertical strain at that peak,0.02959,-,
+6.21,a own porosities,X 1,peak unconfined vertical stress (max of curve),8.764,kPa,axis residual 2e-06 kPa · includes curve noise
+6.21,a own porosities,X 1,vertical strain at that peak,0.01041,-,
+6.21,a own porosities,X 5,peak unconfined vertical stress (max of curve),7.781,kPa,axis residual 2e-06 kPa · includes curve noise
+6.21,a own porosities,X 5,vertical strain at that peak,0.01062,-,
+6.21,a own porosities,X 10,peak unconfined vertical stress (max of curve),7.921,kPa,axis residual 2e-06 kPa · includes curve noise
+6.21,a own porosities,X 10,vertical strain at that peak,0.01151,-,
+6.21,a own porosities,X 20,peak unconfined vertical stress (max of curve),7.678,kPa,axis residual 2e-06 kPa · includes curve noise
+6.21,a own porosities,X 20,vertical strain at that peak,0.01476,-,
+6.21,b same porosity,X 1,peak unconfined vertical stress (max of curve),7.001,kPa,axis residual 0.00064 kPa · includes curve noise
+6.21,b same porosity,X 1,vertical strain at that peak,0.01335,-,
+6.21,b same porosity,X 5,peak unconfined vertical stress (max of curve),6.332,kPa,axis residual 0.00064 kPa · includes curve noise
+6.21,b same porosity,X 5,vertical strain at that peak,0.0104,-,
+6.21,b same porosity,X 10,peak unconfined vertical stress (max of curve),6.624,kPa,axis residual 0.00064 kPa · includes curve noise
+6.21,b same porosity,X 10,vertical strain at that peak,0.01054,-,
+6.21,b same porosity,X 20,peak unconfined vertical stress (max of curve),7.678,kPa,axis residual 0.00064 kPa · includes curve noise
+6.21,b same porosity,X 20,vertical strain at that peak,0.01476,-,
+6.24,a spherical,mu 0.2,peak unconfined vertical stress (max of curve),9.535,kPa,axis residual 0.0013 kPa · includes curve noise
+6.24,a spherical,mu 0.2,vertical strain at that peak,0.01049,-,
+6.24,a spherical,mu 0.5,peak unconfined vertical stress (max of curve),10.72,kPa,axis residual 0.0013 kPa · includes curve noise
+6.24,a spherical,mu 0.5,vertical strain at that peak,0.01091,-,
+6.24,a spherical,mu 0.8,peak unconfined vertical stress (max of curve),10.33,kPa,axis residual 0.0013 kPa · includes curve noise
+6.24,a spherical,mu 0.8,vertical strain at that peak,0.01371,-,
+6.24,b paired,mu 0.2,peak unconfined vertical stress (max of curve),10.69,kPa,axis residual 2e-06 kPa · includes curve noise
+6.24,b paired,mu 0.2,vertical strain at that peak,0.01084,-,
+6.24,b paired,mu 0.5,peak unconfined vertical stress (max of curve),12.17,kPa,axis residual 2e-06 kPa · includes curve noise
+6.24,b paired,mu 0.5,vertical strain at that peak,0.01584,-,
+6.24,b paired,mu 0.8,peak unconfined vertical stress (max of curve),11.7,kPa,axis residual 2e-06 kPa · includes curve noise
+6.24,b paired,mu 0.8,vertical strain at that peak,0.02292,-,
+6.25,a same initial packing,mu 0.2,peak unconfined vertical stress (max of curve),9.535,kPa,axis residual 0.0013 kPa · includes curve noise
+6.25,a same initial packing,mu 0.2,vertical strain at that peak,0.01049,-,
+6.25,a same initial packing,mu 0.5,peak unconfined vertical stress (max of curve),11.11,kPa,axis residual 0.0013 kPa · includes curve noise
+6.25,a same initial packing,mu 0.5,vertical strain at that peak,0.01271,-,
+6.25,a same initial packing,mu 0.8,peak unconfined vertical stress (max of curve),10.23,kPa,axis residual 0.0013 kPa · includes curve noise
+6.25,a same initial packing,mu 0.8,vertical strain at that peak,0.01363,-,
+6.25,b same consolidated packing,mu 0.2,peak unconfined vertical stress (max of curve),9.647,kPa,axis residual 0.0027 kPa · includes curve noise
+6.25,b same consolidated packing,mu 0.2,vertical strain at that peak,0.01023,-,
+6.25,b same consolidated packing,mu 0.5,peak unconfined vertical stress (max of curve),17.17,kPa,axis residual 0.0027 kPa · includes curve noise
+6.25,b same consolidated packing,mu 0.5,vertical strain at that peak,0.01241,-,
+6.25,b same consolidated packing,mu 0.8,peak unconfined vertical stress (max of curve),21.59,kPa,axis residual 0.0027 kPa · includes curve noise
+6.25,b same consolidated packing,mu 0.8,vertical strain at that peak,0.01314,-,
+6.27,-,AR 1.0,peak unconfined vertical stress (max of curve),10.72,kPa,axis residual 0.0013 kPa · includes curve noise
+6.27,-,AR 1.0,vertical strain at that peak,0.01091,-,
+6.27,-,AR 1.5,peak unconfined vertical stress (max of curve),12.16,kPa,axis residual 0.0013 kPa · includes curve noise
+6.27,-,AR 1.5,vertical strain at that peak,0.01583,-,
+6.27,-,AR 2 (2p),peak unconfined vertical stress (max of curve),14.66,kPa,axis residual 0.0013 kPa · includes curve noise
+6.27,-,AR 2 (2p),vertical strain at that peak,0.02055,-,
+6.27,-,AR 2 (3p),peak unconfined vertical stress (max of curve),14.55,kPa,axis residual 0.0013 kPa · includes curve noise
+6.27,-,AR 2 (3p),vertical strain at that peak,0.01811,-,
+6.41,a own assemblies,no damping model,peak unconfined vertical stress (max of curve),10.9,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,a own assemblies,no damping model,vertical strain at that peak,0.01865,-,
+6.41,a own assemblies,GD 0,peak unconfined vertical stress (max of curve),10.65,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,a own assemblies,GD 0,vertical strain at that peak,0.01937,-,
+6.41,a own assemblies,GD 0.2,peak unconfined vertical stress (max of curve),10.74,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,a own assemblies,GD 0.2,vertical strain at that peak,0.02444,-,
+6.41,a own assemblies,GD 0.75,peak unconfined vertical stress (max of curve),12.25,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,a own assemblies,GD 0.75,vertical strain at that peak,0.017,-,
+6.41,b same assembly,no damping model,peak unconfined vertical stress (max of curve),10.74,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,b same assembly,no damping model,vertical strain at that peak,0.0171,-,
+6.41,b same assembly,GD 0,peak unconfined vertical stress (max of curve),10.69,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,b same assembly,GD 0,vertical strain at that peak,0.01939,-,
+6.41,b same assembly,GD 0.2,peak unconfined vertical stress (max of curve),11.14,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,b same assembly,GD 0.2,vertical strain at that peak,0.02091,-,
+6.41,b same assembly,GD 0.5,peak unconfined vertical stress (max of curve),11.42,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,b same assembly,GD 0.5,vertical strain at that peak,0.0242,-,
+6.41,b same assembly,GD 0.75,peak unconfined vertical stress (max of curve),11.92,kPa,axis residual 1.7e-06 kPa · includes curve noise
+6.41,b same assembly,GD 0.75,vertical strain at that peak,0.01748,-,
+6.42,-,no damping model,peak unconfined vertical stress (max of curve),10.88,kPa,axis residual 0.0013 kPa · includes curve noise
+6.42,-,no damping model,vertical strain at that peak,0.01894,-,
+6.42,-,GD 0,peak unconfined vertical stress (max of curve),10.97,kPa,axis residual 0.0013 kPa · includes curve noise
+6.42,-,GD 0,vertical strain at that peak,0.01825,-,
+6.42,-,GD 0.2,peak unconfined vertical stress (max of curve),10.94,kPa,axis residual 0.0013 kPa · includes curve noise
+6.42,-,GD 0.2,vertical strain at that peak,0.01941,-,
+6.42,-,GD 0.75,peak unconfined vertical stress (max of curve),10.88,kPa,axis residual 0.0013 kPa · includes curve noise
+6.42,-,GD 0.75,vertical strain at that peak,0.01772,-,
+6.44,a own packings,CoR 0.2,peak unconfined vertical stress (max of curve),12.52,kPa,axis residual 1.9e-06 kPa · includes curve noise
+6.44,a own packings,CoR 0.2,vertical strain at that peak,0.01579,-,
+6.44,a own packings,CoR 0.5,peak unconfined vertical stress (max of curve),12.17,kPa,axis residual 1.9e-06 kPa · includes curve noise
+6.44,a own packings,CoR 0.5,vertical strain at that peak,0.01584,-,
+6.44,a own packings,CoR 0.8,peak unconfined vertical stress (max of curve),13.03,kPa,axis residual 1.9e-06 kPa · includes curve noise
+6.44,a own packings,CoR 0.8,vertical strain at that peak,0.01665,-,
+6.44,b same packing,CoR 0.2,peak unconfined vertical stress (max of curve),10.39,kPa,axis residual 0.0013 kPa · includes curve noise
+6.44,b same packing,CoR 0.2,vertical strain at that peak,0.01255,-,
+6.44,b same packing,CoR 0.5,peak unconfined vertical stress (max of curve),10.94,kPa,axis residual 0.0013 kPa · includes curve noise
+6.44,b same packing,CoR 0.5,vertical strain at that peak,0.0129,-,
+6.44,b same packing,CoR 0.8,peak unconfined vertical stress (max of curve),11.34,kPa,axis residual 0.0013 kPa · includes curve noise
+6.44,b same packing,CoR 0.8,vertical strain at that peak,0.01345,-,
+7.19,a Δγ 8,20 kPa,peak unconfined vertical stress (max of curve),3.17,kPa,axis residual 1.8e-06 kPa · includes curve noise
+7.19,a Δγ 8,20 kPa,vertical strain at that peak,0.01916,-,
+7.19,a Δγ 8,40 kPa,peak unconfined vertical stress (max of curve),5.255,kPa,axis residual 1.8e-06 kPa · includes curve noise
+7.19,a Δγ 8,40 kPa,vertical strain at that peak,0.0171,-,
+7.19,a Δγ 8,60 kPa,peak unconfined vertical stress (max of curve),7.258,kPa,axis residual 1.8e-06 kPa · includes curve noise
+7.19,a Δγ 8,60 kPa,vertical strain at that peak,0.01672,-,
+7.19,a Δγ 8,80 kPa,peak unconfined vertical stress (max of curve),9.099,kPa,axis residual 1.8e-06 kPa · includes curve noise
+7.19,a Δγ 8,80 kPa,vertical strain at that peak,0.01856,-,
+7.19,a Δγ 8,100 kPa,peak unconfined vertical stress (max of curve),11.76,kPa,axis residual 1.8e-06 kPa · includes curve noise
+7.19,a Δγ 8,100 kPa,vertical strain at that peak,0.01948,-,
+7.19,b Δγ 12.5,20 kPa,peak unconfined vertical stress (max of curve),4.811,kPa,axis residual 0.0014 kPa · includes curve noise
+7.19,b Δγ 12.5,20 kPa,vertical strain at that peak,0.02261,-,
+7.19,b Δγ 12.5,40 kPa,peak unconfined vertical stress (max of curve),7.668,kPa,axis residual 0.0014 kPa · includes curve noise
+7.19,b Δγ 12.5,40 kPa,vertical strain at that peak,0.02251,-,
+7.19,b Δγ 12.5,60 kPa,peak unconfined vertical stress (max of curve),10.12,kPa,axis residual 0.0014 kPa · includes curve noise
+7.19,b Δγ 12.5,60 kPa,vertical strain at that peak,0.02418,-,
+7.19,b Δγ 12.5,80 kPa,peak unconfined vertical stress (max of curve),12.98,kPa,axis residual 0.0014 kPa · includes curve noise
+7.19,b Δγ 12.5,80 kPa,vertical strain at that peak,0.02016,-,
+7.19,b Δγ 12.5,100 kPa,peak unconfined vertical stress (max of curve),16.78,kPa,axis residual 0.0014 kPa · includes curve noise
+7.19,b Δγ 12.5,100 kPa,vertical strain at that peak,0.02037,-,
+7.19,c Δγ 18.5,20 kPa,peak unconfined vertical stress (max of curve),6.489,kPa,axis residual 3.3e-06 kPa · includes curve noise
+7.19,c Δγ 18.5,20 kPa,vertical strain at that peak,0.04026,-,
+7.19,c Δγ 18.5,40 kPa,peak unconfined vertical stress (max of curve),10.07,kPa,axis residual 3.3e-06 kPa · includes curve noise
+7.19,c Δγ 18.5,40 kPa,vertical strain at that peak,0.03724,-,
+7.19,c Δγ 18.5,60 kPa,peak unconfined vertical stress (max of curve),14.29,kPa,axis residual 3.3e-06 kPa · includes curve noise
+7.19,c Δγ 18.5,60 kPa,vertical strain at that peak,0.03649,-,
+7.19,c Δγ 18.5,80 kPa,peak unconfined vertical stress (max of curve),17.58,kPa,axis residual 3.3e-06 kPa · includes curve noise
+7.19,c Δγ 18.5,80 kPa,vertical strain at that peak,0.03715,-,
+7.19,c Δγ 18.5,100 kPa,peak unconfined vertical stress (max of curve),21.94,kPa,axis residual 3.3e-06 kPa · includes curve noise
+7.19,c Δγ 18.5,100 kPa,vertical strain at that peak,0.02741,-,
+7.19,d Δγ 23.5,20 kPa,peak unconfined vertical stress (max of curve),7.965,kPa,axis residual 0.0041 kPa · includes curve noise
+7.19,d Δγ 23.5,20 kPa,vertical strain at that peak,0.05164,-,
+7.19,d Δγ 23.5,40 kPa,peak unconfined vertical stress (max of curve),11.99,kPa,axis residual 0.0041 kPa · includes curve noise
+7.19,d Δγ 23.5,40 kPa,vertical strain at that peak,0.04058,-,
+7.19,d Δγ 23.5,60 kPa,peak unconfined vertical stress (max of curve),16.27,kPa,axis residual 0.0041 kPa · includes curve noise
+7.19,d Δγ 23.5,60 kPa,vertical strain at that peak,0.04691,-,
+7.19,d Δγ 23.5,80 kPa,peak unconfined vertical stress (max of curve),21.26,kPa,axis residual 0.0041 kPa · includes curve noise
+7.19,d Δγ 23.5,80 kPa,vertical strain at that peak,0.04811,-,
+7.19,d Δγ 23.5,100 kPa,peak unconfined vertical stress (max of curve),27.12,kPa,axis residual 0.0041 kPa · includes curve noise
+7.19,d Δγ 23.5,100 kPa,vertical strain at that peak,0.04385,-,
+6.28,-,AR 1.0,value at start of unconfined compression (max of curve),1.487,x1e4 contacts,axis residual 2.6e-07
+6.28,-,AR 1.5,value at start of unconfined compression (max of curve),1.27,x1e4 contacts,axis residual 2.6e-07
+6.28,-,AR 2 (2p),value at start of unconfined compression (max of curve),0.8787,x1e4 contacts,axis residual 2.6e-07
+6.28,-,AR 2 (3p),value at start of unconfined compression (max of curve),1.12,x1e4 contacts,axis residual 2.6e-07
+6.29,-,AR 1.0,value at start of unconfined compression (max of curve),5.948,coordination number,axis residual 0.00067
+6.29,-,AR 1.5,value at start of unconfined compression (max of curve),8.466,coordination number,axis residual 0.00067
+6.29,-,AR 2 (2p),value at start of unconfined compression (max of curve),8.399,coordination number,axis residual 0.00067
+6.29,-,AR 2 (3p),value at start of unconfined compression (max of curve),10.42,coordination number,axis residual 0.00067
+6.6,-,G 2.5E6,K0 median of markers above 90 % of max vertical stress,0.3362,-,marker centres (vector symbols)
+6.6,-,G 2.5E6,max K0 among all markers (unloading branch; axis top 0.7),0.6938,-,clipped by the 0.7 axis limit
+6.6,-,G 5E6,K0 median of markers above 90 % of max vertical stress,0.3567,-,marker centres (vector symbols)
+6.6,-,G 5E6,max K0 among all markers (unloading branch; axis top 0.7),0.6866,-,clipped by the 0.7 axis limit
+6.6,-,G 7.5E6,K0 median of markers above 90 % of max vertical stress,0.349,-,marker centres (vector symbols)
+6.6,-,G 7.5E6,max K0 among all markers (unloading branch; axis top 0.7),0.6956,-,clipped by the 0.7 axis limit
+6.18,-,SE 5,K0 median of markers above 90 % of max vertical stress,0.3039,-,marker centres (vector symbols)
+6.18,-,SE 5,max K0 among all markers (unloading branch; axis top 0.7),0.686,-,clipped by the 0.7 axis limit
+6.18,-,SE 15,K0 median of markers above 90 % of max vertical stress,0.307,-,marker centres (vector symbols)
+6.18,-,SE 15,max K0 among all markers (unloading branch; axis top 0.7),0.6966,-,clipped by the 0.7 axis limit
+6.18,-,SE 25,K0 median of markers above 90 % of max vertical stress,0.2966,-,marker centres (vector symbols)
+6.18,-,SE 25,max K0 among all markers (unloading branch; axis top 0.7),0.6913,-,clipped by the 0.7 axis limit

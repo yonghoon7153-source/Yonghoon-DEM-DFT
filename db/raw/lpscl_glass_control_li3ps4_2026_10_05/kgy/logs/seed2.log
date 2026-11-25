@@ -1,0 +1,96 @@
+[B seed2] 120 원자 · 셀 15.52 Å · 담금질 900 ps (450000 스텝) → /home/kgy/work/runs/lpscl_glass_control_li3ps4_2026_10_05/B/seed2
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+UMA inference mode: turbo
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+WARNING:root:Model is being compiled this might take a while for the first time
+W1006 23:37:56.595000 952366 site-packages/torch/_logging/_internal.py:1154] [3/0] Profiler function <class 'torch.autograd.profiler.record_function'> will be ignored
+/home/kgy/wt_li3ps4_1005/tools/ionic/melt_quench_uma.py:474: DeprecationWarning: Use thermalize_momenta
+  MaxwellBoltzmannDistribution(atoms, temperature_K=T_melt, rng=np.random.default_rng(seed)); Stationary(atoms)
+  [melt] 10000/50000 T_set=1200 K T=1271 K ρ=1.357 (16.0 min)
+  [melt] 20000/50000 T_set=1200 K T=1208 K ρ=1.351 (32.4 min)
+  [melt] 30000/50000 T_set=1200 K T=1347 K ρ=1.337 (48.7 min)
+  [melt] 40000/50000 T_set=1200 K T=1285 K ρ=1.310 (65.1 min)
+  [melt] 50000/50000 T_set=1200 K T=1273 K ρ=1.332 (81.3 min)
+  [quench] 10000/450000 T_set=1180 K T=1193 K ρ=1.355 (97.6 min)
+  [quench] 20000/450000 T_set=1160 K T=1131 K ρ=1.308 (113.9 min)
+  [quench] 30000/450000 T_set=1140 K T=1202 K ρ=1.366 (130.2 min)
+  [quench] 40000/450000 T_set=1120 K T=1116 K ρ=1.396 (146.6 min)
+  [quench] 50000/450000 T_set=1100 K T=1029 K ρ=1.402 (163.2 min)
+  [quench] 60000/450000 T_set=1080 K T=1078 K ρ=1.405 (179.8 min)
+  [quench] 70000/450000 T_set=1060 K T=1029 K ρ=1.399 (196.4 min)
+  [quench] 80000/450000 T_set=1040 K T=1009 K ρ=1.388 (212.9 min)
+  [quench] 90000/450000 T_set=1020 K T=952 K ρ=1.395 (229.4 min)
+  [quench] 100000/450000 T_set=1000 K T=1059 K ρ=1.394 (245.9 min)
+  [quench] 110000/450000 T_set=980 K T=934 K ρ=1.441 (262.5 min)
+  [quench] 120000/450000 T_set=960 K T=1001 K ρ=1.448 (279.2 min)
+  [quench] 130000/450000 T_set=940 K T=997 K ρ=1.413 (295.9 min)
+  [quench] 140000/450000 T_set=920 K T=874 K ρ=1.403 (312.6 min)
+  [quench] 150000/450000 T_set=900 K T=925 K ρ=1.426 (329.2 min)
+  [quench] 160000/450000 T_set=880 K T=867 K ρ=1.445 (345.9 min)
+  [quench] 170000/450000 T_set=860 K T=854 K ρ=1.478 (362.7 min)
+  [quench] 180000/450000 T_set=840 K T=779 K ρ=1.470 (379.5 min)
+  [quench] 190000/450000 T_set=820 K T=811 K ρ=1.392 (396.3 min)
+  [quench] 200000/450000 T_set=800 K T=892 K ρ=1.466 (412.8 min)
+  [quench] 210000/450000 T_set=780 K T=772 K ρ=1.445 (429.5 min)
+  [quench] 220000/450000 T_set=760 K T=742 K ρ=1.447 (446.2 min)
+  [quench] 230000/450000 T_set=740 K T=750 K ρ=1.396 (462.9 min)
+  [quench] 240000/450000 T_set=720 K T=673 K ρ=1.433 (479.5 min)
+  [quench] 250000/450000 T_set=700 K T=688 K ρ=1.466 (496.2 min)
+  [quench] 260000/450000 T_set=680 K T=719 K ρ=1.471 (513.1 min)
+  [quench] 270000/450000 T_set=660 K T=554 K ρ=1.524 (530.0 min)
+  [quench] 280000/450000 T_set=640 K T=643 K ρ=1.558 (547.1 min)
+  [quench] 290000/450000 T_set=620 K T=623 K ρ=1.564 (564.2 min)
+  [quench] 300000/450000 T_set=600 K T=587 K ρ=1.536 (581.3 min)
+  [quench] 310000/450000 T_set=580 K T=577 K ρ=1.561 (598.3 min)
+  [quench] 320000/450000 T_set=560 K T=558 K ρ=1.536 (615.4 min)
+  [quench] 330000/450000 T_set=540 K T=548 K ρ=1.579 (632.5 min)
+  [quench] 340000/450000 T_set=520 K T=546 K ρ=1.567 (649.6 min)
+  [quench] 350000/450000 T_set=500 K T=485 K ρ=1.589 (666.7 min)
+  [quench] 360000/450000 T_set=480 K T=481 K ρ=1.596 (684.0 min)
+  [quench] 370000/450000 T_set=460 K T=437 K ρ=1.578 (701.2 min)
+  [quench] 380000/450000 T_set=440 K T=480 K ρ=1.580 (718.4 min)
+  [quench] 390000/450000 T_set=420 K T=420 K ρ=1.599 (735.7 min)
+  [quench] 400000/450000 T_set=400 K T=417 K ρ=1.604 (752.9 min)
+  [quench] 410000/450000 T_set=380 K T=357 K ρ=1.614 (770.1 min)
+  [quench] 420000/450000 T_set=360 K T=381 K ρ=1.620 (787.6 min)
+  [quench] 430000/450000 T_set=340 K T=359 K ρ=1.600 (804.7 min)
+  [quench] 440000/450000 T_set=320 K T=301 K ρ=1.617 (822.0 min)
+  [quench] 450000/450000 T_set=300 K T=285 K ρ=1.631 (839.3 min)
+  [hold] 10000/25000 T_set=300 K T=323 K ρ=1.621 (856.6 min)
+  [hold] 20000/25000 T_set=300 K T=298 K ρ=1.612 (873.9 min)
+{
+ "indicators": {
+  "PS4_fraction": 1.0,
+  "P_S_coord_hist": {
+   "4": 15
+  },
+  "bridging_S_P2S7_like": 0,
+  "P_P_bonds_P2S6_like": 0,
+  "S_Li8_fraction_Li2S_like": 0.0,
+  "S_Li_coord_hist": {
+   "2": 10,
+   "3": 43,
+   "4": 7
+  },
+  "density_g_cm3": 1.6129658603230461,
+  "n_atoms": 120,
+  "cell_A": [
+   [
+    14.061227581667756,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    14.061227581667756,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    14.061227581667756
+   ]
+  ]
+ },
+ "wall_min": 882.6
+}

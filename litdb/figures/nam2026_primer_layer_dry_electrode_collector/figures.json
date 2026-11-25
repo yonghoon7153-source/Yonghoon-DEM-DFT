@@ -1,0 +1,639 @@
+{
+ "slug": "nam2026_primer_layer_dry_electrode_collector",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-11",
+ "sources": [
+  "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+  "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of the PTFE ﬁbrillation-based DPE fabrication process with an aqueous primer layer coating step. The primer layer is ﬁrst coated on the current collector using a water-based slurry and fully dried before lamination with the solvent-free DPE. The primer layer enables robust interfacial adhesion and eﬃcient electron conduction from the current collector to the DPE.",
+   "bbox": [
+    45.8,
+    459.5,
+    561.9,
+    713.0
+   ],
+   "w": 2152,
+   "h": 1057,
+   "dpi": 300,
+   "src": "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.521
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Design and structural characterization of carbon-based primer layers for dry electrodes. (a) Schematic illustration of the primer layer archi- tecture for a robust interface and the experimental design used to investigate the eﬀect of the primer layer on the electrochemical performance of DPEs. Cross-sectional SEM images of dry electrodes (b) without a primer layer and (c–g) with primer layers composed of (c) S100, (d) S75C25, (e) S50C50, (f) S25C75, and (g) C100. (h) Photograph of the SAICAS setup for measuring interfacial adhesion force. (i) Interfacial adhesion strength at 300 μm cutting depth and (j) the corresponding summary plot.",
+   "bbox": [
+    45.8,
+    230.0,
+    561.8,
+    689.0
+   ],
+   "w": 2151,
+   "h": 1913,
+   "dpi": 300,
+   "src": "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.53
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Surface morphology and mechanical properties of carbon-based primer layers. (a) Top-view SEM images, (b) 2D AFM images, (c) 3D AFM topographic images, and (d) AFM line-scan proﬁles of primer layers comprising (1) S100, (2) S75C25, (3) S50C50, (4) S25C75, and (5) C100. The AFM scan area was 50 × 50 μm2. (e) Hardness, (f) elastic modulus, and (g) elastic recovery ratio derived from nanoindentation measurements.",
+   "bbox": [
+    45.8,
+    60.3,
+    561.8,
+    516.9
+   ],
+   "w": 2151,
+   "h": 1903,
+   "dpi": 300,
+   "src": "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.644
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Microstructure-informed modeling and electron transport behavior in carbon-based primer layers. (a) Schematic illustration of the AFM topology-based 3D structure generation process: (i) surface topology measurement using AFM, (ii) primer layer reconstruction based on the acquired AFM topological map, and (iii) electrode microstructure modeling based on digital twin technology. (b) Potential distribution and (c) normalized current density, deﬁned as the local current density divided by the average current density, along the electrode thickness direction for S100, S50C50, and C100 calculated from electron conduction simulations. (d) 3D current density distribution. (e) 3D distribution and (f) 1D distribution along the thickness direction of active materials exposed to the high current density (top 10% current density).",
+   "bbox": [
+    45.8,
+    60.3,
+    561.9,
+    424.0
+   ],
+   "w": 2152,
+   "h": 1516,
+   "dpi": 300,
+   "src": "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.72
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical characterization and XPS analysis of dry electrodes. (a) Rate performance at C-rates ranging from 0.2 to 7.0C (charge rate: 0.5C). (b) Long-term cycling performance at 1C. (c) Nyquist plots of EIS measured after cycling. XPS results of (d) F 1s, (e) O 1s, and (f) C 1s spectra for each electrode after cycling. (g) Schematic illustration of the electron transport behavior without a primer layer and with S100, S50C50, and C100 primer layers, with the corresponding radar chart shown in (h).",
+   "bbox": [
+    45.8,
+    60.3,
+    561.8,
+    481.8
+   ],
+   "w": 2151,
+   "h": 1757,
+   "dpi": 300,
+   "src": "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Cross-sectional SEM images of electrodes (a) without a primer layer, (b) S100, (c) S75C25, (d) S50C50, (e) S25C75, and (f) C100 after lamination and calendering.",
+   "bbox": [
+    66.0,
+    68.1,
+    549.0,
+    350.7
+   ],
+   "w": 2013,
+   "h": 1179,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.345
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 8,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) Photograph after the peel-off strength test (top) and the corresponding contrast- enhanced image to highlight the differences more clearly (bottom). SEM images of (b) the current collector side and (c) the electrode side. Yellow marks indicate residual active materials remaining on the current collector.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    294.1
+   ],
+   "w": 2013,
+   "h": 951,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.402
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) Photograph of UTM used for peel-strength measurements. (b) Peel-off test results for electrodes with and without primer layers, respectively. (c) The ultimate peel strength obtained from the peel-off test.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    224.3
+   ],
+   "w": 2013,
+   "h": 660,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) Surface energy calculated from dispersive and polar components, based on contact angle measurements using deionized water and diiodomethane. (b) The work of adhesion calculated using OWRK method.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    249.5
+   ],
+   "w": 2013,
+   "h": 765,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 11,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Top-view SEM images of dry electrodes with primer layers composed of (a) S100, (b) S75C25, (c) S50C50, (d) S25C75, and (e) C100.",
+   "bbox": [
+    66.0,
+    66.0,
+    553.0,
+    335.7
+   ],
+   "w": 2030,
+   "h": 1124,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.377
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 12,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Load-displacement curves from nanoindentation tests of primer layers with compositions of (a) S100, (b) S75C25, (c) S50C50, (d) S25C75, and (e) C100.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    352.4
+   ],
+   "w": 2013,
+   "h": 1194,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.602
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (a) Bulk resistivity and (b) interfacial resistance as a function of theoretical porosity for different primer compositions, measured using only the primer layer. (c) Contrast-enhanced 2D image obtained from (d) the SEM image to clearly visualize the porosity, with the average porosity indicated at the bottom. The average porosity in (d) was determined from the corresponding 2D image analysis of the primer layer region within the fabricated electrode.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    416.5
+   ],
+   "w": 2013,
+   "h": 1461,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.614
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. (a) Bulk resistivity and (b) interfacial resistance for each electrode.",
+   "bbox": [
+    66.0,
+    66.0,
+    511.2,
+    289.8
+   ],
+   "w": 1855,
+   "h": 933,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. (a) AFM topology-based 3D electrode structure and (b) corresponding 2D image.",
+   "bbox": [
+    66.0,
+    66.0,
+    546.8,
+    388.5
+   ],
+   "w": 2004,
+   "h": 1344,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.531
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Relative contact area of the S100, S50C50, and C100 electrodes, normalized to that of C100, estimated from the AFM topology-based 3D structures.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    248.7
+   ],
+   "w": 2013,
+   "h": 762,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Modeling domain, boundary conditions, and governing equation for electron conduction simulation.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    248.7
+   ],
+   "w": 2013,
+   "h": 762,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. 3D current density distribution of the S100, S50C50, and C100 electrodes calculated from electron conduction simulation.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    248.7
+   ],
+   "w": 2013,
+   "h": 762,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.695
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 20,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Nyquist plots of EIS measured before cycling.",
+   "bbox": [
+    66.0,
+    66.0,
+    402.3,
+    227.7
+   ],
+   "w": 1402,
+   "h": 674,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 21,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. (a) Equivalent circuit model. (b) Deconvolution results of the charge-transfer (Rct) and film resistances (Rfilm) derived from the EIS measurements.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    252.9
+   ],
+   "w": 2013,
+   "h": 779,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 22,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. (a) DCIR estimated using HPPC before cycling. (b) Overpotential measured by GITT before cycling.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    227.7
+   ],
+   "w": 2013,
+   "h": 674,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 23,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Voltage profiles of the (a) without a primer layer, (b) S100, (c) S75C25, (d) S50C50, (e) S25C75, and (f) C100 during precycling.",
+   "bbox": [
+    66.0,
+    66.0,
+    552.0,
+    348.0
+   ],
+   "w": 2025,
+   "h": 1175,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 24,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Reproducibility analysis of electrochemical performance. Data are presented as mean ± standard deviation from three independent cells for each condition (n = 3). (a) Rate performance. (b) Long-term cycling performance.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    215.5
+   ],
+   "w": 2013,
+   "h": 623,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.702
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 25,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. (a) Rate performance at C-rates ranging from 0.2C to 7.0C at 25℃ (charge rate: 0.5C). (b) Long-term cycling performance at 1C and 25℃.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    221.4
+   ],
+   "w": 2013,
+   "h": 648,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.808
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 26,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Voltage profiles of electrodes (a) without a primer layer, (b) S100, (c) S75C25, (d) S50C50, (e) S25C75, and (f) C100 during 1C cycling.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    347.4
+   ],
+   "w": 2013,
+   "h": 1173,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.808
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 27,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. (a) DC-IR estimated using HPPC. (b) overpotential values measured by GITT after cycling.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    237.0
+   ],
+   "w": 2013,
+   "h": 713,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 28,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Cross-sectional SEM images of electrodes (a) without a primer layer, (b) S100, (c) S75C25, (d) S50C50, (e) S25C75, and (f) C100 after cycling.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    313.1
+   ],
+   "w": 2013,
+   "h": 1030,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.24
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 29,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Voltage profiles of the (a) S50C50 (5 μm), (b) S50C50 (3 μm), (c) S50C50 (1 μm), and (d) Commercial primer (1 μm) during precycling.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    421.1
+   ],
+   "w": 2013,
+   "h": 1480,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 30,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Effect of primer layer thickness on electrochemical performance. (a) Rate capability at C-rates ranging from 0.2C to 7.0C (charge rate: 0.5C) as a function of primer-layer thickness (5, 3, and 1 μm), including a commercial primer (1 μm). (b) Long-term cycling performance at 1C. (c) Cross-sectional SEM images of dry electrodes.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    320.8
+   ],
+   "w": 2013,
+   "h": 1062,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.599
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 31,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Reproducibility analysis of electrochemical performance as a function of primer layer thickness. Data are presented as mean ± standard deviation from three independent cells for each condition (n = 3). (a) Rate performance. (b) Long-term cycling performance.",
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    215.5
+   ],
+   "w": 2013,
+   "h": 623,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.696
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 33,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Formulation details of carbon primer slurries with different Super P:MWCNT ratios. Weight (g) Super P Solid : MWCNT Total Sample content (weight (wt%) Super P MWCNT carbon CMC D.I. water ratio) additive S100 100:0 0.450 - S75C25 75:25 0.337 0.113 S50C50 50:50 0.225 0.225 0.450 0.05 1.20 12.0 S25C75 25:75 0.113 0.337 C100 0:100 - 0.450",
+   "bbox": [
+    59.2,
+    99.7,
+    552.3,
+    287.4
+   ],
+   "w": 2056,
+   "h": 783,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.597
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 34,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Modeling parameters for electron conduction simulation",
+   "bbox": [
+    67.0,
+    69.0,
+    537.0,
+    149.6
+   ],
+   "w": 1959,
+   "h": 337,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.469
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 35,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Summary of surface free energy values measured by contact angle analysis.",
+   "bbox": [
+    67.0,
+    69.0,
+    538.5,
+    156.6
+   ],
+   "w": 1965,
+   "h": 366,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.508
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 36,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Summary table of the work of adhesion calculated using the OWRK method.",
+   "bbox": [
+    67.0,
+    69.0,
+    538.5,
+    149.6
+   ],
+   "w": 1965,
+   "h": 337,
+   "dpi": 300,
+   "src": "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "blank": 0.462
+  }
+ ]
+}

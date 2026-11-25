@@ -1,0 +1,18 @@
+[10-23 13:37:34] li2s 사슬 잠금 대기 (/tmp/li2s_qe_sp_chain.lock)
+[10-23 15:39:53] 잠금 풀림 — V₀ relax 시작
+[10-23 15:39:53] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-23 15:39:53] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-23 15:39:53]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-23 15:39:53]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-23 15:39:53] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-23 15:39:53] 설정 균일성 ✓ (2점 동일 · key bc3759b0)
+               occupations = 'smearing'
+               electron_maxstep = 100
+               mixing_mode  = 'plain'
+[10-23 15:39:53] 점 2개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-23 15:39:53]   VRAM 여유 21076 MiB (문턱 8000)
+[10-23 17:36:35] ✓ MLi_04  116분
+[10-23 17:36:35]   VRAM 여유 21077 MiB (문턱 8000)
+[10-23 19:16:48] ✓ MP_07  100분
+[10-23 19:16:48] 끝 — 완료 2 · 건너뜀 0 · 실패 0 · 총 216분
+다음: UMA 힘 (같은 frame.xyz) → 분석

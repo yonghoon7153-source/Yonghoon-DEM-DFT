@@ -1,0 +1,215 @@
+{
+ "card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
+ "amendment": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json",
+ "ladder_K": [
+  800,
+  1000
+ ],
+ "seeds": [
+  1,
+  2
+ ],
+ "protocol": {
+  "prod_ps": 400.0,
+  "dt_fs": 2.0,
+  "save_fs": 100.0
+ },
+ "pair_parent": "C",
+ "pair_seeds": [
+  3,
+  4
+ ],
+ "plan": [
+  [
+   "H0_host",
+   1
+  ],
+  [
+   "H0_host",
+   2
+  ],
+  [
+   "P1_Al2O3_C",
+   3
+  ],
+  [
+   "P2_Al2S3_C",
+   3
+  ],
+  [
+   "P1_Al2O3_C",
+   4
+  ],
+  [
+   "P2_Al2S3_C",
+   4
+  ]
+ ],
+ "off_plan_runs": [],
+ "binding": "온도(msd·aimd·폴더·태그·사다리)·prod_ps·dt_fs·save_fs·시간축 끝 결속 (회신 CP P0-1)",
+ "T_star_K": 1000,
+ "why": "1000 K: H0 두 시드 · 대표 쌍(부모 C · 시드 [3, 4]) 네 런 전부 자격 통과 · 골격 경보 없음 → T* = 1000 K",
+ "next": null,
+ "tool": {
+  "commit": "a29248957da325983642f02820b8ec77686dc615",
+  "dirty": false
+ },
+ "⛔": "D 값은 싣지 않는다 — 탐침은 조건 선택용이다",
+ "runs": [
+  {
+   "T_K": 800,
+   "structure": "H0_host",
+   "seed": 1,
+   "tag": "H0_host__T800__s1",
+   "run_dir": "/home/kgy/work/runs/cascade_v7_probe_1003/md/H0_host__T800__s1/d0.00_cfg0/T800",
+   "eligible": false,
+   "aggregation_eligible": false,
+   "framework_alarm": "framework_static",
+   "framework_alarm_role": "보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · 첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)",
+   "run_verdict": "no_value",
+   "sub_window_ratios": [
+    1.7189146145578698,
+    0.8587554722737267,
+    0.8441178653491868
+   ],
+   "events": 17117,
+   "n_frames": 4000,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 40% > 10%, 추세 -40%)",
+    "부창 기울기 비 기준 밖 2-18: 1.719 (허용 (0.8, 1.2))"
+   ]
+  },
+  {
+   "T_K": 1000,
+   "structure": "H0_host",
+   "seed": 1,
+   "tag": "H0_host__T1000__s1",
+   "run_dir": "/home/kgy/work/runs/cascade_v7_probe_1003/md/H0_host__T1000__s1/d0.00_cfg0/T1000",
+   "eligible": true,
+   "aggregation_eligible": true,
+   "framework_alarm": "framework_static",
+   "framework_alarm_role": "보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · 첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)",
+   "run_verdict": "citable",
+   "sub_window_ratios": [
+    1.1599416421060733,
+    0.9889881285381742,
+    0.9189051544079186
+   ],
+   "events": 23936,
+   "n_frames": 4000,
+   "reasons": [
+    "D_inc plateau (산포 10%) · 홉 23.4/이온"
+   ]
+  },
+  {
+   "T_K": 1000,
+   "structure": "H0_host",
+   "seed": 2,
+   "tag": "H0_host__T1000__s2",
+   "run_dir": "/home/kgy/work/runs/cascade_v7_probe_1003/md/H0_host__T1000__s2/d0.00_cfg0/T1000",
+   "eligible": true,
+   "aggregation_eligible": true,
+   "framework_alarm": "framework_static",
+   "framework_alarm_role": "보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · 첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)",
+   "run_verdict": "citable",
+   "sub_window_ratios": [
+    1.075722948051243,
+    0.9855463050276649,
+    0.9882130419211046
+   ],
+   "events": 24685,
+   "n_frames": 4000,
+   "reasons": [
+    "D_inc plateau (산포 7%) · 홉 29.0/이온"
+   ]
+  },
+  {
+   "T_K": 1000,
+   "structure": "P1_Al2O3_C",
+   "seed": 3,
+   "tag": "P1_Al2O3_C__T1000__s3",
+   "run_dir": "/home/kgy/work/runs/cascade_v7_probe_1003/md/P1_Al2O3_C__T1000__s3/d0.00_cfg0/T1000",
+   "eligible": true,
+   "aggregation_eligible": true,
+   "framework_alarm": "framework_static",
+   "framework_alarm_role": "보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · 첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)",
+   "run_verdict": "citable",
+   "sub_window_ratios": [
+    1.0604224311392816,
+    0.9950923553676312,
+    0.9928736959307819
+   ],
+   "events": 23113,
+   "n_frames": 4000,
+   "reasons": [
+    "D_inc plateau (산포 9%) · 홉 34.2/이온"
+   ]
+  },
+  {
+   "T_K": 1000,
+   "structure": "P1_Al2O3_C",
+   "seed": 4,
+   "tag": "P1_Al2O3_C__T1000__s4",
+   "run_dir": "/home/kgy/work/runs/cascade_v7_probe_1003/md/P1_Al2O3_C__T1000__s4/d0.00_cfg0/T1000",
+   "eligible": true,
+   "aggregation_eligible": true,
+   "framework_alarm": "framework_static",
+   "framework_alarm_role": "보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · 첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)",
+   "run_verdict": "citable",
+   "sub_window_ratios": [
+    1.0486389315561429,
+    0.9923850686058638,
+    1.003734510880396
+   ],
+   "events": 23160,
+   "n_frames": 4000,
+   "reasons": [
+    "D_inc plateau (산포 6%) · 홉 33.2/이온"
+   ]
+  },
+  {
+   "T_K": 1000,
+   "structure": "P2_Al2S3_C",
+   "seed": 3,
+   "tag": "P2_Al2S3_C__T1000__s3",
+   "run_dir": "/home/kgy/work/runs/cascade_v7_probe_1003/md/P2_Al2S3_C__T1000__s3/d0.00_cfg0/T1000",
+   "eligible": true,
+   "aggregation_eligible": true,
+   "framework_alarm": "framework_static",
+   "framework_alarm_role": "보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · 첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)",
+   "run_verdict": "citable",
+   "sub_window_ratios": [
+    1.0449935106768167,
+    0.9987891429276279,
+    0.9995382128076321
+   ],
+   "events": 23356,
+   "n_frames": 4000,
+   "reasons": [
+    "D_inc plateau (산포 7%) · 홉 32.9/이온"
+   ]
+  },
+  {
+   "T_K": 1000,
+   "structure": "P2_Al2S3_C",
+   "seed": 4,
+   "tag": "P2_Al2S3_C__T1000__s4",
+   "run_dir": "/home/kgy/work/runs/cascade_v7_probe_1003/md/P2_Al2S3_C__T1000__s4/d0.00_cfg0/T1000",
+   "eligible": true,
+   "aggregation_eligible": true,
+   "framework_alarm": "framework_static",
+   "framework_alarm_role": "보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · 첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)",
+   "run_verdict": "citable",
+   "sub_window_ratios": [
+    1.081388553509833,
+    0.9728240778159081,
+    1.0027090613135228
+   ],
+   "events": 23184,
+   "n_frames": 4000,
+   "reasons": [
+    "D_inc plateau (산포 10%) · 홉 34.1/이온"
+   ]
+  }
+ ]
+}

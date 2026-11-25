@@ -1,0 +1,81 @@
+{
+  "symbol": "As",
+  "name": "Arsenic",
+  "Z": 33,
+  "role": "P의 무거운 동족(pnictogen, group 15) — As/Sb 동족 계열. AsS₄³⁻ 티오아세네이트(thioarsenate)가 PS₄³⁻와 등전자·등구조라 원리적으로 P⁵⁺ 자리 등가원자가(isovalent) 치환종(Na₃AsS₄ 같은 thioarsenate 초이온전도체 모티프 존재). As⁵⁺(3d¹⁰4s⁰)는 P⁵⁺보다 훨씬 크고 분극성이 커 골격 연화 레버가 될 수 있으나, As³⁺(4s² 고립전자쌍, stereochem 활성)로 환원 쉽고 독성이 커 실제 우리 캠페인 원소는 아님. Sb의 한 칸 위 가벼운 동족.",
+  "oxidation_states": [
+    "+5",
+    "+3",
+    "-3"
+  ],
+  "electronegativity": 2.18,
+  "ionic_radius_A": {
+    "As5+_IV": 0.335,
+    "As5+_VI": 0.46,
+    "As3+_VI": 0.58,
+    "_note": "Shannon 1976: As⁵⁺ 사면체 IV 0.335 A / 팔면체 VI 0.46 A; As³⁺(4s² lone pair) VI 0.58 A. 사면체 IV 0.335는 P⁵⁺ IV(0.17)의 약 2배라 AsS₄가 PS₄ 자리에 들어가면 국소 팽창; 사면체 배위 자체는 유지(등구조). Sb⁵⁺ IV/VI(0.60)보다는 작음 — 크기 순 P < As < Sb."
+  },
+  "representative_compounds": [
+    {
+      "formula": "As2O3 (arsenolite/claudetite)",
+      "context": "As³⁺ 산화물(대표)",
+      "battery_role": "As³⁺ 산화물 원 — stereochem 활성 4s² 고립전자쌍",
+      "note": "arsenolite는 As₄O₆ cage 분자결정; As 3d5/2 ~44.3 eV(As³⁺). 독성 강함"
+    },
+    {
+      "formula": "As2O5",
+      "context": "As⁵⁺ 산화물",
+      "battery_role": "As⁵⁺(3d¹⁰4s⁰) 산화물 원",
+      "note": "arsenate 골격; As 3d5/2 ~45.7 eV(As⁵⁺). 흡습성"
+    },
+    {
+      "formula": "Na3AsS4 / AsS4 3- (thioarsenate)",
+      "context": "PS₄ 등구조 황화물 모티프",
+      "battery_role": "As⁵⁺@S 사면체(티오아세네이트) — P⁵⁺ 자리 등가치환 유추",
+      "note": "AsS₄³⁻가 PS₄³⁻와 등전자·등구조 → thioarsenate SE 모티프(Na₃AsS₄ 초이온전도 보고). P의 무거운 동족으로 연화·분극 레버지만 독성으로 실사용 제한"
+    }
+  ],
+  "sei_relevance": "As는 native SE 원소가 아니고 독성 때문에 실제 캠페인엔 안 쓰지만, P의 동족이라 계면 화학은 P와 유사하게 유추됨: As⁵⁺는 Li 금속 계면에서 As³⁺→As⁰→Li₃As(합금/conversion)로 환원되기 쉬워 벌크 절연 도펀트로는 부적합. 즉 골격 연화(AsS₄) 레버로는 흥미롭되 저전위 계면 안정성엔 불리(Ge/Sb류와 같은 '벌크는 흥미·계면은 취약' 패턴). 특이적 SEI 무기 부동태 보고는 없음 — 백과사전 참조종.",
+  "xps": [
+    {
+      "core": "As 3d5/2",
+      "BE_eV": 41.7,
+      "assignment": "elemental As / As⁰ (환원 생성물)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "As 3d5/2",
+      "BE_eV": 44.3,
+      "assignment": "As2O3 / As³⁺ (보고 ~44.0-44.5 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "As 3d5/2",
+      "BE_eV": 45.7,
+      "assignment": "As2O5 / As⁵⁺ / arsenate (보고 ~45.2-46.2 eV)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 370,
+      "assignment": "arsenolite(cubic As2O3, As4O6 cage) 강모드 — As-O cage breathing (부수 ~470/555/780 cm-1)",
+      "ref": "As2O3 arsenolite Raman 표준 참조"
+    }
+  ],
+  "dos_character": "As는 준금속(metalloid). As⁵⁺=3d¹⁰4s⁰라 빈 4s/4p가 CBM을 이뤄 thioarsenate는 P 유사한 밴드엣지 화학이되 As가 더 분극성·연해 gap이 PS₄계보다 좁아지는 경향. As³⁺(4s² lone pair)로 환원되면 stereochemically active 고립전자쌍이 VBM 근처 상태를 만듦(Sb³⁺/Sn²⁺류). closed-shell 3d¹⁰라 스핀분극 불필요. P의 무거운 동족 — 밴드엣지 화학 P와 닮되 더 soft.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p³",
+    "electron_config": "[Ar] 3d¹⁰ 4s² 4p³",
+    "valence_orbitals": "4s² 4p³ 원자가(3d¹⁰ 반코어) — P의 무거운 동족. As⁵⁺면 3d¹⁰4s⁰, As³⁺면 4s² 고립전자쌍",
+    "band_character": "(일반) As⁵⁺=3d¹⁰4s⁰ → 빈 4s가 CBM; AsS₄가 PS₄와 등전자라 밴드구조는 티오포스페이트와 유사하되 As 4s/4p가 낮아 gap 축소·분극↑. As³⁺(4s² lone pair)면 stereochem 활성 VBM 상태, 더 환원되면 Li₃As 합금 → 조건부(P 동족, 더 soft)",
+    "bonding": "As–S(AsS₄³⁻ 티오아세네이트, P⁵⁺ 등가 연화 레버)·As–O(As₂O₃/As₂O₅) 혼성, As 4s/4p–S 3p/O 2p 공유"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (As⁵⁺ IV 0.335 / VI 0.46, As³⁺ VI 0.58 A)",
+    "NIST XPS DB — As 3d5/2: As⁰ 41.7 / As³⁺(As₂O₃) 44.3 / As⁵⁺(As₂O₅) 45.7 eV",
+    "thioarsenate/Na₃AsS₄ 문헌 — AsS₄³⁻가 PS₄³⁻ 등구조인 P⁵⁺ 등가 동족 모티프"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii · handbook). SSB 앵커 없음(비캠페인) — 백과사전 기본+orbital. 우리 db 절대값과 분리."
+}

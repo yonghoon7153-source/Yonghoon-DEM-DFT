@@ -1,0 +1,23 @@
+[2026-11-11 13:15:19] 시작 · AXIS=vol · 결정 D-2026-11-11-cascade-axes-bundle2-amend2 active · OUT=/data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_11 · PY=/data/apps/miniforge3/envs/uma/bin/python · resume=0
+[2026-11-11 13:15:19] DRY=1 — 검사만 하고 끝
+[2026-11-11 13:15:19] 시작 · AXIS=vol · 결정 D-2026-11-11-cascade-axes-bundle2-amend2 active · OUT=/data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_11 · PY=/data/apps/miniforge3/envs/uma/bin/python · resume=0
+[2026-11-11 13:15:40] selftest 넷 통과 (iface · gaps · esw · 판독기)
+[2026-11-11 13:15:48] manifest 앞 기록
+[2026-11-11 13:15:48] 갈래 발사 (PID 2368916 2368917  · 대상 91 종 · db/properties/cascade_interface_90.jsonl) — 기대 줄 수 273 · 3
+[2026-11-11 13:45:47] 갈래 끝 · rc designs_vol host_vol = 0 0 0
+  designs_vol  rc 0 · 줄 273 · ok 273 · 중복 0 · 부피 거부 0 · 창 교차 불일치 0
+  host_vol     rc 0 · 줄 3 · ok 3 · 중복 0 · 부피 거부 0 · 창 교차 불일치 0
+[2026-11-11 13:45:52] MP 판 앞뒤: same
+[2026-11-11 13:45:53] G3b 재현 대조 rc=0 · G3b 재현 대조: 통과 · 쌍 276/276
+[2026-11-11 13:48:06] Li 쪽 kink 산물 갭 rc=0 · Li 쪽 행 92
+[2026-11-11 13:48:06] 끝 — 회수 블록은 판독기 커밋 뒤에 받는다 (카드 §8 ③)
+[2026-11-11 13:48:06] 시작 · AXIS=win · 결정 D-2026-11-11-cascade-axes-bundle2-amend2 active · OUT=/data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_11 · PY=/data/apps/miniforge3/envs/uma/bin/python · resume=0
+[2026-11-11 13:48:27] selftest 넷 통과 (iface · gaps · esw · 판독기)
+[2026-11-11 13:48:33] manifest 앞 기록
+[2026-11-11 13:48:33] 갈래 발사 (PID 2387122 2387123  · 대상 91 종 · db/properties/cascade_interface_90.jsonl) — 기대 줄 수 91 · 1
+[2026-11-11 13:53:08] 갈래 끝 · rc designs_win host_win = 0 0 0
+  designs_win  rc 0 · 줄 91 · ok 91 · 중복 0 · 부피 거부 0 · 창 교차 불일치 0
+  host_win     rc 0 · 줄 1 · ok 1 · 중복 0 · 부피 거부 0 · 창 교차 불일치 0
+[2026-11-11 13:53:13] MP 판 앞뒤: same
+[2026-11-11 13:54:38] 창 산물 갭 rc=0
+[2026-11-11 13:54:38] 끝 — 회수 블록은 판독기 커밋 뒤에 받는다 (카드 §8 ③)

@@ -1,0 +1,34 @@
+{
+ "material_id": "mp-aaaaadbq",
+ "ordering": "Unknown",
+ "magmoms": [
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "symbols": [
+  "Co",
+  "Co",
+  "Co",
+  "Co",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S"
+ ],
+ "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+ "sum_muB": 0.0
+}

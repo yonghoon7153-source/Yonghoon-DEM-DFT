@@ -1,0 +1,274 @@
+{
+ "slug": "lee2025_heckel_argyrodite_powder_densification_nanoindentation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+  "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) The total displacement (Dd) curve corresponding to the compressive stress (s). (b) Dd and DhSE-powder with time for commer- cial Li6PS5Cl powder. (c) The magniﬁed image of the dotted line square segment in (b). (d) The negative natural logarithmic (1 −rrelative) vs. the compressive stress curve of the commercial Li6PS5Cl powder.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    220.9
+   ],
+   "w": 1090,
+   "h": 736,
+   "dpi": 300,
+   "src": "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.912,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) The Heckel plots of commercial Li6PS5Cl with that of the same powder after ball-milling (vibrating mill). The pressure required to reach each stage is diﬀerent for each electrolyte. (b) The Heckel plots of various argyrodite solid electrolyte powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    584.5,
+    558.8,
+    686.8
+   ],
+   "w": 1091,
+   "h": 427,
+   "dpi": 300,
+   "src": "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.9,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a–d) Porosity of cross-sections of diﬀerent types of solid electrolyte pellets measured by SEM. The scale bar is 3 mm. The black spot, which resembles a pore-like feature, is an artifact caused by the ‘edge eﬀect,’ as explained in detail in Fig. S3.† (e and f) Indentation curve of a synthesized sample. Measurements were taken at least ﬁve times at diﬀerent locations for each sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    290.9
+   ],
+   "w": 1090,
+   "h": 1028,
+   "dpi": 300,
+   "src": "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.633,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Slope K of the Heckel plot in stage II and compressive stress at 97% TD of SE powders. Because the y-axis of the Heckel plot uses the natural logarithm, the variation in compressive strength increases signiﬁcantly as the density approaches 100% TD. Therefore, 97% was arbitrarily selected, as this density is close enough to TD, while the error range due to data ﬂuctuations remains within an acceptable value Li6PS5Br Li6PS5Cl Li5.15PS4.15(BH4)1.85 Li5.55PS4.55(BH4)1.45 Slope, K (×10−4 MPa−1) 25.0 (\u00030.16) 29.1 (\u00030.14) 37.0 (\u00030.11) 41.3 (\u00030.11) Compressive stress @ 97% theoretical density (MPa) 725 675 570 510",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    535.8,
+    554.8,
+    625.0
+   ],
+   "w": 2144,
+   "h": 373,
+   "dpi": 300,
+   "src": "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.874,
+   "auto_bbox": [
+    37.5,
+    18.9,
+    557.8,
+    765.2
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체 (2090x2997 px) 를 잡았다 — 두 표가 한 쪽 아래에 붙어 있어 캡션 앵커가 표 경계를 못 찾음. clip = 표 1 윗선 (y 537.8) ~ 마지막 행 (y 621.7) + 2–3 pt",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Nano-indentation results of various SE powders",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    641.4,
+    554.8,
+    730.0
+   ],
+   "w": 2144,
+   "h": 370,
+   "dpi": 300,
+   "src": "3. Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.874,
+   "auto_bbox": [
+    37.5,
+    18.9,
+    557.8,
+    765.2
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 쪽 전체를 잡았다. clip = 표 2 윗선 (y 643.4) ~ 마지막 행 (y 727.2) + 2–3 pt",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Indentation curve of a synthesized sample. Measurements were taken at least five",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    110.6,
+    499.6,
+    277.4
+   ],
+   "w": 1791,
+   "h": 696,
+   "dpi": 300,
+   "src": "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.92,
+   "auto_bbox": [
+    66.0,
+    79.6,
+    532.3,
+    281.4
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 가 SI 절 제목 '2. Figures and Tables' (y 85.6–98.8) 를 넣었다. clip = 래스터 두 장 합집합 (72.0, 112.6, 497.6, 275.4) + 2 pt",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) Measured XRD data of synthesized Li6PS5Cl. (b) Rietveld refinement results of synthesized Li6PS5Br. The amorphous hump observed at angles between 10 and 20 degrees was from the Kapton film. In the case of Li6PS5Cl, only Li6PS5Br was refined, as the distinction between S and Cl was not possible from the XRD data.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    253.8
+   ],
+   "w": 1943,
+   "h": 729,
+   "dpi": 300,
+   "src": "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.904,
+   "viewed": true
+  },
+  {
+   "key": "fS3abc",
+   "kind": "figure",
+   "label": "S3abc",
+   "page": 7,
+   "file": "fig_S3abc.png",
+   "caption": "Figure S3 (a)–(c) (SI p.7 — 캡션은 p.8): Cross-sectional SEM image of an synthesized electrolyte pellet (cold pressed). scale bar is 3 µm. (a) Li6PS5Cl porosity = 2.48% · (b) Li6PS5Br 2.49% · (c) Li5.55PS4.55(BH4)1.45 4.68%",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    83.0,
+    541.6,
+    722.8
+   ],
+   "w": 1966,
+   "h": 2667,
+   "dpi": 300,
+   "src": "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "viewed": true,
+   "manual_crop": "2026-10-13 수동 크롭 — Figure S3 은 두 쪽에 걸친다 — 자동 추출은 캡션이 있는 p.8 의 (d) 패널만 잘랐다. p.7 의 (a)–(c) 래스터 세 장 합집합 (72.0, 85.0, 539.6, 720.8) + 2 pt",
+   "si": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 (d) (SI p.8): Cross-sectional SEM image of an synthesized electrolyte pellet (cold pressed). scale bar is 3 µm. … (d) Li5.15PS4.15(BH4)1.85 porosity = 7.31% — 패널 (a)–(c) 는 fig_S3abc (SI p.7)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    545.6,
+    298.4
+   ],
+   "w": 1999,
+   "h": 915,
+   "dpi": 300,
+   "src": "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.315,
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Raw data of powder compression test.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    531.5,
+    438.2
+   ],
+   "w": 1940,
+   "h": 1497,
+   "dpi": 300,
+   "src": "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.884,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 10,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Rietveld refinement results of synthesized Li6PS5Br.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    516.0,
+    420.0
+   ],
+   "w": 1871,
+   "h": 1415,
+   "dpi": 300,
+   "src": "3. Sup) Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries.pdf",
+   "blank": 0.938,
+   "auto_bbox": [
+    67.0,
+    80.6,
+    471.8,
+    373.7
+   ],
+   "recrop": "2026-10-13 수동 재크롭 — 자동 bbox 하단 373.7 pt 가 표 아래 '상 정량 (Li6PS5Br : LiBr : Li2S = 97.3 : 0.85 : 1.9 %)' 줄 (y 403.7–418.0) 을 뺐다 — 그 줄까지 + 2 pt",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-10-13 — 손 크롭 5 장 (tab_1 · tab_2 자동 bbox 쪽 전체 · fig_S1 절 제목 혼입 · fig_S3abc 두 쪽에 걸친 S3 의 p.7 패널 · tab_S1 상 정량 줄 누락) · 판독 원자료 digitized.csv 77 행 (Fig 1c 기준선 · 1d · 2a · 2b) · 크롭 전부 Read 로 실독"
+}

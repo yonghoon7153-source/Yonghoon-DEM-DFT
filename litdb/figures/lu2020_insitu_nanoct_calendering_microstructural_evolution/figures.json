@@ -1,0 +1,2664 @@
+{
+ "slug": "lu2020_insitu_nanoct_calendering_microstructural_evolution",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+  "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf"
+ ],
+ "figures": [
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "page": 1,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract (PDF p.1, unnumbered, no caption): radiograph of the pillar between the 'Compression head' and the 'Steel pin' on the 'Current collector'; two virtual slices with the inter-particle gap colour map (0–7 µm) under 'Increasing compression'; the cylinder representation of the particles; two 'State-of-lithiation (3C)' volumes (colour bar 0–0.95).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.6,
+    268.5,
+    373.5,
+    455.4
+   ],
+   "w": 1362,
+   "h": 829,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.399,
+   "src_native": [
+    1325,
+    1325
+   ],
+   "native_dpi": 300,
+   "manual_crop": "graphical abstract (PDF p.1, no caption — not found by the caption-anchored tool) — cut from the embedded native raster (xref 1396, 1325×1325 px = 300 dpi, no resampling): ink bounding box (min RGB < 240; the raster carries white bands above and below the drawing) → white canvas with a uniform 6 pt (25 px) margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그래픽 초록 — Fig. 1C · 1I–K · 2B · 4 의 요약판. 숫자는 본 그림에서 읽는다."
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. In Situ Electrode Calendering Experiment Using X-Ray Nano-CT and the Microstructural Evolution. (A) Experimental set-up showing the relative position of the X-ray source, loading stage, and detector. (B) Alignment of the electrode pillar under compression pinhead. (C) X-ray radiograph of the electrode before compression. (D) X-ray radiograph showing a stand-alone CBD (no NMC particles). (E–G) Reconstructed virtual slices showing the microstructural change of the AM_L electrode under (E) 7%, (F) 15%, and (G) 22.5% compression, following a DSS procedure to include the deformation of CBD. Red arrows indicate the particle deformation. (H) Structural self-arrangement (from top to bottom) via particle rotation and deformation. Yellow arrows indicate the compression of CBD. Details of the cylinders to characterize particle orientation are introduced later. (I–K) Reconstructed virtual slices overlaid with colormap showing the change of the inter-particle gap under (I) 7%, (J) 13.5%, and (K) 24% calendering of the AM_S electrode. (L) Comparison of the particle size distribution between AM_S and AM_L. The standard deviation for AM_S and AM_L is 1.8 and 3.1 µm, respectively. The insets display the morphology of the color-coded particles, highlighting the average size difference. Subset (a), (b), and (h) are reproduced from the previous work.25",
+   "rotated_deg": 0,
+   "bbox": [
+    58.1,
+    103.6,
+    376.1,
+    371.5
+   ],
+   "w": 1375,
+   "h": 1166,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.307,
+   "auto_bbox": [
+    51.7,
+    45.3,
+    382.5,
+    377.3
+   ],
+   "src_native": [
+    1325,
+    1116
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 144, 1325×1116 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "장치와 '누른 채' 찍은 단면. AM_L 7 → 15 → 22.5 % · AM_S 7 → 13.5 → 24 % (압축률 = 두께 감소로 읽힘 · 정의 · 하중 · 압력 · 유지 시간 인쇄 없음). 지름 < 90 µm 기둥을 평평한 핀으로 누르는 옆 구속 없는 압축이라 롤 압연 · 다이 일축 가압과 응력 상태가 다르다 (원문은 Table S3 의 '8 % 안' 대조만 댄다). (L) = 두 전극 입도 (평균 7.3 ± 3.1 · 5.2 ± 1.8 µm)."
+  },
+  {
+   "key": "f1ad",
+   "kind": "figure",
+   "label": "1a-d",
+   "page": 5,
+   "file": "fig_1abcd.png",
+   "caption": "Fig. 1(A–D) — (A) set-up photograph (X-ray source, detector), (B) electrode pillar between the compression head and the bottom pin (scale 2 mm), (C) radiograph of the electrode before compression (compression head / current collector / bottom pin; scale 20 µm), (D) radiograph of the stand-alone CBD without NMC particles (scale 10 µm) (panels of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.1,
+    103.6,
+    370.1,
+    184.5
+   ],
+   "w": 1350,
+   "h": 387,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.231,
+   "src_native": [
+    1325,
+    1116
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop of Fig. 1 — cut from the embedded native raster (xref 144, 300 dpi, no resampling): panel box [0, 0, 1325, 345] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "가압 장치 = 평평한 강철 핀 (압전 구동기) 이 기둥 시료를 위에서 누른다 · 옆벽 (다이) 이 없다 = 옆 구속 없는 압축. 변위 제어로 읽히며 하중 센서 · 압력 값은 인쇄돼 있지 않다."
+  },
+  {
+   "key": "f1eg",
+   "kind": "figure",
+   "label": "1e-g",
+   "page": 5,
+   "file": "fig_1efg.png",
+   "caption": "Fig. 1(E–G) — reconstructed virtual slices of the AM_L electrode under (E) 7%, (F) 15% and (G) 22.5% compression (scale 12 µm); red arrows = particle deformation. In the printed figure the white label of (G) runs off the dark image onto the white page, so its last letter is invisible (not a cropping loss) (panels of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.6,
+    188.6,
+    288.8,
+    276.7
+   ],
+   "w": 1009,
+   "h": 417,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.292,
+   "src_native": [
+    1325,
+    1116
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop of Fig. 1 — cut from the embedded native raster (xref 144, 300 dpi, no resampling): panel box [0, 345, 972, 730] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM_L 을 누른 채 찍은 세 단계 (0 % 영상은 실리지 않았다). 첫 단계 (7 %) 부터 2 차입자 안에 균열 · 공극 무늬가 보인다 — 원문은 이것을 언급하지 않는다. 붉은 화살표 = 이웃에 눌려 찌그러진 입자. 입자 파쇄의 정량은 없다."
+  },
+  {
+   "key": "f1h",
+   "kind": "figure",
+   "label": "1h",
+   "page": 5,
+   "file": "fig_1h.png",
+   "caption": "Fig. 1(H) — structural self-arrangement from top to bottom: one particle (coloured cylinder: blue → green) rotates and is compressed between its neighbours (red arrows, green rotation arrow); yellow arrows = compression of the CBD between two particles (scale 10 µm) (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    294.3,
+    195.3,
+    369.4,
+    276.9
+   ],
+   "w": 363,
+   "h": 390,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.33,
+   "src_native": [
+    1325,
+    1116
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop of Fig. 1 — cut from the embedded native raster (xref 144, 300 dpi, no resampling): panel box [972, 345, 1325, 730] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자 하나의 회전 + 압축 변형 추적 (원기둥 색 = ovality 변화). 원문: 장축이 수평으로 누워 이온 수송을 막는다. 우리 DEM (강체 구) 은 회전은 주지만 형상 · 장축이 없다 — 이 관찰은 비구형 입자에서만 뜻이 있다."
+  },
+  {
+   "key": "f1ik",
+   "kind": "figure",
+   "label": "1i-k",
+   "page": 5,
+   "file": "fig_1ijk.png",
+   "caption": "Fig. 1(I–K) — virtual slices of the AM_S electrode under (I) 7%, (J) 13.5% and (K) 24% calendering; the non-particle domain is overlaid with the inter-particle distance colour map (0–7 µm) (panels of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    59.6,
+    281.0,
+    289.5,
+    360.4
+   ],
+   "w": 1008,
+   "h": 381,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.323,
+   "src_native": [
+    1325,
+    1116
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop of Fig. 1 — cut from the embedded native raster (xref 144, 300 dpi, no resampling): panel box [0, 730, 972, 1085] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[950, 800, 972, 1085]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM_S 세 단계 + 입자 사이 거리 지도. 원문: AM_S 에서는 자유로운 입자 이동 · 국소 변형이 뚜렷하지 않다 (작은 입자가 만드는 안정한 구조 때문일 수 있다고 'possibly' 로 씀)."
+  },
+  {
+   "key": "f1l",
+   "kind": "figure",
+   "label": "1l",
+   "page": 5,
+   "file": "fig_1l.png",
+   "caption": "Fig. 1(L) — particle size distribution of AM_L (red) and AM_S (blue): percentage of particles vs particle size (2–18 µm, 2 µm steps), with the colour-coded 3D particle renderings as insets (panel of Fig. 1; the same histogram is Fig. S13 left).",
+   "rotated_deg": 0,
+   "bbox": [
+    286.8,
+    282.2,
+    376.1,
+    371.5
+   ],
+   "w": 422,
+   "h": 422,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.686,
+   "src_native": [
+    1325,
+    1116
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop of Fig. 1 — cut from the embedded native raster (xref 144, 300 dpi, no resampling): panel box [950, 738, 1325, 1116] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[950, 738, 980, 800]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두 전극의 입도 (개수 %). 인쇄 평균 7.3 (STD 3.1) · 5.2 (STD 1.8) µm. 벡터 판독 (Fig. S13 왼쪽 = 같은 막대): AM_L 2.9 · 21.6 · 29.5 · 20.9 · 12.2 · 5.8 · 5.0 · 0.7 · 1.4 % (2…18 µm) · AM_S 21.7 · 22.6 · 35.0 · 14.1 · 5.5 · 0.9 · 0.2 % (2…14 µm). '큰 / 작은' 의 차는 평균 1.4 배뿐이고 분포가 크게 겹친다."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Shape and Orientation of NMC Particles under Calendering. (A and B) Representation of individual NMC particles by cylinders with size and color corresponding to the particle size and ovality (blue to red: spherical to flake) for (A) AM_L and (B) AM_S, respectively. An exemplary particle that experienced rotation and deformation under incremental compression is shown in Figure 1H. (C and D) Fractional particle distribution as a function of particle ovality for (C) AM_L and (D) AM_S electrode. The red bars indicate the change before and after calendering at each ovality level. (E–H) Orientation distribution (E) before, (F) after calendering for AM_L and (G) before, (H) after calendering for AM_S electrodes. The size and color of the symbols correspond to the actual particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.0,
+    105.1,
+    543.4,
+    363.6
+   ],
+   "w": 2068,
+   "h": 1127,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.654,
+   "auto_bbox": [
+    51.7,
+    70.1,
+    550.9,
+    370.3
+   ],
+   "src_native": [
+    2023,
+    1086
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 167, 2023×1086 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자 하나하나를 원기둥으로 (크기 · ovality = 1 − b/a · 장축 방향). AM_L = ovality 분포 넓음 (STD 0.22) · 압연 뒤에도 방향 무작위. AM_S = 좁음 (STD 0.13) · 압연 뒤 0.75 에 몰림 (0.65–0.8 에 약 60 %) · 90° / 270° 군집. ⇒ 원문이 '작은 입자 = 균일 (집단) 변형' 이라 부르는 근거 그림 — 단 두 분말은 공급사 · 분포 폭 · 형상이 함께 다르다."
+  },
+  {
+   "key": "f2ab",
+   "kind": "figure",
+   "label": "2a-b",
+   "page": 6,
+   "file": "fig_2ab.png",
+   "caption": "Fig. 2(A, B) — every NMC particle drawn as a cylinder whose size, axis and colour give the particle size, the orientation of the largest eigenvector and the ovality (blue to red: spherical to flake) for (A) AM_L and (B) AM_S (panels of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    63.6,
+    105.1,
+    299.3,
+    225.6
+   ],
+   "w": 1032,
+   "h": 552,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.38,
+   "src_native": [
+    2023,
+    1086
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel crop of Fig. 2 — cut from the embedded native raster (xref 167, 300 dpi, no resampling): panel box [0, 0, 1009, 510] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자별 관성 텐서 → 등가 타원체 → 원기둥 표시. AM_S 쪽이 붉은 (납작한) 입자가 많다 = 원문 'AM_S 입자가 더 작고 더 타원형'."
+  },
+  {
+   "key": "f2cd",
+   "kind": "figure",
+   "label": "2c-d",
+   "page": 6,
+   "file": "fig_2cd.png",
+   "caption": "Fig. 2(C, D) — fraction of total particles vs ovality (0–1) before (blue: 'Uncal') and after calendering (orange: '22.5% Cal' / '24% Cal') and their difference (red) for (C) AM_L (STD 0.22) and (D) AM_S (STD 0.13) (panels of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.4,
+    108.0,
+    540.5,
+    222.4
+   ],
+   "w": 1042,
+   "h": 527,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.773,
+   "src_native": [
+    2023,
+    1086
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel crop of Fig. 2 — cut from the embedded native raster (xref 167, 300 dpi, no resampling): panel box [1009, 0, 2023, 503] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "ovality 분포. AM_L = 넓고 압연 전후 차 (붉은 막대) 가 부호를 바꿔 가며 흩어짐 = 원문 '거시적 자기 재배열 · 변형은 불균일하고 약하다 (mild)'. AM_S = 0.75 에 뾰족 (0.65–0.8 에 약 60 %) = '집단 변형'."
+  },
+  {
+   "key": "f2eh",
+   "kind": "figure",
+   "label": "2e-h",
+   "page": 6,
+   "file": "fig_2efgh.png",
+   "caption": "Fig. 2(E–H) — orientation of the long axis of each particle in polar plots (in-plane angle 0–330°, out-of-plane angle 30/60/90 rings; symbol size and colour = particle size 2–16 µm): (E) AM_L before, (F) AM_L after, (G) AM_S before, (H) AM_S after calendering (panels of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    59.0,
+    226.5,
+    543.4,
+    363.6
+   ],
+   "w": 2068,
+   "h": 621,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.745,
+   "src_native": [
+    2023,
+    1086
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel crop of Fig. 2 — cut from the embedded native raster (xref 167, 300 dpi, no resampling): panel box [0, 509, 2023, 1086] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "방향 분포 (면외각 0° = 장축이 집전체에 수직). AM_L = 압연 뒤에도 무작위. AM_S = 압연 전부터 90° / 270° 군집 · 압연 뒤 바깥 고리로 이동 (더 수평). ⇒ AM_S 의 방향성은 코팅 단계에서 이미 있었다 — 압연만의 효과가 아니다."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Morphological Evolution of the Pore Phase under Calendering. (A and B) Color-coded skeletons are used to represent the inter-particle gap size for (A) uncalendered and (B) 22.5% calendered AM_L electrode, respectively. (C and D) Color-coded skeletons are used to represent the inter-particle gap size for (C) uncalendered and (D) 24% calendered AM_S electrode, respectively. (E–H) Electrolyte permeability simulation of the pore phase in (E) uncalendered, (F) 22.5% calendered AM_L and (G) uncalendered, (H) 24% calendered AM_S, with color-coded streamlines showing the relative (normalized) fluid velocity. (I) Dependence of tortuosity and porosity on the compression ratio. Insets compare the size distribution of the inter-particle gap. (J) Dependence of specific reaction area and average pore size on the compression ratio. Insets compare the spatial distribution of the reaction area before/after calendering in AM_S. Measurements in (E–J) use a three-phase electrode. Solid and hollow symbols represent AM_L and AM_S, respectively. The dashed circle in (A) highlights the loss of pore connectivity under calendering.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.1,
+    103.6,
+    376.1,
+    410.4
+   ],
+   "w": 1375,
+   "h": 1328,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.636,
+   "auto_bbox": [
+    51.7,
+    97.6,
+    382.4,
+    416.3
+   ],
+   "src_native": [
+    1325,
+    1278
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 206, 1325×1278 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기공 골격 (A–D) · 투과도 (E–H: AM_L 1.7e-13 → 8.2e-14 m² · AM_S 2.5e-13 → 5.6e-14 m²) · (I) 압축률–기공률–tortuosity (= tortuosity factor · TauFactor · 3 상) · (J) 압축률–기공 크기–비반응면적. I · J 는 원근 3D 산점도라 값이 인쇄돼 있지 않다 → digitized.csv 판독 (AM_L τ 2.58 → 8.79 · AM_S 2.32 → 7.56 · 표 S3 · S4 의 8.85 · 2.58 과 대조됨)."
+  },
+  {
+   "key": "f3ad",
+   "kind": "figure",
+   "label": "3a-d",
+   "page": 8,
+   "file": "fig_3abcd.png",
+   "caption": "Fig. 3(A–D) — skeletons of the pore network colour-coded by the inter-particle gap size (0–9 µm): (A) uncalendered and (B) 22.5% calendered AM_L; (C) uncalendered and (D) 24% calendered AM_S. The dashed circle in (A) marks the loss of pore connectivity under calendering (panels of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.1,
+    103.6,
+    375.2,
+    207.6
+   ],
+   "w": 1371,
+   "h": 483,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.649,
+   "src_native": [
+    1325,
+    1278
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel crop of Fig. 3 — cut from the embedded native raster (xref 206, 300 dpi, no resampling): panel box [0, 0, 1325, 434] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[0, 393, 1235, 434]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기공 망 골격. AM_L = 굵은 (붉은) 통로 소수 · AM_S = 가는 통로 다수 (Fig. S3: 세그먼트 4028 ↔ 1564). 액체 전해질 전극에서는 이 기공 망이 곧 이온 통로다 — 우리 ASSB 에서는 SE 망이 그 자리이고 기공은 죽은 부피다 (대응시킬 때 뒤집어 읽는다)."
+  },
+  {
+   "key": "f3eh",
+   "kind": "figure",
+   "label": "3e-h",
+   "page": 8,
+   "file": "fig_3efgh.png",
+   "caption": "Fig. 3(E–H) — liquid permeability simulation on the 3D pore structures with streamlines colour-coded by the normalised fluid velocity (0–1): (E) uncalendered AM_L 1.7e-13 m2, (F) 22.5% calendered AM_L 8.2e-14 m2, (G) uncalendered AM_S 2.5e-13 m2, (H) 24% calendered AM_S 5.6e-14 m2 (panels of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    60.3,
+    198.7,
+    376.1,
+    289.9
+   ],
+   "w": 1366,
+   "h": 430,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.597,
+   "src_native": [
+    1325,
+    1278
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel crop of Fig. 3 — cut from the embedded native raster (xref 206, 300 dpi, no resampling): panel box [0, 393, 1325, 776] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[1235, 393, 1325, 434], [0, 718, 1244, 776]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "투과도 (Avizo XLab · no-slip). 압연 전 AM_L 은 AM_S 의 약 70 % (본문) — 압연 뒤에는 뒤집혀 AM_S 가 더 낮다 (5.6e-14 < 8.2e-14 m²). 전해액 젖음 지표이고 ASSB 에는 대응 양이 없다."
+  },
+  {
+   "key": "f3i",
+   "kind": "figure",
+   "label": "3i",
+   "page": 8,
+   "file": "fig_3i.png",
+   "caption": "Fig. 3(I) — dependence of tortuosity (vertical axis 2–10) and porosity (0.20–0.36) on the compression ratio (0–25 %), drawn as a perspective 3D scatter whose points appear only as projections on the three faces (red: porosity–tortuosity, green: compression–tortuosity, blue: compression–porosity); solid symbols AM_L, hollow AM_S; insets = inter-particle gap maps (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    62.7,
+    279.1,
+    211.7,
+    410.4
+   ],
+   "w": 671,
+   "h": 597,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.771,
+   "src_native": [
+    1325,
+    1278
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel crop of Fig. 3 — cut from the embedded native raster (xref 206, 300 dpi, no resampling): panel box [0, 724, 644, 1278] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 단계별 값의 유일한 원천 (표로는 양 끝만 인쇄). 판독 (digitized.csv fig3I · 두 면 교차 일치 τ ≤ 0.014): AM_L (0, 0.330, 2.58) · (7.0, 0.300, 2.94) · (15.0, 0.250, 4.65) · (22.5, 0.190, 8.79) · AM_S (0, 0.350, 2.32) · (8.5, 0.300, 2.73) · (13.5, 0.270, 3.55) · (24.0, 0.195, 7.56) = (압축률 %, 기공률, tortuosity factor). 같은 기공률에서 AM_L 의 τ 가 더 높다. ⚠ AM_S 둘째 점은 8.5 % 로 찍혀 있다 (Fig. 1I 라벨 7 %)."
+  },
+  {
+   "key": "f3j",
+   "kind": "figure",
+   "label": "3j",
+   "page": 8,
+   "file": "fig_3j.png",
+   "caption": "Fig. 3(J) — dependence of the specific reaction area (vertical axis 2–11 ×10^5 m−1) and the average pore size (0.27–0.42 µm) on the compression ratio (0–25 %), same perspective 3D scatter convention as (I); insets = spatial distribution of the reaction area before ('Uncal') and after ('Cal (24%)') calendering in AM_S (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    213.6,
+    276.2,
+    364.8,
+    408.9
+   ],
+   "w": 680,
+   "h": 603,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.748,
+   "src_native": [
+    1325,
+    1278
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel crop of Fig. 3 — cut from the embedded native raster (xref 206, 300 dpi, no resampling): panel box [644, 718, 1325, 1278] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[1228, 718, 1325, 764], [1244, 764, 1262, 768], [1262, 764, 1325, 780]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독 (digitized.csv fig3J): 평균 기공 크기 AM_L 0.421 → 0.379 → 0.343 → 0.309 µm · AM_S 0.406 → 0.360 → 0.335 → 0.284 µm · 비반응면적 (×10⁵ m⁻¹) AM_L 3.60 → 3.29 → 2.77 → 2.22 (−38 %) · AM_S 6.27 → 5.42 → 4.12 → 2.43 (−61 %). 압연이 반응 면적을 줄인다 — CBD 가 눌려 AM 표면을 덮기 때문 (3 상 측정)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Electrochemical Parameters Obtained at 60% DoD, at Discharge Rates of 3C and 5C with Incremental Calendering. (A–F) Spatial distribution of SoL in (A) uncalendered, (B) 22.5% calendered AM_L discharged at 3C and (C) 5C; (D) uncalendered, (E) 24% calendered AM_S discharged at 3C and (F) 5C. (G–L) Spatial distribution of activation overpotential η_act at the active particle/electrolyte reacting interface in (G) uncalendered, (H) 22.5% calendered AM_L discharged at 3C and (I) 5C; (J) uncalendered, (K) 24% calendered AM_S discharged at 3C and (L) 5C. (M–R) Spatial distribution of electrolyte concentration C_ey in (M) uncalendered, (N) 22.5% calendered AM_L discharged at 3C and (O) 5C; (P) uncalendered, (Q) 24% calendered AM_S discharged at 3C and (R) 5C. (S–X) Spatial distribution of Li+ ion flux J_p in (S) uncalendered, (T) 22.5% calendered AM_L discharged at 3C and (U) 5C; (V) uncalendered, (W) 24% calendered AM_S discharged at 3C and (X) 5C.. The separator side is at the top.",
+   "rotated_deg": 0,
+   "bbox": [
+    60.4,
+    103.9,
+    373.6,
+    342.9
+   ],
+   "w": 1355,
+   "h": 1046,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.504,
+   "auto_bbox": [
+    51.7,
+    97.6,
+    382.5,
+    349.4
+   ],
+   "src_native": [
+    1308,
+    999
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 253, 1308×999 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "3D 미세구조 분해 모델 (COMSOL 5.5 · gPNP) 의 60 % DoD 필드 — SoL (0.2–0.95) · η_act (0–0.1 V) · C_ey (300–800 mol m⁻³) · J_p (0–200 A m⁻²). 우리 STEP4 (입자별 SoL · 반응 분포) 와 같은 종류의 출력이지만 액체 전해질 LIB 다 (기공 = 이온 통로)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Correlation between the Global and Local Electrochemical Performance. (A–D) Comparison of the simulated discharge performance between (A) uncalendered and (B) 22.5% calendered AM_L; (C) uncalendered and (D) 24% calendered AM_S. (E and F) Comparison of the simulated and experimental results (solid lines) of (E) uncalendered and (F) 18% calendered AM_H electrode that is composed of large particles with heavier mass loading than AM_L (2 versus 1.5 mAh cm−2) and the solid lines represent the experimental results. (G) Comparison of the η_act distribution (solid lines) and its in-plane variation (shaded area) as a function of the distance from the separator under different calendering conditions. (H and I) Comparison of the SoL distribution (solid lines) and its in-plane variation (dashed lines) as a function of the distance from the separator under different calendering conditions for (H) AM_L and (I) AM_S, with P1 and P2 indicating two characteristic peaks associated with the same local microstructure.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.0,
+    103.9,
+    541.9,
+    494.6
+   ],
+   "w": 2062,
+   "h": 1678,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.821,
+   "auto_bbox": [
+    51.7,
+    70.1,
+    550.9,
+    503.1
+   ],
+   "src_native": [
+    2023,
+    1640
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 296, 2023×1640 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 방전 곡선 (A–D · 0.2–5C) · AM_LH (NMC622 · 2 mAh cm⁻²) 실험 대조 (E, F — 모델 검증은 이 한 쌍) · 두께 방향 η_act · SoL 프로파일 (G–I). 캡션의 'AM_H' 는 본문 · 표의 AM_LH."
+  },
+  {
+   "key": "f5ad",
+   "kind": "figure",
+   "label": "5a-d",
+   "page": 12,
+   "file": "fig_5abcd.png",
+   "caption": "Fig. 5(A–D) — simulated discharge curves (voltage 3.0–4.2 V vs specific capacity 0–180 mAh g−1) at 0.2C, 0.5C, 1C, 2C, 3C and 5C for (A) AM_L (Uncal), (B) AM_L (22.5% Cal), (C) AM_S (Uncal), (D) AM_S (24% Cal) (panels of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    59.0,
+    103.9,
+    382.3,
+    364.3
+   ],
+   "w": 1397,
+   "h": 1135,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.88,
+   "src_native": [
+    2023,
+    1640
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel crop of Fig. 5 — cut from the embedded native raster (xref 296, 300 dpi, no resampling): panel box [0, 0, 1360, 1086] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[1332, 100, 1360, 440], [1332, 600, 1360, 1000], [0, 1070, 60, 1086]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 방전 곡선 네 전극 × 여섯 율. 끝 용량 = Fig. 7A 의 점. 실험 대조가 붙은 것은 E · F (AM_LH) 뿐이다."
+  },
+  {
+   "key": "f5ef",
+   "kind": "figure",
+   "label": "5e-f",
+   "page": 12,
+   "file": "fig_5ef.png",
+   "caption": "Fig. 5(E, F) — simulated (symbols) vs experimental (solid lines) discharge curves of (E) AM_LH (Uncal) and (F) AM_LH (18% Cal) at 0.2C–5C (panels of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    379.9,
+    104.4,
+    541.9,
+    364.5
+   ],
+   "w": 725,
+   "h": 1134,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.851,
+   "src_native": [
+    2023,
+    1640
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel crop of Fig. 5 — cut from the embedded native raster (xref 296, 300 dpi, no resampling): panel box [1332, 0, 2023, 1087] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[1332, 462, 1362, 495], [1332, 1018, 1362, 1048]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 검증의 전부 — NMC622 · 2 mAh cm⁻² 전극 한 쌍. 본문: 'in good agreement …, except for a noticeable discrepancy at 5C' — 5C 끝 용량이 모델 ≈88 · 81 ↔ 실험 ≈80 · 73 mAh g⁻¹ [눈대중] 로 모델이 크다. D_s · OCV 는 GITT (Fig. S7 · S9), j00 는 문헌값 (Table S1) — 맞춘 손잡이가 있었는지는 인쇄돼 있지 않다."
+  },
+  {
+   "key": "f5g",
+   "kind": "figure",
+   "label": "5g",
+   "page": 12,
+   "file": "fig_5g.png",
+   "caption": "Fig. 5(G) — activation overpotential (V, 0.02–0.12) vs distance from the separator (0–45 µm): mean (solid lines) and in-plane variation (shaded) for AM_L fresh / 15% / 22.5% compression and AM_S fresh / 24% compression (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    60.0,
+    361.9,
+    218.9,
+    494.4
+   ],
+   "w": 712,
+   "h": 602,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.541,
+   "src_native": [
+    2023,
+    1640
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel crop of Fig. 5 — cut from the embedded native raster (xref 296, 300 dpi, no resampling): panel box [0, 1066, 673, 1640] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[100, 1066, 673, 1087]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두께 방향 η_act. AM_L 은 압축할수록 평균과 면내 산포가 함께 커지고 AM_S 는 낮고 평평하다 (반응 면적이 커서)."
+  },
+  {
+   "key": "f5hi",
+   "kind": "figure",
+   "label": "5h-i",
+   "page": 12,
+   "file": "fig_5hi.png",
+   "caption": "Fig. 5(H, I) — state-of-lithiation vs distance from the separator: mean (solid) and in-plane variation (dashed) for (H) AM_L fresh / 15% / 22.5% compression and (I) AM_S fresh / 13.5% / 24% compression; P1, P2 = characteristic peaks tied to the same local microstructure (panels of Fig. 5).",
+   "rotated_deg": 0,
+   "bbox": [
+    221.8,
+    364.8,
+    540.5,
+    494.6
+   ],
+   "w": 1378,
+   "h": 591,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.867,
+   "src_native": [
+    2023,
+    1640
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel crop of Fig. 5 — cut from the embedded native raster (xref 296, 300 dpi, no resampling): panel box [673, 1087, 2023, 1640] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두께 방향 SoL. 같은 국소 구조에 붙은 봉우리 P1 · P2 가 압축에 따라 분리막 쪽으로 옮겨 간다 = 같은 시료를 단계별로 추적했다는 표시."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6. The Effect of Solid-State Diffusion and Reaction Kinetics on the Discharge Performance of AM_L. (A–F) (A–C) and (D–F) Spatial distribution of SoL and η_act respectively at 60% DoD, 3C discharge in AM_L, corresponding to the time step highlighted by the black dashed line in (G). (G) Comparison of the discharge curves simulated at 3C under different conditions. (H–K) the transient potential in the electron-conducting phase μ_e, in ion-conducting phase μ_p, equilibrium potential V_eq and V_eq under faster solid-state diffusion, corresponding to the time step highlighted in (G). Black and blue arrows in (D) indicate the low η_act arising from locally large pore and small particles, respectively. Black arrows in (J) compare the marked difference of V_eq at the surface of small and large particles, leading to heterogeneous performance.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.6,
+    103.6,
+    544.1,
+    442.8
+   ],
+   "w": 2073,
+   "h": 1463,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.519,
+   "auto_bbox": [
+    51.7,
+    70.1,
+    550.9,
+    448.7
+   ],
+   "src_native": [
+    2023,
+    1413
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 334, 2023×1413 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM_L 22.5 % · 3C 에서 고체 확산을 빠르게 (Ds_f) 하면 용량이 늘고, 반응 속도 상수를 빠르게 (Rk_f · j00_f) 하면 전압만 오른다 ⇒ 원문 결론 '고체 확산 지배'. μ_e 3.577–3.584 V (7 mV 폭) ↔ μ_p 0 … −0.04 V — 전자 쪽 강하는 작다."
+  },
+  {
+   "key": "f6g",
+   "kind": "figure",
+   "label": "6g",
+   "page": 14,
+   "file": "fig_6g.png",
+   "caption": "Fig. 6(G) — simulated 3C discharge curves of AM_L (22.5% Cal): initial parameters (red), fast solid diffusion Ds_f (purple), fast reaction kinetics Rk_f (green); the dotted line marks the time step of panels A–F and H–K (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.6,
+    290.4,
+    235.4,
+    434.4
+   ],
+   "w": 787,
+   "h": 650,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.9,
+   "src_native": [
+    2023,
+    1413
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop of Fig. 6 — cut from the embedded native raster (xref 334, 300 dpi, no resampling): panel box [0, 760, 754, 1413] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[722, 1100, 754, 1260]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "민감도 두 팔: 고체 확산 계수를 올리면 (Ds_f · Fig. S7 점선) 용량이 ≈117 → ≈138 mAh g⁻¹ 로 늘고 [눈대중], 반응 상수를 올리면 (j00_f = 2e-5) 전압만 오른다."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 16,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Overview of the Cell Performance Obtained from Electrodes with Incremental Thickness and Calendering Ratio. (A) Comparison of the simulated rated specific capacity of uncalendered, calendered, and increasing thickness of calendered AM_L and AM_S electrodes. (B and C) SoL and C_ey distribution at 60% DoD (first three columns) and end of discharge (last column; 67% DoD for AM_L and 83% DoD for AM_S) for heavily calendered AM_S and AM_L electrodes, respectively. (D) Dependence of specific capacity on the dual-variation of porosity and electrode thickness for AM_S and AM_L electrodes. Electrochemical performance in (B), (C), and (D) is obtained at 3C discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.1,
+    103.6,
+    376.1,
+    356.1
+   ],
+   "w": 1375,
+   "h": 1102,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.58,
+   "auto_bbox": [
+    51.7,
+    97.6,
+    382.1,
+    361.9
+   ],
+   "src_native": [
+    1325,
+    1052
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 385, 1325×1052 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(A) 모델 정격 용량 vs C-rate 8 계열 (판독 = digitized.csv fig7A) · (B, C) 같은 구조를 거울상으로 붙여 1.5 × · 2 × 로 만든 가상 후막의 SoL · C_ey · (D) 3C 용량의 두께 (40–70 µm)–기공률 (0.20–0.32) 지도: AM_S 145.4–170.0 · AM_L 98.40–145.0 mAh g⁻¹ (컬러바 인쇄값) · AM_L 은 기공률 0.25 가 전이점."
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 16,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(A) — simulated rated specific capacity (mAh g−1, 60–180) vs C-rate (0.1–10 h−1, log) for AM_L (Uncal), AM_L (22.5% Cal), AM_L1.5, AM_L2, AM_S (Uncal), AM_S (24% Cal), AM_S1.5, AM_S2; arrows S1.5 / S2 / L1.5 / L2 mark the capacity loss from the added thickness at 5C (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.1,
+    112.3,
+    178.6,
+    215.7
+   ],
+   "w": 552,
+   "h": 481,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.891,
+   "src_native": [
+    1325,
+    1052
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel crop of Fig. 7 — cut from the embedded native raster (xref 385, 300 dpi, no resampling): panel box [0, 20, 504, 489] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[495, 20, 504, 420], [0, 455, 60, 489]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독 (digitized.csv fig7A · 삼각형 ±0.7): 5C 에서 AM_L 101 (압연 전) → 87 (22.5 %) → 76 (1.5 ×) → 55 (2 ×) · AM_S 149 → 142 → 129 → 111 mAh g⁻¹. 3C: AM_L 130 → 118 → 110 → 95 · AM_S 159 → 157 → 149 → 141. 모델값 (실험 아님) · 반쪽 셀."
+  },
+  {
+   "key": "f7d",
+   "kind": "figure",
+   "label": "7d",
+   "page": 16,
+   "file": "fig_7d.png",
+   "caption": "Fig. 7(D) — 3C specific capacity (mAh g−1) as two surfaces over electrode thickness (40–70 µm) and porosity (0.20–0.32): AM_S (colour bar 145.4–170.0) above AM_L (colour bar 98.40–145.0) (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    237.2,
+    240.2,
+    374.2,
+    351.3
+   ],
+   "w": 621,
+   "h": 513,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.672,
+   "src_native": [
+    1325,
+    1052
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel crop of Fig. 7 — cut from the embedded native raster (xref 385, 300 dpi, no resampling): panel box [745, 560, 1325, 1052] px (split lines placed in white gaps measured on the raster row/column ink profiles); pieces of the neighbouring panels that interlock with this box were painted white first: [[745, 1000, 805, 1052]] px → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel labels kept, caption excluded; re-cut after the first visual check (box / white-out adjusted — a clipped label or unit, or a speck of a neighbour panel) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두께–기공률 설계 지도 (모델 · 3C). 원문: AM_S 는 대각선 방향으로 단조 감소 (두께 · 기공률이 같은 무게) · AM_L 은 기공률 0.25 가 전이점 — 그 아래에서 급락. 두께는 같은 구조를 거울상으로 붙이거나 잘라 만든 가상 전극 (40–70 µm) 이다."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 19,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Comparison of the Discharge Performance by Experiment between Electrodes of Different Mass Loadings before and after Calendering. [The printed caption is this title only. Read from the figure: (A, B) 1 mAh cm−2, 30 µm → 25 µm; (C, D) 2 mAh cm−2, 48 µm → 39 µm; (E, F) 3 mAh cm−2, 74 µm → 57 µm; voltage 3.0–4.2 V vs specific capacity 0–180 mAh g−1 at 0.2C, 0.5C, 1C, 2C, 3C and 5C; insets = cross-section images with the thickness arrows.]",
+   "rotated_deg": 0,
+   "bbox": [
+    58.6,
+    103.6,
+    544.1,
+    427.6
+   ],
+   "w": 2073,
+   "h": 1400,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.766,
+   "auto_bbox": [
+    51.7,
+    70.1,
+    550.6,
+    433.6
+   ],
+   "src_native": [
+    2023,
+    1350
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the top of the page to the caption, so it carried the running head and uneven margins), re-cut from the embedded native raster (xref 450, 2023×1350 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실험 (반쪽 셀): 1 · 2 · 3 mAh cm⁻² 전극의 압연 전 → 후 두께 30 → 25 · 48 → 39 · 74 → 57 µm (본문 'ca. 20%' · 카드 산술 16.7 · 18.8 · 23.0 %) 방전 곡선. 2 mAh 쌍의 48 → 39 µm 는 Table 1 의 AM_LH (NMC622) 와 같다 — 1 · 3 mAh 전극의 재료 · 조성은 인쇄돼 있지 않다. 탈압 뒤 두께이고 압연 방법 · 압력 · 선하중 · 롤 간격도 없다. 캡션이 제목 한 줄뿐이라 두께는 그림 안 라벨에서 읽는다."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 13,
+   "file": "tab_1.png",
+   "caption": "Table 1. Microstructural Parameters for the Selected Electrodes — columns: areal capacity (mAh cm−2), AM volume fraction, thickness (µm), porosity; rows AM_L (Uncal), AM_L (22.5 % Cal), AM_LH (Uncal), AM_LH (18% Cal), AM_L1.5 (22.5% Cal), AM_L2 (22.5% Cal), AM_S (Uncal), AM_S (24% Cal), AM_S1.5 (24% Cal), AM_S2 (24% Cal).",
+   "rotated_deg": 0,
+   "bbox": [
+    52.7,
+    98.1,
+    381.5,
+    278.3
+   ],
+   "w": 1371,
+   "h": 752,
+   "dpi": 300,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.192,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed the table cells; crop kept as cut by the tool (opened and checked: title + all ten rows, uniform margins) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 압연 전 · 후 값이 인쇄된 유일한 표: AM_L 45 → 35 µm · 기공률 0.325 → 0.188 · AM 분율 0.46 → 0.52 · AM_S 43 → 33 µm · 0.354 → 0.195 · 0.45 → 0.50 · AM_LH 48 → 39 µm · 0.286 → 0.217 · 0.57 → 0.62. ⚠ 두께는 22 % · 23 % 줄었는데 AM 분율은 13 % · 11 % 만 늘었다 [카드 산술] = 옆으로 밀려난 양이 있다 (기둥 압축) 또는 분할 오차. L1.5 · L2 · S1.5 · S2 는 가상 전극."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Diffusion time constant distribution of the particles for the two types of electrodes. C50 and C90 represent the maximum C-rate for 50% and 90% of total particles when solid-state diffusion is rate-limiting. The time constant for Li diffusion across the active particle with a radius r is t_D = r^2/D_s and the maximum C-rate is calculated as C = 3600/t_D.",
+   "rotated_deg": 0,
+   "bbox": [
+    137.0,
+    73.7,
+    459.4,
+    307.9
+   ],
+   "w": 1393,
+   "h": 1026,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.835,
+   "manual_crop": "figure not found by the caption-anchored tool (rejected as 'no graphics' — the chart is vector paths / an embedded object the tool does not count) — rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 316] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자별 확산 시간 t_D = r²/D_s → 최대 율 C = 3600/t_D. AM_S C50 = 5C · C90 = 1.8C · AM_L C50 = 3C · C90 = 0.8C. 우리 STEP4 의 입자별 확산 분리 (SC/PC) 와 같은 척도 — 값은 액체 셀 NMC111 의 D_s 에 묶여 있다."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: The effect of particle shape and orientation on the mass transport property. Synthetic active materials consist of (A) spherical particles (SP), (B) horizontally-aligned particles (HP) and (C) vertically-aligned particles (VP) generated by open-source code Porespy3. The equivalent size and volume fraction of the particles are identical in three samples; (D-F) streamlines of the mass flux obtained from computed fluid dynamics simulation in the three samples respectively. VP electrode has a straighter flux trajectory in contrast to the tortuous one in HP, highlighting the impact of particle orientation and morphology; (G-I) qualitative comparison of the magnitude of the mass flux, which is represented by the colour map. A local low-flux region due to the tortuous pathway in HP is indicated by a yellow arrow in (H).",
+   "rotated_deg": 0,
+   "bbox": [
+    96.5,
+    74.6,
+    497.3,
+    414.7
+   ],
+   "w": 1720,
+   "h": 1467,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.272,
+   "auto_bbox": [
+    66.0,
+    66.2,
+    532.2,
+    421.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 422] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "합성 구조 세 가지 (구 · 수평 정렬 · 수직 정렬 · PoreSpy) 의 유선. 정량은 Fig. S4."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: (top) Illustration of the pore network defined by the combination of nodes and pore segments. Node with coordination number 1 means that it only connects to one single pore segment, indicating the end of a continuous pathway; node with coordination number larger than 1 means it simultaneously connects to multiple pore segments, acting as a transport junction; (bottom) quantification of the nodes type and pore segment before and after calendering for two types of electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.4,
+    74.6,
+    492.7,
+    615.1
+   ],
+   "w": 1793,
+   "h": 2302,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.824,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    532.2,
+    622.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 625] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기공 망 연결성. 인쇄: 세그먼트 · 노드 AM_S 4028 · 3488 → 3125 · 2773 · AM_L 1564 · 1416 → 1349 · 1242. 배위수별 감소 AM_S 15.6 / 23.5 / 25.2 / 41.9 / 0 % (1, 3, 4, 5, 6) · AM_L 1.8 / 18.3 / 31.4 / 66.8 / 100 %. ⇒ AM_L 은 고배위 접합점이 먼저 사라진다 = 원문 '연결성 상실'. 막대 판독 = digitized.csv figS3. ⚠ 배위수 1 = 통로의 끝 (막다른 가지 또는 시료 경계) — 구분돼 있지 않다."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Comparison of the mass transport parameters in electrodes of different particle shape and orientations, as well as electrodes with and without the inclusion of the CBD phase. The effective mass transport factor f, equal to the ratio of porosity ε to norminal [sic] tortuosity τ_norm. The numbers in parentheses reflect the change relative to the SP. The results accounting for the CBD morphology (left side) show significantly worse mass transport properties compared to the two phase ones, and the effect of particle orientation and shape is more obvious in the former condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    111.0,
+    482.2,
+    378.6
+   ],
+   "w": 1759,
+   "h": 1165,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.668,
+   "auto_bbox": [
+    66.0,
+    85.8,
+    527.5,
+    386.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 106, 540, 387] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ τ 규약 확인 자리: f = ε/τ_norm (인쇄) ⇒ τ 는 tortuosity factor (우리 tau2). 값 (CBD 포함 | 2 상): HP f 0.053 | 0.20 · τ 4.51 | 1.73 · ε 0.24 | 0.36 · SP 0.058 | 0.22 · 4.07 | 1.62 · VP 0.077 | 0.26 · 2.95 | 1.38 (ε 0.23 | 0.36). CBD 를 넣으면 τ 가 2.1–2.6 배 [카드 산술] — 기공률 차 (0.24 ↔ 0.36) 가 함께 들어 있다. 합성 구조 (PoreSpy) 이고 CBD 를 어떻게 넣었는지는 인쇄돼 있지 않다."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: State-of-lithiation (SoL) obtained at 60% DoD, 0.5C discharge in 22.5% calendered AM_L.",
+   "rotated_deg": 0,
+   "bbox": [
+    193.4,
+    530.2,
+    403.2,
+    656.0
+   ],
+   "w": 924,
+   "h": 574,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.393,
+   "auto_bbox": [
+    66.0,
+    521.2,
+    528.5,
+    664.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 470, 540, 665] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "저율 (0.5C) 에서는 SoL 이 거의 균일 (컬러바 0.2–0.9) — 고율의 불균일 (Fig. 4B, C) 과 대조."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Lithium concentration profile as a function of the distance from the core of the particles of two sizes under different conditions. The insets show colour-code particles corresponding to 22.5% calendering, discharged at 3C. Particles are extracted from the simulation in Fig. 4A,B and C.",
+   "rotated_deg": 0,
+   "bbox": [
+    154.6,
+    74.2,
+    430.8,
+    275.3
+   ],
+   "w": 1201,
+   "h": 888,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.859,
+   "auto_bbox": [
+    66.0,
+    66.2,
+    522.2,
+    281.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 282] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자 안 반경 방향 SoL (지름 5 · 11 µm 두 입자 · Table S2 의 원자료). 11 µm 입자는 중심 ≈0.40–0.47 ↔ 표면 ≈0.73–0.79 [눈대중] — 큰 입자 속이 덜 쓰인다."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Solid-state diffusion coefficient obtained by GITT test for both 18% calendered and uncalendered 2 mAh cm-2 NMC622 electrode. An average value is used in the modelling (blue line). The dashed blue line Ds_f shows the increased values based on the original Ds_0 in the faster solid-state diffusion investigation.",
+   "rotated_deg": 0,
+   "bbox": [
+    153.8,
+    389.8,
+    442.0,
+    608.2
+   ],
+   "w": 1251,
+   "h": 960,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.947,
+   "manual_crop": "figure not found by the caption-anchored tool (rejected as 'no graphics' — the chart is vector paths / an embedded object the tool does not count) — rendered by hand from the vector page at 300 dpi: region [100, 384, 540, 616] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 입력 D_s(DoD) — NMC622 전극의 GITT 겉보기 값 (cm² s⁻¹): 압연 전 2.36e-10 (DoD 0) … 6.5e-12 (0.92) · 18 % 압연 2.05e-10 … 1.6e-12 (0.95) [벡터 판독]. ⚠ Table S1 한 벌 (D_s · OCV = NMC622 GITT) 이 AM_L · AM_S (NMC111 · 다른 공급사) 모델에도 쓰인 것으로 읽힌다 — NMC111 의 D_s 측정은 실리지 않았다. 본문은 'D_s 가 압연에 크게 의존하지 않는다' 고 쓰지만 판독으로는 압연 시료가 DoD ≤ 0.66 에서 0.68–0.87 배 · 그 뒤로는 더 낮다 (같은 순번 점끼리의 비 · 두 계열의 DoD 가 조금 다르다)."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Average voltage as a function of C-rate for uncalendered and calendered AM_L and AM_S electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    171.8,
+    74.6,
+    426.0,
+    271.2
+   ],
+   "w": 1109,
+   "h": 869,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.967,
+   "manual_crop": "figure not found by the caption-anchored tool (rejected as 'no graphics' — the chart is vector paths / an embedded object the tool does not count) — rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 280] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 평균 전압 (V) [벡터 판독 0.2 / 0.5 / 1 / 2 / 3 / 5C]: AM_L 압연 전 3.801 … 3.707 · 22.5 % 3.801 … 3.657 · AM_S 압연 전 3.798 … 3.751 · 24 % 3.797 … 3.744. 본문은 AM_S 가 5C 에서 '3.75 V 위' 라 쓰지만 압연한 AM_S 는 3.744 로 읽힌다."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 8,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: GITT charge and discharge test to measure the OCV and solid-state diffusion coefficient Ds.",
+   "rotated_deg": 0,
+   "bbox": [
+    160.6,
+    356.2,
+    436.3,
+    575.0
+   ],
+   "w": 1199,
+   "h": 962,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.958,
+   "manual_crop": "figure not found by the caption-anchored tool (rejected as 'no graphics' — the chart is vector paths / an embedded object the tool does not count) — rendered by hand from the vector page at 300 dpi: region [60, 330, 540, 583] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "GITT 원곡선 (C/10 · 2.5 % SoC 걸음 · 5 h 휴지 · vs Li/Li⁺) — OCV 와 D_s 의 출처."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Comparison of the microstructures of AM_L electrodes calendered by test stage and rollers. (A), (C) and (E) show the segmentation of the reconstructed data, colour-coded particle size distribution and inter-particle gap size with skeletons for the microtester calendering, whereas (B), (D), (F) for the roller calendering. (G) and (F) [sic — (G) and (H)] quantitatively compares the particle size distribution and (I) for the inter-particle gap size distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.5,
+    74.2,
+    492.7,
+    494.9
+   ],
+   "w": 1726,
+   "h": 1803,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.543,
+   "auto_bbox": [
+    66.0,
+    66.2,
+    531.6,
+    500.7
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 503] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ '기둥 압축 = 압연' 의 근거 전부. 롤 압연 시료: 압연 전 44.3 µm → 20 % 압연 35.4 µm (단면 라벨 · 탈압 뒤) ↔ 마이크로테스터 22.5 % (누른 채). 입도 · 틈 분포가 비슷하다는 대조이고 숫자는 Table S3. 압연 조건 (간격 · 선하중 · 온도 · 속도) 은 인쇄돼 있지 않다."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Thresholding segmentation using FWHM criterion (50% peak height) and +/- 10% uptake to assess the variation of the measured mean particle size. These are compared with the automatic marker-based watershed method.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.7,
+    72.0,
+    456.2,
+    337.2
+   ],
+   "w": 1648,
+   "h": 1155,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.648,
+   "auto_bbox": [
+    65.4,
+    66.0,
+    528.7,
+    344.2
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 345.5] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자 경계 문턱 민감도: 60 % (173) → D_mean 7.03 · 50 % FWHM (160.9) → 7.3 µm · 40 % (148) → 7.49 µm · 자동 watershed 7.42 µm. ±10 % 에 −3.7 / +2.6 % [카드 산술]."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 10,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: Thresholding segmentation using FWHM criterion (50% peak height) and +/- 10% uptake to assess the variation of the measured mean particle size. These are compared with the automatic marker-based watershed method. [Printed caption is a copy of Fig. S11's; the figure itself is the pore-phase threshold test.]",
+   "rotated_deg": 0,
+   "bbox": [
+    74.9,
+    391.5,
+    510.2,
+    697.2
+   ],
+   "w": 1864,
+   "h": 1324,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.678,
+   "auto_bbox": [
+    66.0,
+    385.5,
+    528.7,
+    703.2
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 385, 540, 705.5] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 기공률의 분할 문턱 민감도: 60 % (59.4) → 기공률 0.353 · 크기 0.462 µm · 50 % FWHM (50.1) → 0.325 · 0.423 · 40 % (40.8) → 0.288 · 0.398 · watershed 0.310 · 0.404. ⇒ 문턱 ±10 % 에 기공률 0.288–0.353 (−11 / +9 % 상대 [카드 산술]) — 압연 22.5 % 의 변화 (0.325 → 0.188) 보다 작지만 시료 간 산포 (Table S4 std 0.016) 의 두 배. 캡션은 S11 의 복사본 ('mean particle size')."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Comparison of the uncalendered AM_L scanned by nano-CT and micro-CT. Quantitative analysis of the particle size distribution, volume fraction of NMC and mean particle size distribution are shown and good consistency is found between the small sample (nano-CT) and large sample (micro-CT).",
+   "rotated_deg": 0,
+   "bbox": [
+    77.3,
+    74.2,
+    501.6,
+    329.5
+   ],
+   "w": 1818,
+   "h": 1114,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.754,
+   "auto_bbox": [
+    66.0,
+    66.2,
+    529.1,
+    335.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 336.5] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "대표성: nano-CT 시료 Vol_AM 43 % · D_AM 7.32 µm ↔ micro-CT 큰 시료 45 % · 7.67 µm (본문 '4.7 % 차'). 왼쪽 히스토그램에는 AM_S 도 겹쳐 있다 (= Fig. 1L). ⚠ Table 1 의 AM_L 압연 전 AM 부피 분율은 0.46."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 11,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Representative volume analysis of the tortuosity and porosity by incremental volume dilation method. The size of the symbols proportionally represents the size of the volume in which the metrics are measured. Volume fraction 1 means the total volume of the sample used in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    138.5,
+    421.6,
+    460.8,
+    653.2
+   ],
+   "w": 1393,
+   "h": 1015,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.85,
+   "auto_bbox": [
+    66.0,
+    413.5,
+    527.2,
+    661.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 400, 540, 663.5] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "RVE 수렴 (압연 전 AM_L) [벡터 판독]: 부피 분율 0.1 → 1.0 에서 τ 2.46 → 2.60 (0.6 부터 2.58–2.61) · 기공률 0.303 → 0.330 (0.2 부터 0.329–0.335). ⇒ 64 µm 시야가 τ · 기공률에는 겨우 수렴 — 압연 뒤 시료의 RVE 는 보이지 않았다."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 12,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Particle size distribution of two extra samples of the similar size used in this study. Good agreement is observed between sample 2, sample 3 and sample 1 (the one used in this study, shown in Figure S13), despite some local disparities between these samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.9,
+    72.0,
+    503.3,
+    253.4
+   ],
+   "w": 1839,
+   "h": 806,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.691,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    529.3,
+    259.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the text-column width, so the side margins were uneven), rendered by hand from the vector page at 300 dpi: region [60, 60, 540, 261.5] pt (between the neighbouring text lines, caption excluded) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt margin on all four sides (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "시료 간 재현 (압연 전 AM_L 시료 2 · 3 의 입도). 수치는 Table S4."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 14,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Simulation parameters — NMC: D_s 'From Error! Reference source not found.' [broken cross-reference, = Fig. S7], σ_e 1.039×10−3 S m−1 (ref 4), c_s^max 32000 mol m−3, SoL_in 0.2, SoL_max 1; electrolyte: D_io and σ_io correlations (ref 5), C_in 700 mol m−3, t_p 0.38; CBD: σ_e 0.375×10^3 S m−1 (ref 6); reaction kinetics: j00 5.06×10−6 A m^2.5 mol^−1.5 (ref 7), j00_f 2×10−5, α 0.5, F 96485 C mol−1, R 8.314 J mol−1 K−1, T 298 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.0,
+    74.0,
+    493.7,
+    399.0
+   ],
+   "w": 1686,
+   "h": 1404,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.947,
+   "auto_bbox": [
+    67.0,
+    67.4,
+    495.9,
+    698.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the table title to the bottom of the page and swallowed the following tables / references), re-rendered by hand from the vector page at 300 dpi: region [60, 68, 540, 412] pt (title line to the table's bottom rule) → ink bounding box → uniform 6 pt white margin; table title kept on top (tool convention for tables) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 입력 전부. σ_e(NMC) 1.039e-3 S/m = 1.04e-2 mS/cm ↔ σ_e(CBD) 375 S/m — 3.6e5 배 [카드 산술]: 전자는 CBD 가 나른다. 초기 전해질 농도 700 mol m⁻³ (실험 셀은 1 M LiPF₆). D_s 칸은 깨진 상호참조 ('Error! Reference source not found.')."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 14,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Mean state-of-lithiation in particles of two sizes in AM_L under different conditions, with intra-particle standard deviation presented in the parenthesis — Particle 1 (5 µm): 0.69 (0.038) / 0.69 (0.043) / 0.66 (0.089); Particle 2 (11 µm): 0.59 (0.075) / 0.60 (0.087) / 0.54 (0.131) for Uncalendered (3C) / 22.5% Calendered (3C) / 22.5% Calendered (5C).",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    465.8,
+    523.0,
+    548.8
+   ],
+   "w": 1932,
+   "h": 396,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.86,
+   "auto_bbox": [
+    67.0,
+    101.9,
+    515.6,
+    698.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the table title to the bottom of the page and swallowed the following tables / references), re-rendered by hand from the vector page at 300 dpi: region [60, 460, 540, 552] pt (title line to the table's bottom rule) → ink bounding box → uniform 6 pt white margin; table title kept on top (tool convention for tables) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자 크기별 평균 SoL — 11 µm 입자가 5 µm 입자보다 14 % (3C) · 18 % (5C) 덜 리튬화 [0.59/0.69 · 0.54/0.66 = 본문 값과 맞음]."
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 14,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Summary of the key material parameters measured for the calendered AM_L using different equipment — microtester / roller / Diff (%): porosity 0.188 / 0.203 / 7.3; average pore size (µm) 0.306 / 0.324 / 5.5; tortuosity 8.85 / 8.34 / 6.1; average particle size (µm) 7.35 / 7.09 / 3.6; NMC Vol (%) 51.8 / 49.7 / 4.2.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    594.0,
+    483.4,
+    700.3
+   ],
+   "w": 1764,
+   "h": 493,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.905,
+   "auto_bbox": [
+    67.0,
+    101.9,
+    491.7,
+    698.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the table title to the bottom of the page and swallowed the following tables / references), re-rendered by hand from the vector page at 300 dpi: region [60, 588, 540, 706] pt (title line to the table's bottom rule) → ink bounding box → uniform 6 pt white margin; table title kept on top (tool convention for tables) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 누른 채 (마이크로테스터 22.5 %) ↔ 탈압 뒤 (롤 20 %) 의 유일한 수치 대조: 기공률 0.188 ↔ 0.203 · τ 8.85 ↔ 8.34 · 기공 크기 0.306 ↔ 0.324 µm. ⚠ 압축률이 다르고 (22.5 ↔ 20 %) 시료 하나씩이라 '탄성 회복' 으로 읽을 수 없다 — 원문도 '8 % 안 일치' 로만 쓴다."
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 15,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Summary of the key material metrics measured between different samples of the similar size (nano-CT) with the standard deviations — Sample 1 / 2 / 3 / Std: porosity 0.325 / 0.310 / 0.343 / 0.016; average pore size (µm) 0.421 / 0.403 / 0.441 / 0.019; tortuosity 2.58 / 2.64 / 2.51 / 0.065; average particle size (µm) 7.32 / 7.03 / 7.71 / 0.341; NMC Vol (%) 43 / 46 / 44 / 1.52.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.6,
+    74.0,
+    514.3,
+    185.6
+   ],
+   "w": 1857,
+   "h": 515,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.895,
+   "auto_bbox": [
+    67.0,
+    67.4,
+    522.2,
+    537.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop ran from the table title to the bottom of the page and swallowed the following tables / references), re-rendered by hand from the vector page at 300 dpi: region [60, 68, 540, 190] pt (title line to the table's bottom rule) → ink bounding box → uniform 6 pt white margin; table title kept on top (tool convention for tables) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "시료 간 산포 (압연 전 AM_L · n = 3): 기공률 ±0.016 · τ ±0.065 · 입경 ±0.34 µm. 압연 단계 실험은 전극마다 시료 하나. ⚠ 시료 2 의 0.310 · 0.403 · 7.03 은 Fig. S12 watershed (0.310 · 0.404) · Fig. S11 60 % 문턱 (7.03) 값과 수치가 겹친다 [관찰만 · 원문 설명 없음]."
+  },
+  {
+   "key": "xS12a",
+   "kind": "text",
+   "label": "S-p12-nomenclature",
+   "page": 12,
+   "file": "txt_S12_electrochemical_model_nomenclature.png",
+   "caption": "SI p.12 'Electrochemical model — Nomenclature': OCV; J_p, J_n, J_e, J_s (fluxes, A m−2); μ_p, μ_e (potentials in the ion / electron conducting phase, V); C_ey, C_in; c_s, c_s^max, c_s^in, c_s^acc; SoL_in, SoL_acc; t_p; σ_io; D_io; σ_e; D_s; j00; j0; J_ct; α; I; A_e; v_AM; V; A; F; T; R; V_eq.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    309.7,
+    510.0,
+    760.2
+   ],
+   "w": 1878,
+   "h": 1927,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.909,
+   "manual_crop": "block rendered by hand from the vector page at 300 dpi: region [60, 303, 540, 765] pt → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "식 (4)–(15) 의 기호표. μ_p · μ_e 는 (전기화학) 퍼텐셜을 V 로 적은 것 · J 는 전류 밀도 단위 (A m⁻²)."
+  },
+  {
+   "key": "eS1",
+   "kind": "equation",
+   "label": "eqS1",
+   "page": 2,
+   "file": "eq_S01_fourier_bulk_heat_flow.png",
+   "caption": "SI Eq. (1), p.2: Q_b = −A σ ΔT / L — Fourier heat flow through a fully dense ('fully porous' in the text) volume; A cross-sectional area, L domain length, σ thermal conductivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    265.7,
+    190.3,
+    516.1,
+    222.0
+   ],
+   "w": 1457,
+   "h": 242,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [200, 182, 530, 226] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기준 (구조 없는 부피) 의 흐름. 열 유추로 쓴 것 — 확산 · 이온 전도에도 같은 꼴."
+  },
+  {
+   "key": "eS2",
+   "kind": "equation",
+   "label": "eqS2",
+   "page": 2,
+   "file": "eq_S02_porous_heat_flow_eps_over_tau.png",
+   "caption": "SI Eq. (2), p.2: Q_p = −A (ε/τ) σ ΔT / L — the same flow in a porous medium (0 < porosity ε < 1); 'where τ is the tortuosity'.",
+   "rotated_deg": 0,
+   "bbox": [
+    262.5,
+    276.6,
+    516.1,
+    305.8
+   ],
+   "w": 1475,
+   "h": 228,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [200, 266, 530, 310] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 다공체의 유효 전도 = (ε/τ)·σ ⇒ τ 는 제곱 없이 들어간다 = tortuosity factor (우리 tau2)."
+  },
+  {
+   "key": "eS3",
+   "kind": "equation",
+   "label": "eqS3",
+   "page": 2,
+   "file": "eq_S03_tortuosity_factor_flux_ratio.png",
+   "caption": "SI Eq. (3), p.2: Q_p / Q_b = ε / τ — τ obtained from the ratio of the two flows.",
+   "rotated_deg": 0,
+   "bbox": [
+    280.6,
+    350.1,
+    516.1,
+    385.0
+   ],
+   "w": 1374,
+   "h": 260,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.986,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [200, 340, 530, 390] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ τ = ε·Q_b/Q_p = ε·σ₀/σ_eff = 우리 tau2 (수송 tortuosity) 의 정의와 같다. √ 값이 아니다 — 이 논문의 8.85 를 우리 τ (√) 와 나란히 놓지 않는다."
+  },
+  {
+   "key": "eS1_3",
+   "kind": "equation",
+   "label": "eqS1-3",
+   "page": 2,
+   "file": "eq_S01_S03_tortuosity_definition_with_text.png",
+   "caption": "SI p.2 'CFD simulation for tortuosity measurement' — the full definition block: 'Tortuosity, also called tortuosity factor, is a material parameter representing the mass transport resistance from the convoluted 3D morphology of the medium and can be obtained from Fickian type diffusion simulations.1,2' with Eqs. (1)–(3).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.1,
+    115.2,
+    523.3,
+    384.8
+   ],
+   "w": 2573,
+   "h": 1564,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.94,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [60, 108, 540, 392] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "정의 문단 통째 — '이 논문의 tortuosity = tortuosity factor' 를 원문 문장으로 대는 자리. 문단이 드는 SI ref 1 · 2 = Tjaden 2016 (Solid State Ionics 288) · Kaempfer 2005 (눈의 열전달) — 계산 도구 TauFactor 는 본문 ref 55 (Cooper 2016)."
+  },
+  {
+   "key": "eS4",
+   "kind": "equation",
+   "label": "eqS4",
+   "page": 13,
+   "file": "eq_S04_electrolyte_salt_balance.png",
+   "caption": "SI Eq. (4), p.13, pore (electrolyte) domain: F ∂C_ey/∂t + ∇·J_p = 0 — cation balance.",
+   "rotated_deg": 0,
+   "bbox": [
+    151.2,
+    136.4,
+    252.5,
+    163.0
+   ],
+   "w": 629,
+   "h": 214,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.956,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [140, 127, 255.2, 171] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전해질 (기공) 영역: 양이온 보존. (4)–(7) = 농축 용액 gPNP — 우리 ASSB 에는 농도 구배 항이 없다 (단일 이온 전도체)."
+  },
+  {
+   "key": "eS5",
+   "kind": "equation",
+   "label": "eqS5",
+   "page": 13,
+   "file": "eq_S05_cation_flux_migration.png",
+   "caption": "SI Eq. (5), p.13: J_p = −t_p σ_io ∇μ_p — cation flux.",
+   "rotated_deg": 0,
+   "bbox": [
+    292.6,
+    145.9,
+    460.5,
+    157.8
+   ],
+   "w": 999,
+   "h": 132,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.97,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [258.7, 127, 463.4, 171] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "양이온 플럭스 = 이동 항만 (농도 구배는 식 (7) 의 음이온 쪽에 실린다)."
+  },
+  {
+   "key": "eS6",
+   "kind": "equation",
+   "label": "eqS6",
+   "page": 13,
+   "file": "eq_S06_anion_balance.png",
+   "caption": "SI Eq. (6), p.13: −F ∂C_ey/∂t + ∇·J_n = 0 — anion balance.",
+   "rotated_deg": 0,
+   "bbox": [
+    145.9,
+    176.7,
+    253.6,
+    203.3
+   ],
+   "w": 664,
+   "h": 214,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.958,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [140, 170, 256.3, 213] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "음이온 보존."
+  },
+  {
+   "key": "eS7",
+   "kind": "equation",
+   "label": "eqS7",
+   "page": 13,
+   "file": "eq_S07_anion_flux_diffusion_migration.png",
+   "caption": "SI Eq. (7), p.13: J_n = (1/t_p) F D_io ∇C_ey − (1 − t_p) σ_io ∇μ_p — anion flux (diffusion + migration).",
+   "rotated_deg": 0,
+   "bbox": [
+    290.4,
+    177.4,
+    469.3,
+    207.6
+   ],
+   "w": 1060,
+   "h": 234,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.959,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [259.8, 170, 472.2, 213] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "음이온 플럭스 = 확산 + 이동."
+  },
+  {
+   "key": "eS8",
+   "kind": "equation",
+   "label": "eqS8",
+   "page": 13,
+   "file": "eq_S08_solid_lithium_balance.png",
+   "caption": "SI Eq. (8), p.13, NMC particle domain: F ∂c_s/∂t + ∇·J_s = 0 — lithium balance in the active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    151.5,
+    240.5,
+    252.9,
+    267.3
+   ],
+   "w": 629,
+   "h": 215,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.955,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [140, 232, 255.6, 273] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "활물질 안 Li 보존 — 입자를 3D 실제 형상으로 푼다 (구 가정 아님)."
+  },
+  {
+   "key": "eS9",
+   "kind": "equation",
+   "label": "eqS9",
+   "page": 13,
+   "file": "eq_S09_solid_fick_flux.png",
+   "caption": "SI Eq. (9), p.13: J_s = −F D_s ∇c_s — Fick's law in the active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.3,
+    249.8,
+    388.7,
+    261.0
+   ],
+   "w": 585,
+   "h": 128,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.945,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [259.1, 232, 391.6, 273] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "고체 확산 (Fick). D_s = D_s(DoD) (Fig. S7)."
+  },
+  {
+   "key": "eS10",
+   "kind": "equation",
+   "label": "eqS10",
+   "page": 13,
+   "file": "eq_S10_nmc_electron_conservation.png",
+   "caption": "SI Eq. (10), p.13, NMC particle domain: ∇·J_e = 0 — electron conservation.",
+   "rotated_deg": 0,
+   "bbox": [
+    153.5,
+    281.5,
+    255.6,
+    292.7
+   ],
+   "w": 633,
+   "h": 128,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.961,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [140, 272, 258.3, 299] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "NMC 전자 보존."
+  },
+  {
+   "key": "eS11",
+   "kind": "equation",
+   "label": "eqS11",
+   "page": 13,
+   "file": "eq_S11_nmc_ohm_law.png",
+   "caption": "SI Eq. (11), p.13: J_e = −σ_e ∇μ_e — Ohm's law in the NMC particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.3,
+    281.7,
+    394.7,
+    292.9
+   ],
+   "w": 618,
+   "h": 128,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.953,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [261.8, 272, 397.6, 299] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "NMC Ohm (σ_e 1.039e-3 S/m)."
+  },
+  {
+   "key": "eS12",
+   "kind": "equation",
+   "label": "eqS12",
+   "page": 13,
+   "file": "eq_S12_cbd_electron_conservation.png",
+   "caption": "SI Eq. (12), p.13, CBD domain: ∇·J_e = 0 — electron conservation.",
+   "rotated_deg": 0,
+   "bbox": [
+    153.5,
+    327.2,
+    255.6,
+    338.3
+   ],
+   "w": 633,
+   "h": 128,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [140, 318, 258.3, 345] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "CBD 전자 보존 — CBD 는 전자만 나른다 (이온 · 반응 없음 · 기공 없는 균질 상)."
+  },
+  {
+   "key": "eS13",
+   "kind": "equation",
+   "label": "eqS13",
+   "page": 13,
+   "file": "eq_S13_cbd_ohm_law.png",
+   "caption": "SI Eq. (13), p.13: J_e = −σ_e ∇μ_e — Ohm's law in the CBD.",
+   "rotated_deg": 0,
+   "bbox": [
+    292.8,
+    327.4,
+    392.2,
+    338.5
+   ],
+   "w": 618,
+   "h": 128,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.951,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [261.8, 318, 395.0, 345] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "CBD Ohm (σ_e 375 S/m). ⚠ CBD 안 나노 기공의 이온 전도는 모델에 없다."
+  },
+  {
+   "key": "eS14",
+   "kind": "equation",
+   "label": "eqS14",
+   "page": 13,
+   "file": "eq_S14_butler_volmer_charge_transfer.png",
+   "caption": "SI Eq. (14), p.13, pore/NMC boundary: J_ct = j0 [exp(αF/RT (μ_p − μ_e + V_eq)) − exp(−(1−α)F/RT (μ_p − μ_e + V_eq))] — Butler–Volmer charge transfer.",
+   "rotated_deg": 0,
+   "bbox": [
+    106.6,
+    370.6,
+    433.4,
+    397.6
+   ],
+   "w": 1882,
+   "h": 216,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.95,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [90, 362, 436.4, 404] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Butler–Volmer — 반응은 기공/NMC 경계에서만 (CBD 가 덮은 NMC 표면은 반응 면적에서 빠진다)."
+  },
+  {
+   "key": "eS15",
+   "kind": "equation",
+   "label": "eqS15",
+   "page": 13,
+   "file": "eq_S15_exchange_current_density.png",
+   "caption": "SI Eq. (15), p.13: j0 = j00 C_ey^α c_s^α (c_s^max − c_s)^(1−α) — exchange current density.",
+   "rotated_deg": 0,
+   "bbox": [
+    106.9,
+    410.5,
+    268.4,
+    425.4
+   ],
+   "w": 963,
+   "h": 149,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.952,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [90, 404, 271.3, 431] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "교환 전류 밀도 (j00 5.06e-6 · 빠른 팔 2e-5)."
+  },
+  {
+   "key": "eSbc",
+   "kind": "equation",
+   "label": "eqS-bc",
+   "page": 13,
+   "file": "eq_S_boundary_conditions.png",
+   "caption": "SI p.13 'Boundary Conditions': separator/electrode interface μ_p = 0, n·J_n = 0, n·J_s = 0, n·J_e = 0; pore/NMC boundary n·J_p = J_ct, n·J_n = 0, n·J_s = J_ct, n·J_e = J_ct; electrode/current collector boundary n·J_p = 0, n·J_n = 0, n·J_s = 0, n·J_e = I/A_e with I = (c_s^acc − c_s^in) v_AM V (F/3600)(C_rate/A); c_s^acc = c_s^max × SoL_acc, c_s^in = c_s^max × SoL_in.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.7,
+    438.3,
+    503.7,
+    625.0
+   ],
+   "w": 2466,
+   "h": 1103,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.973,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [60, 432, 540, 632] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "경계 조건 (번호 없는 식). 분리막 쪽 μ_p = 0 (반쪽 셀 · 상대극 · 분리막은 풀지 않는다) · 집전체 쪽 전류 = 용량 × C-rate."
+  },
+  {
+   "key": "eSic",
+   "kind": "equation",
+   "label": "eqS-ic",
+   "page": 13,
+   "file": "eq_S_initial_conditions.png",
+   "caption": "SI p.13 'Initial Conditions': C_ey = C_in, μ_p = 0, c_s = c_s^in, μ_e = OCV.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.7,
+    637.9,
+    396.1,
+    672.1
+   ],
+   "w": 1868,
+   "h": 256,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.969,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [60, 632, 540, 672] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "초기 조건 (번호 없는 식)."
+  },
+  {
+   "key": "eS4_15",
+   "kind": "equation",
+   "label": "eqS4-15",
+   "page": 13,
+   "file": "eq_S04_S15_governing_set_bc_ic.png",
+   "caption": "SI p.13 — the whole governing set as printed: balance and flux equations (4)–(13) by domain (pore / NMC particles / CBD), charge-transfer kinetics (14)–(15), boundary conditions and initial conditions (300 dpi overview).",
+   "rotated_deg": 0,
+   "bbox": [
+    71.5,
+    95.8,
+    503.8,
+    672.0
+   ],
+   "w": 1851,
+   "h": 2451,
+   "dpi": 300,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.971,
+   "manual_crop": "equation region rendered by hand from the vector page at 300 dpi: region [60, 90, 540, 672] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "지배식 한 장 (훑어보기용 · 식별 크롭은 eq_S04 … eq_S15)."
+  },
+  {
+   "key": "eST1",
+   "kind": "equation",
+   "label": "eq-tabS1",
+   "page": 14,
+   "file": "eq_tabS1_electrolyte_diffusivity_conductivity.png",
+   "caption": "Table S1 rows (SI p.14), electrolyte correlations (ref 5): D_io = 10^−4 × 10^(−4.43 − 54/(T − 229 − 5.0×10^−3 C_ey)) − 0.22×10^−3 C_ey [m2 s−1]; σ_io = 10^−4 × C_ey (−10.5 + 0.668×10^−3 C_ey + 0.494×10^−6 C_ey^−2 + 0.074 T − 1.78×10^−5 C_ey T − 8.86×10^−10 C_ey^2 T − 6.96×10^−5 T^2 + 2.8×10^−8 C_ey T^2)^2 [S m−1] (as printed).",
+   "rotated_deg": 0,
+   "bbox": [
+    145.2,
+    190.7,
+    488.1,
+    268.5
+   ],
+   "w": 1971,
+   "h": 498,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.951,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [100, 189.3, 500, 270] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept; re-cut after the visual check (top edge moved down to drop a speck of the row above) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "액체 전해질 물성 상관식 (LiPF₆ · SI ref 5). 인쇄 그대로 — D_io 식의 지수 · 'C_ey^−2' 항은 조판이 모호하다. 우리에게 옮길 값 없음."
+  },
+  {
+   "key": "eS1cap",
+   "kind": "equation",
+   "label": "eq-figS1-caption",
+   "page": 3,
+   "file": "eq_figS1caption_diffusion_time_constant_crate.png",
+   "caption": "Fig. S1 caption (SI p.3) with the two inline formulas: t_D = r^2 / D_s (diffusion time constant of a particle of radius r) and C = 3600 / t_D (maximum C-rate).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.4,
+    319.4,
+    523.1,
+    378.6
+   ],
+   "w": 2570,
+   "h": 395,
+   "dpi": 400,
+   "src": "f9364f36-53._Sup_Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.889,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: region [60, 314, 540, 382] pt (band between the neighbouring lines; side-by-side equations split just right of the left equation's number) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C50 · C90 의 정의식 (번호 없음 · 캡션 안)."
+  },
+  {
+   "key": "e2759",
+   "kind": "equation",
+   "label": "eq-main-eta-act",
+   "page": 15,
+   "file": "eq_main_p2759_activation_overpotential_inline.png",
+   "caption": "Main text p.2759 (PDF p.15), inline definition: '… a decreased equilibrium lithiation potential V_eq that is dependent on the SoL (η_act = μ_p − μ_e + V_eq(SoL), μ_p: potential in the electrolyte; μ_e: potential in electron-conducting phases).'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    208.9,
+    378.8,
+    246.1
+   ],
+   "w": 1834,
+   "h": 250,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.905,
+   "manual_crop": "inline (unnumbered) equation sentence cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "본문의 유일한 식 (번호 없음): 활성화 과전압 = BV 지수 안의 구동력."
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2746-summary",
+   "page": 2,
+   "file": "txt_p2746_summary.png",
+   "caption": "p.2746 Summary: 'By conducting an in situ calendering experiment on lithium-ion battery cathodes using X-ray nano-computed tomography, here we show that the electrodes composed of large particles with a broad size distribution experience heterogeneous microstructural self-arrangement. … In contrast, electrodes consisting of small particles are structurally stable with more homogeneous deformation and a lower tortuosity, showing a much higher rated capacity that is less sensitive to calendering densification.'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    299.9,
+    378.8,
+    517.0
+   ],
+   "w": 1839,
+   "h": 1252,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.802,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 고른 의도 문구 ('소입자일수록 균일변형 · 저 tortuosity') 의 원문 자리 — 원문 낱말은 'in situ' (operando 아님)."
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p2747-numerical-approaches-spheres-no-cbd",
+   "page": 3,
+   "file": "txt_p2747_dem_spherical_particles_no_cbd.png",
+   "caption": "p.2747 Introduction: Lenze et al. (ref 6) pseudo-2D model; 'Spherical particles were used to study the mechanical responses and porosity variation of the electrode under different calendering steps.19 However, these studies were conducted based on simplified electrode geometries that were artificially synthesized with spherical particles, ignoring the influence of particle shape and orientation on mass transport and electrochemical performance. More importantly, the carbon-binder domain (CBD) … especially under compression, was not taken into account.'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    400.2,
+    378.8,
+    591.9
+   ],
+   "w": 1839,
+   "h": 1110,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.882,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ DEM 한계 문장 (ref 19 = Sangrós Giménez 2019 DEM 압연 · 정본 카드 있음): 구 입자 · 형상 · 방향 무시 · CBD 없음."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p2747-p2748-ct-cbd-contrast-dss",
+   "page": 3,
+   "file": "txt_p2747_p2748_xct_cbd_contrast_dss.png",
+   "caption": "pp.2747–2748: X-ray CT cannot separate micro-pores from CBD ('similarity of the X-ray attenuation coefficient between air and carbon'); stochastic CBD generation 'casts doubt on the representativeness of the structure'; the dual-scan superimposition (DSS) technique (refs 25, 26) resolves the carbon-binder and nano-pore phases.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    603.4,
+    378.8,
+    735.4
+   ],
+   "w": 1835,
+   "h": 923,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.885,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 3,
+     "clip": [
+      55.5,
+      603.4,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 4,
+     "clip": [
+      55.5,
+      97.5,
+      378.8,
+      125.7
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "CBD 를 실제 영상으로 넣는 방법 (DSS) 의 동기 — 우리 복셀 격자에 탄소 · 바인더를 '생성' 해 넣는 것과 같은 문제 제기."
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p2748-pore-tortuosity-cbd",
+   "page": 4,
+   "file": "txt_p2748_pore_tortuosity_needs_cbd.png",
+   "caption": "p.2748: 'pore phase tortuosity plays a critical role in determining the rate capability.27,28 It is dependent on both the porosity and the morphology of the solid materials. … the lack of resolution of the CBD … means that the pore phase is misrepresented and the influence of active particles on Li+ ion transport is underestimated.29,30'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    137.2,
+    378.8,
+    281.1
+   ],
+   "w": 1838,
+   "h": 847,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.882,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "CBD 를 빼면 tortuosity 를 낮게 본다는 주장 (정량은 Fig. S4)."
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p2748-scope",
+   "page": 4,
+   "file": "txt_p2748_scope_insitu_nanoct_dss_models.png",
+   "caption": "p.2748 scope: 'In this study, we use in situ X-ray nano-computed tomography to monitor different microstructural responses during the calendering process for LiNixMnyCozO2 (NMC) electrodes, which constitute large and small active particles, respectively. … High-fidelity fully microstructure-resolved battery models are then employed …'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    292.2,
+    378.8,
+    436.5
+   ],
+   "w": 1836,
+   "h": 846,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.882,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "연구 범위 한 문단."
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p2748-p2749-insitu-evolution-particle-size",
+   "page": 4,
+   "file": "txt_p2748_p2749_microstructural_evolution_particle_size.png",
+   "caption": "pp.2748–2749: bespoke nano-mechanical test stage in the nano-CT; NMC + CBD electrode and stand-alone CBD compressed, scanned and reconstructed separately (DSS); 'particle deformation and rotation … are observed as well, which is consistent with the previous speculation.18 … Unlike AM_L, free particle movement and localized deformation are not evident in AM_S, possibly as a result of the more stable structure formed by the small particle size.' D_mean 7.3 (STD 3.1 µm) and 5.2 µm (STD 1.8 µm); C50/C90 = 5C/1.8C (AM_S) vs 3C/0.8C (AM_L).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    478.6,
+    378.8,
+    730.2
+   ],
+   "w": 1839,
+   "h": 1775,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.879,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 4,
+     "clip": [
+      55.5,
+      478.6,
+      378.8,
+      730.2
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 5,
+     "clip": [
+      55.5,
+      591.4,
+      378.8,
+      653.1
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 두 입경 (7.3 ± 3.1 ↔ 5.2 ± 1.8 µm) 과 'AM_S 는 국소 변형이 뚜렷하지 않다' 의 원문 자리 — 'possibly' 가 붙어 있다."
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p2749-p2751-shape-orientation-aml",
+   "page": 5,
+   "file": "txt_p2749_p2751_particle_shape_orientation_self_arrangement.png",
+   "caption": "pp.2749–2751: morphology analysis by the moments-of-inertia matrix of each particle; 'ovality', equal to 1 − b/a; 'NMC particles in AM_S are generally smaller and more elliptical'; a particle rotates and deforms and 'finally settles down with the long axis aligning parallel to the horizontal direction, impeding ion transport'; AM_L 'was undergoing macroscopic self-arrangement' with 'inter-particle sliding and rolling'; 'in good agreement with the previous speculation that active particles undergo re-arrangement, deformation, and finally fracture under the incremental calendering process.18 However, … the particle deformation is heterogeneous and mild (i.e., each region behaves differently).'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    663.2,
+    378.8,
+    735.4
+   ],
+   "w": 1837,
+   "h": 2247,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.874,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 5,
+     "clip": [
+      55.5,
+      663.2,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 6,
+     "clip": [
+      55.5,
+      470.8,
+      378.8,
+      734.3
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 7,
+     "clip": [
+      55.5,
+      101.3,
+      378.8,
+      161.6
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 입자 재배열 · 회전 · 변형 · 파쇄 관찰의 원문 자리. '파쇄' 는 인용한 ref 18 (Günther 2020) 의 추측에 든 낱말이고 이 논문의 정량은 없다 — 변형은 '불균일하고 약하다'."
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p2751-ams-collective-deformation",
+   "page": 7,
+   "file": "txt_p2751_ams_collective_deformation_orientation.png",
+   "caption": "p.2751: 'the calendered AM_S displays a remarkable spike at 0.75 … with approx. 60% of particles falling within the ovality range between 0.65 to 0.8. This implies that particles deformed collectively to form a preferential orientation and shape, possibly due to the high lateral constraints from neighboring particles as a consequence of high specific area and small inter-particle gap.' Orientation: AM_L random 'even after calendering'; AM_S 'a strong preferential arrangement of the particles even before calendering, evidenced by the clusters around 90° and 270°'.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    173.0,
+    378.8,
+    388.7
+   ],
+   "w": 1839,
+   "h": 1245,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.875,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ '균일 (집단) 변형' 주장의 원문 자리 — 근거 = ovality · 방향 분포 (변형률 장 · 입자별 변형률 측정이 아님)."
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p2751-p2752-pore-phase-connectivity-permeability",
+   "page": 7,
+   "file": "txt_p2751_p2752_pore_connectivity_permeability.png",
+   "caption": "pp.2751–2752: 'AM_S has two times more pore segments and junction nodes than AM_L. Calendering affects the pore percolation evenly in AM_S, whereas it mainly reduces the junction nodes of high coordination number in AM_L'; 'mass transport in the pore is less affected in AM_S … This is conducive to an even distribution of the compressive stress and strain across the whole electrode.'; permeability: uncalendered AM_L 'approximately 70% of the permeability of the AM_S electrode'; 'the permeability of the calendered AM_S is lower than that of the calendered AM_L'.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    400.2,
+    378.8,
+    735.4
+   ],
+   "w": 1838,
+   "h": 2243,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.873,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 7,
+     "clip": [
+      55.5,
+      400.2,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 8,
+     "clip": [
+      55.5,
+      591.4,
+      378.8,
+      651.8
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "기공 연결성 · 투과도 문단. '응력 · 변형의 고른 분포' 는 추론 문장이다 — 응력 · 변형률은 재지도 계산하지도 않았다."
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p2752-p2753-porosity-tortuosity-reaction-area",
+   "page": 8,
+   "file": "txt_p2752_p2753_porosity_tortuosity_reaction_area.png",
+   "caption": "pp.2752–2753: 'Figure 3I summarizes the variation of porosity and tortuosity as a function of the compression ratio based on fully reconstructed electrodes (3 phases) … Tortuosity here is a material parameter that represents the Li+ ion transport resistance arising from the convoluted morphology of the pore phase (Equation. S1–S3). … for a given porosity, AM_L shows a higher pore phase tortuosity than AM_S, especially at high calendering ratios … It is worth emphasizing the importance of including CBD in the tortuosity measurement'; 'AM_S possesses a much higher specific reaction area than AM_L … this in turn yields a greater loss of surface area under calendering'.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    663.2,
+    378.8,
+    735.4
+   ],
+   "w": 1840,
+   "h": 1313,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.881,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 8,
+     "clip": [
+      55.5,
+      663.2,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 9,
+     "clip": [
+      55.5,
+      101.3,
+      378.8,
+      257.2
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ '저 tortuosity' 주장의 원문 자리 — '같은 기공률에서 AM_L 의 τ 가 더 높다 · 특히 높은 압축률에서'. 수치는 본문에 없고 Fig. 3I 에만 있다."
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p2753-short-summary",
+   "page": 9,
+   "file": "txt_p2753_short_summary_structure.png",
+   "caption": "p.2753 short summary: 'AM_L experiences structural re-arrangement under calendering, accompanied by heterogeneous particle movement, deformation, and random orientation, as opposed to AM_S, which has a stable framework due to the smaller and narrower distribution of particle size (STD 1.8 versus 3.1 µm), and thus the particles react more uniformly to the external compression … AM_L experiences critical loss of pore connectivity and the rapid rise of tortuosity compared to AM_S, the fine structure of which, however, is disadvantageous in electrolyte wetting'.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    268.6,
+    378.8,
+    388.7
+   ],
+   "w": 1835,
+   "h": 701,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.892,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 구조 절의 요약 — 원문 자신이 원인을 '더 작고 더 좁은 분포 (STD 1.8 ↔ 3.1 µm)' 로 묶어 쓴다 = 크기와 분포 폭을 가르지 않았다."
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p2755-electrolyte-not-limiting-heat",
+   "page": 11,
+   "file": "txt_p2755_electrolyte_transport_not_limiting.png",
+   "caption": "p.2755: 'a 2.5-fold increase of the C_ey gradient is observed in the 22.5% calendered electrode, and it increases further by 180% from 3C to 5C … AM_S shows a 25% to 30% lower gradient … However, Li+ ion transport is not the primary performance-limiting factor for the two electrodes as the electrolyte concentration is far from depletion in the proximity of the current collector, due to the relatively low electrode thickness (approx. 35 µm after calendering) and moderate mass loading (NMC volume fraction approx. 0.45).'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    101.3,
+    378.8,
+    412.6
+   ],
+   "w": 1837,
+   "h": 1778,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.875,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전해질 수송이 제한 인자가 아니라는 판정과 그 조건 (≈35 µm · AM 분율 ≈0.45) — τ 가 2.6 → 8.8 로 올라도 성능을 가르지 않는 두께 영역."
+  },
+  {
+   "key": "x15a",
+   "kind": "text",
+   "label": "p2759-p2760-solid-diffusion-limits",
+   "page": 15,
+   "file": "txt_p2759_p2760_solid_state_diffusion_limits.png",
+   "caption": "pp.2759–2760: 'for uncalendered NMC electrodes with a mass loading 90 — 94 wt % and an initial thickness less than 50 µm (AM_L and AM_LH), Li+ ion transport in the electrolyte is not the predominant factor …, even when the electrode is calendered up to approx. 23%. It is instead the sluggish solid-state diffusion …, especially for electrodes composed of large particles.'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    627.3,
+    378.8,
+    735.4
+   ],
+   "w": 1837,
+   "h": 1249,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.877,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 15,
+     "clip": [
+      55.5,
+      627.3,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 16,
+     "clip": [
+      55.5,
+      482.4,
+      378.8,
+      590.5
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "결론의 적용 범위 (원문이 직접 건 조건): 활물질 90–94 wt% · 초기 두께 < 50 µm · 압연 ≈23 % 까지."
+  },
+  {
+   "key": "x18a",
+   "kind": "text",
+   "label": "p2762-thickness-porosity-map-025",
+   "page": 18,
+   "file": "txt_p2762_thickness_porosity_map_transition_025.png",
+   "caption": "p.2762: Fig. 7D — 'Different thickness electrodes are obtained by virtually mirroring and/or cropping the existing electrodes of three different porosities'; AM_S capacity 'decreases monotonically along the diagonal direction'; AM_L: 'porosity plays a vital role … and 0.25 can be regarded as a transition point, above which the electrode thickness is not particularly influential, compared to the region below 0.25, where a catastrophic performance decrease is observed.'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    101.3,
+    378.8,
+    472.4
+   ],
+   "w": 1837,
+   "h": 2110,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.871,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ lee2026_li 가 인용한 '후막 미세구조 설계' 의 원문 자리 — 가상 (거울상) 전극 40–70 µm · 3C 모델값."
+  },
+  {
+   "key": "x18b",
+   "kind": "text",
+   "label": "p2762-p2763-experiment-thin-electrode-cracks",
+   "page": 18,
+   "file": "txt_p2762_p2763_experiment_mass_loading_cbd_cracks.png",
+   "caption": "pp.2762–2763: experiment (Fig. 8) — electrodes of 1, 2 and 3 mAh cm−2 'calendered to ca. 20%'; 'Calendering a thin electrode (ca. 2 to 3 times of the particle size) has a higher chance to generate cracks between the CBD and active material particle surface, undermining the electronic percolation and reaction homogeneity'; the calendered 3 mAh cm−2 electrode 'is within 10% variation compared to the predicted values for AM_L2 in Figure 7A'; 'the volumetric capacity always increases with incremental calendering'. ('consistent with the prediction in Figure 8' is printed where Figure 7 is meant.)",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    483.8,
+    378.8,
+    735.4
+   ],
+   "w": 1837,
+   "h": 2178,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.878,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 18,
+     "clip": [
+      55.5,
+      483.8,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 19,
+     "clip": [
+      55.5,
+      464.4,
+      378.8,
+      596.4
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "실험 대조 문단. 'CBD–입자 균열' 은 추정 문장 (영상 근거 인용 없음)."
+  },
+  {
+   "key": "x19a",
+   "kind": "text",
+   "label": "p2763-p2764-conclusion",
+   "page": 19,
+   "file": "txt_p2763_p2764_conclusion.png",
+   "caption": "pp.2763–2764 Conclusion: AM_L (D_mean = 7.3 ± 3.1 µm, C50 = 3C, C90 = 0.8C) 'present large microstructural heterogeneity that leads to spatial self-arrangement during calendering, such as inter-particle rotation, uneven deformation, and a loss of pore connectivity'; AM_S (D_mean = 5.2 ± 1.8 µm, C50 = 5C, C90 = 1.8C) 'are structurally stable with homogeneous deformation and a lower pore tortuosity under calendering'; 'Almost 80% of initial capacity can be retained for a 66 µm thick AM_S electrode after 24% calendering at 3C discharge'; AM_L: 'a porosity of 0.25 can be regarded as a transition point'.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    624.8,
+    378.8,
+    732.9
+   ],
+   "w": 1839,
+   "h": 2246,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.89,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 19,
+     "clip": [
+      55.5,
+      624.8,
+      378.8,
+      732.9
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 20,
+     "clip": [
+      55.5,
+      101.3,
+      378.8,
+      388.7
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "결론 문단 — 고른 의도 문구와 낱말까지 겹친다 ('homogeneous deformation and a lower pore tortuosity')."
+  },
+  {
+   "key": "x20a",
+   "kind": "text",
+   "label": "p2764-p2765-materials",
+   "page": 20,
+   "file": "txt_p2764_p2765_materials_electrodes_cells.png",
+   "caption": "pp.2764–2765 Materials: AM_LH = NMC622 (AGM Batteries), 130 g m−2, 94.5:3:2.5 (AM : C65 + KS6L 2:1 : PVDF), Al 15 µm, 'Uncalendared [sic] and 18% calendered'; Swagelok half-cells (12 mm, Li metal, Celgard 2325, 50 µL 1 M LiPF6 EC/EMC 3:7 + 1 wt % VC); AM_L and AM_S = LiNi0.33Mn0.33Co0.33O2 powders from MTI (USA) and Targray (Canada), 90:5:5 with Super C65 and PVDF, 20-µm Al, doctor blade 175-µm gap, dried overnight at 80 °C; stand-alone CBD = 50:50 carbon : PVDF.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    555.5,
+    378.8,
+    735.4
+   ],
+   "w": 1837,
+   "h": 1248,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.875,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 20,
+     "clip": [
+      55.5,
+      555.5,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 21,
+     "clip": [
+      55.5,
+      99.9,
+      378.8,
+      137.7
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "재료 · 전극 조성. ★ AM_L 과 AM_S 는 공급사가 다른 분말 (MTI ↔ Targray) — '크기만 다른' 짝이 아니다."
+  },
+  {
+   "key": "x21a",
+   "kind": "text",
+   "label": "p2765-nanoct-insitu-compression",
+   "page": 21,
+   "file": "txt_p2765_nanoct_insitu_compression_method.png",
+   "caption": "p.2765: 1 mm disk glued on a pin tip by epoxy, laser-milled to a pillar 'below 90 µm in diameter'; 'A flat-headed stainless-steel pin, attached to a piezo-mechanical actuator, was used to compress the electrode'; Zeiss Xradia Ultra 810, 5.4 keV, voxel 64 nm, field of view 64 × 64 µm2; '1,201 radiographic projections … at an exposure time of 60 s over 144° rotation of the pillars'; 'The electrodes calendered by the test stage and by a roller calendering machine are compared in Figure S10. The measured material parameters are within 8% of the difference (Table S3).'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    324.4,
+    378.8,
+    552.1
+   ],
+   "w": 1838,
+   "h": 1307,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.873,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 측정 조건의 원문 자리: 기둥 (< 90 µm) · 평평한 핀 · 압전 구동 · 누른 채 1,201 장 × 60 s (≈20 h [카드 산술]) — 하중 · 압력 · 변위 속도 · 유지 · 이완 기록 없음."
+  },
+  {
+   "key": "x21b",
+   "kind": "text",
+   "label": "p2765-p2766-dss-fwhm-taufactor-permeability",
+   "page": 21,
+   "file": "txt_p2765_p2766_dss_fwhm_taufactor_permeability.png",
+   "caption": "pp.2765–2766: DSS (electrode and stand-alone CBD scanned separately; the blurred carbon-binder phase 'replaced by the second scan'); segmentation by thresholding in Avizo 9.5 'with the FWHM (50% contrast) criterion'; 'The tortuosity factor was obtained by the open-source software TauFactor.55'; permeability in Avizo XLab with a non-slip boundary condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    579.5,
+    378.8,
+    735.4
+   ],
+   "w": 1836,
+   "h": 1051,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.881,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 21,
+     "clip": [
+      55.5,
+      579.5,
+      378.8,
+      735.4
+     ]
+    },
+    {
+     "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+     "page": 22,
+     "clip": [
+      55.5,
+      101.3,
+      378.8,
+      125.7
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ tortuosity 도구 · 낱말의 원문 자리: 'The tortuosity factor was obtained by … TauFactor' (어느 방향 · 어느 상 · 경계 조건인지는 인쇄돼 있지 않다)."
+  },
+  {
+   "key": "x22a",
+   "kind": "text",
+   "label": "p2766-rve-sample-variation",
+   "page": 22,
+   "file": "txt_p2766_rve_analysis_sample_variation.png",
+   "caption": "p.2766: nano-CT vs micro-CT comparison (Fig. S13, '4.7% difference'); RVE analysis 'from 10% to 100% of the sample size' (Fig. S14); two additional uncalendered AM_L electrodes for the sample-to-sample variation (Fig. S15, Table S4).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    152.1,
+    378.8,
+    284.1
+   ],
+   "w": 1836,
+   "h": 779,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.877,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "대표성 · 재현성 점검 문단 — 전부 압연 전 AM_L 에 대해서만."
+  },
+  {
+   "key": "x22b",
+   "kind": "text",
+   "label": "p2766-3d-microstructure-resolved-model",
+   "page": 22,
+   "file": "txt_p2766_3d_microstructure_resolved_model.png",
+   "caption": "p.2766: segmentation into NMC particles, carbon-binder and pore, adaptive meshing in Simpleware ScanIP N-2018.03; 'The generalized Poisson-Nernst-Planck (gPNP) mathematic model,56 which originated from the Newman battery model,38 was employed with concentrated solution theory … in COMSOL Multiphysics V5.5. … No volume-averaged material parameters, such as porosity, tortuosity, and particle size were used in the microstructure-resolved model.'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    310.5,
+    378.8,
+    490.3
+   ],
+   "w": 1837,
+   "h": 1034,
+   "dpi": 400,
+   "src": "78a488a6-53._Microstructural_evolution_of_battery_electrodes_during_calendering.pdf",
+   "blank": 0.886,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line (±2 pt), parts on several pages stacked with a 3.4 pt gap → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 한 문단 — 미세구조 분해 (체적 평균 매개변수 없음). 격자 크기 · 요소 수 · 영역 크기 · 수렴 확인은 인쇄돼 있지 않다."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found 24 items — Fig. 1–8 and Table 1 of the article, Fig. S2–S6, S10–S15 and Tables S1–S4 of the SI — and reported Fig. S1, S7, S8, S9 as missing ('no graphics': vector charts).  All 24 were opened; 23 were re-cut (Fig. 1–8: the auto crops carried the running head — re-cut from the embedded 300-dpi rasters; Fig. S2–S6 · S10–S15: column-width crops with uneven margins — re-rendered; Tables S1–S4: the auto crops ran to the bottom of the page and swallowed the next tables — re-rendered one by one with the title on top) and Table 1 was kept as cut by the tool.  Added by hand: Fig. S1, S7, S8, S9 (4), the graphical abstract (1), 19 panel crops (Fig. 1A–D · 1E–G · 1H · 1I–K · 1L · 2A–B · 2C–D · 2E–H · 3A–D · 3E–H · 3I · 3J · 5A–D · 5E–F · 5G · 5H–I · 6G · 7A · 7D), 22 equation crops (SI Eqs. 1–15 one per equation number + the tortuosity definition block + boundary conditions + initial conditions + the whole governing set + the Table S1 electrolyte correlations + the two inline formulas of the Fig. S1 caption + the inline η_act definition of the main text) and 22 text crops (21 evidence paragraphs of the main text + the SI nomenclature table).  Every one of the 92 crops was opened and checked after cutting; 19 hand crops (18 panels + 1 equation) were re-cut after the first visual check — real defects in 10 (the 'L' label of Fig. 1L painted out; colour-bar units '(µm)' / '(m/s)' of Fig. 3A–D / 3E–H cut off; specks of neighbouring panels in Fig. 2C–D, 2E–H, 3I, 3J, 6G; the 'C' panel label inside Fig. 7A; a speck of the row above in the Table S1 equation crop), split-line tidying in the rest.  Read-outs: digitized.csv (277 rows: Fig. 3I · 3J · 7A raster read-outs; Fig. S3 · S7 · S8 · S10 · S13 · S14 · S15 vector-path read-outs).",
+ "note_manual": "Printed inconsistencies visible in the crops: (1) Fig. 3I plots the second AM_S step at 8.5 % compression while Fig. 1I labels it '7% compression' and the caption says 7%; (2) Table 1 gives the AM volume fraction of uncalendered AM_L as 0.46 while Fig. S13 / Table S4 give 43 % for the same sample; (3) Table 1 thickness falls by 22–23 % (45 → 35, 43 → 33 µm) while the AM volume fraction rises by only 11–13 % (0.46 → 0.52, 0.45 → 0.50) — not closed for a laterally confined, incompressible solid; (4) the Fig. S12 caption is a copy of the Fig. S11 caption ('mean particle size') although the figure is the pore-phase threshold test; (5) Table S1 prints 'From Error! Reference source not found.' for D_s (broken cross-reference to Fig. S7); (6) Fig. 5 caption 'AM_H' vs text / Table 1 'AM_LH'; (7) Fig. S10 caption '(G) and (F) quantitatively compares' where (G) and (H) are meant; (8) text p.2761 'Doubling the thickness to 70 µm (AM_S2)' vs Table 1 AM_S2 = 66 µm, and 'increasing the thickness … by 150% (AM_S1.5)' for a 1.5-fold thickness; (9) text p.2762 'consistent with the prediction in Figure 8' where Figure 7 is meant; (10) text p.2757 'AM_S can maintain the Vavg above 3.75 V at 5C' while the calendered AM_S point of Fig. S8 reads 3.744 V; (11) the Fig. 8 caption consists of the title only; (12) Fig. S4 caption 'norminal'; Methods 'Uncalendared'; (13) the white label 'G 22.5% compression' of Fig. 1G runs off the image; (14) Table S4 'Sample 2' values (0.310 · 0.403 · 7.03) coincide numerically with the watershed values of Fig. S12 (0.310 · 0.404) and the 60 %-uptake value of Fig. S11 (7.03) — observation only.",
+ "key_note": "manual keys: ga = graphical abstract; f<N><panels> = panel crop of Fig. N (panel_of); fS<N> / tS<N> = SI figure / table; e<…> = equation crop (kind 'equation'; eS<n> = SI Eq. (n), eSbc / eSic = boundary / initial conditions, eS1_3 / eS4_15 = stacked blocks, eST1 = Table S1 correlations, eS1cap = Fig. S1 caption formulas, e2759 = inline definition on printed p.2759); x<PDF page><letter> = evidence paragraph of the main text (kind 'text'; multi-page ones list 'parts'); xS12a = SI nomenclature.  'page' fields are PDF page numbers — for the main PDF printed page = PDF page + 2744 (PDF p.1 = unnumbered graphical-abstract page); SI pages are unnumbered (PDF p.1–15).",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 277,
+  "method": "Fig. 3I / 3J (perspective 3D scatters, embedded 300-dpi raster): box edges fitted → corners → one homography per face → axis limits from all tick feet → marker centres by circle fits to the outer marker edge; every quantity read on two faces (agreement: tortuosity ≤ 0.014, porosity ≤ 0.0002, compression ≤ 0.03 %).  Fig. 7A (raster): legend-colour classification → marker bounding-box centres, y from the five major ticks (triangles ±0.7 mAh/g; partly hidden markers flagged, hidden ones not listed).  Fig. S3 · S7 · S8 · S10 · S13 · S14 · S15: vector paths of the SI PDF mapped through the axis ticks (bar heights / marker-box centres; bar sums and binned means checked against the printed counts and means)."
+ }
+}

@@ -1,0 +1,144 @@
+{
+ "slug": "bielefeld2020_effective_ionic_conductivity_binder",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "건식전극 논문/08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Eﬀective ionic conductivity and (b) ionic tortuosity factor of composite microstructures versus composition for uniformly distributed AM; particle sizes between d ∈[3,15] μm; electrode void space held constant at ϕ = 15%. ion a LCO:Li10GeP2S12 (LGPS):Acetylene Black cathode micro- structure based on a cross-sectional SEM image from Kato et al.44 Figure S4 (Supporting Information) shows the SEM image and a cross section of our reconstruction. Since LCO does not exhibit a spherical morphology like NCM, we modeled the AM as ﬁve-edged planar polyhedra and assumed Gaussian distributions for the particle thickness lAM and ray length rAM, which is deﬁned as the distance from the polyhedron center to the outer face center. Unfortunately, no information on the void space in the pressed electrode is provided, and the SEM image does not allow us to distinguish between acetylene black ",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    243.6
+   ],
+   "w": 2151,
+   "h": 752,
+   "dpi": 300,
+   "src": "08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Simulated ionic tortuosity factor and comparison with the Bruggeman eq 18 and the modiﬁed Bruggeman eq 19 for composite microstructures versus total fraction of SE; uniformly distributed AM at particle size d = {3,15} μm; electrode void space held constant at ϕ = 15%. total fraction of SE εSE = (1 −ϕ) · vSE in context with the Bruggeman eq 18 and the modiﬁed/ﬁtted Bruggeman eq 19. Clearly and similar to studies on conventional battery electrodes,47,49 the Bruggeman equation signiﬁcantly under- estimates the tortuosity factor and does not adequately describe the complexity of electrode microstructures. The mismatch is pronounced especially for small AM particles and small SE fractions, where the values of the model micro- structures are 4-fold larger than the Bruggeman eq 18 predicts. The modiﬁed Bruggeman eq 19 describes the behavior acceptably but incorporates parameters of α ",
+   "bbox": [
+    318.5,
+    96.7,
+    570.5,
+    265.6
+   ],
+   "w": 1052,
+   "h": 705,
+   "dpi": 300,
+   "src": "08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Multimodal particle size distributions for AM with resulting electronic conduction clusters at 55 vol % AM fraction. (b) Eﬀective ionic conductivity and (c) the ionic tortuosity factor of composite microstructures versus the fraction of the active material for trimodally distributed AM; particle sizes of the largest particles vary linearly between dL ∈[5.5,13.5] μm; medium and small particle’s size is held constant at dM = 5.5 μm and dS = 3 μm, while the electrode void space is held constant at ϕ = 15%.",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    425.5
+   ],
+   "w": 2151,
+   "h": 1511,
+   "dpi": 300,
+   "src": "08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Eﬀective ionic conductivity and (b) ionic tortuosity factor of composite microstructures versus AM:SE volume ratio for uniformly distributed AM and their dependence on void space at an AM particle size of d = 5 μm. dL ∈[5.5,13.5] μm so that the distribution became bimodal in the lower limit of 5.5 μm, as illustrated in Figure 3a. observable in regions where ionic conduction becomes limiting and high energy density is achieved due to a large AM fraction. Compared to monomodal particle arrangements, the tortuosity is generally lower, even though the average particle size is smaller. We chose a speciﬁc composition (70:30 SE:AM volume ratio) to provide further insight into the discrepancies Figure 3b,c shows that also, in multimodal distributions, arrangements of smaller particles result in reduced eﬀective ionic conduction and higher tortuosity for multimodal distributions. Th",
+   "bbox": [
+    54.5,
+    474.2,
+    570.5,
+    653.9
+   ],
+   "w": 2151,
+   "h": 750,
+   "dpi": 300,
+   "src": "08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Inﬂuence of two diﬀerent binder fractions on (a) binder weight fraction for PVDF and NBR in NCM811:LPS composites, (b) utilization level of the AM and SE, (c) active interface area between conductive clusters, (d) relative active interface area (normalized to values of binder-free electrodes), blue points represent data from GITT experiments on NCM622:LPSCl:C65:NBR, reported by Nam et al.,25 (e) eﬀective ionic conductivities and (f) ionic tortuosity factors in composite microstructures versus AM:SE+B (Binder) volume ratio. For the simulation, the AM particle size is d = 5 μm, and the electrode void space is constant at ϕ = 15%. 2 for a monomodal AM particle between mono- and multimodal distributions and their AM particle size dependence. The tortuosity factor versus the AM particle size for this composition is shown in Figure S5, Supporting Information. The linear behavior in t",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    597.9
+   ],
+   "w": 2151,
+   "h": 2229,
+   "dpi": 300,
+   "src": "08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Estimated current densities depending on (a) electrode thickness and SE ionic bulk conductivity and (b) AM:SE composition and ionic tortuosity factor. Resulting C-rates for NCM811 for varying (c) electrode thickness and SE ionic bulk conductivity and (d) AM:SE composition and ionic tortuosity factor, assuming NCM811 and 15% void space. keep in mind that the ionic, ohmic loss is not the only contribution: in the assessment of ASSB cathodes, charge transfer at the interfaces and Li diﬀusion within the AM are important aspects that may limit electrode performance as well. Consequently, our calculation should rather be considered a good case scenario because interface kinetics and AM diﬀusion limitation can become crucial for cell performance, even though the eﬀective ionic conduction through the composite may be suﬃcient. Apart from that, the entire cell can be understood as a ser",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    441.9
+   ],
+   "w": 2151,
+   "h": 1579,
+   "dpi": 300,
+   "src": "08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.586
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1.png",
+   "caption": "Table 1. Application Cases",
+   "bbox": [
+    55.5,
+    43.7,
+    569.5,
+    792.0
+   ],
+   "w": 2058,
+   "h": 2994,
+   "dpi": 288,
+   "src": "08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.851
+  }
+ ]
+}

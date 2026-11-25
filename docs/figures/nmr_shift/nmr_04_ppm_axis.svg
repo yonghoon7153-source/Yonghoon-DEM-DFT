@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 136" width="540" height="136" role="img" aria-label="ppm axis: left is high ppm (down-field, less shielded), right is low ppm (up-field, more shielded)">
+<style>
+text{font-family:"DejaVu Sans","Helvetica Neue",Arial,sans-serif;font-size:15px;fill:#1f2937}
+.mono{font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:14px}
+.note{font-size:13.5px;fill:#6b7280}
+.li{fill:#0d9488} .p{fill:#7c3aed} .nd{fill:#db2777} .fld{fill:#2563eb} .wht{fill:#ffffff}
+.ax{stroke:#6b7280;stroke-width:1.2;fill:none}
+.guide{stroke:#6b7280;stroke-width:1;stroke-dasharray:3 4;fill:none}
+.trace{fill:none;stroke-width:2.2;stroke-linejoin:round}
+</style>
+<rect x="0.5" y="0.5" width="539" height="135" rx="8" fill="#ffffff" stroke="#d3dcdc"/>
+<defs><marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker></defs>
+<line class="ax" x1="40" y1="74" x2="500" y2="74"/>
+<line class="ax" x1="40" y1="74" x2="40" y2="81"/><text class="mono" x="40" y="98" text-anchor="middle">high ppm</text>
+<line class="ax" x1="500" y1="74" x2="500" y2="81"/><text class="mono" x="500" y="98" text-anchor="middle">low ppm</text>
+<line x1="250" y1="40" x2="70" y2="40" stroke="#1f2937" stroke-width="2" marker-end="url(#am)"/>
+<line x1="290" y1="40" x2="470" y2="40" stroke="#1f2937" stroke-width="2" marker-end="url(#am)"/>
+<text x="160" y="28" text-anchor="middle">down-field</text>
+<text x="380" y="28" text-anchor="middle">up-field</text>
+<text class="note" x="40" y="122">less shielded · higher f</text>
+<text class="note" x="500" y="122" text-anchor="end">more shielded · lower f</text>
+</svg>

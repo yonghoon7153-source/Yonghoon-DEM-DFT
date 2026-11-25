@@ -1,0 +1,333 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "Nd",
+    "O"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {},
+  "formation": {
+    "NdPO4": {
+      "reduced_formula": "NdPO4",
+      "n_atoms": 24.0,
+      "n_P": 4.0,
+      "E_f_eV_per_atom": -3.45019,
+      "E_f_eV_per_P": -20.70114,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaafhw-GGA",
+      "found": true
+    },
+    "Nd(PO3)3": {
+      "reduced_formula": "Nd(PO3)3",
+      "n_atoms": 26.0,
+      "n_P": 6.0,
+      "E_f_eV_per_atom": -2.98792,
+      "E_f_eV_per_P": -12.94765,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaaktk-GGA",
+      "found": true
+    },
+    "NdP5O14": {
+      "reduced_formula": "NdP5O14",
+      "n_atoms": 80.0,
+      "n_P": 20.0,
+      "E_f_eV_per_atom": -2.82383,
+      "E_f_eV_per_P": -11.29533,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaabfxkr-GGA",
+      "found": true
+    },
+    "LiNd(PO3)4": {
+      "reduced_formula": "LiNd(PO3)4",
+      "n_atoms": 36.0,
+      "n_P": 8.0,
+      "E_f_eV_per_atom": -2.92627,
+      "E_f_eV_per_P": -13.16823,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabbrr-GGA",
+      "found": true
+    },
+    "Li3PO4": {
+      "reduced_formula": "Li3PO4",
+      "n_atoms": 16.0,
+      "n_P": 2.0,
+      "E_f_eV_per_atom": -2.7535,
+      "E_f_eV_per_P": -22.02798,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaauhx-GGA",
+      "found": true
+    },
+    "LiPO3": {
+      "reduced_formula": "LiPO3",
+      "n_atoms": 60.0,
+      "n_P": 12.0,
+      "E_f_eV_per_atom": -2.70316,
+      "E_f_eV_per_P": -13.51581,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabrex-GGA",
+      "found": true
+    },
+    "Li4P2O7": {
+      "reduced_formula": "Li4P2O7",
+      "n_atoms": 26.0,
+      "n_P": 4.0,
+      "E_f_eV_per_atom": -2.74386,
+      "E_f_eV_per_P": -17.83507,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabqcg-GGA",
+      "found": true
+    },
+    "P2O5": {
+      "reduced_formula": "P2O5",
+      "n_atoms": 14.0,
+      "n_P": 4.0,
+      "E_f_eV_per_atom": -2.43886,
+      "E_f_eV_per_P": -8.53601,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaadqi-GGA",
+      "found": true
+    },
+    "Li3PS4": {
+      "reduced_formula": "Li3PS4",
+      "n_atoms": 32.0,
+      "n_P": 4.0,
+      "E_f_eV_per_atom": -1.18252,
+      "E_f_eV_per_P": -9.46015,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacebzb-GGA",
+      "found": true
+    },
+    "P2S7": {
+      "reduced_formula": "P2S7",
+      "n_atoms": 36.0,
+      "n_P": 8.0,
+      "E_f_eV_per_atom": -0.51201,
+      "E_f_eV_per_P": -2.30406,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacqhbm-GGA",
+      "found": true
+    },
+    "P2S5": {
+      "reduced_formula": "P2S5",
+      "n_atoms": 28.0,
+      "n_P": 8.0,
+      "E_f_eV_per_atom": -0.5193,
+      "E_f_eV_per_P": -1.81755,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaabevma-GGA",
+      "found": true
+    },
+    "Nd2O3": {
+      "reduced_formula": "Nd2O3",
+      "n_atoms": 40.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -3.78155,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaabof-GGA",
+      "found": true
+    },
+    "NdCl3": {
+      "reduced_formula": "NdCl3",
+      "n_atoms": 8.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -2.74794,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabihr-GGA",
+      "found": true
+    },
+    "Nd2S3": {
+      "reduced_formula": "Nd2S3",
+      "n_atoms": 20.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -2.36113,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaaaqw-GGA",
+      "found": true
+    },
+    "NdOCl": {
+      "reduced_formula": "NdClO",
+      "n_atoms": 6.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -3.26653,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.05563,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabicw-GGA",
+      "found": true
+    }
+  },
+  "formation_per_element": "P",
+  "⛔_formation_caveat": "이 표는 **반응에너지가 아니다.** `E_f_per_P` 는 O:P 비가 다른 상들을 한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — **순위 힌트**다. 판정은 균형반응(`reactions`)이 한다. 0 K · MP2020 보정 에너지이고 온도·엔트로피·pO₂ 를 안 본다. 여기 상들이 실제로 합성/석출된다는 뜻도 아니다.",
+  "reactions": {
+    "Li3PO4,Nd2O3 > NdPO4,Li2O": {
+      "ok": true,
+      "reaction": "Li3PO4 + 0.5 Nd2O3 -> NdPO4 + 1.5 Li2O",
+      "E_eV_as_written": 1.50352,
+      "E_eV_per_reactant_atom": 0.14319,
+      "E_eV_per_P": 1.50352,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "Nd2O3": "mp-aaaaabof-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "Li2O": "mp-aaaaacxk-GGA"
+      }
+    },
+    "LiPO3,Nd2O3 > NdPO4,Li2O": {
+      "ok": true,
+      "reaction": "LiPO3 + 0.5 Nd2O3 -> NdPO4 + 0.5 Li2O",
+      "E_eV_as_written": -0.82386,
+      "E_eV_per_reactant_atom": -0.10985,
+      "E_eV_per_P": -0.82386,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "LiPO3": "mp-aaaabrex-GGA",
+        "Nd2O3": "mp-aaaaabof-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "Li2O": "mp-aaaaacxk-GGA"
+      }
+    },
+    "P2S7,Nd2O3,Li2O > NdPO4,Li2S,S": {
+      "ok": true,
+      "reaction": "0.5 P2S7 + 0.5 Nd2O3 + 2.5 Li2O -> NdPO4 + 2.5 Li2S + S",
+      "E_eV_as_written": -4.75949,
+      "E_eV_per_reactant_atom": -0.32824,
+      "E_eV_per_P": -4.75949,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "P2S7": "mp-aaacqhbm-GGA",
+        "Nd2O3": "mp-aaaaabof-GGA",
+        "Li2O": "mp-aaaaacxk-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "Li2S": "mp-aaaaabsj-GGA",
+        "S": "mp-aaaaaads-GGA"
+      }
+    },
+    "P2S7,Li2O > Li3PO4,Li2S,S": {
+      "ok": true,
+      "reaction": "0.5 P2S7 + 4 Li2O -> Li3PO4 + 2.5 Li2S + S",
+      "E_eV_as_written": -6.26301,
+      "E_eV_per_reactant_atom": -0.37958,
+      "E_eV_per_P": -6.26301,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "P2S7": "mp-aaacqhbm-GGA",
+        "Li2O": "mp-aaaaacxk-GGA",
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "Li2S": "mp-aaaaabsj-GGA",
+        "S": "mp-aaaaaads-GGA"
+      }
+    },
+    "Li3PS4,Nd2O3,Li2O > NdPO4,Li2S": {
+      "ok": true,
+      "reaction": "Li3PS4 + 0.5 Nd2O3 + 2.5 Li2O -> NdPO4 + 4 Li2S",
+      "E_eV_as_written": -4.37037,
+      "E_eV_per_reactant_atom": -0.2428,
+      "E_eV_per_P": -4.37037,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "Li3PS4": "mp-aaacebzb-GGA",
+        "Nd2O3": "mp-aaaaabof-GGA",
+        "Li2O": "mp-aaaaacxk-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "Li2S": "mp-aaaaabsj-GGA"
+      }
+    },
+    "Li3PS4,Li2O > Li3PO4,Li2S": {
+      "ok": true,
+      "reaction": "Li3PS4 + 4 Li2O -> Li3PO4 + 4 Li2S",
+      "E_eV_as_written": -5.87389,
+      "E_eV_per_reactant_atom": -0.29369,
+      "E_eV_per_P": -5.87389,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "Li3PS4": "mp-aaacebzb-GGA",
+        "Li2O": "mp-aaaaacxk-GGA",
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "Li2S": "mp-aaaaabsj-GGA"
+      }
+    },
+    "Nd2S3,Li3PO4 > NdPO4,Li2S": {
+      "ok": true,
+      "reaction": "0.5 Nd2S3 + Li3PO4 -> NdPO4 + 1.5 Li2S",
+      "E_eV_as_written": 0.46269,
+      "E_eV_per_reactant_atom": 0.04407,
+      "E_eV_per_P": 0.46269,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "Nd2S3": "mp-aaaaaaqw-GGA",
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "Li2S": "mp-aaaaabsj-GGA"
+      }
+    },
+    "NdCl3,Li3PO4 > NdPO4,LiCl": {
+      "ok": true,
+      "reaction": "NdCl3 + Li3PO4 -> NdPO4 + 3 LiCl",
+      "E_eV_as_written": -0.50293,
+      "E_eV_per_reactant_atom": -0.04191,
+      "E_eV_per_P": -0.50293,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "NdCl3": "mp-aaaabihr-GGA",
+        "Li3PO4": "mp-aaaaauhx-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "LiCl": "mp-aaacpllf-GGA"
+      }
+    },
+    "Li4P2O7,Nd2O3 > NdPO4,Li2O": {
+      "ok": true,
+      "reaction": "0.5 Li4P2O7 + 0.5 Nd2O3 -> NdPO4 + Li2O",
+      "E_eV_as_written": 0.40301,
+      "E_eV_per_reactant_atom": 0.04478,
+      "E_eV_per_P": 0.40301,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "Li4P2O7": "mp-aaaabqcg-GGA",
+        "Nd2O3": "mp-aaaaabof-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "Li2O": "mp-aaaaacxk-GGA"
+      }
+    },
+    "LiNd(PO3)4,Nd2O3 > NdPO4,Li2O": {
+      "ok": true,
+      "reaction": "0.25 LiNd(PO3)4 + 0.375 Nd2O3 -> NdPO4 + 0.125 Li2O",
+      "E_eV_as_written": -1.21561,
+      "E_eV_per_reactant_atom": -0.19068,
+      "E_eV_per_P": -1.21561,
+      "n_P_reactant_side": 1.0,
+      "entry_ids": {
+        "LiNd(PO3)4": "mp-aaaabbrr-GGA",
+        "Nd2O3": "mp-aaaaabof-GGA",
+        "NdPO4": "mp-aaaaafhw-GGA",
+        "Li2O": "mp-aaaaacxk-GGA"
+      }
+    }
+  },
+  "⛔_reaction_caveat": "반응물·생성물 집합은 **사람이 고른 것**이다 — hull 이 고른 게 아니다. hull 이 고르는 판정은 interface_reactivity_v2.py 쪽이다. 반응이 **일어나는지**(운동학·경로)는 말하지 않는다."
+}

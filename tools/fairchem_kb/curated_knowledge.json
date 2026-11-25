@@ -1,0 +1,676 @@
+{
+  "tasks": [
+    {
+      "task_id": "omol",
+      "label": "OMol",
+      "domain": "Aperiodic organic molecules and molecular complexes",
+      "reference_method": "wB97M-V/def2-TZVPD in ORCA 6",
+      "charge_spin_contract": "Total charge and spin multiplicity are required model inputs.",
+      "official_cautions": ["Use the OMol task only when molecular charge and spin are defined."],
+      "code_snapshot_state": "present_in_UMATask_enum",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "task_id": "omc",
+      "label": "OMC",
+      "domain": "Organic molecular crystals",
+      "reference_method": "PBE+D3 in VASP",
+      "charge_spin_contract": "Training did not vary charge or spin; the documented inputs are charge=0 and spin multiplicity=0.",
+      "official_cautions": ["Do not treat OMC as a charged-crystal model without validation."],
+      "code_snapshot_state": "present_in_UMATask_enum",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "task_id": "omat",
+      "label": "OMat",
+      "domain": "Inorganic materials",
+      "reference_method": "PBE/PBE+U with VASP 5.4 conventions",
+      "charge_spin_contract": "Charge and spin are not user-selectable physical states for this task.",
+      "official_cautions": [
+        "OMat total energies are not directly compatible with Materials Project total energies or MP2020 corrections.",
+        "Magnetic-state selection is not exposed as a user-controlled condition."
+      ],
+      "code_snapshot_state": "present_in_UMATask_enum",
+      "source_paths": ["docs/core/uma.md", "docs/inorganic_materials/models.md", "README.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "task_id": "oc20",
+      "label": "OC20",
+      "domain": "Heterogeneous catalysis on surfaces",
+      "reference_method": "RPBE with VASP 5.4 pseudopotentials; no dispersion",
+      "charge_spin_contract": "Documented inputs are charge=0 and spin multiplicity=0.",
+      "official_cautions": ["OC20 does not cover oxides or explicit solvents.", "Transition-state use is described as possible but caution is required."],
+      "code_snapshot_state": "present_in_UMATask_enum",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "task_id": "odac",
+      "label": "ODAC",
+      "domain": "CO2/H2O adsorption in metal-organic frameworks",
+      "reference_method": "PBE+D3 with VASP 5.4 pseudopotentials",
+      "charge_spin_contract": "Documented inputs are charge=0 and spin multiplicity=0.",
+      "official_cautions": ["Training chemistry is centered on CO2/H2O adsorption; hydrocarbons and unseen bare MOFs require caution."],
+      "code_snapshot_state": "present_in_UMATask_enum",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "task_id": "oc25",
+      "label": "OC25",
+      "domain": "Solid-liquid electrochemical and catalytic interfaces",
+      "reference_method": "RPBE+D3 with VASP 6.4 pseudopotentials and dipole corrections",
+      "charge_spin_contract": "Training did not explicitly condition on charge or spin.",
+      "official_cautions": ["Available only in UMA 1.2 according to the docs.", "Work functions are not model outputs and require subsequent DFT."],
+      "code_snapshot_state": "present_in_UMATask_enum",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "task_id": "oc22",
+      "label": "OC22",
+      "domain": "Oxide catalysis and supports",
+      "reference_method": "Spin-polarized PBE+U with VASP 5.4 pseudopotentials",
+      "charge_spin_contract": "Documented inputs are charge=0 and spin multiplicity=0.",
+      "official_cautions": ["Available only in UMA 1.2 according to the docs.", "No explicit solvents are included."],
+      "code_snapshot_state": "documented_but_absent_from_UMATask_enum_at_pinned_commit",
+      "source_paths": ["docs/core/uma.md", "docs/core/quickstart.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "omol25",
+      "label": "OMol25",
+      "domain": "Organic molecules",
+      "primary_labels": ["energy", "forces", "charge", "spin"],
+      "role": "Molecular quantum chemistry training and evaluation",
+      "license_note": "Check the dataset card; repository license does not automatically cover payloads.",
+      "source_paths": ["docs/molecules/datasets/omol25.md"]
+    },
+    {
+      "dataset_id": "omol25_elec",
+      "label": "OMol25 Electronic",
+      "domain": "Organic molecules",
+      "primary_labels": ["electronic-structure targets"],
+      "role": "Electronic-property extension of the molecular domain",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/molecules/datasets/omol25_elec.md"]
+    },
+    {
+      "dataset_id": "omc25",
+      "label": "OMC25",
+      "domain": "Organic molecular crystals",
+      "primary_labels": ["energy", "forces", "stress"],
+      "role": "Periodic molecular-crystal training and benchmarks",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/molecules/datasets/omc25.md"]
+    },
+    {
+      "dataset_id": "omat24",
+      "label": "OMat24",
+      "domain": "Inorganic materials",
+      "primary_labels": ["energy", "forces", "stress"],
+      "role": "Large-scale inorganic training data and Matbench-compatible discovery evaluation",
+      "license_note": "The documentation identifies CC BY 4.0 for OMat24; model licenses remain separate.",
+      "source_paths": ["docs/inorganic_materials/datasets/omat24.md"]
+    },
+    {
+      "dataset_id": "oc20",
+      "label": "OC20",
+      "domain": "Heterogeneous catalysis",
+      "primary_labels": ["surface-adsorbate energies", "forces"],
+      "role": "Catalyst structure-to-energy/force benchmarks",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/catalysts/datasets/oc20.md"]
+    },
+    {
+      "dataset_id": "oc20_mads",
+      "label": "OC20 Multiple Adsorbates",
+      "domain": "Heterogeneous catalysis",
+      "primary_labels": ["multi-adsorbate structures"],
+      "role": "Multiple-adsorbate extension",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/catalysts/datasets/oc20_mads.md"]
+    },
+    {
+      "dataset_id": "oc22",
+      "label": "OC22",
+      "domain": "Oxide catalysis",
+      "primary_labels": ["energy", "forces"],
+      "role": "Oxide surface and catalyst-support domain",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/catalysts/datasets/oc22.md"]
+    },
+    {
+      "dataset_id": "oc20dense",
+      "label": "OC20-Dense",
+      "domain": "Heterogeneous catalysis",
+      "primary_labels": ["dense adsorbate placement and relaxations"],
+      "role": "Adsorption-energy discovery benchmark",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/catalysts/datasets/oc20dense.md"]
+    },
+    {
+      "dataset_id": "oc20neb",
+      "label": "OC20NEB",
+      "domain": "Catalytic transition states",
+      "primary_labels": ["NEB paths", "transition-state energies"],
+      "role": "Catalysis-specific transition-state benchmark",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/catalysts/datasets/oc20neb.md"]
+    },
+    {
+      "dataset_id": "ocx24",
+      "label": "OCx24",
+      "domain": "Experimental catalysis",
+      "primary_labels": ["experimental catalyst properties"],
+      "role": "Experiment-linked catalyst data",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/catalysts/datasets/ocx24.md"]
+    },
+    {
+      "dataset_id": "oc25",
+      "label": "OC25",
+      "domain": "Solid-liquid interfaces",
+      "primary_labels": ["energy", "forces", "stress"],
+      "role": "Electrochemical/catalytic interface training domain",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/catalysts/datasets/oc25.md"]
+    },
+    {
+      "dataset_id": "odac23",
+      "label": "ODAC23",
+      "domain": "Direct air capture",
+      "primary_labels": ["MOF-adsorbate energies", "forces"],
+      "role": "CO2/H2O adsorption in MOFs",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/dac/datasets/odac23.md"]
+    },
+    {
+      "dataset_id": "odac25",
+      "label": "ODAC25",
+      "domain": "Direct air capture",
+      "primary_labels": ["MOF-adsorbate energies", "forces"],
+      "role": "Expanded DAC benchmark and model domain",
+      "license_note": "Check the dataset card.",
+      "source_paths": ["docs/dac/datasets/odac25.md"]
+    }
+  ],
+  "technologies": [
+    {
+      "technology_id": "uma-mole",
+      "label": "UMA with Mixture of Linear Experts",
+      "layer": "model architecture",
+      "what_it_does": "Shares an equivariant backbone across chemistry domains while routing task, charge, spin and composition information through expert modules.",
+      "paper_use": "Explain why a single model can expose multiple DFT-task identities without pretending those identities are interchangeable.",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/models/uma/nn/mole.py"]
+    },
+    {
+      "technology_id": "pretrained-mlip",
+      "label": "pretrained_mlip model loader",
+      "layer": "inference API",
+      "what_it_does": "Resolves named checkpoints and returns a prediction unit for a selected task.",
+      "paper_use": "Record model ID, task ID, checkpoint source and package version with every result.",
+      "source_paths": ["docs/core/quickstart.md", "src/fairchem/core/calculate/pretrained_mlip.py", "src/fairchem/core/calculate/pretrained_models.json"]
+    },
+    {
+      "technology_id": "fairchem-calculator",
+      "label": "FAIRChemCalculator",
+      "layer": "ASE integration",
+      "what_it_does": "Exposes MLIP energies, forces and stress through the ASE calculator interface.",
+      "paper_use": "Connect official inference to relaxations, MD and property workflows while preserving task metadata.",
+      "source_paths": ["docs/core/common_tasks/ase_calculator.md", "src/fairchem/core/calculate/ase_calculator.py"]
+    },
+    {
+      "technology_id": "batch-inference",
+      "label": "Batch and Ray inference",
+      "layer": "scale-out inference",
+      "what_it_does": "Runs batched model inference and supports distributed workers for larger structure collections.",
+      "paper_use": "Useful for screening throughput, but batching does not create statistical independence or scientific validity.",
+      "source_paths": ["docs/core/common_tasks/batch_inference.md", "src/fairchem/core/calculate/_batch.py", "src/fairchem/core/calculate/_ray_inference_cluster.py"]
+    },
+    {
+      "technology_id": "inference-batcher",
+      "label": "InferenceBatcher",
+      "layer": "streaming inference",
+      "what_it_does": "Collects multiple requests into efficient inference batches.",
+      "paper_use": "A possible service layer for a future webapp queue, separate from the evidence database.",
+      "source_paths": ["docs/core/common_tasks/inference_batcher.md", "src/fairchem/core/calculate/_batch.py"]
+    },
+    {
+      "technology_id": "ase-datasets",
+      "label": "ASE-readable datasets",
+      "layer": "data ingestion",
+      "what_it_does": "Provides ASE-file, multi-structure and ASE-DB readers plus LMDB-oriented data tooling.",
+      "paper_use": "A reference for normalizing structures and labels before fine-tuning or evaluation.",
+      "source_paths": ["docs/core/common_tasks/ase_dataset_creation.md", "src/fairchem/core/datasets/ase_datasets.py"]
+    },
+    {
+      "technology_id": "training",
+      "label": "Configuration-driven training",
+      "layer": "model development",
+      "what_it_does": "Builds MLIP training runs from reusable model, data, optimizer and task configurations.",
+      "paper_use": "Keep the complete configuration and split policy as provenance; do not report only the checkpoint name.",
+      "source_paths": ["docs/core/common_tasks/training.md", "src/fairchem/core/components/train/train_runner.py"]
+    },
+    {
+      "technology_id": "evaluation",
+      "label": "Evaluation workflows",
+      "layer": "validation",
+      "what_it_does": "Runs configured evaluation jobs and benchmark reducers.",
+      "paper_use": "Use chemistry-grouped, task-matched evaluation instead of interpreting random row splits as transfer performance.",
+      "source_paths": ["docs/core/common_tasks/evaluation.md", "src/fairchem/core/components/evaluate/eval_runner.py"]
+    },
+    {
+      "technology_id": "fine-tuning",
+      "label": "Fine-tuning",
+      "layer": "domain adaptation",
+      "what_it_does": "Adapts a pretrained model using project-specific labeled structures.",
+      "paper_use": "For LPSCl, fine-tune only after DFT labels, split policy and target conventions are frozen.",
+      "source_paths": ["docs/core/common_tasks/fine_tuning.md", "configs/uma/finetune/uma_sm_finetune_template.yaml"]
+    },
+    {
+      "technology_id": "workflow-components",
+      "label": "Composable calculate workflows",
+      "layer": "orchestration",
+      "what_it_does": "Provides runners and recipes for single points, relaxations and derived properties.",
+      "paper_use": "Separate input generation, execution, collection and approval in our own workflow contract.",
+      "source_paths": ["docs/core/common_tasks/workflows.md", "src/fairchem/core/components/calculate/_calculate_runner.py"]
+    },
+    {
+      "technology_id": "relaxation",
+      "label": "Geometry relaxation",
+      "layer": "atomistic workflow",
+      "what_it_does": "Relaxes atomic positions and, when requested, cell degrees of freedom.",
+      "paper_use": "Report optimizer, force/stress convergence and maximum steps; model output alone is not convergence.",
+      "source_paths": ["src/fairchem/core/components/calculate/_single/relaxation_runner.py", "src/fairchem/core/components/calculate/recipes/relax.py"]
+    },
+    {
+      "technology_id": "molecular-dynamics",
+      "label": "ASE molecular dynamics",
+      "layer": "atomistic workflow",
+      "what_it_does": "Runs MD with thermostat and trajectory utilities.",
+      "paper_use": "Distinct trajectories require explicit, recorded random seeds; preserve raw trajectories needed by retrospective gates.",
+      "source_paths": ["README.md", "src/fairchem/core/components/calculate/_single/md_runner.py", "src/fairchem/core/components/dynamics/ase_md_runner.py"]
+    },
+    {
+      "technology_id": "lammps",
+      "label": "LAMMPS integration",
+      "layer": "large-scale simulation",
+      "what_it_does": "Connects FAIR-Chem inference to LAMMPS workflows.",
+      "paper_use": "Potential route for larger MD after ASE-level equivalence and reproducibility checks.",
+      "source_paths": ["docs/core/common_tasks/lammps.md", "packages/fairchem-lammps/pyproject.toml"]
+    },
+    {
+      "technology_id": "elasticity",
+      "label": "Elastic-property workflow",
+      "layer": "materials property",
+      "what_it_does": "Generates strained structures and evaluates elastic response.",
+      "paper_use": "Specify relaxed-ion versus clamped-ion semantics and reject nonphysical moduli before aggregation.",
+      "source_paths": ["docs/inorganic_materials/examples_tutorials/elastic.md", "src/fairchem/core/components/calculate/_single/elasticity_runner.py"]
+    },
+    {
+      "technology_id": "phonons",
+      "label": "Phonon workflow",
+      "layer": "materials property",
+      "what_it_does": "Builds force-constant/phonon calculations around MLIP forces.",
+      "paper_use": "Use as a stability diagnostic only after supercell and displacement convergence checks.",
+      "source_paths": ["docs/inorganic_materials/examples_tutorials/phonons.md", "src/fairchem/core/components/calculate/_single/phonon_runner.py"]
+    },
+    {
+      "technology_id": "thermal-conductivity",
+      "label": "Thermal-conductivity workflow",
+      "layer": "materials property",
+      "what_it_does": "Provides a recipe and benchmark runner for lattice thermal conductivity workflows.",
+      "paper_use": "Do not confuse this capability with ionic conductivity; the observables and validation are different.",
+      "source_paths": ["src/fairchem/core/components/calculate/recipes/thermal_conductivity.py", "src/fairchem/core/components/calculate/_single/kappa_runner.py"]
+    },
+    {
+      "technology_id": "formation-energy",
+      "label": "Formation-energy workflow",
+      "layer": "materials thermodynamics",
+      "what_it_does": "Combines predicted energies with task-specific elemental references.",
+      "paper_use": "Keep OMat reference energies and corrections isolated from Materials Project energy conventions.",
+      "source_paths": ["docs/inorganic_materials/examples_tutorials/formation_energy.md", "src/fairchem/core/components/calculate/recipes/energy.py"]
+    },
+    {
+      "technology_id": "adsorbml",
+      "label": "AdsorbML",
+      "layer": "catalysis application",
+      "what_it_does": "Accelerates adsorption-energy searches using ML relaxations plus higher-level evaluation.",
+      "paper_use": "A pattern for coarse-to-expensive screening, not a directly transferable solid-electrolyte gate.",
+      "source_paths": ["docs/catalysts/examples_tutorials/adsorbml_walkthrough.md", "packages/fairchem-applications-AdsorbML/pyproject.toml"]
+    },
+    {
+      "technology_id": "cattsunami",
+      "label": "CatTSunami",
+      "layer": "catalysis application",
+      "what_it_does": "Builds transition-state workflows for catalytic surface reactions.",
+      "paper_use": "Borrow workflow ideas only; bulk-Li hopping has a different system and method contract.",
+      "source_paths": ["docs/catalysts/examples_tutorials/cattsunami_tutorial.md", "packages/fairchem-applications-cattsunami/pyproject.toml"]
+    },
+    {
+      "technology_id": "fastcsp",
+      "label": "FastCSP",
+      "layer": "structure discovery application",
+      "what_it_does": "Accelerates molecular crystal structure prediction.",
+      "paper_use": "Relevant as a search/relax/rerank architecture, not as a chemistry-equivalent model for LPSCl.",
+      "source_paths": ["packages/fairchem-applications-fastcsp/pyproject.toml", "docs/core/fair_chemistry_papers.md"]
+    },
+    {
+      "technology_id": "ocx",
+      "label": "OCx application tools",
+      "layer": "experiment-linked application",
+      "what_it_does": "Connects catalyst experiment data and modeling workflows.",
+      "paper_use": "A useful precedent for keeping experimental and computational evidence linked but not merged.",
+      "source_paths": ["packages/fairchem-applications-ocx/pyproject.toml", "docs/catalysts/datasets/ocx24.md"]
+    },
+    {
+      "technology_id": "generative-models",
+      "label": "Generative structure models",
+      "layer": "candidate generation",
+      "what_it_does": "The documentation indexes several diffusion, flow-matching and language-model approaches for structure generation.",
+      "paper_use": "Potential future candidate generator; every generated structure still needs domain and stability validation.",
+      "source_paths": ["docs/core/generative_models.md", "docs/core/fair_chemistry_papers.md"]
+    },
+    {
+      "technology_id": "benchmark-reducers",
+      "label": "Benchmark reducers",
+      "layer": "evaluation infrastructure",
+      "what_it_does": "Aggregates task-specific benchmark outputs for discovery, adsorption, molecular and speed tests.",
+      "paper_use": "Reuse the idea of task-specific reducers; never force unrelated properties into one universal score.",
+      "source_paths": ["src/fairchem/core/components/benchmark/_benchmark_reducer.py", "src/fairchem/core/components/benchmark/systems.py"]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "fc-claim-v2-breaking",
+      "statement": "Fair-Chem v2 is a breaking redesign rather than an in-place continuation of the v1 trainer/calculator stack.",
+      "claim_type": "official_fact",
+      "allowed_use": "background_and_methods",
+      "caveat": "Pin major version and migration assumptions in all project provenance.",
+      "source_paths": ["docs/core/fairchemv1_v2.md", "docs/core/install.md"]
+    },
+    {
+      "claim_id": "fc-claim-gated-model-access",
+      "statement": "Pretrained checkpoints are fetched from gated Hugging Face repositories and require license acceptance/authentication.",
+      "claim_type": "official_fact",
+      "allowed_use": "setup_and_reproducibility",
+      "caveat": "Repository MIT licensing does not imply identical licensing for every model or dataset.",
+      "source_paths": ["README.md", "docs/core/install.md"]
+    },
+    {
+      "claim_id": "fc-claim-task-is-method-identity",
+      "statement": "UMA task labels encode different data domains and electronic-structure conventions; they are not interchangeable application tags.",
+      "claim_type": "project_inference_from_official_contract",
+      "allowed_use": "methods_and_limitations",
+      "caveat": "Record task ID with every value and never pool energies across tasks without an explicit bridge.",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "claim_id": "fc-claim-omat-mp-incompatibility",
+      "statement": "OMat/UMA total energies are not directly compatible with Materials Project total energies or MP2020 corrections.",
+      "claim_type": "official_caution",
+      "allowed_use": "limitations_and_workflow_design",
+      "caveat": "Do not mix UMA-OMat energies into MP hull or grand-potential tables as if they shared a reference.",
+      "source_paths": ["README.md", "docs/inorganic_materials/models.md", "docs/inorganic_materials/examples_tutorials/formation_energy.md"]
+    },
+    {
+      "claim_id": "fc-claim-md-rng",
+      "statement": "The prediction-unit construction path sets a global NumPy seed, so independent MD trajectories need explicitly distinct seeds.",
+      "claim_type": "official_caution",
+      "allowed_use": "methods_and_reproducibility",
+      "caveat": "A different directory label is not evidence of an independent stochastic trajectory.",
+      "source_paths": ["README.md"]
+    },
+    {
+      "claim_id": "fc-claim-code-doc-oc22-drift",
+      "statement": "At the pinned source commit, OC22 is documented as a UMA 1.2 task but is absent from the public UMATask enum.",
+      "claim_type": "code_documentation_drift_observation",
+      "allowed_use": "engineering_audit_only",
+      "caveat": "Recheck on upgrade; do not present this snapshot observation as a permanent product limitation.",
+      "source_paths": ["docs/core/uma.md", "docs/core/quickstart.md", "src/fairchem/core/units/mlip_unit/api/inference.py"]
+    },
+    {
+      "claim_id": "fc-claim-registry-doc-model-drift",
+      "statement": "The code-registered pretrained model inventory can be newer or broader than models highlighted in prose documentation.",
+      "claim_type": "code_documentation_drift_observation",
+      "allowed_use": "engineering_audit_only",
+      "caveat": "Show docs-advertised and code-registered states separately in the webapp.",
+      "source_paths": ["README.md", "src/fairchem/core/calculate/pretrained_models.json"]
+    },
+    {
+      "claim_id": "fc-claim-capability-not-validation",
+      "statement": "Availability of a relaxation, MD, elasticity, phonon or fine-tuning workflow does not validate that workflow for a new chemistry or observable.",
+      "claim_type": "project_policy",
+      "allowed_use": "all_project_outputs",
+      "caveat": "Store capability, project validation and approved use as separate fields.",
+      "source_paths": ["docs/core/common_tasks/workflows.md", "docs/inorganic_materials/examples_tutorials/elastic.md", "docs/inorganic_materials/examples_tutorials/phonons.md"]
+    },
+    {
+      "claim_id": "fc-claim-batch-not-replicate",
+      "statement": "Batch inference improves throughput but does not turn multiple inputs into controlled replicates or concentration points.",
+      "claim_type": "project_policy",
+      "allowed_use": "screening_design",
+      "caveat": "Experimental-design identity must come from structure/composition/seed provenance.",
+      "source_paths": ["docs/core/common_tasks/batch_inference.md", "docs/core/common_tasks/inference_batcher.md"]
+    },
+    {
+      "claim_id": "fc-claim-paper-index-not-endorsement",
+      "statement": "The FAIR Chemistry papers page is a curated index, not proof that every method is suitable for LPSCl.",
+      "claim_type": "project_policy",
+      "allowed_use": "literature_discovery",
+      "caveat": "Each paper added to litdb still needs figure inspection and an explicit comparison-vs-ours note.",
+      "source_paths": ["docs/core/fair_chemistry_papers.md"]
+    }
+  ],
+  "lpscl_crosswalk": [
+    {
+      "crosswalk_id": "lpscl-task-omat",
+      "fairchem_capability": "UMA inorganic-material inference",
+      "project_use": "LPSCl structural relaxation, screening and selected MD",
+      "official_task": "omat",
+      "project_status": "validated_with_project_specific_exceptions",
+      "project_rule": "Use the project-pinned model/task/protocol. Official support does not override the Li3N ban or convergence gates.",
+      "paper_language": "UMA provides an inorganic pretrained potential used as a computational accelerator; project-specific validation defines the claim scope.",
+      "source_paths": ["docs/core/uma.md", "docs/inorganic_materials/models.md"]
+    },
+    {
+      "crosswalk_id": "lpscl-energy-reference",
+      "fairchem_capability": "OMat total energy and formation-energy references",
+      "project_use": "Host-relative energies within one frozen protocol",
+      "official_task": "omat",
+      "project_status": "conditional",
+      "project_rule": "Do not merge OMat energies with Materials Project hull/grand-potential values. Keep method_id and reference set explicit.",
+      "paper_language": "MLIP energy differences were interpreted only within the same task and reference convention.",
+      "source_paths": ["README.md", "docs/inorganic_materials/examples_tutorials/formation_energy.md"]
+    },
+    {
+      "crosswalk_id": "lpscl-relaxation",
+      "fairchem_capability": "ASE geometry/cell relaxation",
+      "project_use": "Screening-stage optimization",
+      "official_task": "omat",
+      "project_status": "conditional_on_convergence",
+      "project_rule": "Persist fmax, step count, residual stress, optimizer, model version and final structure. A returned structure is not automatically converged.",
+      "paper_language": "Structures were relaxed with a pinned UMA/OMat calculator and promoted only after explicit force/stress convergence checks.",
+      "source_paths": ["docs/core/common_tasks/ase_calculator.md", "src/fairchem/core/components/calculate/_single/relaxation_runner.py"]
+    },
+    {
+      "crosswalk_id": "lpscl-md",
+      "fairchem_capability": "ASE/LAMMPS molecular dynamics",
+      "project_use": "Li diffusion and framework-state diagnostics",
+      "official_task": "omat",
+      "project_status": "project_protocol_controls_claim",
+      "project_rule": "Use the project canonical temperature/seed/time-window contract and save raw trajectories required by retrospective gates.",
+      "paper_language": "FAIR-Chem supplied the force engine; trajectory generation, seed policy and transport estimator followed the project protocol.",
+      "source_paths": ["README.md", "docs/core/common_tasks/lammps.md", "src/fairchem/core/components/calculate/_single/md_runner.py"]
+    },
+    {
+      "crosswalk_id": "lpscl-elastic",
+      "fairchem_capability": "Elastic response workflow",
+      "project_use": "Screening-stage mechanical response",
+      "official_task": "omat",
+      "project_status": "conditional_on_physical_validity",
+      "project_rule": "Record strain/relaxation semantics and reject non-positive or otherwise nonphysical moduli before species aggregation.",
+      "paper_language": "Elastic quantities were treated as configuration-conditional diagnostics, not intrinsic values until convergence and validity checks passed.",
+      "source_paths": ["docs/inorganic_materials/examples_tutorials/elastic.md", "src/fairchem/core/components/calculate/_single/elasticity_runner.py"]
+    },
+    {
+      "crosswalk_id": "lpscl-phonon",
+      "fairchem_capability": "Phonon workflow",
+      "project_use": "Future local/dynamical stability validation",
+      "official_task": "omat",
+      "project_status": "not_yet_project_canonical",
+      "project_rule": "Require displacement, supercell and force-convergence studies before promotion.",
+      "paper_language": "Phonons remain a planned validation layer rather than an output of the current screen.",
+      "source_paths": ["docs/inorganic_materials/examples_tutorials/phonons.md", "src/fairchem/core/components/calculate/_single/phonon_runner.py"]
+    },
+    {
+      "crosswalk_id": "lpscl-ehull-esw",
+      "fairchem_capability": "Formation-energy workflow",
+      "project_use": "Grand-potential and E_hull context",
+      "official_task": "omat",
+      "project_status": "blocked_as_cross_reference",
+      "project_rule": "Use a separately pinned Materials Project phase set for MP thermodynamics; never substitute UMA/OMat totals into that ledger.",
+      "paper_language": "Thermodynamic phase competition was evaluated in a method-specific external phase-set workflow, separate from UMA screening energies.",
+      "source_paths": ["README.md", "docs/inorganic_materials/examples_tutorials/formation_energy.md"]
+    },
+    {
+      "crosswalk_id": "lpscl-neb",
+      "fairchem_capability": "Catalysis transition-state tooling and general MLIP forces",
+      "project_use": "Li-hop scout calculations",
+      "official_task": "omat",
+      "project_status": "diagnostic_only_until_dft",
+      "project_rule": "CatTSunami/OC20NEB are catalysis-specific. Bulk Li hopping requires our own cell, path and DFT validation contract.",
+      "paper_language": "MLIP barriers were used only to scout paths; absolute barriers required matched DFT validation.",
+      "source_paths": ["docs/catalysts/examples_tutorials/cattsunami_tutorial.md", "docs/catalysts/datasets/oc20neb.md"]
+    },
+    {
+      "crosswalk_id": "lpscl-batch-screening",
+      "fairchem_capability": "Batch inference and distributed workers",
+      "project_use": "Large candidate roster throughput",
+      "official_task": "omat",
+      "project_status": "engineering_ready_science_contract_separate",
+      "project_rule": "Batch records need immutable composition, site, seed and method identity. Throughput metadata must not be used as a replicate label.",
+      "paper_language": "Batched inference reduced computational cost, while scientific denominators were defined from exact structure provenance.",
+      "source_paths": ["docs/core/common_tasks/batch_inference.md", "docs/core/common_tasks/inference_batcher.md"]
+    },
+    {
+      "crosswalk_id": "lpscl-finetune",
+      "fairchem_capability": "UMA fine-tuning",
+      "project_use": "Potential future LPSCl domain adaptation",
+      "official_task": "omat",
+      "project_status": "future_after_ground_truth",
+      "project_rule": "First fix relaxation convergence and collect composition-diverse DFT energies/forces/stress; use nested chemistry-group evaluation.",
+      "paper_language": "Fine-tuning is reserved for residual systematic error after protocol defects are removed.",
+      "source_paths": ["docs/core/common_tasks/fine_tuning.md", "docs/core/common_tasks/evaluation.md"]
+    },
+    {
+      "crosswalk_id": "lpscl-li3n-exception",
+      "fairchem_capability": "General inorganic UMA inference",
+      "project_use": "Li3N",
+      "official_task": "omat",
+      "project_status": "project_blocked",
+      "project_rule": "UMA is banned for Li3N by project evidence even though the official task is broad.",
+      "paper_language": "Li3N was excluded from UMA-based claims under a project-specific validation decision.",
+      "source_paths": ["docs/inorganic_materials/models.md", "docs/core/uma.md"]
+    },
+    {
+      "crosswalk_id": "lpscl-model-upgrade",
+      "fairchem_capability": "Named pretrained model registry and versioned releases",
+      "project_use": "Model migration",
+      "official_task": "omat",
+      "project_status": "requires_revalidation",
+      "project_rule": "A model/version upgrade creates a new method_id. Do not silently mix UMA 1.1 and 1.2 values.",
+      "paper_language": "All model upgrades were treated as method changes and benchmarked before data pooling.",
+      "source_paths": ["README.md", "docs/core/uma_changelog.md", "src/fairchem/core/calculate/pretrained_models.json"]
+    }
+  ],
+  "webapp_seed": [
+    {
+      "section_id": "fairchem-overview",
+      "title": "Overview",
+      "fairchem_parallel": "Documentation home and Quickstart",
+      "purpose": "Explain domains, version, source snapshot and the difference between capability and approval.",
+      "default_visibility": "public",
+      "source_paths": ["docs/index.md", "docs/core/quickstart.md"]
+    },
+    {
+      "section_id": "fairchem-models-tasks",
+      "title": "Models & Tasks",
+      "fairchem_parallel": "AI/ML Models & Usage",
+      "purpose": "Show registered model IDs, task-specific DFT conventions and documentation/code drift.",
+      "default_visibility": "public",
+      "source_paths": ["docs/core/uma.md", "src/fairchem/core/calculate/pretrained_models.json"]
+    },
+    {
+      "section_id": "fairchem-organic",
+      "title": "Organic Molecules & Crystals",
+      "fairchem_parallel": "Organic Molecules",
+      "purpose": "Organize OMol25, OMol25 electronic and OMC25 without mixing them with inorganic claims.",
+      "default_visibility": "public",
+      "source_paths": ["docs/molecules/datasets/summary.md", "docs/molecules/models.md"]
+    },
+    {
+      "section_id": "fairchem-catalysis",
+      "title": "Heterogeneous Catalysis",
+      "fairchem_parallel": "Heterogeneous Catalysis",
+      "purpose": "Index OC datasets and application workflows with their surface-specific scope.",
+      "default_visibility": "public",
+      "source_paths": ["docs/catalysts/datasets/summary.md", "docs/catalysts/models.md"]
+    },
+    {
+      "section_id": "fairchem-inorganic",
+      "title": "Inorganic Materials",
+      "fairchem_parallel": "Inorganic Materials",
+      "purpose": "Place OMat24, UMA/OMat and property workflows next to explicit energy-reference cautions.",
+      "default_visibility": "public",
+      "source_paths": ["docs/inorganic_materials/datasets/summary.md", "docs/inorganic_materials/models.md"]
+    },
+    {
+      "section_id": "fairchem-dac",
+      "title": "MOFs for Direct Air Capture",
+      "fairchem_parallel": "MOFs for Direct Air Capture",
+      "purpose": "Keep ODAC chemistry and adsorption claims in their own domain.",
+      "default_visibility": "public",
+      "source_paths": ["docs/dac/datasets/summary.md", "docs/dac/models.md"]
+    },
+    {
+      "section_id": "fairchem-workflows",
+      "title": "Workflows & Code",
+      "fairchem_parallel": "Common Tasks and Tutorials",
+      "purpose": "Search relax, MD, LAMMPS, elastic, phonon, training and inference technology by capability.",
+      "default_visibility": "public",
+      "source_paths": ["docs/core/common_tasks/summary.md", "docs/core/common_tasks/workflows.md"]
+    },
+    {
+      "section_id": "fairchem-papers",
+      "title": "Papers",
+      "fairchem_parallel": "FAIR Chemistry Papers",
+      "purpose": "Seed future litdb curation; show paper-index status separately from locally reviewed papers.",
+      "default_visibility": "public",
+      "source_paths": ["docs/core/fair_chemistry_papers.md"]
+    },
+    {
+      "section_id": "fairchem-lpscl",
+      "title": "Our LPSCl Use",
+      "fairchem_parallel": "Project-specific addition",
+      "purpose": "Map official capability to project validation, exceptions and approved wording.",
+      "default_visibility": "public",
+      "source_paths": ["docs/core/uma.md", "docs/inorganic_materials/models.md"]
+    },
+    {
+      "section_id": "fairchem-sources",
+      "title": "Source & Provenance Explorer",
+      "fairchem_parallel": "GitHub source links",
+      "purpose": "Expose pinned commit, file hash, source path and official link behind every claim.",
+      "default_visibility": "public",
+      "source_paths": ["docs/myst.yml", "README.md"]
+    },
+    {
+      "section_id": "fairchem-updates",
+      "title": "Updates & Drift",
+      "fairchem_parallel": "Changelog and migration guides",
+      "purpose": "Compare snapshots, flag model/task/page changes and require review before promotion.",
+      "default_visibility": "maintainer",
+      "source_paths": ["docs/core/uma_changelog.md", "docs/core/fairchemv1_v2.md"]
+    }
+  ]
+}

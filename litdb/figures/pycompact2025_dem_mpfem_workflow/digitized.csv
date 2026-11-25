@@ -1,0 +1,163 @@
+figure,series,x_name,x,y_name,y,note
+fig3a,Fine (red dashed),particle_diameter_um,38.1,weight_fraction_peak,0.025,"Fig. 3(a) native raster; log x-axis from the frame (0.1 … 1000 µm), y from the frame (0 … 0.030); curve = coloured pixels inside the frame (legend excluded)"
+fig3a,Fine (red dashed),particle_diameter_um_lower_edge_half_maximum,11.4,weight_fraction,0.0125,
+fig3a,Fine (red dashed),particle_diameter_um_upper_edge_half_maximum,55.5,weight_fraction,0.0125,
+fig3a,Fine (red dashed),particle_diameter_um_lower_edge_5_percent_of_peak,3.5,weight_fraction,0.0012,
+fig3a,Fine (red dashed),particle_diameter_um_upper_edge_5_percent_of_peak,71.5,weight_fraction,0.0012,
+fig3a,Coarse (black),particle_diameter_um,121.9,weight_fraction_peak,0.0171,"Fig. 3(a) native raster; log x-axis from the frame (0.1 … 1000 µm), y from the frame (0 … 0.030); curve = coloured pixels inside the frame (legend excluded)"
+fig3a,Coarse (black),particle_diameter_um_lower_edge_half_maximum,99.5,weight_fraction,0.0086,
+fig3a,Coarse (black),particle_diameter_um_upper_edge_half_maximum,163.3,weight_fraction,0.0086,
+fig3a,Coarse (black),particle_diameter_um_lower_edge_5_percent_of_peak,85.2,weight_fraction,0.0009,
+fig3a,Coarse (black),particle_diameter_um_upper_edge_5_percent_of_peak,184.3,weight_fraction,0.0009,
+fig3e,axial stress at 95 % density (Coarse),average_elements_per_particle,500,axial_stress_MPa,1641,"Fig. 3(e) native raster; frame top = 1800 MPa (y 1746), bottom = 0 (y 2120); marker = centroid of the green square; 1 px = 4.8 MPa. The text (p.6) prints 1650 and 1310 MPa for 500 and 2500 elements — the 2500 marker reads ≈ 1380"
+fig3e,axial stress at 95 % density (Coarse),average_elements_per_particle,1000,axial_stress_MPa,1531,"Fig. 3(e) native raster; frame top = 1800 MPa (y 1746), bottom = 0 (y 2120); marker = centroid of the green square; 1 px = 4.8 MPa. The text (p.6) prints 1650 and 1310 MPa for 500 and 2500 elements — the 2500 marker reads ≈ 1380"
+fig3e,axial stress at 95 % density (Coarse),average_elements_per_particle,1500,axial_stress_MPa,1469,"Fig. 3(e) native raster; frame top = 1800 MPa (y 1746), bottom = 0 (y 2120); marker = centroid of the green square; 1 px = 4.8 MPa. The text (p.6) prints 1650 and 1310 MPa for 500 and 2500 elements — the 2500 marker reads ≈ 1380"
+fig3e,axial stress at 95 % density (Coarse),average_elements_per_particle,2000,axial_stress_MPa,1398,"Fig. 3(e) native raster; frame top = 1800 MPa (y 1746), bottom = 0 (y 2120); marker = centroid of the green square; 1 px = 4.8 MPa. The text (p.6) prints 1650 and 1310 MPa for 500 and 2500 elements — the 2500 marker reads ≈ 1380"
+fig3e,axial stress at 95 % density (Coarse),average_elements_per_particle,2500,axial_stress_MPa,1380,"Fig. 3(e) native raster; frame top = 1800 MPa (y 1746), bottom = 0 (y 2120); marker = centroid of the green square; 1 px = 4.8 MPa. The text (p.6) prints 1650 and 1310 MPa for 500 and 2500 elements — the 2500 marker reads ≈ 1380"
+fig3f,"relative density vs friction coefficient (Coarse, 2000 MPa)",friction_coefficient,0.1,relative_density_pct,84.21,Fig. 3(f) native raster; frame 82 … 88 %; marker = bounding-box centre of the red triangle (centroid would read 0.02 lower); 1 px = 0.016 %
+fig3f,"relative density vs friction coefficient (Coarse, 2000 MPa)",friction_coefficient,0.2,relative_density_pct,85.49,Fig. 3(f) native raster; frame 82 … 88 %; marker = bounding-box centre of the red triangle (centroid would read 0.02 lower); 1 px = 0.016 %
+fig3f,"relative density vs friction coefficient (Coarse, 2000 MPa)",friction_coefficient,0.3,relative_density_pct,85.94,Fig. 3(f) native raster; frame 82 … 88 %; marker = bounding-box centre of the red triangle (centroid would read 0.02 lower); 1 px = 0.016 %
+fig3g,"relative density vs RVE size (Fine, 2000 MPa)",rve_size_um,210,relative_density_pct,86.86,Fig. 3(g) native raster; frame 80 … 90 %; marker = centroid of the red circle; 1 px = 0.027 %
+fig3g,"relative density vs RVE size (Fine, 2000 MPa)",rve_size_um,250,relative_density_pct,87.01,Fig. 3(g) native raster; frame 80 … 90 %; marker = centroid of the red circle; 1 px = 0.027 %
+fig3g,"relative density vs RVE size (Fine, 2000 MPa)",rve_size_um,300,relative_density_pct,87.46,Fig. 3(g) native raster; frame 80 … 90 %; marker = centroid of the red circle; 1 px = 0.027 %
+fig3g,EXP (dashed line),rve_size_um,all,relative_density_pct,87.77,centre row of the red dashed line (rows 1822–1824)
+fig4a,Fine (red) loading,eng_stress_MPa,20,eng_strain,0.293,"Fig. 4(a) native raster; frame 0 … 0.7 strain, 0 … 2500 MPa; 1 px = 0.0014 strain = 7.3 MPa; value = centre of the run of curve pixels on that stress row; left run = loading branch, right run = unloading branch"
+fig4a,Fine (red) unloading,eng_stress_MPa,20,eng_strain,0.54,
+fig4a,Fine (red) loading,eng_stress_MPa,50,eng_strain,0.31,
+fig4a,Fine (red) unloading,eng_stress_MPa,50,eng_strain,0.554,
+fig4a,Fine (red) loading,eng_stress_MPa,100,eng_strain,0.336,
+fig4a,Fine (red) unloading,eng_stress_MPa,100,eng_strain,0.559,
+fig4a,Fine (red) loading,eng_stress_MPa,250,eng_strain,0.388,
+fig4a,Fine (red) unloading,eng_stress_MPa,250,eng_strain,0.563,
+fig4a,Fine (red) loading,eng_stress_MPa,500,eng_strain,0.454,
+fig4a,Fine (red) unloading,eng_stress_MPa,500,eng_strain,0.565,
+fig4a,Fine (red) loading,eng_stress_MPa,750,eng_strain,0.495,
+fig4a,Fine (red) unloading,eng_stress_MPa,750,eng_strain,0.568,
+fig4a,Fine (red) loading,eng_stress_MPa,1000,eng_strain,0.524,
+fig4a,Fine (red) unloading,eng_stress_MPa,1000,eng_strain,0.57,
+fig4a,Fine (red) loading,eng_stress_MPa,1250,eng_strain,0.544,
+fig4a,Fine (red) unloading,eng_stress_MPa,1250,eng_strain,0.571,
+fig4a,Fine (red) loading,eng_stress_MPa,1500,eng_strain,0.557,
+fig4a,Fine (red) unloading,eng_stress_MPa,1500,eng_strain,0.571,
+fig4a,Fine (red) (single run — the other branch is hidden under the other curve or merged near the peak),eng_stress_MPa,1750,eng_strain,0.569,
+fig4a,Fine (red) (single run — the other branch is hidden under the other curve or merged near the peak),eng_stress_MPa,1900,eng_strain,0.572,
+fig4a,Fine (red) peak,eng_stress_MPa,2000,eng_strain,0.576,right-most pixel column of the curve
+fig4a,Coarse (black) loading,eng_stress_MPa,20,eng_strain,0.379,"Fig. 4(a) native raster; frame 0 … 0.7 strain, 0 … 2500 MPa; 1 px = 0.0014 strain = 7.3 MPa; value = centre of the run of curve pixels on that stress row; left run = loading branch, right run = unloading branch"
+fig4a,Coarse (black) unloading,eng_stress_MPa,20,eng_strain,0.591,
+fig4a,Coarse (black) loading,eng_stress_MPa,50,eng_strain,0.391,
+fig4a,Coarse (black) unloading,eng_stress_MPa,50,eng_strain,0.599,
+fig4a,Coarse (black) loading,eng_stress_MPa,100,eng_strain,0.409,
+fig4a,Coarse (black) unloading,eng_stress_MPa,100,eng_strain,0.603,
+fig4a,Coarse (black) loading,eng_stress_MPa,250,eng_strain,0.444,
+fig4a,Coarse (black) unloading,eng_stress_MPa,250,eng_strain,0.608,
+fig4a,Coarse (black) loading,eng_stress_MPa,500,eng_strain,0.498,
+fig4a,Coarse (black) unloading,eng_stress_MPa,500,eng_strain,0.612,
+fig4a,Coarse (black) loading,eng_stress_MPa,750,eng_strain,0.539,
+fig4a,Coarse (black) unloading,eng_stress_MPa,750,eng_strain,0.614,
+fig4a,Coarse (black) (single run — the other branch is hidden under the other curve or merged near the peak),eng_stress_MPa,1000,eng_strain,0.615,
+fig4a,Coarse (black) loading,eng_stress_MPa,1250,eng_strain,0.589,
+fig4a,Coarse (black) unloading,eng_stress_MPa,1250,eng_strain,0.617,
+fig4a,Coarse (black) loading,eng_stress_MPa,1500,eng_strain,0.603,
+fig4a,Coarse (black) unloading,eng_stress_MPa,1500,eng_strain,0.618,
+fig4a,Coarse (black) (single run — the other branch is hidden under the other curve or merged near the peak),eng_stress_MPa,1750,eng_strain,0.617,
+fig4a,Coarse (black) (single run — the other branch is hidden under the other curve or merged near the peak),eng_stress_MPa,1900,eng_strain,0.619,
+fig4a,Coarse (black) peak,eng_stress_MPa,2000,eng_strain,0.622,right-most pixel column of the curve
+fig4a,Fine (red) stress onset,eng_stress_MPa,<10,eng_strain,0.287,end of the red run on the zero-stress rows (y 355–356)
+fig4a,Coarse (black) stress onset,eng_stress_MPa,<10,eng_strain,0.371,end of the black run on the zero-stress rows (y 356)
+fig4a,Fine (red) end of unloading (zero-stress tail),eng_stress_MPa,<10,eng_strain,0.505,left end of the red run 0.505–0.532 on the zero-stress rows
+fig4a,Coarse (black) end of unloading (zero-stress tail),eng_stress_MPa,<10,eng_strain,0.56,left end of the black run 0.560–0.572 on the zero-stress row; ±0.01 (the tail lies on the frame line)
+fig4b,Fine (red) loading,pressure_MPa,20,porosity_pct,41.6,"Fig. 4(b) native raster; x ticks 0 and 2500 MPa at x 869.0 and 1329.0 (the frame starts at −204 MPa), y ticks 0 and 60 % at y 351.0 and 59.5; 1 px = 5.4 MPa = 0.21 %; value = centre of the run of curve pixels in that pixel column; upper run = loading, lower run = unloading"
+fig4b,Fine (red) unloading,pressure_MPa,20,porosity_pct,9.2,
+fig4b,Fine (red) loading,pressure_MPa,50,porosity_pct,40.4,
+fig4b,Fine (red) unloading,pressure_MPa,50,porosity_pct,7.8,
+fig4b,Fine (red) loading,pressure_MPa,100,porosity_pct,38.3,
+fig4b,Fine (red) unloading,pressure_MPa,100,porosity_pct,6.9,
+fig4b,Fine (red) loading,pressure_MPa,200,porosity_pct,34.4,
+fig4b,Fine (red) unloading,pressure_MPa,200,porosity_pct,6.2,
+fig4b,Fine (red) loading,pressure_MPa,300,porosity_pct,31.1,
+fig4b,Fine (red) unloading,pressure_MPa,300,porosity_pct,5.7,
+fig4b,Fine (red) loading,pressure_MPa,400,porosity_pct,27.6,
+fig4b,Fine (red) unloading,pressure_MPa,400,porosity_pct,5.2,
+fig4b,Fine (red) loading,pressure_MPa,500,porosity_pct,24.7,
+fig4b,Fine (red) unloading,pressure_MPa,500,porosity_pct,5.2,
+fig4b,Fine (red) loading,pressure_MPa,600,porosity_pct,22.2,
+fig4b,Fine (red) unloading,pressure_MPa,600,porosity_pct,4.9,
+fig4b,Fine (red) loading,pressure_MPa,750,porosity_pct,18.6,
+fig4b,Fine (red) unloading,pressure_MPa,750,porosity_pct,4.7,
+fig4b,Fine (red) loading,pressure_MPa,1000,porosity_pct,13.7,
+fig4b,Fine (red) unloading,pressure_MPa,1000,porosity_pct,4.4,
+fig4b,Fine (red) loading,pressure_MPa,1250,porosity_pct,9.9,
+fig4b,Fine (red) unloading,pressure_MPa,1250,porosity_pct,4.1,
+fig4b,Fine (red) loading,pressure_MPa,1500,porosity_pct,7.0,
+fig4b,Fine (red) unloading,pressure_MPa,1500,porosity_pct,3.9,
+fig4b,Fine (red) loading,pressure_MPa,1750,porosity_pct,4.7,
+fig4b,Fine (red) unloading,pressure_MPa,1750,porosity_pct,3.8,
+fig4b,Fine (red) (branches merged),pressure_MPa,1900,porosity_pct,3.7,
+fig4b,Fine (red) (branches merged),pressure_MPa,2000,porosity_pct,3.3,
+fig4b,Coarse (black) loading,pressure_MPa,20,porosity_pct,40.3,"Fig. 4(b) native raster; x ticks 0 and 2500 MPa at x 869.0 and 1329.0 (the frame starts at −204 MPa), y ticks 0 and 60 % at y 351.0 and 59.5; 1 px = 5.4 MPa = 0.21 %; value = centre of the run of curve pixels in that pixel column; upper run = loading, lower run = unloading"
+fig4b,Coarse (black) unloading,pressure_MPa,20,porosity_pct,10.4,
+fig4b,Coarse (black) loading,pressure_MPa,50,porosity_pct,39.3,
+fig4b,Coarse (black) unloading,pressure_MPa,50,porosity_pct,9.4,
+fig4b,Coarse (black) loading,pressure_MPa,100,porosity_pct,37.7,
+fig4b,Coarse (black) unloading,pressure_MPa,100,porosity_pct,8.4,
+fig4b,Coarse (black) loading,pressure_MPa,200,porosity_pct,35.1,
+fig4b,Coarse (black) unloading,pressure_MPa,200,porosity_pct,7.6,
+fig4b,Coarse (black) loading,pressure_MPa,300,porosity_pct,32.5,
+fig4b,Coarse (black) unloading,pressure_MPa,300,porosity_pct,7.1,
+fig4b,Coarse (black) loading,pressure_MPa,400,porosity_pct,29.7,
+fig4b,Coarse (black) unloading,pressure_MPa,400,porosity_pct,6.7,
+fig4b,Coarse (black) loading,pressure_MPa,500,porosity_pct,27.0,
+fig4b,Coarse (black) unloading,pressure_MPa,500,porosity_pct,6.5,
+fig4b,Coarse (black) loading,pressure_MPa,600,porosity_pct,24.4,
+fig4b,Coarse (black) unloading,pressure_MPa,600,porosity_pct,6.1,
+fig4b,Coarse (black) loading,pressure_MPa,750,porosity_pct,20.7,
+fig4b,Coarse (black) unloading,pressure_MPa,750,porosity_pct,6.1,
+fig4b,Coarse (black) loading,pressure_MPa,1000,porosity_pct,15.6,
+fig4b,Coarse (black) unloading,pressure_MPa,1000,porosity_pct,5.6,
+fig4b,Coarse (black) loading,pressure_MPa,1250,porosity_pct,11.6,
+fig4b,Coarse (black) unloading,pressure_MPa,1250,porosity_pct,5.2,
+fig4b,Coarse (black) loading,pressure_MPa,1500,porosity_pct,8.5,
+fig4b,Coarse (black) unloading,pressure_MPa,1500,porosity_pct,5.0,
+fig4b,Coarse (black) loading,pressure_MPa,1750,porosity_pct,6.1,
+fig4b,Coarse (black) unloading,pressure_MPa,1750,porosity_pct,5.1,
+fig4b,Coarse (black) (branches merged),pressure_MPa,1900,porosity_pct,4.7,
+fig4b,Coarse (black) (branches merged),pressure_MPa,2000,porosity_pct,4.4,
+fig4b,Fine (red) start of the curve at P ≈ 0,pressure_MPa,0,porosity_pct,60.9,top of the vertical red segment 42.8–60.9 % at P ≈ 0–5 MPa; a grey pixel caps it (the black Coarse curve probably runs underneath)
+fig4b,Fine (red) porosity where the pressure starts to rise,pressure_MPa,0,porosity_pct,42.8,bottom of that vertical segment
+fig4b,Coarse (black) porosity where the pressure starts to rise,pressure_MPa,0,porosity_pct,42.4,black pixels visible beside the red line from 42.6 % down to 41.4 % at P ≈ 0–5 MPa
+fig4b,Fine (red) end of unloading at P ≈ 0,pressure_MPa,0,porosity_pct,16.9,top of the vertical red segment 12.1–16.9 % at P ≈ 0–5 MPa
+fig4b,Coarse (black) end of unloading at P ≈ 0,pressure_MPa,0,porosity_pct,17.2,black/grey pixels just above the red segment (17.1–17.3 %); the rest of the black segment is hidden under the red line
+fig4g,Fine-EXP (green circle),pressure_MPa,1400,relative_density_pct,83.9,"Fig. 4(g)/(h) native raster; 1 px = 0.14 %; markers overlap (drawing order: green circle, red square, black triangle on top) — centre = mid-point of the visible top and bottom edges, or visible edge ± marker radius when one edge is hidden (circle radius 6.5 px in (g), 7 px in (h)); triangle = bounding-box centre (area centroid 0.25 % lower); ±0.3 %"
+fig4g,Fine-EXP (green circle),pressure_MPa,1500,relative_density_pct,83.5,
+fig4g,Fine-EXP (green circle),pressure_MPa,1600,relative_density_pct,83.9,
+fig4g,Fine-EXP (green circle),pressure_MPa,1800,relative_density_pct,87.6,
+fig4g,Fine-EXP (green circle),pressure_MPa,2000,relative_density_pct,87.8,
+fig4g,Fine-OpenRadioss (red square),pressure_MPa,1400,relative_density_pct,82.9,
+fig4g,Fine-OpenRadioss (red square),pressure_MPa,1500,relative_density_pct,83.9,
+fig4g,Fine-OpenRadioss (red square),pressure_MPa,1600,relative_density_pct,84.7,
+fig4g,Fine-OpenRadioss (red square),pressure_MPa,1800,relative_density_pct,86.5,
+fig4g,Fine-OpenRadioss (red square),pressure_MPa,2000,relative_density_pct,87.0,
+fig4g,Fine-ABAQUS (black triangle),pressure_MPa,1400,relative_density_pct,83.2,
+fig4g,Fine-ABAQUS (black triangle),pressure_MPa,1500,relative_density_pct,84.2,
+fig4g,Fine-ABAQUS (black triangle),pressure_MPa,1600,relative_density_pct,84.8,
+fig4g,Fine-ABAQUS (black triangle),pressure_MPa,1800,relative_density_pct,86.1,
+fig4g,Fine-ABAQUS (black triangle),pressure_MPa,2000,relative_density_pct,87.2,
+fig4h,Coarse-EXP (green circle),pressure_MPa,1400,relative_density_pct,83.3,
+fig4h,Coarse-EXP (green circle),pressure_MPa,1500,relative_density_pct,82.7,
+fig4h,Coarse-EXP (green circle),pressure_MPa,1600,relative_density_pct,83.1,centre from two visible arc pixels beside the triangle
+fig4h,Coarse-EXP (green circle),pressure_MPa,1800,relative_density_pct,82.7,
+fig4h,Coarse-EXP (green circle),pressure_MPa,2000,relative_density_pct,83.3,
+fig4h,Coarse-OpenRadioss (red square),pressure_MPa,1400,relative_density_pct,82.1,
+fig4h,Coarse-OpenRadioss (red square),pressure_MPa,1500,relative_density_pct,83.1,
+fig4h,Coarse-OpenRadioss (red square),pressure_MPa,1600,relative_density_pct,84.0,
+fig4h,Coarse-OpenRadioss (red square),pressure_MPa,1800,relative_density_pct,85.0,
+fig4h,Coarse-OpenRadioss (red square),pressure_MPa,2000,relative_density_pct,85.4,
+fig4h,Coarse-ABAQUS (black triangle),pressure_MPa,1400,relative_density_pct,80.8,
+fig4h,Coarse-ABAQUS (black triangle),pressure_MPa,1500,relative_density_pct,81.6,
+fig4h,Coarse-ABAQUS (black triangle),pressure_MPa,1600,relative_density_pct,82.3,
+fig4h,Coarse-ABAQUS (black triangle),pressure_MPa,1800,relative_density_pct,82.8,
+fig4h,Coarse-ABAQUS (black triangle),pressure_MPa,2000,relative_density_pct,84.1,
+fig4e,fig4e loading section (Coarse),image_width_px,471,image_height_px,179,bounding box of the coloured section image in the native raster
+fig4e,"fig4e unloading section (Coarse, arrow label 445 µm)",image_width_px,471,image_height_px,197,bounding box of the coloured section image in the native raster
+fig4f,fig4f loading section (Fine),image_width_px,469,image_height_px,196,bounding box of the coloured section image in the native raster
+fig4f,"fig4f unloading section (Fine, arrow label 120 µm)",image_width_px,470,image_height_px,214,bounding box of the coloured section image in the native raster

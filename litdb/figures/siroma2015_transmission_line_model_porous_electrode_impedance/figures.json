@@ -1,0 +1,332 @@
+{
+ "slug": "siroma2015_transmission_line_model_porous_electrode_impedance",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Typical circuit with a ladder-like structure, where Ri, x,Re, x, Cdl, x, and Rct, x represent the ionic resistance, electronic resistance, double-layer capacitance, and charge- transfer resistance at each position, respectively. substrate sheet and active material layer [18], and there is a double-layer capacitance between the substrate and electrolyte. And for another example, in the catalyst layer of a polymer electrolyte fuel cell, especially in a case of using different kinds of polymer for the membrane and ionomer in the catalyst layer, ionic resistance between the membrane | ionomer interface (a kind of contact resistance) might not be negligible [19,20], and simulta- neously, faradaic impedance at the electrode | membrane interface at the outermost of the catalyst layer might be different from that at the catalyst | ionomer interface in the catalyst layer. In such cases, a",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    71.5,
+    559.8,
+    183.1
+   ],
+   "w": 2218,
+   "h": 466,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Y–D transform. (a) A D-circuit and (b) a Y-circuit are equivalent when ZJ = ZQ\u0004ZR/(ZP\u0004ZQ\u0004ZR), ZK = ZR\u0004ZP/(ZP\u0004ZQ\u0004ZR), and ZL = ZP\u0004ZQ/(ZP\u0004ZQ\u0004ZR).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.7,
+    581.1,
+    520.7,
+    733.9
+   ],
+   "w": 1892,
+   "h": 638,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Sequential simpliﬁcation of a ladder-like circuit using the Y–D transform technique. Ztotal ¼ Eapp ‘z’, whereas the values of the additional outer elements are represented by capital ‘Z’.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    53.2,
+    464.7,
+    480.2
+   ],
+   "w": 1785,
+   "h": 1780,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. One-dimensional TML model with a length of L [cm]. Although a discrete model is depicted, zA, zB, and zC are inﬁnitesimal elements, with [V cm\u00021], [V cm], and [V cm\u00021] dimensions, respectively. The current in the upper line is a function of the position x [cm], and is represented as I(x) [A]. Since the condition is under a ﬁxed total current of IT [A], the current in the bottom line is IT \u0002 I(x). The potential difference between the two lines is represented as E(x) [V].",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    572.2,
+    299.7,
+    691.1
+   ],
+   "w": 1097,
+   "h": 497,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Three fundamental connections, (a) Z-type, (b) T-type, (c) E-type, and an additional (d) universal-type, which includes Z-type and T-type. Note that the Zp element of the E-type is less important since it is just a parallel connection with respect to the rest.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    53.2,
+    559.7,
+    494.1
+   ],
+   "w": 2218,
+   "h": 1838,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.728
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Variations of the combination of Zp and ZQ in Z-type, T-type, and E-type connections.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.6,
+    53.2,
+    524.6,
+    297.9
+   ],
+   "w": 1851,
+   "h": 1021,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.746
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Hypothetical example of a Z-type connection with an “open–Q” condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    53.2,
+    299.6,
+    223.9
+   ],
+   "w": 1097,
+   "h": 712,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.699
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Impedance diagram of the impedance of the model shown in Fig. 7 with the parameters L = 100mm, ri = 100V cm, re = 10V cm, cdl = 100 F cm\u00023, rct = 1V cm3, and Cdl = 100mF cm\u00022, where Rct is varied in a range of 1V cm2 \u0003 1. Frequency range is 1 mHz \u0003 1 kHz.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    508.2,
+    299.6,
+    708.3
+   ],
+   "w": 1097,
+   "h": 835,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Hypothetical example of a universal-type connection. The values of the additional outer elements are assumed to be symmetric.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    53.2,
+    568.6,
+    232.7
+   ],
+   "w": 1096,
+   "h": 749,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.708
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig.10. Impedance diagram of the impedance of the model shown in Fig. 9 with the parameters L = 1 mm, ri = 10V cm, re = 10V cm, cdl = 100 F cm\u00023, rct = 1V cm3, Cdl = 100mF cm\u00022, and Rcontact = 1V cm2, where Rct is varied in a range of 10V cm2 \u0003 1. Frequency range is 1 mHz \u0003 1 MHz.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    513.1,
+    568.6,
+    708.3
+   ],
+   "w": 1097,
+   "h": 814,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. TML-Y transform. (a) A circuit that contains a TML model, and (b) an equivalent Y-circuit.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    53.2,
+    290.7,
+    268.5
+   ],
+   "w": 1097,
+   "h": 898,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.771
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Demonstration of stepwise simpliﬁcation of a serial connection of multiple TML models. A value of 3.871V (=2.081V + 0.717V + 0.573V + 0.500V) is ﬁnally obtained in this example. Dimensions for “1D object” in Table 1 is used to simplify the units.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    324.7,
+    559.8,
+    725.4
+   ],
+   "w": 2218,
+   "h": 1670,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Dimension of each value. value unit",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    31.6,
+    558.8,
+    744.0
+   ],
+   "w": 2210,
+   "h": 2969,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.805
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Solutions for a Z-type connection. condition solution",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    31.6,
+    567.7,
+    728.7
+   ],
+   "w": 2210,
+   "h": 2906,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3 Solutions for a T-type connection.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    31.6,
+    558.8,
+    744.5
+   ],
+   "w": 2210,
+   "h": 2972,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 6,
+   "file": "tab_4.png",
+   "caption": "Table 4 Solutions for a E-type connection.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    31.6,
+    558.8,
+    744.5
+   ],
+   "w": 2210,
+   "h": 2972,
+   "dpi": 300,
+   "src": "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf",
+   "blank": 0.921
+  }
+ ],
+ "missing_labels": []
+}

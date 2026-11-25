@@ -1,0 +1,69 @@
+{
+  "cif": [
+    "db/structures/modelc_nd_doped_DFTrelax.cif"
+  ],
+  "composition": "Li48 Nd2 P10 S41 Cl16 O3",
+  "reduced": "Li48Nd2P10S41Cl16O3",
+  "elements": [
+    "Li",
+    "Nd",
+    "P",
+    "S",
+    "Cl",
+    "O"
+  ],
+  "mode": "mp",
+  "n_mp_entries": 321,
+  "hull_energy_eV": -558.038371546875,
+  "hull_energy_per_atom": -4.650319762890626,
+  "decomposition_products": {
+    "Li3PS4": 0.6167,
+    "Nd2S3": 0.0417,
+    "Li2S": 0.025,
+    "Li3PO4": 0.05,
+    "LiCl": 0.2667
+  },
+  "decomposition_entries": [
+    {
+      "formula": "Li3PS4",
+      "entry_id": "mp-aaacebzb-GGA",
+      "mp_id": "mp-aaacebzb",
+      "amount": 0.616667
+    },
+    {
+      "formula": "LiCl",
+      "entry_id": "mp-aaacpllf-GGA",
+      "mp_id": "mp-aaacpllf",
+      "amount": 0.266667
+    },
+    {
+      "formula": "Li3PO4",
+      "entry_id": "mp-aaaaauhx-GGA",
+      "mp_id": "mp-aaaaauhx",
+      "amount": 0.05
+    },
+    {
+      "formula": "Nd2S3",
+      "entry_id": "mp-aaaaaaqw-GGA",
+      "mp_id": "mp-aaaaaaqw",
+      "amount": 0.041667
+    },
+    {
+      "formula": "Li2S",
+      "entry_id": "mp-aaaaabsj-GGA",
+      "mp_id": "mp-aaaaabsj",
+      "amount": 0.025
+    }
+  ],
+  "mp_database_version": "2026.09.28",
+  "query_utc": "2026-10-23T14:04:48+00:00",
+  "note": "MP-energy hull. Products + hull energy at our composition. Absolute E_above_hull of OUR structure needs an MP-compatible energy (use --mode uma for a self-consistent number).",
+  "thermo_type": "GGA_GGA+U",
+  "mp_api_version": "unknown",
+  "entries_by_suffix": {
+    "GGA": 321
+  },
+  "elemental_products": [],
+  "saved_product_structs": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped",
+  "sanity_ok": true
+}

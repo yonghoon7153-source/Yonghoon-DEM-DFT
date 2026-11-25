@@ -1,0 +1,11 @@
+bond,n_bonds,mean_dist_A,ELF_midpoint,ELF_mid_std,character
+B–S (BS₃),6,1.83,0.959,0.003,covalent
+P–S (PS₄),29,2.07,0.945,0.002,covalent
+P–O,3,1.56,0.930,0.001,covalent
+Li–S,149,2.48,0.929,0.024,ionic/Li-anion
+Li–Cl,78,2.51,0.884,0.027,ionic/Li-anion
+Li–O,6,1.91,0.780,0.026,ionic/Li-anion
+# ELF at bond midpoint from DFT plot_num=8 cube (KISTI, tmp/b2o3.save; ELF grid mean 0.446 = real).
+# Covalency: B-S(BS3) 0.959 > P-S 0.945 > P-O 0.930 > Li-S 0.929 > Li-Cl 0.884 > Li-O 0.780.
+# B-S is the MOST covalent -> BS3 thioborate is a strong covalent dopant motif (above PS4). Matches tool calib (P-S 0.94>Li-S 0.93>Li-Cl 0.85).
+# CAVEAT: Li-S/Li-Cl midpoint ELF is inflated by proximity to the anion lone-pair shell (larger std 0.02-0.03); robust covalent set = B-S/P-S/P-O (std 0.001-0.003).

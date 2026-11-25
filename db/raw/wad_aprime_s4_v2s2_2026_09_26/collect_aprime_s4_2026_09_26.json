@@ -1,0 +1,695 @@
+{
+ "schema": "aprime_s4_v2_collect/v1",
+ "stage2": "db/inputs/wad_aprime_s4_v2_stage2_2026_09_26",
+ "raw": "db/raw/wad_aprime_s4_v2s2_2026_09_26",
+ "uma_json": "db/raw/wad_aprime_s4_v2s2_2026_09_26/uma_energies_v2_stage2_2026_09_26.json",
+ "supp": "db/inputs/wad_aprime_s4_v2_stage2_supp_2026_09_26",
+ "registries": {
+  "V2_bridge": {
+   "registry": "V2_bridge",
+   "d0_A": 3.3017,
+   "area_A2": 21.5232,
+   "n_C": 8,
+   "n_if": 1,
+   "jobs": {
+    "V2_bridge_dft_bound": {
+     "job": "V2_bridge_dft_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83474203,
+     "D3_Ry": -0.50438973,
+     "mTS_Ry": -0.00084973,
+     "E_pbe_Ry": -3595.3303523,
+     "E_int_Ry": -3595.8338923,
+     "nat": 20,
+     "pw_out_sha256": "7e8a75da9ba3a5ef1c88b9683e073490cc94d572ec6d08a63628fe45c24af579"
+    },
+    "V2_bridge_dft_far": {
+     "job": "V2_bridge_dft_far",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79174373,
+     "D3_Ry": -0.45596048,
+     "mTS_Ry": -0.00097312,
+     "E_pbe_Ry": -3595.3357832499996,
+     "E_int_Ry": -3595.79077061,
+     "nat": 20,
+     "pw_out_sha256": "a9134ba8764336783e428b87c39e304a9434f56efb07881ee7181622cab1c4fa"
+    },
+    "V2_bridge_Ed_m03": {
+     "job": "V2_bridge_Ed_m03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83177069,
+     "D3_Ry": -0.51370205,
+     "mTS_Ry": -0.001171,
+     "E_pbe_Ry": -3595.31806864,
+     "E_int_Ry": -3595.8305996900003,
+     "nat": 20,
+     "pw_out_sha256": "6c2b4157ce6d0619bd693774a48e2763f613a92556ef04bcf2c173f85835b85a"
+    },
+    "V2_bridge_Ed_p03": {
+     "job": "V2_bridge_Ed_p03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82989351,
+     "D3_Ry": -0.49508434,
+     "mTS_Ry": -0.00109498,
+     "E_pbe_Ry": -3595.33480917,
+     "E_int_Ry": -3595.8287985300003,
+     "nat": 20,
+     "pw_out_sha256": "881e17d50280bec84243e5019e8b8d90c4eff4dfe7747cb3eb6667fd761529b6"
+    },
+    "V2_bridge_Ed_p06": {
+     "job": "V2_bridge_Ed_p06",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82329203,
+     "D3_Ry": -0.48675301,
+     "mTS_Ry": -0.00106046,
+     "E_pbe_Ry": -3595.33653902,
+     "E_int_Ry": -3595.82223157,
+     "nat": 20,
+     "pw_out_sha256": "cd09a83538697d147711ebbef56f78167b0f9bab0e600db5e2b1ad87b03b3239"
+    }
+   },
+   "W_PBE_D3_J_m2": 0.4354874168780525,
+   "W_PBE_D3_Eint_J_m2": 0.4367371126164562,
+   "W_PBE_J_m2": -0.05500474173461076,
+   "dD3_QE_J_m2": 0.49049215861239454,
+   "W_PBE_D3_eV_per_C": 0.07312770932692161,
+   "W_PBE_D3_meV_per_cell": 585.021674615373,
+   "E_d_local_min_in_grid": true,
+   "E_d_parabola": {
+    "curvature_meV_A2": 1182.162393597562,
+    "min_offset_A": -0.03600793364745423,
+    "⚠": "3 점 포물선 — 진단용 (카드 문턱 없음)"
+   },
+   "E_d": {
+    "d0-0.3": {
+     "d_A": 3.0017,
+     "dE_meV": 40.427140203137284,
+     "status": "OK"
+    },
+    "d0+0.3": {
+     "d_A": 3.6017,
+     "dE_meV": 65.9674752206433,
+     "status": "OK"
+    },
+    "d0+0.6": {
+     "d_A": 3.9017,
+     "dE_meV": 155.7851862578457,
+     "status": "OK"
+    },
+    "far": {
+     "d_A": "≥ 8",
+     "dE_meV": 585.021674615373,
+     "status": "OK"
+    }
+   },
+   "UMA": {
+    "E_bound_eV": -103.8880066912188,
+    "E_far_eV": -104.0062661827916,
+    "W_UMA_J_m2": -0.08803181615500634,
+    "W_UMA_plus_QE_D3_J_m2": 0.4024603424573882,
+    "Delta_J_m2": 0.03302707442066427,
+    "identity_check_W_PBE_minus_W_UMA": 0.03302707442039558,
+    "⚠": "V2 는 대상군 P1′ 이 아니다 — G5 판정 아님 · 0.10/0.05 는 참고 눈금"
+   }
+  },
+  "V2_hollow_fcc": {
+   "registry": "V2_hollow_fcc",
+   "d0_A": 3.3045,
+   "area_A2": 21.5232,
+   "n_C": 8,
+   "n_if": 1,
+   "jobs": {
+    "V2_hollow_fcc_dft_bound": {
+     "job": "V2_hollow_fcc_dft_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83473467,
+     "D3_Ry": -0.50438919,
+     "mTS_Ry": -0.00084604,
+     "E_pbe_Ry": -3595.3303454800002,
+     "E_int_Ry": -3595.8338886300003,
+     "nat": 20,
+     "pw_out_sha256": "584a391278b446fa934938a91ebe48138e17cf34df7af630cb59f9e1a8c9710d"
+    },
+    "V2_hollow_fcc_dft_far": {
+     "job": "V2_hollow_fcc_dft_far",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79177259,
+     "D3_Ry": -0.45596224,
+     "mTS_Ry": -0.00097198,
+     "E_pbe_Ry": -3595.33581035,
+     "E_int_Ry": -3595.79080061,
+     "nat": 20,
+     "pw_out_sha256": "afa8079ffac4e64cc75e0e810dd38ef82b4def606cacf0c4d664619d30fd8b35"
+    },
+    "V2_hollow_fcc_Ed_m03": {
+     "job": "V2_hollow_fcc_Ed_m03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83175882,
+     "D3_Ry": -0.51372114,
+     "mTS_Ry": -0.00117038,
+     "E_pbe_Ry": -3595.3180376799996,
+     "E_int_Ry": -3595.8305884399997,
+     "nat": 20,
+     "pw_out_sha256": "49c9ae23a13b03440d3808eb9e11cd1f38ac4815c4a4b5aad9817d388139cf01"
+    },
+    "V2_hollow_fcc_Ed_p03": {
+     "job": "V2_hollow_fcc_Ed_p03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82989982,
+     "D3_Ry": -0.49508243,
+     "mTS_Ry": -0.00109211,
+     "E_pbe_Ry": -3595.33481739,
+     "E_int_Ry": -3595.8288077099996,
+     "nat": 20,
+     "pw_out_sha256": "d127cb76adc7578d5a7340fd362402d7aa58964bc2e2c7a3f0528d259db39511"
+    },
+    "V2_hollow_fcc_Ed_p06": {
+     "job": "V2_hollow_fcc_Ed_p06",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82330947,
+     "D3_Ry": -0.48675111,
+     "mTS_Ry": -0.00105879,
+     "E_pbe_Ry": -3595.33655836,
+     "E_int_Ry": -3595.82225068,
+     "nat": 20,
+     "pw_out_sha256": "50dfb417cb46baf73a2b7d5e50f2b1a33aa49f199e5653fa69640886f3e8eb0d"
+    }
+   },
+   "W_PBE_D3_J_m2": 0.43512058018044747,
+   "W_PBE_D3_Eint_J_m2": 0.43639610235969484,
+   "W_PBE_J_m2": -0.05534828399591823,
+   "dD3_QE_J_m2": 0.49046886417845664,
+   "W_PBE_D3_eV_per_C": 0.07306610955077833,
+   "W_PBE_D3_meV_per_cell": 584.5288764062267,
+   "E_d_local_min_in_grid": true,
+   "E_d_parabola": {
+    "curvature_meV_A2": 1180.777636525303,
+    "min_offset_A": -0.035701025511791336,
+    "⚠": "3 점 포물선 — 진단용 (카드 문턱 없음)"
+   },
+   "E_d": {
+    "d0-0.3": {
+     "d_A": 3.0045,
+     "dE_meV": 40.488501886035884,
+     "status": "OK"
+    },
+    "d0+0.3": {
+     "d_A": 3.6045,
+     "dE_meV": 65.7814854012414,
+     "status": "OK"
+    },
+    "d0+0.6": {
+     "d_A": 3.9045,
+     "dE_meV": 155.44776507295964,
+     "status": "OK"
+    },
+    "far": {
+     "d_A": "≥ 8",
+     "dE_meV": 584.5288764062267,
+     "status": "OK"
+    }
+   },
+   "UMA": {
+    "E_bound_eV": -103.88907280363128,
+    "E_far_eV": -104.00664873050698,
+    "W_UMA_J_m2": -0.08752297376997059,
+    "W_UMA_plus_QE_D3_J_m2": 0.40294589040848605,
+    "Delta_J_m2": 0.03217468977196142,
+    "identity_check_W_PBE_minus_W_UMA": 0.03217468977405236,
+    "⚠": "V2 는 대상군 P1′ 이 아니다 — G5 판정 아님 · 0.10/0.05 는 참고 눈금"
+   }
+  },
+  "V2_top_fcc": {
+   "registry": "V2_top_fcc",
+   "d0_A": 3.3017,
+   "area_A2": 21.5232,
+   "n_C": 8,
+   "n_if": 1,
+   "jobs": {
+    "V2_top_fcc_dft_bound": {
+     "job": "V2_top_fcc_dft_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83474203,
+     "D3_Ry": -0.50438975,
+     "mTS_Ry": -0.00085029,
+     "E_pbe_Ry": -3595.33035228,
+     "E_int_Ry": -3595.83389174,
+     "nat": 20,
+     "pw_out_sha256": "6d7e574345dc1263855e4e4ae49fadbc6a79d99d15a24f1643fd554e56a42eeb"
+    },
+    "V2_top_fcc_dft_far": {
+     "job": "V2_top_fcc_dft_far",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79174373,
+     "D3_Ry": -0.45596048,
+     "mTS_Ry": -0.00097327,
+     "E_pbe_Ry": -3595.3357832499996,
+     "E_int_Ry": -3595.7907704599997,
+     "nat": 20,
+     "pw_out_sha256": "772604eac31aae7cf1c1acf911cd6024e573890a3ff4af91aafc22fb8d02517d"
+    },
+    "V2_top_fcc_Ed_m03": {
+     "job": "V2_top_fcc_Ed_m03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83177068,
+     "D3_Ry": -0.51370206,
+     "mTS_Ry": -0.00117128,
+     "E_pbe_Ry": -3595.31806862,
+     "E_int_Ry": -3595.8305993999998,
+     "nat": 20,
+     "pw_out_sha256": "e51ee70c40ef5cb1dc7415065801a7faaf2f8a8f6190834572cf0ab8c8347a52"
+    },
+    "V2_top_fcc_Ed_p03": {
+     "job": "V2_top_fcc_Ed_p03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82989351,
+     "D3_Ry": -0.49508435,
+     "mTS_Ry": -0.00109522,
+     "E_pbe_Ry": -3595.33480916,
+     "E_int_Ry": -3595.82879829,
+     "nat": 20,
+     "pw_out_sha256": "3091428f43ee9995c8dd1af6fbb33c7999121596fe50156fbc0112b8066a1fea"
+    },
+    "V2_top_fcc_Ed_p06": {
+     "job": "V2_top_fcc_Ed_p06",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82329204,
+     "D3_Ry": -0.48675301,
+     "mTS_Ry": -0.00106061,
+     "E_pbe_Ry": -3595.33653903,
+     "E_int_Ry": -3595.82223143,
+     "nat": 20,
+     "pw_out_sha256": "6a6ce0ba6c49be66275e79b537ef0088cd3e29576ca8109818e9d0e3dbedbc8f"
+    },
+    "V2_top_fcc_G3_c2_bound": {
+     "job": "V2_top_fcc_G3_c2_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83443162,
+     "D3_Ry": -0.50408038,
+     "mTS_Ry": -0.00084863,
+     "E_pbe_Ry": -3595.3303512400003,
+     "E_int_Ry": -3595.83358299,
+     "nat": 20,
+     "pw_out_sha256": "6d3b3b03b31a22741c9d1c6b19f94c6d8e7606320522366b1af847e4e2b21a9c"
+    },
+    "V2_top_fcc_G3_c2_far_i": {
+     "job": "V2_top_fcc_G3_c2_far_i",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79069584,
+     "D3_Ry": -0.45491261,
+     "mTS_Ry": -0.00097363,
+     "E_pbe_Ry": -3595.33578323,
+     "E_int_Ry": -3595.78972221,
+     "nat": 20,
+     "pw_out_sha256": "1927b944b373cb3b3cfc9c603cfaa58d5261becf500b3abbab8a406b21a31d20"
+    },
+    "V2_top_fcc_G3_c2_far_ii": {
+     "job": "V2_top_fcc_G3_c2_far_ii",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79009259,
+     "D3_Ry": -0.45433301,
+     "mTS_Ry": -0.00097599,
+     "E_pbe_Ry": -3595.33575958,
+     "E_int_Ry": -3595.7891166,
+     "nat": 20,
+     "pw_out_sha256": "a81e5de107a782aa70324d969e9d063e8ab43155fb90eab909f130189b694799"
+    },
+    "V2_top_fcc_G4_e70_bound": {
+     "job": "V2_top_fcc_G4_e70_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83772019,
+     "D3_Ry": -0.50438975,
+     "mTS_Ry": -0.0008493,
+     "E_pbe_Ry": -3595.33333044,
+     "E_int_Ry": -3595.83687089,
+     "nat": 20,
+     "pw_out_sha256": "cd33de300ed44a78cd5f12ad8b79cee2b14ecc0d8682e17615e41b116cf793f7"
+    },
+    "V2_top_fcc_G4_e70_far": {
+     "job": "V2_top_fcc_G4_e70_far",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79472457,
+     "D3_Ry": -0.45596048,
+     "mTS_Ry": -0.00097408,
+     "E_pbe_Ry": -3595.33876409,
+     "E_int_Ry": -3595.79375049,
+     "nat": 20,
+     "pw_out_sha256": "138795895a0a6f9080ab07103e5560086bdd58d6d8a81527bb25b26352035d5d"
+    },
+    "V2_top_fcc_G4_k1_bound": {
+     "job": "V2_top_fcc_G4_k1_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82824781,
+     "D3_Ry": -0.50438975,
+     "mTS_Ry": -0.0022407,
+     "E_pbe_Ry": -3595.32385806,
+     "E_int_Ry": -3595.82600711,
+     "nat": 20,
+     "pw_out_sha256": "b485ae04f891bf6602bc41f73e0d51ad83cb60f1ca3d649f4547a25cb99431e5"
+    },
+    "V2_top_fcc_G4_k1_far": {
+     "job": "V2_top_fcc_G4_k1_far",
+     "input_match": true,
+     "status": "FAILED",
+     "why": "db/raw/wad_aprime_s4_v2s2_2026_09_26/V2_top_fcc/V2_top_fcc_G4_k1_far/pw.out: 미완료 또는 SCF 미수렴 (마지막 실행)",
+     "supplement": {
+      "job": "V2_top_fcc_G4_k1_far_b01",
+      "status": "FAILED",
+      "changed": "mixing_beta 0.3 → 0.1 (local-TF · 그 외 동일)"
+     }
+    },
+    "V2_top_fcc_G4_s05_bound": {
+     "job": "V2_top_fcc_G4_s05_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83407779,
+     "D3_Ry": -0.50438975,
+     "mTS_Ry": -0.00066084,
+     "E_pbe_Ry": -3595.32968804,
+     "E_int_Ry": -3595.83341695,
+     "nat": 20,
+     "pw_out_sha256": "dae6fc0c5f1596315d1920dc41bfa2a90d340ec299cf519fe2a38e68c6da2ab7",
+     "substituted_by": "V2_top_fcc_G4_s05_bound_r1",
+     "changed": "없음 — 원 잡 입력이 빈 파일(빌더 결함)이라 규칙대로 다시 생성 (base 에 degauss 0.01 → 0.005 · prefix 만 다름)",
+     "original": {
+      "job": "V2_top_fcc_G4_s05_bound",
+      "input_match": true,
+      "status": "FAILED",
+      "why": "db/raw/wad_aprime_s4_v2s2_2026_09_26/V2_top_fcc/V2_top_fcc_G4_s05_bound/pw.out: 미완료 또는 SCF 미수렴 (마지막 실행)"
+     }
+    },
+    "V2_top_fcc_G4_s05_far": {
+     "job": "V2_top_fcc_G4_s05_far",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79090055,
+     "D3_Ry": -0.45596048,
+     "mTS_Ry": -0.00096612,
+     "E_pbe_Ry": -3595.33494007,
+     "E_int_Ry": -3595.78993443,
+     "nat": 20,
+     "pw_out_sha256": "1e973ee8ca2a884a00c65245361e77b83d799dd62a99fbd1e9aacbdc6d373b57",
+     "substituted_by": "V2_top_fcc_G4_s05_far_r1",
+     "changed": "없음 — 원 잡 입력이 빈 파일(빌더 결함)이라 규칙대로 다시 생성 (base 에 degauss 0.01 → 0.005 · prefix 만 다름)",
+     "original": {
+      "job": "V2_top_fcc_G4_s05_far",
+      "status": "MISSING"
+     }
+    }
+   },
+   "W_PBE_D3_J_m2": 0.4354874168780525,
+   "W_PBE_D3_Eint_J_m2": 0.43673296013286933,
+   "W_PBE_J_m2": -0.05500494429276372,
+   "dD3_QE_J_m2": 0.4904923611726895,
+   "W_PBE_D3_eV_per_C": 0.07312770932692161,
+   "W_PBE_D3_meV_per_cell": 585.021674615373,
+   "E_d_local_min_in_grid": true,
+   "E_d_parabola": {
+    "curvature_meV_A2": 1182.1639053940012,
+    "min_offset_A": -0.03600769577339086,
+    "⚠": "3 점 포물선 — 진단용 (카드 문턱 없음)"
+   },
+   "E_d": {
+    "d0-0.3": {
+     "d_A": 3.0017,
+     "dE_meV": 40.42727626481681,
+     "status": "OK"
+    },
+    "d0+0.3": {
+     "d_A": 3.6017,
+     "dE_meV": 65.9674752206433,
+     "status": "OK"
+    },
+    "d0+0.6": {
+     "d_A": 3.9017,
+     "dE_meV": 155.78505020235335,
+     "status": "OK"
+    },
+    "far": {
+     "d_A": "≥ 8",
+     "dE_meV": 585.021674615373,
+     "status": "OK"
+    }
+   },
+   "G3": {
+    "dE_bound_meV": 4.2233432038188745,
+    "dE_far_i_meV": 14.257269765043137,
+    "dE_far_ii_meV": 22.464904142035323,
+    "W_i_J_m2": 0.4429566251978374,
+    "W_ii_J_m2": 0.44906635009968104,
+    "dW_i_J_m2": 0.007469208319784926,
+    "dW_ii_J_m2": 0.013578933221628564,
+    "threshold": {
+     "|dW|<= (both checks)": 0.01,
+     "endpoint_dE": "기록만 (W 모델 · CA Q2)"
+    },
+    "status": "FAIL",
+    "failed_checks": [
+     "ii_direct"
+    ],
+    "endpoint_piece_reading_info": {
+     "reading": "옛 도구 해석(끝점 |ΔE| ≤ 5 meV) — 카드 근거 약함 · 판정에 안 씀",
+     "status": "FAIL"
+    }
+   },
+   "G4": {
+    "e70": {
+     "W_J_m2": 0.4354602737907919,
+     "dW_J_m2": -2.714308726059489e-05,
+     "dE_bound_meV": -40.51993102650609,
+     "dE_far_meV": -40.55639429443994,
+     "threshold": {
+      "|dW|<=": 0.02,
+      "endpoint_dE": "기록만 (W 모델)"
+     },
+     "status": "PASS",
+     "endpoint_piece_reading_info": {
+      "reading": "옛 도구 해석(k·smearing 끝점 |ΔE| ≤ 10 meV) — 판정에 안 씀",
+      "status": "n/a"
+     }
+    },
+    "k1": {
+     "W_J_m2": null,
+     "dW_J_m2": null,
+     "dE_bound_meV": 88.35836439524621,
+     "dE_far_meV": null,
+     "threshold": {
+      "|dW|<=": 0.02,
+      "endpoint_dE": "기록만 (W 모델)"
+     },
+     "status": "INCOMPLETE",
+     "endpoint_piece_reading_info": {
+      "reading": "옛 도구 해석(k·smearing 끝점 |ΔE| ≤ 10 meV) — 판정에 안 씀",
+      "status": null
+     }
+    },
+    "s05": {
+     "W_J_m2": 0.43729972383224497,
+     "dW_J_m2": 0.0018123069541924886,
+     "dE_bound_meV": 9.037445604547393,
+     "dE_far_meV": 11.47204832363272,
+     "threshold": {
+      "|dW|<=": 0.02,
+      "endpoint_dE": "기록만 (W 모델)"
+     },
+     "status": "PASS",
+     "endpoint_piece_reading_info": {
+      "reading": "옛 도구 해석(k·smearing 끝점 |ΔE| ≤ 10 meV) — 판정에 안 씀",
+      "status": "FAIL"
+     }
+    },
+    "status": "INCOMPLETE"
+   },
+   "UMA": {
+    "E_bound_eV": -103.88800575822731,
+    "E_far_eV": -104.00626382910852,
+    "W_UMA_J_m2": -0.08803075859878709,
+    "W_UMA_plus_QE_D3_J_m2": 0.4024616025739024,
+    "Delta_J_m2": 0.03302581430415008,
+    "identity_check_W_PBE_minus_W_UMA": 0.03302581430602337,
+    "⚠": "V2 는 대상군 P1′ 이 아니다 — G5 판정 아님 · 0.10/0.05 는 참고 눈금"
+   }
+  },
+  "V2_top_hcp": {
+   "registry": "V2_top_hcp",
+   "d0_A": 3.3045,
+   "area_A2": 21.5232,
+   "n_C": 8,
+   "n_if": 1,
+   "jobs": {
+    "V2_top_hcp_dft_bound": {
+     "job": "V2_top_hcp_dft_bound",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.8347354,
+     "D3_Ry": -0.50438942,
+     "mTS_Ry": -0.00084598,
+     "E_pbe_Ry": -3595.3303459800004,
+     "E_int_Ry": -3595.83388942,
+     "nat": 20,
+     "pw_out_sha256": "0c754d5bfad10bed08af4be75575e9e1e6a5929bd5f4cea34286f3ad60a42361"
+    },
+    "V2_top_hcp_dft_far": {
+     "job": "V2_top_hcp_dft_far",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.79177358,
+     "D3_Ry": -0.45596164,
+     "mTS_Ry": -0.00097163,
+     "E_pbe_Ry": -3595.33581194,
+     "E_int_Ry": -3595.79080195,
+     "nat": 20,
+     "pw_out_sha256": "0b99858889d75418205924ac790a4f80f9e03f882174935f5b303f3dbf12320f"
+    },
+    "V2_top_hcp_Ed_m03": {
+     "job": "V2_top_hcp_Ed_m03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.83175847,
+     "D3_Ry": -0.51372166,
+     "mTS_Ry": -0.00117041,
+     "E_pbe_Ry": -3595.3180368099997,
+     "E_int_Ry": -3595.8305880599996,
+     "nat": 20,
+     "pw_out_sha256": "d47fca7fa984ed4d681c83f1a681c21a118b6aaa013f37ecd05a921f5f3a52ab"
+    },
+    "V2_top_hcp_Ed_p03": {
+     "job": "V2_top_hcp_Ed_p03",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82990102,
+     "D3_Ry": -0.49508258,
+     "mTS_Ry": -0.00109253,
+     "E_pbe_Ry": -3595.3348184399997,
+     "E_int_Ry": -3595.82880849,
+     "nat": 20,
+     "pw_out_sha256": "a19c53a7034d71d207f4aba9daa3f349232f9b0364561bfb3ea1dc2be4bdbab1"
+    },
+    "V2_top_hcp_Ed_p06": {
+     "job": "V2_top_hcp_Ed_p06",
+     "input_match": true,
+     "status": "OK",
+     "F_Ry": -3595.82331086,
+     "D3_Ry": -0.48675114,
+     "mTS_Ry": -0.0010583,
+     "E_pbe_Ry": -3595.3365597200004,
+     "E_int_Ry": -3595.8222525600004,
+     "nat": 20,
+     "pw_out_sha256": "24fc55516debf35d967ecbb0811450aa69306b6268dc42c13236887fc196e5e2"
+    }
+   },
+   "W_PBE_D3_J_m2": 0.4351179468968249,
+   "W_PBE_D3_Eint_J_m2": 0.4363905319506145,
+   "W_PBE_J_m2": -0.055359323530396735,
+   "dD3_QE_J_m2": 0.49047727043070344,
+   "W_PBE_D3_eV_per_C": 0.07306566736578776,
+   "W_PBE_D3_meV_per_cell": 584.5253389263021,
+   "E_d_local_min_in_grid": true,
+   "E_d_parabola": {
+    "curvature_meV_A2": 1180.8698528770246,
+    "min_offset_A": -0.035668473018115536,
+    "⚠": "3 점 포물선 — 진단용 (카드 문턱 없음)"
+   },
+   "E_d": {
+    "d0-0.3": {
+     "d_A": 3.0045,
+     "dE_meV": 40.50319603389104,
+     "status": "OK"
+    },
+    "d0+0.3": {
+     "d_A": 3.6045,
+     "dE_meV": 65.77509072504117,
+     "status": "OK"
+    },
+    "d0+0.6": {
+     "d_A": 3.9045,
+     "dE_meV": 155.43878531146856,
+     "status": "OK"
+    },
+    "far": {
+     "d_A": "≥ 8",
+     "dE_meV": 584.5253389263021,
+     "status": "OK"
+    }
+   },
+   "UMA": {
+    "E_bound_eV": -103.88909820644503,
+    "E_far_eV": -104.0066650366537,
+    "W_UMA_J_m2": -0.08751620225329292,
+    "W_UMA_plus_QE_D3_J_m2": 0.4029610681774105,
+    "Delta_J_m2": 0.03215687871941442,
+    "identity_check_W_PBE_minus_W_UMA": 0.03215687872289618,
+    "⚠": "V2 는 대상군 P1′ 이 아니다 — G5 판정 아님 · 0.10/0.05 는 참고 눈금"
+   }
+  }
+ },
+ "summary": {
+  "n_registry": 4,
+  "n_W": 4,
+  "W_PBE_D3_J_m2": {
+   "V2_bridge": 0.4354874168780525,
+   "V2_hollow_fcc": 0.43512058018044747,
+   "V2_top_fcc": 0.4354874168780525,
+   "V2_top_hcp": 0.4351179468968249
+  },
+  "W_range_J_m2": [
+   0.4351179468968249,
+   0.4354874168780525
+  ],
+  "W_mean_J_m2": 0.4353033402083443,
+  "G3": {
+   "V2_top_fcc": "FAIL"
+  },
+  "G4": {
+   "V2_top_fcc": "INCOMPLETE"
+  },
+  "Delta_UMA_J_m2": {
+   "V2_bridge": 0.03302707442066427,
+   "V2_hollow_fcc": 0.03217468977196142,
+   "V2_top_fcc": 0.03302581430415008,
+   "V2_top_hcp": 0.03215687871941442
+  },
+  "G5_ref_scale": {
+   "per_sample": 0.1,
+   "mean": 0.05
+  },
+  "jobs_not_ok": {
+   "V2_bridge": [],
+   "V2_hollow_fcc": [],
+   "V2_top_fcc": [
+    "V2_top_fcc_G4_k1_far"
+   ],
+   "V2_top_hcp": []
+  },
+  "substituted": {
+   "V2_bridge": {},
+   "V2_hollow_fcc": {},
+   "V2_top_fcc": {
+    "V2_top_fcc_G4_s05_bound": "V2_top_fcc_G4_s05_bound_r1",
+    "V2_top_fcc_G4_s05_far": "V2_top_fcc_G4_s05_far_r1"
+   },
+   "V2_top_hcp": {}
+  }
+ }
+}

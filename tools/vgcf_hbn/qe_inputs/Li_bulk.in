@@ -1,0 +1,44 @@
+&CONTROL
+    calculation     = 'vc-relax'
+    prefix          = 'Li_bulk'
+    outdir          = './tmp'
+    pseudo_dir      = '$PSEUDO_DIR'
+    tprnfor         = .true.
+    tstress         = .true.
+    forc_conv_thr   = 1.0d-4
+    nstep           = 100
+    disk_io         = 'low'
+/
+&SYSTEM
+    ibrav           = 3
+    celldm(1)       = 6.55
+    nat             = 1
+    ntyp            = 1
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.02
+    vdw_corr        = 'grimme-d3'
+    dftd3_version   = 4
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+&IONS
+    ion_dynamics    = 'bfgs'
+/
+&CELL
+    cell_dynamics   = 'bfgs'
+    press_conv_thr  = 0.5
+/
+ATOMIC_SPECIES
+  Li    6.941  Li.pbe-s-kjpaw_psl.1.0.0.UPF
+
+ATOMIC_POSITIONS crystal
+  Li  0.00000000  0.00000000  0.00000000
+
+K_POINTS automatic
+  20 20 20  0 0 0

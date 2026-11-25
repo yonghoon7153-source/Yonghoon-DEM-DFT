@@ -1,0 +1,193 @@
+{
+ "schema": "claim_prereg/v1",
+ "date": "2026-08-31",
+ "status": "ratified",
+ "⚠_비준": "✔ 2026-09-02 1저자 비준. 회신 AZ P0-6 · BB P0-2 가 요구한 **비용 발생 전 마감**이다 — 결과를 보고 보고량을 확정하면 그 결과가 정책 결정에 압력을 준다.",
+ "제목": "C-12 보고량 한정·오차예산·자세 해석 규칙 (회신 AT Q1/Q2/Q5/Q6 · 해제조건 8)",
+ "근거": "kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md",
+ "0_시각_증거": "VASP 결과를 **하나도 보기 전**이다. 이 시점의 계산 산출물은 0개다 — git log 가 그 순서의 증거다.",
+ "1_보고량": {
+  "이름": "E_ads (fixed-geometry adsorption energy) 절대값 2건 + 그 차 ΔE_ads",
+  "한국어": "고정기하 흡착에너지 E_ads 절대값(sdcp·ptfe) 과 그 차 ΔE_ads — 셋 다 보고한다",
+  "식": "E_ads(f) = E_C(f) − E_S − E_G(f)   [**보고한다** — clean slab 을 실었다] ; ΔE_ads = E_ads(sdcp) − E_ads(ptfe_c10)   [**보고한다**]",
+  "기호": "E_C 복합체 · E_S clean slab · E_G 기체 조각 (전부 같은 셀·k·AFM seed 의 static)",
+  "⛔_부르면_안_되는_이름": [
+   "binding energy · free energy — 평형·고립계 양이 아니다 (이 금지는 **유지**한다)",
+   "⚠ 이름이 아니라 **용법 금지**: 이 E_ads 를 옛 wave1 값과 **같은 표에** 두지 않는다 (프로토콜이 다르다 — 그쪽은 별도 마감·보류 상태다)",
+   "⚠ 완전 이완으로 계산한 문헌 adsorption/binding energy 와 **같은 표에 두지 않는다** — 우리 값은 고정기하다"
+  ],
+  "포함": [
+   "조각 변형에너지",
+   "표면 변형에너지",
+   "고정된 gas conformer 선택 효과"
+  ],
+  "제외": [
+   "기하 이완",
+   "영점·열적 기여",
+   "용매·계면 전기장"
+  ],
+  "★_두_값의_신뢰도가_다르다": "ΔE_ads 는 E_S 가 대수적으로 소거돼 clean slab 의 오차에 **둔감**하다. E_ads 절대값은 E_S 를 직접 빼므로 **민감**하다 — clean slab 이 복합체와 다른 자성 basin 에 앉으면 그 차이가 통째로 절대값에 실린다. ⇒ 원고에서 두 값을 같은 확신으로 쓰지 않는다. 순위·부호 주장은 ΔE_ads 로, 절대값은 '규모(order)' 로만.",
+  "★_변형에너지는_절대값에서_상쇄되지_않는다": "단일점이라 조각·표면 변형에너지가 값에 들어간다. ΔE_ads 에서는 두 조각·두 표면이 서로 상당 부분 상쇄되지만 **절대값에서는 상쇄되지 않는다.** 이것이 이름에 `fixed-geometry` 한정어를 유지하는 이유다.",
+  "★_E_S_의_요건": "clean slab 은 복합체와 **같은 셀 · 같은 k · 같은 AFM seed(초기 MAGMOM)** 여야 하고 같은 자유도(NUPDOWN=−1)로 돈다 — 같은 *state-selection policy* 다. 실제로 같은 basin 에 앉았는지는 반송 뒤 `BASIN_MISMATCH_SLAB` 게이트가 판정하며, 어긋나면 **절대값만** 차단하고 ΔE_ads 는 살린다(E_S 가 소거되므로).",
+  "★_절대값의_진공_수렴": "진공 두께 효과는 ΔE_ads 에서는 상쇄되지만 절대값에서는 남는다. ⇒ `vacconv/clean_slab__<주seed>__c2` 를 함께 싣고, 절대값은 c1↔c2 차이를 병기한다.",
+  "⚠_개명_2026_09_01": "1저자 결정: 'adsorption' 을 쓰되 **한정어 'fixed-geometry' 를 붙인 형태로 통일**한다. 2026-09-04 개정도 그 결정을 그대로 따른다 — 한정어를 떼는 것은 여전히 별도 결정이 필요하다.",
+  "⚠_개정_전_2026_08_31": {
+   "이름": "ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다",
+   "왜_그랬나": "clean slab 잡을 싣지 않아 E_S 가 없었다. 공통 E_S 는 ΔE_ads 에서 대수적으로 소거되므로 차만 보고하는 한 필요 없었다 (회신 AZ P0-4·Q6).",
+   "무엇이_바뀌었나": "2026-09-04 1저자 요청으로 clean slab 3잡(주 seed · 부 seed · c2)을 싣기로 했다. E_S 가 생기므로 절대값이 산출 가능해졌다.",
+   "⛔": "이 칸은 **이력**이다. 지우지 않는다."
+  }
+ },
+ "2_허용_서술_이대로만": {
+  "문구": "사전등록한 18.272 × 11.512 Å² lateral cell, 1 fragment/cell (0.5009 nm⁻²), fixed geometry, pm1, PBE+U+D3 프로토콜에서의 differential complex–gas reference energy 이다. 잔여 lateral-size/coverage 의존은 추정하지 않았으며, 고립 흡착·평형 결합·실제 전극 피복률로 일반화하지 않는다.",
+  "출처": "회신 AT Q6 이 준 문구",
+  "⛔": "이 문구를 줄이거나 조건절을 떼지 않는다"
+ },
+ "3_오차예산": {
+  "정의": "B_num = |Δ_vac| + |δ_gas| + |δ_k|   (meV)",
+  "문턱": 5.0,
+  "⛔_RSS_금지": "세 축은 독립 확률오차가 아니다 — 같은 계·같은 프로토콜의 체계오차다. 제곱합근으로 합치면 상관을 0 으로 가정하는 것이고, 셋이 같은 방향이면 실제 편차는 단순합에 가깝다. 축별 5 meV 를 다 통과해도 합이 15 meV 일 수 있다.",
+  "통과하면": "전체 값의 0.01 eV 안정성을 주장할 수 있다",
+  "넘으면": "**값을 버리지 않는다.** 0.01 eV 안정성 주장을 하지 않고, 보고 해상도를 낮추거나 축별 민감도만 보고한다",
+  "축이_하나라도_없으면": "NUMERIC_BUDGET_INCOMPLETE — 확인 못 한 것은 통과가 아니다",
+  "구현": "tools/sdcp/vasp_handoff_bundle.py · `numeric_budget` (분석기), 문턱은 코드 상수",
+  "⚠_봉인": "결과를 보기 전에 정했다",
+  "축_설계_제외_2026_09_03": {
+   "축": "δ_k",
+   "결정": "δ_k(k 격자 수렴, static 3×4×1 → dense 4×6×1) 축을 **설계에서 뺀다**. dense 2잡이 최장 잡을 299.6 h 로 만들어 전체 일정을 12.5일로 끌었다 (vasp_cost_estimate 실측: dense 200 h + static 100 h). static 만이면 최장 111 h · 동시 8잡 기준 8.16일.",
+   "50행과의_관계": "50행 '축이 하나라도 없으면 NUMERIC_BUDGET_INCOMPLETE' 는 **설계에 있는 축이 결측일 때**의 규칙으로 읽는다. 설계에서 뺀 축은 '결측' 이 아니라 '미설계' 다 — 분석기가 `axes_not_designed` 로 따로 세고 `B_num` 은 시험한 두 축(Δ_vac·δ_gas)만 합산한다. ⚠ 이 재해석은 2026-09-02 비준 이후의 것이라 여기서 명시적으로 비준한다. 비준 전 번들(v32–v34)은 이 항 없이 같은 경로를 열었다 — 발송하지 않았다.",
+   "잃는_것": "'전체 값의 0.01 eV 안정성' 을 주장하지 않는다 (`overall_citable_at_0.01eV=False`). 시험한 두 축의 envelope 만 말한다. `rounded_value_under_tested_axes_eV` 는 '시험한 축 기준' 이라는 한정어를 원고에서 떼어내지 않는다. verdict 문자열에 '사전등록 축 없음(δ_k)' 꼬리가 붙는다.",
+   "⚠_UMA_로_미리_판단_금지": "조각 간 UMA 비교는 무효(오프셋 sdcp ~1.070 vs ptfe ~0.167 eV · 차등 0.90 eV). |ΔE_ads| 가 클 것이라 가정하지 않는다.",
+   "구현": "tools/sdcp/vasp_handoff_bundle.py — 생성기 `--no_kconv` 가 이 항의 재개 조건을 MANIFEST.kconv_pair 로 **복사**하고(하드코딩 금지), 분석기는 번들에 실린 이 문서 사본에서 이 항을 읽어 있을 때만 not_designed 경로를 연다 (없으면 KCONV_OMISSION_UNRATIFIED · 다르면 KCONV_OMISSION_DRIFT). 재개 조건은 D_raw_eV 에 기계로 대어 `kconv_omission.reopen_eval` 에 남는다 (렌즈2 P1-2).",
+   "재개_조건_결과_보기_전에_선언": {
+    "규칙": "재개하지 않는다. |D_raw| < 0.05 eV 는 프로토콜 §7 미해결 · §8 '계산을 확장하지 않는다'. |D_raw| ≥ 0.05 eV 면 k 가드밴드(0.01 eV)가 부호·판정을 못 바꾼다. 경계 구간 0.05 ≤ |D_raw| < 0.06 eV 에서는 분석기가 KCONV_UNTESTED_AXIS_AT_THRESHOLD 자문을 내고 원고는 '미시험 축에 판정이 민감하다' 를 적는다 — 계산은 추가하지 않는다.",
+    "판정량": "D_raw_eV",
+    "문턱_eV": 0.05,
+    "가드밴드_eV": 0.01,
+    "비교": "boundary",
+    "충족시": "자문만 (KCONV_UNTESTED_AXIS_AT_THRESHOLD) — dense 추가 없음 · 원고에 민감성 명시",
+    "⛔_사후변경_금지": "이 조건은 결과를 보기 전에 선언했다. 이 밖의 이유로 dense 를 추가하면 '결과를 보고 게이트를 바꾼 것' 이다."
+   },
+   "선택한_안": "A"
+  }
+ },
+ "4_자세_해석_규칙": {
+  "primary": "b00 — MLIP 스크린의 E_pose 최저 basin. DFT 결과를 하나도 보기 전에 동결했다 (sdcp_c12_protocol_2026_08_30.json)",
+  "보고량은_primary_조건이다": "대안 자세(b12 등)의 값을 primary 값처럼 싣지 않는다",
+  "분자-이미지_최단거리": {
+   "⛔_정정_2026_08_31": "종전엔 조각별 **최솟값 하나**만 실어, sdcp 4.613 Å(대안 자세 b12 의 worst case)이 primary 값처럼 보고됐다. role 별로 나눈다.",
+   "primary_b00": {
+    "sdcp_neutral": 4.894,
+    "ptfe_c10": 5.646
+   },
+   "대안_b12_worst": {
+    "sdcp_neutral": 4.613
+   },
+   "⚠": "격자벡터 길이(11.512 Å)와 **다른 양**이다 — 그것을 최소이미지라고 찍으면 실제보다 여유가 있어 보인다"
+  },
+  "⛔_철회한_근거": "'공통 주기영상 항이 상당 부분 소거된다' — **삭제한다.** 두 primary 복합체의 슬랩 원자 수가 48/192 로 다르고 최대 변위가 약 0.296 Å 이라 공통항이라는 보장이 없다 (회신 AT Q1)",
+  "D3": "IVDW=11 은 pairwise D3 zero-damping 이다. D3-off 쌍 잡은 **만들지 않는다** — 기존 OUTCAR 의 Edisp 네 항으로 D 의 총 D3 기여를 계산할 수 있다 (고정기하 static 에서 E_on − E_off = Edisp 가 항등식)"
+ },
+ "5_pooled_영구_비인용": {
+  "결정": "선택지 (a) — pooled 최솟값과 secondary_G 를 **영구 진단값(비인용)** 으로 고정. 추가 VASP 잡 0",
+  "1저자_결정": "2026-08-31",
+  "사유": [
+   "dense k 검증이 primary pm1 b00 두 복합체뿐인데 pool 에는 net4 도 든다 — 검증 깊이가 다른 값을 섞어 min 을 뽑는 것이다",
+   "net4 dense 를 +2 잡 넣어도 **basin 혼합은 그대로다.** pm1/net4 는 애초에 서로 다른 자기상태로 수렴하라고 넣은 seed 라 BASIN_HETEROGENEOUS 가 사실상 상시 뜬다",
+   "인용가능 pool 을 만들려면 basin 별로 pool 을 쪼개고 pooled min 의 정의를 다시 짜야 한다 — 잡 두 개가 아니라 설계 변경이다"
+  ],
+  "⚠_이_사유_②는_우리_판단이다": "회신 AT 이 명시한 것은 ① 이다. ② (basin 혼합이 +2 잡으로 안 닫힌다)는 코드를 읽고 우리가 낸 판단이므로 다음 리뷰에서 확인받는다",
+  "값은_남긴다": "`secondary_G_eV_diagnostic` — 숫자를 지우면 왜 못 쓰는지도 같이 사라져 재논증이 반복된다",
+  "대신_무엇을_쓰나": "자세 탐색의 폭은 **MLIP 스크린**이 진다 (§6)"
+ },
+ "6_MLIP_역할_원고_구조": {
+  "구조": "MLIP 가 넓게 훑고, DFT 가 한 점을 정밀하게 찍는다",
+  "왜_이_구조인가": "pooled('DFT 값 여러 개 중 제일 좋은 것')는 체리피킹으로 읽힌다. 탐색과 판정을 분리하면 자세를 결과 보고 고르지 않았다는 것이 자동으로 증명된다",
+  "MLIP_가_말할_수_있는_것": [
+   "탐색의 폭 — LiNiO₂(104) 192원자 슬랩 · 피보나치 12방향 × roll 4 × 자리 7 전수 rigid SP · freeze 설정 2종",
+   "자세 선정 규칙 — E_pose 최저 basin, 동률은 (E_pose, basin_id) 사전순, 난수 없음",
+   "그 선정이 **DFT 결과를 보기 전에** 동결됐다는 사실"
+  ],
+  "⛔_MLIP_가_말할_수_없는_것": [
+   "에너지 숫자 일체 — `E_pose` 는 결합에너지가 아니다. E_pose = E_complex − E_slab − E_mol(기체상 ORCA 기하) 라 분자·표면 변형 몫이 함께 실리고 자세마다 달라 상쇄되지 않는다 (db/properties/sdcp_ptfe_site_preference_uma_v1.json 의 do_not_cite)",
+   "'가장 잘 붙는 자세는 X 다'",
+   "자세 수를 **rolls 단위로** 부풀려 세기 — 판정 단위가 결과를 바꾼다 (ptfe_c10 이 쌍 단위로는 +0.041 > 0.033 이었지만 방향 단위로 접으면 +0.027 < 0.036). **방향 단위로 센다**"
+  ],
+  "⛔_doped_는_제외": "MLIP 스크린에 sdcp_doped 가 들어 있으나, doped 마감 문서의 금지 서술에 '무선호 또는 자리선호 방향 일체' 가 있다. 원고의 MLIP 절은 sdcp_neutral + ptfe_c10(+ptfe_dimer)만 쓰고 doped 스크린은 내부 기록으로 둔다 (db/properties/sdcp_doped_closed_2026_08_28.json)"
+ },
+ "7_추가_계산이_필요한_주장": {
+  "citable_pooled": "net4 primary 두 복합체에 dense 2상 (+2잡) — **그리고** basin 설계 변경. 지금 하지 않는다",
+  "k×vac_결합_안정성": "vacconv c2 에 dense (+2잡). 지금 하지 않는다",
+  "coverage-independent / isolated affinity": "lateral 확장 쌍 별도 wave. 지금 하지 않는다",
+  "⛔": "위 셋 중 어느 것도 지금 주장하지 않는다 — §2 문구가 그것을 명시적으로 배제한다"
+ },
+ "연결": {
+  "프로토콜": "db/properties/sdcp_c12_protocol_2026_08_30.json",
+  "MLIP_스크린": "db/properties/sdcp_ptfe_site_preference_uma_v1.json",
+  "doped_마감": "db/properties/sdcp_doped_closed_2026_08_28.json",
+  "리뷰": [
+   "kb/reviews/codex_AS_prompt_c12_v16_2026_08_31.md",
+   "kb/reviews/codex_AT_prompt_c12_v17_2026_08_31.md"
+  ]
+ },
+ "status_history": [
+  {
+   "at": "2026-08-31",
+   "state": "proposed",
+   "note": "회신 AT 의 Q1/Q2/Q5/Q6 과 해제조건 8 을 사전등록으로 고정. VASP 결과 0개 시점. ratify 대기"
+  },
+  {
+   "date": "2026-09-01",
+   "what": "보고량 개명 (회신 AY P0-4 · 1저자 결정 2단계)",
+   "from": "fixed-geometry differential complex–gas reference energy",
+   "to": "E_ads (adsorption energy) · 차는 ΔE_ads",
+   "경위": "1차 'fixed-geometry adsorption energy difference' → 1저자 기각(그런 이름 쓰는 논문 없다, 옳다) → 2차 'ΔΔE_ads' → 1저자: **그냥 E_ads**. 단서는 Methods 로."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "proposed",
+   "note": "회신 BA P0-4 — E_ads 식에서 누락됐던 clean-slab 항 E_S 를 정의에 넣고, 보고량을 **ΔE_ads 하나**로 못 박았다. 개별 E_ads 는 미산출로 명시. ⚠ 비준은 여전히 사람 몫이다."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "ratified",
+   "note": "1저자 비준 (scientific_owner). 회신 AZ P0-6 · BB P0-2 의 '비용 발생 전 마감'. 보고량(ΔE_ads 하나)·허용/금지 서술·오차예산을 v23 생성 **전에** 닫는다. DFT 결과 0잡 시점이다."
+  },
+  {
+   "at": "2026-09-04",
+   "state": "proposed",
+   "note": "δ_k 축 설계 제외 + 재개 조건(안 A) 을 3_오차예산.축_설계_제외_2026_09_03 로 추가 — 렌즈2 P0-1 · 렌즈4 P0-2 · 렌즈5 P1-1 이 '비준 문서 이탈 · 원장 부재' 를 잡았다. v32–v34 는 이 항 없이 생성됐고 발송되지 않았다. ⚠ 비준은 사람 몫."
+  },
+  {
+   "at": "2026-09-04",
+   "state": "ratified",
+   "note": "1저자 비준 (scientific_owner) — δ_k 설계 제외 · 재개 조건 안 A. DFT 결과 0잡 시점."
+  },
+  {
+   "at": "2026-09-04",
+   "state": "proposed",
+   "note": "§1_보고량 개정 — clean slab 3잡을 실어 E_S 가 생기므로 **절대 E_ads 도 보고량에 넣는다**. 이름은 사전등록 자신의 2026-09-01 결정(adsorption + 한정어 fixed-geometry)을 따른다. 'binding energy' 금지는 유지. ⚠ 비준은 사람 몫."
+  },
+  {
+   "at": "2026-09-04",
+   "state": "ratified",
+   "note": "1저자 비준 (scientific_owner) — 절대 E_ads 보고량 편입. DFT 결과 0잡 시점."
+  }
+ ],
+ "8_POTCAR_정책_2026_09_01": {
+  "결정": "**외주처 소관** (1저자 2026-09-01). potcar_pin 없이 보내고 회수 시 POTCAR_PROVENANCE.json 으로 사후 대조한다.",
+  "회신_AY_P0-5_에_대한_답": "P0-5 는 'pin 재생성' 과 '조건부-PP 보고량 비준' 둘 중 하나를 요구했는데, 1저자가 **전자도 후자도 아닌 세 번째** — 외주처가 자기 트리를 관리하는 것 — 을 택했다.",
+  "⚠_그래서_남는_한계": "'우리가 의도한 트리와 다른 트리를 썼다' 는 여전히 못 본다. 결과를 인용할 때 **PAW dataset 조건부**임을 병기한다."
+ },
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-04",
+  "by": "1저자",
+  "content_digest": "aa7fb52d5f1b2a1e57a6aa7652de63243a1e6fa7818f855c8d934c00ff12b0a7",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-04T02:17:57Z",
+  "commit": "f9717b63eb4a9d4980d6de27c7adc37ac8c14e0e",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다."
+ }
+}

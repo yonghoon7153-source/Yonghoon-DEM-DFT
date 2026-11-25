@@ -1,0 +1,592 @@
+{
+ "slug": "tompa2026_finetuning_mlip_foundation_strategies",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Overview of fine-tuning strategies evaluated. Schematic representation of from-scratch model training and the fine-tuning methods benchmarked in this work: naive fine-tuning (full parameter updates), layer freezing, low-rank adaptation (LoRA), multihead replay, pseudolabelled replay, and replay combined with LoRA.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    101.2,
+    547.2,
+    377.8
+   ],
+   "w": 2011,
+   "h": 1153,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Overview of the five main benchmark systems used in this work. Representative structures and key dataset attributes for each benchmark, ordered by increasing departure from OMat24’s core domain of periodic inorganic bulk materials: the argyrodite Li6PS5Cl is an inorganic periodic solid most aligned with the pretraining data, while aqueous NaCl, ice polymorphs, SN2 reactions, and SPICE biomolecules progressively probe further from this domain. Detailed reference levels, dataset sizes, evaluation sets, and replay-set composition are given in Appendix Table 6.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    186.9,
+    547.3,
+    444.1
+   ],
+   "w": 2011,
+   "h": 1073,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.809
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Foundation model quality strongly shapes fine-tuning outcomes. (a) Lithium elec- trolytes: Multihead-pseudolabel fine-tuning of several MACE foundation models on the lithium solid elec- trolyte system. Violin plots show force and energy errors on two held-out evaluation sets, both unseen during fine-tuning: other argyrodite compositions (top row) and non-argyrodite structures (bottom row). (b) SN2 reaction: reaction energy profiles comparing OMat24- and MPTraj-based foundation models. The OMat24-based naive fine-tuned model accurately reproduces the MP2 reference barrier, while the MPTraj- based model produces an unstable profile under identical NEB settings.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.2,
+    234.5
+   ],
+   "w": 2011,
+   "h": 707,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4: E0 initialisation can exceed method-level differences. (a) Lithium electrolyte (LPSC): reestimated versus averaged E0s for Naive and LoRA fine-tuning with the MACE-OMat-0-medium founda- tion. Models trained with averaged E0s exhibit substantially higher errors and wider distributions on both held-out test sets (other argyrodites and non-argyrodites, both unseen during fine-tuning). (b) SN2 reac- tion: NEB and dimer energy curves comparing E0 choices. Reestimated and explicit isolated-atom E0s yield nearly identical curves, whereas averaged E0s distort the interaction profile.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    117.3,
+    547.2,
+    296.2
+   ],
+   "w": 2011,
+   "h": 747,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5: Impact of E0 initialisation on ice cross-phase learning with MACE-OMat-0-medium. Force RMSE for models trained on each ice phase (Ih, II, VI, VIII) and evaluated on all phases, comparing reestimated E0s versus averaged E0s for Naive and LoRA fine-tuning. Reestimated E0s consistently yield lower errors across all phase combinations, with the improvement exceeding the differences between fine-tuning methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.2,
+    353.5
+   ],
+   "w": 2010,
+   "h": 1203,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Narrow-task fine-tuning results. a, Cl–O RDFs at 10% training data, averaged over three random seeds. b, Cl–O RDFs at 100% training data. c, SN2 nudged elastic band energy profiles for models trained only on reactant/product configurations, excluding the transition state. Relative energy (eV) along the reaction coordinate is compared to the MP2 reference (dashed red). Naive and LoRA closely reproduce the reference barrier height and shape. Multihead and Pseudolabel slightly underestimate the barrier. From- scratch training substantially underestimates the barrier, while the foundation model before fine-tuning fails to capture the reaction profile. d, Dataset-size dependence of the earth mover’s distance to the BPNN reference. All fine-tuning methods closely reproduce the reference solvation structure already at 10% data, while training from scratch remains substantially worse.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    206.5,
+    547.2,
+    468.0
+   ],
+   "w": 2011,
+   "h": 1090,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 15,
+   "file": "fig_7.png",
+   "caption": "Figure 7: Near-transfer within related chemical families. (a) Ice polymorph cross-phase learning: summarised as in-phase force RMSE and out-of-phase average force RMSE for each fine-tuning method with MACE-OMat-0-medium. (b) Lithium electrolyte (LPSC) transfer: with the MACE-OMat-0-medium foundation, comparing force MAE on two held-out test sets: other argyrodites and non-argyrodites, both unseen during fine-tuning.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    208.0,
+    541.0,
+    368.0
+   ],
+   "w": 1964,
+   "h": 668,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.0,
+   "note": "manual recovery: auto-extractor found no region (2-image panel)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 16,
+   "file": "fig_8.png",
+   "caption": "Figure 8: SPICE test set errors with 1 configuration per molecule training (19 687 configurations total). En- ergy RMSE (left, meV/atom) and force RMSE (right, meV/˚A) are broken down by SPICE subset: DES370K monomers, DES370K dimers, dipeptides, solvated amino acids, PubChem, QMugs, and water.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.2,
+    262.2
+   ],
+   "w": 2011,
+   "h": 823,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 16,
+   "file": "fig_9.png",
+   "caption": "Figure 9: SPICE torsion accuracy across training methods. a, TorsionNet500 mean relative energy RMSE as a function of SPICE training data fraction. b, Representative torsion profiles comparing fine-tuned models, the foundation model before fine-tuning, and the DFT reference. Fine-tuned models substantially improve over the foundation model, and the best methods closely track the reference curves.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    399.3,
+    547.2,
+    539.9
+   ],
+   "w": 2011,
+   "h": 587,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 17,
+   "file": "fig_10.png",
+   "caption": "Figure 10: Foundation-model quality preservation after fine-tuning. a, SPICE forgetting with 1 configuration per molecule, measured as force RMSE on the OMat test set after fine-tuning. b, Forgetting for ice polymorph fine-tuning, shown for the Ih-trained models across foundation sizes. Replay-based methods best preserve the pretrained distribution in both settings.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.3,
+    215.3
+   ],
+   "w": 2011,
+   "h": 628,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.773
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 18,
+   "file": "fig_11.png",
+   "caption": "Figure 11: Random structure search summary for fine-tuned NaCl models. Heat maps report the fraction of flagged relaxed structures under the RSS criteria described in Appendix A.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.2,
+    280.8
+   ],
+   "w": 2010,
+   "h": 901,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.523
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 29,
+   "file": "fig_12.png",
+   "caption": "Figure 12: Loss-weight schedule comparison on ice Ih. Comparison of constant target-task loss weights (λE = 10, λF = 10 throughout training, “baseline”) against two-stage schedules in which λF is dominant in stage one and λE is increased in stage two (starting at epoch 500), with and without a reduced learning rate in stage two. a,b,c,d, Naive fine-tuning of MACE-OMat-0-medium: final validation energy and force RMSE relative to the baseline (a) and validation error curves over training (b). e,f,g,h, From-scratch training on the same ice Ih dataset: corresponding bars and error curves. The staged schedules introduce a sharp transient at the stage-two transition and do not improve over the constant-weight baseline in either setting.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    241.0,
+    547.2,
+    457.3
+   ],
+   "w": 2010,
+   "h": 902,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 31,
+   "file": "fig_13.png",
+   "caption": "Figure 13: Multihead replay is sensitive to the learning rate (LPSC). Multihead replay fine-tuning of MACE-OMat-0-medium on the lithium electrolyte (LPSC) system with pseudolabelled MPTraj replay, swept over learning rates {10−4, 10−3, 10−2}. Training and validation loss curves for the target head (“Default”) and the replay head (“pt head”) as a function of epoch. At the higher learning rates the loss on the replay data immediately jumps to a high value and never recovers. Final-epoch validation metrics for both heads are reported in Table 9.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    112.4,
+    547.2,
+    270.1
+   ],
+   "w": 2010,
+   "h": 658,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 31,
+   "file": "fig_14.png",
+   "caption": "Figure 14: Multihead replay learning-rate sensitivity on the SN2 system. Multihead replay fine- tuning of MACE-OMat-0-medium on the SN2 reaction dataset, swept over learning rates {10−4, 10−3, 10−2} for two pseudolabelled replay-set choices: an OMat24 element-matched subsample and a combined OMat24 + 10 000-structure MPTraj subsample. Training and validation losses for the target head (“Default”) and replay head (“pt head”) as a function of epoch, shown for each head choice. Final-epoch validation metrics are reported in Table 9.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    442.8,
+    547.2,
+    597.9
+   ],
+   "w": 2010,
+   "h": 647,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 32,
+   "file": "fig_15.png",
+   "caption": "Figure 15: Effect of replay-data composition on multihead fine-tuning. Comparison of three replay- set constructions on the lithium electrolyte system: element-matched subsampling of the OMat24 pretraining corpus, a random 10 000-structure subsample drawn from MPTraj, and a combination of the two. In all three cases the replay labels are obtained by pseudolabelling the structures with the OMat24 foundation model. Target-task and replay-task force RMSEs are similar across the three choices, indicating that target-task accuracy is largely insensitive to the precise composition of the replay set provided sufficient structural diversity is included.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    264.0,
+    547.2,
+    464.2
+   ],
+   "w": 2010,
+   "h": 835,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 33,
+   "file": "fig_16.png",
+   "caption": "Figure 16: Replay-strategy comparison on NaCl PES holes. Fraction of flagged RSS structures (with absolute change relative to the foundation baseline before fine-tuning shown in parentheses) at 0.1 GPa and 50 GPa for Scratch, Naive, and three multihead-pseudolabel replay-set choices (element-matched OMat24 subsample, random MPTraj subsample, combination of the two), all on 100% of the NaCl training data. All three replay-set choices substantially reduce the hole fraction relative to Scratch and Naive, with only small differences between them.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.2,
+    272.8
+   ],
+   "w": 2011,
+   "h": 867,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.711
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 34,
+   "file": "fig_17.png",
+   "caption": "Figure 17: Foundation models versus fine-tuning methods on the lithium electrolyte system. Violin plots of energy MAE (left) and force MAE (right) on the two out-of-distribution evaluation sets used in the main text—other argyrodite compositions (top row) and non-argyrodite structures (bottom row)—for the MP0 and OMat foundation families. Within each foundation, the panels show the foundation baseline before fine-tuning (“found.”), Naive, LoRA, and Multihead/Pseudolabel fine-tuning. The OMat foundation baseline achieves errors comparable to the best fine-tuned MP0 models on both evaluation sets.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    190.5,
+    547.3,
+    519.8
+   ],
+   "w": 2011,
+   "h": 1373,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 35,
+   "file": "fig_18.png",
+   "caption": "Figure 18: Effect of foundation-model capacity on ice cross-phase learning with naive fine-tuning on 100 con- figurations. Force RMSE is summarised as in-phase and out-of-phase averages for MACE-OMat-0-medium, MACE-OMat-small, and MACE-MH1. Higher-capacity and more broadly pretrained models achieve lower in-phase errors, though the advantage narrows for cross-phase evaluation.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    158.4,
+    547.2,
+    501.2
+   ],
+   "w": 2010,
+   "h": 1430,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 36,
+   "file": "fig_19.png",
+   "caption": "Figure 19: Single-phase versus combined ice fine-tuning across methods. Energy RMSE (left, eV/atom) and force RMSE (right, eV/˚A) for ice Ih, II, VI, and VIII, comparing single-phase fine-tuning with a reference model trained on all four phases jointly. Results are shown for Naive, LoRA, and Pseudolabel fine-tuning of MACE-OMat-0-medium. Dashed vertical lines separate the single-phase evaluation blocks from the combined-phase reference, which is included in each evaluation panel to show how jointly training on all phases changes the cross-phase error scale. All axes use logarithmic scaling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    88.7,
+    547.2,
+    318.8
+   ],
+   "w": 2011,
+   "h": 960,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 37,
+   "file": "fig_20.png",
+   "caption": "Figure 20: Full aqueous-NaCl RDF and EMD panel. a–c, Cl–O RDFs at 10%, 10%-10× epochs, and 100% training data. d–f, corresponding Na–O RDFs. g–i, EMD to the BPNN reference for each method at each training-data condition. Fine-tuning methods saturate near the reference already at 10% data; from- scratch training remains substantially worse even at 100%.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    168.4,
+    547.2,
+    554.4
+   ],
+   "w": 2010,
+   "h": 1609,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 11,
+   "file": "tab_1.png",
+   "caption": "Table 1: E0 initialisation determines MD stability. Stability of ice Ih models trained on 25 configu- rations with averaged versus reestimated E0s. “100 K Stable”: NPT simulations at 100 K complete 250 ps without unphysical distortions. “T-ramp Stable”: stability during temperature ramps from 50 K to 800 K over 50 ps. With averaged E0s, all fine-tuned models fail; with reestimated E0s, all succeed. ✓= stable, × = unstable.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    70.0,
+    546.2,
+    697.6
+   ],
+   "w": 2002,
+   "h": 2616,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 11,
+   "file": "tab_2.png",
+   "caption": "Table 2: SPICE atomic reference energies from averaging and model-aware reestimation. Values are obtained by applying E0 averaging and model-aware reestimation to the full SPICE dataset using the pretrained MACE-OMat-0-medium model, without training on SPICE. The table includes only elements present in our SPICE data. Deltas are computed relative to the explicit SPICE DFT isolated-atom E0s.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    70.0,
+    546.2,
+    697.6
+   ],
+   "w": 2002,
+   "h": 2616,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 12,
+   "file": "tab_3.png",
+   "caption": "Table 3: Isolated-atom RMSE summary for MACE-MH1 multihead fine-tuning across E0 choices. All rows are multihead replay fine-tuning of MACE-MH1 with DFT replay labels. Columns differ only in the E0 convention used for the target task (explicitly evaluated with DFT, training-set average, or reestimated). Rows show the number of repeated isolated-atom configurations included in the fine-tuning data. Values are in meV/atom; lower is better.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    70.0,
+    546.2,
+    724.5
+   ],
+   "w": 2002,
+   "h": 2728,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 13,
+   "file": "tab_4.png",
+   "caption": "Table 4: Validation RMSE for the two narrow-task systems. SN2 results are on the full training dataset (single run); aqueous NaCl results are at 10% training data, reported as mean ± std over seeds 1–3. Bold marks the lowest entry in each (system, column) pair.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    68.0,
+    546.2,
+    620.2
+   ],
+   "w": 2002,
+   "h": 2302,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 24,
+   "file": "tab_5.png",
+   "caption": "Table 5: Architecture summary for foundation models used in this work. All OMat models use Agnesi distance transforms; MACE-MP0a-medium uses no distance transform. MACE-MH1 uses 6 readout heads (one per training dataset: OMat24, OMol25, MatPES, OC20, MP-PBE, SPICE) while other models use a single head. The lower parameter count of MACE-MH1 relative to the OMat models despite its larger channel dimension reflects the use of a different, more compact interaction block architecture.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    64.6,
+    546.2,
+    689.3
+   ],
+   "w": 2002,
+   "h": 2603,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 26,
+   "file": "tab_6.png",
+   "caption": "Table 6: Benchmark systems used for fine-tuning and evaluation. The table separates the data used for fine-tuning and validation from held-out or downstream evaluations, and summarises the replay data used by replay-based methods. SPICE and the water/ice benchmark use separate test sets, while the lithium electrolyte benchmark includes a broad out-of-distribution test set spanning many compositions and structures beyond LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    70.0,
+    546.2,
+    702.8
+   ],
+   "w": 2002,
+   "h": 2638,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "t7",
+   "kind": "table",
+   "label": "7",
+   "page": 27,
+   "file": "tab_7.png",
+   "caption": "Table 7: Hyperparameter configurations for all fine-tuning methods. Each row reflects per-method tuning to converged, stable training.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    70.0,
+    546.2,
+    302.8
+   ],
+   "w": 2002,
+   "h": 971,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "t8",
+   "kind": "table",
+   "label": "8",
+   "page": 28,
+   "file": "tab_8.png",
+   "caption": "Table 8: Isolated-atom RMSE for MACE-MH1 multihead fine-tuning under MACE’s stress loss. Same configurations as Table 3, using a weighted mean-squared-error objective over energy, forces, and stress. All values are in meV/atom; lower is better. Columns marked “2-stage” use a two-stage loss schedule that raises the energy weight relative to the force weight partway through training; all other columns use constant loss weights throughout.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    64.6,
+    546.2,
+    758.2
+   ],
+   "w": 2002,
+   "h": 2891,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "t9",
+   "kind": "table",
+   "label": "9",
+   "page": 30,
+   "file": "tab_9.png",
+   "caption": "Table 9: Final-epoch validation RMSE for energy (meV/atom) and forces (meV/˚A) from the multihead + pseudolabel learning-rate sweep, reported for the Default head (task) and pt head (replay).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    64.6,
+    546.2,
+    758.2
+   ],
+   "w": 2002,
+   "h": 2891,
+   "dpi": 300,
+   "src": "7eca4ae9-91._Finetuning_MLIP_foundation_models_strategies_for_accuracy_and_transferability.pdf",
+   "blank": 0.929
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+# SDCP v7c computed-IR peak table (from sdcp_v7c_IR_computed_fwhm25.csv; threshold A>=0.004).
+# marker: NEUTRAL/DOPED = |A_n - A_d| >= 0.015 discriminator band; scaled = raw x 0.965.
+# Key verdict bands: 3754 raw (3624 scaled) O-H NEUTRAL-ONLY (A_doped = 0) -> matches absent O-H in exp FTIR;
+#                    991 raw (956 scaled) DOPED-only nu_s(SO3)-window band; 1562 raw (1508) DOPED-only C=C.
+raw_cm1,scaled_cm1_x0965,A_neutral,A_doped,marker,region_assignment
+383,370,0.0051,0.0002,common,SO3/chain deformation (low-freq)
+427,412,0.0023,0.0066,common,SO3/chain deformation (low-freq)
+499,481,0.0002,0.0169,DOPED,SO3/chain deformation (low-freq)
+568,548,0.0016,0.0076,common,SO3/chain deformation (low-freq)
+597,576,0.0001,0.0114,common,SO3/chain deformation (low-freq)
+640,618,0.0077,0.0392,DOPED,SO3 deformation + C-S (doped-enhanced)
+748,722,0.0507,0.0162,NEUTRAL,ring deformation + SO3H def
+792,764,0.0013,0.0090,common,ring deformation + SO3H def
+857,827,0.0079,0.0160,common,"ring/C-H bend, chain"
+937,904,0.0084,0.0030,common,"ring/C-H bend, chain"
+991,956,0.0008,0.0349,DOPED,nu_s(SO3) window (doped) / S-O(H) (neutral)
+1034,998,0.0281,0.0109,NEUTRAL,nu_s(SO3) window (doped) / S-O(H) (neutral)
+1099,1061,0.0371,0.0135,NEUTRAL,S=O + C-O mixed
+1154,1113,0.0295,0.0080,NEUTRAL,C-O-C ether
+1208,1166,0.0281,0.0119,NEUTRAL,nu_as(SO3) + ring
+1266,1221,0.0049,0.0024,common,S=O asym (SO3H) / CH bend
+1320,1274,0.0104,0.0096,common,S=O asym (SO3H) / CH bend
+1345,1298,0.0320,0.0042,NEUTRAL,S=O asym (SO3H) / CH bend
+1389,1340,0.0131,0.0334,DOPED,CH2 bend / backbone
+1421,1371,0.0014,0.0101,common,CH2 bend / backbone
+1454,1403,0.0200,0.0036,NEUTRAL,CH2 bend / backbone
+1494,1441,0.0212,0.0483,DOPED,ring C=C backbone
+1508,1455,0.0430,0.0176,NEUTRAL,ring C=C backbone
+1562,1508,0.0000,0.0251,DOPED,ring C=C backbone
+2962,2858,0.0037,0.0164,common,C-H stretch
+2987,2883,0.0230,0.0029,NEUTRAL,C-H stretch
+3016,2911,0.0081,0.0180,common,C-H stretch
+3027,2921,0.0117,0.0134,common,C-H stretch
+3092,2984,0.0024,0.0055,common,C-H stretch
+3107,2998,0.0061,0.0034,common,C-H stretch
+3110,3001,0.0061,0.0028,common,C-H stretch
+3754,3623,0.0189,0.0000,NEUTRAL,O-H stretch
+3758,3626,0.0189,0.0000,NEUTRAL,O-H stretch

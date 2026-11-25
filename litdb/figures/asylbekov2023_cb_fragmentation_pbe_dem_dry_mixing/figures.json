@@ -1,0 +1,251 @@
+{
+ "slug": "asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. A schematic structure of the presented workﬂow.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    65.5,
+    481.1,
+    455.0
+   ],
+   "w": 1818,
+   "h": 1624,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) A segment of the mixer geometry as a representative element with periodic boundary conditions (red). b) Grid created for Eulerian statistics of the particle interaction data within the periodic element.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    521.1,
+    550.1,
+    696.5
+   ],
+   "w": 2118,
+   "h": 732,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.573
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Left: Quantitative distributions of the mean stress at different tip speeds. Right: Spatial distribution of the mean stress at vtip ¼ 9.5 m s\u00021.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    491.9,
+    550.0,
+    705.3
+   ],
+   "w": 2117,
+   "h": 890,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Left: Time average speciﬁc frequency for different values of the mean stress at different tip speeds. Right: Spatial distribution of the average speciﬁc frequency at vtip ¼ 9.5 m s\u00021.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    68.5,
+    553.1,
+    283.8
+   ],
+   "w": 2118,
+   "h": 898,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Simulation results for homogeneous breakage are compared to experimental measurements and initial state. Left: Mass-based carbon black (CB) particle size population distribution. Right: Cumulative mass-based CB particle size distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    499.9,
+    553.1,
+    694.8
+   ],
+   "w": 2118,
+   "h": 813,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Simulation results for heterogeneous breakage with power-law and σ50 fracture strength models are compared to experimental measurements and initial state. Left: Mass-based CB particle size population distribution. Right: Cumulative mass-based CB particle size distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    54.3,
+    550.0,
+    267.5
+   ],
+   "w": 2117,
+   "h": 889,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Breakage parameters after successful calibration at vtip ¼ 9.5 m s\u00021 for power-law and σ50 models. Left: Breakage rate. Right: Fracture strength. agglomerates. The increase in the breakage rate is inﬂuenced by the slope of the fracture strength. As a result, the course of the breakage rate of the power-law model is slightly steeper. However, both functions end in a constant value for large agglom- erates. Another characteristic of the breakage rate is the limit value of xlim \u0004 0.2 μm. With bðx < xlimÞ ¼ 0, the breakage rate repro- duces a limited breakage. While the σ50 model imposes this limit with xp ¼ 0.199 μm, the power-law model implements this by a very steep gradient. This behavior is consistent with the observa- tions of Mayer et al.[63]. Here, wet dispersion of CB in a planetary mixer also showed a limit at 0.2 μm. The same was conﬁrmed with micro-scale DEM simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    289.9,
+    550.0,
+    503.8
+   ],
+   "w": 2117,
+   "h": 893,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Breakage functions after successful calibration at vtip ¼ 9.5 m s\u00021 for power-law and σ50 models. Left: Brittle agglomerates. Right: Soft agglomerates. While the breakage function of the power-law model converges to a narrow distribution with q > 1 and z50 ¼ 1.68 \u0005 10\u00022, the breakage function of the σ50 model forms an asymmetric function corresponding to erosion with q < 1. Since σ50 model assumes much higher values for fracture strength of soft agglomerates compared to the power-law model. Thus, the breakage rate in this region is lower than in the power-law model. Since experimental data dictates a certain extent of breakage within the speciﬁed time, the parameters of the breakage function compensate for this inﬂu- ence with a higher amount of smaller fragments. an order of magnitude larger than for the simulation with the orig- inal tip speed of 9.5 m s\u00021. The agreement of t",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    66.9,
+    553.0,
+    254.5
+   ],
+   "w": 2305,
+   "h": 783,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Left: Total squared errors for Cases III and IV at different tip speeds. Right: population size distributions at different tip speeds of Cases II and IV compared to experimental results.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    487.4,
+    553.0,
+    694.8
+   ],
+   "w": 2118,
+   "h": 865,
+   "dpi": 300,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Calibrated DEM parameters of the scaled-up particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2. Optimized breakage function parameters for soft and brittle agglomerates at vtip ¼ 9.5 m s\u00021.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 12,
+   "file": "tab_3.png",
+   "caption": "Table 3. Optimized breakage function parameters for soft and brittle agglomerates at all tip speeds.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf",
+   "blank": 0.868
+  }
+ ]
+}

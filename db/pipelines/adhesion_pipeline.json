@@ -1,0 +1,1662 @@
+{
+ "schema": "adhesion_pipeline/1",
+ "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
+ "updated": "2026-11-20",
+ "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
+ "⛔_이_원장이_하지_않는_것": [
+  "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
+  "판정하지 않는다 — 판정은 `db/governance/decisions.json` 이 한다. 화면은 scope `adhesion.` 결정을 원장에서 실시간으로 읽는다.",
+  "COMSOL 단계는 이름으로만 둔다 — 우리 관할이 아니다 (1저자 2026-09-24)."
+ ],
+ "stages": [
+  {
+   "key": "dft",
+   "label": "DFT",
+   "title": "DFT — 점착일 W (J/m²)",
+   "scope": "ours",
+   "owner": "DFT 트랙 · 1저자 = 사용자 (이 브랜치 `claude/friendly-meitner-lldvar`)",
+   "consumes": "DEM 요청서의 계면 목록 (P1 · P2 · P3 선택)",
+   "produces": "고정기하 **W_sep** (헤드라인) · W_ad · D3 끈 값 · (요청) E(d) 곡선",
+   "state": "run",
+   "state_text": "P1b Ag|흑연 3층 마감 (10-06 · k9) · V5 VASP 반송 G3 PASS · G4 INCOMPLETE (10-15) · 외주 2차 (탄소 P2′ · 은 a4) 단계 1–4 진행 (10-27 해제) · ⚠ 2026-10-27 전 문구 'SE|SE 대조 끝 · P1·P2 계면은 입력 전' 은 09-25 상태였다"
+  },
+  {
+   "key": "dem",
+   "label": "DEM",
+   "title": "DEM — JKR 점착 접촉 (LIGGGHTS)",
+   "scope": "partner",
+   "owner": "DEM 트랙 (브랜치 `claude/stoic-knuth-NObVQ`)",
+   "consumes": "W (J/m²) → JKR pull-off `F = 1.5πR*·w` 의 **w = W**",
+   "produces": "G_c,eff(P) **띠** — DFT 값 둘로 돌리는 민감도 시나리오",
+   "state": "wait",
+   "state_text": "DEM 9차 수령 (10-06 · 새 요청 없음 · 박리 시험은 질문 ② 기하부터) · 회신 10 은 외주 2차 반송 뒤 · 계면 면적 가중(혼합)은 DEM 쪽 모델 가정"
+  },
+  {
+   "key": "comsol",
+   "label": "COMSOL",
+   "title": "COMSOL — 셀·스택 연속체",
+   "scope": "outside",
+   "owner": "관할 밖",
+   "consumes": "—",
+   "produces": "—",
+   "state": "outside",
+   "state_text": "하류 단계 — 이 화면은 추적하지 않는다"
+  }
+ ],
+ "contracts": [
+  {
+   "from": "DFT",
+   "to": "DEM",
+   "what": "점착일 W → JKR 의 w",
+   "unit": "J/m²",
+   "rule": "w = **W** (γ 아님 — 같은 면이면 W = 2γ). 헤드라인은 **고정기하 W_sep**.",
+   "state": "합의",
+   "since": "2026-09-23",
+   "record": "kb/projects/wad_dem_reply_draft_2026_09_23.md"
+  },
+  {
+   "from": "DFT",
+   "to": "DEM",
+   "what": "값 두 개 → G_c 띠",
+   "unit": "J/m²",
+   "rule": "작은 주기 모델의 **DFT 값**과 전체 계면의 **UMA+D3 예측**을 따로 넘긴다. 그 띠는 **민감도 시나리오**이지 신뢰구간·물리적 상하한이 아니다 (A′).",
+   "state": "결정",
+   "since": "2026-09-23",
+   "record": "db/governance/decisions.json"
+  },
+  {
+   "from": "DFT",
+   "to": "DEM",
+   "what": "E(d) 분리 곡선 → 최대 결합력·임계 분리",
+   "unit": "J/m² · Å",
+   "rule": "DEM 요청서의 선택 항목 — 계산 계획 미정.",
+   "state": "요청됨",
+   "since": "2026-09-23",
+   "record": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+  },
+  {
+   "from": "DFT",
+   "to": "DEM",
+   "what": "W 값의 **참조·기판 제약 상태 라벨** (입방 고정 / epitaxial 면내 고정·법선 자유 / 무응력) · SE|SE 는 두 참조 병기",
+   "unit": "라벨",
+   "rule": "라벨 없는 W 는 넘기지 않는다 · P1·P2 는 '지정 comp1 셀 조건부' (잔류 응력 명시) · W′ 는 경보 대체·DEM 입력 아님",
+   "state": "결정",
+   "since": "2026-09-25",
+   "record": "db/governance/decisions.json"
+  }
+ ],
+ "systems": [
+  {
+   "id": "sese",
+   "title": "SE|SE 대조 — comp1 (001) 대칭 슬랩 두 장",
+   "role": "**경보 대조** (합격선 아님 · 경보 v2) — 벽개일 W_cleave = γ(S 바깥) + γ(Li 바깥), μ 상쇄",
+   "cell": "4층 · S 바깥 110 / Li 바깥 98 원자 · 진공 15 Å · 슬랩 k 3×3×1 · 벌크 52 원자 k 3×3×3",
+   "machine": "V100",
+   "state": "done",
+   "state_text": "5잡 끝 · ⚠ 경보 v2 **유지** (입방 기준) · epitaxial 기준은 참조 민감도 · Codex BX 조건부 GO(진단) · 검증 완료·DEM 승격 NO-GO",
+   "records": [
+    "db/inputs/wad_sese_control_4L_2026_09_24/jobs.json",
+    "db/structures/wad_se_slabs_4L_2026_09_24/manifest.json",
+    "tools/wad/se_sym_slab.py",
+    "db/properties/wad_sese_4L_result_2026_09_25.json"
+   ]
+  },
+  {
+   "id": "P1a",
+   "title": "LPSCl | Ag(111)",
+   "role": "DEM P1 · SE 종결 두 가지 (S 바깥 · Li·PS₄ 바깥 — 대칭 슬랩 결정)",
+   "cell": "SE 4층 1×2 + Ag(111) 4층 2√3×7 (112 Ag · 332/308 원자)",
+   "machine": "gabia A6000 (UMA · 탄성 23_m 잠깐 정지 동안)",
+   "state": "done",
+   "state_text": "전체 계면 **UMA+D3 예측** 끝 (10-01 · 카드 봉인 뒤 계산) — 게이트 G1·G2·G3 통과 · registry 합쳐짐 없음 · 값은 결과 기록에서만 · G5 (외주 V5 · VASP) 대기 · DEM 회신 9 초안 (사용자 검토·발송 대기)",
+   "records": [
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+    "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json",
+    "db/properties/wad_se_pairs_uma_result_2026_10_01.json"
+   ]
+  },
+  {
+   "id": "P1b",
+   "title": "Ag(111) | graphite(0001)",
+   "role": "DEM P1 — 인터레이어 안쪽 계면",
+   "cell": "Ag(111) (√3×√3)R30° 4층 (12 Ag) + 흑연 2×2 ABA 3층 (24 C) · V2 와 같은 옆 셀 (+1.078 %) · 두께 점검 4층",
+   "machine": "kgy RTX3090 (li2s v2 UMA 와 GPU 공유 · START 12000 · KILL 23000 MiB)",
+   "state": "run",
+   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음) · ⏩ 10-03 기계 대조 G1 **PASS** (CTRL 두 잡 kgy–V100 |ΔW| 1.0e-7 J/m² ≤ 0.002 · W 값은 화면에 안 싣는다 · kgy 가 V100 보다 bound 3.94× · far 3.72× 느림) · 첫 이완 AGC_N3_top_fcc 진행 (04:22 351 분 · BFGS 16) — 총 견적은 첫 이완 뒤 · ⏩ 10-03 16:29 이완 2/5 끝 (hollow_fcc 진행 177 분) · 총 견적 1.9–3.2 일 (7 일 안 · kgy 유지) · ⏩ 10-04 15:08 1단계 **7/7 끝** · 2단계 SCF **6/31** (개당 50–80 분 · 피크 7.8 GB · cascade v7 탐침과 GPU 공유) — 남은 25 ≈ 하루 (10-05 오후 · 어림) · ⏩ 10-05 13:35 2단계 **31/31 끝** · 회수 d2bfb55a (211 파일 · SHA256 일치) · 2단계 재생성 대조 ✅ · 레포 집계 = kgy 집계 (차이 0) · 게이트: G0 5/5 · G1 PASS · G3 PASS · **G4 FAIL (k 9×9×1 축 — 대표가 문턱의 두 배 움직임)** · 두께 PASS · ATM 열 계산 · 카드 규칙: 라벨을 값에 붙여 보고 · 새 계산은 1저자(사용자) 결정 — **결정 대기** · W 값은 결과 기록에만 (`db/properties/wad_agc_graphite_result_2026_10_05.json` · 화면에 안 싣는다) · ⏩ 1저자 결정 (c) — 대표 두 끝점 k 12×12×1 탐침 2 잡 (D-2026-10-05-wad-agc-kprobe12 · 판독 |ΔW(12−9)| ≤ 0.01 → 9×9×1 수렴 · 헤드라인 불변)",
+   "records": [
+    "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+    "db/inputs/wad_agc_graphite_2026_10_02/stage1/qe/jobs.json",
+    "db/inputs/wad_agc_graphite_2026_10_02/run_kgy.sh",
+    "tools/wad/agc_graphite.py",
+    "db/properties/wad_agc_graphite_result_2026_10_05.json"
+   ]
+  },
+  {
+   "id": "P2",
+   "title": "LPSCl | graphite(0001)",
+   "role": "P1 과 **같은 우선순위** (결정 p2 · DEM 요청 수용) · 같은 SE 슬랩 · 흑연 먼저",
+   "cell": "SE 4층 1×3 + 흑연 AB 3층 4×7√3 (336 C · 666/630 원자)",
+   "machine": "gabia A6000 (UMA · 탄성 23_m 잠깐 정지 동안)",
+   "state": "done",
+   "state_text": "전체 계면 **UMA+D3 예측** 끝 (10-01 · 카드 봉인 뒤 계산) — 게이트 G1·G2·G3 통과 · registry 합쳐짐 없음 · 값은 결과 기록에서만 · DFT 확인 경로 없음 (라벨) · DEM 회신 9 초안 (사용자 검토·발송 대기)",
+   "records": [
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+    "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json",
+    "db/properties/wad_se_pairs_uma_result_2026_10_01.json"
+   ]
+  },
+  {
+   "id": "CC",
+   "title": "graphite | graphite (C|C) — 덴카–덴카 · 덴카–VGCF · VGCF–VGCF",
+   "role": "DEM — C–C 접촉 (조성 확정: LPSCl | Ag–C (Ag + 덴카블랙) | VGCF) · 흑연 대조 (Wang 2015)",
+   "cell": "1×1 육방 · S33 6층 3|3 (12 원자) · M41 4층 + 그래핀 1 (10 원자) · S44 · M61 두께 · V2a 변형",
+   "machine": "V100 pw.x GPU",
+   "state": "done",
+   "state_text": "사전등록 게이트 전부 통과 · DEM 입력 (c) 둘 다 시나리오 (1저자 09-30) · 회신 8 초안",
+   "records": [
+    "db/properties/wad_cc_graphite_prereg_2026_09_28.json",
+    "db/properties/wad_cc_graphite_result_2026_09_30.json",
+    "db/raw/wad_cc_graphite_2026_09_28/cc_collect_repo_atm_2026_09_30.json"
+   ]
+  },
+  {
+   "id": "P3",
+   "title": "LiAg 합금 · 결함 흑연 (선택)",
+   "role": "DEM 선택 항목",
+   "cell": "—",
+   "machine": "—",
+   "state": "out",
+   "state_text": "범위 밖 — 한다면 LiAg | LPSCl 먼저",
+   "records": []
+  }
+ ],
+ "runs": [
+  {
+   "id": "sese_4L_v100_2026_09_24",
+   "system": "sese",
+   "machine": "V100 (Tesla V100-PCIE-32GB) · QE 7.4.1 GPU 재빌드 (NVHPC 24.11 · cc70)",
+   "check": "빌드 검증 통과 — 09-13 같은 기계의 static_ab/a SCF 에너지를 인쇄 자릿수까지 재현",
+   "started": "2026-09-24 01:44",
+   "jobs": [
+    {
+     "dir": "01_bulk_scf",
+     "state": "done",
+     "wall_s": 104,
+     "peak_vram_mib": 10350
+    },
+    {
+     "dir": "02_s_outer_scf",
+     "state": "done",
+     "wall_s": 693,
+     "peak_vram_mib": 32038
+    },
+    {
+     "dir": "02_li_outer_scf",
+     "state": "done",
+     "wall_s": 556,
+     "peak_vram_mib": 29724
+    },
+    {
+     "dir": "03_s_outer_relax_pbe",
+     "state": "done",
+     "wall_s": 75969,
+     "peak_vram_mib": 32378
+    },
+    {
+     "dir": "03_li_outer_relax_pbe",
+     "state": "done",
+     "wall_s": 32355,
+     "peak_vram_mib": 30274
+    }
+   ],
+   "vram_total_mib": 32768,
+   "verdict": "⚠ **경보 v2 발화 · 유지** — 입방 벌크 기준 이완 PBE W_cleave 가 운영 구간 아래. c-벡터 이완 벌크 참조로 바꾸면 값이 오르지만 그 차이는 **참조 상태 민감도**다 (순수 전단·문헌 차 원인으로 해석 안 함). Codex BX: 원인 진단 조건부 GO · 방법 검증 완료·DEM 승격 **NO-GO**. 값은 결과 기록 `db/properties/wad_sese_4L_result_2026_09_25.json` (인용 불가 · 내부 방법 점검용).",
+   "values_policy": "무이완 중간값은 `kb/open_items.md` ⏭-NOW-w 에만 ‘중간 · 인용 금지’ 로 적었다 — 이 원장·화면에는 싣지 않는다",
+   "records": [
+    "kb/platforms/v100_uma_setup_2026_09_14.md",
+    "tools/wad/run_sese_gpu.sh",
+    "db/properties/wad_sese_4L_result_2026_09_25.json"
+   ],
+   "vram_note": "VRAM 은 nvidia-smi 의 MiB 그대로 적는다 (GB 로 바꾸면 1000·1024 가 섞인다 — 2026-09-24 실측 혼동)"
+  },
+  {
+   "id": "bulk_sens_v100_2026_09_25",
+   "system": "sese",
+   "machine": "V100 · QE 7.4.1 GPU (재빌드) · code_id e955365d0",
+   "check": "CODE_ID·도구 sha 커밋과 일치 · selftest 54/72 · PP ⑨ ×4 · DRY_RUN 통과 · 내장 대조 07_epi_e52_k3 = 05 (2e-8 Ry)",
+   "started": "2026-09-25 17:47",
+   "vram_total_mib": 32768,
+   "jobs": [
+    {
+     "dir": "06_cubic_e52_k4",
+     "state": "done",
+     "wall_s": 228,
+     "peak_vram_mib": 10518
+    },
+    {
+     "dir": "06_cubic_e70_k3",
+     "state": "done",
+     "wall_s": 147,
+     "peak_vram_mib": 15916
+    },
+    {
+     "dir": "06_cubic_e70_k4",
+     "state": "done",
+     "wall_s": 343,
+     "peak_vram_mib": 15920
+    },
+    {
+     "dir": "07_epi_e52_k3",
+     "state": "done",
+     "wall_s": 96,
+     "peak_vram_mib": 10314
+    },
+    {
+     "dir": "07_epi_e52_k4",
+     "state": "done",
+     "wall_s": 250,
+     "peak_vram_mib": 10332
+    },
+    {
+     "dir": "07_epi_e70_k3",
+     "state": "done",
+     "wall_s": 150,
+     "peak_vram_mib": 15416
+    },
+    {
+     "dir": "07_epi_e70_k4",
+     "state": "done",
+     "wall_s": 369,
+     "peak_vram_mib": 15660
+    }
+   ],
+   "verdict": "진단 (합격선 아님 · Codex BX Q5 권고 3): **R1 ✅** 입방 셀 전단 응력이 cutoff·k 에 무관하게 같다 (수치 아티팩트 아님) · **R2 ✅** 두 참조의 에너지 차가 네 설정에서 같다 (참조 변경 효과는 수치 설정에 강건). 슬랩 W 의 수렴 인증은 아니다. 값은 결과 기록.",
+   "values_policy": "응력·ΔW′ 숫자는 결과 기록 `점검_C` 에만 — 화면에는 판정 문장만",
+   "records": [
+    "db/inputs/wad_sese_bulk_sensitivity_2026_09_25/jobs.json",
+    "db/raw/wad_sese_4L_2026_09_25/bulk_sens_result_2026_09_25.json",
+    "db/properties/wad_sese_4L_result_2026_09_25.json"
+   ]
+  },
+  {
+   "id": "aprime_prep_v100_2026_09_25",
+   "system": "prep",
+   "machine": "V100 · QE 7.4.1 GPU · code_id 3fc5613d8",
+   "check": "CODE_ID·도구 sha 일치 · PP 7종 해시 ⑨ · DRY_RUN ⛔ 0 · 내장 대조 12·13 첫 SCF = 01/04 (차 0.0)",
+   "started": "2026-09-25 20:19",
+   "vram_total_mib": 32768,
+   "jobs": [
+    {
+     "dir": "08_ag_fcc_pbe_e52_k20",
+     "state": "done",
+     "wall_s": 61,
+     "peak_vram_mib": 848
+    },
+    {
+     "dir": "08_ag_fcc_pbe_e70_k20",
+     "state": "done",
+     "wall_s": 66,
+     "peak_vram_mib": 866
+    },
+    {
+     "dir": "08_ag_fcc_pbe_e70_k24",
+     "state": "done",
+     "wall_s": 113,
+     "peak_vram_mib": 868
+    },
+    {
+     "dir": "09_ag_fcc_pbe_d3_e52_k20",
+     "state": "done",
+     "wall_s": 85,
+     "peak_vram_mib": 848
+    },
+    {
+     "dir": "10_graphene_pbe_e52_k24",
+     "state": "done",
+     "wall_s": 34,
+     "peak_vram_mib": 1102
+    },
+    {
+     "dir": "10_graphene_pbe_e70_k24",
+     "state": "done",
+     "wall_s": 38,
+     "peak_vram_mib": 1214
+    },
+    {
+     "dir": "11_graphene_pbe_d3_e52_k24",
+     "state": "done",
+     "wall_s": 33,
+     "peak_vram_mib": 1102
+    },
+    {
+     "dir": "12_cubic_relax_pbe_d3",
+     "state": "done",
+     "wall_s": 103,
+     "peak_vram_mib": 10350
+    },
+    {
+     "dir": "13_epi_vcrelax_pbe_d3",
+     "state": "done",
+     "wall_s": 3161,
+     "peak_vram_mib": 10372
+    }
+   ],
+   "verdict": "선행 배치 (카드 밖 · 결정 7 시행 · DEM 부탁 1) — 수렴 규칙·Pulay·내장 대조 전부 통과 · 깃발 0. Ag a₀ PBE/PBE+D3 · 그래핀 a₀ · 정합 변형률 재기입 (3 % 규칙 미발동) · comp1 셀 PBE+D3 응력 = 라벨용. 값은 원자료.",
+   "values_policy": "a₀·변형률·응력은 원자료·결박 파일·계획 표에 — 화면에는 판정 문장만",
+   "records": [
+    "db/inputs/wad_aprime_prep_2026_09_25/jobs.json",
+    "db/raw/wad_aprime_prep_2026_09_25/aprime_prep_result_2026_09_25.json",
+    "db/properties/wad_aprime_s1_bindings_2026_09_25.json"
+   ]
+  },
+  {
+   "id": "aprime_s2_uma_relax_gabia_2026_09_25",
+   "system": "aprime_s2",
+   "machine": "gabia uma env · UMA uma-s-1p1 default + simple-dftd3 1.6.0",
+   "check": "sha·마스크 사전 점검 12/12 · 결박 기록 · gabia 커밋 30e1e90eb · repo 대조 12/12",
+   "started": "2026-09-25 22:27",
+   "vram_total_mib": 49140,
+   "jobs": [
+    {
+     "dir": "V2_bridge",
+     "state": "done",
+     "wall_s": 2.8,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_hollow_fcc",
+     "state": "done",
+     "wall_s": 3.1,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_top_fcc",
+     "state": "done",
+     "wall_s": 3.7,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_top_hcp",
+     "state": "done",
+     "wall_s": 3.0,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V3_li_outer_A",
+     "state": "incomplete",
+     "wall_s": 24.3,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V3_s_outer_A",
+     "state": "incomplete",
+     "wall_s": 34.9,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V4_li_outer_A",
+     "state": "incomplete",
+     "wall_s": 216.1,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V4_s_outer_A",
+     "state": "done",
+     "wall_s": 34.6,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_li_outer_A",
+     "state": "done",
+     "wall_s": 44.2,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_li_outer_B",
+     "state": "done",
+     "wall_s": 50.9,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_s_outer_A",
+     "state": "done",
+     "wall_s": 102.2,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_s_outer_B",
+     "state": "done",
+     "wall_s": 98.8,
+     "peak_vram_mib": null
+    }
+   ],
+   "verdict": "UMA+D3 이완 12/12 수렴 · 카드 G2 후검: **S3 후보 9** (V2×4 · V4_s_outer_A · V5×4) · **INCOMPLETE 3** (V3 두 종결 Ag₄ 개방 +16–17 % · V4_li_outer Li 상승 1.46 Å) — 세고 제외. 에너지·W 미열람.",
+   "values_policy": "구조 지표(변위·간격)만 기록 · 에너지 없음",
+   "records": [
+    "db/properties/wad_aprime_s2_result_2026_09_25.json",
+    "db/inputs/wad_aprime_s3_2026_09_25/s3_manifest.json",
+    "db/raw/wad_aprime_s2_relax_2026_09_25"
+   ]
+  },
+  {
+   "id": "aprime_s4_v2_v100_2026_09_26",
+   "system": "aprime_s4",
+   "machine": "V100 pw.x GPU (runyour) · tmux s4v2 · run_sese_gpu.sh KILL 31000 MiB",
+   "check": "S3 v1 입력 (V2_top_fcc_relax pw_in sha 3cfe06c1…) · ⑨ PP 해시 통과 · DRY_RUN ok",
+   "started": "2026-09-26 00:17 UTC",
+   "vram_total_mib": 32768,
+   "jobs": [
+    {
+     "dir": "V2_top_fcc_relax",
+     "state": "failed_technical",
+     "wall_s": 10069,
+     "peak_vram_mib": 2752,
+     "note": "nstep 200 소진 · bfgs converged 없음 · 199/199 energy_new > energy_old · 고정 Ag 바닥층 +0.195 Ry/Bohr — 쌍극자 불연속 구간이 바닥층 주기영상 1 Å 아래 → 개정 2 · 결과 사용 금지"
+    },
+    {
+     "dir": "V2_top_hcp_relax",
+     "state": "not_started",
+     "wall_s": null,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_bridge_relax",
+     "state": "not_started",
+     "wall_s": null,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_hollow_fcc_relax",
+     "state": "not_started",
+     "wall_s": null,
+     "peak_vram_mib": null
+    }
+   ],
+   "verdict": "⛔ 기술 실패 (QE 입력 설정 · 물리 판정 아님) — S3v2 패키지로 4 잡 재실행 예정 (개정 2 비준 뒤)",
+   "values_policy": "실패 실행(V2_top_fcc_relax · v1 입력)의 에너지·힘·좌표는 어디에도 쓰지 않는다 — QE 입력 설정(쌍극자 구간) 기술 실패 · 물리 판정 아님 · S3v2 로 재실행",
+   "records": [
+    "db/raw/wad_aprime_s4_v2_2026_09_26/V2_top_fcc_relax_fail1_dipreg_diag_2026_09_26.json",
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_2_2026_09_26.json",
+    "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
+    "db/inputs/wad_aprime_s3v2_2026_09_26/s3_manifest.json"
+   ]
+  },
+  {
+   "id": "aprime_v4_gpu_trial_gabia_2026_09_27",
+   "system": "aprime_s4",
+   "machine": "gabia A6000 pw.x GPU · tmux v4trial · run_sese_gpu.sh @ac99c7c45 · KILL 44000 MiB",
+   "check": "입력 해시(jobs.json d6415d75…) · ⑨ PP 6종 · ⑪ kind↔calc · DRY_RUN ⛔ 0 · 탄성 러너 동결 뒤 GPU 1 MiB 에서 시작",
+   "started": "2026-09-27 10:31",
+   "vram_total_mib": 49140,
+   "jobs": [
+    {
+     "dir": "trial_V4_far_e52_m2",
+     "state": "done",
+     "wall_s": 519,
+     "peak_vram_mib": 39230
+    },
+    {
+     "dir": "trial_V4_G3c2_far_i_e52_m2",
+     "state": "done",
+     "wall_s": 503,
+     "peak_vram_mib": 41518
+    }
+   ],
+   "verdict": "✅ 두 셀 합격 (피크 ≤ 44,000 MiB · 결과 전 규칙) → V4_s_outer_A 본 잡 9 개 실행 허가",
+   "values_policy": "자원 판정용 시험 — 에너지는 어디에도 쓰지 않는다 (electron_maxstep 2 로 자른 SCF)",
+   "records": [
+    "db/raw/wad_aprime_v4_gpu_trial_2026_09_26/trial_result_2026_09_27.json",
+    "db/inputs/wad_aprime_v4_gpu_trial_2026_09_26/jobs.json"
+   ]
+  },
+  {
+   "id": "aprime_v4_main_gabia_2026_09_27",
+   "system": "aprime_s4",
+   "machine": "gabia A6000 pw.x GPU · tmux v4main · run_sese_gpu.sh · KILL 44000 MiB · 런 /data/work/runs/wad_aprime_s4_v4_2026_09_27",
+   "check": "GPU 시험 두 셀 합격(aprime_v4_gpu_trial_gabia_2026_09_27) 뒤 발사 · 잡마다 시작 전 GPU 합계 1 MiB",
+   "started": "2026-09-27 10:52",
+   "vram_total_mib": 49140,
+   "jobs": [
+    {
+     "dir": "V4_s_outer_A_bound",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 9276,
+     "peak_vram_mib": 39238,
+     "started": "2026-09-27 10:52",
+     "host_free_min_mib": 49389
+    },
+    {
+     "dir": "V4_s_outer_A_far",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 7989,
+     "peak_vram_mib": 39230,
+     "started": "2026-09-27 13:27",
+     "host_free_min_mib": 49383
+    },
+    {
+     "dir": "V4_s_outer_A_G3_c2_bound",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 14804,
+     "peak_vram_mib": 41520,
+     "started": "2026-09-27 15:40",
+     "host_free_min_mib": 49047
+    },
+    {
+     "dir": "V4_s_outer_A_G3_c2_far_i",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 13070,
+     "peak_vram_mib": 41518,
+     "started": "2026-09-27 19:47",
+     "host_free_min_mib": 49029
+    },
+    {
+     "dir": "V4_s_outer_A_G3_c2_far_ii",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 12287,
+     "peak_vram_mib": 41518,
+     "started": "2026-09-27 23:24",
+     "host_free_min_mib": 49012
+    },
+    {
+     "dir": "V4_s_outer_A_G4_k1_bound",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 14961,
+     "peak_vram_mib": 39238,
+     "started": "2026-09-28 02:49",
+     "host_free_min_mib": 49423
+    },
+    {
+     "dir": "V4_s_outer_A_G4_k1_far",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 22404,
+     "peak_vram_mib": 39238,
+     "started": "2026-09-28 06:59",
+     "host_free_min_mib": 49366
+    },
+    {
+     "dir": "V4_s_outer_A_G4_s05_bound",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 12667,
+     "peak_vram_mib": 39230,
+     "started": "2026-09-28 13:12",
+     "host_free_min_mib": 48613
+    },
+    {
+     "dir": "V4_s_outer_A_G4_s05_far",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 13947,
+     "peak_vram_mib": 39230,
+     "started": "2026-09-28 16:43",
+     "host_free_min_mib": 48543
+    }
+   ],
+   "verdict": "✅ **9/9 끝** (마지막 잡 09-28 21:32 · 전부 rc 0 · 원자료 ebd0abe7a `db/raw/wad_aprime_s4_v4_2026_09_27/jobs_run.tsv`) — 판정·값은 결과 기록 `db/properties/wad_aprime_pilot_result_v4_2026_09_28.json` 에서만. ⚠ 이 run 항목은 09-27 14:02 실측(1/9)에서 멈춰 있다가 10-01 에 jobs_run.tsv 로 채웠다.",
+   "values_policy": "9 잡이 끝나면 collect_aprime_s4.py --v4 로 한 번에 집계 (ΔE_frag eV/조각 · G3 5 · G4 10 meV = 변화 · J/m² 환산 금지) — 그 전엔 에너지를 어디에도 쓰지 않는다",
+   "records": [
+    "db/inputs/wad_aprime_s3v2_2026_09_26/qe/jobs.json",
+    "db/properties/wad_aprime_pilot_result_v4_2026_09_28.json",
+    "db/raw/wad_aprime_s4_v4_2026_09_27/jobs_run.tsv"
+   ]
+  },
+  {
+   "id": "wad_cc_graphite_v100_2026_09_28",
+   "system": "CC",
+   "machine": "V100 (Tesla V100-PCIE-32GB) · QE 7.4.1 GPU · tmux wadcc · run_v100.sh · 코드 @61e41bc67",
+   "check": "selftest 52/52 (V100) · 1단계 9 이완 → 2단계 입력 생성 → 2단계 44 SCF · 레포에서 --verify_stage2 ✅ (pw.in sha 44 같음) · --collect --atm (V100 집계와 차이 0)",
+   "started": "2026-09-28 22:42",
+   "jobs": [
+    {
+     "dir": "CC_S33_AB_relax",
+     "state": "done",
+     "wall_s": 9442,
+     "peak_vram_mib": 15160
+    },
+    {
+     "dir": "CC_S33_SP_relax",
+     "state": "done",
+     "wall_s": 9011,
+     "peak_vram_mib": 15864
+    },
+    {
+     "dir": "CC_S33_AA_relax",
+     "state": "done",
+     "wall_s": 31851,
+     "peak_vram_mib": 15864
+    },
+    {
+     "dir": "CC_M41_AB_relax",
+     "state": "done",
+     "wall_s": 11086,
+     "peak_vram_mib": 14040
+    },
+    {
+     "dir": "CC_M41_SP_relax",
+     "state": "done",
+     "wall_s": 9428,
+     "peak_vram_mib": 14142
+    },
+    {
+     "dir": "CC_M41_AA_relax",
+     "state": "done",
+     "wall_s": 21002,
+     "peak_vram_mib": 17022
+    },
+    {
+     "dir": "CC_S44_AB_relax",
+     "state": "done",
+     "wall_s": 16352,
+     "peak_vram_mib": 17020
+    },
+    {
+     "dir": "CC_M61_AB_relax",
+     "state": "done",
+     "wall_s": 9723,
+     "peak_vram_mib": 14814
+    },
+    {
+     "dir": "CC_M41_AB_V2a_relax",
+     "state": "done",
+     "wall_s": 7190,
+     "peak_vram_mib": 17118
+    },
+    {
+     "dir": "CC_S33_AB_dft_bound",
+     "state": "done",
+     "wall_s": 7640,
+     "peak_vram_mib": 17112
+    },
+    {
+     "dir": "CC_S33_AB_dft_far",
+     "state": "done",
+     "wall_s": 6911,
+     "peak_vram_mib": 14336
+    },
+    {
+     "dir": "CC_S33_AB_far8",
+     "state": "done",
+     "wall_s": 8642,
+     "peak_vram_mib": 15288
+    },
+    {
+     "dir": "CC_S33_AB_Ed_m03",
+     "state": "done",
+     "wall_s": 8567,
+     "peak_vram_mib": 14200
+    },
+    {
+     "dir": "CC_S33_AB_Ed_p03",
+     "state": "done",
+     "wall_s": 570,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AB_Ed_p06",
+     "state": "done",
+     "wall_s": 425,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AB_G3_c2_bound",
+     "state": "done",
+     "wall_s": 684,
+     "peak_vram_mib": 1400
+    },
+    {
+     "dir": "CC_S33_AB_G3_c2_far_i",
+     "state": "done",
+     "wall_s": 283,
+     "peak_vram_mib": 1400
+    },
+    {
+     "dir": "CC_S33_AB_G3_c2_far_ii",
+     "state": "done",
+     "wall_s": 154,
+     "peak_vram_mib": 1400
+    },
+    {
+     "dir": "CC_S33_AB_G4_e70_bound",
+     "state": "done",
+     "wall_s": 393,
+     "peak_vram_mib": 1638
+    },
+    {
+     "dir": "CC_S33_AB_G4_k24_bound",
+     "state": "done",
+     "wall_s": 513,
+     "peak_vram_mib": 1360
+    },
+    {
+     "dir": "CC_S33_AB_G4_s05_bound",
+     "state": "done",
+     "wall_s": 343,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AB_G4_e70_far",
+     "state": "done",
+     "wall_s": 217,
+     "peak_vram_mib": 1638
+    },
+    {
+     "dir": "CC_S33_AB_G4_k24_far",
+     "state": "done",
+     "wall_s": 266,
+     "peak_vram_mib": 1360
+    },
+    {
+     "dir": "CC_S33_AB_G4_s05_far",
+     "state": "done",
+     "wall_s": 130,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_SP_dft_bound",
+     "state": "done",
+     "wall_s": 249,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_SP_dft_far",
+     "state": "done",
+     "wall_s": 156,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AA_dft_bound",
+     "state": "done",
+     "wall_s": 479,
+     "peak_vram_mib": 1352
+    },
+    {
+     "dir": "CC_S33_AA_dft_far",
+     "state": "done",
+     "wall_s": 197,
+     "peak_vram_mib": 1352
+    },
+    {
+     "dir": "CC_M41_AB_dft_bound",
+     "state": "done",
+     "wall_s": 360,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_dft_far",
+     "state": "done",
+     "wall_s": 680,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_far8",
+     "state": "done",
+     "wall_s": 248,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_Ed_m03",
+     "state": "done",
+     "wall_s": 208,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_Ed_p03",
+     "state": "done",
+     "wall_s": 255,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_Ed_p06",
+     "state": "done",
+     "wall_s": 301,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_G3_c2_bound",
+     "state": "done",
+     "wall_s": 177,
+     "peak_vram_mib": 1350
+    },
+    {
+     "dir": "CC_M41_AB_G3_c2_far_i",
+     "state": "done",
+     "wall_s": 667,
+     "peak_vram_mib": 1350
+    },
+    {
+     "dir": "CC_M41_AB_G3_c2_far_ii",
+     "state": "done",
+     "wall_s": 255,
+     "peak_vram_mib": 1350
+    },
+    {
+     "dir": "CC_M41_AB_G4_e70_bound",
+     "state": "done",
+     "wall_s": 194,
+     "peak_vram_mib": 1548
+    },
+    {
+     "dir": "CC_M41_AB_G4_k24_bound",
+     "state": "done",
+     "wall_s": 274,
+     "peak_vram_mib": 1324
+    },
+    {
+     "dir": "CC_M41_AB_G4_s05_bound",
+     "state": "done",
+     "wall_s": 434,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_G4_e70_far",
+     "state": "done",
+     "wall_s": 407,
+     "peak_vram_mib": 1548
+    },
+    {
+     "dir": "CC_M41_AB_G4_k24_far",
+     "state": "done",
+     "wall_s": 248,
+     "peak_vram_mib": 1324
+    },
+    {
+     "dir": "CC_M41_AB_G4_s05_far",
+     "state": "done",
+     "wall_s": 190,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_SP_dft_bound",
+     "state": "done",
+     "wall_s": 245,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_SP_dft_far",
+     "state": "done",
+     "wall_s": 270,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AA_dft_bound",
+     "state": "done",
+     "wall_s": 167,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AA_dft_far",
+     "state": "done",
+     "wall_s": 217,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_S44_AB_dft_bound",
+     "state": "done",
+     "wall_s": 494,
+     "peak_vram_mib": 1534
+    },
+    {
+     "dir": "CC_S44_AB_dft_far",
+     "state": "done",
+     "wall_s": 285,
+     "peak_vram_mib": 1534
+    },
+    {
+     "dir": "CC_M61_AB_dft_bound",
+     "state": "done",
+     "wall_s": 334,
+     "peak_vram_mib": 1464
+    },
+    {
+     "dir": "CC_M61_AB_dft_far",
+     "state": "done",
+     "wall_s": 578,
+     "peak_vram_mib": 1464
+    },
+    {
+     "dir": "CC_M41_AB_V2a_dft_bound",
+     "state": "done",
+     "wall_s": 294,
+     "peak_vram_mib": 1330
+    },
+    {
+     "dir": "CC_M41_AB_V2a_dft_far",
+     "state": "done",
+     "wall_s": 281,
+     "peak_vram_mib": 1330
+    }
+   ],
+   "vram_total_mib": 32768,
+   "verdict": "✅ **사전등록 게이트 전부 통과** — G0 9/9 · 흑연 대조 S33_AB IN_BAND · G3 · G4 · 두께 PASS (라벨 없음). 짝 규칙 ② = **2체** (ATM 열은 민감도). 값·헤드라인은 결과 기록 `db/properties/wad_cc_graphite_result_2026_09_30.json` — DEM 입력값은 1저자 결정 대기.",
+   "records": [
+    "db/properties/wad_cc_graphite_result_2026_09_30.json",
+    "db/raw/wad_cc_graphite_2026_09_28/cc_collect_repo_atm_2026_09_30.json",
+    "db/raw/wad_cc_graphite_2026_09_28/verify_stage2_repo_2026_09_30.txt",
+    "tools/wad/cc_graphite.py"
+   ],
+   "vram_note": "VRAM 은 jobs_run.tsv 의 peak_total_MiB (V100 전용 · 다른 잡 없음)"
+  },
+  {
+   "id": "wad_se_pairs_uma_gabia_2026_10_01",
+   "system": "P1a · P2",
+   "machine": "gabia A6000 48 GB · UMA uma-s-1p1 omat default + D3(BJ) 2체 · li2s v2 MD 옆 한 번에 하나 · 이완 코드 @7ca3cfc57 · W @d84299f3c",
+   "check": "프로브 1 → 이완 8 (rc 0) → W 8 (끝점 10·12 Å · ATM) → 레포에서 `relax_uma_d3.py --collect` (sha 사슬 8/8 · SHA256SUMS 80/80)",
+   "started": "2026-10-01 02:27",
+   "jobs": [
+    {
+     "dir": "P1_s_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P1_s_outer/B",
+     "state": "done"
+    },
+    {
+     "dir": "P1_li_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P1_li_outer/B",
+     "state": "done"
+    },
+    {
+     "dir": "P2_s_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P2_s_outer/B",
+     "state": "done"
+    },
+    {
+     "dir": "P2_li_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P2_li_outer/B",
+     "state": "done"
+    }
+   ],
+   "vram_total_mib": 48539,
+   "verdict": "✅ **카드 게이트 전부 통과** — G1 8/8 · G2 8/8 · G3 대표 2/2 · registry 합쳐짐 0/4 (흑연 두 registry 는 따로 남았지만 값 차가 아주 작다 — 결과 기록 📎). 값·헤드라인·라벨은 결과 기록 `db/properties/wad_se_pairs_uma_result_2026_10_01.json` 에서만.",
+   "records": [
+    "db/properties/wad_se_pairs_uma_result_2026_10_01.json",
+    "db/raw/wad_se_pairs_uma_2026_10_01/collect_repo_2026_10_01.json",
+    "db/raw/wad_se_pairs_uma_2026_10_01/SHA256SUMS"
+   ],
+   "vram_note": "VRAM 은 relax_meta 의 peak_mem.max_reserved (우리 UMA 만 · li2s MD 2 GB 는 따로)"
+  }
+ ],
+ "reviews": [
+  {
+   "who": "내부 리뷰 (Fable)",
+   "target": "계획 v1",
+   "verdict": "NO-GO",
+   "one_line": "셀·기준 프로토콜·옛 숫자 재사용·검증 짝 — P0 넷",
+   "record": "kb/reviews/internal_review_wad_agc_fable_2026_09_23.md"
+  },
+  {
+   "who": "Codex BV",
+   "target": "계획 v2",
+   "verdict": "NO-GO",
+   "one_line": "구조 검증부터 — PS₄ 보존 슬랩이 정의되지 않았다",
+   "record": "kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md"
+  },
+  {
+   "who": "Codex BW",
+   "target": "클러스터 없는 검증",
+   "verdict": "조건부 GO (A′)",
+   "one_line": "전체 계면 절대 W 로 넘기기는 NO-GO · 작은 주기 모델 파일럿은 조건부 GO · 4층 식 계수 4",
+   "record": "kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md"
+  },
+  {
+   "who": "Codex (BX)",
+   "target": "SE|SE 4층 대조 — 경보 원인 진단 (A·B·B′)",
+   "verdict": "조건부 GO",
+   "one_line": "원인 진단은 조건부 GO · **'방법 검증 완료'·DEM 입력 승격은 NO-GO**. P0: 실패한 이완을 완료로 받는 판정기 (수정됨). W′ 0.354 는 일관되게 정의되나 +0.0775 는 **참조 변경 효과**이지 순수 전단이 아니다. ±0.16 문헌 귀속 철회.",
+   "record": "kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md"
+  },
+  {
+   "id": "BY",
+   "date": "2026-09-25",
+   "verdict": "NO-GO (봉인·본계산 보류 · A′ 경로 찬성) — 재승인 최소조건 6",
+   "prompt": "kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md",
+   "reply": "kb/reviews/codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json"
+  },
+  {
+   "id": "BZ",
+   "date": "2026-09-25",
+   "verdict": "NO-GO (v2 봉인·S2 보류 · 설계·비준 5 선택 유지) — G2 우회 4경로 · G5 종결별 평균 · G3 조작 · S1/S3 경계",
+   "prompt": "kb/reviews/codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md",
+   "reply": "kb/reviews/codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v3_2026_09_25.json"
+  },
+  {
+   "id": "CA",
+   "date": "2026-09-25",
+   "verdict": "NO-GO (v3 봉인·S2 보류 · BZ 주요 수정 이행) — V2 측방 마스크 선택 입력 P0 · 인덱스 자동 변환 P1 · G3/G5 문구 · CPU/GPU 프로브 예외 · registry 주기영상",
+   "prompt": "kb/reviews/codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md",
+   "reply": "kb/reviews/codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v4_2026_09_25.json"
+  },
+  {
+   "id": "CB",
+   "date": "2026-09-25",
+   "verdict": "조건부 GO — CA 코드 결함 해제 · registry 명세 2(전역 d_min 동률 · Σ∖{A} 차단) + S1 미완료(UMA 결박·선행 값·빌더) 채우면 S1 봉인 가능 · 본 계산 승인 아님",
+   "prompt": "kb/reviews/codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md",
+   "reply": "kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json"
+  },
+  {
+   "id": "CE",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 외주 준비본) — P0 4 (성능 태그 ';' 우회 · 지난 OUTCAR 재사용 · POTCAR sha 미검사 · UMA NaN/출처) · P1 5 (승인본 미대조 · 결측 통과·종료코드 · r1 과잉 승격 · D3 1 % ≠ 예산 · G3 예측 산술) · 3b 원안 반대 · 3c 찬성 · 설계(별도 비교군 · DIPOL 식)는 조건부 찬성",
+   "prompt": "kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md",
+   "reply": "kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  },
+  {
+   "id": "CF",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 준비본 v2) — P0 3 (모순+실패 조합을 r1 이 덮음 · 등록부 없이 최종 승인 · G4 D3 불일치가 수렴 실패를 가림) · P1 3 (마지막 NaN 에너지 · 실물 Edisp 무콜론 · 포장 실패 exit 0) · D3 예산 조건부 찬성 · 3b′/3c 찬성",
+   "prompt": "kb/reviews/codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md",
+   "reply": "kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  },
+  {
+   "id": "CG",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 준비본 v3) — 새 P0 없음 · P1 3 (실패·PACK_ONLY 경로에서 POTCAR 본문이 반송 묶음에 들어감 · 봉인 파일럿 run_id 미대조 → 교체된 파일럿도 G5 PASS · 정상 TITEL 접두만 찍힌 조기 종료를 모순으로 오판) · S3 찬성 · S4 조건부 찬성 (±2 격자 = 운영 여유 · 파일럿에서 실제 격자·cut 기록) · S5 찬성 · 선택 권고 3 (빈 에너지 레코드 · tar/sha 쌍 승격 · 등록부 attempt/OUTCAR sha)",
+   "prompt": "kb/reviews/codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md",
+   "reply": "kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  },
+  {
+   "id": "CI",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 준비본 v4) — CG P1 3 해제 확인 · 새 P0 없음 · P1 1 (러너 pack() 이 find/sort/tar tzf 실패를 성공으로 승격 — 관리 파일 3 개 묶음 · 종료 0 · 기존 묶음 교체) · S1–S6 전부 찬성 (허용 목록 충분 · run_id+sha 결속 충분 · TITEL 좁은 규칙 유지 + 자동 확인 불가 설명 · 위생과 과학 판정 분리 · 두 mv 틈 수용 · 발송 = 종료 0 + sha 대조) · 정리 권고 3",
+   "prompt": "kb/reviews/codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md",
+   "reply": "kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md",
+   "repro": "db/raw/codex_CI_repro_2026_09_27",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  },
+  {
+   "id": "CJ",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 준비본 v5) — CI 재현 3 경로 해제 확인 · 새 P0 없음 · 같은 P1 의 남은 경로 1 (관리 파일 목록 쓰기(echo 와 cat 을 한 묶음으로 실패 검사)가 앞 echo 의 실패를 못 잡음 → 23·24 구성원 묶음이 종료 0·✅·sha -c 통과·옛 묶음 교체) · S1–S6 찬성 (허용 목록 · grep 0/1/≥2 · 이름 대조 유지 + Linux/GNU 명시 (bsdtar CRLF 거짓 실패 실측) · TITEL_TRUNCATED · 무엔트로피 None 그대로) · 권고 3 (sha 파이프 종료값 · 마지막 rm = pack 반환값 거짓 종료 4 · README 발송 문구 충돌)",
+   "prompt": "kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md",
+   "reply": "kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md",
+   "repro": "db/raw/codex_CJ_repro_2026_09_27",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  },
+  {
+   "id": "CK",
+   "date": "2026-09-27",
+   "verdict": "GO (V5 VASP 준비본 v6 · 기술 검토 · 실행·인용 승인 아님) — CJ 해제조건 충족 · CJ 주입 17 + 추가 차단 시험 16 전부 종료 4·구본 보존 (둘째 mv 예외 선언대로) · 정상·복구·빈 run 통과 · 정리 실패는 경고만 · 해시 17·MANIFEST 93·입력 90·D3 불변 · 새 P0/P1 없음 · S1 잔여 위험 문장(성공을 돌려주는 find 의 잘못된 출력 · 수신 검사는 보조 로그 완전성 미보증) · S2 grep -q 수용 · S3 두 검사 유지 · S4 종료 0 또는 1 + sha 찬성 · P2 정리 2 (개정 문구)",
+   "prompt": "kb/reviews/codex_CK_prompt_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md",
+   "reply": "kb/reviews/codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md",
+   "repro": "db/raw/codex_CK_repro_2026_09_27",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  }
+ ],
+ "hazards": [
+  {
+   "id": "HZ-wad-0p8-misattributed",
+   "level": "BLOCKED",
+   "text": "황화물 점착의 문헌 귀속값 — 원전을 확인하니 다른 값이다. 문헌값으로 인용하지 않는다.",
+   "record": "db/properties/citation_hazards.json"
+  },
+  {
+   "id": "adhesion-aJ-errata",
+   "level": "정오표",
+   "text": "옛 SE|NCM `adhesion.json` 은 AFM 실험값(aJ, 에너지)을 J/m² 로 읽은 자리가 있었다 — **J/m² 실험 기준값은 repo 에 없다**.",
+   "record": "db/properties/adhesion.json"
+  },
+  {
+   "id": "mlip-wad-absolute-ban",
+   "level": "금지",
+   "text": "MLIP 절대 W_ad 는 인용하지 않는다 — 같은 프로토콜의 순위·비만 (A′ 예외는 탐색·DEM 민감도 시나리오 용도로만).",
+   "record": "db/governance/decisions.json"
+  },
+  {
+   "id": "old-numbers-no-reuse",
+   "level": "금지",
+   "text": "옛 SE|NCM 캠페인 숫자를 이 캠페인의 기준값으로 재사용하지 않는다 (계획 §1 ⚠3).",
+   "record": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+  },
+  {
+   "id": "wad-sese-values-not-for-dem",
+   "level": "금지",
+   "text": "SE|SE 4층 값(입방 기준 0.277 · epitaxial 기준 0.354 J/m²)은 **내부 방법 점검용** — DEM 파라미터·계면 점착 서열·파괴 위치 판정에 쓰지 않는다. +0.0775 는 참조 변경 효과이지 순수 전단·문헌 차의 확정 원인이 아니다 (Codex BX Q6).",
+   "record": "db/properties/wad_sese_4L_result_2026_09_25.json"
+  }
+ ],
+ "open": [
+  {
+   "state": "진행",
+   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → v3 → CA NO-GO → v4 → CB 조건부 GO → v5 → S1 봉인 ✅ → S2 ✅ → **S3 봉인 ✅ (09-26)** → 🔴 **S4-1 첫 잡 실패 (09-26 · 쌍극자 구간 → 개정 2 · S3v2 비준 ✅)** → ⏭ **S4** (V2 relax V100 · S3v2 입력 → 2단계 → V4 GPU 시험 → V4 9잡) · V5 RESOURCE_BLOCKED → G5 NOT_TESTED → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
+  },
+  {
+   "text": "✅ 격자 정합 규칙 = **(a) 흡착층을 SE 에 맞춘다** (`D-2026-09-25-wad-lattice-matching-rule-a` · 09-25) — SE 슬랩 한 기하 · 변형률 x·y·Å·원자당·면적당·밀도 병기",
+   "state": "결정"
+  },
+  {
+   "text": "A′ — S1 ✅ · S2 ✅ · **S3 봉인 ✅ (09-26 · 1저자 비준 · `db/properties/wad_aprime_s3_seal_2026_09_26.json` · manifest 2a0e9a9b5f5fef4a…)** · 개정 1 ✅ (D3 항 = QE 출력). **S4 실행 집합**: V2 relax 4 (V100 · 지금) → 2단계 → V4_s_outer_A 9 (gabia GPU 시험 뒤). 제외: V5 전부 (RESOURCE_BLOCKED 실측 → G5 NOT_TESTED · 갈래0) · V4 e70. INCOMPLETE 3 세고 제외.",
+   "state": "S4"
+  },
+  {
+   "text": "D3 3체(ATM) 후처리 — 같은 기하에서 따로 보고: **V2 ✅ (09-27)** ΔW_ATM −0.069 J/m² (8 Å · W 의 −16 %) · −0.076 (10 Å) · 헤드라인 2체 유지 · 다음 DEM 회신에 별도 열 · V4 는 집계 때 → ✅ DEM 전달: 회신 7 (Ag|그래핀 3체 열 · 벤젠 3체) · 회신 8 (C–C 3체 0.257 · Ag–C 0.366 · 0.373 = 민감도 열 · 짝 ② = 2체 기본) · DEM 8차 수령 (09-30)",
+   "state": "V2 계산 ✅ · DEM 전달 ✅ (회신 7 · 8)"
+  },
+  {
+   "text": "DEM 5차 회신 (V2 두 값·라벨 수령 · SE 쌍 보류 · 소모델 질문) → 회신 6 (프로브 3 변형 불합격 · 없음) 발송 ✅ → **DEM 6차 확인 수령 (09-26 밤 · 열린 질문 0)**: SE 쌍 보류 유지 · Ag–C 값으로 질문 ② 기하 · C–C 는 DEM 문헌 카드 · 벤젠 조각 참고 대기. ⏭ 남은 인계 = V4_s_outer_A 9 잡 (gabia · 탄성 뒤 GPU 시험) 결과(eV/조각 · 참고) → ✅ 회신 7 (벤젠 참고 · 3체 열) → DEM 7차 (짝 원칙 ①–④) → 회신 8 (C–C 0.332 · 둘 다 시나리오 · 짝 ② = 2체) → **DEM 8차 수령 (09-30 · 열린 질문 0 · 새 요청 없음 · DEM 박리 시험은 질문 ② 기하부터 · SE 쌍 보류 그대로)** → **10-01 SE 쌍 전체 계면 UMA+D3 예측** (1저자 결정 · 카드 봉인 → gabia 계산 → 게이트 통과 · 결과 기록) → **회신 9 초안** (라벨 네 문장 · 방법 섞인 비 · 탄소 DFT 경로 없음 · V5 비교 계획 · 사용자 검토·발송 대기) → ✅ **회신 9 발송 · DEM 9차 수령 (10-06)** — SE 쌍 = 별도 칸 'UMA+D3 예측 · 미검증' (보류 그대로) · Ag–C 행 기본 = 흑연 3층 (P1b) · 새 요청 없음 → ⏭ **회신 10** (V5 은 라벨 · LPSCl|Ag 재합의 · Ag|흑연 라벨 · CU 덧붙임) — 외주 2차 단계 1–4 반송 뒤.",
+   "state": "회신 9 발송 · DEM 9차 수령 (10-06 · 새 요청 없음) · 회신 10 은 외주 2차 반송 뒤"
+  },
+  {
+   "state": "반송 검사 ✅ (10-15 · G3 PASS · G4 INCOMPLETE) · e70 은 외주 2차 a4 → 미수렴 (10-26 · 종료 · 라벨 '미완료')",
+   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI → v5 → CJ → **v6 → Codex CK GO** (09-27 · 기술 검토 · MANIFEST 8118bbc0… · 개정 v6.1 digest 8a1554e9… · 문구 정리만) → ✅ **1저자 비준 = 발송 (09-30 · \"이거 외주 보냈엉\" · 개정 v6.1 ratified · 결정 active · ⚠ 비준 기록이 발송 뒤)** → ⏭ 업체 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선). GO ≠ 실행·인용 승인. · 배포 zip `wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip` (sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json) 을 1저자가 보관하다 **09-30 업체에 발송** (업로드 사본 sha 대조 일치). ⏭ 반송 오면 `python3 tools/wad/build_v5_vasp_package.py --check --out db/inputs/wad_aprime_v5_vasp_2026_09_27 --manifest_sha256 8118bbc0… --ret <반송 폴더>`. → ✅ **반송 (10-15)**: OK 17/18 · G3 PASS · G4 INCOMPLETE (e70 far 미수렴) · 결과 기록 `db/properties/wad_aprime_v5_vasp_result_2026_10_15.json` · UMA 단일점 12 (kgy 10-15) → e70 far 한 잡은 개정 4 (a4) 로 외주 2차에 실었고 10-26 파일럿에서 두 단계 다 미수렴 → 개정 4 대로 종료 · 은 G5 · §1b ② 는 외주 2차 단계 1–4 반송 뒤 한 번에."
+  },
+  {
+   "state": "단계 1–4 진행 (10-27 해제 발송) · 반송 대기",
+   "text": "**외주 2차** (탄소 작은 모델 P2′ + 은 a4 · 카드 `db/properties/wad_p2small_vasp_card_2026_10_15.json` · 개정 4 `db/properties/wad_aprime_pilot_prereg_v5_amendment_4_e70_rerun_2026_10_15.json`) — 비준 10-17 → 빌드 ①–⑤ (10-17 ~ 22) → Codex CZ · DB · DC · DD NO-GO → **DE GO** (v5 · MANIFEST 714324cc…) → 발송 10-23 → 파일럿 반송 10-26 (탄소 OK · 은 a4 미수렴 → 종료) → 등록부 봉인 (999aa2da…) → 단계 1–4 해제 (R2-REL-2026-10-26) 발송 10-27. ⏭ 반송 오면 `python3 tools/wad/build_round2_vasp_package.py --check` → `--collect` · 기록 `db/properties/wad_round2_build_log_2026_10_17.json`. GO ≠ 실행·인용 승인."
+  }
+ ],
+ "log": [
+  {
+   "date": "2026-09-23",
+   "stage": "dem",
+   "text": "DEM 트랙이 Ag–C 인터레이어 점착을 요청 — P1 LPSCl↔Ag · Ag↔흑연, P2 LPSCl↔탄소, P3 선택."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "review",
+   "text": "계획 v1 내부 리뷰 **NO-GO** → v2 Codex BV **NO-GO** (구조 검증부터) → 계획 v3."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "decision",
+   "text": "SE 종결 = **대칭 슬랩 두 장** · 분산 헤드라인 = D3(BJ) 2체, ATM 은 따로 — 1저자 비준."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "dft",
+   "text": "대칭 슬랩 빌더·검증기 (`tools/wad/se_sym_slab.py`) — comp1 에는 −4 축이 없고 양면은 C2x 로 같다."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "dem",
+   "text": "DEM 회신 — JKR 의 **w = W** · 헤드라인 고정기하 W_sep · G_c 는 띠. P2(LPSCl|흑연)를 P1 과 같은 우선순위로 수용."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "ops",
+   "text": "6층 SE|SE 가 CPU 추정으로 gabia 48 GB 를 넘었다 — KISTI 는 09-15 에 종료돼 이전 제안은 반려."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "review",
+   "text": "Codex BW — 전체 계면 절대 W 로 넘기기 **NO-GO**, 작은 주기 모델 파일럿 **조건부 GO (A′)**, 4층 식 계수 4."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "decision",
+   "text": "**A′ 채택** · SE|SE 경보 v2 (계수 일반형) · gabia GPU 공존 예외는 **실행 전 철회** · DEM 회신 2‴ 발송 승인."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "4층 SE|SE 입력 — 110/98 원자 · 진공 15 Å · 벌크 k 를 슬랩 면내 밀도에 맞춤 · 러너에 PP **내용** 해시 게이트."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "ops",
+   "text": "V100 컨테이너가 다시 만들어져 QE-GPU 가 사라졌다 → kgy 에서 NVHPC 를 옮겨 재빌드 · 09-13 기준 에너지 재현으로 빌드 검증."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "V100 실행 — SCF 3/5 완료 (피크 VRAM 32,038 / 32,768 MiB = 98 %) · PBE 이완 진행 · 판정 보류."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "webapp",
+   "text": "`/adhesion` 섹션 신설 — 이 원장을 읽는다. 앞으로 사실은 `log` 에 덧붙인다."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "V100 러너 결함 발견·수정 (`run_sese_gpu.sh` ⑩): 기록된 pw.x PID 가 곧 사라진 보조였다 (hpcx mpirun 은 래퍼 — 실제 pw.x 는 한 단 아래). 그래서 자기 VRAM 칸이 세 잡 모두 **거짓 0** 이었고, 가드는 죽은 PID 와 래퍼만 TERM 하게 돼 있었다 (래퍼만 죽으면 pw.x 는 고아로 계속 돈다). 고친 뒤: comm 으로 pw.x 를 찾고 · 트리 통째로 PID+comm 대조로 멈추고 · 못 잰 칸은 '—'. selftest 48/0 · 돌연변이 5종 빨간불. ⚠ V100 에서 **지금 도는 인스턴스는 옛 코드**다 — 그 기계에선 VRAM 가드(44 GB)가 32 GB 장에서 안 걸리고 호스트 가드(4 GB)도 여유 119 GB 라 발동 가능성이 낮아 재시작하지 않는다."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "V100 **S 바깥 PBE 이완 끝** (rc 0 · 러너 완료 판정 통과 = 수렴 + BFGS 종료 · 벽시계 75,969 s = 21.1 h) · 피크 합계 **32,378 MiB / 32,768 = 98.8 % — 여유 390 MiB** (이 장비 최대치). **Li 바깥 이완 23:13 시작** (30,258 MiB · 89 %). 경보 v2 판정은 두 이완이 다 끝난 뒤 `--collect`. ⚠ 추정: 이 장비(32 GB)에서 **5층 이상 슬랩은 안 들어간다** — 4층이 사실상 상한."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "S 바깥 이완 수렴 내역: `bfgs converged in 200 scf cycles and 199 bfgs steps` — **nstep 200 에서 한 스텝 남기고** 수렴 · 마지막 Total force 0.0018 Ry/Bohr · $STORE 백업 확인 (`/home/ubuntu/runyourai/1/runs/wad_sese_4L_2026_09_24` · pw.out mtime 23:13:16). ⭐ **결과 전 선언 (재개 규칙)**: Li 바깥 이완이 nstep 200 에서 미수렴(`The maximum number of steps has been reached`)으로 끝나면 → 마지막 좌표로 **이어서 이완 1 회** (verified-carry · 물리 설정 불변 · nstep 200) · 그래도 미수렴이면 멈추고 1저자에게 보고. 집계는 `se_sym_slab.py --collect <RUN> --qe_in db/inputs/wad_sese_control_4L_2026_09_24` (기본 입력은 6층이다)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "V100 **Li 바깥 PBE 이완 끝** (09-25 08:12 · rc 0 · 러너 완료 판정 통과 · 32,355 s = 9.0 h · 피크 30,274 MiB) ⇒ **5잡 전부 끝**. 집계는 `--collect <RUN> --qe_in db/inputs/wad_sese_control_4L_2026_09_24` (옛 러너 안내문엔 --qe_in 이 없다)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "⛔ **정정 (09-24 러너 결함 줄)**: *'V100 에선 VRAM 가드(44 GB)가 32 GB 장에서 안 걸려 발동 가능성이 낮다'* 는 **틀렸다**. V100 발사 명령이 `KILL_MIB=32700` 을 줬고 S 바깥 이완 피크 32,378 MiB 는 그 문턱에서 **322 MiB** 떨어져 있었다. 발동했으면 옛 `_stop` 이 래퍼만 TERM 해서 pw.x 는 고아로 남았을 것이다 — 운이었다. 러너는 ⑩ 으로 고쳤다 (트리 통째로 · PID+comm 대조)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "SE|SE 4층 **집계 — 경보 v2 발화**: 이완 PBE W_cleave 가 운영 구간 0.3–0.7 J/m² **아래** (원인 미분류 · 합격선 아님). 무이완 ≥ 이완 조건은 정상 · missing 없음 · −TS 0 · Li 바깥 105 BFGS 스텝 수렴 · 백업 같음. 문헌 비교 기준(Pustorino γ_rich + γ_def)은 우리 W_cleave 와 같은 정의임을 검산했다. 원인 후보 5 개와 결과 전 문턱을 붙인 점검 제안 2 개(이완 좌표 PS₄·속층 변위 · 벌크 이완 1잡) → 결과 기록. 값은 원장·화면에 싣지 않는다."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "SE|SE 경보 후속 — **점검 B** 벌크 원자 이완: 0 스텝 (이미 극소 · ΔW 0) · 그러나 벌크 응력 y–z 전단 10.8 kbar. **점검 B′** a·b 고정 c 자유 vc-relax: c 가 y 로 3.4° 기울고 z −1.7 % · ΔW′ 가 실행 전 문턱 0.05 J/m² 를 넘었다 ⇒ **원인 후보 ②′ (기준 벌크의 셀 모양)** 가 차이의 일부를 설명. Li 바깥 슬랩 뼈대의 전단이 벌크 기울기와 거의 같다 (S 바깥은 절반). 사후 보정값은 경보 판정을 대체하지 않는다 → Codex BX. ⚠ 범위 밖 발견: comp1 V0 셀이 이 설정에서 전단 응력을 품는다 — 다른 계산 영향은 1저자 결정."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex BX 회신** — 원인 진단 조건부 GO · '방법 검증 완료'·DEM 승격 NO-GO. **P0**: 완료 판정기가 QE 실패 문구(`bfgs failed … convergence not achieved`)를 완료로 통과시켰다 → 러너·집계기 둘 다 '마지막 실행 · bfgs converged 명시 요구 · 실패 문구 거부' 로 수정 (selftest 62/62 · 54/0 · 음성 5). **P1 정정**: 4층 값은 '선택한 참조에 대한 슬랩 쌍 초과에너지'(두께 수렴 γ 합 아님) · 'Pustorino ±0.16 보고' 귀속 철회(우리 산술) · '이미 원자 극소' → '힘 기준 만족 · BFGS 가 추가 감소 못 찾음' · +0.0775 는 참조 변경 효과(순수 전단 아님) · Pulay 등방성 보장 아님 · 절반 전단은 미수렴 근거 아님. DEM 허용 서술 확정 (Q6). W′ 운영 판정은 새 ID 로 — 1저자."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**파이프라인 v4** (1저자 '권장하는걸로 다시 짜자' → `D-2026-09-25-wad-reference-state-policy`): 참조·기판 **제약 상태 라벨** 의무 · SE|SE 두 참조 병기 · comp1 V0 정본 불변(응력은 조건) · P1·P2 = '지정 comp1 셀 조건부' · P0 규칙 명문화. P0 원출력 확인 ✅ (네 잡 마지막 실행 명시 수렴 · 성분별 힘 < 1e-3). 사후 아핀 분석: Li 바깥 가운데는 균일 전단으로 대부분 설명 · S 바깥 가운데 Li 는 아핀을 빼도 1.33 Å (Li 자리 이동). Q3″ 대조: 끝점 동일 ✅ · 같은 기판 상태는 정합 규칙 (a) 일 때 ✅(권고) · 조건 누락(잔류 응력)은 결정으로 명시. 다음: 벌크 수치 민감도 7 SCF (`--bulk_sens` · 진단 R1·R2) → A′ 사전등록."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**벌크 수치 민감도 7 SCF 끝** (V100 27 min · 새 러너 ⑩ 이 실제 pw.x PID 를 잡음). 내장 대조 ✅ (2e-8 Ry). **R1 ✅** 입방 셀 σ_yz 가 52/70 Ry × k3/k4 네 설정에서 같다 — 전단은 수치 아티팩트가 아니다. **R2 ✅** 두 참조의 에너지 차(ΔW′)가 네 설정에서 같다 (스프레드 0) — 참조 변경 효과는 수치 설정에 강건. 52 Ry/k3 는 이 벌크의 에너지 차·응력에 사실상 수렴 (70/k4 대비 −0.16 meV/atom). ⛔ 슬랩 W 수렴 인증은 아니다. v4 ② 끝 → ③ A′ 파일럿 사전등록으로."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "1저자 '이거 하게 전체적으로 하고 DEM 보낼 회신도': **결정 7 = (a) 흡착층을 SE 에 맞춘다** (`…-lattice-matching-rule-a`) · **A′ 파일럿 사전등록 카드 초안** (V1 대조 · V2 Ag|graphene 직접 DFT registry ≥ 4 · V3/V4 조각 진단 eV/조각 · V5 SE 2층+Ag 3층 ≈ 200 원자는 CPU 프로브 41 GB 통과 시에만 · UMA 대조 5점 ≤ 0.10/0.05 · Li→Ag 침투 1.5 Å = 반응 계면 무효 · 갈래 0–3 · 총상한 140 GPU-h 제안) → **Codex BY 프롬프트** 발송 대기 · **DEM 회신 2‴+부록 발송판** (정합 규칙 · 라벨 · Q6 부록 · 숫자는 부록 둘뿐 · '내부 점검용' 문장 고정)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex BY 회신 NO-GO** (A′ 카드 v1 · 봉인·본계산 보류 · 경로 찬성): 핵심 차단 = SE 고정↔전 원자 이완 상충 · G5 5점 계수(분리 끝점 하나는 W 아님) · Ag₁₃ 홀수 전자. **카드 v2** 로 대응 — 4층 조성 정정(Li₅₂P₈S₄₂Cl₈ 110 · Li₄₄P₈S₃₈Cl₈ 98) · SE **부분 고정 마스크**(계면 반대쪽 절반) + 결정 7 개정 proposed · G5 = P1′ 비자명한 W 쌍 5 · 분모 5 고정 · 상태 어휘(PASS/FAIL/INCOMPLETE/BLOCKED/RESOURCE_BLOCKED/NOT_TESTED) · Ag₁₃·C₂₄H₁₂ 제외 · −TS 무효 규칙 삭제 · W = `!` 자유에너지 + E_int 병기 · 분리 끝점 양쫑 간격 ≥ 8 Å + dipfield(eamp=0) 규약 · **G2 `--interface_check` 구현**(음성 5 · 돌연변이 4 빨간불) · G3/G4 대상군별 대표점 · 장치별 한도(gabia 44,000 / V100 31,000 MiB) · GPU-h ≠ 경과시간 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4. ⚠ 자원 추정(SE|SE 실측 32 GB 스케일): **V5 ≈ 246 GB** (Ag 19 e PP) → RESOURCE_BLOCKED 예상 → 갈래0(G5 NOT_TESTED · UMA 예측 내부 전용) 이 기본 경로일 가능성. V3/V4 37–42 GB = gabia 만 · V2 3 GB. **DEM 3차 회신 수령** — 정합 규칙·라벨 수용 · 부록 값 미사용 확약 · 부탁 1(잔류 응력 GPa) · 부탁 2(민감도 시나리오는 DEM 초안). 선행 배치 `db/inputs/wad_aprime_prep_2026_09_25` (Ag·그래핀 a₀ · comp1 D3 응력 · 9 잡 · 읽는 규칙 결과 전 등록) · 집계 `--aprime_prep` · vc-relax P0 갈래 (`_done`·`parse_pw`)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**1저자 비준 — A′ 카드 v2 권고 5 그대로** ('ㅇㅇ 권장하는걸로 진행' · 설명 5건 재청취): `D-2026-09-25-wad-aprime-card-v2-choices` active · 결정 7 개정 `…-amend-1` active. 값이 바뀌는 것은 없다 (계산 전 설계·절차 선택 · SE|SE·벌크 민감도 값 무영향). Ag·C·H PP 해시 kgy 원본에서 채움 (Ag z 19 실측 → V5 246 GB 추정 근거). → **Codex BZ 재심 프롬프트** `codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` (Q1–Q7 · 발송 대기) · 선행 배치는 카드 밖으로 두고 V100 전송 준비."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex BZ 회신 NO-GO** (v2 봉인·S2 보류 · 비준 5 선택 유지): G2 우회 4경로 실측 재현(마스크 누락/잘못됨 통과 · NaN 통과 · 흡착면 뒤집힘 통과 · V2 검사 경로 없음) · G5 전체 평균만(종결별 상쇄 반례) · G3 조작 미정의(8→10 이동은 영상 6) · G5↔G3/G4 미연결 · S1/S3 경계(UMA sha 를 S3 로 미룸). → **G2 재작성** (`interface_check`: 마스크 필수·정책 집합 일치 `fixed_mask_policy` · 비교 전 유한성 · 법선 초기 선언 `normal_sign` · V2 모드 substrate/ads 선언 + 측방 제약 · CLI `--fixed_idx` 필수 · `--mask_policy`) selftest 110/110 · BZ 음성 9 · 돌연변이 5 빨간불. **카드 v3**: G5 종결별 평균 복구 + G3·G4 PASS 전제 · G3 두 셀 조작(영상/거리 분리) · Ag₄ 비영 초기 자화·절대자화 · S3 전 예외 4 · S1 봉인 범위(UMA sha·D3·코드·마스크 규칙·registry 규칙·결정 내용 digest) · RESOURCE_BLOCKED 예상/실측 · DEM 회신 4 §3 을 '확인 요청' 으로. → Codex CA 프롬프트."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex CA 회신 NO-GO** (v3 봉인·S2 보류 · BZ 주요 수정은 이행 인정): **P0** V2 측방 마스크가 선택 입력 — 생략·Ag 만·움직인 원자 제외 부분집합이 통과 (실측 재현) · **P1** `int(i)` 가 0.9·−0.9·True 를 조용히 변환 · G3 절댓값·끝점별 기록·문구 · G5 문구 '종결별' 누락 · CPU 프로브 예외 누락 + electron_maxstep 오해 · registry 중점의 주기영상 반례(x 0.1·9.9). → 코드: 금속 기판 모드 측방 마스크 **필수 + 흡착층 전체 집합 일치** · PS₄ 모델 측방 제약 금지 깃발 · `_validate_idx` 타입 검사(변환 없음 · bool/float/중복 오류) · CLI 파싱/검증 분리 — selftest 120/120 · CA 음성 10 · 돌연변이 8 빨간불 · CLI JSON 소수 rc 2. **카드 v4**: G3 |ΔW|·ΔE_far/ΔE_bound/ΔW 기록·허용 문구 · G5 문구 종결별 · 프로브 예외 CPU/GPU·scf 한정·원출력 보존 · registry Σ 집합·최소영상 중점·동률(ID→오프셋)·감기 · Ag₄ '정책' 문구 · S1 빈 항목 봉인 불가. → Codex CB 프롬프트."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**선행 배치 9 잡 끝** (V100 62 min · rc 0 · 깃발 0): Ag a₀ **PBE 4.1448 · PBE+D3 4.0705** (실험 4.086) · 그래핀 2.4668/2.4660 · 수렴 규칙 ✓ · Pulay ✓ · 내장 대조 ✓. **정합 변형률 (헤드라인 PBE+D3 격자 · 결정 7 시행)**: P1 Ag +0.85/−0.19 % · P2 흑연 +1.94/+0.89 % · V2 그래핀-on-Ag +1.08 % → 3 % 재개 규칙 미발동. **라벨 응력 PBE+D3** (GPa 인장+): 입방 고정 xx +0.71 · yy +2.65 · zz +2.66 · yz −1.11 · **p −2.01 (인장 정수압)** / 면내 고정·c 이완 c 9.40 Å (−6.5 %). ⚠ 지정 comp1 셀은 PBE 평형이라 D3 아래서 −2 GPa 인장 상태 — 라벨 조건 (참조 셀 변경은 새 결정). DEM 회신 4 표에 PBE+D3 줄 채움 · S1 결박 파일에 값 기록."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex CB 조건부 GO** (CA 코드 결함 해제 · 본 계산 승인 아님): 남은 조건 = registry 전역 d_min 동률 집합 · Σ∖{A} 빔 차단 · GPU 프로브 문구 · 선언한 S1 미완료(UMA·선행 값·빌더). → **빌더 `tools/wad/build_aprime_interfaces.py`** 작성: V2 (Ag(111)√3 4층 + graphene 2×2 · registry 4 · 변형률 +1.08 %) · V3/V4 (Ag₄·C₆H₆ on 정본 4층 · registry A/B = 108/109 · 93/94) · V5 (SE 2층 1×2 116 + Ag 84 = 200 · +0.85/−0.19 %) · `registry_select` (전역 d_min · 이미지 열거 · 감기 · Σ∖{A} 차단) · `make_endpoints` (직접·영상 ≥ 8 · c · dipfield 구간) · 변형률 3 % 가드 · selftest 20/20 · 돌연변이 4 빨간불. **카드 v5 = S1 봉인 후보** (UMA·PP·D3·코드 sha 결박 · 선행 값 · registry 명세 · 추론 모드 default 제안) → 1저자 비준 대기."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**A′ 카드 v5 S1 봉인** — 1저자 '가장 권장하는거면 비준' (카드 전체 + UMA 추론 모드 default). content_digest 126aa58ebdc4803b… · 결정 `D-2026-09-25-wad-aprime-s1-seal` (active). 설계·선택 규칙·결박의 봉인이며 본 계산 승인 아님 (CB). 다음 S2 = 빌더 기하 생성 → 최적화 전 기록 → UMA+D3 이완(default · gabia · b2o3 뒤) → interface_check → CPU/GPU 프로브(S3 전 예외 ③) → S3. **DEM 회신 4 발송본** 작성 (1저자 발송). li2s 는 추석 뒤."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**DEM 4차 회신** — PBE+D3 잔류 응력 라벨 수용(p 검산 일치) · '한 기하' 성립 (조건 (a) 종결별 W · (b) P1/P2 마스크 깊이 동일 — 둘 다 우리 카드와 같다) · UMA 미검증 값은 '작은 모델 대조 미실시' 라벨 · 시나리오 초안 (i) 소모델 직접 DFT W 기준 / (ii)(iii) 전체 UMA registry 최소·최대 / (iv) (i)−D3. → **회신 5 초안**: (i) 범위 정정 — 우리 카드에서 직접 DFT W 가 나오는 소모델은 V2(Ag|그래핀)뿐이고 SE 계면 V5 는 RESOURCE_BLOCKED 예상 → SE 계면엔 (i) 기준선이 없을 수 있음을 프로브 전에 알린다 · (iv) V2 가능 · (ii)(iii) 내부 전용 기본(재합의)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**A′ S2 완료 → S3 패키지** — gabia UMA+D3 이완 12 모델 (default · simple-dftd3 1.6.0 설치 · MixedPBCError → 3축 pbc 수정 후 재실행) 전부 수렴. 카드 G2 후검: 후보 9 (V2×4 9스텝 · V4_s_outer_A · V5×4 변위 1.7–2.5 Å 깃발 0) · INCOMPLETE 3 (V3 두 종결 Ag₄ 결합 +15.7/+17.1 % 개방 · V4_li_outer Li 상승 1.46 Å < 1.5) — 세고 제외. gabia 가 산출물을 직접 커밋(30e1e90eb · 토큰) · repo 에서 sha 12/12 대조. `build_aprime_s3.py` (13/13 · 돌연변이 1): 끝점 재구성 · 표본 ⑤ · G3 (i)(ii) 셀 · G4 3변형 · V2 QE relax if_pos 제약 + 2단계 규칙 · 프로브 5 · QE 입력 38 · D3 결박 검사 입력 (외부 −0.5037974 Ry). ⏳ S3 비준 → S4."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**S3 전 예외 ③ CPU 프로브 (gabia · 70 Ry · 분리 셀)**: V5 ×4 = **89–109 GB** (밴드 1217–1274 · Ag 19 e) → 52 Ry 환산 57–70 GB > 48 ⇒ **V5 RESOURCE_BLOCKED (실측 근거)** → 카드 갈래0: **G5 NOT_TESTED** · UMA 전체 계면 예측 내부 전용. V4_s_outer_A far 70 Ry = 52.4 GB > 48 ⇒ G4 e70 변형 gabia 불가 ('ecut 미검증') · 기본 52 Ry 는 다음 프로브 (~34 GB 예상 · GPU 피크는 1.2–1.45×). V2 는 V100 (3 GB). 기록 `db/raw/wad_aprime_s3_probe_2026_09_25/`."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "CPU 프로브 (52 Ry · V4_s_outer_A 세트 7): bound/far/k1 **33.6 GB** · G3 c+2 셀 35.4 GB < 48 ⇒ GPU 시험 허가 (b2o3 s4 뒤 · 44 GB 한도가 실측으로 정한다). 잠정 S4 실행 집합 = V2 relax 4 (+2단계) + V4_s_outer_A 9 잡 (bound·far·G3 3·G4 k1 2·s05 2) · V5 전부·V4 e70 제외."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**D3 결박 검사 FAIL** (S3 전 예외 ② · V100 20원자 255 s): QE `DFT-D3 Dispersion` **−0.50431702** vs simple-dftd3 **−0.5037974 Ry** → |Δ| 5.2e-4 (문턱 1e-5 의 52배). 컷오프 스캔(30–200 Bohr): 기본 60 Bohr 가 외부값 재현 · 200 Bohr 로 −0.50410 까지 접근 — 격차의 ~60 % 는 컷오프, **0.2 mRy 는 구현 차(미확정)**. 문턱 안 바꿈. → **개정 1 (proposed)**: UMA+D3 W 의 D3 항을 **QE 출력 D3(같은 끝점)** 로 정의 (W_UMA+D3 := W_UMA + ΔE_D3,QE) · 외부 D3 는 기하 생성 라벨 · 새 계산 0. 1저자 비준 대기 (S3 비준과 함께)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S3 봉인 + 개정 1 비준** (1저자 '비준'): `db/properties/wad_aprime_s3_seal_2026_09_26.json` content_digest a1074e51b64d98d2… · 결정 `D-2026-09-26-wad-aprime-s3-seal` · `D-2026-09-26-wad-aprime-amend-1-d3-from-qe` active. S4 실행 집합 = V2 relax 4 (V100) + V4_s_outer_A 9 (gabia GPU 시험 뒤) · V5·⑤·V4 e70 제외 (RESOURCE_BLOCKED 실측) ⇒ **G5 NOT_TESTED** (갈래0 · UMA 전체 계면 예측 내부 전용 · DEM 회신 5 §3 과 일치). W_UMA+D3 := W_UMA + ΔE_D3,QE. 다음: V100 에 V2 relax 4 발사."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S4-1 첫 잡 V2_top_fcc_relax 실패 (V100 · 2.8 h · 기술)** — nstep 200 소진 · 199/199 스텝 energy_new > energy_old · bfgs 이력 초기화 22 회 · 고정 Ag 바닥층 3 원자에 +0.195 Ry/Bohr 씩 같은 +z 힘 = 에너지·힘 불일치. **원인** = 쌍극자 보정 톱니 불연속 구간 '[c−1.5, c−0.5] Å' 가 기판 바닥층(z 0.5) 의 **주기 영상 1.0 Å 아래** (QE 문서: 'change of slope must be in the empty region, or unphysical forces'). 종전 검사는 흡착층 쪽만 보고 `empty_in_both_endpoints: True` 를 상수로 적었다 (한쪽 검사 + 상수 깃발 · 내 설계 오류). → `dip_region` (집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 미달 SlabError · selftest 26/26 · 16/16) → **S3v2 패키지** `db/inputs/wad_aprime_s3v2_2026_09_26` (구조 sha 38 동일 · pw.in 38/38 emaxpos/eopreg 만 변경 · 여유 4.0/4.0 Å) → **개정 2 · S3v2 봉인 proposed** (`D-2026-09-26-wad-aprime-amend-2-dipole-region` · `D-2026-09-26-wad-aprime-s3v2-seal`) · 재개 규칙(첫 10 스텝) 결과 전에 박음. 실패 실행 값 사용 금지 · 진단 기록 `db/raw/wad_aprime_s4_v2_2026_09_26/…_fail1_dipreg_diag_2026_09_26.json`. 1저자 비준 대기 → V100 재발사 (코드 갱신 kgy v100-serve 경로)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**개정 2 + S3v2 봉인 비준** (1저자 '비준' · 원인 확정 뒤): 개정 2 content_digest e2bec8f0a7f9eac0… · S3v2 봉인 6df8c01382a17b61… · `D-2026-09-26-wad-aprime-amend-2-dipole-region` · `D-2026-09-26-wad-aprime-s3v2-seal` active · v1 봉인 결정 superseded. 다음: V100 코드 갱신(kgy v100-serve → archive) → S3v2 입력으로 V2 relax 4 재발사 → 재개 규칙(첫 10 스텝 · Potential amp. ≤ 0.05 Ry)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S4-1 완료 (V100 · S3v2 입력 · 18:58–19:16)** — V2 relax 4 잡 전부 `bfgs converged in 2 scf cycles and 1 bfgs steps` (잡당 ≈4 분 · 2.75 GB) · 첫 SCF 톱니 진폭 **0.0035 Ry** (실패본 7.26 Ry 의 1/2000) · 초기 Total force 0.0028–0.0032 → 0.0025–0.0027 Ry/Bohr · uphill 0 ⇒ **재개 규칙 통과**. 읽기: UMA+D3 이완 기하에서 PBE+D3 힘의 최대 성분이 이미 forc_conv_thr(1e-3 Ry/Bohr ≈ 0.026 eV/Å) 아래 — d₀ 는 UMA 값과 사실상 같다(2단계에서 수치로 확인). 다음: 원출력 회수(V100 → kgy → repo db/raw) → `--v2_ed` 2단계 입력 4 세트 → 부록 봉인 → V100 실행."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**V2 2단계 입력 생성** (`build_aprime_s3.py --v2_ed` × 4 · S4-1 원출력 43cf9c6fe): d₀ = 3.3017 (top_fcc·bridge) / 3.3045 Å (hollow_fcc·top_hcp) — UMA+D3 시작값 3.30 과 사실상 같음 · E(d) = d₀ −0.3/+0.3/+0.6 · far 8/9 Å · 쌍극자 여유 4.0/4.0 · 잡 **29** (registry 4 × 5 + 대표점 top_fcc 의 G3 3 · G4 6). 부록 봉인 `db/properties/wad_aprime_s4_v2_stage2_seal_2026_09_26.json` **proposed** → 1저자 비준 → V100 실행."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**V2 2단계 부록 봉인 비준** (1저자 '비준' · content_digest 9085cb4aec2bf184…) → V100 29 잡 실행 (kgy serve → archive → 4 세트 순차 · tmux s4v2c)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**UMA 쪽 S4 에너지 (kgy · fairchem 2.21.0 · 체크포인트 결박값 07068e9c… · default)**: S1 결박(gabia 2.19.0)과 버전이 달라 S2 relaxed 4 구조로 교차대조 → |Δ| ≤ 0.005 meV ⇒ 등가로 기록 (`wad_aprime_s4_uma_env_xcheck_2026_09_26.json`). 미리 본 것(판정 아님): UMA 단독 W −0.088 · 외부 D3 항 +0.488 → UMA+D3 ≈ 0.40 J/m² (정본은 QE D3 항 · 개정 1). V100 29 잡 진행 중 → 원출력 회수 → `collect_aprime_s4.py`."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**V2 2단계 V100 진행 — 27/29 + 1 실패**: top_hcp·bridge 5/5 · hollow_fcc 진행 · top_fcc 12/14 — `V2_top_fcc_G4_k1_far` (k 7×7 far) SCF **200 회 미수렴**(정확도 1.1e-6 ↔ 5.3e-6 진동 · sloshing · 1212 s) → 러너 정지로 G4_s05 2 잡 미실행. **1저자 (가)**: 보조 잡 `V2_top_fcc_G4_k1_far_b01` (mixing_beta 0.3 → 0.1 만 · `db/inputs/wad_aprime_s4_v2_stage2_supp_2026_09_26`) 재실행 + s05 2 잡 실행 · 원 잡 입력·실패 출력 보존 · 부록 정오 1 `wad_aprime_s4_v2_stage2_erratum_1_2026_09_26.json`. 집계기 `--supp` 대체 규칙(원 FAILED 보존 · 보조 OK 만 대체 · selftest 14/14)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**부록 정오 2 — 빌더 결함**: V2 2단계 G4 smearing ½ 두 잡(s05_bound · s05_far)의 pw.in 이 **빈 파일**이었다 (`open(p,'w').write(open(p).read()…)` — 쓰기용으로 먼저 열어 비운 뒤 읽음 · V100 에서 3 s rc 1 'could not find namelist &control'). S3 본 패키지(V4·V5 s05)는 읽고-쓰기 순서라 정상. 고침: 빌더 순서 + degauss 가드 + selftest(s05 내용 · base 동일 · 두 패키지 빈 pw.in 0 → 19/19). 보조 잡 `V2_top_fcc_G4_s05_{bound,far}_r1` (규칙대로 재생성 · sha 4005920d… · ccc0cf34…) 을 supp 패키지에 추가 (정오 1 의 k1_far_b01 과 함께 3 잡) · 원 잡 상태 보존 · 집계기 --supp 대체. 부록 봉인은 빈 파일 sha 를 봉인한 셈 — 정오로 기록(봉인 파일 불변)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S4 V2 결과 (V100 · Ag(111)|그래핀 · PBE+D3(BJ) 고정기하)**: registry 4 모두 비슷 — 폭 0.0004 J/m² · E(d) 는 d₀ 가 격자 안 국소 최소 · 결합은 전부 분산항(PBE 단독 음수). **G3 FAIL** (직접 8→10 Å 에서 ΔW 가 0.01 초과 · D3 꼬리 · 영상 검사는 통과) · **G4 = 수치 미검증(k 축 · 7×7 far SCF 미수렴)** · e70 · smearing ½ 통과. UMA 대조(개정 1)는 참고(V2 는 G5 대상군 아님). ⚠ 내 첫 집계가 W 모델에 끝점 조각 문턱을 걸었다 → 카드 괄호는 조각 모델(V3·V4) 문턱이라 정정 (G3 판정 불변 · G4 smearing 만 PASS 로). 결과 기록 `db/properties/wad_aprime_pilot_result_v2_2026_09_26.json` (citable false · 1저자 결정 3: 보고 방식 · 읽기 정정 확인 · DEM 회신 5)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**1저자 '권장하는걸로 해' — V2 보고 확정**: ① 분리 끝점 8 Å 값 + G3 FAIL 라벨 + 10 Å 값 병기 · G4 k 축 미검증 라벨 · 새 계산 없음 ② 게이트 읽기 확정 (카드 '조각' 괄호 = V3·V4 조각 모델 문턱 · W 모델은 ΔW 만) ③ DEM 회신 5 발송판에 V2 값(카드 V2_항상 문장 + 라벨 · (iv) D3 항 뺀 값) — 결정 `D-2026-09-26-wad-aprime-v2-report` (ratified) · 발송 파일 `kb/projects/wad_dem_reply_5_send_2026_09_26.md`."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dem",
+   "text": "**DEM 5차 회신 수령**: Ag|그래핀 두 끝점 값 + 라벨 전부 수령 (DEM 검산 C 원자당 → 면적당 환산 일치) · (iv) 는 '결합은 전부 분산' 라벨로만 · 쓰임새 = 인터레이어 Ag–C 접촉 쌍 (P2 자리 아님) · **SE 쌍 보류 확정** (DEM 질문 ① 결과 없음 · 질문 ② 부터) · UMA 전달 요구 없음. 열린 질문: 48 GB 안에 드는 더 작은 SE 소모델이 원리적으로 가능한가 (1저자 판단)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**LPSCl|Ag 축소 소모델 프로브 — 셋 다 불합격** (DEM 5차 질문): 은 2 층 · 은 2 층 + 11 전자 PAW · 은 3 층 + 11 전자 PAW 모두 CPU 추정 총량이 결과 전 문턱(30 GB)의 두 배 이상 → GPU 시험 없음 · 축소 경로 닫음. ⚠ 내 사전 추정(0.5 배)이 틀렸다 — 메모리는 전자 수가 아니라 원자 수 × 셀 크기 항(투영자 · PAW 배열)에 지배된다. 결론: 우리 GPU 로는 의미 있는 SE 계면 소모델 없음 → P1·P2 직접 DFT W 없음 확정. 기록 `db/raw/wad_aprime_v5lite_probe_2026_09_26/probe_cpu_52Ry_2026_09_26.json`."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dem",
+   "text": "**DEM 6차 확인 수령** (회신 6 '소모델 없음' 발송 뒤): SE 쌍(질문 ①) 보류 유지 · DEM 박리는 Ag–C 두 값(라벨 그대로 · `wad_aprime_pilot_result_v2_2026_09_26.json`)으로 질문 ② 기하(Ag–C ↔ VGCF 호스트)부터 설계 · C–C 쌍은 DEM 쪽 문헌 카드(우리 값 아님) · 벤젠 조각(V4) 결과는 참고로 수령. **열린 질문 0** — 이 캠페인에서 DEM 에 남은 인계 = V4_s_outer_A 9 잡(gabia · 탄성 뒤 GPU 시험 · CPU 추정 33.6/35.4 GB @52 Ry) 의 ΔE_frag(eV/조각 · 참고 · J/m² 환산 금지) 하나. SE 쌍 재개는 자원이 바뀔 때 새 사전등록으로만 (조용히 다시 열지 않는다)."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**V4 GPU 시험 2/2 합격** (gabia · 탄성 23_p 를 BFGS 67 에서 EXIT 로 세운 뒤): far 셀 피크 39,230 MiB · G3 c+2 셀 41,518 MiB (≤ 44,000 · CPU 추정의 1.14–1.15 배) → V4_s_outer_A 본 잡 9 개 허가. 첫 반복 오차가 컸던 원인은 Li PP 원자밀도 부족(Li 당 0.4508 e · modelc_2x 와 일치)의 균일 재규격화 — 설정 오류 아님. 기록 `db/raw/wad_aprime_v4_gpu_trial_2026_09_26/trial_result_2026_09_27.json`."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**D3 3체(ATM) 열 — V2 계산** (결정 D-2026-09-23-wad-d3-twobody-atm-separate 의 '별도 열' 의무 · V2 보고 때 빠져 있었다): simple-dftd3 1.6.0 · 같은 구조 · s9 1 vs 0 → ΔW_ATM −0.069 J/m² (8 Å · registry 4 개 동일 · W 의 −15.8 %) · −0.076 (10 Å) · cutoff 수렴 ±3e-5. 헤드라인은 2체 그대로 · DEM 에는 다음 회신에 별도 열로. 2체 교차: QE 0.4905 vs s-dftd3 0.4880 (0.5 % · 구현 차이)."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**V5 VASP 외주 준비본** (1저자 '준비는 해둬볼게' · 업체·예산 미정): 18 단일점 패키지 `db/inputs/wad_aprime_v5_vasp_2026_09_27` · 빌더/반송검사/집계 `tools/wad/build_v5_vasp_package.py` · 카드 개정 3 초안 + 결정 proposed · Codex CE 프롬프트 (발송 대기). 결과 전 D3 만 예측으로 V5 G3(ii) 가 문턱 경계선(+0.0095 vs 0.01) — G5 자격용 G3 를 W_PBE 로 읽는 안을 CE 에 물음."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CE NO-GO → V5 VASP 준비본 v2**: 도구 `build_v5_vasp_package.py` v2 (성능 태그 제한 문법 · 시도 폴더 새로만 + attempt.json 결박 · 복수 실행·설정 되울림·EFIELD · 전체 TITEL + 종별·조립본 sha 잡 사이 일치 + 파일럿 등록부 · VASP 버전 일치 · UMA 출처·유한성 · 외부 고정 MANIFEST 대조 · 결측=미검증 · 종료코드 · r1 자격 제한 · D3 두 층 (1 % 오설정 · 쌍 0.005 / G3 차이의 차이 0.001 J/m²) · 3c 필드 · 3b′ 진단) · selftest 82 (CE 재현 전부 음성 · 배포 러너 실제 실행) · 돌연변이 20/20 · 패키지 재생성 (구조 불변 · INCAR 에 VDW_RADIUS/CNRADIUS) · 개정 3 v2 (G3 산술 정정: +0.0095396 + 0.0004 = 0.0099396 < 0.01 · v1 의 'FAIL' 서술 틀림). 결정은 여전히 proposed."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CF NO-GO → V5 VASP 준비본 v3**: 도구 v3 (증거 모순을 실행 상태보다 먼저 — 모순+rc/미수렴 조합을 r1 이 못 덮음 · 시도 사이 일관성은 모든 시도 · 최종 --collect 는 봉인 PP 등록부 필수(없으면 2 · --pilot 만 예외) + 등록부 내용 검증 · G4 같은 기하 Edisp 동일성 ≤ 1e-4 eV · 에너지 마지막 레코드 유한수 + 최종 FREE ENERGIE 구획 · 실물 VASP 5.4.4 OUTCAR 픽스처 (Edisp 무콜론 · SCF 단계 TOTEN 은 D3 빠짐 · DIPOL 줄 없음 · min pos 520/560 = DIPOL_z 0.4278+½ 실측) · INCAR 에코 제외 · D3 계수 해석값 대조 · 러너 포장 실패 4 + PACK_ONLY · total_w_citable · run_id 형식 · 원자적 mkdir) · selftest 129 · 돌연변이 38/38 · 패키지 재생성 (입력 불변 · 러너·README 갱신) · 개정 3 v3."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CG NO-GO → V5 VASP 준비본 v4**: 도구 v4 (반송 묶음 허용 목록 포장 + 구성원 검사 + 준비 실패 시 부분 POTCAR 삭제 · 검사기 forbidden_files 보고 · 파일럿 채택 시도 run_id·attempt.json/OUTCAR sha = 등록부 봉인(schema v3) 아니면 PILOT_NOT_SEALED · 미완료 출력의 정상 TITEL 접두 = 결측(r1 자격) / 접두 아님 = 모순 / 성공 시도 접두 = 미검증 · 빈 에너지 레코드도 마지막 레코드 · tar/sha 쌍 승격) · selftest 155/155 · 돌연변이 13/13 · 패키지 재생성 (입력 93 파일 중 jobs.json·run_all.sh 만 변경 · MANIFEST ccbc0988…) · 실제 패키지 끝-끝 (리뷰어 세 재현 전부 차단: run_id 교체 --collect 3 · PACK_ONLY 누출 0 · 준비 실패 누출 0) · 개정 3 v4 (digest dbcbc486…). 결정은 여전히 proposed · 재리뷰 CI 대기."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CI NO-GO → V5 VASP 준비본 v5**: 러너 pack() 단계별 성공 확인 (find · 허용 필터 grep 1≠≥2 · sort · 목록 · tar · tar tzf 열람 · 금지 검사 · 구성원↔목록 cmp · sha 64 · mv → 실패 = 종료 4 · .part 삭제 · 기존 쌍 보존) · TITEL_TRUNCATED (잘린 마지막 TITEL = 자동 확인 불가) · 개정 3 v5 (cut 검사는 게이트 문구 정정 · digest 2b3a0ad4…) · 결정 원장 v3/129 표기 정리 · selftest 175/175 · 돌연변이 CI 11/11 (첫 판 8/11 → 표적 주입 3 종 추가) · 패키지 재생성 (입력 불변 · MANIFEST 85bfebdb…) · 실제 패키지 끝-끝 주입 4 종 전부 종료 4 · 리뷰어 repro_pack_ci.sh 종료 0 · CI 회신·재현 묶음 8 파일 보존. 결정은 여전히 proposed · 재리뷰 CJ 대기."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CJ NO-GO → V5 VASP 준비본 v6**: 러너 관리 파일 목록을 쓰기마다 검사 + 목록 내용 검증 (줄 수 = 1 + 디스크 관리 파일 수 + 허용 파일 수 · 필수 이름 존재) · sha256sum 명령 성공/hex64 분리 · 정리 rm 실패 = ⚠ 종료 0 · 발송 조건 = 종료 0 또는 1 + sha256sum -c · 지원 환경 Linux/GNU 명시 · selftest 194/194 (BASH_ENV 주입 26 종 · 리뷰어 probe_pack_cj.py·repro_pack_ci.sh 를 selftest 가 그대로 돌림) · 돌연변이 CJ 12/12 (첫 판 6/11 → 표적 주입 → 그 과정에서 '줄 수 검증이 쓴 파일 기준' 결함 발견·수정) · 패키지 재생성 (입력 불변 · MANIFEST 8118bbc0…) · 실제 패키지에 리뷰어 probe_pack_cj.py --assert-fixed 종료 0 · repro_ci.py --assert-fixed 종료 0 · 개정 3 v6 (digest eb5e36fa…) · CJ 회신·재현 묶음 13 파일 보존. 결정은 여전히 proposed · 재리뷰 CK 대기."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CK GO — V5 VASP 준비본 v6**: CJ 해제조건 충족 · 주입 17 + 16 전부 종료 4 · 새 P0/P1 없음 · 리뷰 사슬 CE→CF→CG→CI→CJ→CK 종료. 개정 3 v6.1 (P2 문구 정리 · S1 잔여 위험 문장 · 패키지·도구 불변) · 결정은 proposed 그대로 → **1저자 비준 대기** (비준 = active · 업체·예산 · 실행 승인은 별개). CK 회신·재현 묶음 18 파일 보존 (db/raw/codex_CK_repro_2026_09_27)."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "V5 VASP 패키지 v6 배포 zip 생성 (git archive · 커밋 f4441c426 · MANIFEST 대조 ✓ · 작업 트리와 동일) → 1저자 보관 · sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json. 발송 시점은 1저자가 알린다 — 비준 전 발송 없음."
+  },
+  {
+   "date": "2026-09-30",
+   "stage": "dft",
+   "text": "V5 VASP 패키지 v6 **외주 발송** (1저자 '이거 외주 보냈엉') — 업로드 사본 sha256 5b7cad0b… = 보관 zip. 개정 3 v6.1 비준 → 결정 D-2026-09-27-wad-aprime-v5-vasp-route active (⚠ 비준 기록이 발송 뒤 · 발송을 비준으로 기록 · 빌더 selftest 194/194). 다음: 업체 파일럿 2 잡 반송 → --check → --seal_pp → 16 잡."
+  },
+  {
+   "date": "2026-09-30",
+   "stage": "dft",
+   "text": "**WAD-CC 흑연 C|C 결과 (V100 · 53 잡 rc 0)** — 사전등록 게이트 전부 통과 (G0 9/9 · 흑연 대조 S33_AB 0.350 J/m² IN_BAND [0.31, 0.47] · G3 · G4 · 두께 PASS). 헤드라인 C–C W_inc(S33, 2성) 0.332 J/m² [0.298, 0.350] · PBE+D3(BJ) 2체 조건부 · 이상 기저면 — 실험 0.37 ± 0.01 과 나란히. 짝 규칙 ② = 2체 (|W_inc − 0.37| 2체 0.038 · +ATM 0.113). 회수: V100 → kgy → worktree 커밋 e0bcbfa44 · --verify_stage2 ✅ · 레포 집계 = V100 집계. 다음: 1저자 DEM 입력값 (a)/(b)/(c) → DEM 회신 8 → 점착 DFT 마감. 결과 기록 `db/properties/wad_cc_graphite_result_2026_09_30.json`."
+  },
+  {
+   "date": "2026-09-30",
+   "stage": "dem",
+   "text": "**C–C DEM 입력 = (c) 둘 다 시나리오** (1저자 · 결정 D-2026-09-30-wad-cc-dem-input-both-scenarios) — DFT W_inc(S33) 0.332 J/m² (Ag–C 와 같은 방법 · 짝 원칙 ①) · 실험 0.37 ± 0.01 (방법이 섞인 비 라벨 · ③) · 기본 D3 열 2체 (②) · 뒤집히면 판별 불가 (④ · DEM 몫). 회신 8 초안."
+  },
+  {
+   "date": "2026-09-30",
+   "stage": "dem",
+   "text": "**DEM 회신 8 발송 (1저자 · 초안 그대로) · DEM 8차 회신 수령** — C–C 0.332 를 세 쌍 공통 값 · 라벨 그대로 · 짝 ② = 2체 동의 · 세 시나리오 표 (DFT · 실험 · 민감도 3체) · 새 요청 없음 · 열린 질문 0 · SE 쌍 보류 그대로 · DEM 박리 시험 0 건 (질문 ② 기하부터). 산술 검산 일치. 원문 kb/projects/wad_dem_reply_draft_2026_09_23.md §DEM 8차 회신."
+  },
+  {
+   "date": "2026-10-01",
+   "stage": "dem",
+   "text": "**SE 쌍 (LPSCl–Ag · LPSCl–C) 을 DEM 에 준다 (1저자 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem)** — 전체 계면 UMA+D3 예측 (P1 두 종결 · P2) 을 결과 전 카드로 계산해 '미검증 UMA+D3 예측 · 민감도 시나리오' 라벨로 넘긴다 · 외주 V5 (VASP) 가 오면 같은 표본에서 UMA 비교 (G5) + 작은 모델 ↔ 전체 계면 UMA 차 · 탄소는 DFT 검증 경로 없음 라벨. ⚠ 전체 계면 UMA 예측은 지금까지 계산된 적이 없다 ('내부 전용' 으로 미룸). 사용자: 'DEM도 개발하고 해야되니까 시간은 오래걸릴거' — 카드 먼저."
+  },
+  {
+   "date": "2026-10-01",
+   "stage": "dft",
+   "text": "**SE 쌍 전체 계면 UMA+D3 예측 끝** (gabia · 탄성 strain_23_m 을 EXIT 로 약 1 시간 세운 동안 · 이완 8 + W 8 ≈ 49 분) — 카드 게이트 G1 8/8 · G2 8/8 · G3 대표 2/2 · registry 합쳐짐 0/4. 흑연 쪽 A·B 값이 거의 같아 같은 모델을 두 번 잰 건 아닌지 확인했다: sha 가 다르고 이완 뒤에도 1.31 Å 떨어져 있다 — 이 모형에서 흑연 면이 옆으로 거의 평평하다. 원자료 80c398511 (사용자 · gabia) · 집계 `relax_uma_d3.py --collect` (새 · selftest 36/36 · 돌연변이 6/6) · registry 거리 `build_aprime_interfaces.registry_distance` (새 · 44/44 · 4/4). 값·라벨은 결과 기록에서만. 탄성은 03:28 새 러너로 재개 (파일에서 기하·밀도·wfc 읽음 확인)."
+  },
+  {
+   "date": "2026-10-01",
+   "stage": "dft",
+   "text": "원장 정정 — V4 본 잡 run 항목이 09-27 14:02 실측(1/9 done)에서 멈춰 있었다 → 원자료 jobs_run.tsv 로 9/9 done · rc 0 · wall · 피크 VRAM 을 채웠다 (9월 증빙 스크립트가 '1/9' 를 찍어 드러났다)."
+  },
+  {
+   "date": "2026-10-02",
+   "stage": "dft",
+   "text": "**외주 V5 반송까지 대기** (사용자 '외주한거 오면 관련해서 더 진행하자') — 그동안 새 점착 계산은 없다. P1b (Ag(111)|흑연) · E(d) 곡선 착수 여부도 그때 정한다. 반송 순서: 업체 파일럿 2 잡 → `build_v5_vasp_package.py --check` → 파일럿 OK 면 `--seal_pp` (등록부 커밋·sha) → 사용자가 업체에 확인 연락 → 나머지 16 잡 → `--collect` → G5 (LPSCl|Ag 작은 모델 UMA ↔ DFT) → 새 결과 기록 → DEM 회신. 회신 9 발송은 V5 와 무관 (사용자 판단)."
+  },
+  {
+   "date": "2026-10-02",
+   "stage": "dft",
+   "text": "**P1b (Ag(111)|흑연) 카드·입력 준비 — kgy** (사용자 'P1b 이건 지금 할 수 있는건가? 우리꺼로?' → 'kgy 가능할듯') — V2 와 같은 옆 셀·QE·제약으로 그래핀 1장 → 흑연 3층(ABA) · registry 넷 (top_fcc · top_hcp · hollow_fcc · s01) · 두께 점검 4층 · 기계 대조 = V2_top_fcc 2단계 입력 그대로 (V100 W 와 |ΔW| ≤ 0.002) · G3 · G4 (k 9×9×1) · β 0.1 대체 판은 결과 전에 같이 만듦. 도구 `tools/wad/agc_graphite.py` (selftest 47 · 일부러 깨기 12 전부 빨강) · 결정 `D-2026-10-02-wad-agc-graphite` proposed. ⚠ 준비 중 발견: **V2 의 registry 넷은 대칭으로 둘**이었다 (bridge ≡ top_fcc · top_hcp ≡ hollow_fcc — W 16 자리 같음 · 3e-6 차) — V2 값은 그대로, 표본 수 해석만 바뀜 (V2 결과 기록에 덧붙임)."
+  },
+  {
+   "date": "2026-10-02",
+   "stage": "dft",
+   "text": "**P1b 카드 비준 → kgy 발사** (사용자 '비준 · 지금 발사') — kgy 점검: PP Ag·C 해시 기준과 같음 · pw.x qe-7.4.1-gpu (sha 256293a3 · V100 912d8c8f 와 다른 빌드 → 기계 대조가 뜻이 있다) · kgy 에서 selftest 47/0 · DRY_RUN rc 0 · RAM 58 GB · 디스크 304 GB. ⚠ GPU 에 출처 모를 잡 96 % (0.8 GB · kgy 는 프로세스 정보가 막혀 안 보인다) — 같이 돈다. 결정 D-2026-10-02-wad-agc-graphite active (digest sha256:083b3578ab3e6464…)."
+  },
+  {
+   "date": "2026-10-03",
+   "stage": "dft",
+   "text": "**P1b 기계 대조 G1 PASS** (kgy · 대피 세션 claude/evac-2026-10-02 · 사용자 붙여넣기 10-03) — CTRL 두 잡 (V2_top_fcc 2단계 입력 그대로 · bound 706 s · far 521 s · rc 0 · 피크 3.4 · 3.1 GB) 의 kgy–V100 |ΔW| **1.0e-7** J/m² (문턱 0.002) · ΔF bound −0.00027 · far −0.00014 meV (정보) ⇒ kgy pw.x (sha 256293a3) 와 V100 (912d8c8f) 이 같은 입력에서 같은 W — P1b 를 V2 · WAD-CC 와 같은 표에 놓는 조건 충족. 속도 V100 대비 bound 3.94× · far 3.72× 느림 (3090 FP64). 1단계 첫 이완 AGC_N3_top_fcc 진행 (10-03 04:22 · 351 분 · BFGS 16 · SCF 255 · 스텝당 ≈ 22 분) — 총 견적은 첫 이완이 끝난 뒤 (카드 §8 · 7 일 넘으면 V100 이전 질문)."
+  },
+  {
+   "date": "2026-10-03",
+   "stage": "dft",
+   "text": "**P1b 총 견적 (카드 §8 · 첫 이완 뒤 실측)** — kgy watch 10-03 16:29 (사용자 붙여넣기): 1단계 끝 4/7 (CTRL 2 + 이완 top_fcc 37,470 s · top_hcp 16,565 s · rc 0) · hollow_fcc 진행 (177 분 · BFGS 13) · GPU 5.3 GB (출처 모를 잡 사라짐 · 가드 23,000 안). 이완 실측 top_fcc 10.4 h · top_hcp 4.6 h (피크 13.8 · 11.3 GB) → 남은 1단계 12–31 h (hollow_fcc 잔여 · s01 · N4 ×1.3) + 2단계 31 × (CTRL 평균 10 분 × 3–5) = 16–26 h ⇒ 끝 10-04 저녁 ~ 10-06 새벽 · 발사부터 총 1.9–3.2 일 (7 일 안 → kgy 그대로 · V100 이전 질문 없음). ⚠ 2단계 G4 (ecut 70/700 · k 9×9×1) 잡은 ×3–5 어림 밖일 수 있다 — 2단계 첫 잡 실측으로 다시 본다."
+  },
+  {
+   "date": "2026-10-04",
+   "stage": "dft",
+   "text": "**P1b 1단계 7/7 끝 · 2단계 SCF 6/31** (kgy watch 10-04 15:08 · 사용자 붙여넣기 · 대피 세션) — 1단계 남은 셋 N3 hollow_fcc 16,168 s · N3 s01 20,548 s · N4 top_fcc 35,014 s (rc 0 · 피크 9.6 GB) → 러너가 2단계 입력 생성 → SCF 09:27 시작 · 6/31 끝 (개당 50–80 분 · 피크 7.8 GB) · Ed_p10 진행 · GPU 합계 6.7 GB (cascade v7 탐침과 공유). 남은 25 ≈ 하루 (10-05 오후 · 어림) → 회수 · 2단계 재생성 대조 · 집계 → 결과 기록 → DEM 회신. 판정 전 물리값은 싣지 않는다."
+  },
+  {
+   "date": "2026-10-04",
+   "stage": "dft",
+   "text": "⚠ **정정 — 10-03 의 P1b 줄 둘에 W 값을 적었었다** (log 70 · P1b state_text · 내 실수) — 기계 대조 CTRL 두 잡의 W 두 개(V2_top_fcc 와 같은 값)가 이 화면 · /todo · 대시보드에 떴다. 점착 W 는 화면에 싣지 않는다 (V2 결과 기록 '화면 게재는 1저자 별도' · 대피 세션 운영 규칙) → 값 두 개를 지우고 kgy–V100 |ΔW| 1.0e-7 (문턱 0.002) 만 남겼다. 판정(G1 PASS)은 그대로 · 값은 kgy 원출력과 P1b 결과 기록(만들 때)에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b Ag(111)|흑연 3층 — 2단계 31/31 끝 (kgy 13:35) · 원자료 회수 d2bfb55a · 2단계 재생성 대조 ✅ · 레포 집계 = kgy 집계 · 게이트 G0·G1·G3·두께 PASS · **G4 FAIL (k 축)** → 카드대로 라벨 동반 · 새 계산은 1저자 결정 대기. W 값은 결과 기록에만 (화면에 안 싣는다)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b G4 k 축 FAIL → 1저자 결정 (c): 대표 두 끝점 k 12×12×1 탐침 2 잡 (D-2026-10-05-wad-agc-kprobe12) · 입력은 k9 와 두 줄만 다름 · 판독 문턱 0.01 (G4 와 같음) · 헤드라인 불변 · kgy 공존 (같은 가드)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b k 12×12×1 탐침 kgy 발사 (tmux agck12 · c704348b · 15:39 watch 에서 bound SCF 1 회째) · k 점 74 (k9 41 · k6 20 — 시간반전만 쓰는 격자 셈과 일치) · 첫 DRY_RUN 은 jobs.json 해시 칸 버그로 거부됐다 → 정정 9160143e (입력 불변). GPU 합계 7.9 / 24.6 GB (cascade v7 · li2s 대조 담금질과 공유)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "V5 VASP 외주 **파일럿 2 잡 반송** (10-05 · 업체) — --check 파일럿 OK (VASP 5.4.4 · PBE_54 TITEL · 설정 되울림 · 첫 시도 수렴 · bound 10.4 h · far 4.9 h · peak 67.6 GB) · 반송 MANIFEST = 고정값 · 금지 파일 0 · **PP 등록부 봉인** a279d529… · 다음 = 업체에 나머지 16 잡 (파일럿 폴더 그대로) → 최종 --collect. W 는 최종 집계에서."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b k12 탐침 끝 (kgy 21:30 · bound·far rc 0) · 회수 365a53ae · 판독 **CONVERGED_AT_K9** (사전 문턱 안 · 레포 재집계 = kgy 집계) · 다음 = 1저자 결정 (라벨로 닫기 / 넷도 k9). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b **마감** — 1저자 결정 (a′) 라벨로 닫기 (헤드라인은 사전등록 registry 평균 그대로 + 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' 라벨 · 새 계산 없음) · 마감 카드 wad_agc_graphite_closed_2026_10_05.json · 결정 D-2026-10-05-wad-agc-graphite-closed. 다음 = DEM 회신 (라벨 동반). W 값은 결과 기록·마감 카드에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b 마감 재개 ① **(b)** — 사용자 '지금 kgy 에서' · 나머지 넷 (N3 registry 셋 + N4) 두 끝점 9×9×1 · 8 잡 · 결정 D-2026-10-05-wad-agc-graphite-k9-registry · 판독 규칙 결과 전 고정 (10 잡 전부 OK → 헤드라인 교체는 새 마감 결정 · 아니면 (a′) 그대로) · 상한 벽시계 30 h · 마감 (a′) 은 결과까지 그대로. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b (b) k9 넷 kgy 발사 (tmux agck9 · 6adf297c · 22:48:11 · DRY_RUN 통과) · 첫 잡 AGC_N3_top_hcp_K9_bound k 점 41 (k6 20 · 시간반전 대칭만 · 예상 일치) · 8 잡 한 잡씩 · 상한 30 h. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-06",
+   "stage": "dft",
+   "text": "P1b (b) k9 넷 끝 — 8 잡 rc 0 (17 h 35 m / 상한 30 h) · 회수 bc2a0200 · SHA256SUMS 251 일치 · 레포 재집계 = kgy 집계 → 사전 규칙 판독 REPLACE (두께 PASS · 폭 OK) · 새 마감 카드 wad_agc_graphite_closed_2026_10_06.json · 결정 D-2026-10-06-wad-agc-graphite-closed-k9 proposed (1저자 비준 대기). W 값은 결과 기록·마감 카드에만."
+  },
+  {
+   "date": "2026-10-06",
+   "stage": "dft",
+   "text": "P1b 마감 교체 비준 — 1저자(사용자) '비준' · 결정 D-2026-10-06-wad-agc-graphite-closed-k9 active · 마감 (a′) D-2026-10-05-wad-agc-graphite-closed superseded (재봉인) · 정본 마감 카드 wad_agc_graphite_closed_2026_10_06.json · DEM 회신은 회신 9 초안에 붙인다. W 값은 마감 카드·결과 기록에만."
+  },
+  {
+   "date": "2026-10-06",
+   "stage": "dft",
+   "text": "V5 VASP 외주 본 잡 — 사용자 '도는 중' (건엽 씨 · 파일럿 2 잡 OK 뒤 · PP 등록부 a279d529). 반송되면 --collect --pp_registry … --uma → G5."
+  },
+  {
+   "date": "2026-10-06",
+   "stage": "dem",
+   "text": "회신 9 발송 (1저자) → DEM 9차 수령 · SE 쌍 = 별도 칸 'UMA+D3 예측 · 미검증' (보류 그대로) · Ag–C 행 기본 = 흑연 3층 (P1b) · 그래핀 1장은 이력·민감도 · 산술 전부 일치 · 새 요청 없음 · DEM 박리 시험 0 건 (질문 ② 기하부터). W 값은 결과 기록·마감 카드·회신 문서에만."
+  },
+  {
+   "date": "2026-10-08",
+   "stage": "dft",
+   "text": "Codex **CU** 회신 보관 — P1b k9 마감 사후 감사 **조건부 GO · 값 유지** · P1 '기판만' 정정 (셀 c · 영상 간격도 다름) → 마감 카드 보충 2c · P2 라벨 좁히기 (다음 DEM 편지) · 회신 `kb/reviews/codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md`. W 값은 마감 카드·결과 기록에만."
+  },
+  {
+   "date": "2026-10-15",
+   "stage": "dft",
+   "text": "V5 VASP 외주 **반송 검사** — 18 잡 중 OK 17 (G3_c2_far_i 는 사전 재시도 r1 채택) · **G3 PASS · G4 INCOMPLETE** (e70 ENCUT 650 far 가 r1 까지 미수렴 · k · SIGMA 는 PASS) · 은 쪽 라벨 = '작은 모델 지정 표본에서 미완료' · 결과 기록 `db/properties/wad_aprime_v5_vasp_result_2026_10_15.json` (citable false). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-15",
+   "stage": "dft",
+   "text": "V5 UMA 단일점 12 구조 (kgy · G5 표본 9 + G3 셋 · `db/raw/…/uma_energies_v5_2026_10_15`) — G5 오차표 · §1b ② 는 은 a4 결과와 한 번에 연다 · 같은 날 사용자 **'지금 다시 연다'** — G4_e70_far 한 잡을 개정 4 (두 단계 쌍극 보정 a4) 로 · 탄소 작은 모델 (P2′) 외주와 한 묶음 (LPSCl 이 Ag–C 층의 Ag 와 직접 닿는다). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-17",
+   "stage": "dft",
+   "text": "외주 2차 **비준** (사용자 · W_ad 1저자) — 탄소 작은 모델 P2′ VASP 카드 v2 (Codex CY 조건부 GO 반영 · 점검 범위 선택 2 + 80 % 발동 규칙 · 단계 누적 상한 1.5 배 · 전자 스텝 ≥ 1 뒤 충돌 = 실행 실패) + V5 개정 4 v2 · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` active · 빌드 ① 빌더 플래그 (`--build P2S`) → ⑤ 묶음."
+  },
+  {
+   "date": "2026-10-21",
+   "stage": "dft",
+   "text": "P2′ 부모 둘 (S_A · Li_A) UMA+D3 이완 (kgy) — 첫 시도는 `dftd3` 모듈이 없어 러너가 시작을 거부 (계산 0) → kgy uma env 에 simple-dftd3 설치 (D3 구현 그대로) → 둘 다 수렴 · 회수 · 봉인 (p05 마스크 기준 고침 뒤). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-22",
+   "stage": "dft",
+   "text": "P2′ 봉인 구조 9 개 UMA 단일점 (kgy · rc 0) → VASP 묶음 v1 (24 잡) → Codex **CZ NO-GO** (발송 해제조건 7) → 고침 · 자체 검토 → v2 → DB NO-GO → v3 → DC NO-GO → v4 → DD NO-GO → v5 → **Codex DE GO** (MANIFEST 714324cc… · 배포 zip dc4047e3…) · 기록 `db/properties/wad_round2_build_log_2026_10_17.json`. GO ≠ 실행·인용 승인."
+  },
+  {
+   "date": "2026-10-23",
+   "stage": "dft",
+   "text": "외주 2차 묶음 v5 **업체 발송** (사용자) — 파일럿 단계 P (탄소 P2S_S_A bound·far · C–C optB88 둘 · 은 a4) 먼저."
+  },
+  {
+   "date": "2026-10-26",
+   "stage": "dft",
+   "text": "파일럿 반송 검사 — 탄소 P2S_S_A bound·far **OK** · 은 a4 두 단계 다 **SCF_NOT_CONVERGED** → 개정 4 '한 번 · 최종 실패면 종료' (은 G4 INCOMPLETE 그대로 · 라벨 '미완료' · 탄소 판정에 안 넘긴다) · 등록부 봉인이 AGGAC 미출력 (VASP 5.4.4) 으로 멈춤 → 사용자 '권고대로' — D1 입력으로만 확인 (`D-2026-10-26-wad-round2-aggac-input-only`) · D2 S_A far 진단 '신호 없음' · D3 단계 1–4 상한 (파일럿 실측 스텝당 비용으로 다시 냄) → 등록부 봉인 (999aa2da…) · 해제 파일 R2-REL-2026-10-26. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-27",
+   "stage": "dft",
+   "text": "단계 1–4 **해제 파일 발송** (사용자 'wad는 보냈어' · sha256 d4f757b9…) → ⏭ 반송 → `--check` (등록부) → `--collect` (W 집계 한 번) · 은 V5 G5 집계와 DEM 회신 10 은 그 뒤 같이. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-11-17",
+   "stage": "dft",
+   "text": "외주 2차 **중간 반송** (업체 운영자 중단 11-17 11:18 KST) — 19 잡 중 13 완료 (단계 1 · 2 전부 단 0 수렴) · 단계 3 optB88 첫 잡 (S_A bound · 398 원자) 단 0 미수렴 · r1 ⓐ 발산 → 사용자 결정 `D-2026-11-17-wad-round2-interim-stage4-optb88-closed`: 단계 4 (C–C PBE+D3 2 잡) 지금 · optB88 4 잡 닫기 (δ_XC+vdW 미완료 · G5_C 영향 없음) · `--check` rc 3 (반송 미완 · 탄소 15 OK). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-11-20",
+   "stage": "dft",
+   "text": "외주 2차 **최종 반송** (11-19 · 단계 4 C–C PBE+D3 2 잡 단 0 수렴) — `--check` rc 3 (19 OK · optB88 4 는 `D-2026-11-17-wad-round2-interim-stage4-optb88-closed` 로 닫힘 · 은 a4 는 개정 4 로 종료 · 공통 고장 0) → `--collect` **한 번** (UMA p2s 10-22): **G3 PASS · G4 PASS · G5_C PASS** · 80 % 발동 없음 · 전하이동 신호 0 · δ_XC+vdW 미완료 · ②′ C–C 두 방법 OK · 결과 `db/properties/wad_round2_vasp_result_2026_11_19.json` → ⏭ 은 V5 G5 집계 · DEM 회신 10. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-11-20",
+   "stage": "dft",
+   "text": "은 쪽 **V5 G5 집계 한 번** (앞 점검: 10-15 UMA 없는 집계 바이트 재현 · a4 결과 재생성 같음) — G3 PASS · G4 INCOMPLETE (e70 = a4 실패 채택) · **G5 INCOMPLETE (오차표만 · 예정 상태 그대로)** · §1b ② 크기 효과 '크기 민감' = Li·PS₄ 바깥 A · B · 은 쪽 DEM 라벨 '작은 모델 지정 표본에서 미완료' · 업체 서버 run/ 은 업체가 알아서 둔다 (사용자). ⏭ DEM 회신 10 초안. W 값은 결과 기록에만."
+  }
+ ],
+ "related_decisions": [
+  "D-2026-09-23-gabia-gpu-exception-sese",
+  "D-2026-11-17-wad-round2-interim-stage4-optb88-closed"
+ ]
+}

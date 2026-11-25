@@ -1,0 +1,9 @@
+[2026-10-14 19:31:02] == cascade 녹는 에너지 입력 · DRY-RUN · repo 830e643eb · /data/work/wt_diss_1014
+[2026-10-14 19:31:09]   1단계 원본 /data/work/runs/multi_category_2026_05_26_v23 — 02_screen 결과 270 개
+[2026-10-14 19:31:09]   1단계 원본 /data/work/runs/as2s3_recover — 02_screen 결과 6 개
+[2026-10-14 19:31:13] selftest 둘 ✓ (selftest: 18/18 · selftest: 31/31)
+  버전: fairchem 2.19.0 · torch 2.8.0+cu128 · ase 3.28.0
+[2026-10-14 19:31:20] CPU 20 코어 · 1분 부하 2.75 · 이완 스레드 8
+  GPU (이 잡은 안 씀 · 참고) 39351 MiB, 49140 MiB
+[2026-10-14 19:31:20] 계획 ① MP 다형 → db/raw/cascade_dissolution_2026_10_14/mp ② 1단계 원본 → db/raw/cascade_dissolution_2026_10_14/stage1_energies.json ③ UMA 이완 CPU → db/raw/cascade_dissolution_2026_10_14/uma ④ 합치기 → db/raw/cascade_dissolution_2026_10_14/result · db/raw/cascade_dissolution_2026_10_14/element_effects
+[2026-10-14 19:31:20] DRY-RUN 끝 (MP 조회 0 · 이완 0) ✅

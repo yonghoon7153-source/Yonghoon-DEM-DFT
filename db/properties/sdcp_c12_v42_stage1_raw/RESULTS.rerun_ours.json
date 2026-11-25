@@ -1,0 +1,2854 @@
+{
+ "delta_eV": 0.03,
+ "pairs": {},
+ "fragments": {
+  "ptfe_c10": {
+   "n": 0,
+   "n_planned": 0,
+   "class": "NO_DATA"
+  },
+  "sdcp_neutral": {
+   "n": 0,
+   "n_planned": 0,
+   "class": "NO_DATA"
+  }
+ },
+ "e_ads": {},
+ "reference_overrides": {},
+ "numerical_gates": {
+  "box_ptfe_c10": {
+   "dE_meV": 0.1,
+   "pass": null,
+   "role": "diagnostic_only",
+   "why": "판정은 δ_gas(두 기체의 차) 하나로 한다 (회신 AR P0-3). 조각별 값은 진단으로만 남긴다"
+  },
+  "box_sdcp_neutral": {
+   "dE_meV": 0.2,
+   "pass": null,
+   "role": "diagnostic_only",
+   "why": "판정은 δ_gas(두 기체의 차) 하나로 한다 (회신 AR P0-3). 조각별 값은 진단으로만 남긴다"
+  }
+ },
+ "warnings": [
+  "sensitivity tier 7건 미완 ['prospective/ptfe_c10__b00__afm2424_net4 [static]', 'prospective/ptfe_c10__b52__afm2424_pm1 [static]', 'prospective/ptfe_c10__b52__afm2424_net4 [static]'] — **D_pm1 에는 영향이 없다**. 다만 자기 분기·자세 민감도를 보고할 수 없다 (회신 AP #4)"
+ ],
+ "integrity": {
+  "checked": 129,
+  "changed": [],
+  "missing": [],
+  "runtime_poscar_mismatch": [],
+  "parent_geom_checked": [
+   "refs/mol__ptfe_c10__box24__nzmag/static/POSCAR ← 부모 루트 POSCAR (부모가 단일점): 일치 (셀 0 · 좌표 0 Å)",
+   "refs/mol__sdcp_neutral__box24__nzmag/static/POSCAR ← 부모 루트 POSCAR (부모가 단일점): 일치 (셀 0 · 좌표 0 Å)"
+  ],
+  "geometry_unverified": []
+ },
+ "jobs": {
+  "prospective/ptfe_c10__b00__afm2424_net4": {
+   "ok": false,
+   "gates": [
+    "NOT_RUN(static)",
+    "RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)"
+   ],
+   "E0_static": null,
+   "vasp_version": null,
+   "incar_audit": {},
+   "run_segments": {},
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 2.744,
+     "d_Ni": 2.538,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.538,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ]
+   }
+  },
+  "prospective/ptfe_c10__b00__afm2424_pm1": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -1123.59334184,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "LDAUU",
+      "LDAUTYPE",
+      "IDIPOL",
+      "ISPIN",
+      "LDAUL",
+      "LDAUJ",
+      "LDAU",
+      "LMAXMIX"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 2.744,
+     "d_Ni": 2.538,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.538,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.44,
+     "frms_eVA": 0.172,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    },
+    "magnetic": {
+     "n_ni": 48,
+     "global_sign": 1.0,
+     "n_partial_flip": 0,
+     "flip_indices_poscar": [],
+     "index_base": 0,
+     "flip_indices_poscar_1based": [],
+     "flip_moments_muB": {},
+     "n_small": 0,
+     "min_abs_muB": 1.223,
+     "abs_mean_muB": 1.268,
+     "total_muB": 0.0004018,
+     "realized_basin_id": "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30",
+     "realized_basin": {
+      "id_short": "4d49899b120e",
+      "canonical": "{\"collapsed\":[],\"ni_sign_vector\":\"-+++---++--+-+++---++--+-+++---++--+-+++---++--+\",\"organic_relative_spin\":\"\"}",
+      "ni_sign_vector": "-+++---++--+-+++---++--+-+++---++--+-+++---++--+",
+      "n_ni": 48,
+      "global_sign": 1.0,
+      "collapsed_ni_positions": [],
+      "organic_relative_spin": null,
+      "ni_index_poscar": [
+       48,
+       49,
+       50,
+       51,
+       52,
+       53,
+       54,
+       55,
+       56,
+       57,
+       58,
+       59,
+       60,
+       61,
+       62,
+       63,
+       64,
+       65,
+       66,
+       67,
+       68,
+       69,
+       70,
+       71,
+       72,
+       73,
+       74,
+       75,
+       76,
+       77,
+       78,
+       79,
+       80,
+       81,
+       82,
+       83,
+       84,
+       85,
+       86,
+       87,
+       88,
+       89,
+       90,
+       91,
+       92,
+       93,
+       94,
+       95
+      ],
+      "ni_moments_muB": [
+       -1.323,
+       1.323,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.225,
+       1.243,
+       1.23,
+       -1.228,
+       -1.243,
+       1.226,
+       -1.323,
+       1.323,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.226,
+       1.243,
+       1.227,
+       -1.229,
+       -1.243,
+       1.223,
+       -1.323,
+       1.324,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.225,
+       1.243,
+       1.23,
+       -1.225,
+       -1.242,
+       1.252,
+       -1.323,
+       1.323,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.226,
+       1.242,
+       1.232,
+       -1.229,
+       -1.241,
+       1.224
+      ],
+      "abs_mean_muB": 1.2678,
+      "thresholds": {
+       "collapse": 0.25,
+       "magnetic": 0.55
+      },
+      "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다. site moment 는 PAW 투영 관측량이다"
+     },
+     "ldau": {
+      "n_atoms": 48,
+      "mean_n_up_dn": [
+       3.935,
+       3.93
+      ],
+      "moment_from_occ_mean_abs": 1.246,
+      "fingerprint": "2fa4a3d1e1b8"
+     },
+     "phase_sign_sig": {
+      "static": "7653305c"
+     },
+     "Q_muB": 1.268,
+     "f_small": 0.0,
+     "Q_clean_ref": 1.267,
+     "Q_clean_ref_seed": "afm2424_pm1",
+     "Q_ratio": 1.001
+    }
+   }
+  },
+  "prospective/ptfe_c10__b52__afm2424_net4": {
+   "ok": false,
+   "gates": [
+    "NOT_RUN(static)",
+    "RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)"
+   ],
+   "E0_static": null,
+   "vasp_version": null,
+   "incar_audit": {},
+   "run_segments": {},
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 3.447,
+     "d_Ni": 3.203,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 3.203,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ]
+   }
+  },
+  "prospective/ptfe_c10__b52__afm2424_pm1": {
+   "ok": false,
+   "gates": [
+    "NOT_RUN(static)",
+    "RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)"
+   ],
+   "E0_static": null,
+   "vasp_version": null,
+   "incar_audit": {},
+   "run_segments": {},
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 3.447,
+     "d_Ni": 3.203,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 3.203,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ]
+   }
+  },
+  "prospective/sdcp_neutral__b00__afm2424_net4": {
+   "ok": false,
+   "gates": [
+    "NOT_RUN(static)",
+    "RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)"
+   ],
+   "E0_static": null,
+   "vasp_version": null,
+   "incar_audit": {},
+   "run_segments": {},
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 3.083,
+     "d_Ni": 2.708,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.708,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ]
+   }
+  },
+  "prospective/sdcp_neutral__b00__afm2424_pm1": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -1151.29228248,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "LDAUU",
+      "LDAUTYPE",
+      "IDIPOL",
+      "ISPIN",
+      "LDAUL",
+      "LDAUJ",
+      "LDAU",
+      "LMAXMIX"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 3.083,
+     "d_Ni": 2.708,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.708,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.557,
+     "frms_eVA": 0.182,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    },
+    "magnetic": {
+     "n_ni": 48,
+     "global_sign": 1.0,
+     "n_partial_flip": 0,
+     "flip_indices_poscar": [],
+     "index_base": 0,
+     "flip_indices_poscar_1based": [],
+     "flip_moments_muB": {},
+     "n_small": 0,
+     "min_abs_muB": 1.22,
+     "abs_mean_muB": 1.27,
+     "total_muB": 0.0801562,
+     "realized_basin_id": "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30",
+     "realized_basin": {
+      "id_short": "4d49899b120e",
+      "canonical": "{\"collapsed\":[],\"ni_sign_vector\":\"-+++---++--+-+++---++--+-+++---++--+-+++---++--+\",\"organic_relative_spin\":\"\"}",
+      "ni_sign_vector": "-+++---++--+-+++---++--+-+++---++--+-+++---++--+",
+      "n_ni": 48,
+      "global_sign": 1.0,
+      "collapsed_ni_positions": [],
+      "organic_relative_spin": null,
+      "ni_index_poscar": [
+       48,
+       49,
+       50,
+       51,
+       52,
+       53,
+       54,
+       55,
+       56,
+       57,
+       58,
+       59,
+       60,
+       61,
+       62,
+       63,
+       64,
+       65,
+       66,
+       67,
+       68,
+       69,
+       70,
+       71,
+       72,
+       73,
+       74,
+       75,
+       76,
+       77,
+       78,
+       79,
+       80,
+       81,
+       82,
+       83,
+       84,
+       85,
+       86,
+       87,
+       88,
+       89,
+       90,
+       91,
+       92,
+       93,
+       94,
+       95
+      ],
+      "ni_moments_muB": [
+       -1.323,
+       1.326,
+       1.329,
+       1.285,
+       -1.287,
+       -1.277,
+       -1.227,
+       1.241,
+       1.22,
+       -1.227,
+       -1.242,
+       1.224,
+       -1.324,
+       1.326,
+       1.33,
+       1.286,
+       -1.287,
+       -1.278,
+       -1.225,
+       1.241,
+       1.228,
+       -1.235,
+       -1.241,
+       1.277,
+       -1.323,
+       1.326,
+       1.329,
+       1.286,
+       -1.287,
+       -1.278,
+       -1.229,
+       1.241,
+       1.226,
+       -1.23,
+       -1.242,
+       1.248,
+       -1.323,
+       1.326,
+       1.33,
+       1.285,
+       -1.287,
+       -1.278,
+       -1.223,
+       1.241,
+       1.231,
+       -1.231,
+       -1.242,
+       1.228
+      ],
+      "abs_mean_muB": 1.2699,
+      "thresholds": {
+       "collapse": 0.25,
+       "magnetic": 0.55
+      },
+      "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다. site moment 는 PAW 투영 관측량이다"
+     },
+     "ldau": {
+      "n_atoms": 48,
+      "mean_n_up_dn": [
+       3.935,
+       3.93
+      ],
+      "moment_from_occ_mean_abs": 1.248,
+      "fingerprint": "6cfc38fe271e"
+     },
+     "phase_sign_sig": {
+      "static": "7653305c"
+     },
+     "Q_muB": 1.27,
+     "f_small": 0.0,
+     "Q_clean_ref": 1.267,
+     "Q_clean_ref_seed": "afm2424_pm1",
+     "Q_ratio": 1.002
+    }
+   }
+  },
+  "prospective/sdcp_neutral__b12__afm2424_net4": {
+   "ok": false,
+   "gates": [
+    "NOT_RUN(static)",
+    "RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)"
+   ],
+   "E0_static": null,
+   "vasp_version": null,
+   "incar_audit": {},
+   "run_segments": {},
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 2.407,
+     "d_Ni": 2.802,
+     "nearest": "Li",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.407,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ]
+   }
+  },
+  "prospective/sdcp_neutral__b12__afm2424_pm1": {
+   "ok": false,
+   "gates": [
+    "NOT_RUN(static)",
+    "RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)"
+   ],
+   "E0_static": null,
+   "vasp_version": null,
+   "incar_audit": {},
+   "run_segments": {},
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 2.407,
+     "d_Ni": 2.802,
+     "nearest": "Li",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.407,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ]
+   }
+  },
+  "refs/clean_slab__afm2424_net4": {
+   "ok": false,
+   "gates": [
+    "NOT_RUN(static)",
+    "RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)"
+   ],
+   "E0_static": null,
+   "vasp_version": null,
+   "incar_audit": {},
+   "run_segments": {},
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ]
+   }
+  },
+  "refs/clean_slab__afm2424_pm1": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -944.94760445,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "LDAUU",
+      "LDAUTYPE",
+      "IDIPOL",
+      "ISPIN",
+      "LDAUL",
+      "LDAUJ",
+      "LDAU",
+      "LMAXMIX"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.211,
+     "frms_eVA": 0.121,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    },
+    "magnetic": {
+     "n_ni": 48,
+     "global_sign": 1.0,
+     "n_partial_flip": 0,
+     "flip_indices_poscar": [],
+     "index_base": 0,
+     "flip_indices_poscar_1based": [],
+     "flip_moments_muB": {},
+     "n_small": 0,
+     "min_abs_muB": 1.224,
+     "abs_mean_muB": 1.267,
+     "total_muB": 0.0001788,
+     "realized_basin_id": "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30",
+     "realized_basin": {
+      "id_short": "4d49899b120e",
+      "canonical": "{\"collapsed\":[],\"ni_sign_vector\":\"-+++---++--+-+++---++--+-+++---++--+-+++---++--+\",\"organic_relative_spin\":\"\"}",
+      "ni_sign_vector": "-+++---++--+-+++---++--+-+++---++--+-+++---++--+",
+      "n_ni": 48,
+      "global_sign": 1.0,
+      "collapsed_ni_positions": [],
+      "organic_relative_spin": null,
+      "ni_index_poscar": [
+       48,
+       49,
+       50,
+       51,
+       52,
+       53,
+       54,
+       55,
+       56,
+       57,
+       58,
+       59,
+       60,
+       61,
+       62,
+       63,
+       64,
+       65,
+       66,
+       67,
+       68,
+       69,
+       70,
+       71,
+       72,
+       73,
+       74,
+       75,
+       76,
+       77,
+       78,
+       79,
+       80,
+       81,
+       82,
+       83,
+       84,
+       85,
+       86,
+       87,
+       88,
+       89,
+       90,
+       91,
+       92,
+       93,
+       94,
+       95
+      ],
+      "ni_moments_muB": [
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228,
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228,
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228,
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228
+      ],
+      "abs_mean_muB": 1.2672,
+      "thresholds": {
+       "collapse": 0.25,
+       "magnetic": 0.55
+      },
+      "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다. site moment 는 PAW 투영 관측량이다"
+     },
+     "ldau": {
+      "n_atoms": 48,
+      "mean_n_up_dn": [
+       3.935,
+       3.93
+      ],
+      "moment_from_occ_mean_abs": 1.245,
+      "fingerprint": "59a9c964a734"
+     },
+     "phase_sign_sig": {
+      "static": "7653305c"
+     },
+     "Q_muB": 1.267,
+     "f_small": 0.0,
+     "Q_clean_ref": 1.267,
+     "Q_clean_ref_seed": "afm2424_pm1",
+     "Q_ratio": 1.0
+    }
+   }
+  },
+  "refs/mol__ptfe_c10__box20": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -177.85486528,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "IDIPOL",
+      "ISPIN"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LMAXMIX(기대값 미등록 — 되울림 2 은 비교 안 됨)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.709,
+     "frms_eVA": 0.603,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    }
+   }
+  },
+  "refs/mol__ptfe_c10__box24": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -177.85499666,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "IDIPOL",
+      "ISPIN"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LMAXMIX(기대값 미등록 — 되울림 2 은 비교 안 됨)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.709,
+     "frms_eVA": 0.603,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    }
+   }
+  },
+  "refs/mol__ptfe_c10__box24__nzmag": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -177.85495874,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "IDIPOL",
+      "ISPIN"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LMAXMIX(기대값 미등록 — 되울림 2 은 비교 안 됨)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.709,
+     "frms_eVA": 0.603,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    }
+   }
+  },
+  "refs/mol__sdcp_neutral__box20": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -205.38963155,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "IDIPOL",
+      "ISPIN"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LMAXMIX(기대값 미등록 — 되울림 2 은 비교 안 됨)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 1.186,
+     "frms_eVA": 0.384,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    }
+   }
+  },
+  "refs/mol__sdcp_neutral__box24": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -205.38984936,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "IDIPOL",
+      "ISPIN"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LMAXMIX(기대값 미등록 — 되울림 2 은 비교 안 됨)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 1.186,
+     "frms_eVA": 0.384,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    }
+   }
+  },
+  "refs/mol__sdcp_neutral__box24__nzmag": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -205.38984795,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "IDIPOL",
+      "ISPIN"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LMAXMIX(기대값 미등록 — 되울림 2 은 비교 안 됨)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 1.186,
+     "frms_eVA": 0.384,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    }
+   }
+  },
+  "vacconv/clean_slab__afm2424_pm1__c2": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -944.94772651,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "LDAUU",
+      "LDAUTYPE",
+      "IDIPOL",
+      "ISPIN",
+      "LDAUL",
+      "LDAUJ",
+      "LDAU",
+      "LMAXMIX"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.21,
+     "frms_eVA": 0.12,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    },
+    "magnetic": {
+     "n_ni": 48,
+     "global_sign": 1.0,
+     "n_partial_flip": 0,
+     "flip_indices_poscar": [],
+     "index_base": 0,
+     "flip_indices_poscar_1based": [],
+     "flip_moments_muB": {},
+     "n_small": 0,
+     "min_abs_muB": 1.224,
+     "abs_mean_muB": 1.267,
+     "total_muB": 8.12e-05,
+     "realized_basin_id": "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30",
+     "realized_basin": {
+      "id_short": "4d49899b120e",
+      "canonical": "{\"collapsed\":[],\"ni_sign_vector\":\"-+++---++--+-+++---++--+-+++---++--+-+++---++--+\",\"organic_relative_spin\":\"\"}",
+      "ni_sign_vector": "-+++---++--+-+++---++--+-+++---++--+-+++---++--+",
+      "n_ni": 48,
+      "global_sign": 1.0,
+      "collapsed_ni_positions": [],
+      "organic_relative_spin": null,
+      "ni_index_poscar": [
+       48,
+       49,
+       50,
+       51,
+       52,
+       53,
+       54,
+       55,
+       56,
+       57,
+       58,
+       59,
+       60,
+       61,
+       62,
+       63,
+       64,
+       65,
+       66,
+       67,
+       68,
+       69,
+       70,
+       71,
+       72,
+       73,
+       74,
+       75,
+       76,
+       77,
+       78,
+       79,
+       80,
+       81,
+       82,
+       83,
+       84,
+       85,
+       86,
+       87,
+       88,
+       89,
+       90,
+       91,
+       92,
+       93,
+       94,
+       95
+      ],
+      "ni_moments_muB": [
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228,
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228,
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228,
+       -1.323,
+       1.324,
+       1.329,
+       1.279,
+       -1.286,
+       -1.275,
+       -1.227,
+       1.242,
+       1.231,
+       -1.224,
+       -1.239,
+       1.228
+      ],
+      "abs_mean_muB": 1.2672,
+      "thresholds": {
+       "collapse": 0.25,
+       "magnetic": 0.55
+      },
+      "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다. site moment 는 PAW 투영 관측량이다"
+     },
+     "ldau": {
+      "n_atoms": 48,
+      "mean_n_up_dn": [
+       3.935,
+       3.93
+      ],
+      "moment_from_occ_mean_abs": 1.245,
+      "fingerprint": "59a9c964a734"
+     },
+     "phase_sign_sig": {
+      "static": "7653305c"
+     },
+     "Q_muB": 1.267,
+     "f_small": 0.0,
+     "Q_clean_ref": 1.267,
+     "Q_clean_ref_seed": "afm2424_pm1",
+     "Q_ratio": 1.0
+    }
+   }
+  },
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -1123.59261041,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "LDAUU",
+      "LDAUTYPE",
+      "IDIPOL",
+      "ISPIN",
+      "LDAUL",
+      "LDAUJ",
+      "LDAU",
+      "LMAXMIX"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 2.744,
+     "d_Ni": 2.538,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.538,
+    "bonds": {
+     "canonical": 31,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.441,
+     "frms_eVA": 0.172,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    },
+    "magnetic": {
+     "n_ni": 48,
+     "global_sign": 1.0,
+     "n_partial_flip": 0,
+     "flip_indices_poscar": [],
+     "index_base": 0,
+     "flip_indices_poscar_1based": [],
+     "flip_moments_muB": {},
+     "n_small": 0,
+     "min_abs_muB": 1.223,
+     "abs_mean_muB": 1.268,
+     "total_muB": 6.42e-05,
+     "realized_basin_id": "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30",
+     "realized_basin": {
+      "id_short": "4d49899b120e",
+      "canonical": "{\"collapsed\":[],\"ni_sign_vector\":\"-+++---++--+-+++---++--+-+++---++--+-+++---++--+\",\"organic_relative_spin\":\"\"}",
+      "ni_sign_vector": "-+++---++--+-+++---++--+-+++---++--+-+++---++--+",
+      "n_ni": 48,
+      "global_sign": 1.0,
+      "collapsed_ni_positions": [],
+      "organic_relative_spin": null,
+      "ni_index_poscar": [
+       48,
+       49,
+       50,
+       51,
+       52,
+       53,
+       54,
+       55,
+       56,
+       57,
+       58,
+       59,
+       60,
+       61,
+       62,
+       63,
+       64,
+       65,
+       66,
+       67,
+       68,
+       69,
+       70,
+       71,
+       72,
+       73,
+       74,
+       75,
+       76,
+       77,
+       78,
+       79,
+       80,
+       81,
+       82,
+       83,
+       84,
+       85,
+       86,
+       87,
+       88,
+       89,
+       90,
+       91,
+       92,
+       93,
+       94,
+       95
+      ],
+      "ni_moments_muB": [
+       -1.323,
+       1.323,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.225,
+       1.243,
+       1.23,
+       -1.228,
+       -1.243,
+       1.226,
+       -1.323,
+       1.323,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.226,
+       1.243,
+       1.227,
+       -1.229,
+       -1.243,
+       1.223,
+       -1.323,
+       1.324,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.225,
+       1.243,
+       1.23,
+       -1.225,
+       -1.242,
+       1.252,
+       -1.323,
+       1.323,
+       1.329,
+       1.278,
+       -1.286,
+       -1.275,
+       -1.226,
+       1.242,
+       1.232,
+       -1.229,
+       -1.241,
+       1.224
+      ],
+      "abs_mean_muB": 1.2678,
+      "thresholds": {
+       "collapse": 0.25,
+       "magnetic": 0.55
+      },
+      "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다. site moment 는 PAW 투영 관측량이다"
+     },
+     "ldau": {
+      "n_atoms": 48,
+      "mean_n_up_dn": [
+       3.935,
+       3.93
+      ],
+      "moment_from_occ_mean_abs": 1.246,
+      "fingerprint": "67b1223ae853"
+     },
+     "phase_sign_sig": {
+      "static": "7653305c"
+     },
+     "Q_muB": 1.268,
+     "f_small": 0.0,
+     "Q_clean_ref": 1.267,
+     "Q_clean_ref_seed": "afm2424_pm1",
+     "Q_ratio": 1.001
+    }
+   }
+  },
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2": {
+   "ok": true,
+   "gates": [],
+   "E0_static": -1151.29218257,
+   "vasp_version": "5.4.4.18Apr17",
+   "incar_audit": {
+    "static": {
+     "verified_exact": [
+      "ENCUT",
+      "ISMEAR",
+      "IVDW",
+      "ISTART",
+      "ICHARG",
+      "LDIPOL",
+      "LASPH",
+      "ISYM",
+      "NUPDOWN",
+      "LDAUU",
+      "LDAUTYPE",
+      "IDIPOL",
+      "ISPIN",
+      "LDAUL",
+      "LDAUJ",
+      "LDAU",
+      "LMAXMIX"
+     ],
+     "verified_equivalence_class": [
+      "LREAL"
+     ],
+     "unverified": [
+      "ADDGRID(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "MAGMOM(OUTCAR 미되울림 — 원리적 검증불가, 선언은 INCAR sha256 무결성으로만 보증)",
+      "LNONCOLLINEAR(기대값 미등록 — 되울림 F 은 비교 안 됨)",
+      "LSORBIT(기대값 미등록 — 되울림 F 은 비교 안 됨)"
+     ],
+     "mismatch": []
+    }
+   },
+   "run_segments": {
+    "static": {
+     "n": 1,
+     "used": "only",
+     "used_index": 0
+    }
+   },
+   "geom": {
+    "single_point": true,
+    "cell_drift_A": 0.0,
+    "registry": {
+     "d_Li": 3.083,
+     "d_Ni": 2.708,
+     "nearest": "Ni",
+     "top_only": true,
+     "expected": null,
+     "checked": false
+    },
+    "mol_slab_min_A": 2.708,
+    "bonds": {
+     "canonical": 36,
+     "broken": 0,
+     "formed": 0,
+     "compared_against": "빌드 시 조각 정본 그래프"
+    },
+    "fixed_drift_A": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates": "NOT_APPLICABLE_SINGLE_POINT",
+    "relaxation_gates_list": [
+     "ionic convergence",
+     "fixed-atom drift",
+     "surface reconstruction",
+     "Li extraction",
+     "new interface bonds",
+     "DFT CONTCAR migration"
+    ],
+    "uma_geometry_residual_force": {
+     "fmax_eVA": 0.56,
+     "frms_eVA": 0.183,
+     "meaning": "MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, 에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토.",
+     "trigger_hint_eVA": 0.05
+    },
+    "magnetic": {
+     "n_ni": 48,
+     "global_sign": 1.0,
+     "n_partial_flip": 0,
+     "flip_indices_poscar": [],
+     "index_base": 0,
+     "flip_indices_poscar_1based": [],
+     "flip_moments_muB": {},
+     "n_small": 0,
+     "min_abs_muB": 1.22,
+     "abs_mean_muB": 1.27,
+     "total_muB": 0.0095819,
+     "realized_basin_id": "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30",
+     "realized_basin": {
+      "id_short": "4d49899b120e",
+      "canonical": "{\"collapsed\":[],\"ni_sign_vector\":\"-+++---++--+-+++---++--+-+++---++--+-+++---++--+\",\"organic_relative_spin\":\"\"}",
+      "ni_sign_vector": "-+++---++--+-+++---++--+-+++---++--+-+++---++--+",
+      "n_ni": 48,
+      "global_sign": 1.0,
+      "collapsed_ni_positions": [],
+      "organic_relative_spin": null,
+      "ni_index_poscar": [
+       48,
+       49,
+       50,
+       51,
+       52,
+       53,
+       54,
+       55,
+       56,
+       57,
+       58,
+       59,
+       60,
+       61,
+       62,
+       63,
+       64,
+       65,
+       66,
+       67,
+       68,
+       69,
+       70,
+       71,
+       72,
+       73,
+       74,
+       75,
+       76,
+       77,
+       78,
+       79,
+       80,
+       81,
+       82,
+       83,
+       84,
+       85,
+       86,
+       87,
+       88,
+       89,
+       90,
+       91,
+       92,
+       93,
+       94,
+       95
+      ],
+      "ni_moments_muB": [
+       -1.323,
+       1.325,
+       1.329,
+       1.284,
+       -1.287,
+       -1.277,
+       -1.227,
+       1.241,
+       1.22,
+       -1.227,
+       -1.242,
+       1.224,
+       -1.324,
+       1.326,
+       1.33,
+       1.286,
+       -1.287,
+       -1.278,
+       -1.225,
+       1.241,
+       1.228,
+       -1.235,
+       -1.241,
+       1.277,
+       -1.323,
+       1.326,
+       1.329,
+       1.286,
+       -1.287,
+       -1.278,
+       -1.229,
+       1.241,
+       1.226,
+       -1.23,
+       -1.242,
+       1.248,
+       -1.323,
+       1.326,
+       1.33,
+       1.285,
+       -1.287,
+       -1.278,
+       -1.223,
+       1.241,
+       1.231,
+       -1.231,
+       -1.242,
+       1.228
+      ],
+      "abs_mean_muB": 1.2699,
+      "thresholds": {
+       "collapse": 0.25,
+       "magnetic": 0.55
+      },
+      "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다. site moment 는 PAW 투영 관측량이다"
+     },
+     "ldau": {
+      "n_atoms": 48,
+      "mean_n_up_dn": [
+       3.935,
+       3.93
+      ],
+      "moment_from_occ_mean_abs": 1.248,
+      "fingerprint": "9299d1aec894"
+     },
+     "phase_sign_sig": {
+      "static": "7653305c"
+     },
+     "Q_muB": 1.27,
+     "f_small": 0.0,
+     "Q_clean_ref": 1.267,
+     "Q_clean_ref_seed": "afm2424_pm1",
+     "Q_ratio": 1.002
+    }
+   }
+  }
+ },
+ "gas_canary_geom": {
+  "ptfe_c10": {
+   "same": true,
+   "max_cart_diff_A": 0.0,
+   "max_cell_diff_A": 0.0,
+   "tol_A": 1e-06
+  },
+  "sdcp_neutral": {
+   "same": true,
+   "max_cart_diff_A": 0.0,
+   "max_cell_diff_A": 0.0,
+   "tol_A": 1e-06
+  }
+ },
+ "prereg_closure": {
+  "schema": "prereg_closure/v1",
+  "prereg_doc": [
+   "db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
+   "db/properties/sdcp_c12_protocol_2026_08_30.json"
+  ],
+  "prereg_doc_note": "보고량은 claim prereg, D 의 정의는 protocol §2b 다. 두 문서의 내용 SHA 와 비준 상태는 MANIFEST.governance_binding 에 결박돼 있다 (회신 BB P0-2).",
+  "superseded_origin": {
+   "doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
+   "지위": "⛔ SUPERSEDED (2026-08-31) — estimand 가 다르다",
+   "⚠": "이 문서의 **실측 기록**(UMA–DFT 오프셋·술폰산 수소결합·표본밀도 비대칭)은 여전히 유효하다. 폐기된 것은 estimand 이지 관측이 아니다. 여기에 남기는 이유는 계보이지 근거가 아니다."
+  },
+  "candidate_set": "c12 (frozen cc87f6eeae5f9c3a)",
+  "blocks": [
+   "POOL_JOB_NOT_OK(prospective/ptfe_c10__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+   "POOL_JOB_NOT_OK(prospective/sdcp_neutral__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+   "POOL_INCOMPLETE(계획된 자세 중 사용 불가 {'ptfe_c10': 1, 'sdcp_neutral': 1} — pooled 값을 내지 않는다)"
+  ],
+  "block_records": [
+   {
+    "code": "POOL_JOB_NOT_OK",
+    "msg": "POOL_JOB_NOT_OK(prospective/ptfe_c10__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+    "job_keys": [
+     "prospective/ptfe_c10__b00__afm2424_net4"
+    ],
+    "scope": "pooled_diagnostic",
+    "affects_estimand": true
+   },
+   {
+    "code": "POOL_JOB_NOT_OK",
+    "msg": "POOL_JOB_NOT_OK(prospective/sdcp_neutral__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+    "job_keys": [
+     "prospective/sdcp_neutral__b00__afm2424_net4"
+    ],
+    "scope": "pooled_diagnostic",
+    "affects_estimand": true
+   },
+   {
+    "code": "POOL_INCOMPLETE",
+    "msg": "POOL_INCOMPLETE(계획된 자세 중 사용 불가 {'ptfe_c10': 1, 'sdcp_neutral': 1} — pooled 값을 내지 않는다)",
+    "job_keys": [
+     "prospective/ptfe_c10__b00__afm2424_net4",
+     "prospective/sdcp_neutral__b00__afm2424_net4"
+    ],
+    "scope": "pooled_diagnostic",
+    "affects_estimand": true
+   }
+  ],
+  "A_by_frag": {
+   "ptfe_c10": {
+    "n": 1,
+    "min": [
+     -945.738345,
+     "prospective/ptfe_c10__b00__afm2424_pm1",
+     "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30"
+    ],
+    "max": [
+     -945.738345,
+     "prospective/ptfe_c10__b00__afm2424_pm1",
+     "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30"
+    ]
+   },
+   "sdcp_neutral": {
+    "n": 1,
+    "min": [
+     -945.902433,
+     "prospective/sdcp_neutral__b00__afm2424_pm1",
+     "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30"
+    ],
+    "max": [
+     -945.902433,
+     "prospective/sdcp_neutral__b00__afm2424_pm1",
+     "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30"
+    ]
+   }
+  },
+  "cohort_fields": {
+   "checked": 19,
+   "incoherent": 0
+  },
+  "spin_control_delta_eV": {
+   "ptfe_c10": 4e-05,
+   "sdcp_neutral": 0.0
+  },
+  "realized_basins": {
+   "ptfe_c10": {
+    "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30": [
+     "prospective/ptfe_c10__b00__afm2424_pm1"
+    ]
+   },
+   "sdcp_neutral": {
+    "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30": [
+     "prospective/sdcp_neutral__b00__afm2424_pm1"
+    ]
+   }
+  },
+  "pool_completeness": {
+   "expected": {
+    "ptfe_c10": 2,
+    "sdcp_neutral": 2
+   },
+   "usable": {
+    "ptfe_c10": 1,
+    "sdcp_neutral": 1
+   },
+   "unusable": {
+    "ptfe_c10": [
+     "prospective/ptfe_c10__b00__afm2424_net4: not ok"
+    ],
+    "sdcp_neutral": [
+     "prospective/sdcp_neutral__b00__afm2424_net4: not ok"
+    ]
+   },
+   "ok": false,
+   "⛔": "계획된 자세 하나라도 결측·게이트·미해결이면 pooled 값(secondary_G · pooled min · 일반화 주장)을 **전부 비인용**으로 한다. 살아남은 부분집합으로 min 을 뽑으면 표본이 통과 쪽으로 편향된다"
+  },
+  "clean_slab_basins": [
+   "4d49899b120e256ec5ed67a18e21919073832f3539f4b50ae3732c5cc6944b30"
+  ],
+  "pose_basin_interaction": {
+   "ptfe_c10": {
+    "판정": "not_measurable",
+    "J_f_meV": null,
+    "n_pose": 0,
+    "n_pose_required": 1,
+    "why": "primary 자세가 1개라 자세 간 range 가 정의되지 않는다 — 값은 0 이 아니라 **측정 불가**다. 대안 자세(sensitivity·stress_sensitivity)는 역할 정책상 이 풀에 안 들어온다 (회신 BE P1)"
+   },
+   "sdcp_neutral": {
+    "판정": "not_measurable",
+    "J_f_meV": null,
+    "n_pose": 0,
+    "n_pose_required": 1,
+    "why": "primary 자세가 1개라 자세 간 range 가 정의되지 않는다 — 값은 0 이 아니라 **측정 불가**다. 대안 자세(sensitivity·stress_sensitivity)는 역할 정책상 이 풀에 안 들어온다 (회신 BE P1)"
+   }
+  },
+  "closure_C1": {
+   "schema": "closure_C1/v1",
+   "S_tol_eV": 0.05,
+   "⚠": "선택된 네 자세의 국소 일관성. selector 일반 검증이 아니다",
+   "by_frag": {},
+   "verdict": "unresolved — clean slab(pm1·D3-on)이 2개"
+  },
+  "closure_C3": {
+   "schema": "closure_C3/v3",
+   "ref_gap_eV": 0.9,
+   "hi": 0.7,
+   "lo": 0.3,
+   "edisp_tol_eV": 0.001,
+   "source": "Edisp (eV) from the D3-on OUTCAR — no D3-off twin required",
+   "offset_definition": {
+    "sdcp_neutral": {
+     "Li_top": 1.0728,
+     "Ni_top": 1.0667
+    },
+    "ptfe_c10": {
+     "Li_top": 0.1855,
+     "Ni_top": 0.1484
+    }
+   },
+   "offset_within_fragment_range_eV": {
+    "sdcp_neutral": 0.0061,
+    "ptfe_c10": 0.0371
+   },
+   "⚠_C3_가_무엇인가": {
+    "ko": "IVDW=11(D3 zero damping)의 correction 은 total energy 에 **더해질 뿐 SCF 에 들어가지 않는다.** 그래서 고정기하 static 에서 `E_on − E_off = Edisp` 가 항등식이고, 쌍둥이 D3-off 잡이 필요 없다. ⇒ C3 는 **exact-cell 차등량에 대한 전체 D3 기여**이지 조각–슬랩 쌍 분산으로 분해한 값이 **아니다**.",
+    "en": "With IVDW=11 (D3, zero damping) the correction is added to the total energy and does not enter the SCF, so at fixed geometry E_on − E_off = Edisp identically and no D3-off twin is needed. C3 is therefore the **total D3 contribution to the exact-cell difference**, not a fragment–slab pair decomposition.",
+    "출처": "https://vasp.at/wiki/IVDW",
+    "⛔_틀린_근거": "*'두 조각이 슬랩을 다르게 편극시키지 않는다'* 는 **틀렸다** — D3 계수는 원자종·배위 기하에 의존한다 (회신 AY Q2 정정)"
+   },
+   "by_frag": {
+    "ptfe_c10": {
+     "verdict": "unresolved",
+     "missing": [
+      "prospective/ptfe_c10__b52__afm2424_pm1: 게이트됨"
+     ],
+     "n_used": 1,
+     "n_required": 2,
+     "required_keys": [
+      "prospective/ptfe_c10__b00__afm2424_pm1",
+      "prospective/ptfe_c10__b52__afm2424_pm1"
+     ],
+     "used_keys": [
+      "prospective/ptfe_c10__b00__afm2424_pm1"
+     ],
+     "예상밖": [],
+     "누락": [
+      "prospective/ptfe_c10__b52__afm2424_pm1"
+     ],
+     "why": "자세 하나라도 Edisp 가 없거나 검사에 걸리면 unresolved — 부분집합 평균을 내지 않는다"
+    },
+    "sdcp_neutral": {
+     "verdict": "unresolved",
+     "missing": [
+      "prospective/sdcp_neutral__b12__afm2424_pm1: 게이트됨"
+     ],
+     "n_used": 1,
+     "n_required": 2,
+     "required_keys": [
+      "prospective/sdcp_neutral__b00__afm2424_pm1",
+      "prospective/sdcp_neutral__b12__afm2424_pm1"
+     ],
+     "used_keys": [
+      "prospective/sdcp_neutral__b00__afm2424_pm1"
+     ],
+     "예상밖": [],
+     "누락": [
+      "prospective/sdcp_neutral__b12__afm2424_pm1"
+     ],
+     "why": "자세 하나라도 Edisp 가 없거나 검사에 걸리면 unresolved — 부분집합 평균을 내지 않는다"
+    }
+   },
+   "verdict": "unresolved — 두 조각이 다 필요하다"
+  },
+  "closure_vacconv": {
+   "schema": "closure_vacconv/v1",
+   "tol_eV": 0.005,
+   "report_digits": 2,
+   "⚠_5meV_출처": "물리 상수가 아니라 보고 최소단위(0.01 eV)의 절반",
+   "pass": true,
+   "by_cell": {},
+   "blocks": [],
+   "applicable": true,
+   "gas_reference_used": {
+    "ptfe_c10": true,
+    "sdcp_neutral": true
+   },
+   "⚠_기체_불필요": "Δ_vac 에서 기체 에너지는 대수적으로 소거된다 — 기체가 없어도 판정은 유효하다 (회신 AM P0-3). 단 **최종 D** 에는 기체가 필요하다.",
+   "jobs": {
+    "ptfe_c10/c1": "prospective/ptfe_c10__b00__afm2424_pm1",
+    "ptfe_c10/c2": "vacconv/ptfe_c10__b00__afm2424_pm1__c2",
+    "sdcp_neutral/c1": "prospective/sdcp_neutral__b00__afm2424_pm1",
+    "sdcp_neutral/c2": "vacconv/sdcp_neutral__b00__afm2424_pm1__c2"
+   },
+   "A_eV": {
+    "ptfe_c10/c1": -945.738345,
+    "ptfe_c10/c2": -945.737614,
+    "sdcp_neutral/c1": -945.902433,
+    "sdcp_neutral/c2": -945.902333
+   },
+   "D_eV": {
+    "c1": -0.164088,
+    "c2": -0.164719
+   },
+   "D_reported": {
+    "c1": -0.16,
+    "c2": -0.16
+   },
+   "delta_vac_eV": -0.000632,
+   "within_tol": true,
+   "same_rounded": true,
+   "gate": "|Δ_vac| ≤ 5 meV (물리 gate)",
+   "rounding_note": "표시 안정성 정보 — 판정에 안 들어간다. 반올림만 불일치하면 0.01 eV 대신 한 자리 더(0.001 eV) 보고하거나 불확도를 병기한다.",
+   "claim_scope": "시험한 b00·afm2424_pm1 branch 에서 c +4 Å 증가에 대한 안정성. **무한진공 수렴의 증명이 아니다.**",
+   "verdict": "ok — Δ_vac -0.6 meV (문턱 5) · 반올림 일치"
+  },
+  "potcar_identity": {
+   "schema": "potcar_identity/v1",
+   "blocking": [],
+   "n_with_prov": 19,
+   "pin": null,
+   "observed": {
+    "source_sha256": {
+     "Li_sv": [
+      "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895"
+     ],
+     "Ni_pv": [
+      "368cd815a19284a5fda64519f43fef792dad8376deb9e2da41aae78b997dc50e"
+     ],
+     "O": [
+      "818f92134a0a090dccd8ba1447fa70422a3b330e708bb4f08108d8ae51209ddf"
+     ],
+     "C": [
+      "253f7b50bb8d59471dbedb8285d89021f4a42ed1a2c5d38a03a736e69125dd95"
+     ],
+     "F": [
+      "53c630871ac675939349fc2b976745ee17808dedc90b5bdde026bc81f0faf456"
+     ],
+     "S": [
+      "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132"
+     ],
+     "H": [
+      "030f79b5d3ab3cf0e668861823c8fb652ff669f3e15e46930bd03bfd63a607b6"
+     ]
+    },
+    "vasp_version": [
+     "5.4.4.18Apr17"
+    ],
+    "titel_by_variant": {
+     "C": [
+      "PAW_PBE C 08Apr2002",
+      "TITEL  = PAW_PBE C 08Apr2002"
+     ],
+     "F": [
+      "PAW_PBE F 08Apr2002",
+      "TITEL  = PAW_PBE F 08Apr2002"
+     ],
+     "H": [
+      "PAW_PBE H 15Jun2001",
+      "TITEL  = PAW_PBE H 15Jun2001"
+     ],
+     "Li_sv": [
+      "PAW_PBE Li_sv 10Sep2004",
+      "TITEL  = PAW_PBE Li_sv 10Sep2004"
+     ],
+     "Ni_pv": [
+      "PAW_PBE Ni_pv 06Sep2000",
+      "TITEL  = PAW_PBE Ni_pv 06Sep2000"
+     ],
+     "O": [
+      "PAW_PBE O 08Apr2002",
+      "TITEL  = PAW_PBE O 08Apr2002"
+     ],
+     "S": [
+      "PAW_PBE S 06Sep2000",
+      "TITEL  = PAW_PBE S 06Sep2000"
+     ]
+    }
+   },
+   "completeness": {
+    "n_jobs": 19,
+    "n_completed": 12,
+    "stage_census": {
+     "not_attempted": 7,
+     "completed": 12
+    },
+    "n_with_prov": 19,
+    "n_no_prov": 0,
+    "n_incomplete_variants": 0,
+    "n_without_vasp_version": 0,
+    "판정": "완전성은 **completed**(정상 종료 + 최종 에너지) 잡에만 건다. 미실행·중단 잡은 대상이 아니다 — 단계별 실행에서 2단계가 비어 있는 것은 정상이다"
+   },
+   "root_seal_variants": [
+    "C",
+    "F",
+    "H",
+    "Li_sv",
+    "Ni_pv",
+    "O",
+    "S"
+   ],
+   "root_seal_meta": {
+    "schema": "potcar_root_seal/v2",
+    "allowlist_sha256": "8d192587cf8b1b7cec52804d0aff311a99a5c25c471dae230f0b90b8ce13dc49",
+    "manifest_sha256": "a2e3e820a276757389862ae7bf0bd273fd7362a35e1368d5b74c5937c7eb17e7",
+    "vasp_executable": "/home/shared/programs/vasp/5.4.4+vtst+vaspsol+beef/vasp.5.4.4/bin/vasp_std",
+    "vasp_executable_sha256": "f1eee9acd5f7bf3bbffe951a266af9b8f91cbd15e07775c43d9f8a83e7f8c3e8",
+    "vasp_version_banner": "vasp.5.4.4.18Apr17-6-g9f103f2a35",
+    "sealed_at_utc": "2026-09-24T11:30:56Z",
+    "sealed_before_production": true
+   },
+   "assembled_crosscheck": {
+    "compared": 19,
+    "mismatch": 0,
+    "unverified": 0
+   },
+   "attestation": {
+    "present": false,
+    "usable": false,
+    "why_not": [],
+    "checked": [
+     "schema 필드 전건",
+     "manifest 해시",
+     "정확한 ZIP 해시",
+     "allowlist",
+     "VASP 경로·해시·버전",
+     "variant 집합 3자 완전일치",
+     "variant 별 TITEL·embedded hash·원본 sha",
+     "생산 전 근거"
+    ],
+    "release_label": null,
+    "site": null,
+    "created_utc": null
+   },
+   "root_seal_coverage": {
+    "ok": true,
+    "why": "봉인이 현재 MANIFEST·계획 잡 19개·variant ['C', 'F', 'H', 'Li_sv', 'Ni_pv', 'O', 'S'] 를 포괄한다",
+    "sealed_variants": [
+     "C",
+     "F",
+     "H",
+     "Li_sv",
+     "Ni_pv",
+     "O",
+     "S"
+    ],
+    "planned_variants": [
+     "C",
+     "F",
+     "H",
+     "Li_sv",
+     "Ni_pv",
+     "O",
+     "S"
+    ],
+    "⛔": "이 판정은 '봉인이 이 묶음을 포괄한다' 까지다 — 봉인한 트리가 공식 배포판인지는 attestation 의 몫이다"
+   },
+   "release_label_anchor_detail": {
+    "pin_has_sha_map": false,
+    "pin_declares_label": null,
+    "label_matches_site_report": false,
+    "sha_map_covers_all_variants": false,
+    "uncovered_variants": [],
+    "⛔": "바이트 pin 만으로는 **이름**을 인증하지 못한다 (회신 BB P0-6 · Q4). `{label, 전체 source SHA map}` 을 함께 결박한 외부 앵커여야 한다."
+   },
+   "allowed_claim": "bundle_conditional_only",
+   "methods_candidate": "⚠ 공식 release 를 단정하지 않는다 — 계산 전 attestation 이 없다. 허용 문구: 'the reported D is conditional on this bundle's PAW dataset; the fingerprints were not independently matched to an archived POTCAR release.' (회신 AP #12·Q3)",
+   "methods_candidate_⛔": "이 문구는 내부 기록용으로는 되지만 **원고 Methods 로는 약하다**(AP Q3). 원고에 PAW release 를 적으려면 POTCAR_ATTESTATION_REQUEST.md 를 외주처에 보내 계산 전에 받아야 한다",
+   "methods_candidate_⚠": "이것은 **후보 문구**다 (회신 AR Q5). 도구가 검증 상태로 상한을 정할 뿐이고, 원고 채택은 사람이 검토한 뒤에 한다. 더 강한 문장으로 바꿔 쓰지 말 것.",
+   "pin_absent": true,
+   "identity_scope": "sealed_root_v13 — variant 별 원본 SHA256 을 **생산 전에 봉인**하고 완주 전 잡이 그 봉인과 일치함을 확인했다. 이전 wave 와의 수치적 동등성은 가정하지 않는다. ⚠ 공식 release 여부는 이 라벨이 보증하지 않는다 (POTCAR_ATTESTATION.json 이 그 몫이다)",
+   "⚠": "pin 없음 — 사후 provenance 로 잡 사이 일치만 본다. 미리 고정하려면 생성 시 `--potcar_pin`",
+   "ok": true
+  },
+  "h1_tolerance": {},
+  "closure_C5": {
+   "schema": "closure_C5/v2",
+   "name": "ddE_obs",
+   "merge": null,
+   "n_pose_required": 12,
+   "h1_tol": {},
+   "h1_floor_eV": 0.03,
+   "decision": "D-2026-08-30-sdcp-neutral-ptfe-ddE-obs (proposed)",
+   "⚠": "표본 조건부 — 전역 최소가 아니다",
+   "by_frag": {},
+   "verdict": "⛔ NOT_MERGED — 12자세는 calibration 묶음과 holdout 묶음에 걸쳐 있다. `analyze_results.py <calib> --merge <holdout>` 로 두 묶음을 함께 줘야 한다. 한 묶음만으로는 정의되지 않는다"
+  },
+  "gas_pair_contract": {
+   "ok": true,
+   "violations": [],
+   "요구": [
+    "box20/box24 내부기하 동일 (internal_geometry_sha)",
+    "전자상태 정책 동일 (electronic_state_sha)",
+    "둘 다 고정기하 static — 상자별 독립 이완 금지"
+   ],
+   "⚠": "이 계약이 깨지면 δ_gas 는 셀 수렴이 아니라 '셀 + 이완 경로' 를 잰 값이라 문턱을 걸 대상이 아니다"
+  },
+  "gas_box_delta": {
+   "delta_gas_meV": -0.086,
+   "by_fragment_meV": {
+    "sdcp_neutral": -0.218,
+    "ptfe_c10": -0.131
+   },
+   "tol_meV": 5.0,
+   "pass": true,
+   "pair_contract_ok": true,
+   "식": "δ_gas = [E_G^sdcp(24)−E_G^sdcp(20)] − [E_G^ctl(24)−E_G^ctl(20)]",
+   "⚠": "조각별 값이 각각 작아도 **부호가 반대면 차에서 커진다** — 그래서 조각별이 아니라 이 차에 문턱을 건다 (회신 AP #11)"
+  },
+  "advisories": [
+   "KCONV_NOT_DESIGNED(k 축을 **설계에서 뺐다** — 비준 사전등록 축_설계_제외_2026_09_03 에 선언된 생략. ΔE_ads 는 보고하되 **0.01 eV 전체 안정성은 주장하지 않는다.** 재개 조건: 재개하지 않는다. |D_raw| < 0.05 eV 는 프로토콜 §7 미해결 · §8 '계산을 확장하지 않는다'. |D_raw| ≥ 0.05 eV 면 k 가드밴드(0.01 eV)가 부호·판정을 못 바꾼다. 경계 구간 0.05 ≤ |D_raw| < 0.06 eV 에서는 분석기가 KCONV_UNTESTED_AXIS_AT_THRESHOLD 자문을 내고 원고는 '미시험 축에 판정이 민감하다' 를 적는다 — 계산은 추가하지 않는다.)",
+   "KCONV_REOPEN_NOT_TRIGGERED(|D_raw|=0.1641 eV · 비교 boundary · 문턱 0.05 eV · |D_raw| ≥ 문턱+가드밴드 — 미시험 축이 판정을 못 바꾼다 · 추가 계산 없음)"
+  ],
+  "kconv_omission": {
+   "status": "not_designed",
+   "delta_k_meV": null,
+   "⛔": "이 축은 재지 않았다 — 0 이 아니라 **없음**이다",
+   "prereg_entry": "축_설계_제외_2026_09_03",
+   "재개_조건": {
+    "규칙": "재개하지 않는다. |D_raw| < 0.05 eV 는 프로토콜 §7 미해결 · §8 '계산을 확장하지 않는다'. |D_raw| ≥ 0.05 eV 면 k 가드밴드(0.01 eV)가 부호·판정을 못 바꾼다. 경계 구간 0.05 ≤ |D_raw| < 0.06 eV 에서는 분석기가 KCONV_UNTESTED_AXIS_AT_THRESHOLD 자문을 내고 원고는 '미시험 축에 판정이 민감하다' 를 적는다 — 계산은 추가하지 않는다.",
+    "판정량": "D_raw_eV",
+    "문턱_eV": 0.05,
+    "가드밴드_eV": 0.01,
+    "비교": "boundary",
+    "충족시": "자문만 (KCONV_UNTESTED_AXIS_AT_THRESHOLD) — dense 추가 없음 · 원고에 민감성 명시",
+    "⛔_사후변경_금지": "이 조건은 결과를 보기 전에 선언했다. 이 밖의 이유로 dense 를 추가하면 '결과를 보고 게이트를 바꾼 것' 이다."
+   },
+   "reopen_eval": {
+    "판정량": "D_raw_eV",
+    "값_eV": -0.164088,
+    "비교": "boundary",
+    "문턱_eV": 0.05,
+    "가드밴드_eV": 0.01,
+    "충족": false,
+    "행동": "|D_raw| ≥ 문턱+가드밴드 — 미시험 축이 판정을 못 바꾼다 · 추가 계산 없음"
+   }
+  },
+  "numeric_budget": {
+   "정의": "B_num = |Δ_vac| + |δ_gas|  (meV)  — 사전등록 3축 중 제외: δ_k (이 번들 설계에 없음)",
+   "정의_사전등록_원문": "B_num = |Δ_vac| + |δ_gas| + |δ_k|  (meV) — 3_오차예산",
+   "tested_axes_n": 2,
+   "성격": "**시험한 세 축의 보수적 sensitivity envelope** — 총 오차 상한이 아니다 (ENCUT·교차축 미포함, 회신 AV Q6)",
+   "⛔_RSS_금지": "세 축은 독립 확률오차가 아니다 — 같은 계·같은 프로토콜의 체계오차다. RSS(제곱합근)로 합치면 상관을 0 으로 가정하는 것이고, 셋이 같은 방향이면 실제 편차는 단순합에 가깝다 (회신 AT Q2)",
+   "by_axis_meV": {
+    "gas": 0.086,
+    "vac": 0.632
+   },
+   "missing_axes": [],
+   "axes_not_designed": [
+    "ENCUT (평면파 컷오프 수렴 — 이 묶음에 설계 자체가 없다)",
+    "δ_k(k 수렴 쌍이 이 번들 설계에 없음)",
+    "축간 상호작용 (교차항 — 한 축씩만 흔들어 봤다)"
+   ],
+   "B_num_meV": 0.718,
+   "tol_meV": 5.0,
+   "pass": true,
+   "tested_axes_stable_at_0.01eV": true,
+   "overall_citable_at_0.01eV": false,
+   "overall_⚠": "사전등록 3_오차예산 축 ['δ_k'] 가 이 결과에 없다 (설계 제외) — 전체 0.01 eV 안정성은 **주장하지 않는다(False)**. 시험한 축 ['Δ_vac', 'δ_gas'] 의 envelope 만 tested_axes_… 에 남는다 (사전등록 50행).",
+   "⚠_두_키의_차이": "tested_axes_… 는 **시험한 축**만 말한다. overall_… 은 사전등록 3축이 전부 있을 때 ENCUT·교차항 근거 부재로 None(모른다), 하나라도 없으면 False(주장하지 않는다). 전체 0.01 eV 를 주장하려면 세 축 + 별도 ENCUT 설계가 필요하다 (회신 AY Q6 · 렌즈2 P1-4).",
+   "⚠_문턱_봉인": "결과를 보기 전에 정한 값이다 (회신 AT Q2 · 코드 상수)",
+   "미달이면": "값을 버리지 않는다 — **0.01 eV 안정성 주장을 하지 않고** 보고 해상도를 낮추거나 축별 민감도만 낸다"
+  },
+  "estimand_topology": {
+   "pm1": {
+    "blocks": [],
+    "by_job": {
+     "prospective/sdcp_neutral__b00__afm2424_pm1": {
+      "fingerprint": "+---+++--++-+---+++--++-+---+++--++-+---+++--++-",
+      "why": []
+     },
+     "prospective/ptfe_c10__b00__afm2424_pm1": {
+      "fingerprint": "+---+++--++-+---+++--++-+---+++--++-+---+++--++-",
+      "why": []
+     }
+    },
+    "same": true,
+    "branch": "pm1",
+    "why": "같음"
+   },
+   "net4": {
+    "blocks": [
+     "ESTIMAND_TOPOLOGY_UNRESOLVED(net4 E_C_sdcp=prospective/sdcp_neutral__b00__afm2424_net4: MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다) — 어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)",
+     "ESTIMAND_TOPOLOGY_UNRESOLVED(net4 E_C_control=prospective/ptfe_c10__b00__afm2424_net4: MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다) — 어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)"
+    ],
+    "by_job": {
+     "prospective/sdcp_neutral__b00__afm2424_net4": {
+      "fingerprint": null,
+      "why": [
+       "MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다)"
+      ]
+     },
+     "prospective/ptfe_c10__b00__afm2424_net4": {
+      "fingerprint": null,
+      "why": [
+       "MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다)"
+      ]
+     }
+    },
+    "same": null,
+    "branch": "net4",
+    "usable_as_sensitivity": false
+   }
+  },
+  "estimand_semantics": {
+   "pm1": {
+    "blocks": [],
+    "by_key": {
+     "E_C_sdcp": {
+      "job": "prospective/sdcp_neutral__b00__afm2424_pm1",
+      "ok": true,
+      "why": []
+     },
+     "E_C_control": {
+      "job": "prospective/ptfe_c10__b00__afm2424_pm1",
+      "ok": true,
+      "why": []
+     },
+     "E_G_sdcp": {
+      "job": "refs/mol__sdcp_neutral__box24",
+      "ok": true,
+      "why": []
+     },
+     "E_G_control": {
+      "job": "refs/mol__ptfe_c10__box24",
+      "ok": true,
+      "why": []
+     }
+    },
+    "branch": "pm1"
+   },
+   "net4": {
+    "blocks": [],
+    "by_key": {
+     "E_C_sdcp": {
+      "job": "prospective/sdcp_neutral__b00__afm2424_net4",
+      "ok": true,
+      "why": []
+     },
+     "E_C_control": {
+      "job": "prospective/ptfe_c10__b00__afm2424_net4",
+      "ok": true,
+      "why": []
+     },
+     "E_G_sdcp": {
+      "job": "refs/mol__sdcp_neutral__box24",
+      "ok": true,
+      "why": []
+     },
+     "E_G_control": {
+      "job": "refs/mol__ptfe_c10__box24",
+      "ok": true,
+      "why": []
+     }
+    },
+    "branch": "net4"
+   },
+   "pose_role_pair": {
+    "blocks": [],
+    "by_key": {
+     "E_C_sdcp": {
+      "job": "prospective/sdcp_neutral__b12__afm2424_pm1",
+      "ok": true,
+      "why": []
+     },
+     "E_C_control": {
+      "job": "prospective/ptfe_c10__b52__afm2424_pm1",
+      "ok": true,
+      "why": []
+     },
+     "E_G_sdcp": {
+      "job": "refs/mol__sdcp_neutral__box24",
+      "ok": true,
+      "why": []
+     },
+     "E_G_control": {
+      "job": "refs/mol__ptfe_c10__box24",
+      "ok": true,
+      "why": []
+     }
+    },
+    "branch": "pose_role_pair"
+   }
+  },
+  "pooled_demote_policy": {
+   "rule": "exact-key 경로에서는 scope=pooled_diagnostic 을 전부 강등한다",
+   "why": "pooled min 을 쓰지 않으므로 그 진단이 estimand 에 적용되지 않는다",
+   "estimand_keys": [
+    "prospective/ptfe_c10__b00__afm2424_pm1",
+    "prospective/sdcp_neutral__b00__afm2424_pm1",
+    "refs/mol__ptfe_c10__box24",
+    "refs/mol__sdcp_neutral__box24"
+   ],
+   "estimand_safety": [
+    "ESTIMAND_KEY_UNUSABLE(게이트·에너지)",
+    "ESTIMAND_TOPOLOGY_*(자기 상태 직접 비교)"
+   ]
+  },
+  "primary_estimand_blocks": [],
+  "nonprimary_notes": [
+   "POOL_JOB_NOT_OK(prospective/ptfe_c10__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+   "POOL_JOB_NOT_OK(prospective/sdcp_neutral__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+   "POOL_INCOMPLETE(계획된 자세 중 사용 불가 {'ptfe_c10': 1, 'sdcp_neutral': 1} — pooled 값을 내지 않는다)",
+   "SENSITIVITY_INCOMPLETE(자기 분기 민감도가 suppressed_topology — D 를 '분기에 강건' 이라고 서술하지 말 것)",
+   "POSE_SENSITIVITY_INCOMPLETE(role_pair:suppressed_topology — D 를 '자세에 강건' 이라고 서술하지 말 것)"
+  ],
+  "nonprimary_note_records": [
+   {
+    "code": "POOL_JOB_NOT_OK",
+    "msg": "POOL_JOB_NOT_OK(prospective/ptfe_c10__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+    "job_keys": [
+     "prospective/ptfe_c10__b00__afm2424_net4"
+    ],
+    "scope": "pooled_diagnostic",
+    "affects_estimand": true
+   },
+   {
+    "code": "POOL_JOB_NOT_OK",
+    "msg": "POOL_JOB_NOT_OK(prospective/sdcp_neutral__b00__afm2424_net4: 게이트 목록에 없는 사유로 사용 불가 — NOT_RUN(static))",
+    "job_keys": [
+     "prospective/sdcp_neutral__b00__afm2424_net4"
+    ],
+    "scope": "pooled_diagnostic",
+    "affects_estimand": true
+   },
+   {
+    "code": "POOL_INCOMPLETE",
+    "msg": "POOL_INCOMPLETE(계획된 자세 중 사용 불가 {'ptfe_c10': 1, 'sdcp_neutral': 1} — pooled 값을 내지 않는다)",
+    "job_keys": [
+     "prospective/ptfe_c10__b00__afm2424_net4",
+     "prospective/sdcp_neutral__b00__afm2424_net4"
+    ],
+    "scope": "pooled_diagnostic",
+    "affects_estimand": true
+   }
+  ],
+  "nonprimary_notes_why": "이 블록들은 **D 에 들어가지 않는 잡**(net4·대안 자세)에 대한 것이다. pm1 조건부 D 는 사전 고정한 네 잡으로 정의되므로 지우지 않는다 (회신 AO P0-7). 강등 판정은 **job_keys 교집합**으로 하지 문자열로 하지 않는다 (회신 AP #3). 자기 분기 민감도로만 읽는다",
+  "pooled_effect": {
+   "secondary_G_citable": false,
+   "pooled_min_citable": false,
+   "citable": "no — 영구 (회신 AT Q5 선택지 (a) · 1저자 결정 2026-08-31)",
+   "would_pass_dynamic_gates": false,
+   "pool_complete": false,
+   "⛔_영구_비인용_사유": [
+    "dense k 검증이 primary pm1 b00 두 복합체뿐 — pool 의 net4 는 미검증이다",
+    "pm1/net4 는 다른 자기상태를 보려고 넣은 seed 라 basin 이 섞인다. 상태를 가로질러 min 을 뽑지 않는다",
+    "잡 +2 로는 ①만 닫히고 ②는 안 닫힌다 — 설계 변경이 필요한 일이다"
+   ],
+   "대신_무엇을_쓰나": "자세 탐색의 폭은 **MLIP 스크린**이 진다 (탐색 범위·자세 선정 규칙만, 에너지는 인용 금지). DFT 는 사전등록한 한 조건의 D 하나를 낸다",
+   "why": "pooled heterogeneity 는 primary(봉인 네 잡)에는 적용되지 않지만 pooled 최솟값·secondary_G·일반화 주장은 **계속 막는다** (회신 AR Q1)"
+  },
+  "estimand_job_keys": {
+   "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
+   "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
+   "E_G_sdcp": "refs/mol__sdcp_neutral__box24",
+   "E_G_control": "refs/mol__ptfe_c10__box24",
+   "formula": "D = (E_C_sdcp - E_G_sdcp) - (E_C_control - E_G_control)",
+   "branch": "afm2424_pm1",
+   "⛔": "net4 와 대안 자세(sensitivity·stress_sensitivity)는 **D 에 안 들어간다** — 자기 분기·자세 민감도 병기용이다. 조각별 최솟값을 다시 쓰지 않는다",
+   "E_S": "refs/clean_slab__afm2424_pm1",
+   "formula_absolute": "E_ads(f) = E_C_f - E_S - E_G_f  [절대값 — E_S 에 민감하다]",
+   "⚠_E_S_는_D_에_안_들어간다": "D 는 두 대괄호에서 E_S 가 대수적으로 소거된다. 그래서 D 의 식은 clean slab 유무와 무관하게 같다. E_S 는 **절대값에만** 쓰인다 — clean slab 이 basin 을 어긋나면 절대값만 막고 D 는 살린다."
+  },
+  "estimand_mode": "exact_keys (사전 고정 네 잡 직접 대입)",
+  "branch_sensitivity": {
+   "status": "suppressed_topology",
+   "why": [
+    "ESTIMAND_TOPOLOGY_UNRESOLVED(net4 E_C_sdcp=prospective/sdcp_neutral__b00__afm2424_net4: MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다) — 어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)",
+    "ESTIMAND_TOPOLOGY_UNRESOLVED(net4 E_C_control=prospective/ptfe_c10__b00__afm2424_net4: MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다) — 어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)"
+   ],
+   "D_net4_eV": null,
+   "D_net4_minus_D_pm1_eV": null,
+   "⛔": "net4 두 complex 가 같은 자기 branch 임을 확인하지 못했다. 상태를 가로질러 뺀 차는 분기 민감도가 아니므로 값을 내지 않는다 (회신 AR P1-9). D_pm1 은 영향받지 않는다",
+   "⚠_민감도_불완전": true
+  },
+  "pose_sensitivity": {
+   "role_pair": {
+    "status": "suppressed_topology",
+    "D_pose_eV": null,
+    "D_pose_minus_D_pm1_eV": null,
+    "why": [
+     "ESTIMAND_TOPOLOGY_UNRESOLVED(pose_role_pair E_C_sdcp=prospective/sdcp_neutral__b12__afm2424_pm1: MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다) — 어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)",
+     "ESTIMAND_TOPOLOGY_UNRESOLVED(pose_role_pair E_C_control=prospective/ptfe_c10__b52__afm2424_pm1: MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — LORBIT 출력을 회수하지 못했다) — 어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)"
+    ]
+   },
+   "⛔": "자세 민감도다 — 보고값은 primary 자세의 pm1 조건부 D 이고 이 값들로 min 을 다시 뽑거나 평균하지 않는다"
+  },
+  "sensitivity_complete": false,
+  "diagnostic_only": {
+   "⛔": "이 절의 수는 **인용 대상이 아니다.** 최상위 정본은 `D_raw_eV` 와 `rounded_value_under_tested_axes_eV` 둘뿐이다 (회신 BA P0-2).",
+   "primary_ddE_lowE_eV": -0.1641,
+   "⚠_왜_최상위가_아닌가": "범위 없는 맨숫자가 최상위에 있으면 `overall_citable=None` 이어도 결과값으로 읽힌다"
+  },
+  "secondary_G_eV_diagnostic": null,
+  "secondary_G_eV": null,
+  "secondary_G_⛔": "**영구 비인용** (회신 AT Q5 선택지 (a) · 1저자 결정 2026-08-31). secondary_G 는 pooled 최솟값/최댓값에서 나오는데, pool 은 dense k 미검증 잡과 서로 다른 자기 basin 을 함께 담는다. 진단값은 `secondary_G_eV_diagnostic` 에 남는다 (지금은 동적 게이트도 통과하지 못한다 — pooled heterogeneity 또는 pool 불완전)",
+  "D_raw_eV": -0.164088,
+  "fragments": {
+   "sdcp": "sdcp_neutral",
+   "control": "ptfe_c10"
+  },
+  "tested_axes_stable_at_0.01eV": true,
+  "overall_citable_at_0.01eV": false,
+  "rounded_value_under_tested_axes_eV": -0.16,
+  "rounded_value_under_tested_axes_⚠": "**시험한 축 조건부** 값이다 (ENCUT·축간 상호작용은 안 쟀다). overall_citable_at_0.01eV 가 True 가 되기 전에는 최종 인용값이 아니다 (회신 AZ P0-5)",
+  "reported_X_⛔": "overall_citable_at_0.01eV=False — ENCUT·축간 상호작용을 안 쟀으므로 무조건적 인용값을 내지 않는다. 시험한 축 조건부 값은 `rounded_value_under_tested_axes_eV` 에 있다 (회신 AZ P0-5)",
+  "D_interval_eV": {
+   "lo": -0.1648,
+   "hi": -0.1634,
+   "성격": "D_raw ± B_num — 시험한 축의 sensitivity envelope 이지 통계 신뢰구간이 아니다"
+  },
+  "guard": "통과 (구간 [-0.1648, -0.1634] 전체가 guard -0.10 이하)",
+  "verdict": "보고 가능 (시험한 축 조건부) · 사전등록 축 없음(δ_k) — 0.01 eV 전체 안정성 미주장",
+  "verdict_scope": {
+   "범위": "tested axes only (ENCUT·축간 상호작용 미측정)",
+   "⛔": "이 판정은 `overall_citable_at_0.01eV` 가 True 가 되기 전에는 최종 인용 승인이 아니다. 원고 문장에 축 조건을 병기한다 (회신 AZ P0-5)"
+  },
+  "⚠_후보집합": "candidate_set 이 동결된 prospective_lowE 가 아니면 이 값은 primary 가 아니라 **legacy 교정 tranche** 다 (회신 V P0-5). 'primary'·'low-energy'·'pose-insensitive'·'전역 최소' 로 쓰지 말 것",
+  "manuscript_citable": false,
+  "⛔_인용": "⛔ **탐색용**이다. 이 결과로 원고 문장을 쓰지 않는다 — potcar_identity_policy.manuscript_citable != true (mode='post_hoc') — 승인된 PAW dataset 인지 확인되지 않았다 · overall_citable_at_0.01eV != true — ENCUT·축간 상호작용을 안 쟀다 · potcar_identity.allowed_claim='bundle_conditional_only' — 외부 앵커가 없다"
+ },
+ "k_transfer": {
+  "pass": false,
+  "why": "dense 를 돌린 조각이 없다 — 전이 불가"
+ },
+ "k_labels": {
+  "ptfe_c10": "K_UNVERIFIED",
+  "sdcp_neutral": "K_UNVERIFIED"
+ },
+ "required_missing_sensitivity": [
+  "prospective/ptfe_c10__b00__afm2424_net4 [static]",
+  "prospective/ptfe_c10__b52__afm2424_pm1 [static]",
+  "prospective/ptfe_c10__b52__afm2424_net4 [static]",
+  "prospective/sdcp_neutral__b00__afm2424_net4 [static]",
+  "prospective/sdcp_neutral__b12__afm2424_pm1 [static]",
+  "prospective/sdcp_neutral__b12__afm2424_net4 [static]",
+  "refs/clean_slab__afm2424_net4 [static]"
+ ],
+ "tier_census": {
+  "estimand": 12,
+  "sensitivity": 7
+ },
+ "sensitivity_status": "incomplete (7건)",
+ "citation_status": {
+  "manuscript_citable": false,
+  "blockers": [
+   "potcar_identity_policy.manuscript_citable != true (mode='post_hoc') — 승인된 PAW dataset 인지 확인되지 않았다",
+   "overall_citable_at_0.01eV != true — ENCUT·축간 상호작용을 안 쟀다",
+   "potcar_identity.allowed_claim='bundle_conditional_only' — 외부 앵커가 없다"
+  ],
+  "why": "⛔ **탐색용**이다. 이 결과로 원고 문장을 쓰지 않는다 — potcar_identity_policy.manuscript_citable != true (mode='post_hoc') — 승인된 PAW dataset 인지 확인되지 않았다 · overall_citable_at_0.01eV != true — ENCUT·축간 상호작용을 안 쟀다 · potcar_identity.allowed_claim='bundle_conditional_only' — 외부 앵커가 없다",
+  "⛔_계산_성공과_다른_상태다": "계산이 정상 종료하고 게이트를 통과해도 이 값이 false 면 인용 불가다. 둘을 한 값으로 뭉개지 않는다 (회신 BA P0-3)"
+ },
+ "required_missing": []
+}

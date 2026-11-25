@@ -1,0 +1,492 @@
+{
+ "slug": "lee2026_lpscl_coating_thickness_ncm811",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+  "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 | FE-SEM and cross-sectional EDS images of NCM811@LPSCl with weight ratios of (a) 80:20, (b) 85:15, (c) 90:10, and (d) 95:5. (e) Plot of the measured coating thickness according to the SE coating ratio. (f) XRD patterns of the NCM811@LPSCl core–shells with ratios of 80:20 (black), 85:15 (red), 90:10 (blue), and 95:5 (green), and (g) enlargement of the pattern at 2θ = 20.0°–40.0°. The diffraction patterns of NCM811 and LPSCl are provided for reference. Small Structures, 2026 3 of 12",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    317.5,
+    558.2,
+    685.7
+   ],
+   "w": 2164,
+   "h": 1535,
+   "dpi": 300,
+   "src": "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.508
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 | FE-SEM compositional mode images and EDS mapping images for the Ni K and S K series of cathode composites with an overall weight ratio of NCM811/LPSCl/VGCF = 75:22.6:2.4 using (a–c) uncoated NCM811 and (e–g) 80:20 and (i–k) 90:10 NCM811@LPSCl core–shell particles (the scale bars in the SEM and EDS mapping images represent 10 µm). Digitally processed EDS mapping images for the S K series using (d) uncoated NCM811 and (h) 80:20 and (l) 90:10 NCM811@LPSCl core–shell particles. The white areas in these images represent the interface of NCM811 and LPSCl in the cathode composite, based on the color threshold. 4 of 12 Small Structures, 2026",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    390.6,
+    558.2,
+    674.2
+   ],
+   "w": 2164,
+   "h": 1183,
+   "dpi": 300,
+   "src": "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.305
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 | Rate capability tests for the ASSB cells using (a) uncoated NCM811 and (b) 80:20, (c) 85:15, (d) 90:10, and (e) 95:5 NCM811@LPSCl core–shells at 60 °C. All samples had a CAM content of 75 wt% and an areal capacity of 4.6 mAh cm−2. (f) Reversible capacity with the C-rate increasing from 0.05 to 0.1, 0.2, and 0.5 C according to the NCM811/LPSCl ratio. (g) Porosity and (h) electrode density of the cathode composite pellet according to the LPSCl coating ratio. Small Structures, 2026 5 of 12",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    299.8,
+    558.2,
+    685.7
+   ],
+   "w": 2164,
+   "h": 1608,
+   "dpi": 300,
+   "src": "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.763
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 | DC analysis at constant voltages of 5, 10, 30, and 50 mV for MCLs with ratios of (a) 80:20, (b) 85:15, (c) 90:10, and (d) 95:5 and (e) uncoated NCM811 and additional LPSCl with an overall NCM811 content of 75 wt%. (f) Plot of the effective electronic conductivity according to the NCM811/LPSCl coating ratio. DC analysis at a constant current of 200 μA for MCLs with ratios of (g) 80:20, (h) 85:15, (i) 90:10, and (j) 95:5 and (k) uncoated NCM811 and additional LPSCl with an overall NCM811 content of 75 wt%. (l) Plot of the effective ionic conductivity according to the NCM811/LPSCl coating ratio. Small Structures, 2026 7 of 12",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    220.7,
+    558.2,
+    674.2
+   ],
+   "w": 2164,
+   "h": 1891,
+   "dpi": 300,
+   "src": "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 | CV for cathode composite with (a) uncoated NCM811 and (b) 80:20 and (c) 90:10 NCM811@LPSCl core–shells under scan rates of 0.01, 0.02, 0.03, 0.05, and 0.1 mV s−1 at 60 °C. (d) Relationship between the peak current and the square root of the scan rate in CV. 3 | Conclusion coefficient of NCM811 [45]. Consequently, these values are used for comparative purposes among the different coating ratios under identical conditions. According to the slope of iP/v1/2, the DLi+ values of the cathode composite using uncoated NCM811 and 80:20 and 90:10 core–shell particles for the delithiation process were 3.898 × 10−10, 2.327 × 10−10, and 8.596 × 10−10 cm2 s−1, respectively. Furthermore, Figure S14c shows that the apparent Li-ion diffusion coefficients of the 85:15 and 95:5 cathodes for the delithiation process were 4.126 × 10−10 and 6.812 × 10−10 cm2 s−1, respectively, which are consistent ",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    26.5,
+    558.4,
+    388.6
+   ],
+   "w": 2165,
+   "h": 1510,
+   "dpi": 300,
+   "src": "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) FE-SEM image, (b) magnified image, and (c) XRD pattern of NCM811. The diffraction pattern of NCM811 (PDF# 98-016-9367) is provided for reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    60.1,
+    86.6,
+    535.5,
+    247.7
+   ],
+   "w": 1982,
+   "h": 671,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.635
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. FE-SEM images of (a) synthesized LPSCl and (b) milled LPSCl used for including additional LiNi0.8Co0.1Mn0.1O2(NCM811)@Li6PS5Cl (LPSCl) in the cathode composite. (c) XRD patterns of each SE as a component in the ASSB half-cell. The diffraction pattern of LPSCl (PDF# 98-041-8490) is provided for reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.2,
+    29.4,
+    544.2,
+    205.2
+   ],
+   "w": 2026,
+   "h": 733,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.679
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Nyquist plots of (a) synthesized LPSCl and (b) milled LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.3,
+    29.4,
+    555.5,
+    275.3
+   ],
+   "w": 2081,
+   "h": 1025,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Schematic for the calculation of the LPSCl coating thickness on NCM811 according to the NCM811:LPSCl ratio. We calculate the coating thickness ( x) for NCM811@LPSCl core–shells via the following equation using the weight ratio, theoretical density, and mean radius of NCM811 and LPSCl: 4 3 π(r + x) 3- 4 3 π r 3 4 3 π r 3 = Weight of LPSCl Weight of NCM 811 × ρtheo. NCM 811 Volume ratio= . ρtheo. LPSCl",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    29.4,
+    595.3,
+    235.3
+   ],
+   "w": 2481,
+   "h": 859,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. SEM–EDS analysis of NCM811@LPSCl core–shell particles prepared with",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    368.9
+   ],
+   "w": 1954,
+   "h": 1415,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.359
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Ni K maps converted to grayscale images, S K maps converted to grayscale images, and overlap images obtained by applying the AND operation to the corresponding Ni and S binary masks using FIJI ImageJ software for cathode composites using (a~c) uncoated NCM811 and (d~f) 80:20 and (g~i) 90:10 NCM811@LPSCl core–shell particles. The overlap images represent the NCM811-LPSCl interfacial contact regions (scale bars: 10 µm).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    29.4,
+    533.7,
+    311.4
+   ],
+   "w": 1954,
+   "h": 1176,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.567
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Galvanostatic charge–discharge dQ/dV profiles of the ASSB cells using cathode composites with (a) uncoated NCM811, (b) 80:20, (c) 85:15, (d) 90:10 and (e) 95:5 NCM811@LPSCl core–shell particles at representative C-rates. (f) charge–discharge peak separations (ΔV) of H1+M transition at representative redox peaks as a function of C-rate for all cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.6,
+    331.3
+   ],
+   "w": 1954,
+   "h": 1259,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Rate performance of the uncoated, 80:20, 85:15, 90:10, and 95:5 cathodes measured at 60 °C, followed by an additional recovery cycle at 0.1 C after the high-rate test.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    29.4,
+    533.7,
+    255.9
+   ],
+   "w": 1954,
+   "h": 945,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Rate performance of the uncoated, 80:20, 85:15, 90:10, and 95:5 cathodes measured at 25 °C, followed by an additional recovery cycle at 0.1 C after the high-rate test.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    29.4,
+    530.5,
+    249.8
+   ],
+   "w": 1941,
+   "h": 919,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. 0.5C cycle performance of the uncoated, 80:20, 85:15, 90:10, and 95:5 cathodes",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    29.4,
+    533.5,
+    254.4
+   ],
+   "w": 1954,
+   "h": 938,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 13,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. EIS measurements at the discharged state (a) after the formation cycle at 0.1C (before cycling) and (b) after cycling (or immediately after short-circuit failure for the uncoated cathode) at 0.5C of the uncoated, 80:20, 85:15, 90:10, and 95:5 cathodes measured at 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.7,
+    254.5
+   ],
+   "w": 1954,
+   "h": 939,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Schematics of the (a) SS//MCL//SS ion-blocking cell and (b) Li//LPSCl//MCL//LPSCl//Li electron-blocking cell for evaluating the effective electronic and ionic conductivities, respectively, at 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    29.4,
+    533.5,
+    248.1
+   ],
+   "w": 1954,
+   "h": 912,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 15,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Nyquist plots of the (a) ion-blocking cell and (b) electron-blocking cell for the MCLs according to the NCM811:LPSCl coating ratio at 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    551.5,
+    274.7
+   ],
+   "w": 2028,
+   "h": 1023,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 16,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Cyclic voltammetry (CV) for ASSBs with (a) 85:15 and (b) 95:5 NCM811@LPSCl core–shells with a scan rate from 0.01, 0.02, 0.03, 0.05mV s-1 to 0.1mV s-1 at 60℃. (c) Relationship between peak current and the square root of the scan rate in CV.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.7,
+    203.0
+   ],
+   "w": 1954,
+   "h": 724,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 2,
+   "file": "sch_1.png",
+   "caption": "SCHEME 1 | Variable LPSCl coating thicknesses obtained using the MF process and the expected properties according to the LPSCl coating ratio. 2 of 12 Small Structures, 2026",
+   "rotated_deg": 0,
+   "bbox": [
+    39.0,
+    464.1,
+    556.3,
+    720.2
+   ],
+   "w": 2156,
+   "h": 1068,
+   "dpi": 300,
+   "src": "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.674
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Ionic conductivities of the synthesized LPSCl and milled LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    66.4,
+    484.5,
+    177.9
+   ],
+   "w": 1745,
+   "h": 466,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 18,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Quantitative analysis of the NCM811–LPSCl interfacial regions obtained from the Ni–S overlap images for cathode composites using uncoated NCM811 and 80:20 and 90:10 NCM811@LPSCl core–shell particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    66.4,
+    532.5,
+    260.3
+   ],
+   "w": 1945,
+   "h": 809,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 19,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Modified LPSCl coating ratio of the prepared cathode composite having an overall NCM811 content of 75 wt.%, along with the experimental electrode thickness, density, and porosity. The porosity was calculated according to the theoretical density of the cathode composite (3.27 g cm−3), as determined by Equation S1 and S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    66.4,
+    532.5,
+    336.2
+   ],
+   "w": 1945,
+   "h": 1125,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 20,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Experimental information of DC analysis at 60 °C for the (a) SS//MCL//SS ion- blocking cell and (b) Li//LPSCl//MCL//LPSCl//Li electron-blocking cell for the MCLs with an overall NCM811 content of 75 wt.%.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    66.4,
+    532.5,
+    362.5
+   ],
+   "w": 1945,
+   "h": 1235,
+   "dpi": 300,
+   "src": "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "blank": 0.909
+  }
+ ]
+}

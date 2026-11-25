@@ -1,0 +1,3 @@
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+-> /home/kgy/work/runs/wad_p2small_uma_sp_2026_10_17/uma_energies_p2s_2026_10_17.json
+{"S_A_bound": -2761.604118492888, "S_A_far": -2761.92383033136, "S_A_p05_bound": -2761.9348003472332, "Li_A_bound": -2624.8205146363503, "Li_A_far": -2625.460956731825, "Li_A_p05_bound": -2625.451705506272, "S_A_G3_c2_bound": -2761.6041974976506, "S_A_G3_c2_far_i": -2761.9238141259343, "S_A_G3_c2_far_ii": -2761.923855583093}

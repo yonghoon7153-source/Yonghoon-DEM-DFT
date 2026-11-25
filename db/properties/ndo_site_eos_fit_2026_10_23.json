@@ -1,0 +1,129 @@
+{
+  "schema": "ndo_site_eos_fit/v1",
+  "plan": "db/inputs/ndo_site_eos_2026_10_16/eos_plan.json",
+  "plan_sha256": "30908eba3e3f93f478cdfe0c6d3fd406ab4bdf099a9f6a4cafe966f142594a6d",
+  "tool_sha256": "b13002f2fa1cdb52eb8150dfa32aa5d41a3301e57f9e8e6ec58bc5a973f9482d",
+  "cells": {
+    "MLi_04": {
+      "status": "V0_relax",
+      "points": [
+        {
+          "x": 0.98,
+          "V_A3": 1152.1486088487716,
+          "E_eV": -30304.275854311076,
+          "basin_dev_A": 0.12908400788534904,
+          "basin_flag": false
+        },
+        {
+          "x": 1.0,
+          "V_A3": 1175.6618475785592,
+          "E_eV": -30304.362957822388,
+          "basin_dev_A": 0.101568686224459,
+          "basin_flag": false
+        },
+        {
+          "x": 1.02,
+          "V_A3": 1199.1750863083469,
+          "E_eV": -30304.3819310975,
+          "basin_dev_A": 0.08082345490436102,
+          "basin_flag": false
+        },
+        {
+          "x": 1.04,
+          "V_A3": 1222.6883250381347,
+          "E_eV": -30304.263088089217,
+          "basin_dev_A": 0.0,
+          "basin_flag": false
+        },
+        {
+          "x": 1.06,
+          "V_A3": 1246.2015637679224,
+          "E_eV": -30304.173030101636,
+          "basin_dev_A": 0.026143839814922794,
+          "basin_flag": false
+        },
+        {
+          "x": 1.08,
+          "V_A3": 1269.71480249771,
+          "E_eV": -30304.039458250256,
+          "basin_dev_A": 0.05800349104999291,
+          "basin_flag": false
+        }
+      ],
+      "fit_all": {
+        "V0_A3": 1184.1407236748773,
+        "E0_eV": -30304.37985740196,
+        "B0_GPa": 32.45404368721493,
+        "rms_meV": 12.269807998931153,
+        "n": 6
+      },
+      "basin_ref_x": 1.04,
+      "basin_flag_A": 0.3,
+      "flagged_x": [],
+      "V0_start_from_x": 1.0,
+      "x0": 1.0072120008788812,
+      "next": "make_eos_inputs.py --v0 <이 파일> --run <점 폴더> --out <root_v0> → V₀ relax → site_dg.py --qe <root_v0> --expect 1 --top 1 --thresholds Nd=0.10"
+    },
+    "MP_07": {
+      "status": "V0_relax",
+      "points": [
+        {
+          "x": 0.98,
+          "V_A3": 1152.1486088487716,
+          "E_eV": -31907.14539401164,
+          "basin_dev_A": 0.06378138848555313,
+          "basin_flag": false
+        },
+        {
+          "x": 1.0,
+          "V_A3": 1175.6618475785592,
+          "E_eV": -31907.3914054879,
+          "basin_dev_A": 0.04428911396582646,
+          "basin_flag": false
+        },
+        {
+          "x": 1.02,
+          "V_A3": 1199.1750863083469,
+          "E_eV": -31907.540501707248,
+          "basin_dev_A": 0.02325090878884805,
+          "basin_flag": false
+        },
+        {
+          "x": 1.04,
+          "V_A3": 1222.6883250381347,
+          "E_eV": -31907.603125583384,
+          "basin_dev_A": 0.0,
+          "basin_flag": false
+        },
+        {
+          "x": 1.06,
+          "V_A3": 1246.2015637679224,
+          "E_eV": -31907.58840857725,
+          "basin_dev_A": 0.023798730850302163,
+          "basin_flag": false
+        },
+        {
+          "x": 1.08,
+          "V_A3": 1269.71480249771,
+          "E_eV": -31907.50500268515,
+          "basin_dev_A": 0.0471085331702117,
+          "basin_flag": false
+        }
+      ],
+      "fit_all": {
+        "V0_A3": 1229.6725280692226,
+        "E0_eV": -31907.60639772009,
+        "B0_GPa": 26.55881022627418,
+        "rms_meV": 0.03396289186396027,
+        "n": 6
+      },
+      "basin_ref_x": 1.04,
+      "basin_flag_A": 0.3,
+      "flagged_x": [],
+      "V0_start_from_x": 1.04,
+      "x0": 1.0459406577817463,
+      "next": "make_eos_inputs.py --v0 <이 파일> --run <점 폴더> --out <root_v0> → V₀ relax → site_dg.py --qe <root_v0> --expect 1 --top 1 --thresholds Nd=0.10"
+    }
+  },
+  "status": "V0_relax"
+}

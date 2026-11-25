@@ -1,0 +1,207 @@
+{
+ "schema": "aprime_s4_v4_collect/v1",
+ "package": "db/inputs/wad_aprime_s3v2_2026_09_26",
+ "raw": "db/raw/wad_aprime_s4_v4_2026_09_27",
+ "fragment": {
+  "model": "V4_s_outer_A",
+  "quantity": "ΔE_frag = E(far) − E(bound) [eV/조각] · 양수 = 결합 쪽이 낮다 · J/m² 환산 금지 (카드 V3_V4)",
+  "dE_frag_eV": 0.1914842120471331,
+  "dE_frag_Eint_eV": 0.1914842120471331,
+  "dE_frag_PBE_eV": -0.061776377508810314,
+  "dD3_QE_eV": 0.2532605895562787,
+  "jobs": {
+   "V4_s_outer_A_G3_c2_bound": {
+    "job": "V4_s_outer_A_G3_c2_bound",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.77979534,
+    "D3_Ry": -1.75547004,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.0243253,
+    "E_int_Ry": -2271.77979534,
+    "nat": 122,
+    "pw_out_sha256": "8af833e36518d107f5f806a2be2ce8af4e27f971f11dd4ec0348858772bf3cd4"
+   },
+   "V4_s_outer_A_G3_c2_far_i": {
+    "job": "V4_s_outer_A_G3_c2_far_i",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.76546088,
+    "D3_Ry": -1.73656481,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.02889607,
+    "E_int_Ry": -2271.76546088,
+    "nat": 122,
+    "pw_out_sha256": "e9bf787698059e5d3d33744fb4f032b92cd5ff36bca196ea7567621afd0a2f6b"
+   },
+   "V4_s_outer_A_G3_c2_far_ii": {
+    "job": "V4_s_outer_A_G3_c2_far_ii",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.76522713,
+    "D3_Ry": -1.73636071,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.0288664199998,
+    "E_int_Ry": -2271.76522713,
+    "nat": 122,
+    "pw_out_sha256": "ba24886c279f674d891ad167c3238f6a5e4bbc0719872c4bd1296b33ca911985"
+   },
+   "V4_s_outer_A_G4_e70_bound": {
+    "job": "V4_s_outer_A_G4_e70_bound",
+    "status": "MISSING"
+   },
+   "V4_s_outer_A_G4_e70_far": {
+    "job": "V4_s_outer_A_G4_e70_far",
+    "status": "MISSING"
+   },
+   "V4_s_outer_A_G4_k1_bound": {
+    "job": "V4_s_outer_A_G4_k1_bound",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.78007324,
+    "D3_Ry": -1.75574967,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.02432357,
+    "E_int_Ry": -2271.78007324,
+    "nat": 122,
+    "pw_out_sha256": "a02707850692586f2657c4b24cc8514a44864ee1ebcfd463339b5f93452ec204"
+   },
+   "V4_s_outer_A_G4_k1_far": {
+    "job": "V4_s_outer_A_G4_k1_far",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.7659994,
+    "D3_Ry": -1.73713536,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.02886404,
+    "E_int_Ry": -2271.7659994,
+    "nat": 122,
+    "pw_out_sha256": "51267c4660380a7d3f402c823b0f1ca1c8607c12278932526a3c93e4c39b3000"
+   },
+   "V4_s_outer_A_G4_s05_bound": {
+    "job": "V4_s_outer_A_G4_s05_bound",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.78007372,
+    "D3_Ry": -1.75574967,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.02432405,
+    "E_int_Ry": -2271.78007372,
+    "nat": 122,
+    "pw_out_sha256": "84e49abad042db406a37119c25e52c3225de4e8fb6bab14f877d1371bb2e55e0"
+   },
+   "V4_s_outer_A_G4_s05_far": {
+    "job": "V4_s_outer_A_G4_s05_far",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.76599989,
+    "D3_Ry": -1.73713536,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.0288645299997,
+    "E_int_Ry": -2271.76599989,
+    "nat": 122,
+    "pw_out_sha256": "9d5682565f3e6d155308fd113186751e50c49c83c827bb6ae3081bafb8c55bf5"
+   },
+   "V4_s_outer_A_bound": {
+    "job": "V4_s_outer_A_bound",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.78007372,
+    "D3_Ry": -1.75574967,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.02432405,
+    "E_int_Ry": -2271.78007372,
+    "nat": 122,
+    "pw_out_sha256": "2f5d9ef6a30437cad306d626a2d241d483ebbb21ab654aeca6b6e643765e116e"
+   },
+   "V4_s_outer_A_far": {
+    "job": "V4_s_outer_A_far",
+    "input_match": true,
+    "status": "OK",
+    "F_Ry": -2271.76599989,
+    "D3_Ry": -1.73713536,
+    "mTS_Ry": -0.0,
+    "E_pbe_Ry": -2270.0288645299997,
+    "E_int_Ry": -2271.76599989,
+    "nat": 122,
+    "pw_out_sha256": "91217a3f6bcce547bc3ed15a75a558d9ed5292efa624053290c38daec6944d19"
+   }
+  },
+  "lateral_image": {
+   "min_frag_image_distance_A": 5.0669,
+   "a_A": 10.0551,
+   "b_A": 10.0551,
+   "n_frag_atoms": 12,
+   "frag_elements": [
+    "C",
+    "H"
+   ]
+  },
+  "G3": {
+   "dE_frag_i_eV": 0.19503026384519423,
+   "dE_frag_ii_eV": 0.19821059461278515,
+   "d_dE_frag_i_meV": 3.5460517980611392,
+   "d_dE_frag_ii_meV": 6.726382565652056,
+   "endpoint_dE_meV": {
+    "bound": 3.7875528523180275,
+    "far_i": 7.333604650379157,
+    "far_ii": 10.51393541797008
+   },
+   "threshold": {
+    "|ΔE_frag 변화| ≤ meV (두 검사 모두)": 5.0,
+    "endpoint_dE": "기록만 (CA Q2)"
+   },
+   "status": "FAIL",
+   "failed_checks": [
+    "ii_direct"
+   ]
+  },
+  "G4": {
+   "e70": {
+    "dE_frag_eV": null,
+    "d_dE_frag_meV": null,
+    "endpoint_dE_meV": {
+     "bound": null,
+     "far": null
+    },
+    "threshold": {
+     "|ΔE_frag 변화| ≤ meV": 10.0
+    },
+    "status": "RESOURCE_BLOCKED",
+    "note": "RESOURCE_BLOCKED (CPU 추정 52.4 GB @70 Ry > 48 · S3v2 봉인 제외) → 'ecut 미검증'"
+   },
+   "k1": {
+    "dE_frag_eV": 0.19148434810262546,
+    "d_dE_frag_meV": 0.0001360554923723889,
+    "endpoint_dE_meV": {
+     "bound": 0.0065307316926041395,
+     "far": 0.006666787184977519
+    },
+    "threshold": {
+     "|ΔE_frag 변화| ≤ meV": 10.0
+    },
+    "status": "PASS"
+   },
+   "s05": {
+    "dE_frag_eV": 0.1914842120471331,
+    "d_dE_frag_meV": 0.0,
+    "endpoint_dE_meV": {
+     "bound": 0.0,
+     "far": 0.0
+    },
+    "threshold": {
+     "|ΔE_frag 변화| ≤ meV": 10.0
+    },
+    "status": "PASS"
+   },
+   "status": "PASS",
+   "untested": {
+    "e70": "RESOURCE_BLOCKED (CPU 추정 52.4 GB @70 Ry > 48 · S3v2 봉인 제외) → 'ecut 미검증'"
+   }
+  },
+  "jobs_not_ok": [
+   "V4_s_outer_A_G4_e70_bound",
+   "V4_s_outer_A_G4_e70_far"
+  ]
+ }
+}

@@ -1,0 +1,201 @@
+{
+  "name": "P1_Al2O3_A",
+  "xyz_input": "db/structures/cascade_pilot/P1_Al2O3_A.xyz",
+  "n_atoms": 204,
+  "composition": {
+    "Al": 2,
+    "Cl": 16,
+    "Li": 90,
+    "O": 3,
+    "P": 16,
+    "S": 77
+  },
+  "E_pre_anneal_per_atom": -4.232373159660191,
+  "E_post_anneal_per_atom": -4.232373159660191,
+  "eos": {
+    "V_points": [
+      3958.3616859646727,
+      3978.5574088522494,
+      3998.753131739824,
+      4039.1445775149723,
+      4079.5360232901176,
+      4099.7317461776975,
+      4119.927469065272
+    ],
+    "E_points": [
+      -863.8067680295163,
+      -863.8347154874459,
+      -863.8476811323582,
+      -863.8419660876833,
+      -863.769292857187,
+      -863.7147929782998,
+      -863.6480806118811
+    ],
+    "fractions": [
+      0.98,
+      0.985,
+      0.99,
+      1.0,
+      1.01,
+      1.015,
+      1.02
+    ],
+    "continuation": true,
+    "hysteresis": {
+      "E_up": [
+        -863.8067680295163,
+        -863.8347154874459,
+        -863.8476811323582,
+        -863.8419660876833,
+        -863.769292857187,
+        -863.7147929782998,
+        -863.6480806118811
+      ],
+      "E_down": [
+        -863.8060230305102,
+        -863.8355983332941,
+        -863.8502083412509,
+        -863.8392330720001,
+        -863.7742591814919,
+        -863.7267018248112,
+        -863.6652126257128
+      ],
+      "reported_branch": "up",
+      "max_abs_dE_eV": 0.017132013831655968,
+      "level_offset_eV": 0.00484846067136654,
+      "shape_max_abs_dE_eV": 0.012283553160289427,
+      "E_span_eV": 0.19960052047701993,
+      "tol_V0_rel": 0.01,
+      "\u26a0_dE_over_span_\ub294_\ucc3d\uc5d0_\uc758\uc874\ud55c\ub2e4": "\ubd84\ubaa8(E_span)\uac00 \ubd80\ud53c\ucc3d\uc5d0 \ub538\ub824 \uc904\uc5b4\ub4e0\ub2e4. \ucc3d\uc774 \ub2e4\ub978 \uc870\uac74\ub07c\ub9ac \uac19\uc740 \ubb38\ud131\uc73c\ub85c \ube44\uad50\ud558\uc9c0 \ub9c8\ub77c \u2014 \ud68c\uc2e0 BQ Q2. \ucc3d \ube44\uad50\ub294 \uc808\ub300\uac12(shape_max_abs_dE_eV)\uc73c\ub85c \ud55c\ub2e4",
+      "convergence_up": [
+        {
+          "fraction": 0.98,
+          "n_steps": 188,
+          "final_fmax_eV_A": 0.019301047548651695,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.985,
+          "n_steps": 21,
+          "final_fmax_eV_A": 0.0194515660405159,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.99,
+          "n_steps": 21,
+          "final_fmax_eV_A": 0.019830118864774704,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.0,
+          "n_steps": 50,
+          "final_fmax_eV_A": 0.018444379791617393,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.01,
+          "n_steps": 19,
+          "final_fmax_eV_A": 0.019783008843660355,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.015,
+          "n_steps": 18,
+          "final_fmax_eV_A": 0.01991647481918335,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.02,
+          "n_steps": 18,
+          "final_fmax_eV_A": 0.01982555165886879,
+          "converged": true,
+          "hit_step_limit": false
+        }
+      ],
+      "convergence_down": [
+        {
+          "fraction": 1.02,
+          "n_steps": 277,
+          "final_fmax_eV_A": 0.019992657005786896,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.015,
+          "n_steps": 8,
+          "final_fmax_eV_A": 0.018658393993973732,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.01,
+          "n_steps": 8,
+          "final_fmax_eV_A": 0.01826644316315651,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 1.0,
+          "n_steps": 23,
+          "final_fmax_eV_A": 0.01916981302201748,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.99,
+          "n_steps": 36,
+          "final_fmax_eV_A": 0.019706126302480698,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.985,
+          "n_steps": 21,
+          "final_fmax_eV_A": 0.01958748698234558,
+          "converged": true,
+          "hit_step_limit": false
+        },
+        {
+          "fraction": 0.98,
+          "n_steps": 20,
+          "final_fmax_eV_A": 0.01964874193072319,
+          "converged": true,
+          "hit_step_limit": false
+        }
+      ],
+      "V0_up": 4010.578752588524,
+      "V0_down": 4009.939183373788,
+      "V0_rel_diff": 0.0001594832702431936,
+      "dE_over_span": 0.08583150880925876,
+      "tol_span": 0.1,
+      "ok": true
+    },
+    "convergence": null,
+    "V0": null,
+    "V0_per_atom": null,
+    "E0": null,
+    "B0_eV_per_A3": null,
+    "B0_GPa": null,
+    "Bp": null,
+    "r2": 0.9993069951416729,
+    "fit_quality_ok": false,
+    "fit_quality_reason": "r2=0.9993 / V0 / B0'=-1.94 unphysical (need r2>=0.95, 0<B0'<15)",
+    "t_s": 64.91418814659119
+  },
+  "cell_policy": {
+    "step0_relax": "CellFilter(atoms) \u2014 \ud615\uc0c1 \ubb34\uc81c\ud55c",
+    "eos_v0_applied": false,
+    "\ud45c\ud604": "\uc140 \uac01\ub3c4\uc640 \uae38\uc774\ube44\ub97c \uace0\uc815\ud558\uace0 \ub4f1\ubc29 E(V) \uacbd\ub85c\uc5d0\uc11c \ubd80\ud53c\ub97c \ucd5c\uc801\ud654\ud55c\ub2e4. \ubaa9\ud45c \ud3c9\uade0\uc555\uc740 0 GPa \uc774\uba70, \uc2e4\uc81c \uc794\ub958 \ud3c9\uade0\uc555\uacfc \ud3b8\ucc28\uc751\ub825\uc744 \ubcc4\ub3c4\ub85c \ubcf4\uace0\ud55c\ub2e4"
+  },
+  "structures_written": {
+    "stage1_before_eos.xyz": "\u26a0 EOS\u00b7V\u2080 \uc801\uc6a9 **\uc804** \uad6c\uc870. \ud558\ub958\uac00 \uc9d1\uc5b4\uac00\uba74 \uc548 \ub41c\ub2e4",
+    "final_v0_applied.xyz": "\u2705 \uc140 \uc815\ucc45\uc774 \uc801\uc6a9\ub41c \ucd5c\uc885 \uad6c\uc870 \u2014 MD\u00b7\ud0c4\uc131\uc774 \uc2e4\uc81c\ub85c \uc4f4 \uac83",
+    "eos_v0_applied": false
+  }
+}

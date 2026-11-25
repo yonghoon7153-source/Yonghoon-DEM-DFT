@@ -1,0 +1,40 @@
+{
+  "symbol": "K",
+  "name": "Potassium",
+  "Z": 19,
+  "role": "1족 알칼리 금속 — 사실상 K⁺ 1가로만 존재하는 hard 대형 양이온. Li 대체 알칼리 관점: K⁺(VI 1.38 Å)는 Li⁺(0.76)의 약 1.8배라 훨씬 크고 편극·수화 거동이 달라, K-ion 전지·알칼리(KOH) 수계전지에서 캐리어로 쓰이지만 우리 황화물 SE 캠페인의 직접 앵커는 아님. 대형 1가라 격자를 크게 열되 이동도는 Li계보다 낮은 게 일반적.",
+  "oxidation_states": ["+1"],
+  "electronegativity": 0.82,
+  "ionic_radius_A": {
+    "K+_IV": 1.37,
+    "K+_VI": 1.38,
+    "K+_VIII": 1.51,
+    "K+_XII": 1.64,
+    "_note": "Shannon 1976: K+ VI(팔면체) 1.38 A, IV 1.37, VIII 1.51, XII 1.64. Li+(VI 0.76)의 약 1.8배 -> Li 자리 치환 시 큰 격자 팽창; Na+(1.02)보다도 확연히 큼."
+  },
+  "representative_compounds": [
+    {"formula": "KCl", "context": "대표 할라이드(sylvite)", "battery_role": "K 자체는 SE 아님 — K 2p XPS 기준물", "note": "rock salt; K 2p3/2 ~293.1 eV. K+는 큰 hard 양이온"},
+    {"formula": "KOH", "context": "수계 알칼리 전지 전해질", "battery_role": "Ni-Cd·Ni-MH·alkaline Zn-MnO2의 강염기 전해질(OH- 캐리어)", "note": "황화물 SE와는 별개 계 — 수계 알칼리 전지의 표준 전해질"},
+    {"formula": "KPF6 / KFSI", "context": "K-ion 전지 전해질 염", "battery_role": "LiPF6/LiFSI의 K 유사체 — K-ion 셀 캐리어 염", "note": "K-ion 전지 맥락의 참고상; 우리 캠페인 앵커 아님"}
+  ],
+  "sei_relevance": "(일반적) K는 native Li-SE 이온이 아니라 Li 대체 알칼리. KF·KCl·K2O 같은 K 함유 무기상은 wide-gap 이온상으로 Li계 LiF/LiCl/Li2O와 성격이 유사하지만, 우리 황화물 캠페인의 SEI 앵커는 아님. K-ion 전지에선 KFSI/KPF6 유래 SEI가 논의되나 별개 계.",
+  "xps": [
+    {"core": "K 2p3/2", "BE_eV": 293.1, "assignment": "KCl / K+ (2p 이중선: 2p1/2 ~295.9 eV, 스핀궤도 분리 ~2.8 eV)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [],
+  "dos_character": "K 3p는 깊은 semicore, 4s는 비어 전도대 상부에 기여 -> 순수 이온성 s-block 1가. 밴드엣지 redox에 직접 관여 안 함; 결합/밴드는 상대 음이온(O 2p, Cl 3p)이 지배하고 K는 정전기·자리크기만 바꿈.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹",
+    "electron_config": "[Ar] 4s¹",
+    "valence_orbitals": "4s¹ — K⁺면 빈 4s + 닫힌 [Ar] 코어(순수 이온성 1가)",
+    "band_character": "(일반 전자구조) K⁺ s-block 1가, 빈 4s가 전도대 상부 -> 밴드엣지 redox 무관; K2O·KCl은 wide-gap clean 이온상, K는 자리/정전기만 바꿈",
+    "bonding": "K–O·K–Cl 거의 순이온성, K 4s–음이온 p 전하이동; 큰 hard 양이온이라 산소·할라이드와 잘 맞음"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (K+ VI 1.38 A)",
+    "NIST XPS DB — K 2p3/2 (KCl / K+ ~293.1 eV)",
+    "CRC Handbook / WebElements — Pauling EN 0.82, 전자배치 [Ar]4s¹"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii); SSB 앵커 없음(비캠페인 원소)"
+}

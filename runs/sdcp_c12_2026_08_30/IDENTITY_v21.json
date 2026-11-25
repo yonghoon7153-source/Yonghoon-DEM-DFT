@@ -1,0 +1,69 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-09-02",
+ "bundle": "sdcp_c12_v21",
+ "zip_sha256": "c9950d4a98506a9d6b6e02200c358a7c85ab716a3aa07a76b3d2f1384ee38e09",
+ "manifest_sha256": "bbbdb3cd9e5776421343878475e3f9c6532185b2f7dba9dec517472e0d00fcaf",
+ "generator_sha256": "68412a416df4c0be14bac5ae1935db638532c8ce6df0261016c3f65fdf96531e",
+ "analyzer_in_bundle_sha256": "28b13b061b064e63d2dd601bf34f167ed79bc296fc8968859071b9c68dd49a48",
+ "generated_commit": "69844dc8d34d2e3314b0961175eed193f45e89d4",
+ "git_dirty": false,
+ "branch": "claude/friendly-meitner-lldvar",
+ "⚠_branch_표기": "번들 안에는 `git_branch: b2o3run` 으로 찍혔다 — gabia 로컬 브랜치 이름이다. **커밋 해시가 같으므로 내용은 동일**하고, 리뷰어가 claude/friendly-meitner-lldvar 의 69844dc8 을 받아도 바이트가 같다. 이름만 다른 것을 숨기지 않는다.",
+ "generated_on": "gabia (kserver116-27) · 2026-09-02",
+ "generated_argv": "--from_basins db/properties/c12_poses_2026_08_30.json --frags sdcp_neutral ptfe_c10 --refs --refs_minimal --both_seeds --single_point --allow_no_pin --potcar_identity post_hoc --cell_c 36.6551 --cell_c2 40.6551 --min_vacuum 15.0 --roles primary sensitivity stress_sensitivity --out /data/work/runs/sdcp_c12_v21",
+ "⚠_argv_출처": "v20 과 같고 `--potcar_identity post_hoc` 만 **명시적으로** 추가됐다 (기본값과 같은 값이지만 정책이 산출물에 남게 하려고 적는다 — 회신 AZ P0-7).",
+
+ "상태": "회신 AZ 의 P0 7건 + P1 전건 이행 완료. VASP 는 여전히 **0잡**이다.",
+ "잡": 16,
+ "검증": {
+  "verify_zip": "PASS · rc 0",
+  "배포본_selftest": "301/301 PASS (v20 은 300 · v19 은 294)",
+  "신설_e2e": "정상 launcher 경로 회귀 — 픽스처 표시 없이 봉인된 mpirun 으로 run_job.sh 를 실제로 완주시킨다 (양성 1 + 음성 4)"
+ },
+
+ "v20_과_다른_점": {
+  "P0-1_기본_실행경로가_아예_안_돌았다": {
+   "무엇이_문제였나": "AY P0-1 패치가 잡 폴더에서 `POTCAR_ROOT_SEAL.json` 을 찾았는데 실물은 `../../POTCAR_ROOT_SEAL.json` 이다. 같은 파일 안에서 두 경로가 섞여 있었고(진공·해시 대조는 `../../` 를 맞게 썼다), 그 결과 **16잡이 전부 첫 launcher 검사에서 죽었다.**",
+   "왜_못_봤나": "기존 러너 회귀가 **언제나** `.SELFTEST_FIXTURE`(=봉인 조회 블록 통째로 건너뜀) + `VASP_LAUNCHER_KIND=none`(=mpirun 분기 통째로 건너뜀) 이었다. selftest 300건이 정상 실행 경로를 **한 번도** 지나지 않았다.",
+   "고침": [
+    "봉인 경로를 `_SEAL` 변수 하나로 묶었다 — 두 벌이면 또 갈라진다",
+    "`_runner_launcher_regression` 신설: 픽스처 표시 **없이** 봉인된 mpirun 으로 run_job.sh 를 실제로 돌린다",
+    "음성 4건: 봉인에 launcher 없음 · 봉인 파일 없음 · LAUNCHER_BIN 이 봉인과 다름 · launcher 를 도중에 교체",
+    "원래 오타를 되돌리면 이 시험이 `rc=1 · 상 []` 로 잡는 것을 확인했다"
+   ]
+  },
+  "P0-2_PATH_우회가_봉인_시점에_그대로였다": {
+   "⚠_우리_잘못": "AY 에서 run_job.sh 쪽만 걷고 리뷰 AZ 프롬프트에 **'PATH 조회를 폐기했다' 고 적었다.** 봉인을 *만드는* run_staged.sh 는 그대로였다 — 같은 실수 두 번째다. PATH 앞에 가짜를 두면 그 파일이 **정상적으로 봉인**됐다.",
+   "고침": [
+    "VASP_EXE·LAUNCHER_BIN 을 **절대경로로만** 받는다 (PATH 에서 찾아 주지 않는다)",
+    "SEAL 재대조 불변량에 `launcher_kind`/`launcher_path`/`launcher_sha256` 추가 — 종전엔 봉인에 **쓰기만** 하고 대조 목록엔 없었다",
+    "분석기가 receipt 의 **kind·path** 를 봉인과 대조한다 — kind 를 `none` 으로 바꿔 해시 검사를 건너뛰던 경로를 닫았다"
+   ]
+  },
+  "P0-3_진공_판정": "코드는 이미 `|Δ_vac| ≤ 5 meV` 단독이었는데 MANIFEST 문자열이 반올림 일치를 계속 요구했다 (AY P0-3 에서 docstring 만 고쳤다). MANIFEST 를 5 meV 단독으로 맞추고 반올림은 표시 정보로 분리했다.",
+  "P0-4_E_ads_정의": {
+   "무엇이_틀렸나": "`E_ads(f) = E_C(f) − E_G(f)` 에 **clean-slab 항 E_S 가 없다.** 그건 흡착에너지가 아니라 '복합체 − 기체' 다. 게다가 같은 문서가 개별 E_ads 를 산출물이 아니라고 하면서 이름은 E_ads 로 썼다 (내부 모순).",
+   "고침": "정의를 `E_ads(f) = E_C(f) − E_S − E_G(f)` 로 적고, **보고량은 ΔE_ads 하나**로 못 박았다. 공통 E_S 는 ΔE_ads 에서 대수적으로 소거되므로 **clean-slab 추가 잡은 여전히 불필요**하다(잡 수 불변). 개별 E_ads 는 E_S 를 안 쟀으므로 산출하지 않는다."
+  },
+  "P0-5_overall_None_우회": "`overall_citable_at_0.01eV=None`(모른다)을 옳게 넣어 놓고, 시험한 축만 통과하면 **무조건적 이름**의 `reported_X_eV` 를 냈다. 필드명에 범위를 박았다 — `rounded_value_under_tested_axes_eV`. `reported_X_eV` 는 overall 이 True 일 때만 나온다(지금은 언제나 None). 방향 판정도 `보고 가능 (시험한 축 조건부)` 로 바뀌고 `verdict_scope` 가 붙는다.",
+  "P0-6_거버넌스": "좁은 C-12 estimand 노드가 전역 마감정책을 supersede 하던 간선을 제거했다. 되돌려 보니 그 정책은 **사람 승인 기록이 한 번도 없었다** — `superseded` 가 그 사실을 가리고 있었다. 그래서 `active` 가 아니라 `proposed` 로 뒀다. 원장 fail-closed 신설: 상태 enum · 타입 · 중복 id · 적재 누락 · **좁은 노드→전역 정책 / non-policy→policy supersede 금지**.",
+  "P0-7_POTCAR": "🔴 **1저자가 두 번 재확인해 post_hoc 을 유지**했다 (게이트 없음). 대신 README 에 권고를 넣고, 그 선택의 대가를 산출물이 진다 — `potcar_identity_policy.manuscript_citable=false` · `현재_판정: ⛔ 탐색용` · Methods 필수문장(PAW dataset 조건부). `1저자_결정_2026_09_01` 에 **리뷰어 판정을 알고 고른 것**임을 기록해 누락과 결정을 구분할 수 있게 했다.",
+  "P1": [
+   "`ALLOW_RESUME=1` 이 receipt 를 **새 헤더로 덮어써** 완료 상의 행이 사라지고 결국 RECEIPT_PHASE_MISSING 이 났다 — 정직하게 이어 돌린 사람이 '러너 밖에서 돌렸다' 판정을 받았다. 재개는 **이어 쓰고** `_runner_resume` 으로 구분한다",
+   "`_runner_start` 헤더의 **내용**도 본다 (종전엔 개수만 셌다)",
+   "같은 상이 두 번 찍히면 `RECEIPT_PHASE_DUPLICATE`",
+   "attestation 파일명 대소문자 (`make_attestation.sh` → `MAKE_POTCAR_ATTESTATION.sh`)",
+   "**'두 복합체의 슬랩 조성이 다르다' 는 거짓**이었다 — 둘 다 `Li48 Ni48 O96` · 192원자로 같다. 결론(소거 미주장)은 유지하고 이유를 정정: 비소거 위험은 복합체 전체 조성·기하와 주기영상 항이 조각마다 다른 데서 온다",
+   "D3 단서를 코드 주석뿐 아니라 **결과 객체**에도 실었다 (`⚠_C3_가_무엇인가`, VASP IVDW 문서 링크 포함)"
+  ]
+ },
+
+ "🔴_남은_것": [
+  "거버넌스: 전역 마감정책 `D-2026-08-28-closure-criteria-first` 가 승인 기록 없이 `proposed` 다. 회신 AZ P0-6 이 **비용 발생 전** 닫으라고 했다 — 계산 후 비준하면 결과가 정책 결정에 압력을 준다. **발송 전 1저자 비준 필요.**",
+  "POTCAR 신원: post_hoc 이므로 이 묶음 결과는 원고 인용 시 **PAW dataset 조건부** 단서가 붙는다 (1저자 결정 · 회신 AZ Q4 는 '원고용 불가' 판정)",
+  "프로토콜 파일의 잡 수(§0 12잡 · §12 19잡)가 실물 16잡과 다르다 — citation_hazards 등재됨, 파일 미정정"
+ ],
+ "이전판": "runs/sdcp_c12_2026_08_30/IDENTITY_v20.json",
+ "리뷰": "kb/reviews/codex_BA_prompt_c12_v21_2026_09_02.md"
+}

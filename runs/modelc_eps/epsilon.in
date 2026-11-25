@@ -1,0 +1,7 @@
+&inputpp
+  prefix='modelc', outdir='./out', calculation='eps'
+/
+&energy_grid
+  smeartype='gauss', intersmear=0.15d0, intrasmear=0.0d0,
+  wmax=25.0d0, wmin=0.0d0, nw=2500, shift=0.0d0
+/

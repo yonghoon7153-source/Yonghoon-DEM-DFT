@@ -1,0 +1,5 @@
+element,n_atom_forces,force_rmse_eV_per_A,force_mae_eV_per_A,rms_dft_force_eV_per_A,relative_mae_percent,force_softening_slope
+S,480,0.0563,0.0451,0.751,6.0,0.9785
+P,120,0.0434,0.0337,1.263,2.67,0.9766
+Cl,120,0.0118,0.0086,0.446,1.94,1.0104
+Li,480,0.0114,0.0086,0.37,2.32,1.0149

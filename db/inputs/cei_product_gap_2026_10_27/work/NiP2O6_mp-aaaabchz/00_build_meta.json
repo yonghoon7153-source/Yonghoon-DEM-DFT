@@ -1,0 +1,45 @@
+{
+ "tag": "NiP2O6_mp-aaaabchz",
+ "structure": "db/structures/cei_gap_tm/NiP2O6_mp-aaaabchz.vasp",
+ "structure_sha256": "4ec7acf4196df255b1e808d3e63a616559fdc9ea033edf4a6ff8ceb52c72392d",
+ "species": [
+  "Ni",
+  "O",
+  "P"
+ ],
+ "nspin": 2,
+ "tm_state": "mp",
+ "tm_moment_rule": "a_mp_sites",
+ "magmom_sidecar": "db/structures/cei_gap_tm/NiP2O6_mp-aaaabchz.magmom.json",
+ "starting_magnetization": {
+  "Ni": 0.09711111111111109
+ },
+ "tot_magnetization_initial": 8,
+ "hubbard": [
+  "  U Ni-3d 6.2"
+ ],
+ "hubbard_policy": "mp",
+ "ecut_wfc_rho": [
+  60.0,
+  480.0
+ ],
+ "cell_policy": "vc-relax",
+ "pseudo": {
+  "Ni": "ni_pbe_v1.4.uspp.F.UPF",
+  "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+  "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  4,
+  4,
+  3
+ ],
+ "k_gap": [
+  7,
+  7,
+  5
+ ],
+ "nbnd_gap": 188,
+ "gap_step": "03_nscf_gap.in"
+}

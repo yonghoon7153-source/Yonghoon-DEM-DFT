@@ -1,0 +1,28 @@
+변이 351 개 (DP 판 287 · 자리 옮김 11 · DQ 64) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_dqnew3_w*
+DP30_kind_closes_off             ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DP29_kind_verdict_status_off     ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F3 · F4: 폴더 판정 fail · pass 는 근거 (상태 · closes_system) 를 같이 → 러너가 장부에 적는다 · 못 읽은 이전 판정 (상태 없음) = 판독 불가 · 끊긴 런 (고아 마감 전 running 포함) 
+DP48_persist_verdict_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DP 전 리뷰 F1 · F2: 끊긴 런 폴더를 사람이 판정해 fail 이 나오면 (폴더 판정 기록) 확인 · 재시도 검사가 거부 전에 장부 verdict 에 적는다 · 첫 시드면 closes_system → 재시도 경로는 STOP melt · 확인 경로는
+DP55_rejudge_disagree_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-B: 장부 판정 invalid 인 실행을 재판정이 pass 로 내면 러너는 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · 로그에 '충돌 관측' (27 · 발사 0 · invalid · [{'status': 
+DQ12_flip_conflict_off           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (원자료 · 카드 · 도구 다 있고 같음) 일 때만 대체 ({'fail_pass': F
+DQ5_after_replace_plain          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP P0-1 · P2-1 (교체 뒤 실패): 본 녹음 fail 을 적은 장부 교체 뒤 디렉터리 fsync 가 실패해도 메모리를 되돌리지 않는다 — 확인은 거부 · 재시도는 invalid · 장부에 fail 이 남는다 · terminal STOP 교
+DQ6_attempt_section_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DP (같은 꼴): 실행 전 기록 교체가 끝나는 순간 미룬 신호가 와도 장부에 그 실행 행이 생기고 (발사 전) 마감된다 — 장부에 없는 폴더를 안 남긴다 (True · 26 · 발사 0 · 행 0)
+DQ50_same_inputs_always          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (원자료 · 카드 · 도구 다 있고 같음) 일 때만 대체 ({'inv_pass': Fa
+DQ51_same_inputs_missing_ok      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (원자료 · 카드 · 도구 다 있고 같음) 일 때만 대체 ({'inv_prov_noca
+DQ52_nonsci_conflict_off         ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3: 같은 실행 충돌 규칙 (러너 ①-4 · persist · 요약이 같이 쓴다) 진리표 — 비과학적 장부 판정은 그때 지문 = 지금 (원자료 · 카드 · 도구 다 있고 같음) 일 때만 대체 ({'inv_pass': Fa
+DQ54_runkind_prov_off            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 폴더 판정 관측에 지금 판정의 지문이 실린다 (재시도 · 확인 경로도 ①-4 와 같은 대체 규칙) · 관측 상태 (이력의 fail) 가 지금 판정 (pass) 과 다르면 지문을 싣지 않는다 (대체 못 함) (False · {'s
+DQ49_persist_log_conflict_off    ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · P2-B: 장부 판정 invalid 인 실행을 재판정이 pass 로 내면 러너는 덮지 않고 충돌 관측으로 남기고 invalid (발사 0) · 로그에 '충돌 관측' (27 · 발사 0 · invalid · [{'status': 
+DQ57_mark_nonpass_kept_off       ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DQ 전 리뷰 P2-F · 2차: 낡은 통과 요약 · 못 읽는 요약을 '지금 판정 아님' (pending · not_current · 2 단계 없음) 으로 바꾼다 · 통과가 아닌 요약 (stop_track) 은 그대로 · 요약이 없으면 안 만든다 (Fal
+DQ53_consumer_prov_off           ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ55_rows_prov_shape_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ56_rows_superseded_shape_off   ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ58_conflict_closes             ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N1 · N2: 재판정이 장부 pass 와 다른 fail + closes 면 충돌 관측으로만 남기고 계를 닫지 않는다 (닫는 STOP 아님) · 재시작해도 같은 관측은 한 번만 (27 · 21 · closes True · 관측 1)
+DQ59_conflict_dedupe_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N1 · N2: 재판정이 장부 pass 와 다른 fail + closes 면 충돌 관측으로만 남기고 계를 닫지 않는다 (닫는 STOP 아님) · 재시작해도 같은 관측은 한 번만 (27 · 27 · closes False · 관측 2)
+DQ60_supersede_off               ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · 통과 (27 · 발사 3 · 0 · 발사 7 · None)
+DQ61_supersede_record_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · 통과 (27 · 발사 3 · 0 · 발사 7 · None)
+DQ62_end_prov_record_off         ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 리뷰 P1-A · 2차 N3 · P2-C · P2-D · P2-G: 장부 판정 invalid · incomplete (지문 없음 · 원자료 지문 다름) · 'PASS' · fail ↔ 폴더 pass · 장부 invalid ↔ 폴더 fail · 장
+DQ63_rejudge_obs_prov_off        ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 끝 판정 도중 일시 오류로 장부 invalid → 확인 뒤 같은 원자료 · 카드 · 도구의 재판정 pass 가 대체하고 (기록) 이어 돌린다 · 통과 (27 · 발사 3 · 27 · 발사 0 · None)
+DQ64_retry_obs_prov_off          ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문이 실린다 ({'kind': 'verdict', 'run_id': 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 'status': 'pass', '
+DQ65_ack_obs_prov_off            ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 DQ 전 2차 리뷰 N3: 재시도 자격 · 확인 경로의 폴더 판정 관측에 지금 판정의 지문이 실린다 ({'kind': 'verdict', 'run_id': 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 'status': 'pass', '
+DQ66_persist_prov_record_off     ⛔ 초록 (못 잡음) · li2s2_stage1_runner selftest: ⭕ 133 · ⛔ 0
+끝: 빨강 24 / 25

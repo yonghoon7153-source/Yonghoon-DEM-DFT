@@ -1,0 +1,163 @@
+{
+ "slug": "so2022_dem_compaction_coated_particles_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Experimental and simulation results using the particle and coating methods. The SEM images to the left were reproduced from Nakamura et al. [17]. 3",
+   "bbox": [
+    38.8,
+    477.7,
+    560.7,
+    730.8
+   ],
+   "w": 2176,
+   "h": 1055,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.592
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Comparison of the simulation and experimental results. Particle distribution after cold pressing at 360 MPa using both the particle mixture (a, b, c) and SE coating (d, e, f) methods. The experimental results in (c) and (f) were reproduced from Nakamura et al. [17].",
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    403.5
+   ],
+   "w": 2227,
+   "h": 1477,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.515
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Volume fractions and interface surface areas.",
+   "bbox": [
+    73.5,
+    441.0,
+    523.2,
+    612.8
+   ],
+   "w": 1874,
+   "h": 717,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.703
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Comparison of the two different simulated fabrication methods with respect to percolation. Number of AM aggregates (a), number of AM percolation clusters (b), and relative percolation volume of AM (c) and SE (d).",
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    362.3
+   ],
+   "w": 2227,
+   "h": 1305,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Number of AM-SE fusion bonds (a) and the balance for the coating method (b). Images of the delaminated regions: 3D simulation (c), simulation slice (d) and experimental results (e). Subfigure (e) was reproduced from Nakamura et al. [17]. 6",
+   "bbox": [
+    31.6,
+    419.0,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1261,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Damage inflicted upon the AM in the electrode as a result of mold pressure. Number of AM-AM fusion bonds (a) and the AM damage (b) plotted versus the mold pressure. Distribution of damage across the particles (c) and along the vertical axis (d). 7",
+   "bbox": [
+    31.6,
+    374.1,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1448,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Tortuosity factors for the SE (a, b) and AM (c, d) from the simulation and experiments (Nakamura et al. [17]). 4.2. Summary of the results",
+   "bbox": [
+    72.0,
+    49.4,
+    523.1,
+    383.6
+   ],
+   "w": 1880,
+   "h": 1394,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Properties for AM (NCM) and SE (LPS) in the simulations.",
+   "bbox": [
+    32.6,
+    31.6,
+    562.7,
+    748.3
+   ],
+   "w": 2210,
+   "h": 2987,
+   "dpi": 300,
+   "src": "53. Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method.pdf",
+   "blank": 0.779
+  }
+ ]
+}

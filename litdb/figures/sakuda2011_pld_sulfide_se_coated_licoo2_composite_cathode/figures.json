@@ -1,0 +1,747 @@
+{
+ "slug": "sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic diagrams of (a) a typical all-solid-state cell and (b) an all-solid-state cell based on SE-coated LiCoO2 particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.5,
+    49.5,
+    491.4,
+    316.5
+   ],
+   "w": 1659,
+   "h": 1113,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "blank": 0.792,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. SEM images of SE-coated LiCoO2 with various coating times: (a) 0 min, (b) 10 min, (c) 20 min, and (d) 40 min.",
+   "rotated_deg": 0,
+   "bbox": [
+    121.2,
+    50.0,
+    485.3,
+    295.5
+   ],
+   "w": 1517,
+   "h": 1024,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "blank": 0.218,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Cross-sectional high-angle annular dark ﬁeld (HAADF) TEM images and EDX mappings of a composite electrode composed of SE-coated LiCoO2 in an all-solid-state cell after 450 cycles. The composite electrode was composed of solely SE-coated LiCoO2, with no added SE particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    25.9,
+    50.0,
+    558.9,
+    505.5
+   ],
+   "w": 2221,
+   "h": 1899,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "blank": 0.489,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Charge–discharge curves of all-solid-state cells based on non-coated, LiNbO3-coated, and SE-coated LiCoO2 with various coating times. The composite electrode was composed solely of coated LiCoO2, with no added SE particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    53,
+    52,
+    284,
+    271
+   ],
+   "w": 964,
+   "h": 914,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "manual_crop": "figure not extracted by the tool ('no graphics (img0/draw1)' — two-panel vector plot whose caption sits under it in the left column); cut by hand from the vector-path union (81.2,58.4,280.0,242.0) + y-axis title (x 57.2) + x-axis labels/title (to y 267.8) with a 4 pt margin, caption (y 279.0) excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Charge–discharge curves of an all-solid-state cell based on SE (120 min)-coated LiCoO2.",
+   "rotated_deg": 0,
+   "bbox": [
+    321.7,
+    52.2,
+    554.7,
+    268.7
+   ],
+   "w": 972,
+   "h": 903,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "manual_crop": "figure not extracted by the tool ('no graphics (img0/draw0)' — vector plot in the right column); cut by hand from the vector-path union (349.1,58.2,550.7,236.3) + y-axis title (x 325.7) + x-axis title (to y 264.7) with a 4 pt margin, caption (y 276.0) excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Charge–discharge curves of an all-solid-state cell based on SE (120 min)- coated LiCoO2 with heat treatment at 200 ◦C. The composite electrode was composed of SE-coated LiCoO2, with no added SE particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.2,
+    496.5,
+    569.8,
+    716.0
+   ],
+   "w": 1100,
+   "h": 916,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "blank": 0.928,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Impedance proﬁles of all-solid-state cells based on composite electrodes with 90 wt.% LiCoO2 and 10 wt.% solid electrolyte particles after charging to 3.6 V vs. Li–In. The composite electrodes were prepared using (a) uncoated LiCoO2, (b) LiNbO3-coated LiCoO2, and (c) SE (20 min)-coated LiCoO2, which was coated with LiNbO3 in advance.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.4,
+    52.2,
+    270.1,
+    330.7
+   ],
+   "w": 937,
+   "h": 1161,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "blank": 0.936,
+   "recrop": "tool crop started at y 57.5 and cut the top frame line and tick marks of panel (a) (frame at y 56.2-56.7); re-cut from the left vector-path union (81.1,56.2,259.3,302.9) + y-axis title (x 49.4) + x-axis labels/title (to y 326.7) with a 4 pt margin, caption (y 338.0) excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Charge–discharge curves of all-solid-state cells based on composite electrodes with 90 wt.% LiCoO2 and 10 wt.% solid electrolyte particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    312.9,
+    52.2,
+    541.6,
+    266.7
+   ],
+   "w": 954,
+   "h": 895,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "manual_crop": "figure not extracted by the tool (caption candidate fell to the rule set and 'no graphics (img0/draw0)' — vector plot in the right column); cut by hand from the vector-path union (339.7,58.2,533.4,236.9) + y-axis title (x 316.9) + x-axis labels/title (to y 262.7) with a 4 pt margin, caption (y 274.0) excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Deposition condition of Li2S–P2S5 solid electrolyte ﬁlm.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.4,
+    637.7,
+    557.0,
+    746.8
+   ],
+   "w": 1082,
+   "h": 455,
+   "dpi": 300,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "blank": 0.851,
+   "recrop": "tool crop was the whole page 2 (bbox 26.9,31.5,558.0,748.0); re-cut to the table only: caption top (641.7) .. bottom rule (742.8), right column x 301.4-553.0, caption included (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6735a",
+   "kind": "text",
+   "label": "p6735-abstract",
+   "page": 1,
+   "file": "txt_p6735_abstract.png",
+   "caption": "PDF p.1 (p.6735) abstract: PLD Li2S–P2S5 coating on LiCoO2; TEM of packing; cells with only SE-coated LiCoO2; coating amount and conductivity controlled; 120 min coating → 65 mAh g-1 with no SE particles; heat treatment at 200 °C raises capacity; coating + added SE particles → 95 mAh g-1.",
+   "rotated_deg": 0,
+   "w": 2003,
+   "h": 749,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      206.4,
+      286.0,
+      566.8,
+      420.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6735b",
+   "kind": "text",
+   "label": "p6735-sulfide-conductivity",
+   "page": 1,
+   "file": "txt_p6735_sulfide_conductivity_interface.png",
+   "caption": "PDF p.1 (p.6735) intro: thio-LISICON and Li2S–P2S5 glass-ceramics 'over 10−3 S cm−1 at room temperature' [19–21], approaching 10−2; transference number ≈ 1 [22].",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 586,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      309.2,
+      454.7,
+      566.8,
+      560.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6735c",
+   "kind": "text",
+   "label": "p6735-interface-degradation-coatings",
+   "page": 1,
+   "file": "txt_p6735_interface_degradation_oxide_coatings.png",
+   "caption": "PDF p.1 (p.6735) intro: difficulty of forming an electrode–electrolyte interface; high interfacial resistance after initial charge with LiCoO2 [9,10,18,23–26]; authors 'believe' it is caused by interface degradation [18]; oxide coatings (Li4Ti5O12, LiNbO3, LiTaO3, Li2O–SiO2, Li2O–TiO2) decrease it.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 876,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      309.2,
+      560.3,
+      566.8,
+      717.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6736a",
+   "kind": "text",
+   "label": "p6736-se-20-30wt-prior-pld",
+   "page": 2,
+   "file": "txt_p6736_se_20_30wt_prior_pld_30mah.png",
+   "caption": "PDF p.2 (p.6736) intro: SE particles needed in a composite 'approximately 20–30 wt.%' [27]; AB/VGCF needed for low-σe actives; first PLD SE coating on LiCoO2 [28]; previous SE-coated cell 'limited to 30 mAh g−1'; PLD film conductivity rises after 200 °C [29].",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1865,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      28.9,
+      345.9,
+      286.5,
+      681.3
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6736b",
+   "kind": "text",
+   "label": "p6736-pld-film",
+   "page": 2,
+   "file": "txt_p6736_pld_film_80_20_amorphous_7p9e-5.png",
+   "caption": "PDF p.2 right + p.3 left (pp.6736–6737) §2: 80Li2S·20P2S5 (mol.%) PLD, KrF λ = 248 nm; Li2S + P2S5 80:20 target; films on Si amorphous; ICP-AES Li:P 80:20; film σ 7.9 × 10−5 S cm−1 at 25 °C [29]; LiCoO2 D-10 (Toda Kogyo) pre-coated with LiNbO3 [10]; vibrating holder (VIB-FB, 50 Hz square pulse); 0–120 min; heat treatment in Ar; SEM Tiny SEM Mighty-8.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1841,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      298.4,
+      485.7,
+      556.0,
+      624.7
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      39.7,
+      324.9,
+      297.3,
+      513.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6737a",
+   "kind": "text",
+   "label": "p6737-cell-90-10-360mpa",
+   "page": 3,
+   "file": "txt_p6737_cell_90_10_bilayer_360mpa.png",
+   "caption": "PDF p.3 (p.6737) left: In / 80Li2S·20P2S5 glass-ceramic SE / LiCoO2 cells; previous working electrodes 70 wt.% LiCoO2 + 30 wt.% SE; here only SE-coated LiCoO2, or 90 wt.% SE-coated LiCoO2 + 10 wt.% SE particles; bilayer pellet WE 10 mg + SE 80 mg pressed at 360 MPa (φ = 10 mm); In foil at 240 MPa; two stainless-steel rods as current collectors.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1284,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      39.7,
+      514.0,
+      297.3,
+      744.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6737b",
+   "kind": "text",
+   "label": "p6737-cycling-eis-tem",
+   "page": 3,
+   "file": "txt_p6737_cycling_eis_tem_protocol.png",
+   "caption": "PDF p.3 (p.6737) right: BTS-2004 at room temperature; EIS (SI 1260) after charging to 3.6 V vs. Li–In at 0.13 mA cm−2; 50 mV; 1 Hz–1 MHz; TEM JEM2100F on FIB samples transferred under Ar.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 823,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      309.2,
+      324.9,
+      566.8,
+      472.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6737c",
+   "kind": "text",
+   "label": "p6737-sem-tem-thickness",
+   "page": 3,
+   "file": "txt_p6737_sem_10_20um_tem_50_70nm_1wt.png",
+   "caption": "PDF p.3 (p.6737) right §3: LiNbO3-coated LiCoO2 average diameter ca. 10 µm, smooth; 10 min similar; 20 and 40 min ca. 20 µm — 'small aggregates', secondary particles grow with deposition time; TEM: 40 min → ca. 50–70 nm ≈ ca. 1 wt.%; 120 min estimated ≈ 3 wt.%.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1229,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      309.2,
+      503.8,
+      566.8,
+      724.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6738a",
+   "kind": "text",
+   "label": "p6738-closely-packed-voids",
+   "page": 3,
+   "file": "txt_p6738_tem_closely_packed_cold_pressing_voids.png",
+   "caption": "PDF p.3 right bottom + p.4 left + p.4 right (pp.6737–6738): 40 min cell no capacity fade [28]; HAADF-TEM after 450 cycles: LiCoO2 'closely packed'; Nb at surfaces, P and S at interfaces; 'prepared by cold pressing … SE coating … was connected'; contact maintained after cycling; 'Some voids at the interfaces'; 120 min coating three times thicker.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 2156,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      309.2,
+      725.0,
+      566.8,
+      746.0
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      28.9,
+      544.8,
+      286.5,
+      746.6
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      298.4,
+      544.8,
+      556.0,
+      702.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6739a",
+   "kind": "text",
+   "label": "p6739-capacity-15-35-65",
+   "page": 5,
+   "file": "txt_p6739_capacity_vs_coating_time_15_35_65.png",
+   "caption": "PDF p.5 (p.6739) left: capacity normalized by the weight of the coated LiCoO2; uncoated could not be charged/discharged; LiNbO3-coated < 10 mAh g−1; SE 10/40/120 min → 15, 35, 65 mAh g−1; previous 40 min ca. 30.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1288,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      39.7,
+      315.6,
+      297.3,
+      547.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6739b",
+   "kind": "text",
+   "label": "p6739-cycling",
+   "page": 5,
+   "file": "txt_p6739_cycling_10_100_cycles.png",
+   "caption": "PDF p.5 (p.6739) left: 120 min cell stable over 10 cycles; 40 min cell 100 cycles with no significant reduction [28].",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 345,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      39.7,
+      547.3,
+      297.3,
+      609.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6739c",
+   "kind": "text",
+   "label": "p6739-heat-treatment",
+   "page": 5,
+   "file": "txt_p6739_heat_treatment_200c_86_69.png",
+   "caption": "PDF p.5 left + right (p.6739): 200 °C for 1 h heat treatment of SE (120 min)-coated LiCoO2; 0.13 mA cm−2; charge 86 / discharge 69 mAh g−1; charge similar with/without heat treatment; conductivity of the coated SE 'would likely be increased'.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1073,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      39.7,
+      609.4,
+      297.3,
+      746.0
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      309.2,
+      306.1,
+      566.8,
+      359.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6739d",
+   "kind": "text",
+   "label": "p6739-reference-70-30",
+   "page": 5,
+   "file": "txt_p6739_reference_70_30_95mah.png",
+   "caption": "PDF p.5 (p.6739) right: SE-coated cells remained below the '95 mAh g−1 typical' of 70 wt.% LiNbO3-coated LiCoO2 + 30 wt.% SE particles at 0.13 mA cm−2.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 407,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      309.2,
+      359.3,
+      566.8,
+      432.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6740a",
+   "kind": "text",
+   "label": "p6740-eis-850-300",
+   "page": 5,
+   "file": "txt_p6740_eis_850_vs_300_ohm_contact_area.png",
+   "caption": "PDF p.5 right + p.6 left (pp.6739–6740): 10 wt.% SE particles added; EIS after 3.6 V vs. Li–In (= 4.2 V vs. Li); large semicircle = LiCoO2/SE interfacial resistance; uncoated 'ca. 850 Ω' vs previous 'ca. 300 Ω' [24–26] because LiCoO2–SE contact area smaller with 10 vs 30 wt.% SE; LiNbO3 lowers it, SE (20 min) coating lowers it further.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1314,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      309.2,
+      432.5,
+      566.8,
+      486.9
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      28.9,
+      399.3,
+      286.5,
+      577.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6740b",
+   "kind": "text",
+   "label": "p6740-capacity-20-60-95",
+   "page": 6,
+   "file": "txt_p6740_capacity_90_10_20_60_95.png",
+   "caption": "PDF p.6 (p.6740) left: 90 wt.% uncoated / LiNbO3-coated / SE (20 min)-coated LiCoO2 + 10 wt.% SE particles at 0.13 mA cm−2 → 20, 60, 95 mAh g−1; similar to 30 wt.% SE with no coating.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 755,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      28.9,
+      578.1,
+      286.5,
+      713.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6740c",
+   "kind": "text",
+   "label": "p6740-energy-density",
+   "page": 6,
+   "file": "txt_p6740_energy_density_86_vs_67.png",
+   "caption": "PDF p.6 left + right (p.6740): capacity normalized by composite (LiCoO2 + SE) weight: 90/10 SE-coated composite 86 mAh g−1 vs normal 70/30 composite 67 mAh g−1.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 729,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      28.9,
+      714.0,
+      286.5,
+      746.0
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      298.4,
+      304.2,
+      556.0,
+      399.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6740d",
+   "kind": "text",
+   "label": "p6740-conclusions",
+   "page": 6,
+   "file": "txt_p6740_conclusions.png",
+   "caption": "PDF p.6 (p.6740) §4 Conclusions: LiCoO2 'closely packed'; SE coating occupied the interfaces; capacity rises with coating time and heat treatment; 10 wt.% SE particles + SE (20 min) coating → 95 mAh g−1.",
+   "rotated_deg": 0,
+   "w": 1432,
+   "h": 1056,
+   "dpi": 400,
+   "src": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      298.4,
+      411.1,
+      556.0,
+      600.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand (400 dpi; pads from neighbouring-line gaps; multi-part paragraphs stacked top-to-bottom with a light-grey rule) (2026-11-16, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 그래픽 없음(img0/draw1)"
+   ],
+   "near_miss": [
+    {
+     "page": 4,
+     "text": "Fig. 4 shows charge–discharge curves of all-solid-state cells using uncoated, LiNbO3-coate"
+    }
+   ]
+  },
+  {
+   "key": "f5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [
+    {
+     "page": 5,
+     "text": "Fig. 5 shows the charge–discharge curves of all-solid-state cell based on SE (120 min)-coa"
+    }
+   ]
+  },
+  {
+   "key": "f8",
+   "why": "캡션 모양 후보가 규칙에 떨어졌고 추출 0 — 본문 참조일 수도 있다 (확인)",
+   "skipped": [
+    "p6 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [
+    {
+     "page": 6,
+     "text": "Fig. 8 shows charge–discharge curves of all-solid-state cells based on composite electrode"
+    }
+   ]
+  }
+ ],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-16) produced 6 crops (Fig. 1, 2, 3, 6, 7, Table 1); all opened. Kept as cut: Fig. 1, 2, 3, 6. Re-cut 2: Fig. 7 (top frame line and ticks of panel (a) cut off) and Table 1 (whole page 2). Added by hand 3 figures the tool rejected as 'no graphics' — Fig. 4, Fig. 5 (PDF p.5) and Fig. 8 (PDF p.6), all vector plots — and 17 evidence paragraphs (400 dpi). No numbered or display equations in the paper (no equation crops). No supplementary material. (2026-11-16, litdb-curator)",
+ "note_manual": "Printed vs figure: Fig. 8 discharge ends read 16.4 / 58.1 / 91.9 mAh g-1 at the 2.0 V cut-off while the text prints 20 / 60 / 95 (p.6740) — printed values are 2–3.6 mAh g-1 higher; Fig. 4 ends 14.5 / 33.6 / 65.1 vs printed 15 / 35 / 65. Fig. 7 Nyquist axes are not equal-scaled (x 0.1477 pt/Ω, y 0.1366 pt/Ω). Fig. 8 top and bottom x-ticks disagree by up to 1.4 pt (bottom ticks match the labels and were used). Cycling voltage window is not printed (figures show charge to 3.6 V and discharge to ≈2.0 V vs. Li–In). Text glyphs φ, λ, µ, Ω are missing in the text layer (visible in the render).",
+ "key_note": "manual keys: f<N> = whole figure (caption excluded) · t1 = table (caption included) · x<printed page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' with PDF page numbers) · 'page' fields are PDF page numbers (printed page = 6734 + PDF page)",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 2292,
+  "method": "Fig. 4, 5, 8 charge–discharge curves = centroids of the coloured dash shapes / black stroke segments from the PDF vector paths, calibrated on the vector major ticks (Fig. 4: x 92.16→258.55 pt = 0→80 mAh g-1, y per panel 20.28 pt/V; Fig. 5: x 352.01→528.38 = 0→80, y 58.86→235.94 = 5→0 V; Fig. 8: bottom ticks x 343.28→532.87 = 0→120, y 58.74→236.41 = 5→0 V); every 3rd point kept plus the charge end (max Q) and the discharge end (max Q with V < 2.5 V), flagged 'END'; Fig. 7 Nyquist = all marker centroids (x 81.69→258.97 pt = 0→1200 Ω; y per panel −400→0 Ω over 27.3 pt). Dash centroids sit up to half a dash inside the true curve end: ±1 mAh g-1."
+ }
+}

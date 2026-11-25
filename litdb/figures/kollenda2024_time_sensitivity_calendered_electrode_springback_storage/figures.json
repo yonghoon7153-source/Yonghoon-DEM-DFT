@@ -1,0 +1,925 @@
+{
+ "slug": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf"
+ ],
+ "figures": [
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1: Investigated product properties in the reference cell production campaign",
+   "rotated_deg": 0,
+   "bbox": [
+    29.0,
+    228.0,
+    278.2,
+    368.1
+   ],
+   "w": 1040,
+   "h": 584,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "blank": 0.916,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed the table cells; crop kept as cut by the tool (opened and checked) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "가설: 슬러리 점도 II · 고형분 I · 밀도 I · 건조 전극 질량 II · 두께 I · 압연 전극 질량 · 두께 II · 진공 건조 전극 질량 · 두께 II (I = 일정 · II = 증가)."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2: Mixing procedures for anode and cathode slurries",
+   "rotated_deg": 0,
+   "bbox": [
+    29.2,
+    596.2,
+    550.1,
+    740.8
+   ],
+   "w": 2172,
+   "h": 603,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "blank": 0.933,
+   "caption_note": "caption text cleaned by hand — the tool caption had swallowed the header row; crop kept as cut by the tool (opened and checked) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1: a) Procedure for defining the validity period of a measurement result on a measured intermediate product feature; b) Hypotheses on the development of the investigated product property over storage duration (qualitative)",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    68.0,
+    565.0,
+    266.5
+   ],
+   "w": 2156,
+   "h": 809,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "manual_crop": "figure not found by the caption-anchored tool (rejected as 'no graphics' — the chart is vector paths inside a page-level form XObject) — rendered by hand from the vector page at 300 dpi: region box from the text-layer blocks (panel labels, axis/legend words) and the drawing extents → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 3,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1(a) — four-step procedure: 1. hypothesis on development of product feature value → 2. time series experiments → 3. definition of set point range for further processing → 4. definition of validity period (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    70.0,
+    271.5,
+    226.0
+   ],
+   "w": 960,
+   "h": 652,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — rendered by hand from the vector page at 300 dpi: panel box split in the white gaps between the panels (x/y measured on the text-layer words and drawing extents) → ink bounding box → uniform 6 pt (25 px) margin; panel label and legend kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 3,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1(b) — qualitative hypotheses over storing duration: curve I constant, curve II increasing and saturating; set point range (min./max.); t1, t2 = time points at which a decision on the intermediate product is required (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    271.5,
+    70.0,
+    560.0,
+    265.0
+   ],
+   "w": 1202,
+   "h": 808,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — rendered by hand from the vector page at 300 dpi: panel box split in the white gaps between the panels (x/y measured on the text-layer words and drawing extents) → ink bounding box → uniform 6 pt (25 px) margin; panel label and legend kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2: Viscosity of anode and cathode slurries after storing on a roller mixer (measured at 100 1/s shear rate, error indicators show standard deviation of the sample)",
+   "rotated_deg": 0,
+   "bbox": [
+    297.0,
+    470.5,
+    557.0,
+    720.5
+   ],
+   "w": 995,
+   "h": 1045,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "manual_crop": "figure not found by the caption-anchored tool (rejected as 'no graphics' — the chart is vector paths inside a page-level form XObject) — rendered by hand from the vector page at 300 dpi: region box from the text-layer blocks (panel labels, axis/legend words) and the drawing extents → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "슬러리 점도 (100 1/s) 음극 n = 3: 2.80 → 3.12 Pa·s (48 h, +11.30 %) · 양극 n = 2: 3.63 → 4.01 Pa·s (30 h, +10.33 %) [인쇄 p.475] · 설정 범위 띠 2.7–3.0 (음극) · 3.5–3.8 (양극) — 벡터 판독 13 점 = digitized.csv (figure 2)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3: a) Comparison of the spring back effect of calendered anodes and cathodes with different mass loading (n=15 per electrode and loading); b) Repeatability: samples (n=15) of two calendered anodes with identical mass loading of 9.79 mg/cm2; c) Comparison of thickness of vacuum-dried (n=5) and non-dried (n=15) calendered anode samples (mass loading of 9.79 mg/cm2, dried after 24 h of storage); d) Thickness development of vacuum-dried (n=5) vs. non-dried (n = 15) cathode samples (mass loading of 16.76 mg/cm2). All graphs show the standard deviation of the sample as error indicators.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.0,
+    303.0,
+    570.0,
+    710.5
+   ],
+   "w": 2209,
+   "h": 1689,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "manual_crop": "figure not found by the caption-anchored tool (rejected as 'no graphics' — the chart is vector paths inside a page-level form XObject) — rendered by hand from the vector page at 300 dpi: region box from the text-layer blocks (panel labels, axis/legend words) and the drawing extents → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 압연 뒤 보관 중 두께 증가 (지연 성분만 · 0 h = 뚫은 뒤 ≤ 2 min): 흑연 음극 28 일 +6.00 / +5.20 µm · NMC622 양극 +0.60 / +0.33 µm (다이얼 게이지 ±1 µm 안) [판독 · 벡터 좌표 = digitized.csv]."
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 7,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — thickness increase [µm] vs storage duration [h, log; 'After calendering' plotted at 0.1] for calendered anodes 9.79 / 11.91 mg/cm2 and cathodes 16.76 / 20.41 mg/cm2 (n = 15 each; error bars = sample SD) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    303.0,
+    302.5,
+    512.0
+   ],
+   "w": 1111,
+   "h": 881,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — rendered by hand from the vector page at 300 dpi: panel box split in the white gaps between the panels (x/y measured on the text-layer words and drawing extents) → ink bounding box → uniform 6 pt (25 px) margin; panel label and legend kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "28 일 값 [판독]: 음극 9.79 6.00 ± 1.07 · 11.91 5.20 ± 0.77 · 양극 16.76 0.60 ± 0.51 · 20.41 0.33 ± 0.72 µm · 양극 점은 72 · 96 · 192 · 240 · 264 h 에도 있다 (인쇄 측정 목록 밖) · 범례 글자가 원문 PDF 에서 두 번 찍혀 있다."
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 7,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — repeatability: thickness increase of two calendered anodes with identical mass loading 9.79 mg/cm2 ('Anode 1' circles, 'Anode 2' crosses; slurry from different mixing batches and coating days) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    303.0,
+    566.0,
+    512.0
+   ],
+   "w": 1112,
+   "h": 803,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — rendered by hand from the vector page at 300 dpi: panel box split in the white gaps between the panels (x/y measured on the text-layer words and drawing extents) → ink bounding box → uniform 6 pt (25 px) margin; panel label and legend kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Anode 1 = Fig 3a 'Anode 9.79' (같은 계열) · Anode 2 28 일 5.73 ± 0.70 µm · 120 · 168 · 336 h 점 없음 [판독]."
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 7,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3(c) — anode 9.79 mg/cm2: vacuum-dried after 24 h of storage (triangles, n = 5) vs not vacuum-dried (circles, n = 15); arrow 'Vacuum-drying after 24 h' (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    512.5,
+    302.5,
+    710.5
+   ],
+   "w": 1117,
+   "h": 821,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — rendered by hand from the vector page at 300 dpi: panel box split in the white gaps between the panels (x/y measured on the text-layer words and drawing extents) → ink bounding box → uniform 6 pt (25 px) margin; panel label and legend kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "진공 건조 (120 °C) 다섯 장: 24 h 5.20 → 48 h 6.80 µm (+1.60 계단) 뒤 그대로 · 비건조 28 일 6.00 µm [판독] — 끝값 차 0.8 µm 는 원문 미논의."
+  },
+  {
+   "key": "f3d",
+   "kind": "figure",
+   "label": "3d",
+   "page": 7,
+   "file": "fig_3d.png",
+   "caption": "Fig. 3(d) — cathode 16.76 mg/cm2: vacuum-dried (triangles, n = 5) vs not vacuum-dried (circles, n = 15); y axis −1.0 to 2.0 µm (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    512.5,
+    569.0,
+    710.5
+   ],
+   "w": 1124,
+   "h": 821,
+   "dpi": 300,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — rendered by hand from the vector page at 300 dpi: panel box split in the white gaps between the panels (x/y measured on the text-layer words and drawing extents) → ink bounding box → uniform 6 pt (25 px) margin; panel label and legend kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "비건조 0.33 → 0.60 µm · 진공 건조 0.20 → 0.40 µm (192–264 h 사이 계단 · 건조 시점 미서술) [판독] — 둘 다 게이지 ±1 µm 안."
+  },
+  {
+   "key": "x470a",
+   "kind": "text",
+   "label": "p470-abstract",
+   "page": 1,
+   "file": "txt_p470_abstract.png",
+   "caption": "PDF p.1 (printed p.470) abstract: quality assurance along the cell production chain; parts of the intermediate product properties, particularly in electrode production, change over time; procedure to investigate time-sensitivity and determine validity durations; applied to viscosity, density and solid content of slurries and to coating masses and the spring-back effect of electrodes 'in an NMC/graphite system'.",
+   "rotated_deg": 0,
+   "w": 2953,
+   "h": 540,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    36.0,
+    336.5,
+    559.5,
+    431.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x471a",
+   "kind": "text",
+   "label": "p471-time-dependency-not-covered",
+   "page": 2,
+   "file": "txt_p471_time_dependency_not_covered.png",
+   "caption": "PDF p.2 (printed p.471) left column: viscosity rises by sedimentation when not stirred [16]; for intermediate products stored between process steps it is vital to know if they are still within specification — 'To the best of the authors’ knowledge, this aspect is not covered by literature'; quality gates / tracking assume one measurement point in time.",
+   "rotated_deg": 0,
+   "w": 1485,
+   "h": 1318,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    372.9,
+    292.5,
+    605.6
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x471b",
+   "kind": "text",
+   "label": "p471-scope-28-days",
+   "page": 2,
+   "file": "txt_p471_scope_28_days.png",
+   "caption": "PDF p.2 (printed p.471) left column → right column (stacked): only output properties measurable after a process step; time-dependent effects of the finalized cell (cyclic aging, formation) outside the scope; 'The time-dependent behavior is investigated in periods ranging from hours to a maximum of 28 days, relevant in industrial production scenarios'.",
+   "rotated_deg": 0,
+   "w": 1489,
+   "h": 1825,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    643.2,
+    292.5,
+    759.1
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      33.0,
+      643.2,
+      292.5,
+      759.1
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      297.0,
+      63.5,
+      556.0,
+      276.1
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x472a",
+   "kind": "text",
+   "label": "p472-springback-definition",
+   "page": 3,
+   "file": "txt_p472_springback_definition.png",
+   "caption": "PDF p.3 (printed p.472) left column: areal mass loading, thickness and porosity are central; moisture uptake would change the calculated porosity; 'The springback effect … describes the elastic recovery of the electrode thickness after the calendering process [32–36]'; DEM simulation [37]: elastic recovery 10.25 % to 17 % depending on compaction rate; here = recovery 'immediately after leaving the calendering gap (in accordance with [34,38]) and also during storage'; influencing parameters outside the scope [34, 36, 38–40].",
+   "rotated_deg": 0,
+   "w": 1485,
+   "h": 1317,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    42.0,
+    377.9,
+    301.0,
+    605.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x472b",
+   "kind": "text",
+   "label": "p472-procedure-validity",
+   "page": 3,
+   "file": "txt_p472_procedure_validity_periods.png",
+   "caption": "PDF p.3 (printed p.472) right column §3.1: four-step approach (Fig. 1a) — hypotheses from literature and experts, time-series experiments, set point range from the subsequent process, validity period t1–t2 = time the value stays in range; constant property (curve I) → no explicit validity period.",
+   "rotated_deg": 0,
+   "w": 1489,
+   "h": 1372,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    305.5,
+    420.6,
+    564.5,
+    670.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x472c",
+   "kind": "text",
+   "label": "p472-p473-hypotheses",
+   "page": 3,
+   "file": "txt_p472_p473_hypotheses_table1.png",
+   "caption": "PDF p.3 right column → p.4 left column (printed p.472–473, stacked): §3.2 — reference production campaign on pilot scale; viscosity expected to increase; solid content and density expected constant in a gas-tight container (chain entangling might change density); moisture uptake of dried, calendered and vacuum-dried electrodes expected to show as mass increase (Table 1).",
+   "rotated_deg": 0,
+   "w": 1486,
+   "h": 1425,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    305.5,
+    672.3,
+    564.5,
+    764.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      305.5,
+      672.3,
+      564.5,
+      764.4
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      33.0,
+      65.3,
+      292.5,
+      228.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x473a",
+   "kind": "text",
+   "label": "p473-composition-mixing",
+   "page": 4,
+   "file": "txt_p473_slurry_composition_mixing.png",
+   "caption": "PDF p.4 (printed p.473) left column → line below Table 2 → right column (stacked): cathode slurry in NMP — 95.5 wt% (666.67 g per batch) NMC622 (BASF AG), 2.25 wt% C65, 1.5 wt% PVDF (Solvay), 0.75 wt% SFG6L graphite; anode slurry in deionized water — 94 wt% (1800 g per batch) graphite SMGA5 (Hitachi), 3 wt% SBR, 2 wt% CMC (Mw 90,000), 1 wt% C65; dry mixes, batches and containers (Table 2); theoretical solid content 52 % (anode) and 78 % (cathode); degassing. NMC622 morphology/size not stated.",
+   "rotated_deg": 0,
+   "w": 1490,
+   "h": 2065,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    548.5,
+    292.5,
+    592.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      33.0,
+      548.5,
+      292.5,
+      592.4
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      33.0,
+      743.2,
+      292.5,
+      760.5
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      297.0,
+      61.4,
+      556.0,
+      367.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x473b",
+   "kind": "text",
+   "label": "p473-p474-slurry-storage-measurements",
+   "page": 4,
+   "file": "txt_p473_p474_slurry_storage_measurements.png",
+   "caption": "PDF p.4 right column → line below Table 2 → p.5 left column (printed p.473–474, stacked): slurry stored in 1000 ml plastic containers sealed with paraffin film on a roll mixer; measured at 0, 2, 4, 6, 24, 30 and 48 h (48 h anode only), '0 h' = 5–10 min after mixing; KINEXUS pro+ cone-and-plate (40 mm, 4°), 25 °C, 0.1–100 1/s; oscillatory amplitude sweep 0.1–100 % at 1.6 Hz; solid content by drying method (DAB); density meter DMA 5000 M; order rheology ≈20 min, solid content ≈5 min, density ≈5 min.",
+   "rotated_deg": 0,
+   "w": 1485,
+   "h": 2665,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    297.0,
+    368.7,
+    556.0,
+    603.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      297.0,
+      368.7,
+      556.0,
+      603.5
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      297.0,
+      743.1,
+      556.0,
+      760.6
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      42.0,
+      61.3,
+      301.0,
+      301.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x474a",
+   "kind": "text",
+   "label": "p474-coating-drying",
+   "page": 5,
+   "file": "txt_p474_coating_drying.png",
+   "caption": "PDF p.5 (printed p.474) left column §4.2: doctor blade, roll-to-roll BC50 with three dryer stages, inline ultrasound areal-mass gauges; two cathodes double-side on 15 µm Al at 0.8 m/min, target 16.76 mg/cm2 (70/75/80 °C) and 20.41 mg/cm2 one side (75/80/82 °C); 'Two anodes' double-side on 10 µm Cu at 0.5 m/min, 9.79 mg/cm2 (40/50/55 °C) and 11.91 mg/cm2 (55/50/55 °C).",
+   "rotated_deg": 0,
+   "w": 1490,
+   "h": 1917,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    42.0,
+    302.8,
+    301.0,
+    643.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x474b",
+   "kind": "text",
+   "label": "p474-dried-electrode-sampling",
+   "page": 5,
+   "file": "txt_p474_dried_electrode_sampling_measurements.png",
+   "caption": "PDF p.5 left column → right column (printed p.474, stacked): Ø15 mm hand punch, 10–14 samples per electrode, each sealed in a plastic sachet → bag → box; half in the clean room (coating/drying conditions), half in the dry room (target dew point −45 °C); thickness and mass at 0, 24, 30 and 48 h ('after coating & drying' ≈2 min after punching); dial gauge Mahr 40 EWRi ±1 µm (mean of several surface points); scale AX26 ±1 mg.",
+   "rotated_deg": 0,
+   "w": 1491,
+   "h": 1690,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    42.0,
+    644.6,
+    301.0,
+    754.7
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      42.0,
+      644.6,
+      301.0,
+      754.7
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      305.5,
+      65.4,
+      564.5,
+      253.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x474c",
+   "kind": "text",
+   "label": "p474-calendering",
+   "page": 5,
+   "file": "txt_p474_calendering_sampling_measurements.png",
+   "caption": "PDF p.5 (printed p.474) right column §4.3: calender EA 102, roll Ø400 mm, maximum line load 1000 N/mm; cathodes 43 % (ρCoating 2.53) → 30 % (3.11 g/cm3) at a roller temperature of 90 °C, total thickness 155 → 122 µm and 171 → 147 µm; anodes 41 % (1.25) → 30 % (1.50) at 24 °C, 216 → 141 µm (both 9.79 mg/cm2 anodes) and 257 → 167 µm (11.91); 20 samples per electrode, stored in a box in the clean room; thickness at 0, 1, 2, 3, 24, 48, 120, 168, 336, 504, 672 h, '0 h' = up to 2 min after punching, some time points skipped (public holidays); coil web snippet for comparison; mass only sporadically.",
+   "rotated_deg": 0,
+   "w": 1485,
+   "h": 2584,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    305.5,
+    254.9,
+    564.5,
+    718.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x475a",
+   "kind": "text",
+   "label": "p475-vacuum-drying",
+   "page": 6,
+   "file": "txt_p475_vacuum_drying.png",
+   "caption": "PDF p.6 (printed p.475) left column §4.4: coils and 5 of 20 stored samples per electrode vacuum-dried (TR03 LFC5-15) after 1 h to 192 h of storage; glass containers with perforated Al foil; three alternating drying/vacuum cycles at 120 °C from dry-room pressure (dew point −45 °C), evacuation 400/200/100/50/30/20 mbar (dwell 30 min, then 5 min each), venting; stored in the clean room afterwards; thickness at the same time points.",
+   "rotated_deg": 0,
+   "w": 1490,
+   "h": 1651,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    69.6,
+    292.5,
+    365.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x475b",
+   "kind": "text",
+   "label": "p475-slurry-viscosity-validity",
+   "page": 6,
+   "file": "txt_p475_slurry_viscosity_validity.png",
+   "caption": "PDF p.6 (printed p.475) left column → right column (stacked): §5.1 — anode viscosity 2.80 → 3.12 Pa·s at 48 h (+11.30 %), cathode 3.63 → 4.01 Pa·s within 30 h (+10.33 %) even on a roller mixer; logarithmic or linear trend; loss modulus always above storage modulus; shear-thinning above 10 1/s; caveats (decreasing slurry amount, up to 30 min standing, container sizes); set point 2.7–3.0 Pa·s → re-measure after 6 h (anode); 3.5–3.8 Pa·s → valid only 3 h (cathode).",
+   "rotated_deg": 0,
+   "w": 1492,
+   "h": 3225,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    439.0,
+    292.5,
+    759.1
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      33.0,
+      439.0,
+      292.5,
+      759.1
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      297.0,
+      63.4,
+      556.0,
+      324.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x475c",
+   "kind": "text",
+   "label": "p475-p476-solid-content-density",
+   "page": 6,
+   "file": "txt_p475_p476_solid_content_density.png",
+   "caption": "PDF p.6 right column → p.7 left column (printed p.475–476, stacked): solid content +0.56 % (three anode slurries, 48 h) and +0.006 % (cathodes, 30 h) → constant, no validity period needed; density +0.32 % (anode, 48 h) and +0.08 % (one cathode slurry, 30 h) → constant.",
+   "rotated_deg": 0,
+   "w": 1491,
+   "h": 1291,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    297.0,
+    325.0,
+    556.0,
+    472.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      297.0,
+      325.0,
+      556.0,
+      472.0
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      42.0,
+      63.4,
+      301.0,
+      149.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x476a",
+   "kind": "text",
+   "label": "p476-dried-electrodes-no-change",
+   "page": 7,
+   "file": "txt_p476_dried_electrodes_no_change.png",
+   "caption": "PDF p.7 (printed p.476) left column → right column (stacked): §5.2 — dried, non-calendered electrodes: values only +1, 0, −1 µm within the ±1 µm gauge tolerance; mass likewise; 'As the electrodes are not compacted in this process step, no elastic relaxation should lead to thickness changes'; dry room vs clean room no detectable difference.",
+   "rotated_deg": 0,
+   "w": 1489,
+   "h": 1491,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    42.0,
+    151.0,
+    301.0,
+    303.7
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      42.0,
+      151.0,
+      301.0,
+      303.7
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      305.5,
+      69.5,
+      564.5,
+      180.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x476b",
+   "kind": "text",
+   "label": "p476-p477-anode-springback",
+   "page": 7,
+   "file": "txt_p476_p477_anode_springback_loading.png",
+   "caption": "PDF p.7 right column → p.8 left column (printed p.476–477, stacked): anodes 9.79 mg/cm2 'increased about 6 µm throughout the 28 days', 11.91 mg/cm2 'about 5 µm' — 'recovery of elastically deformed particles and enclosed air in the pores [33]'; lower loading → higher relaxation (thicker coatings: more rearrangement and plastic deformation [39, 40]; less elastic deformation for comparable strains [34]); gain mainly shortly after calendering, small after 24 h; Fig. 3b repeatability.",
+   "rotated_deg": 0,
+   "w": 1488,
+   "h": 1413,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    305.5,
+    180.9,
+    564.5,
+    303.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      305.5,
+      180.9,
+      564.5,
+      303.8
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      33.0,
+      70.2,
+      292.5,
+      191.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x477a",
+   "kind": "text",
+   "label": "p477-vacuum-drying-coil",
+   "page": 8,
+   "file": "txt_p477_vacuum_drying_coil.png",
+   "caption": "PDF p.8 (printed p.477) left column: vacuum-drying accelerated the thickness increase (Fig. 3c) — final relaxation reached at the next measurement (48 h) for samples dried after 24 h; anode material vacuum-dried on the coil: increase about 2 µm less than samples ('each overlying layer … hampers the relaxation'); coil relaxation during vacuum drying recommended [43].",
+   "rotated_deg": 0,
+   "w": 1484,
+   "h": 850,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    193.3,
+    292.5,
+    336.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x477b",
+   "kind": "text",
+   "label": "p477-cathode-no-springback",
+   "page": 8,
+   "file": "txt_p477_cathode_no_springback_reason.png",
+   "caption": "PDF p.8 (printed p.477) left column ★: cathodes (both loadings) no significant increase — about 0.6 µm (low) and 0.33 µm (high), smaller than the gauge tolerance; coil cathode no change; vacuum drying no significant relaxation (Fig. 3d); reason: 'higher hardness of NMC-particles compared to graphite … [33]', '90 °C … thermoplastic binder PVDF [40] … [44]', 'In consequence, the active material particles were not deformed and fragmented', springback 'mainly evoked by the elasticity of active material particles [34]'; masses unchanged. No polycrystalline/secondary-particle statement.",
+   "rotated_deg": 0,
+   "w": 1490,
+   "h": 1584,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    337.6,
+    292.5,
+    612.9
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x477c",
+   "kind": "text",
+   "label": "p477-validity-strategies",
+   "page": 8,
+   "file": "txt_p477_validity_strategies.png",
+   "caption": "PDF p.8 (printed p.477) left column → right column (stacked): anode values taken directly after calendering valid only for a short time ('less than an hour depending on the set-point range'); strategies: measure right before the next process, use vacuum drying to reach final relaxation first, measure after 24 h, or add an offset; cathodes: results valid throughout the 28 days of storage.",
+   "rotated_deg": 0,
+   "w": 1483,
+   "h": 1357,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    33.0,
+    613.7,
+    292.5,
+    759.7
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) — parts stacked in reading order with a 56 px (10 pt) white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      33.0,
+      613.7,
+      292.5,
+      759.7
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      297.0,
+      63.9,
+      556.0,
+      162.2
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x477d",
+   "kind": "text",
+   "label": "p477-conclusions",
+   "page": 8,
+   "file": "txt_p477_conclusions_outlook.png",
+   "caption": "PDF p.8 (printed p.477) right column §6: time-dependent properties exist → define validity periods; time-sensitivity depends on electrode material and configuration (mass loading) → determine per scenario; outlook: slurry particle size distribution, adhesion, storage atmosphere (dry room costs), moisture uptake/evaporation, incoming goods.",
+   "rotated_deg": 0,
+   "w": 1490,
+   "h": 2449,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    297.0,
+    163.9,
+    556.0,
+    606.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x478a",
+   "kind": "text",
+   "label": "p478-refs-32-44",
+   "page": 9,
+   "file": "txt_p478_refs_32_44.png",
+   "caption": "PDF p.9 (printed p.478) right column: references [32]–[44] as printed (spring-back sources [32]–[40]: Lombardo 2022, Schreiner 2021, Diener 2022, Bouharras 2020, Scheffler 2022, Sangrós Giménez 2019, Jeong & Lee 2014, Meyer 2018, Meyer 2020; [41]–[44] Grabmann 2022, 2023, Huttner 2021, Günther 2020).",
+   "rotated_deg": 0,
+   "w": 1486,
+   "h": 2572,
+   "dpi": 400,
+   "src": "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf",
+   "bbox": [
+    305.5,
+    296.8,
+    564.5,
+    752.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found Table 1 and Table 2 (2 crops, both opened and kept; captions cleaned) and rejected Fig. 1, 2 and 3 as 'no graphics (img0/draw1)' — the charts are vector paths inside a page-level form XObject. Cut by hand from the vector pages: Fig. 1–3 (300 dpi, caption excluded) + 6 panel crops (1a · 1b · 3a–3d) + 21 evidence paragraphs (400 dpi). No numbered or inline equations in the paper → 0 equation crops. After the first visual check 2 text crops were re-cut (reference block extended from [40] to [44]; the 28-day scope paragraph extended to start at its sentence on the left column) and 1 was re-cut before the check (coating paragraph ended too early) (2026-11-12, litdb-curator).",
+ "note_manual": "Printed inconsistencies visible in the crops: 'Two anodes were produced' (p.474) vs three anode coils/slurries (two 9.79 mg/cm2 anodes in Fig. 3b + one 11.91); pre-calendering anode thickness 216/257 µm does not match the printed 41 % / 1.25 g/cm3 with the target loadings (would be 166.6/200.6 µm; back-calculated porosity ≈55 %) while the post-calendering values match within 1–2 µm; cathode time points 72/96/192/240/264 h are outside the printed schedule and 48 h is missing (holidays mentioned only); the cathode vacuum-drying time is not stated; unit 'g/cm–3'; 'dew point of –45° dew point at standard temperature'; 't^evac1' superscript; affiliation 'Ausgsburg'; Fig. 3a legend text printed twice in the PDF. Figures 2–3 values = vector-path readings in digitized.csv (127 rows; gridline calibration residual ≤ 0.05 pt).",
+ "key_note": "manual keys: f<N> = whole figure (vector render) · f<N><panel> = panel crop (panel_of) · x<printed page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' with PDF page numbers) · t1/t2 = tool table crops · 'page' fields are PDF page numbers (printed page = 469 + PDF page)",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 127,
+  "method": "vector paths (marker centres, error-bar centre/ends) mapped through the light-grey gridlines whose values come from the tick-label words; x = log10 storage time; error bars = sample standard deviation"
+ }
+}

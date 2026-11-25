@@ -1,0 +1,105 @@
+{
+  "equal": {
+    "steps": [
+      7,
+      0,
+      0
+    ],
+    "retry_A5": true,
+    "status": "OK",
+    "cap_violations": 0
+  },
+  "above": {
+    "steps": [
+      7,
+      0,
+      5
+    ],
+    "retry_A5": false,
+    "status": "LADDER_INCOMPLETE",
+    "cap_violations": 0
+  },
+  "completed": {
+    "normal": 0,
+    "wrong_id": {
+      "end_vs_start": true,
+      "overall": "OK",
+      "adopted": "a5_c1"
+    },
+    "missing_final": {
+      "status": "OK",
+      "stage_status": "OK",
+      "count": 30,
+      "adopted": "a5_c1"
+    }
+  },
+  "misplaced_receipt": {
+    "alone": {
+      "resume": 5,
+      "launched_c2": false,
+      "checked": "LADDER_INCOMPLETE",
+      "adopted": null,
+      "violations": []
+    },
+    "stray": {
+      "resume": 0,
+      "launched_c2": true,
+      "checked": "OK",
+      "adopted": "a5_c2",
+      "violations": []
+    }
+  },
+  "reverse_history": {
+    "retry": 0,
+    "ledger_order": [
+      "c1#1",
+      "A5#2"
+    ],
+    "actual_order": [
+      "A5",
+      "c1"
+    ],
+    "checked": "OK",
+    "adopted": "a5_c1"
+  },
+  "non_utf8": {
+    "record": 0,
+    "strict_utf8_json": false,
+    "rec1": true,
+    "resume": 0,
+    "checked": "OK"
+  },
+  "late_fill": {
+    "status": "LADDER_VIOLATION",
+    "stage_status": "SCF_NOT_CONVERGED",
+    "count": 400,
+    "adopted": null
+  },
+  "final_shape": {
+    "pack": 0,
+    "rerun": 0,
+    "checked": "STOPPED_FOR_REVIEW",
+    "adopted": null
+  },
+  "partial_restore": {
+    "previous_c1_status_fields": [
+      [
+        "c1",
+        "a5",
+        "1",
+        "SCF_UNVERIFIED"
+      ]
+    ],
+    "startpoint_original": 1795407187,
+    "startpoint_now": 1795407189,
+    "runner": 0,
+    "checked": "OK",
+    "adopted": "a5_c1"
+  },
+  "shorter_header": {
+    "record": 0,
+    "resume": 0,
+    "checked": "OK",
+    "adopted": "a5_c2"
+  }
+}

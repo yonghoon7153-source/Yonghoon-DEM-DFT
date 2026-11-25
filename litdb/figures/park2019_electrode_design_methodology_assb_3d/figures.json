@@ -1,0 +1,333 @@
+{
+ "slug": "park2019_electrode_design_methodology_assb_3d",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "4. Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+  "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematics and issues of composite electrodes in a liquid electrolyte and with all-solid-state electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    114.0,
+    49.4,
+    481.3,
+    258.6
+   ],
+   "w": 1532,
+   "h": 872,
+   "dpi": 300,
+   "src": "4. Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.621
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) 3D structures of ASSEs with LSTP 40 and 10%, (b) contact area and speciﬁc contact area between NG and LSTP of the ASSEs as a function of LSTP %, (c) MacMullin numbers of NG and LSTP structures in the ASSEs at different LSTP %, and (d) LSTP structures with 40 and 10% content in the ASSEs and their cross- section images.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    343.3,
+    563.7,
+    713.1
+   ],
+   "w": 2218,
+   "h": 1542,
+   "dpi": 300,
+   "src": "4. Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.7
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. 3D conductive structures of electrons and ions as a function of LSTP content (40, 30, 20, and 10%).",
+   "rotated_deg": 0,
+   "bbox": [
+    106.8,
+    555.2,
+    488.6,
+    732.2
+   ],
+   "w": 1592,
+   "h": 738,
+   "dpi": 300,
+   "src": "4. Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.635
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a, b) Charge voltage proﬁles, (c, d) state-of-charge of NG, and (e, f) overpotentials of ASSEs with LSTP 40 and 30% as the C-rate increases from 0.05, 0.1, 0.2, to 0.5C.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    334.4
+   ],
+   "w": 2218,
+   "h": 1188,
+   "dpi": 300,
+   "src": "4. Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. 3D ASSE structures with LSTP 30 and 20%.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.6,
+    78.8,
+    547.6,
+    196.5
+   ],
+   "w": 2001,
+   "h": 491,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.723
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. 3D electrode structure of NG:LSTP=60:40 and NG:LSTP=80:20 on different domain sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.2,
+    230.8,
+    540.0,
+    464.9
+   ],
+   "w": 1941,
+   "h": 976,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Specific contact area and effective ionic conductivity of 3D electrode structures with LSTP 40 and 20% as a function of domain volumes.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.2,
+    482.1,
+    538.5,
+    672.4
+   ],
+   "w": 1935,
+   "h": 794,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Domain with governing equations and its boundary conditions (Ohm’s Law).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    281.1,
+    520.8,
+    520.8
+   ],
+   "w": 1898,
+   "h": 999,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Domain with governing equations and its boundary conditions (Newman’s model).",
+   "rotated_deg": 0,
+   "bbox": [
+    80.3,
+    66.0,
+    534.7,
+    378.6
+   ],
+   "w": 1894,
+   "h": 1303,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. 3D electrode structure of LSTP 40% and cross-section images with perspective view or nothing.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.7,
+    66.0,
+    545.2,
+    183.0
+   ],
+   "w": 1982,
+   "h": 488,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.353
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. 3D ion conductive structures and cross-section images of LSTP (a) 40, (b) 30, and (c) 20%, (d) effective electric and ionic conductivity at different LSTP ratio.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    200.3,
+    546.0,
+    495.1
+   ],
+   "w": 2000,
+   "h": 1229,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.66
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. (a, b) Discharge voltage profiles, (c, d) state-of-charge of NG, and (e, f) overpotentials of the ASSEs with LSTP 40 and 30% as increasing the C-rate from 0.05, 0.1, 0.2, to 0.5C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    326.5
+   ],
+   "w": 2000,
+   "h": 1086,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Design parameters of electrode materials",
+   "rotated_deg": 0,
+   "bbox": [
+    142.4,
+    219.8,
+    532.5,
+    685.6
+   ],
+   "w": 1626,
+   "h": 1942,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 1,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Gaussian set-up condition for making NG particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    142.4,
+    220.8,
+    532.5,
+    685.6
+   ],
+   "w": 1626,
+   "h": 1937,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 3,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Intrinsic electric and ionic conductivities of electrode materials. Unit: S cm-1 Electric Ionic conductivity conductivity",
+   "rotated_deg": 0,
+   "bbox": [
+    123.5,
+    113.3,
+    496.5,
+    279.0
+   ],
+   "w": 1555,
+   "h": 691,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 5,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Model parameters and formulas. Parameter Value n L a 6 6 46 10 or 43 10 m − −   eL a 6 1400 10 m −  sR a 6 7.0 10 m −  s D b 13 2 1 1.45 10 m s − −  ,e LSTP D c 16 2 1 4.0 10 m s − −  ,e LPS D c 12 2 1 4.58 10 m s − −  k b 11 1 2.0 10 m s − −  0i c 2 10 A m− s a 1 0.205 or 0.335 S cm− ,e LSTP  a 5 6 1 1.69 10 or 4.48 10 S cm − − −   ,e LPS  a 3 1 1.81 10 S cm − −  sa 0.397 or 0.46 ea 0.237 or 0.177 sa a 47892 or 41485 ,max sc b 3 31507 mol m− 0 ,e LSTP c a 3 15045 mol m− 0 ,e LPS c a 3 16322 mol m− c 0.99 A a 4 2 1.131 10 m −  I a 2 10 A m − T a 298.15 K t+ eq E c 0.2033+0.6613exp(-68.63soc)- 0.006943tanh((soc- 0.4895)/0.0854)- 0.0925tanh((soc- 0.0317)/0.053)-0.075tanh((soc- 0.5692)/0.875)+0.02675tanh(- (soc-0.1814)/0.03031)",
+   "rotated_deg": 0,
+   "bbox": [
+    170.5,
+    67.5,
+    444.9,
+    611.7
+   ],
+   "w": 1144,
+   "h": 2268,
+   "dpi": 300,
+   "src": "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "blank": 0.934
+  }
+ ],
+ "missing_labels": []
+}

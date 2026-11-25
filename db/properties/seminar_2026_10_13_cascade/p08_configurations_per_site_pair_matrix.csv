@@ -1,0 +1,6 @@
+# Page 8 — same counts as a 3x3 matrix (rows = cation site, columns = anion site).
+# Source: db/properties/seminar_table_site_grid.csv.
+cation_site,free sulfide,sulfur in the PS₄ corner,halide site
+Li 24g,1050,810,600
+P 4b (framework),375,270,180
+Li 48h,120,105,105

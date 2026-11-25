@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'SCl_mp-aaaabpoq'
+  outdir = './tmp'
+  fildos = 'SCl_mp-aaaabpoq.dos'
+  degauss = 0.007
+/

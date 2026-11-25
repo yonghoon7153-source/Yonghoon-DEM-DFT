@@ -1,0 +1,46 @@
+{
+  "Li2SiS3": {
+    "train": 863,
+    "valid": 96,
+    "potential_name": "MTP1m",
+    "species_count": "3",
+    "min_dist": "1.095430000000000e+00",
+    "max_dist": "5.000000000000000e+00",
+    "radial_basis_size": "8",
+    "radial_funcs_count": "5",
+    "alpha_moments_count": "1352"
+  },
+  "Li2GeS3": {
+    "train": 1391,
+    "valid": 158,
+    "potential_name": "MTP1m",
+    "species_count": "3",
+    "min_dist": "1.131040000000000e+00",
+    "max_dist": "5.000000000000000e+00",
+    "radial_basis_size": "8",
+    "radial_funcs_count": "5",
+    "alpha_moments_count": "1352"
+  },
+  "Li4SiGeS6": {
+    "train": 1038,
+    "valid": 110,
+    "potential_name": "MTP1m",
+    "species_count": "4",
+    "min_dist": "1.103250000000000e+00",
+    "max_dist": "5.000000000000000e+00",
+    "radial_basis_size": "8",
+    "radial_funcs_count": "5",
+    "alpha_moments_count": "1352"
+  },
+  "Li4SiSnS6": {
+    "train": 1104,
+    "valid": 90,
+    "potential_name": "MTP1m",
+    "species_count": "4",
+    "min_dist": "1.687260000000000e+00",
+    "max_dist": "5.000000000000000e+00",
+    "radial_basis_size": "8",
+    "radial_funcs_count": "5",
+    "alpha_moments_count": "1352"
+  }
+}

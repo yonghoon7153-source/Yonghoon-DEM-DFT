@@ -1,0 +1,374 @@
+{
+ "slug": "wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode",
+ "dpi": 400,
+ "maxpx": 3200,
+ "generated": "2026-10-27",
+ "sources": [
+  "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf"
+ ],
+ "note_manual": "2026-10-27 수동 크롭 — 본문 그림 6 (래스터 2: 그림 1 · 4 = PDF 원 이미지 그대로 / 벡터 4: 그림 2 · 3 · 5 · 6 = 400 dpi 렌더) + 표 3 (300 dpi) + 패널 확대 8 (600 dpi · 그림 6e–f 500 dpi · 그림 1c–h 원 래스터 무손실 자르기). 경계는 그림 경로 · 이미지 · 글자 상자의 합집합과 패널 사이 빈 띠 (y 간격 1.6–5.8 pt) 를 경로 좌표로 찾아 정했다. 17 장 전부 렌더로 열람 — 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 · 이웃 패널 글자가 섞이지 않음을 눈으로 확인. SI (advs78248-sup-0001-SuppMat.docx) 는 입수하지 못해 SI 그림 · 표는 없다.",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1 Continuous twin-screw extruder-mixing: transition of composite powder premix to fibrillated strings (left) and to fine granules (right) as end product, controlled by screw configuration and temperature (a). Batch- mixing: transition of composite powder after high-shear mechanofusion (left) to fibrillated powder bulk (right) as end product, controlled by material sequencing, time, temperature, and rotational speed (b). Extruder mixing: SEM images of the composite microstructure with PTFE fibril network (c) and a close-up view on deformed SE particles covering the CAM surface (d) with its corresponding EDX measurement (e). Batch mixing after PTFE fibrillation: SEM image of the composite microstructure with CA agglomerate highlighted by red ellipse (f). Batch mixing after MF step (without PTFE): SEM close-up image of CAM surface (g) with its corresponding EDX measurement (h). EDX measurement are displayed by layered images combining the SEM image with O-, Ni-, Co-, Mn-Signals (green) referring to the CAM, and S-, P-, Cl-Signals (purple) referring to the SE.",
+   "summary_ko": "공정 개요 (a 압출: 저전단 균질 → 100 °C 혼련 섬유화 → 분쇄 / b 배치: MF 코팅 → PTFE 섬유화) + SEM/EDX: 압출 분말 PTFE 섬유망 (c) · NCM 위 납작한 SE 층 (d) · EDX 로 NCM 신호 가림 (e) / 배치: 탄소 덩어리 (f 붉은 타원) · MF 뒤 NCM 표면 거의 맨살 (g) · EDX 녹색 NCM 그대로 (h)",
+   "bbox": [
+    95.89,
+    41.18,
+    515.89,
+    415.26
+   ],
+   "w": 1750,
+   "h": 1559,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "래스터 원본 그대로 (PDF 안 이미지 xref 138 추출 · 원 해상도 300 ppi · 리샘플 없음)",
+   "native_dpi": 300.0,
+   "viewed": true
+  },
+  {
+   "key": "f1ch",
+   "kind": "figure",
+   "label": "1c–h",
+   "page": 4,
+   "file": "fig_1_c-h.png",
+   "caption": "Figure 1 Continuous twin-screw extruder-mixing: transition of composite powder premix to fibrillated strings (left) and to fine granules (right) as end product, controlled by screw configuration and temperature (a). Batch- mixing: transition of composite powder after high-shear mechanofusion (left) to fibrillated powder bulk (right) as end product, controlled by material sequencing, time, temperature, and rotational speed (b). Extruder mixing: SEM images of the composite microstructure with PTFE fibril network (c) and a close-up view on deformed SE particles covering the CAM surface (d) with its corresponding EDX measurement (e). Batch mixing after PTFE fibrillation: SEM image of the composite microstructure with CA agglomerate highlighted by red ellipse (f). Batch mixing after MF step (without PTFE): SEM close-up image of CAM surface (g) with its corresponding EDX measurement (h). EDX measurement are displayed by layered images combining the SEM image with O-, Ni-, Co-, Mn-Signals (green) referring to the CAM, and S-, P-, Cl-Signals (purple) referring to the SE.",
+   "summary_ko": "SEM/EDX 여섯 패널 확대: 위 줄 = 압출 (c 1 µm · d 500 nm · e EDX) · 아래 줄 = 배치 (f 5 µm · g 500 nm · h EDX) — 녹색 = NCM (O · Ni · Co · Mn) · 보라 = SE (S · P · Cl)",
+   "bbox": [
+    95.89,
+    203.4,
+    515.89,
+    415.26
+   ],
+   "w": 1750,
+   "h": 883,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "fig_1.png 원 래스터의 행 676–1559 px 를 무손실로 잘라 냄 (색 막대 아래 · SEM/EDX 여섯 패널)",
+   "native_dpi": 300.0,
+   "panel_of": "f1",
+   "crop_note": "SEM/EDX 패널 c–h 만 (공정 사진 a–b 제외) — 원 해상도 그대로",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Batch-mixing routine detailing the sequence of material addition and process parameters.",
+   "summary_ko": "배치 (Picoline Nobilta) 단계별 조건: 균질 1000 rpm 15 min 5 °C (7 W · 0.1 W/min · 90 kJ/kg) → 코팅 3000 rpm 45 min 5 °C (98 W · 2.3 W/min · 5022 kJ/kg) → +PTFE 1000 · 2000 rpm 각 15 min → 섬유화 2000 rpm 10 min 60 °C (100 W · 19.5 W/min · 1164 kJ/kg) · 합 100 min · 7140 kJ/kg",
+   "bbox": [
+    53.0,
+    557.0,
+    559.5,
+    710.0
+   ],
+   "w": 2112,
+   "h": 639,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 300 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2 XRD patterns and results of Rietveld refinements of powder premix (a) and after batch mixing (b) (without PTFE). Laser diffraction measurements s howing relative (PSD in vol% of pristine NCM, powder premix, and after batch mixing (c). Based on GL(30) fits, areas of respective core levels are put into relation to indicate the degree of CAM surface coverage by SE species (d).",
+   "summary_ko": "(a, b) 예비혼합 · 배치 MF 뒤 XRD + Rietveld (PTFE 없음) — 거의 같다 · (c) 레이저 회절 PSD: 1 차 봉우리 ≈4 µm (NCM) · 2 차 0.3 µm (SE) — MF 뒤에도 같은 모양 · (d) XPS 면적비 Li1s:Ni3p · S(total):Ni3p — 압출만 높다 (1.21 · 13.8)",
+   "bbox": [
+    103.5,
+    41.5,
+    515.5,
+    393.6
+   ],
+   "w": 2289,
+   "h": 1957,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 400 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "caption_note": "원 캡션의 'measurements s howing relative (PSD in vol% of …' 는 원문 그대로 (띄어쓰기 · 닫는 괄호 누락)",
+   "viewed": true
+  },
+  {
+   "key": "f2c",
+   "kind": "figure",
+   "label": "2c",
+   "page": 6,
+   "file": "fig_2c.png",
+   "caption": "Figure 2 XRD patterns and results of Rietveld refinements of powder premix (a) and after batch mixing (b) (without PTFE). Laser diffraction measurements s howing relative (PSD in vol% of pristine NCM, powder premix, and after batch mixing (c). Based on GL(30) fits, areas of respective core levels are put into relation to indicate the degree of CAM surface coverage by SE species (d).",
+   "summary_ko": "PSD (vol%): 원 NCM 28.4 % @≈4.1 µm · 예비혼합 16.7 % / 배치 16.8 % @≈4 µm · SE 봉우리 7.1 % (예비혼합) / 7.9 % (배치) @0.31 µm [판독] — 압출 분말은 이 패널에 없다",
+   "bbox": [
+    103.5,
+    219.5,
+    300.0,
+    386.0
+   ],
+   "w": 1638,
+   "h": 1388,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 600 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "panel_of": "f2",
+   "crop_note": "패널 c (PSD) 만",
+   "viewed": true
+  },
+  {
+   "key": "f2d",
+   "kind": "figure",
+   "label": "2d",
+   "page": 6,
+   "file": "fig_2d.png",
+   "caption": "Figure 2 XRD patterns and results of Rietveld refinements of powder premix (a) and after batch mixing (b) (without PTFE). Laser diffraction measurements s howing relative (PSD in vol% of pristine NCM, powder premix, and after batch mixing (c). Based on GL(30) fits, areas of respective core levels are put into relation to indicate the degree of CAM surface coverage by SE species (d).",
+   "summary_ko": "XPS 면적비 [판독]: Li1s:Ni3p = 원 NCM 0.19 · 예비혼합 0.50 · 배치 0.46 · 압출 1.21 / S(total):Ni3p = 예비혼합 8.01 · 배치 8.21 · 압출 13.81 — 저자 해석 '높을수록 CAM–SE 접촉 개선'",
+   "bbox": [
+    309.5,
+    217.5,
+    515.5,
+    393.6
+   ],
+   "w": 1717,
+   "h": 1468,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 600 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "panel_of": "f2",
+   "crop_note": "패널 d (XPS 면적비 두 축 + 범례) 만",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3 XPS S 2p 3/2 spectra referring to the LPSCl species at the binding energy 161.8 eV, Li2 S at 160.3 eV, and Li2 SO4 at 168.5 eV; surface-charge corrected to adventitious carbon (284.8 eV) of the pristine NCM. LPSCl phase normalized to the total S phase.",
+   "summary_ko": "XPS S 2p₃/₂: LPSCl · Li₂S · Li₂SO₄ 성분 맞춤 — 그림 안 상순도 97 % (예비혼합) · 90 % (배치) · 60 % (압출) · 불순물 3 / 10 / 40 % — 압출 (100 °C) 이 LPSCl 표면 열화가 가장 크다",
+   "bbox": [
+    109.8,
+    42.0,
+    501.0,
+    236.8
+   ],
+   "w": 2174,
+   "h": 1083,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 400 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외) · 아래 띠 (상순도 막대) 는 그림 안 래스터 (xref 190) 를 함께 렌더",
+   "caption_note": "캡션의 LPSCl 결합에너지 161.8 eV ↔ 본문 p.7 은 161.5 eV",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4 Dry-coated electrode films adhering to the calender roller, based on extruder- (a, c) and batch-mixed (b, d) powder, with the corresponding top-view SEM image, respectively. Void defects at the surface are highlighted by red circles. Calender data during film formation: gap width recorded over time as an indicator for film thickness with a measuring frequency of 500 ms (e) and its time derivative δGap δt− 1 (f). The applied calendering parameters are roller speed 0.1 m min− 1 , shear ratio 70 %, line load 100 N mm− 1 , and 60◦C roller temperature.",
+   "summary_ko": "캘린더 롤에 붙은 건식 막 (a 압출 · b 배치 — 붉은 원 = 표면 공극 결함) · 윗면 SEM (c 매끈 · d PTFE 덩어리) · (e) 롤 간격 시간 기록 (정상 ≈126 / 127 µm, 배치 초기 190 µm 넘침 [판독]) · (f) 간격 변화율",
+   "bbox": [
+    125.89,
+    41.6,
+    485.89,
+    228.26
+   ],
+   "w": 1500,
+   "h": 778,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "래스터 원본 그대로 (PDF 안 이미지 xref 213 추출 · 원 해상도 300 ppi · 리샘플 없음)",
+   "native_dpi": 300.0,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5 Tensile strength test setup (a), tensile measurement of electrodes (b), electronic conductivity measurement at 24 MPa, 25◦C (c), and ionic conductivity measurement at 12 MPa, 25◦C (d). Exemplary EIS spectra of extruder-mixed (e) and batch-mixed (f) electrode films with corresponding thicknesses of 80 / 73 µm and weights of 51.7 / 45.7 mg, respectively. Data points are displayed as markers and TLM fits as red line. Additionally, values of porosity ε and electrochemical tortuosity τionic are provided. Scheme of microstructural electrode features of batch- and extruder-mixed cathodes (g). Included error bars show standard deviation values.",
+   "summary_ko": "(a) 인장 시험 장치 · (b) 인장 강도 29.4 vs 9.3 N/cm² · (c) σ_e (24 MPa) 0.36 vs 1.72 mS/cm · (d) σ_ion (12 MPa) 0.022 vs 0.0072 mS/cm · (e, f) 대칭셀 Nyquist + TLM 맞춤 (τ_ionic 14.6 · ε 16.1 % / 39.6 · 16.3 %) · (g) 미세구조 모식도",
+   "bbox": [
+    110.2,
+    41.0,
+    500.8,
+    393.3
+   ],
+   "w": 2171,
+   "h": 1958,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 400 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외) · 패널 a 사진은 그림 안 래스터 (xref 234) 를 함께 렌더",
+   "viewed": true
+  },
+  {
+   "key": "f5cd",
+   "kind": "figure",
+   "label": "5c–d",
+   "page": 9,
+   "file": "fig_5cd.png",
+   "caption": "Figure 5 Tensile strength test setup (a), tensile measurement of electrodes (b), electronic conductivity measurement at 24 MPa, 25◦C (c), and ionic conductivity measurement at 12 MPa, 25◦C (d). Exemplary EIS spectra of extruder-mixed (e) and batch-mixed (f) electrode films with corresponding thicknesses of 80 / 73 µm and weights of 51.7 / 45.7 mg, respectively. Data points are displayed as markers and TLM fits as red line. Additionally, values of porosity ε and electrochemical tortuosity τionic are provided. Scheme of microstructural electrode features of batch- and extruder-mixed cathodes (g). Included error bars show standard deviation values.",
+   "summary_ko": "σ_e 압출 0.357 [0.318–0.396] vs 배치 1.723 [1.190–2.257] mS/cm · σ_ion 0.02195 [0.0174–0.0265] vs 0.00719 [0.0049–0.0095] mS/cm [판독 · 막대 = SD]",
+   "bbox": [
+    294.5,
+    43.5,
+    501.0,
+    162.5
+   ],
+   "w": 1721,
+   "h": 993,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 600 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "panel_of": "f5",
+   "crop_note": "패널 c (σ_e) · d (σ_ion) 막대 + SD",
+   "viewed": true
+  },
+  {
+   "key": "f5ef",
+   "kind": "figure",
+   "label": "5e–f",
+   "page": 9,
+   "file": "fig_5ef.png",
+   "caption": "Figure 5 Tensile strength test setup (a), tensile measurement of electrodes (b), electronic conductivity measurement at 24 MPa, 25◦C (c), and ionic conductivity measurement at 12 MPa, 25◦C (d). Exemplary EIS spectra of extruder-mixed (e) and batch-mixed (f) electrode films with corresponding thicknesses of 80 / 73 µm and weights of 51.7 / 45.7 mg, respectively. Data points are displayed as markers and TLM fits as red line. Additionally, values of porosity ε and electrochemical tortuosity τionic are provided. Scheme of microstructural electrode features of batch- and extruder-mixed cathodes (g). Included error bars show standard deviation values.",
+   "summary_ko": "InLi/Sep/Cathode/Sep/LiIn 대칭셀 (전자 차단) Nyquist — 저주파 원호 R_ion: 압출 ≈0.2–0.7 kΩ · 배치 ≈0.3–1.4 kΩ (눈 판독) · 그림 안 τ_ionic 14.6 / 39.6 · ε 16.1 / 16.3 % (대표 시료 하나)",
+   "bbox": [
+    111.0,
+    166.0,
+    490.0,
+    277.75
+   ],
+   "w": 3159,
+   "h": 932,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 600 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "panel_of": "f5",
+   "crop_note": "패널 e · f (대칭셀 Nyquist · TLM 맞춤 · 그림 안 τ_ionic · ε) — 아래 경계 = 패널 g 제목 위 1.6 pt 틈",
+   "viewed": true
+  },
+  {
+   "key": "f5g",
+   "kind": "figure",
+   "label": "5g",
+   "page": 9,
+   "file": "fig_5g.png",
+   "caption": "Figure 5 Tensile strength test setup (a), tensile measurement of electrodes (b), electronic conductivity measurement at 24 MPa, 25◦C (c), and ionic conductivity measurement at 12 MPa, 25◦C (d). Exemplary EIS spectra of extruder-mixed (e) and batch-mixed (f) electrode films with corresponding thicknesses of 80 / 73 µm and weights of 51.7 / 45.7 mg, respectively. Data points are displayed as markers and TLM fits as red line. Additionally, values of porosity ε and electrochemical tortuosity τionic are provided. Scheme of microstructural electrode features of batch- and extruder-mixed cathodes (g). Included error bars show standard deviation values.",
+   "summary_ko": "저자 모식도: 배치 = 맨 CAM 끼리 붙은 전자 경로 (e⁻) · 끊기고 구불구불한 Li⁺ 경로 / 압출 = SE 에 싸인 CAM (전자 경로 끊김 · 점선) · 곧은 Li⁺ 경로 — 정량 근거 없는 개념도",
+   "bbox": [
+    112.0,
+    277.85,
+    476.0,
+    393.3
+   ],
+   "w": 3034,
+   "h": 963,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 600 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "panel_of": "f5",
+   "crop_note": "패널 g (모식도) 만",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2 Characteristics of laminated electrodes used for cathode half-cells (cold, uniaxially compacted at 800 MPa).",
+   "summary_ko": "반쪽셀 양극 (800 MPa 냉간 단축 압축): 밀도 3.23 ± 0.11 / 3.30 ± 0.09 g/cm³ · 공극 12.6 ± 3.0 / 10.8 ± 2.4 % · 적재 22.58 ± 0.62 / 24.93 ± 0.47 mg/cm² · 3.26 / 3.58 mAh/cm² · 첫 효율 85.46 / 83.12 % · 첫 충전 204.09 / 187.50 mAh/g_NCM (압출 / 배치)",
+   "bbox": [
+    53.0,
+    39.5,
+    559.5,
+    121.0
+   ],
+   "w": 2112,
+   "h": 341,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 300 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6 Cathode half-cell formation data at 0.1 C: cell voltage profiles (a), differential capacity analysis (dQdV) graphs (b), and resistance contributions derived from EIS, including DRT peak fits (c) of first cycle, comparing extruder- and batch-mixed electrodes. Corresponding specific charge capacities at different C-rates during galvanostatic rate tests (d) and potentiostatic rate charge tests (e), including fit function with characteristic time constant τ (f). Included error bars / band show standard deviation values.",
+   "summary_ko": "반쪽셀 (InLi · 12 MPa · 25 °C · 2.7–4.2 V): (a) 첫 사이클 전압 곡선 · (b) dQ/dV (압출 H1/M 봉우리가 먼저 · 배치 늦음) · (c) Nyquist · (d) 정전류 충전 율속 · (e) 정전위 (CV) 충전 시험 곡선 + CC 점 · (f) Q₀ exp[−(τ·C)ⁿ] 맞춤 (τ 1.73 / 3.28 h)",
+   "bbox": [
+    104.4,
+    43.5,
+    516.9,
+    522.3
+   ],
+   "w": 2292,
+   "h": 2661,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 400 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "caption_note": "캡션은 (c) 에 'DRT peak fits' 가 있다고 적지만 패널 c 에는 Nyquist 점만 있다 (DRT 맞춤은 SI 그림 S7 로 보임 — SI 미입수)",
+   "viewed": true
+  },
+  {
+   "key": "f6d",
+   "kind": "figure",
+   "label": "6d",
+   "page": 11,
+   "file": "fig_6d.png",
+   "caption": "Figure 6 Cathode half-cell formation data at 0.1 C: cell voltage profiles (a), differential capacity analysis (dQdV) graphs (b), and resistance contributions derived from EIS, including DRT peak fits (c) of first cycle, comparing extruder- and batch-mixed electrodes. Corresponding specific charge capacities at different C-rates during galvanostatic rate tests (d) and potentiostatic rate charge tests (e), including fit function with characteristic time constant τ (f). Included error bars / band show standard deviation values.",
+   "summary_ko": "충전 용량 [판독]: 0.1 C 161.7 vs 141.8 · 0.5 C 71.5 vs 34.8 · 1 C 18.1 vs 8.5 mAh/g_NCM — 그림 안 '+12 %' 만 압출 기준 (배치 기준이면 +14 %) · '+106 %' · '+112 %' 는 배치 기준",
+   "bbox": [
+    311.5,
+    192.5,
+    515.5,
+    357.8
+   ],
+   "w": 1701,
+   "h": 1378,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 600 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "panel_of": "f6",
+   "crop_note": "패널 d (정전류 율속 막대 + x 축)",
+   "viewed": true
+  },
+  {
+   "key": "f6ef",
+   "kind": "figure",
+   "label": "6e–f",
+   "page": 11,
+   "file": "fig_6ef.png",
+   "caption": "Figure 6 Cathode half-cell formation data at 0.1 C: cell voltage profiles (a), differential capacity analysis (dQdV) graphs (b), and resistance contributions derived from EIS, including DRT peak fits (c) of first cycle, comparing extruder- and batch-mixed electrodes. Corresponding specific charge capacities at different C-rates during galvanostatic rate tests (d) and potentiostatic rate charge tests (e), including fit function with characteristic time constant τ (f). Included error bars / band show standard deviation values.",
+   "summary_ko": "정전위 (4.2 V 유지) 충전의 전류 감쇠를 용량 · C-rate 로 바꾼 곡선 (e) 과 맞춤 (f): Q₀ 190 고정 · τ 1.732 / 3.283 h · n 1.355 / 1.225 — 축 표기 'g_NMC' 는 원문 그대로 (본문은 NCM)",
+   "bbox": [
+    104.4,
+    357.95,
+    516.9,
+    522.3
+   ],
+   "w": 2865,
+   "h": 1143,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 500 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "panel_of": "f6",
+   "crop_note": "패널 e (정전위 율속 곡선 + CC 점) · f (맞춤) — 위 경계 = 패널 c/d 축 제목 아래 2.5 pt 틈",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 15,
+   "file": "tab_3.png",
+   "caption": "Table 3 Fit parameters and error for chronoamperometry measurements.",
+   "summary_ko": "정전위 율속 맞춤 매개변수: Q₀ 190 mAh/g (고정) · τ 1.732 ± 0.001 h (압출) / 3.283 ± 0.001 h (배치) · n 1.355 / 1.225 · R² 0.997 / 0.996",
+   "bbox": [
+    53.0,
+    39.5,
+    559.5,
+    121.0
+   ],
+   "w": 2112,
+   "h": 341,
+   "src": "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf",
+   "method": "벡터 그림 · PyMuPDF 렌더 300 dpi (clip = 그림 경로 합집합 + 여백 ≤2 pt · 캡션 · 본문 · 오른쪽 여백의 내려받기 문구 제외)",
+   "viewed": true
+  }
+ ]
+}

@@ -1,0 +1,247 @@
+Retrieving ThermoDoc documents:   0%|          | 0/321 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 321/321 [00:00<00:00, 6731857.92it/s]
+[mp_api] 321 entries in Cl-Li-Nd-O-P-S (GGA_GGA+U hull)
+μ_Li(element reference) = -1.9089 eV/atom
+  [landmark] Li→Li2O: 못 냄 — O 가 환원형에 없다 — 균형이 안 잡힌다
+  [landmark] Li2S→Li2SO4: 못 냄 — O 가 환원형에 없다 — 균형이 안 잡힌다
+  [landmark] Li3PS4→Li3PO4: 못 냄 — O 가 환원형에 없다 — 균형이 안 잡힌다
+  ⇒ 개시점을 이 기준 대비로 읽으면 **기준이 양쪽에서 지워진다** (절대값보다 훨씬 낫다. 완전 상쇄는 아니다 — O 결합환경이 다르면 잔차가 남는다)
+
+
+=== comp1  Li6PS5Cl  (열린 원소: Li) ===
+  nominal n_Li = 6.000   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li6PS5Cl -> Li3PS4 + Li2S + LiCl
+  받아들임 개시      @ +1.24 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P
+  내보냄 개시        @ +2.14 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li6PS5Cl -> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li
+  전체 프로파일 (10 분기점):
+           -0.00 V  n=  8.000  Li6PS5Cl + 8 Li -> Li3P + 5 Li2S + LiCl
+           +0.87 V  n=  6.000  Li6PS5Cl + 6 Li -> LiP + 5 Li2S + LiCl
+           +0.93 V  n=  5.429  Li6PS5Cl + 5.429 Li -> 0.1429 Li3P7 + 5 Li2S + LiCl
+           +1.18 V  n=  5.143  Li6PS5Cl + 5.143 Li -> 0.1429 LiP7 + 5 Li2S + LiCl
+           +1.24 V  n=  5.000  Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P
+           +1.72 V  n=  0.000  Li6PS5Cl -> Li3PS4 + Li2S + LiCl
+           +2.14 V  n= -1.750  Li6PS5Cl -> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li
+           +2.36 V  n= -4.625  Li6PS5Cl -> 0.5 P2S7 + 0.375 LiS4 + LiCl + 4.625 Li
+           +3.06 V  n= -5.000  Li6PS5Cl -> 0.5 P2S7 + LiCl + 1.5 S + 5 Li
+           +3.33 V  n= -6.000  Li6PS5Cl -> SCl + 0.5 P2S7 + 0.5 S + 6 Li
+
+=== modelc  Li5.4PS4.4Cl1.6  (열린 원소: Li) ===
+  nominal n_Li = 5.400   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl
+  받아들임 개시      @ +1.24 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li5.4P1S4.4Cl1.6 + 5 Li -> 4.4 Li2S + 1.6 LiCl + P
+  내보냄 개시        @ +2.14 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li
+  전체 프로파일 (11 분기점):
+           -0.00 V  n=  8.000  Li5.4P1S4.4Cl1.6 + 8 Li -> Li3P + 4.4 Li2S + 1.6 LiCl
+           +0.87 V  n=  6.000  Li5.4P1S4.4Cl1.6 + 6 Li -> LiP + 4.4 Li2S + 1.6 LiCl
+           +0.93 V  n=  5.429  Li5.4P1S4.4Cl1.6 + 5.429 Li -> 0.1429 Li3P7 + 4.4 Li2S + 1.6 LiCl
+           +1.18 V  n=  5.143  Li5.4P1S4.4Cl1.6 + 5.143 Li -> 0.1429 LiP7 + 4.4 Li2S + 1.6 LiCl
+           +1.24 V  n=  5.000  Li5.4P1S4.4Cl1.6 + 5 Li -> 4.4 Li2S + 1.6 LiCl + P
+           +1.72 V  n= -0.000  Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl
+           +2.14 V  n= -0.700  Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li
+           +2.36 V  n= -3.575  Li5.4P1S4.4Cl1.6 -> 0.5 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.575 Li
+           +3.06 V  n= -3.800  Li5.4P1S4.4Cl1.6 -> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li
+           +3.33 V  n= -4.700  Li5.4P1S4.4Cl1.6 -> 0.9 SCl + 0.5 P2S7 + 0.7 LiCl + 4.7 Li
+           +3.39 V  n= -5.400  Li5.4P1S4.4Cl1.6 -> 1.188 SCl + 0.08235 PCl5 + 0.4588 P2S7 + 5.4 Li
+
+=== lpsocl  Li27P5S21OCl8  (열린 원소: Li) ===
+  nominal n_Li = 27.000   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li27P5S21Cl8O -> 4.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 8 LiCl
+  받아들임 개시      @ +1.24 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li27P5S21Cl8O + 23.75 Li -> 21 Li2S + 0.25 Li3PO4 + 8 LiCl + 4.75 P
+  내보냄 개시        @ +2.14 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li27P5S21Cl8O -> 4.75 Li3PS4 + 0.5 LiS4 + 0.25 Li3PO4 + 8 LiCl + 3.5 Li
+  전체 프로파일 (15 분기점):
+           -0.00 V  n= 40.000  Li27P5S21Cl8O + 40 Li -> Li2O + 5 Li3P + 21 Li2S + 8 LiCl
+           +0.69 V  n= 38.000  Li27P5S21Cl8O + 38 Li -> 4.75 Li3P + 21 Li2S + 0.25 Li3PO4 + 8 LiCl
+           +0.87 V  n= 28.500  Li27P5S21Cl8O + 28.5 Li -> 4.75 LiP + 21 Li2S + 0.25 Li3PO4 + 8 LiCl
+           +0.93 V  n= 25.786  Li27P5S21Cl8O + 25.79 Li -> 0.6786 Li3P7 + 21 Li2S + 0.25 Li3PO4 + 8 LiCl
+           +1.18 V  n= 24.429  Li27P5S21Cl8O + 24.43 Li -> 0.6786 LiP7 + 21 Li2S + 0.25 Li3PO4 + 8 LiCl
+           +1.24 V  n= 23.750  Li27P5S21Cl8O + 23.75 Li -> 21 Li2S + 0.25 Li3PO4 + 8 LiCl + 4.75 P
+           +1.72 V  n=  0.000  Li27P5S21Cl8O -> 4.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 8 LiCl
+           +2.14 V  n= -3.500  Li27P5S21Cl8O -> 4.75 Li3PS4 + 0.5 LiS4 + 0.25 Li3PO4 + 8 LiCl + 3.5 Li
+           +2.36 V  n=-17.156  Li27P5S21Cl8O -> 2.375 P2S7 + 1.094 LiS4 + 0.25 Li3PO4 + 8 LiCl + 17.16 Li
+           +2.70 V  n=-17.304  Li27P5S21Cl8O -> 0.1429 Li4P2O7 + 2.357 P2S7 + 1.125 LiS4 + 8 LiCl + 17.3 Li
+           +2.91 V  n=-17.500  Li27P5S21Cl8O -> 0.3333 LiPO3 + 2.333 P2S7 + 1.167 LiS4 + 8 LiCl + 17.5 Li
+           +3.06 V  n=-18.667  Li27P5S21Cl8O -> 0.3333 LiPO3 + 2.333 P2S7 + 8 LiCl + 4.667 S + 18.67 Li
+           +3.33 V  n=-23.333  Li27P5S21Cl8O -> 4.667 SCl + 0.3333 LiPO3 + 2.333 P2S7 + 3.333 LiCl + 23.33 Li
+           +3.39 V  n=-26.667  Li27P5S21Cl8O -> 6.039 SCl + 0.3922 PCl5 + 0.3333 LiPO3 + 2.137 P2S7 + 26.67 Li
+           +3.69 V  n=-27.000  Li27P5S21Cl8O -> 0.2 P2O5 + 6.176 SCl + 0.3647 PCl5 + 2.118 P2S7 + 27 Li
+
+=== modelc_nd  Li48Nd2P10O3S41Cl16  (열린 원소: Li) ===
+  nominal n_Li = 48.000   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li48Nd2P10S41Cl16O3 -> 9.25 Li3PS4 + Nd2S3 + Li2S + 0.75 Li3PO4 + 16 LiCl
+  받아들임 개시      @ +1.52 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li48Nd2P10S41Cl16O3 + 46.25 Li -> Nd2S3 + 38 Li2S + 0.75 Li3PO4 + 16 LiCl + 9.25 P
+  내보냄 개시        @ +1.92 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li48Nd2P10S41Cl16O3 -> 0.2 Nd10S19 + 9.25 Li3PS4 + 0.2 Li2S + 0.75 Li3PO4 + 16 LiCl + 1.6 Li
+  전체 프로파일 (21 분기점):
+           -0.00 V  n= 80.000  Li48Nd2P10S41Cl16O3 + 80 Li -> 3 Li2O + 8 Li3P + 41 Li2S + 2 NdP + 16 LiCl
+           +0.69 V  n= 74.000  Li48Nd2P10S41Cl16O3 + 74 Li -> 7.25 Li3P + 41 Li2S + 2 NdP + 0.75 Li3PO4 + 16 LiCl
+           +0.87 V  n= 59.500  Li48Nd2P10S41Cl16O3 + 59.5 Li -> 7.25 LiP + 41 Li2S + 2 NdP + 0.75 Li3PO4 + 16 LiCl
+           +0.93 V  n= 55.357  Li48Nd2P10S41Cl16O3 + 55.36 Li -> 1.036 Li3P7 + 41 Li2S + 2 NdP + 0.75 Li3PO4 + 16 LiCl
+           +1.11 V  n= 52.250  Li48Nd2P10S41Cl16O3 + 52.25 Li -> 41 Li2S + 1.812 NdP5 + 0.1875 NdP + 0.75 Li3PO4 + 16 LiCl
+           +1.21 V  n= 51.875  Li48Nd2P10S41Cl16O3 + 51.88 Li -> 0.1875 NdPS + 40.81 Li2S + 1.813 NdP5 + 0.75 Li3PO4 + 16 LiCl
+           +1.28 V  n= 48.250  Li48Nd2P10S41Cl16O3 + 48.25 Li -> 2 NdPS + 39 Li2S + 0.75 Li3PO4 + 16 LiCl + 7.25 P
+           +1.52 V  n= 46.250  Li48Nd2P10S41Cl16O3 + 46.25 Li -> Nd2S3 + 38 Li2S + 0.75 Li3PO4 + 16 LiCl + 9.25 P
+           +1.72 V  n= -0.000  Li48Nd2P10S41Cl16O3 -> 9.25 Li3PS4 + Nd2S3 + Li2S + 0.75 Li3PO4 + 16 LiCl
+           +1.92 V  n= -1.600  Li48Nd2P10S41Cl16O3 -> 0.2 Nd10S19 + 9.25 Li3PS4 + 0.2 Li2S + 0.75 Li3PO4 + 16 LiCl + 1.6 Li
+           +2.00 V  n= -2.000  Li48Nd2P10S41Cl16O3 -> 9.25 Li3PS4 + 2 NdS2 + 0.75 Li3PO4 + 16 LiCl + 2 Li
+           +2.30 V  n= -7.000  Li48Nd2P10S41Cl16O3 -> Li9Nd2(PS4)5 + 4.25 Li3PS4 + LiS4 + 0.75 Li3PO4 + 16 LiCl + 7 Li
+           +2.36 V  n=-19.219  Li48Nd2P10S41Cl16O3 -> Li9Nd2(PS4)5 + 2.125 P2S7 + 1.531 LiS4 + 0.75 Li3PO4 + 16 LiCl + 19.22 Li
+           +2.36 V  n=-27.844  Li48Nd2P10S41Cl16O3 -> 3.625 P2S7 + 2 NdPS4 + 1.906 LiS4 + 0.75 Li3PO4 + 16 LiCl + 27.84 Li
+           +2.45 V  n=-30.000  Li48Nd2P10S41Cl16O3 -> 0.75 NdPO4 + 4 P2S7 + 1.25 NdPS4 + 2 LiS4 + 16 LiCl + 30 Li
+           +2.62 V  n=-33.594  Li48Nd2P10S41Cl16O3 -> 0.75 NdPO4 + 4.625 P2S7 + 2.156 LiS4 + 1.25 NdCl3 + 12.25 LiCl + 33.59 Li
+           +3.06 V  n=-35.750  Li48Nd2P10S41Cl16O3 -> 0.75 NdPO4 + 4.625 P2S7 + 1.25 NdCl3 + 12.25 LiCl + 8.625 S + 35.75 Li
+           +3.08 V  n=-37.000  Li48Nd2P10S41Cl16O3 -> 4.5 P2S7 + 0.25 LiNd(PO3)4 + 1.75 NdCl3 + 10.75 LiCl + 9.5 S + 37 Li
+           +3.33 V  n=-46.500  Li48Nd2P10S41Cl16O3 -> 9.5 SCl + 4.5 P2S7 + 0.25 LiNd(PO3)4 + 1.75 NdCl3 + 1.25 LiCl + 46.5 Li
+           +3.39 V  n=-47.750  Li48Nd2P10S41Cl16O3 -> 10.01 SCl + 0.1471 PCl5 + 4.426 P2S7 + 0.25 LiNd(PO3)4 + 1.75 NdCl3 + 47.75 Li
+           +3.66 V  n=-48.000  Li48Nd2P10S41Cl16O3 -> 10.12 SCl + 0.1765 PCl5 + 0.3333 Nd(PO3)3 + 4.412 P2S7 + 1.667 NdCl3 + 48 Li
+
+=== ndo_li_002  Li5.34Nd0.02P1S4.37Cl1.6O0.03  (열린 원소: Li) ===
+  nominal n_Li = 5.340   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.01 Nd2S3 + 0.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+  받아들임 개시      @ +1.52 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 4.963 Li -> 0.01 Nd2S3 + 4.34 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9925 P
+  내보냄 개시        @ +1.92 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.002 Nd10S19 + 0.9925 Li3PS4 + 0.362 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.016 Li
+  전체 프로파일 (23 분기점):
+           -0.00 V  n=  8.000  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 8 Li -> 0.03 Li2O + 0.98 Li3P + 4.37 Li2S + 0.02 NdP + 1.6 LiCl
+           +0.69 V  n=  7.940  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 7.94 Li -> 0.9725 Li3P + 4.37 Li2S + 0.02 NdP + 0.0075 Li3PO4 + 1.6 LiCl
+           +0.87 V  n=  5.995  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 5.995 Li -> 0.9725 LiP + 4.37 Li2S + 0.02 NdP + 0.0075 Li3PO4 + 1.6 LiCl
+           +0.93 V  n=  5.439  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 5.439 Li -> 0.1389 Li3P7 + 4.37 Li2S + 0.02 NdP + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.11 V  n=  5.405  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 5.405 Li -> 0.1275 Li3P7 + 4.37 Li2S + 0.02 NdP5 + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.18 V  n=  5.150  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 5.15 Li -> 0.1275 LiP7 + 4.37 Li2S + 0.02 NdP5 + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.24 V  n=  5.022  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 5.022 Li -> 4.37 Li2S + 0.02 NdP5 + 0.0075 Li3PO4 + 1.6 LiCl + 0.8925 P
+           +1.28 V  n=  4.982  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 4.982 Li -> 0.02 NdPS + 4.35 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9725 P
+           +1.52 V  n=  4.963  Li5.34Nd0.02P1S4.37Cl1.6O0.03 + 4.963 Li -> 0.01 Nd2S3 + 4.34 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9925 P
+           +1.72 V  n= -0.000  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.01 Nd2S3 + 0.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.92 V  n= -0.016  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.002 Nd10S19 + 0.9925 Li3PS4 + 0.362 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.016 Li
+           +2.00 V  n= -0.020  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.02 NdS2 + 0.36 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.02 Li
+           +2.14 V  n= -0.650  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.02 NdS2 + 0.09 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 0.65 Li
+           +2.30 V  n= -0.700  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.01 Li9Nd2(PS4)5 + 0.9425 Li3PS4 + 0.1 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 0.7 Li
+           +2.36 V  n= -3.410  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.01 Li9Nd2(PS4)5 + 0.4712 P2S7 + 0.2178 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 3.41 Li
+           +2.36 V  n= -3.496  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.4863 P2S7 + 0.02 NdPS4 + 0.2216 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 3.496 Li
+           +2.45 V  n= -3.518  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.0075 NdPO4 + 0.49 P2S7 + 0.0125 NdPS4 + 0.2225 LiS4 + 1.6 LiCl + 3.517 Li
+           +2.62 V  n= -3.553  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.0075 NdPO4 + 0.4963 P2S7 + 0.2241 LiS4 + 0.0125 NdCl3 + 1.562 LiCl + 3.553 Li
+           +3.06 V  n= -3.777  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.0075 NdPO4 + 0.4963 P2S7 + 0.0125 NdCl3 + 1.563 LiCl + 0.8963 S + 3.777 Li
+           +3.08 V  n= -3.790  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.495 P2S7 + 0.0025 LiNd(PO3)4 + 0.0175 NdCl3 + 1.547 LiCl + 0.905 S + 3.79 Li
+           +3.33 V  n= -4.695  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 0.905 SCl + 0.495 P2S7 + 0.0025 LiNd(PO3)4 + 0.0175 NdCl3 + 0.6425 LiCl + 4.695 Li
+           +3.39 V  n= -5.338  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 1.17 SCl + 0.07559 PCl5 + 0.4572 P2S7 + 0.0025 LiNd(PO3)4 + 0.0175 NdCl3 + 5.337 Li
+           +3.66 V  n= -5.340  Li5.34Nd0.02P1S4.37Cl1.6O0.03 -> 1.171 SCl + 0.07588 PCl5 + 0.003333 Nd(PO3)3 + 0.4571 P2S7 + 0.01667 NdCl3 + 5.34 Li
+
+=== nd_li_002  Li5.34Nd0.02P1S4.4Cl1.6  (열린 원소: Li) ===
+  nominal n_Li = 5.340   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li5.34Nd0.02P1S4.4Cl1.6 -> Li3PS4 + 0.01 Nd2S3 + 0.37 Li2S + 1.6 LiCl
+  받아들임 개시      @ +1.52 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li5.34Nd0.02P1S4.4Cl1.6 + 5 Li -> 0.01 Nd2S3 + 4.37 Li2S + 1.6 LiCl + P
+  내보냄 개시        @ +1.92 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li5.34Nd0.02P1S4.4Cl1.6 -> 0.002 Nd10S19 + Li3PS4 + 0.362 Li2S + 1.6 LiCl + 0.016 Li
+  전체 프로파일 (19 분기점):
+           -0.00 V  n=  8.000  Li5.34Nd0.02P1S4.4Cl1.6 + 8 Li -> 0.98 Li3P + 4.4 Li2S + 0.02 NdP + 1.6 LiCl
+           +0.87 V  n=  6.040  Li5.34Nd0.02P1S4.4Cl1.6 + 6.04 Li -> 0.98 LiP + 4.4 Li2S + 0.02 NdP + 1.6 LiCl
+           +0.93 V  n=  5.480  Li5.34Nd0.02P1S4.4Cl1.6 + 5.48 Li -> 0.14 Li3P7 + 4.4 Li2S + 0.02 NdP + 1.6 LiCl
+           +1.11 V  n=  5.446  Li5.34Nd0.02P1S4.4Cl1.6 + 5.446 Li -> 0.1286 Li3P7 + 4.4 Li2S + 0.02 NdP5 + 1.6 LiCl
+           +1.18 V  n=  5.189  Li5.34Nd0.02P1S4.4Cl1.6 + 5.189 Li -> 0.1286 LiP7 + 4.4 Li2S + 0.02 NdP5 + 1.6 LiCl
+           +1.24 V  n=  5.060  Li5.34Nd0.02P1S4.4Cl1.6 + 5.06 Li -> 4.4 Li2S + 0.02 NdP5 + 1.6 LiCl + 0.9 P
+           +1.28 V  n=  5.020  Li5.34Nd0.02P1S4.4Cl1.6 + 5.02 Li -> 0.02 NdPS + 4.38 Li2S + 1.6 LiCl + 0.98 P
+           +1.52 V  n=  5.000  Li5.34Nd0.02P1S4.4Cl1.6 + 5 Li -> 0.01 Nd2S3 + 4.37 Li2S + 1.6 LiCl + P
+           +1.72 V  n=  0.000  Li5.34Nd0.02P1S4.4Cl1.6 -> Li3PS4 + 0.01 Nd2S3 + 0.37 Li2S + 1.6 LiCl
+           +1.92 V  n= -0.016  Li5.34Nd0.02P1S4.4Cl1.6 -> 0.002 Nd10S19 + Li3PS4 + 0.362 Li2S + 1.6 LiCl + 0.016 Li
+           +2.00 V  n= -0.020  Li5.34Nd0.02P1S4.4Cl1.6 -> Li3PS4 + 0.02 NdS2 + 0.36 Li2S + 1.6 LiCl + 0.02 Li
+           +2.14 V  n= -0.650  Li5.34Nd0.02P1S4.4Cl1.6 -> Li3PS4 + 0.02 NdS2 + 0.09 LiS4 + 1.6 LiCl + 0.65 Li
+           +2.30 V  n= -0.700  Li5.34Nd0.02P1S4.4Cl1.6 -> 0.01 Li9Nd2(PS4)5 + 0.95 Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li
+           +2.36 V  n= -3.431  Li5.34Nd0.02P1S4.4Cl1.6 -> 0.01 Li9Nd2(PS4)5 + 0.475 P2S7 + 0.2188 LiS4 + 1.6 LiCl + 3.431 Li
+           +2.36 V  n= -3.518  Li5.34Nd0.02P1S4.4Cl1.6 -> 0.49 P2S7 + 0.02 NdPS4 + 0.2225 LiS4 + 1.6 LiCl + 3.518 Li
+           +2.62 V  n= -3.575  Li5.34Nd0.02P1S4.4Cl1.6 -> 0.5 P2S7 + 0.225 LiS4 + 0.02 NdCl3 + 1.54 LiCl + 3.575 Li
+           +3.06 V  n= -3.800  Li5.34Nd0.02P1S4.4Cl1.6 -> 0.5 P2S7 + 0.02 NdCl3 + 1.54 LiCl + 0.9 S + 3.8 Li
+           +3.33 V  n= -4.700  Li5.34Nd0.02P1S4.4Cl1.6 -> 0.9 SCl + 0.5 P2S7 + 0.02 NdCl3 + 0.64 LiCl + 4.7 Li
+           +3.39 V  n= -5.340  Li5.34Nd0.02P1S4.4Cl1.6 -> 1.164 SCl + 0.07529 PCl5 + 0.4624 P2S7 + 0.02 NdCl3 + 5.34 Li
+
+=== o_only_003  Li5.4P1S4.37Cl1.6O0.03  (열린 원소: Li) ===
+  nominal n_Li = 5.400   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li5.4P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.4 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+  받아들임 개시      @ +1.24 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li5.4P1S4.37Cl1.6O0.03 + 4.963 Li -> 4.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9925 P
+  내보냄 개시        @ +2.14 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li5.4P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.1 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 0.7 Li
+  전체 프로파일 (15 분기점):
+           -0.00 V  n=  8.000  Li5.4P1S4.37Cl1.6O0.03 + 8 Li -> 0.03 Li2O + Li3P + 4.37 Li2S + 1.6 LiCl
+           +0.69 V  n=  7.940  Li5.4P1S4.37Cl1.6O0.03 + 7.94 Li -> 0.9925 Li3P + 4.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+           +0.87 V  n=  5.955  Li5.4P1S4.37Cl1.6O0.03 + 5.955 Li -> 0.9925 LiP + 4.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+           +0.93 V  n=  5.388  Li5.4P1S4.37Cl1.6O0.03 + 5.388 Li -> 0.1418 Li3P7 + 4.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.18 V  n=  5.104  Li5.4P1S4.37Cl1.6O0.03 + 5.104 Li -> 0.1418 LiP7 + 4.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.24 V  n=  4.963  Li5.4P1S4.37Cl1.6O0.03 + 4.963 Li -> 4.37 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9925 P
+           +1.72 V  n=  0.000  Li5.4P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.4 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+           +2.14 V  n= -0.700  Li5.4P1S4.37Cl1.6O0.03 -> 0.9925 Li3PS4 + 0.1 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 0.7 Li
+           +2.36 V  n= -3.553  Li5.4P1S4.37Cl1.6O0.03 -> 0.4962 P2S7 + 0.2241 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 3.553 Li
+           +2.70 V  n= -3.558  Li5.4P1S4.37Cl1.6O0.03 -> 0.004286 Li4P2O7 + 0.4957 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.558 Li
+           +2.91 V  n= -3.564  Li5.4P1S4.37Cl1.6O0.03 -> 0.01 LiPO3 + 0.495 P2S7 + 0.2262 LiS4 + 1.6 LiCl + 3.564 Li
+           +3.06 V  n= -3.790  Li5.4P1S4.37Cl1.6O0.03 -> 0.01 LiPO3 + 0.495 P2S7 + 1.6 LiCl + 0.905 S + 3.79 Li
+           +3.33 V  n= -4.695  Li5.4P1S4.37Cl1.6O0.03 -> 0.905 SCl + 0.01 LiPO3 + 0.495 P2S7 + 0.695 LiCl + 4.695 Li
+           +3.39 V  n= -5.390  Li5.4P1S4.37Cl1.6O0.03 -> 1.191 SCl + 0.08176 PCl5 + 0.01 LiPO3 + 0.4541 P2S7 + 5.39 Li
+           +3.69 V  n= -5.400  Li5.4P1S4.37Cl1.6O0.03 -> 0.006 P2O5 + 1.195 SCl + 0.08094 PCl5 + 0.4535 P2S7 + 5.4 Li
+
+=== nd_p_002_asused  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03  (열린 원소: Li) ===
+  nominal n_Li = 5.440   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.9725 Li3PS4 + 0.01 Nd2S3 + 0.45 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+  받아들임 개시      @ +1.52 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 4.863 Li -> 0.01 Nd2S3 + 4.34 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9725 P
+  내보냄 개시        @ +1.92 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.002 Nd10S19 + 0.9725 Li3PS4 + 0.442 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.016 Li
+  전체 프로파일 (23 분기점):
+           -0.00 V  n=  7.840  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 7.84 Li -> 0.03 Li2O + 0.96 Li3P + 4.37 Li2S + 0.02 NdP + 1.6 LiCl
+           +0.69 V  n=  7.780  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 7.78 Li -> 0.9525 Li3P + 4.37 Li2S + 0.02 NdP + 0.0075 Li3PO4 + 1.6 LiCl
+           +0.87 V  n=  5.875  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 5.875 Li -> 0.9525 LiP + 4.37 Li2S + 0.02 NdP + 0.0075 Li3PO4 + 1.6 LiCl
+           +0.93 V  n=  5.331  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 5.331 Li -> 0.1361 Li3P7 + 4.37 Li2S + 0.02 NdP + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.11 V  n=  5.296  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 5.296 Li -> 0.1246 Li3P7 + 4.37 Li2S + 0.02 NdP5 + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.18 V  n=  5.047  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 5.047 Li -> 0.1246 LiP7 + 4.37 Li2S + 0.02 NdP5 + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.24 V  n=  4.923  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 4.923 Li -> 4.37 Li2S + 0.02 NdP5 + 0.0075 Li3PO4 + 1.6 LiCl + 0.8725 P
+           +1.28 V  n=  4.883  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 4.882 Li -> 0.02 NdPS + 4.35 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9525 P
+           +1.52 V  n=  4.862  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 + 4.863 Li -> 0.01 Nd2S3 + 4.34 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.9725 P
+           +1.72 V  n= -0.000  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.9725 Li3PS4 + 0.01 Nd2S3 + 0.45 Li2S + 0.0075 Li3PO4 + 1.6 LiCl
+           +1.92 V  n= -0.016  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.002 Nd10S19 + 0.9725 Li3PS4 + 0.442 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.016 Li
+           +2.00 V  n= -0.020  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.9725 Li3PS4 + 0.02 NdS2 + 0.44 Li2S + 0.0075 Li3PO4 + 1.6 LiCl + 0.02 Li
+           +2.14 V  n= -0.790  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.9725 Li3PS4 + 0.02 NdS2 + 0.11 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 0.79 Li
+           +2.30 V  n= -0.840  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.01 Li9Nd2(PS4)5 + 0.9225 Li3PS4 + 0.12 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 0.84 Li
+           +2.36 V  n= -3.492  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.01 Li9Nd2(PS4)5 + 0.4613 P2S7 + 0.2353 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 3.492 Li
+           +2.36 V  n= -3.578  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.4762 P2S7 + 0.02 NdPS4 + 0.2391 LiS4 + 0.0075 Li3PO4 + 1.6 LiCl + 3.578 Li
+           +2.45 V  n= -3.600  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.0075 NdPO4 + 0.48 P2S7 + 0.0125 NdPS4 + 0.24 LiS4 + 1.6 LiCl + 3.6 Li
+           +2.62 V  n= -3.636  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.0075 NdPO4 + 0.4862 P2S7 + 0.2416 LiS4 + 0.0125 NdCl3 + 1.562 LiCl + 3.636 Li
+           +3.06 V  n= -3.877  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.0075 NdPO4 + 0.4863 P2S7 + 0.0125 NdCl3 + 1.563 LiCl + 0.9663 S + 3.877 Li
+           +3.08 V  n= -3.890  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.485 P2S7 + 0.0025 LiNd(PO3)4 + 0.0175 NdCl3 + 1.547 LiCl + 0.975 S + 3.89 Li
+           +3.33 V  n= -4.865  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 0.975 SCl + 0.485 P2S7 + 0.0025 LiNd(PO3)4 + 0.0175 NdCl3 + 0.5725 LiCl + 4.865 Li
+           +3.39 V  n= -5.438  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 1.211 SCl + 0.06735 PCl5 + 0.4513 P2S7 + 0.0025 LiNd(PO3)4 + 0.0175 NdCl3 + 5.438 Li
+           +3.66 V  n= -5.440  Li5.44Nd0.02P0.98S4.37Cl1.6O0.03 -> 1.212 SCl + 0.06765 PCl5 + 0.003333 Nd(PO3)3 + 0.4512 P2S7 + 0.01667 NdCl3 + 5.44 Li
+
+=== nd_p_002  Li5.44Nd0.02P0.98S4.4Cl1.6  (열린 원소: Li) ===
+  nominal n_Li = 5.440   ·  μ_ref(Li) = -1.9089 eV/atom
+  중립(자기분해)     @ +1.72 V → Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.98 Li3PS4 + 0.01 Nd2S3 + 0.45 Li2S + 1.6 LiCl
+  받아들임 개시      @ +1.52 V  [환원 (cathodic) — Li 를 받아들인다]
+                     → Li5.44Nd0.02P0.98S4.4Cl1.6 + 4.9 Li -> 0.01 Nd2S3 + 4.37 Li2S + 1.6 LiCl + 0.98 P
+  내보냄 개시        @ +1.92 V  [산화 (anodic) — Li 를 내놓는다]
+                     → Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.002 Nd10S19 + 0.98 Li3PS4 + 0.442 Li2S + 1.6 LiCl + 0.016 Li
+  전체 프로파일 (19 분기점):
+           -0.00 V  n=  7.840  Li5.44Nd0.02P0.98S4.4Cl1.6 + 7.84 Li -> 0.96 Li3P + 4.4 Li2S + 0.02 NdP + 1.6 LiCl
+           +0.87 V  n=  5.920  Li5.44Nd0.02P0.98S4.4Cl1.6 + 5.92 Li -> 0.96 LiP + 4.4 Li2S + 0.02 NdP + 1.6 LiCl
+           +0.93 V  n=  5.371  Li5.44Nd0.02P0.98S4.4Cl1.6 + 5.371 Li -> 0.1371 Li3P7 + 4.4 Li2S + 0.02 NdP + 1.6 LiCl
+           +1.11 V  n=  5.337  Li5.44Nd0.02P0.98S4.4Cl1.6 + 5.337 Li -> 0.1257 Li3P7 + 4.4 Li2S + 0.02 NdP5 + 1.6 LiCl
+           +1.18 V  n=  5.086  Li5.44Nd0.02P0.98S4.4Cl1.6 + 5.086 Li -> 0.1257 LiP7 + 4.4 Li2S + 0.02 NdP5 + 1.6 LiCl
+           +1.24 V  n=  4.960  Li5.44Nd0.02P0.98S4.4Cl1.6 + 4.96 Li -> 4.4 Li2S + 0.02 NdP5 + 1.6 LiCl + 0.88 P
+           +1.28 V  n=  4.920  Li5.44Nd0.02P0.98S4.4Cl1.6 + 4.92 Li -> 0.02 NdPS + 4.38 Li2S + 1.6 LiCl + 0.96 P
+           +1.52 V  n=  4.900  Li5.44Nd0.02P0.98S4.4Cl1.6 + 4.9 Li -> 0.01 Nd2S3 + 4.37 Li2S + 1.6 LiCl + 0.98 P
+           +1.72 V  n= -0.000  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.98 Li3PS4 + 0.01 Nd2S3 + 0.45 Li2S + 1.6 LiCl
+           +1.92 V  n= -0.016  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.002 Nd10S19 + 0.98 Li3PS4 + 0.442 Li2S + 1.6 LiCl + 0.016 Li
+           +2.00 V  n= -0.020  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.98 Li3PS4 + 0.02 NdS2 + 0.44 Li2S + 1.6 LiCl + 0.02 Li
+           +2.14 V  n= -0.790  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.98 Li3PS4 + 0.02 NdS2 + 0.11 LiS4 + 1.6 LiCl + 0.79 Li
+           +2.30 V  n= -0.840  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.01 Li9Nd2(PS4)5 + 0.93 Li3PS4 + 0.12 LiS4 + 1.6 LiCl + 0.84 Li
+           +2.36 V  n= -3.514  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.01 Li9Nd2(PS4)5 + 0.465 P2S7 + 0.2363 LiS4 + 1.6 LiCl + 3.514 Li
+           +2.36 V  n= -3.600  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.48 P2S7 + 0.02 NdPS4 + 0.24 LiS4 + 1.6 LiCl + 3.6 Li
+           +2.62 V  n= -3.658  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.49 P2S7 + 0.2425 LiS4 + 0.02 NdCl3 + 1.54 LiCl + 3.657 Li
+           +3.06 V  n= -3.900  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.49 P2S7 + 0.02 NdCl3 + 1.54 LiCl + 0.97 S + 3.9 Li
+           +3.33 V  n= -4.870  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.97 SCl + 0.49 P2S7 + 0.02 NdCl3 + 0.57 LiCl + 4.87 Li
+           +3.39 V  n= -5.440  Li5.44Nd0.02P0.98S4.4Cl1.6 -> 1.205 SCl + 0.06706 PCl5 + 0.4565 P2S7 + 0.02 NdCl3 + 5.44 Li
+
+→ db/properties/cei_esw_Li_x002_2026_09_28.json

@@ -1,0 +1,174 @@
+{
+ "slug": "lei2026_se_particle_size_effects_review",
+ "dpi": 200,
+ "generated": "2026-10-30",
+ "method": "200 dpi 쪽 렌더 크롭 (Fig. 1–6 + Table 1–3 · Table 3 은 가로 쪽이라 시계 방향 90° 회전 · 카드 실독 기록) — 크롭 PNG · 캡션 · bbox(pt) 는 카드 작성 때 그대로",
+ "sources": [
+  "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+ ],
+ "note_manual": "2026-10-30 정본 반입 때 목록형 (list) 색인을 정본 형식 (dict) 으로 옮겼다 — 값은 그대로: bbox_pt → bbox · pdf → src · px → w, h (PNG 실측과 같음 확인) · key/kind/label = 파일 이름에서. 목록형이면 webapp papers_with_figures · paper_figures · build_index.py · extract_figures --audit 가 .get / r['kind'] 에서 멈춘다.",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Diagram of the ideal construction of ASSBs and optimized configuration of SEs. a Kinetically limited ion transport from high tortuosity under high-loading cathodes; b solid‒solid contact loss",
+   "bbox": [
+    54,
+    58,
+    541,
+    450
+   ],
+   "w": 1364,
+   "h": 1100,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Common particle size control methods reported in the lit- erature. Solid-phase methods: a high-energy dry milling (HDM); b auxiliary sintering; and c sieving. (a) Reproduced with permission from Ref. [78]. Copyright © 2023, American Chemical Society. (b) Reproduced with permission from Ref. [94]. Copyright © 2023, American Chemical Society. (c) Reproduced with permission from Ref. [80]. Copyright © 2023, The Authors. Published by Wiley–VCH GmbH. Liquid-phase methods: d low-energy wet milling (LWM); e coprecipitation; and f solvent polarity-driven recrystallization. (d) Reproduced with permission from Ref. [78]. Copyright © 2023,",
+   "bbox": [
+    56,
+    58,
+    539,
+    321
+   ],
+   "w": 1352,
+   "h": 739,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 11,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Impact of particle size on intrinsic physical and chemical prop- erties. Ionic conductivity: a the relationship between the ionic con- ductivity and the particle size ratio; b the relationship between the grain size, conductivity and diffusion coefficient; c fraction of the theoretical energy. (a) Reproduced with permission from Ref. [126]. Copyright © 2022, The Authors. Published by Wiley–VCH GmbH. (b, c) Reproduced with permission from Ref. [131]. Copyright © 2022, The Authors. Published by Elsevier. Chemical stability: d sche- matic diagram of the particle size-dependent degradation kinetics; e area-specific interface resistances (ASRs) of pristine LLZO samples and those exposed to air for 24 h; f cyclic voltammetry plot of the Li/",
+   "bbox": [
+    53,
+    58,
+    542,
+    437
+   ],
+   "w": 1359,
+   "h": 1063,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 15,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Impact of particle size on intrinsic physical and chemical prop- erties. Packing density: a the relationship between particle size and open porosity; and b the relationship between porosity and critical current density (CCD). (a) Reproduced with permission from Ref. [156]. Copyright © 2023, The authors. Published by John Wiley and Sons. (b) Reproduced with permission from Ref. [157]. Copyright © 2024, American Chemical Society. Interface compatibility: c simula-",
+   "bbox": [
+    53,
+    58,
+    542,
+    493
+   ],
+   "w": 1369,
+   "h": 1215,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 16,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Effect of size regulation on the monolayer. Models of small SEs in the cathode layer: a composite microstructures, b isolated SE percolating networks, and c state of charge during charging and discharging operations (0.1 C rate). (a, b) Reproduced with permis- sion from Ref. [188]. Copyright © 2019, The Authors. Published by WILEY‐VCH Verlag GmbH & Co. KGaA, Weinheim. Correspond- ing large SE models: d composite microstructures, e isolated SE per- colating networks, f the state of charge during charging and discharg- ing operations (0.1 C rate). (c–f) Reproduced with permission from Ref. [191]. Copyright © 2024, The Authors. Published by John Wiley and Sons. g Modeling results showing the relationships between",
+   "bbox": [
+    54,
+    58,
+    541,
+    516
+   ],
+   "w": 1341,
+   "h": 1264,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 23,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Effect of size regulation on multilayer designs. a Simulation of the electrolyte potential and current density when particles of differ- ent sizes are mixed. Reproduced with permission from Ref. [166]. Copyright © 2023, The Authors. Published by Elsevier. b Schematic diagram of ceramic LLZO pellets with complex heterostructures with alternating large- and small-grain-layer LLZO electrolytes and c the electrochemical properties when the corresponding heterostructure is used. Reproduced with permission from Ref. [138]. Copyright © 2015, American Chemical Society. d Illustration of the mecha-",
+   "bbox": [
+    56,
+    58,
+    539,
+    400
+   ],
+   "w": 1346,
+   "h": 956,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 9,
+   "file": "tab_1.png",
+   "caption": "Table 1 provides a detailed comparison of the aforemen- tioned processes in terms of their ability to control electro- lyte particle sizes and distributions. In summary, strategies for controlling electrolyte particle size include solid-phase, liquid-phase, and unconventional synthesis methods, each with distinct advantages and challenges. The solid-phase approaches, including high-energy milling, sintering, and sieving, offer simplicity and cost-effectiveness but are often limited by particle heterogeneity, the introduction of impu- rities, and energy inefficiency [113–115]. The liquid-phase methods, such as solubility regulation and solvent polar- ity manipulation, enable precise control over particle size and stoichiometry but are limited by solvent toxicity, com- plex post-processing steps, and high costs [116, 117]. The unconventional techniques such as jet milling, raw material pretreatment, and freeze-drying demonstrate unique poten- tial for refining particle sizes and enhancing electrochemi- cal performance but are constrained by material selectivity, high equipment demands, and poor scalability. Collectively,",
+   "bbox": [
+    50,
+    476,
+    546,
+    724
+   ],
+   "w": 1387,
+   "h": 663,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 17,
+   "file": "tab_2.png",
+   "caption": "Table 2 Summary of the effects of pressure on electrolytes of different sizes",
+   "bbox": [
+    50,
+    576,
+    546,
+    708
+   ],
+   "w": 1387,
+   "h": 364,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 22,
+   "file": "tab_3.png",
+   "caption": "Table 3 Key parameters for reducing tortuosity via particle size control",
+   "bbox": [
+    48,
+    52,
+    548,
+    730
+   ],
+   "w": 1844,
+   "h": 795,
+   "dpi": 200,
+   "src": "23704322-3._Review_of_Particle_Size_Effects_of_Solid_Electrolytes_in_All-Solid-State_Batteries.pdf"
+  }
+ ]
+}

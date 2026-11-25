@@ -1,0 +1,125 @@
+{
+ "slug": "kim2025_impedance_decoupling_tlm_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of electrochemical processes in ASSB composite electrodes.",
+   "bbox": [
+    125.0,
+    49.4,
+    470.3,
+    324.0
+   ],
+   "w": 1440,
+   "h": 1146,
+   "dpi": 300,
+   "src": "04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf",
+   "blank": 0.327
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) TLM of the ion blocking–ion blocking condition and its circuit elements. (b) TLM configuration with purely resistive components and resulting impedance spectrum. (c) Parametric study with variations in ri and re. (d) TLM configuration with ionic grain-boundary components and resulting impedance spectrum. (e) Parametric study with variations in ri,gb and ci,gb. (f) TLM configuration with electronic grain-boundary components and resulting impedance spectrum. (g) Para­ metric study with variations in re,gb and ce,gb. Detailed parameters for simulations can be found in Table S1. demonstrated the effect of each element on the specific regions of impedance spectra. Table S2 provides the detailed parameters employed in the simulation. The impedance spectra of the symmetric cells, consisting of a com­ posite electrode sandwiched between two ion-blocking SUS foils, are shown as Nyquis",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    420.7
+   ],
+   "w": 2228,
+   "h": 1549,
+   "dpi": 300,
+   "src": "04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) TLM for the electron blocking–ion blocking condition and its circuit elements. TLM configurations for the simulation and impedance spectra with the components of (b) cpeint, (c) rint, (d) zw, and (e) re. Parametric study with variations in (f) ri and (g) rint. The corresponding TLMs are depicted in the inset. Detailed parameters for simulations can be found in Table S2. boundary impedance (Fig. 4e and f, and Table S3). Except for the cell with 62 wt % NCM811, electronic resistances were negligible compared with the ionic resistances, and the ionic resistance decreased with increasing temperature. Although higher SE content is generally ex­ pected to reduce ionic resistance, the composite electrode with 82 wt % NCM811 exhibited the lowest ionic resistance, followed by those with 62 and 72 wt %. This trend can be attributed to differences in densifi­ cation processes. Since the",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    401.6
+   ],
+   "w": 2228,
+   "h": 1469,
+   "dpi": 300,
+   "src": "04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf",
+   "blank": 0.813
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Impedance spectra of the symmetric cells measured with the NCM composition of 62, 72, and 82 wt %, presented as (a) Nyquist plots and (b) DRT spectra. Impedance spectra of the symmetric cells measured at temperatures of 30, 45, and 60 ◦C, presented as (c) Nyquist plots and (d) DRT spectra. (e) TLM used for the fitting and (f) corresponding quantification results. (Super P) was employed as conductive additives, as it is commonly used to provide electronic percolation in conventional ASSBs. However, trace metallic impurities are introduced during manufacturing of carbon black, which can hinder the stable cycling of ASSBs [45]. In addition, minimizing the interfacial contact between the sulfide electrolyte and conductive additive is critical to suppress the electrolyte decomposition reaction. To address these issues, one-dimensional (1D) conductive carbon materials have been investi",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    390.6
+   ],
+   "w": 2228,
+   "h": 1423,
+   "dpi": 300,
+   "src": "04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Impedance spectra of full cells measured with the NCM composition of 62, 72, and 82 wt %, presented as (a) Nyquist plots and (b) DRT spectra. Impedance spectra of full cells measured at temperatures of 30, 45, and 60 ◦C, presented as (c) Nyquist plots and (d) DRT spectra. (e) TLM used for the fitting and (f) corre­ sponding quantification results. additional equivalent circuit modeling was conducted. Morasch et al. previously investigated how the ratio of charge transfer resistance to pore ionic resistance, which depends on the areal capacity, affects impedance responses of porous electrodes in Li-ion battery systems [48]. Using a similar approach, we performed a parametric study with the TLM by varying the ratio Rint/Ri (Fig. 6e). Detailed model parameters are provided in Table S7. When Rint/Ri ratio was high (3 and 1), the ionic transport and charge transfer regions of the impe",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    389.6
+   ],
+   "w": 2228,
+   "h": 1419,
+   "dpi": 300,
+   "src": "04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Impedance spectra of symmetric cells employing uncoated NCM811 and (b) corresponding quantification results. (c) Impedance spectra of full cells employing uncoated NCM811 and (d) corresponding quantification results. (e) Simulated impedance spectra with varied Rint/Ri values. Impedance spectra of the composite electrode with halide electrolyte measured obtained from (f) symmetric and (g) full cell. impedances between solid electrolyte particles. Intensified pellet densification improved ionic percolation pathways, while higher active material content rendered electronic transport resistance negligible. Interfacial charge transfer kinetics were analyzed using the electron blocking–ion blocking TLM in addition to solid-state diffusion within the active materials. Electrode composition dictated the electrochemically active surface area and controlled the charge transfer resistan",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    388.2
+   ],
+   "w": 2228,
+   "h": 1412,
+   "dpi": 300,
+   "src": "04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf",
+   "blank": 0.901
+  }
+ ]
+}

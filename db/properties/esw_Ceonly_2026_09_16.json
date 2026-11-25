@@ -1,0 +1,154 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "Ce"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {
+    "Ce_only": {
+      "composition": "Li4.8Ce0.2PS4.4Cl1.6",
+      "label": "Ce_only",
+      "open_element": "Li",
+      "n_Li_nominal": 4.8,
+      "mu_Li_ref_eV": -1.9089,
+      "meaning": {
+        "uptake": "환원 (cathodic) — Li 를 받아들인다",
+        "release": "산화 (anodic) — Li 를 내놓는다",
+        "axis": "V_vs_Li"
+      },
+      "uptake_onset_rxn": "Li4.8Ce0.2P1S4.4Cl1.6 + 5 Li -> 0.1 Ce2S3 + 1.6 LiCl + 4.1 Li2S + P",
+      "release_onset_rxn": "Li4.8Ce0.2P1S4.4Cl1.6 -> Li3PS4 + 0.2 CeS2 + 1.6 LiCl + 0.2 Li",
+      "neutral_rxn": "Li4.8Ce0.2P1S4.4Cl1.6 -> Li3PS4 + 0.1 Ce2S3 + 1.6 LiCl + 0.1 Li2S",
+      "profile": [
+        {
+          "mu_Li_eV": -1.9089,
+          "dmu_Li_eV": 0.0,
+          "evolution_Li": 8.0,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 8 Li -> 0.8 Li3P + 1.6 LiCl + 0.2 CeP + 4.4 Li2S",
+          "V_vs_Li": 0.0
+        },
+        {
+          "mu_Li_eV": -2.6955,
+          "dmu_Li_eV": -0.7866,
+          "evolution_Li": 7.8,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 7.8 Li -> 0.2 Li2CeP2 + 0.6 Li3P + 1.6 LiCl + 4.4 Li2S",
+          "V_vs_Li": 0.787
+        },
+        {
+          "mu_Li_eV": -2.7788,
+          "dmu_Li_eV": -0.8699,
+          "evolution_Li": 6.6,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 6.6 Li -> 0.6 LiP + 0.2 Li2CeP2 + 1.6 LiCl + 4.4 Li2S",
+          "V_vs_Li": 0.87
+        },
+        {
+          "mu_Li_eV": -2.8414,
+          "dmu_Li_eV": -0.9325,
+          "evolution_Li": 6.2571,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 6.257 Li -> 0.2 Li2CeP2 + 0.08571 Li3P7 + 1.6 LiCl + 4.4 Li2S",
+          "V_vs_Li": 0.932
+        },
+        {
+          "mu_Li_eV": -2.8421,
+          "dmu_Li_eV": -0.9332,
+          "evolution_Li": 5.8571,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 5.857 Li -> 0.08571 Li3P7 + 0.2 CeP2 + 1.6 LiCl + 4.4 Li2S",
+          "V_vs_Li": 0.933
+        },
+        {
+          "mu_Li_eV": -3.0858,
+          "dmu_Li_eV": -1.1769,
+          "evolution_Li": 5.6857,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 5.686 Li -> 0.08571 LiP7 + 0.2 CeP2 + 1.6 LiCl + 4.4 Li2S",
+          "V_vs_Li": 1.177
+        },
+        {
+          "mu_Li_eV": -3.1369,
+          "dmu_Li_eV": -1.228,
+          "evolution_Li": 5.3143,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 5.314 Li -> 0.1143 LiP7 + 0.2 CePS + 1.6 LiCl + 4.2 Li2S",
+          "V_vs_Li": 1.228
+        },
+        {
+          "mu_Li_eV": -3.1508,
+          "dmu_Li_eV": -1.2419,
+          "evolution_Li": 5.2,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 5.2 Li -> 0.2 CePS + 1.6 LiCl + 4.2 Li2S + 0.8 P",
+          "V_vs_Li": 1.242
+        },
+        {
+          "mu_Li_eV": -3.5313,
+          "dmu_Li_eV": -1.6224,
+          "evolution_Li": 5.0,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 + 5 Li -> 0.1 Ce2S3 + 1.6 LiCl + 4.1 Li2S + P",
+          "V_vs_Li": 1.622
+        },
+        {
+          "mu_Li_eV": -3.6259,
+          "dmu_Li_eV": -1.717,
+          "evolution_Li": 0.0,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 -> Li3PS4 + 0.1 Ce2S3 + 1.6 LiCl + 0.1 Li2S",
+          "V_vs_Li": 1.717
+        },
+        {
+          "mu_Li_eV": -3.8133,
+          "dmu_Li_eV": -1.9044,
+          "evolution_Li": -0.2,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 -> Li3PS4 + 0.2 CeS2 + 1.6 LiCl + 0.2 Li",
+          "V_vs_Li": 1.904
+        },
+        {
+          "mu_Li_eV": -4.2647,
+          "dmu_Li_eV": -2.3558,
+          "evolution_Li": -3.075,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 -> 0.125 LiS4 + 0.5 P2S7 + 0.2 CeS2 + 1.6 LiCl + 3.075 Li",
+          "V_vs_Li": 2.356
+        },
+        {
+          "mu_Li_eV": -4.5627,
+          "dmu_Li_eV": -2.6538,
+          "evolution_Li": -3.575,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 -> 0.225 LiS4 + 0.5 P2S7 + LiCl + 0.2 CeCl3 + 3.575 Li",
+          "V_vs_Li": 2.654
+        },
+        {
+          "mu_Li_eV": -4.9736,
+          "dmu_Li_eV": -3.0647,
+          "evolution_Li": -3.8,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 -> 0.5 P2S7 + LiCl + 0.2 CeCl3 + 0.9 S + 3.8 Li",
+          "V_vs_Li": 3.065
+        },
+        {
+          "mu_Li_eV": -5.2347,
+          "dmu_Li_eV": -3.3258,
+          "evolution_Li": -4.7,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 -> 0.5 P2S7 + 0.1 LiCl + 0.2 CeCl3 + 0.9 SCl + 4.7 Li",
+          "V_vs_Li": 3.326
+        },
+        {
+          "mu_Li_eV": -5.2971,
+          "dmu_Li_eV": -3.3882,
+          "evolution_Li": -4.8,
+          "reaction": "Li4.8Ce0.2P1S4.4Cl1.6 -> 0.4941 P2S7 + 0.01176 PCl5 + 0.2 CeCl3 + 0.9412 SCl + 4.8 Li",
+          "V_vs_Li": 3.388
+        }
+      ],
+      "uptake_onset_mu_eV": -3.5313,
+      "release_onset_mu_eV": -3.8133,
+      "neutral_mu_eV": -3.6259,
+      "reduction_limit_V": 1.622,
+      "oxidation_limit_V": 1.904,
+      "ocv_self_decomposition_V": 1.717,
+      "ocv_self_decomposition_rxn": "Li4.8Ce0.2P1S4.4Cl1.6 -> Li3PS4 + 0.1 Ce2S3 + 1.6 LiCl + 0.1 Li2S",
+      "oxidation_onset_rxn": "Li4.8Ce0.2P1S4.4Cl1.6 -> Li3PS4 + 0.2 CeS2 + 1.6 LiCl + 0.2 Li"
+    }
+  }
+}

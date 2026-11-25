@@ -1,0 +1,32 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "O",
+    "Yb"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {},
+  "reactions": {
+    "Li3PO4,Yb2O3 > YbPO4,Li2O": {
+      "ok": false,
+      "why": "hull 에 없다: Yb2O3 (Yb2O3)"
+    },
+    "YbCl3,Li3PO4 > YbPO4,LiCl": {
+      "ok": false,
+      "why": "hull 에 없다: YbCl3 (YbCl3)"
+    },
+    "Yb2S3,Li3PO4 > YbPO4,Li2S": {
+      "ok": false,
+      "why": "hull 에 없다: Yb2S3 (Yb2S3)"
+    }
+  },
+  "⛔_reaction_caveat": "반응물·생성물 집합은 **사람이 고른 것**이다 — hull 이 고른 게 아니다. hull 이 고르는 판정은 interface_reactivity_v2.py 쪽이다. 반응이 **일어나는지**(운동학·경로)는 말하지 않는다."
+}

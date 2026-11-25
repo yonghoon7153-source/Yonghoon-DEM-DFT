@@ -1,0 +1,311 @@
+{
+ "slug": "li2026_na_sulfide_halide_interface_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Schematic illustration of interfacial compatibility in ASSSBs. (a) Sulfide SEs are prone to oxidation at oxide cathodes and are thermodynamically reactive with anode. Continued reduction may be kinetically limited only when the resulting or deliberately introduced interphase provides sufficient electronic insulation and mechanical integrity. (b) Halide SEs generally provide better cathode side oxidation resistance but are also vulnerable to reduction near anode. (c) A functionally partitioned architecture places a halide near the cathode and uses an intentionally regulated artificial anode interlayer to protect the sulfide transport layer from direct anode contact.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    60.8,
+    561.1,
+    390.0
+   ],
+   "w": 2186,
+   "h": 1372,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.623
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Structural and transport characteristics of representative sodium SEs. (a) Na+ transport channels in PS4 and PO4 frameworks. (b) Phase relationship of Na3PS4.59 Copyright 2021. American Chemical Society. (c)Plastic crystal transition of Na3PS4.63 Copyright 2019. American Chemical Society. (d) Structure of high entropy Na3−δP0.32As0.32Sb0.32W0.04S4.56 Copyright 2025. American Chemical Society. (e) RT conductivity, Rietveld refinement, and 700 K Na+ probability densities of Na3−xPS4−xFx.64 Copyright 2025. The Royal Society of Chemistry. (f) Synthesis and structure of Na3−xSbS4−xBrx.57 Copyright 2021. American Chemical Society. (g) Structures of Na6PS5Cl.65 Copyright 2024. by the authors. Licensee MDPI. (h)Structures and impedance response of Na3−xZnxGa1+xS4.66 Copyright 2022. The Royal Society of Chemistry. (i)Structures of Na3B5S9.67 Copyright 2023. Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    368.6,
+    561.1,
+    652.6
+   ],
+   "w": 2187,
+   "h": 1184,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.55
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Predicted phase equilibria and Na uptake of Na3PS4 as a function of voltage.48 Copyright 2017. American Chemical Society. (b) Schematic of transition metal (TM) and S migration across the Na[TM]O2 and SE interface.73 Copyright 2022. The Royal Society of Chemistry. (c) Time-of-Flight secondary ion mass spectrometry (ToF-SIMS) and S 2p X-ray photoelectron spectroscopy (XPS) analyses of cycled sulfide-based cathode composites.53 Copyright 2024. American Chemical Society. (d) Cycling performance of a FeS2|Na3SbS3Se|Na cell at RT.79 Copyright 2023. Elsevier. (e) Cr 2p XPS spectra showing interfacial chemical evolution between Na0.5CrO2 and sulfide or selenide electrolytes.47 Copyright 2017. The Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    320.6,
+    561.0,
+    651.7
+   ],
+   "w": 2186,
+   "h": 1381,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.611
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) DFT calculated thermodynamic stability window and (b) schematic of Na dendrite growth or stable deposition governed by electron chemical potential and surface roughness.73 Copyright 2022. The Royal Society of Chemistry. (c) In situ Raman evidence of interfacial decomposition.15 Copyright 2022. American Chemical Society. (d, e) Dynamic Na3PS4|Na failure involving reaction zone formation, voids or cracks, and electro chemo mechanical coupling.49 Copyright 2026. Wiley VCH.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    368.6,
+    561.1,
+    671.9
+   ],
+   "w": 2186,
+   "h": 1265,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.456
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Crystal structures of Na2ZrCl6 under hexagonal packing and (b) the corresponding ion transport pathways. (c) Crystal structures of Na3ErCl6 under cubic packing and (d) the corresponding ion transport pathways.38,92 Copyright 2020. American Chemical Society. Copyright 2019. Wiley VCH.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    404.8,
+    561.1,
+    684.5
+   ],
+   "w": 2186,
+   "h": 1167,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.622
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 13,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 (a) AIMD probability density maps and Na+ diffusivity of Na3-xY1-xZrxCl6 at 800 K.17 Copyright 2021. Springer Nature Limited. (b) Schematic of the distorted trigonal prismatic bottleneck for Na+ migration, where Zr induced octahedral rotation modulates channel geometry.38 Copyright 2020. American Chemical Society. (c) Bond valence energy landscapes of Na3YCl6 and NaNbCl6, showing that local polyhedral rotation and channel distortion generate more connected low energy Na+ migration pathways.96 Copyright 2026. The Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    176.8,
+    561.1,
+    655.4
+   ],
+   "w": 2187,
+   "h": 1995,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.703
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) One pot synthesis of ZrO2 containing A2ZrCl6 SEs and conductivity mapping at 30°C.17 Copyright 2023. Springer Nature Limited. (b) Pair distribution function analysis of NaTaOCl4, showing local Ta-Cl, Ta-O, Na-Cl, and Na-O coordination motifs.52 Copyright 2024. American Chemical Society. (c) Rapid mechanochemical synthesis of Na1+xTa(B4O7)xCl6-x and the corresponding conductivity evolution.103 Copyright 2026. American Chemical Society. (d) Schematic showing how short-range disorder promotes Na+ transport.96 Copyright 2026. Wiley VCH. amorphization and induce uncontrolled defect formation, leading to conductivity variations of up to two orders of magnitude among samples prepared from the same batch.102 Despite substantial progress in cation and anion engineering within crystalline halide frameworks, the RT conductivity of most systems remains in the range of 10−5 to 10−4 S cm−1,",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    61.5,
+    561.1,
+    501.9
+   ],
+   "w": 2187,
+   "h": 1836,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.724
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 17,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 (a) Voltage profiles and phase equilibria of Na3YCl6 and Na3YBr6 during sodiation and desodiation.94 Copyright 2020. American Chemical Society. (b) Phase compatibility of Na3PS4 or Na2.25Y0.25Zr0.75Cl6 (NYZC0.75) with NaCrO2, showing that Na3PS4 degradation mainly arises from high voltage oxidation.17 Copyright 2021. Springer Nature Limited. (c) Cl 2p XPS evidence of interfacial changes in Na2.4Er0.4Zr0.6Cl6 (NEZC) composite cathodes.53 Copyright 2024. American Chemical Society. (d) K means clustering of Na ion conductors by bulk and shear moduli.46 Copyright",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    96.8,
+    561.4,
+    644.5
+   ],
+   "w": 2188,
+   "h": 2283,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 22,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 Reductive instability of sodium halide electrolytes at low-potential anodes. (a) Electrochemical and post-cycling interfacial evidence for SE decomposition against Na–Sn alloy anodes.51 Copyright 2022. American Chemical Society. (b) Impedance growth and mixed ionic and electronic conductor (MIEC) interphase formation at Na|NaMOCl4 interfaces.52 Copyright 2024. American Chemical Society. (c, d) Calculated electrochemical stability windows of representative sodium halides and sulfides.94,116 Copyright 2020. American Chemical Society. Copyright 2021. The Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    152.6,
+    561.1,
+    444.4
+   ],
+   "w": 2187,
+   "h": 1217,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.577
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 24,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 (a, b) Solution processed Na3SbS4 coating on NaCrO2 and corresponding microstructural characterization. (c, d) Interfacial impedance and initial voltage profiles of mixed and coated cathodes.128 Copyright 2016. Wiley VCH. (e) Computed reaction energies for oxide buffer layers with cathode active materials.48 Copyright 2017. American Chemical Society. (f, g) Redox pathway and differential capacity behavior of Na3SbS4/Na3PS4 sulfur cathodes.50 Copyright 2025. The Royal Society of Chemistry. broadens the concept of interface stabilization. Controlled redox activity is not merely a process to be suppressed, but can also serve as an integral component of interface design. Future breakthroughs in sulfide-based cathode interface strategies may depend on integrating physical isolation and chemical regulation into a unified interfacial solution, as well as exploring additional routes to c",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    64.1,
+    561.1,
+    529.0
+   ],
+   "w": 2187,
+   "h": 1938,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.68
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 27,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 (a) Interfacial interactions in cathode composites.131 Copyright 2025. The Royal Society of Chemistry. (b, c) Oxidative stability of Na1.4Zr0.4Ta0.6Cl6 (NZTC).133 Copyright 2026. American Chemical Society. Oxidative stability of Na0.6Ta0.2La0.8Cl4 (NTLC), and Na0.6Ta0.2La0.8Cl3.7F0.3 (NTLCF) electrolytes from linear sweep voltammetry (LSV) tests.123 Copyright 2026. American Chemical Society. (d, e) Na+ percolation network and the relationship between configurational entropy, transport, and stability.124 Copyright 2026. Wiley VCH. (f, g) Microstructural and spectroscopic analysis of cycled Na2.25Yb0.25Zr0.75Cl6 (NaYbZrCl0.75) composite cathodes.82 Copyright 2023. Elsevier. (h) Morphology evolution of Na1.4Zr0.4Ta0.6Cl6 (NZTC) composite cathodes before and after cold pressing.117 Copyright 2025. American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    61.5,
+    561.1,
+    526.9
+   ],
+   "w": 2187,
+   "h": 1940,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.644
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 29,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 (a-c) XCT analysis of the Na3PS4|Na3Sb interface before and after Na plating or stripping, and SbF3-THF modified Na for stabilizing the Na3PS4|Na interface.49 Copyright 2026. Wiley VCH. (d-f) Cycling stability of sulfide electrolytes in Na symmetric cells and post cycling S 2p or Cl 2p XPS analysis.58 Copyright 2026. The Royal Society of Chemistry. (g) Na Sn anode and sulfide electrolyte interfaces with or without an Na3.4Zr2Si2.4P0.6O12 (NZSPO) interlayer.142 Copyright 2023. American Chemical Society. (h) Cross sectional SEM images of the cycled hard carbon/Na3BS3 composite anode with Na3BS3 buffer layers.88 Copyright 2023. The Author(s). Published by The Electrochemical Society of Japan.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    63.5,
+    561.1,
+    667.4
+   ],
+   "w": 2187,
+   "h": 2517,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.718
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 30,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 Interfacial compatibility between sulfide and halide SEs. Panels a to d present direct sodium evidence, including impedance evolution and chemical changes at the Na3SbS4|Na2.4Er0.4Zr0.6Cl6 interface.53 Copyright 2024. American Chemical Society. Panels e to g present lithium derived mechanistic insight into possible interfacial reaction pathways and passivation strategies. These lithium results are included as conceptual guidance and do not constitute direct experimental validation in sodium systems.146 Copyright 2025. Wiley VCH. based presodiation of hard carbon has increased the initial coulombic efficiency of an all-solid-state full cell to approximately 92%. In that cell, hard carbon contacted a closo borate electrolyte, whereas the halide electrolyte was used in the cathode composite. The result therefore supports presodiation as a sodium inventory strategy but does not estab",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    92.7,
+    561.1,
+    410.4
+   ],
+   "w": 2187,
+   "h": 1324,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.59
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1.png",
+   "caption": "Table 1 Comparison of representative sodium sulfide solid electrolytes in terms of ionic conductivity, electrochemical behavior, electrode compatibility, and mechanical characteristics. Some parameters were not reported in the cited studies and are marked as not reported (NR). Electrolyte σ (mS cm−1) Cathode Cutoff voltage Anode Cycling conditions Capacity retention Fabricatio n pressure Ref. Thiophosphate and related sulfides Na3PS4 0.73 NaNi1/3Fe1/3Mn1/3 O2 2.3–4.2 V Na|Na3Sb plus NaF layer 0.2 C; 300th 88.3% 500- 600MPa 49 Na3−δP0.32As0.32 Sb0.32W0.04S4 10 NR NR NR NR NR 380MPa 56 Na2.8P0.8W0.2S4 26.4, sintered; 15.5, cold pressed NR NR NR NR NR 375 MPa 30",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    39.6,
+    590.2,
+    757.8
+   ],
+   "w": 2304,
+   "h": 2993,
+   "dpi": 300,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 20,
+   "file": "tab_2.png",
+   "caption": "Table 2 Comparison of representative sodium halide and mixed anion solid electrolytes in terms of ionic conductivity, electrochemical behavior, electrode compatibility, and mechanical characteristics. Some parameters were not reported in the cited studies and are marked as not reported (NR). Cycling performanc Electrolyte σ (mS cm−1) Cathode cutoff voltage Anode Cycling conditions Fabrication Re pressure f.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    5.8,
+    590.2,
+    837.0
+   ],
+   "w": 1989,
+   "h": 2991,
+   "dpi": 259,
+   "src": "116. InterfacialChemistry_Sulfide_Halide_SE_AllSolidState_Sodium_REVIEW.pdf",
+   "blank": 0.87
+  }
+ ]
+}

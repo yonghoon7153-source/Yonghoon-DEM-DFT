@@ -1,0 +1,131 @@
+{
+ "slug": "li2026_functionally_differentiated_interphase",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "115. Li_FunctionallyDifferentiatedCompositeInterphase_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a-f) Interfacial atomic structures and differential charge density distributions of different inorganic coatings on LPSCl (100) and after contact with lithium metal, where yellow and cyan denote electron accumulation and depletion, respectively; (g) DOS of different inorganic coatings and LPSCl; (h-l) Li+ migration barriers in different inorganic coatings; (m) intra-cage and inter-cage Li+ migration barriers in LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.0,
+    565.8,
+    685.0
+   ],
+   "w": 2227,
+   "h": 2647,
+   "dpi": 300,
+   "src": "115. Li_FunctionallyDifferentiatedCompositeInterphase_MAIN.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Schematic illustration of the fabrication process for the composite-coated lithium metal anode; FE-SEM images and corresponding EDS elemental mapping results of different Li metal surfaces: (b) LI, (c) LO, (d) LF-4, (e) BC-3, (f) LN-TMEDA, and (g) 3LFCBNL-1. Li metal (Fig. 2b) exhibits a relatively smooth surface, with only a small amount of O detected, indicating slight surface oxidation during sample preparation and transfer. After further oxidation (denoted as LO), inhomogeneously distributed white particles appear on the Li surface and preferentially grow at defect sites, revealing a pronounced defect- sensitive oxidation behavior (Fig. 2c). Such a nonuniform oxide layer not only deteriorates the surface flatness of Li metal, but may also induce localized current-density concentration during subsequent electro­ chemical cycling. Therefore, Li2O was not adopted as a major ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.1,
+    566.0,
+    407.0
+   ],
+   "w": 2228,
+   "h": 1488,
+   "dpi": 300,
+   "src": "115. Li_FunctionallyDifferentiatedCompositeInterphase_MAIN.pdf",
+   "blank": 0.425
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. XPS spectra of different Li metal samples in the F 1 s, Br 1 s, Cl 1 s, and N 1 s regions: (a) LF-4; (b) BC-3; (c) LN-TMEDA; and (d) 3LFCBNL-1. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    49.8,
+    358.4,
+    545.4,
+    730.8
+   ],
+   "w": 2066,
+   "h": 1552,
+   "dpi": 300,
+   "src": "115. Li_FunctionallyDifferentiatedCompositeInterphase_MAIN.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. AFM surface morphologies and nanomechanical parameters of Li metal with different surface treatments: (a-e) AFM images of LI, LF-4, BC-3, LN-TMEDA, and 3LFCBNL-1, respectively; (f) root mean square roughness; (g) adhesion force; (h) surface apparent modulus. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    279.3,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1843,
+   "dpi": 300,
+   "src": "115. Li_FunctionallyDifferentiatedCompositeInterphase_MAIN.pdf",
+   "blank": 0.491
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Long-term cycling performance of Li symmetric cells assembled with (a) LI and (b) 3LFCBNL-2. Schematic illustrations of the proposed Li deposition be­ haviors at different Li metal/sulfide electrolyte interfaces: (c) LI, (d) LF-4, (e) BC-3, (f) LN-TMEDA, and (g) 3LFCBNL-1. cooperative effects promote a more uniform interfacial Li+ flux and mitigate localized Li deposition, thereby suppressing dendrite growth and improving interfacial stability during prolonged cycling. As shown in Fig. 6a-e, the interfacial regulation strategy plays a decisive role in determining the cycling behavior of NCM/LiZrClO- LPSCl/Li all-solid-state batteries. The cell with bare Li (Fig. 6a) shows low initial capacity and Coulombic efficiency and quickly develops abnormal charging behavior (Fig. S12a), indicating severe interfacial instability, continuous side reactions, and rapid failure at the Li/sulfid",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.6,
+    566.0,
+    613.0
+   ],
+   "w": 2228,
+   "h": 2349,
+   "dpi": 300,
+   "src": "115. Li_FunctionallyDifferentiatedCompositeInterphase_MAIN.pdf",
+   "blank": 0.551
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Cycling performance of all-solid-state lithium metal batteries: (a) NCM/LiZrClO-LPSCl/LI, (b) NCM/LiZrClO-LPSCl/LF-4, (c) NCM/LiZrClO-LPSCl/BC-3, (d) NCM/LiZrClO-LPSCl/LN-TMEDA, and (e) NCM/LiZrClO-LPSCl/3LFCBNL-1. and mitigating irreversible Li loss. However, the cell still undergoes rapid decay after ~50 cycles at 1C, accompanied by abnormal voltage fluctuations and incomplete charging (Fig. S12b), indicating that the strong electron-blocking capability of LiF is offset by its insufficient Li+ interphase. Together with the CCD results, symmetric-cell cycling behavior, and first-principles calculations, these findings collectively support the proposed mechanistic interpretation that the different components cooperate to suppress interfacial side reactions, homoge­ nize Li+ flux, and improve interfacial transport. transport under high-rate conditions. The LiCl/LiBr-covered cell (",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.9,
+    566.0,
+    423.0
+   ],
+   "w": 2228,
+   "h": 1555,
+   "dpi": 300,
+   "src": "115. Li_FunctionallyDifferentiatedCompositeInterphase_MAIN.pdf",
+   "blank": 0.889
+  }
+ ]
+}

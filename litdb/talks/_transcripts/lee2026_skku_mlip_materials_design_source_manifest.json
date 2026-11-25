@@ -1,0 +1,63 @@
+{
+ "slug": "lee2026_skku_mlip_materials_design",
+ "generated": "2026-08-26",
+ "schema": "talk_source_manifest/v1",
+ "sources": {
+  "deck_pdf": {
+   "file": "(inbox) 이상욱 교수님.pdf · 전지화학회-내지부분 (1).pdf",
+   "sha256": "d223336acf53a7a4322ba09d32260afa48225148c0ded74b26e9c8e04970a704",
+   "bytes": 13994267,
+   "note": "2026-07-28 digest 때와 동일 PDF (18 pp · 자료집 pp.279-296) — 2026-08-03 재판독분과 sha256 동일 여부는 미확인(그때 해시를 안 남겼다)"
+  },
+  "stt_txt": {
+   "file": "lee2026_skku_mlip_materials_design_raw.txt",
+   "sha256": "f9c8526204d9a8b3c1de155689ba59f99208799afecdb8b1e16a37d59985b5a0",
+   "bytes": 33224,
+   "note": "음성 341 · 31:44 · 39 블록 · 화자 5인 라벨"
+  }
+ },
+ "audio_status": "absent",
+ "stt_engine": "CLOVA Note",
+ "stt_engine_status": "declared_in_source",
+ "rights_status": "unknown",
+ "qa_consent_status": "unknown",
+ "off_record_status": "unknown",
+ "citable": false,
+ "external_use_allowed": false,
+ "slots_expected": 31,
+ "coverage": {
+  "slots_extracted": 36,
+  "slides_actual": 31,
+  "deck_read": 31,
+  "deck_reverified_2026_08_26": 9,
+  "stt_blocks": 39,
+  "aligned": 39,
+  "unseen_q": 0,
+  "unlocated_dash": 4,
+  "skipped": 0,
+  "unresolved": 6
+ },
+ "promotion_blockers": [
+  {
+   "field": "audio_status",
+   "why": "음성 미보유 → [말]·직접인용·speech-only claim 차단"
+  },
+  {
+   "field": "rights_status",
+   "why": "권리 미상 → 외부 공개·원고 사용 차단"
+  },
+  {
+   "field": "qa_consent_status",
+   "why": "Q&A 동의 미상 → Q&A 외부 사용 차단"
+  }
+ ],
+ "stt_engine_basis": "STT 원문 말미 261행에 `clovanote.naver.com` 이 인쇄돼 있다 (형식 추정 아님)",
+ "tier": "exploratory",
+ "resolved_blockers": [
+  {
+   "field": "stt_engine_status",
+   "when": "2026-08-26",
+   "how": "원문에 엔진명이 적혀 있음 → declared_in_source"
+  }
+ ]
+}

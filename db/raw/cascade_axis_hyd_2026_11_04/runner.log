@@ -1,0 +1,9 @@
+[2026-11-04 19:40:24] 시작 · AXIS=hyd · 결정 D-2026-11-04-cascade-axis-hydrolysis active · OUT=/data/work/repo/db/raw/cascade_axis_hyd_2026_11_04 · PY=/data/apps/miniforge3/envs/uma/bin/python · resume=0
+[2026-11-04 19:40:27] selftest 둘 통과
+[2026-11-04 19:40:53] manifest 앞 기록
+[2026-11-04 19:40:53] 갈래 발사 (PID 1056658 1056659  · 대상 91 종 · db/properties/cascade_interface_90.jsonl) — 기대 줄 수 91 · 1
+[2026-11-04 19:48:30] 갈래 끝 · rc designs_hyd host_hyd = 0 0 0
+  designs_hyd  rc 0 · 줄 91 · ok 91 · 중복 0
+  host_hyd     rc 0 · 줄 1 · ok 1 · 중복 0
+[2026-11-04 19:48:35] MP 판 앞뒤: same
+[2026-11-04 19:48:35] 끝 — 회수 블록은 판독기 커밋 뒤에 받는다 (카드 §8 ③)

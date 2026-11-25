@@ -1,0 +1,92 @@
+{"species": "Ag2O", "cathode": "Li|kink_products", "reaction": "kink_products -> Ag + Ag2S + Ag3P11 + Li + Li2O + Li2S + Li3Ag + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li8Ag5 + LiAg + LiAg3 + LiCl + LiP"}
+{"species": "Al2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Al + Al2O3 + AlP + Li + Li2Al + Li2O + Li2S + Li3Al2 + Li3P + Li3P7 + Li3PS4 + Li5AlO4 + LiAl + LiAl3 + LiAl5O8 + LiAlO2 + LiAlS2 + LiCl + LiP + LiP7 + P"}
+{"species": "Al2S3", "cathode": "Li|kink_products", "reaction": "kink_products -> Al + AlP + Li + Li2Al + Li2S + Li3Al2 + Li3P + Li3P7 + Li3PS4 + LiAl + LiAl3 + LiAlS2 + LiCl + LiP + LiP7 + LiS4 + P"}
+{"species": "AlBr3", "cathode": "Li|kink_products", "reaction": "kink_products -> Al + AlP + Li + Li2Al + Li2S + Li3Al2 + Li3P + Li3P7 + Li3PS4 + LiAl + LiAl3 + LiAlS2 + LiBr + LiCl + LiP + LiP7 + P"}
+{"species": "AlCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> Al + AlP + Li + Li2Al + Li2S + Li3Al2 + Li3P + Li3P7 + Li3PS4 + LiAl + LiAl3 + LiAlS2 + LiCl + LiP + LiP7 + P"}
+{"species": "AlF3", "cathode": "Li|kink_products", "reaction": "kink_products -> Al + AlP + Li + Li2Al + Li2S + Li3Al2 + Li3P + Li3P7 + Li3PS4 + LiAl + LiAl3 + LiAlS2 + LiCl + LiF + LiP + LiP7 + P"}
+{"species": "AlI3", "cathode": "Li|kink_products", "reaction": "kink_products -> Al + AlP + Li + Li2Al + Li2S + Li3Al2 + Li3P + Li3P7 + Li3PS4 + LiAl + LiAl3 + LiAlS2 + LiCl + LiI + LiP + LiP7 + P"}
+{"species": "AlN", "cathode": "Li|kink_products", "reaction": "kink_products -> AlN + Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiAlS2 + LiCl + LiP + LiP7 + LiPN2 + N2 + P"}
+{"species": "As2S3", "cathode": "Li|kink_products", "reaction": "kink_products -> As + Li + Li2S + Li3As + Li3AsS3 + Li3P + Li3P7 + Li3PS4 + LiAs + LiCl + LiP + LiP7 + P"}
+{"species": "B2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> B2S3 + B6P + BP + BPS4 + Li + Li2O + Li2S + Li3B7O12 + Li3BO3 + Li3BS3 + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li5B7S13 + LiB + LiB3 + LiCl + LiP + LiP7 + P"}
+{"species": "BaCl2", "cathode": "Li|kink_products", "reaction": "kink_products -> Ba3(PS4)2 + Ba3P14 + BaCl2 + BaP3 + BaPS3 + Li + Li2S + Li3P + Li3PS4 + LiCl + LiP + P"}
+{"species": "BaO", "cathode": "Li|kink_products", "reaction": "kink_products -> Ba3(PS4)2 + Ba3P14 + BaCl2 + BaP3 + BaPS3 + Li + Li2O + Li2S + Li3P + Li3PO4 + Li3PS4 + LiCl + LiP + P"}
+{"species": "Ca3N2", "cathode": "Li|kink_products", "reaction": "kink_products -> Ca2N + Ca2PN3 + Ca5P8 + CaS + Li + Li2S + Li3P + Li3P7 + Li3PS4 + Li7PN4 + LiCaN + LiCaP + LiCl + LiP7 + LiPN2 + N2 + P"}
+{"species": "CaBr2", "cathode": "Li|kink_products", "reaction": "kink_products -> Ca5P8 + CaS + Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiBr + LiCaP + LiCl + LiP + LiP7 + P"}
+{"species": "CaCl2", "cathode": "Li|kink_products", "reaction": "kink_products -> Ca5P8 + CaS + Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCaP + LiCl + LiP + LiP7 + P"}
+{"species": "CaF2", "cathode": "Li|kink_products", "reaction": "kink_products -> Ca5P8 + CaS + Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCaP + LiCl + LiF + LiP + LiP7 + P"}
+{"species": "CaO", "cathode": "Li|kink_products", "reaction": "kink_products -> Ca5P8 + CaO + CaS + Li + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCaP + LiCl + LiP + LiP7 + P"}
+{"species": "CaS", "cathode": "Li|kink_products", "reaction": "kink_products -> Ca5P8 + CaS + Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCaP + LiCl + LiP + LiP7 + P"}
+{"species": "CoO", "cathode": "Li|kink_products", "reaction": "kink_products -> Co + Co3S4 + Co9S8 + CoP2 + CoP3 + CoPS + Li + Li(Co3P2)2 + Li2Co12P7 + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiP7 + P"}
+{"species": "Cr2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Cr + Cr3P + CrP + CrP2 + CrP4 + Li + Li2O + Li2S + Li3P + Li3PO4 + Li3PS4 + LiCl + LiCrS2"}
+{"species": "CrCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> Cr + Cr3P + CrP + CrP2 + CrP4 + Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiCrS2 + LiP"}
+{"species": "CrO3", "cathode": "Li|kink_products", "reaction": "kink_products -> Cr + Cr3P + CrP + CrP2 + CrP4 + Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiCrS2 + LiP + LiS4"}
+{"species": "Cu2O", "cathode": "Li|kink_products", "reaction": "kink_products -> Cu + Cu2P7 + CuP2 + Li + Li(CuP)2 + Li2CuP + Li2O + Li2S + Li3CuS2 + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li5(Cu2P3)2 + LiCl + LiCu3 + LiP"}
+{"species": "Fe2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Fe + FeP + FeP2 + FePS + FeS2 + Li + Li2O + Li2S + Li3P + Li3PO4 + Li3PS4 + LiCl + LiFeP"}
+{"species": "FeCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> Fe + FeP + FeP2 + FeP4 + FePS + FeS2 + Li + Li2S + Li3P + Li3PS4 + LiCl + LiFeP + LiP"}
+{"species": "Ga2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> GaP + Li + Li2Ga + Li2Ga7 + Li2O + Li2S + Li3Ga2 + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li5Ga4 + LiCl + LiGa + LiGaS2 + LiP + LiP7 + P"}
+{"species": "Ga2S3", "cathode": "Li|kink_products", "reaction": "kink_products -> GaP + Li + Li2Ga + Li2Ga7 + Li2S + Li3Ga2 + Li3P + Li3P7 + Li3PS4 + Li5Ga4 + LiCl + LiGa + LiGaS2 + LiP + LiP7 + P"}
+{"species": "GaCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> GaP + Li + Li2Ga + Li2Ga7 + Li2S + Li3Ga2 + Li3P + Li3P7 + Li3PS4 + Li5Ga4 + LiCl + LiGa + LiGaS2 + LiP + LiP7 + P"}
+{"species": "GaN", "cathode": "Li|kink_products", "reaction": "kink_products -> GaN + GaP + Li + Li2Ga + Li2Ga7 + Li2S + Li3Ga2 + Li3N + Li3P + Li3P7 + Li3PS4 + Li5Ga4 + Li7PN4 + LiCl + LiGa + LiGaS2 + LiP + LiP7 + LiPN2 + N2 + P"}
+{"species": "Gd2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Gd2SO2 + GdP + GdP5 + GdPS + Li + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiGdO2 + LiGdS2 + LiP + LiP7 + P"}
+{"species": "GeO2", "cathode": "Li|kink_products", "reaction": "kink_products -> Ge + Li + Li15Ge4 + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li4GeS4 + Li9Ge4 + LiCl + LiGe + LiP + LiP7 + P"}
+{"species": "GeS2", "cathode": "Li|kink_products", "reaction": "kink_products -> Ge + Li + Li15Ge4 + Li2S + Li3P + Li3P7 + Li3PS4 + Li4GeS4 + Li9Ge4 + LiCl + LiGe + LiP + LiP7 + P"}
+{"species": "HfCl4", "cathode": "Li|kink_products", "reaction": "kink_products -> Hf2P + Hf3P + Hf3P2 + HfP + HfP2 + HfS2 + Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + P"}
+{"species": "HfO2", "cathode": "Li|kink_products", "reaction": "kink_products -> Hf2P + Hf3P + Hf3P2 + HfO2 + HfP + HfP2 + Li + Li2HfO3 + Li2S + Li3P + Li3P7 + Li3PS4 + Li6Hf2O7 + LiCl + LiP + LiP7 + P"}
+{"species": "In2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> In + InP + Li + Li13In3 + Li2In + Li2O + Li2S + Li3In2 + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li5In4 + LiCl + LiIn + LiIn3 + LiInS2 + LiP + LiP7 + P"}
+{"species": "La2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> La10S14O + La2S3 + La2SO2 + LaP + LaP2 + LaP5 + LaP7 + LaPS + Li + Li2O + Li2S + Li3LaP2 + Li3PO4 + Li3PS4 + LiCl + P"}
+{"species": "LaCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> La2S3 + LaP2 + LaP5 + LaP7 + LaPS + Li + Li2S + Li3LaP2 + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + P"}
+{"species": "LaF3", "cathode": "Li|kink_products", "reaction": "kink_products -> La2S3 + LaP2 + LaP5 + LaP7 + LaPS + Li + Li2S + Li3LaP2 + Li3P + Li3P7 + Li3PS4 + LiCl + LiF + LiP + P"}
+{"species": "Li2O", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiP7 + P"}
+{"species": "Li2S", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + P"}
+{"species": "Li3N", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3N + Li3P + Li3P7 + Li3PS4 + Li7PN4 + LiCl + LiP + LiP7 + LiPN2 + N2 + P"}
+{"species": "LiBr", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiBr + LiCl + LiP + LiP7 + P"}
+{"species": "LiCl", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + P"}
+{"species": "LiF", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiF + LiP + LiP7 + P"}
+{"species": "LiI", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiI + LiP + LiP7 + P"}
+{"species": "Mg3N2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3Mg + Li3P + Li3PS4 + Li5Mg + LiCl + LiMg + LiMgN + LiMgP + LiPN2 + Mg2PN3 + Mg3N2 + Mg4P6SN12 + MgP4 + MgS + N2 + P"}
+{"species": "MgBr2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3Mg + Li3P + Li3P7 + Li3PS4 + Li5Mg + LiBr + LiCl + LiMg + LiMg149 + LiMg2 + LiMgP + LiP + MgP4 + MgS + P"}
+{"species": "MgCl2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3Mg + Li3P + Li3P7 + Li3PS4 + Li5Mg + LiCl + LiMg + LiMg149 + LiMg2 + LiMgP + LiP + MgP4 + MgS + P"}
+{"species": "MgF2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3Mg + Li3P + Li3P7 + Li3PS4 + Li5Mg + LiCl + LiF + LiMg + LiMg149 + LiMg2 + LiMgP + LiP + MgP4 + MgS + P"}
+{"species": "MgI2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3Mg + Li3P + Li3P7 + Li3PS4 + Li5Mg + LiCl + LiI + LiMg + LiMg149 + LiMg2 + LiMgP + LiP + MgP4 + MgS + P"}
+{"species": "MgO", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3Mg + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li5Mg + LiCl + LiMg + LiP + LiP7 + MgO + MgP4 + MgS + P"}
+{"species": "MgS", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3Mg + Li3P + Li3P7 + Li3PS4 + Li5Mg + LiCl + LiMg + LiMg149 + LiMg2 + LiMgP + LiP + MgP4 + MgS + P"}
+{"species": "MnO", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(MnS2)2 + Li2O + Li2S + Li3P + Li3PO4 + Li3PS4 + LiCl + LiMnP + Mn + Mn2P + MnP + MnP4"}
+{"species": "MoO3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiS4 + Mo + Mo3P + MoP + MoP2 + MoP4 + MoS2"}
+{"species": "Na2O", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + Na + Na2PS3 + NaCl + NaP7 + P"}
+{"species": "Na2S", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + Na + Na2PS3 + NaCl + NaP7 + P"}
+{"species": "NaI", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + NaI + P"}
+{"species": "Nb2O5", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3NbO4 + Li3P + Li3PO4 + Li3PS4 + Li5(NbS2)7 + Li8Nb2O9 + LiCl + LiNbO2 + LiNbS2 + Nb + Nb2P + Nb2PS10 + Nb3P + Nb5P3 + Nb7P4 + NbP + NbP2 + P"}
+{"species": "NbCl5", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiNbS2 + LiP + LiP7 + Nb + Nb2P + Nb3P + Nb5P3 + Nb7P4 + NbP + NbP2 + P"}
+{"species": "Nd2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + Nd2S3 + NdP + NdP5 + NdPS + P"}
+{"species": "NdCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + Nd2S3 + NdP + NdP5 + NdPS + P"}
+{"species": "NdF3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiF + LiP + Nd2S3 + NdP + NdP5 + NdPS + P"}
+{"species": "NiO", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(NiP)2 + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li5Ni9P7 + LiCl + LiP + LiP7 + Ni + Ni12P5 + Ni2P + Ni3P + Ni3S4 + Ni5P4 + NiP2 + NiP3 + P"}
+{"species": "Sb2O5", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li2Sb + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li3Sb + Li3SbS3 + Li3SbS4 + LiCl + LiP + LiP7 + P + Sb"}
+{"species": "Sb2S3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li2Sb + Li3P + Li3P7 + Li3PS4 + Li3Sb + Li3SbS3 + Li3SbS4 + LiCl + LiP + LiP7 + P + Sb"}
+{"species": "Sc2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiP7 + LiScO2 + LiScS2 + P + Sc2O3 + Sc3P2 + ScP"}
+{"species": "ScCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + LiScS2 + P + Sc3P2 + ScP"}
+{"species": "ScF3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiF + LiP + LiP7 + LiScS2 + P + Sc3P2 + ScP"}
+{"species": "SiO2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li13Si4 + Li15Si4 + Li21Si5 + Li2O + Li2S + Li2Si2O5 + Li2SiO3 + Li3P + Li3P7 + Li3PS4 + Li4SiO4 + Li5SiP3 + Li7Si3 + Li8SiO6 + LiCl + LiP + LiP7 + P + Si + SiO2 + SiP2"}
+{"species": "SiS2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li13Si4 + Li15Si4 + Li21Si5 + Li2S + Li2SiS3 + Li3P + Li3P7 + Li3PS4 + Li5SiP3 + Li7Si3 + LiCl + LiP7 + LiS4 + P + Si + SiP2"}
+{"species": "Sm2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiSmS2 + P + Sm2O3 + Sm2S3 + Sm2SO2 + SmP + SmP5 + SmPS"}
+{"species": "SmCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiSmS2 + P + SmP + SmP5 + SmPS"}
+{"species": "SnO2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li17Sn4 + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li3Sn + Li4SnS4 + Li5Sn2 + Li7Sn2 + LiCl + LiP + LiP7 + LiSn + P + Sn + Sn4P3 + SnS"}
+{"species": "SnS2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li17Sn4 + Li2S + Li3P + Li3P7 + Li3PS4 + Li3Sn + Li4SnS4 + Li5Sn2 + Li7Sn2 + LiCl + LiP + LiP7 + LiSn + P + Sn + Sn4P3 + SnS"}
+{"species": "SrCl2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + P + SrP3 + SrPS3 + SrS"}
+{"species": "SrO", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiP7 + P + SrP3 + SrPS3 + SrS"}
+{"species": "Ta2O5", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2(TaS2)3 + Li2O + Li2S + Li3P + Li3PO4 + Li3PS4 + Li3TaO4 + Li5TaO5 + LiCl + LiTaS2 + P + Ta + Ta2P + Ta3P + TaP + TaS3"}
+{"species": "TaCl5", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2(TaS2)3 + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + P + Ta + Ta2P + Ta3P + TaP"}
+{"species": "TiCl4", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(TiS2)2 + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + LiTiS2 + P + Ti2P + Ti3P + Ti7P4 + TiP + TiP2"}
+{"species": "TiF4", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(TiS2)2 + Li2S + Li3P + Li3P7 + Li3PS4 + Li4TiS4 + LiF + LiP + LiP7 + LiTiS2 + P + Ti2P + Ti3P + Ti7P4 + TiP + TiP2"}
+{"species": "TiO2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(TiS2)2 + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li4TiO4 + Li4TiS4 + LiCl + LiP + LiP7 + LiTiS2 + P + Ti2P + Ti3P + Ti7P4 + TiP + TiP2"}
+{"species": "V2O5", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3PO4 + Li3PS4 + Li3VS4 + LiCl + LiVO2 + V + V12P7 + V2P + V3P + V3S4 + V4P3 + V5S4 + VP + VP2"}
+{"species": "WO3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiP7 + LiS4 + P + P2S7 + P2W + PW + W + WS2"}
+{"species": "Y2O3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiP7 + LiYS2 + P + Y2O3 + Y2SO2 + YP"}
+{"species": "YCl3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + LiYS2 + P + YP"}
+{"species": "YF3", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiF + LiP + LiP7 + LiYS2 + P + YP"}
+{"species": "ZnO", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + LiCl + LiP + LiP7 + LiZn + LiZn3 + LiZnP + P + ZnP2 + ZnS"}
+{"species": "ZrBr4", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(ZrS2)2 + Li2S + Li3P + Li3P7 + Li3PS4 + LiBr + LiP + LiP7 + P + Zr14P9 + Zr7P4 + ZrP + ZrP2 + ZrS2"}
+{"species": "ZrCl4", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(ZrS2)2 + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + P + Zr14P9 + Zr7P4 + ZrP + ZrP2 + ZrS2"}
+{"species": "ZrF4", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(ZrS2)2 + Li2S + Li3P + Li3P7 + Li3PS4 + LiF + LiP + LiP7 + P + Zr14P9 + Zr7P4 + ZrP + ZrP2 + ZrS2"}
+{"species": "ZrO2", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li(ZrS2)2 + Li2O + Li2S + Li3P + Li3P7 + Li3PO4 + Li3PS4 + Li6Zr2O7 + LiCl + LiP + LiP7 + P + Zr14P9 + Zr7P4 + ZrP + ZrP2 + ZrS2"}
+{"species": "HOST", "cathode": "Li|kink_products", "reaction": "kink_products -> Li + Li2S + Li3P + Li3P7 + Li3PS4 + LiCl + LiP + LiP7 + P"}

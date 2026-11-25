@@ -1,0 +1,683 @@
+# slug ↔ PDF 파일명(부분 일치, 소문자 비교) — **자동 매칭이 못 붙인 것만** 손으로 적는다.
+#
+# 왜 필요한가: digest 제목이 원제를 의역한 경우가 많아 파일명과 토큰이 안 겹친다.
+#   문턱을 낮추면 다른 데서 오탐이 터지므로(실측), 예외만 여기 모은다.
+#   이 파일이 inbox #NN·제목·1쪽본문 어느 앵커보다 **우선**한다.
+#
+# 형식:  <slug><TAB><PDF 파일명 일부>       (# 뒤는 주석)
+#   · 비교 대상은 inbox 기준 **상대경로**라 폴더명도 넣을 수 있다.
+#   · 본문·SI 를 함께 잡으려면 둘 다에 들어 있는 제목 조각을 쓴다 (Sup) 판정은 자동).
+# 후보 뽑기:  python3 tools/litdb/extract_figures.py --suggest --inbox_dir "<폴더>"
+#
+# ── 접촉역학 · 소성 ────────────────────────────────────────────────
+jacksongreen2005_fem_elastoplastic_hemispherical_contact	a finite element study of elasto-plastic hemispherical contact
+mesarovicfleck2000_dissimilar_elastoplastic_indentation	frictionless indentation of dissimilar
+thorntonning1998_adhesive_elastoplastic_contact	stick bounce behaviour of adhesive
+pasha2014_linear_elastoplastic_adhesive_contact	a linear model of elasto-plastic and adhesive contact
+thakur2014_eepa_adhesive_elastoplastic_dem	micromechanical analysis of cohesive granular materials
+#
+# ── 미세구조 · percolation · 수송 ──────────────────────────────────
+chen2011_percolation_micromodel_composite_electrode	percolation micro-model to predict the effective properties
+taufactor_tortuosity_factor_tomography_tool	taufactor an open-source application
+nisar2024_dem_effective_electrical_conductivity_sps	discrete element model for effective electrical conductivity
+minnmann2021_jes_charge_transport_bottlenecks	minnmann_2021_j._electrochem
+sangros2020_dem_electrical_conductive_paths_assb	sangrós giménez - modeling the electrical conductive paths
+#
+# ── 공정: 캘린더링 · 압축 · 건식전극 ───────────────────────────────
+ngandjong2021_dem_calendering_digital_twin	15. investigating electrode calendering
+sangros2019_dem_calendering_lib_electrode	numerical simulation of the behavior of lithium-ion battery electrodes
+schreiner2020_dem_calendering_lib	50. modeling of the calendering process
+lyu2025_3d_dem_drying_calendering_lib	three-dimensional discrete element simulation of electrode
+lyu2025_3d_dem_drying_calendering_lib	three-dimensional_discrete_element_simulation_of_electrode
+#   ↑ 2026-11-16 보강 (68-2 번 파일 · inbox 이름이 밑줄이라 옛 패턴 (빈칸) 이 맞지 않아 한 줄 더함 · 같은 조각이 Sup1–Sup4 mp4 이름에도 있다 — 그림 도구는 PDF 만 본다): 손 크롭 58 장 더함 = fig_7c (p.9 'Fig. 7 (continued)') · 식 29 (eq_*) · 근거 문단 20 (txt_*) · 영상 정지 8 (vid_S*) + 다시 자름 2 (fig_1 · tab_1) + digitized.csv · movies.
+#   [!] '--slug lyu2025_3d_dem_drying_calendering_lib --clean' 을 돌리면 이것도 모두 사라지고 fig_1 · tab_1 이 옛 (본문 섞인 · 쪽 전체) 크롭으로 돌아온다 ('--inbox --run --skip-done' 은 안전).
+sangros2020_lib_electrode_dem_mech_elec_ionic	mechanical, electrical, and ionic behavior of lithium-ion
+so2021_dem_mold_pressure_assb_coldpress	16. effect of mold pressure on compaction
+so2022_dem_compaction_coated_particles_assb	simulation of the compaction of an all-solid-state battery cathode
+wet_processing_resolved_am_ssb_cathode_manufacturing	cathode manufacturing via wet-processin
+lee2025_corolling_dryprocess_lpscl_ptfe	enabled by co-rolling
+liu2025_dry_processing_high_energy_li_batteries_review	liu - dry processing technique
+mun2025_dry_electrode_technology_assb_review	mun - paving the way for next
+lim2025_virtual_calendering_framework	validating the virtual calendering process
+#
+# ── 소재 · 바인더 · 복합양극 ───────────────────────────────────────
+sakuda2013_sulfide_mechanical_property	sulfide solid electrolyte with favorable mechanical property
+shi2019_high_am_loading_particle_size_assb	high active material loading in all
+# 가드 (2026-09-26 SI 보강): 새 업로드 본문 파일명은 밑줄 표기(…_High_Active_Material_Loading_in_All_Solid_State_…)라 위 공백 패턴에 안 걸리고,
+#   SI 파일명은 DOI 조각(aenm201902881-sup-0001-suppmat)뿐이다 → 본문·SI 를 각각 한 줄씩 잡는다 (SI 는 'sup' 로 자동 판정).
+shi2019_high_am_loading_particle_size_assb	high_active_material_loading_in_all_solid_state
+shi2019_high_am_loading_particle_size_assb	aenm201902881
+#   ↑ 2026-09-26. **12장 전부 손이 들어가 있다** (figures.json 의 recrop / manual_crop / caption_fix):
+#   · f1–f7 = 임베디드 래스터 경계 (+2 pt) 재크롭 — 옛 PNG 는 2026-08-25 이전 _shrink 결함으로 **256색 양자화**(Fig 3c·7b 열지도 색띠 계단화),
+#     캡션 5개(f1 f2 f4 f5 f6)에 본문 문단·깨진 수식이 섞여 있었다 → 인쇄 캡션으로 교정.
+#   · fS1 · fS2 = 래스터 경계 (+2 pt). fS1 은 RGBA+SMask 라 원판을 떼면 글자가 검은 바탕에 묻힌다 (쪽 렌더로 자름).
+#   · tS1 (SI 인쇄 라벨 "Table 1") · tS3 = 자동 크로퍼가 "거의 백지(1.000)" 로 버렸고, tS2 = 캡션 줄이 숫자 블록과 한 텍스트 블록이라 미검출
+#     → 셋 다 **수동 크롭** (벡터 괘선 범위 +≈2 pt, 아래 끝은 캡션 줄 위).
+#   [!] '--slug shi2019_high_am_loading_particle_size_assb --clean' 을 돌리면 표 3장이 사라지고 재크롭·캡션 교정이 자동값으로 되돌아간다.
+#       ('--inbox --run --skip-done' 은 안전.)  그림 판독값 = figures/…/digitized.csv (tools/litdb/shi2019_fig_digitize.py).
+#   ⭐ SI Table S3 (습식 밀링 ↔ σ, 40 h → 0.14 vs bulk 0.39) 가 아래 cronau2022 의 "[20,25] ≈1/3" 의 1차 근거다 (SELF-51).
+#   ↓ SE 공정 이력 ↔ σ (습식 볼밀링) — SELF-51 원문 대조 (2026-09-25). [20] 이 위 shi2019 다.
+# 가드: 본문 파일명은 제목 토큰이 있지만 digest 제목이 의역(습식 저에너지 볼밀링 …)이라 토큰 겹침이 약하고,
+#   SI 파일명은 DOI 조각(batt202200041)뿐이다 → 본문·SI 를 각각 한 줄씩 잡는다 (SI 는 'sup' 로 자동 판정).
+cronau2022_wet_milling_particle_size_ionic_conductivity	ionic_conductivity_versus_particle_size_of_ball_milled
+cronau2022_wet_milling_particle_size_ionic_conductivity	batt202200041
+#   ↑ 2026-09-25. **9장 전부 손이 들어가 있다** (figures.json 의 manual_crop / recrop):
+#   · fig_S1 = SI page 2 (0-based 1) — **벡터 전용 그림**이라 자동 크로퍼가 못 보고 **S2(XRD) 래스터를 S1 로 잘랐다**
+#     → clip = S1 캡션 위 벡터 영역의 비백색 범위 (192.0, 113.5, 432.2, 316.0) @300 dpi → 1002x845
+#   · fig_4 = 자동 크롭이 **쪽 전폭**이라 머리말 괘선 + 오른쪽 세로 "Downloaded from … Wiley Online Library" 도장이 섞였다
+#     → 임베디드 래스터 경계 (+2 pt) 로 재크롭. 나머지 7장도 래스터 경계 (+2 pt) 로 재크롭 (쪽 여백 제거).
+#   [!] '--slug cronau2022_wet_milling_particle_size_ionic_conductivity --clean' 을 돌리면
+#       fig_S1 이 다시 S2 복제가 되고 fig_4 오염이 되돌아온다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig 2 (σ vs 밀링 시간 × 볼 크기)와 Fig 5b (λ · σ · 용량 vs 시간) 가 이 카드 판정의 근거다.
+oh2026_bimodal_composite_cathode	bimodal composite cathodes advancing the chemo-mechanical
+kim2026_charge_engineered_cnf_binder	charge-engineered cellulose nanofibril binders
+park2026_thiolene_sbr_binder_assb	thiol-ene click
+#
+# ── 다물리 · ML ────────────────────────────────────────────────────
+lee2024_multiphysics_dem_fem_initial_pressure_assb	multiphysics modeling of the influence of initial pressure
+duquesnoy2023_ml_multiobjective_manufacturing_optimization	machine learning-assisted multi-objective optimization of batter
+#
+# ── 개념화학 (EXTERNAL) ──────────────────
+# 가드: 업로드된 '53. Sup3) …' (82 pp) 는 본문(22)+SI(60) 을 이어붙인 중복본이다.
+#   그걸 넣고 추출하면 본문 Fig. 1 이 Fig. S1 로 잡혀 S 번호가 오염된다(§14-12).
+#   아래 줄은 'Sup' 이 없는 본문 파일만 가리킨다 — 그림 51장은 이미 추출돼 있고 git 에 들어있다.
+#   '53. Sup2) …' (60 pp) 는 정상 SI 단독본이다 — 제목 74% 로 자동으로 이 slug 에 SI 로 붙는다
+#   (수동 지정 불필요, 2026-08-06 실측). 크롭 41/51 장이 이 파일에서 나왔다.
+#   [!] 단 지금 inbox 엔 SI-2 만 있고 본문 PDF 가 없다 → '--slug … --clean' 은 본문 크롭 10장을
+#       지운다. 재추출은 본문 PDF 를 같이 넣고서. ('--inbox --skip-done' 은 안전.)
+mulks2024_hard_soft_electrons_holes	53. hard and soft electrons
+#
+# ── 대기안정 열역학 (EXTERNAL) ──────────────────
+# 가드: zhu2020 은 본문 5 pp + SI 5 pp 인데 inbox 엔 늘 둘 중 하나만 있다. 방향이 바뀌므로
+#   '--clean' 전에 반드시 지금 무엇이 있는지 먼저 본다.
+#   [2026-08-06 오전] 본문만 있었다  → --clean 시 fig_S1·fig_S2 유실
+#   [2026-08-06 오후] SI 만 있다      → --clean 시 fig_1·fig_2·fig_3 유실   ← 지금 상태
+#     (inbox: '54. Sup) Materials Design Principles …' 만 존재. 본문 '54. Materials Design …' 은 사라졌다.)
+#   [!!] 지금 방향이 더 위험하다 — fig_3 은 수동 bbox 라 지우면 박스를 손으로 다시 찾아야 한다(아래).
+#   → '--slug zhu2020_air_stable_se_design_principles --clean' 금지.
+#     ('--inbox --run --skip-done' 은 안전. 재추출은 본문+SI 를 같이 넣고서.)
+#   [!] fig_3 은 자동 추출이 구조적으로 못 잡는다(2단 조판 + 오른쪽 단 세로 그림 → 캡션 위 영역 소실).
+#       figures.json 의 f3 은 수동 bbox (300,152,548,684)@300dpi 로 넣은 것이니 덮어쓰지 말 것 (digest §14a-B).
+#   [ok] SI 크롭 2장은 기록된 bbox 로 이 SI PDF 에서 픽셀 크기까지 재현 확인됨
+#        (fig_S1 2151x851 / fig_S2 2164x2624, digest §15a) — SI 가 있는 동안은 재유도 가능.
+#   자동 매칭은 제목 81 % 로 잘 붙는다 — 수동 지정 줄은 필요 없다('Sup)' 는 자동으로 SI 로 묶인다).
+#
+# ── InF3 argyrodite (EXTERNAL) ──────────────────
+# 가드: li2024_inf3_argyrodite_ultrathin_film 의 SI 는 **docx** 라 inbox PDF 에서 재생성이 불가능하다.
+#   figures/ 에는 fig_1..6(본문 PDF 유래) + fig_S1..S34(docx 임베디드 이미지 유래) 40장이 들어 있는데,
+#   inbox 엔 본문 PDF('55. A Versatile InF 3 …') 만 있다.
+#   [!!] '--slug li2024_inf3_argyrodite_ultrathin_film --clean' 금지 — SI 크롭 34 장이 통째로 날아가고
+#        본문 PDF 만으로는 되살릴 방법이 없다. (2026-08-06 실제로 지웠다가 git checkout 으로 복구.)
+#        ('--inbox --run --skip-done' 은 안전.)
+#   자동 매칭은 제목으로 잘 붙는다 — 수동 지정 줄 불필요.
+xu2026_ndo_codoping_argyrodite	ndo_lpscl1.7
+shapeev2016_moment_tensor_potentials	shapeev2016_moment_tensor_potentials
+cronk2026_lis_cathode_interphase_chemistry	bai2026_a_highly_utilized_and_practical_lis_cathode
+lynch2026_greenkubo_mlip_conductivity_thesis	paper9_computational_se_firstprinciples_ml
+
+# ── XLSDFT (EXTERNAL · HPC 방법 원전) ──────────────
+# 가드: xu2026_xlsdft_linear_scaling_100m_atoms 의 `fig_5.png` 는 **수동 bbox** 다.
+#   자동 크로퍼가 p9 의 Fig. 5 를 '영역 없음' 으로 제외한다(2단 조판 위쪽 전폭 벡터 그림).
+#   손으로 넣은 값: page 9(0-based 8) · clip (40, 45, 572, 262) pt @300 dpi → 2218x905.
+#   [!] '--slug xu2026_xlsdft_linear_scaling_100m_atoms --clean' 을 돌리면 fig_5 가 사라진다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 위 bbox 를 그대로 다시 쓴다.
+#   본문 PDF 만 있고 SI 는 없다(논문에 SI 자체가 없음). 자동 매칭은 제목으로 붙는다.
+wang2025_ai_ecosystems_electrolyte_interface_ssb	127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf
+#   ↑ 2026-09-22. 제목은 잘 붙지만, **이 논문은 크로핑에 손이 들어가 있다**:
+#   자동 크로퍼가 Fig. 1·Fig. 2 를 '영역 없음' 으로 제외한다(전폭 벡터 도식 — 캡션 위 블록이 36 pt 미만).
+#   손으로 넣은 값: fig_1 = page 2(0-based 1) clip (36, 55, 560, 341) @300 dpi → 2184x1192
+#                   fig_2 = page 3(0-based 2) clip (36, 415, 560, 675) @300 dpi → 2184x1084
+#   또 fig_2/4/6/8/9 는 자동 bbox 가 패널 A 를 잘라내서 상단을 그래픽 실제 경계까지 확장했다:
+#                   f2 y0=275 · f4 y0=58 · f6 y0=56 · f8 y0=72 · f9 y0=58 (x·y1 은 자동값 유지)
+#   [!] '--slug wang2025_ai_ecosystems_electrolyte_interface_ssb --clean' 을 돌리면
+#       Fig. 1·2 가 사라지고 나머지 5장이 다시 잘린다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig. 1 이 이 논문을 구한 이유다 — 잃어버리면 digest 의 §4 근거가 사라진다.
+#   SI(Tables S1–S5)는 별도 PDF 이고 **우리 미확보**.
+#
+# ── σ_ion 측정 신뢰도 (연구실 간 round robin) ──────────────
+# 가드: 파일명이 출판사 SI 이름(nz9b02764_si_001.pdf)이라 제목 토큰이 안 겹친다 → 파일명 조각으로 잡는다.
+#   ⚠ **본문 PDF 없음 — SI 만** (사용자가 본문을 받을 수 없었다, 2026-09-25). 본문을 구하면 --pdf <본문> --pdf <SI> 로 추가하되 --clean 금지.
+ohno2020_interlab_ionic_conductivity_argyrodite	nz9b02764_si_001
+#   ↑ 2026-09-25. 자동 크롭 31장 + **손이 들어간 표 4장** (figures.json 의 note):
+#   tab_S8 = 자동 크로퍼가 '영역 없음' 으로 제외(8쪽 벡터 그래픽 0) → page 8(0-based 7) clip (51.4, 88.0, 539.3, 416.1) @300 dpi 수동.
+#   tab_S6 = 하단 각주 1–7 이 잘림 → y1 395.0 · tab_S10 = 마지막 행(시료 5 Average/St Dev)이 잘림 → y1 426.0 ·
+#   tab_S11 = 표 아래 주("8 → 11 점")까지 포함 → clip (51.4, 67.0, 727.0, 434.0).
+#   [!] '--slug ohno2020_interlab_ionic_conductivity_argyrodite --clean' 을 돌리면 tab_S8 이 사라지고 S6·S10·S11 이 다시 잘린다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 위 bbox 를 그대로 다시 쓴다.
+#
+# ── SE 고유 열전도 (κ_SE · 공극 지수 α) ──────────────
+# 가드: 파일명이 출판사 SI 이름(ae3c01977_si_001.pdf)이라 제목 토큰이 안 겹친다 → 파일명 조각으로 잡는다 ('_si_' 로 SI 자동 판정됨).
+#   ⚠ **본문 PDF 없음 — SI 만** (사용자가 본문을 받을 수 없었다, 2026-09-26). 본문을 구하면 --pdf <본문> --pdf <SI> 로 추가하되 --clean 금지.
+boger2023_thermal_conductivity_argyrodite_lgps	ae3c01977_si_001
+#   ↑ 2026-09-26. **15장 전부 손이 들어가 있다** (figures.json 의 note). SI 그림은 Microsoft Print-to-PDF 가로 띠 래스터(원 ≈2,900 dpi) —
+#   클립 = 쪽별 임베디드 래스터 합집합 + 5 pt 여백 (위·아래는 이웃 텍스트 줄에 맞춰 자름) · dpi = min(400, max(300, 2000 px / 폭)) → 폭 ≈ 2000 px.
+#   · fig_S8 = 자동 크로퍼가 제외 ('그래픽 없음' — 캡션은 14쪽 맨 위, 그림은 13쪽 맨 아래) → page 13(0-based 12) clip (79.1, 638.0, 515.7, 750.8) @329 dpi 수동.
+#   · fig_S1 = 본문 줄 'via a simple linear fitting routine.' 혼입 → clip (112.5, 271.1, 482.1, 645.2) · fig_S6 = 본문 낱말 'conductivity.' 혼입 → clip (72.8, 113.3, 522.2, 294.0).
+#   · 나머지 12장 = 전폭(64.8–533.8 pt) 자동 클립을 래스터 경계로 좁힘 (내용 변화 없음) — bbox 는 figures.json.
+#   ⚠ S2 · S6 · S10 · S11 의 x 축 제목이 잘린 것은 **SI 원 래스터 자체**다 (래스터 끝 = 캡션 시작 직전) — 크롭으로 복구 불가.
+#   [!] '--slug boger2023_thermal_conductivity_argyrodite_lgps --clean' 을 돌리면 fig_S8 이 사라지고 S1·S6 에 본문 텍스트가 다시 섞이며 나머지는 전폭으로 돌아간다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 figures.json 의 bbox·dpi 를 그대로 다시 쓴다.
+#
+# ── CAM 고유 전달물성 (σ_e / σ_i 단상 펠릿) ──────────────
+# 가드: 파일명이 출판사 해시(1-s2.0-S037877531830466X-main.pdf / …-mmc1.pdf)라 제목 토큰이 안 겹친다
+#   → PII 조각으로 본문·SI 를 같이 잡는다 (SI 는 'mmc' 로 자동 판정).
+wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni	s037877531830466x
+#   ↑ 2026-09-25. **20장 전부 손이 들어가 있다** (figures.json 의 manual_crop / recrop):
+#   모든 그림이 쪽당 임베디드 래스터 1장이고 래스터 밖 그림 요소가 없다(3쪽 벡터 350개 = 크기 0 인공물)
+#   → 클립 = 래스터 경계 + 백색 여백 제거(흰색 = 세 채널 > 244, 여백 14 px @300 dpi).
+#   · fig_1 = 본문 page 3(0-based 2) clip (37.6, 56.6, 352.2, 260.5) → 1312x851
+#     fig_6 = 본문 page 6(0-based 5) clip (37.6, 56.6, 378.8, 398.9) → 1423x1428
+#     ↑ 둘 다 **캡션이 그림 오른쪽 옆**이라 자동 크로퍼가 '그래픽 없음' 으로 제외한다.
+#   · 자동 크롭은 fig_S4 상단에 **Fig S3 캡션 끝줄이 섞였고**, 본문 그림에 페이지 여백이 들어갔다
+#     → 나머지 18장도 래스터 경계로 재크롭 (bbox 는 figures.json 에 그대로 있다).
+#   [!] '--slug wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni --clean' 을 돌리면
+#       Fig 1·Fig 6 이 사라지고 S4 오염이 되돌아온다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig 6 (E_a 요약)과 Fig 4f (σ_e vs T) 가 이 카드의 근거다.
+#
+# ── CAM 고유 기계물성 (E · 입계 강도 · 파괴) ─────────────────
+# 가드: 파일명이 출판사 해시(1-s2.0-S0378775326010268-main.pdf)라 제목 토큰이 안 겹친다 → PII 조각으로 잡는다.
+#   SI(시편 기하 · 동영상 3 · 하중–변위 원자료)는 **우리 미확보** — 본문 PDF 하나뿐.
+sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile	s0378775326010268
+#   ↑ 2026-09-25. 자동 크롭 8장 전부 육안 확인 — 캡션 혼입·라벨/축/스케일바 잘림 **0** → 수동 크롭 없음.
+#     이 논문에는 표가 없다. '--clean' 재추출은 안전하다 (손 들어간 그림이 없다).
+#   ⭐ Fig 6a (응력–변형률 · 입계 강도)와 p. 4 본문 (나노압입 138 ± 24 GPa, n = 29) 이 이 카드의 근거다.
+#   (같은 절 · 짝 카드) NMC532 이차입자 E·H·K_c 원문 = xu2017 (SELF-51 의 옛 "Xu 2017" 서지의 실체)
+# 가드: 업로드 파일명이 'Xu_2017_J._Electrochem._Soc._164_A3333' 형식이라 digest 제목 토큰과 안 겹친다
+#   → 저널·권·쪽 조각으로 잡는다 (SI 는 미보유).
+xu2017_nmc532_nanoindentation_modulus_hardness_toughness	xu_2017_j._electrochem._soc._164_a3333
+#   ↑ 2026-09-25.  9장 = 자동 7 (Fig 2–8, 캡션 앵커 · 쪽 여백 포함) + **수동 2**:
+#   · fig_1 = PDF page 3(1-based) clip (35, 67, 323, 329) @300 dpi → 1201x1092
+#     ↑ 캡션이 **그림 오른쪽 옆**이라 자동 크로퍼가 '그래픽 없음(img0/draw0)' 으로 제외한다.
+#   · tab_1 = PDF page 6(1-based) clip (35, 648, 285, 758) @300 dpi → 1041x442 (벡터 텍스트 표)
+#     ↑ 원문 라벨이 **로마 숫자 'Table I'** 라 도구(아라비아 숫자만)가 못 잡는다.
+#   [!] '--slug xu2017_nmc532_nanoindentation_modulus_hardness_toughness --clean' 을 돌리면
+#       Fig 1 · Table 1 이 사라진다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Table 1 (E·H·K_c: 이차입자 / 펠릿 / DFT) 과 Fig 5 · Fig 8 (SOC·사이클 궤적) 이 이 카드의 근거다.
+#   (같은 절 · 리뷰 층) [Sedl26] 이 [30] 으로 인용한 "Stallard 추정" (K_IC 0.05–0.3) 의 원문 = stallard2022 리뷰
+# 가드: Cell Press 파일명이 PII 뿐('PIIS2542435122001398.pdf' / ScienceDirect '1-s2.0-S2542435122001398-main.pdf')이라
+#   제목 토큰이 안 겹친다 → PII 조각으로 잡는다 (두 이름 모두 부분 일치).  이 리뷰는 **SI 가 없다** (본문 24 pp 하나).
+stallard2022_cathode_mechanical_properties_review	s2542435122001398
+#   ↑ 2026-09-26.  13장 (Fig 1–13, 표 0) 중 **손이 들어간 것 10장** (figures.json 의 recrop / manual_crop):
+#   · 머리말('Joule / Review' 로고 · CellPress 탭) 혼입 7장 = fig_1 · 5 · 7 · 8 · 9 · 10 · 12 — 자동 bbox 가 y 45–70 pt 에서 시작.
+#   · 패널 A–B 윗부분 잘림 2장 = fig_3 (자동 y0 159.2) · fig_13 (자동 y0 137.5) — 패널 라벨 · 윗축 · 주석이 빠졌다.
+#   · fig_4 = PDF page 5(1-based) clip (100, 100, 334, 705) @300 dpi → 949x2498 (**수동 신규**)
+#     ↑ 캡션이 **다음 쪽** (page 6, y 103–151) 에 있고 그림 쪽에는 캡션이 없어 자동 크로퍼가 '그래픽 없음(img0/draw5)' 으로 제외한다.
+#   · 손 클립 = 그래픽 경계(벡터 경로 ∪ 이미지 ∪ 그림 안 글자) + 3–4 pt → 흰 여백 trim (세 채널 > 244, 8 px @300 dpi).
+#     fig_8 은 높이 0 인 표면선(x 62.5 pt)이 합집합에서 빠져 첫 클립이 2 pt 잘렸다 → x0 58 로 다시.
+#   · 자동 그대로 3장 = fig_2 · 6 · 11 (육안 확인 — 결함 없음).
+#   [!] '--slug stallard2022_cathode_mechanical_properties_review --clean' 을 돌리면 **손 크롭 10장이 사라지고**
+#       머리말 섞인 7장 · 잘린 2장 · Fig 4 없음으로 돌아간다. ('--inbox --run --skip-done' 은 안전.)
+#       재생성이 필요하면 figures.json 의 bbox · dpi 를 그대로 다시 쓴다.
+#   ⭐ Fig 9 (E·H vs A_P^½ · A_P^½/d — 부류 차의 원인) 와 Fig 10C (σ_F vs d^-½ + K_IC 등고선 = "Stallard 추정" 의 원천) 가 이 카드의 근거다.
+#   (같은 절 · 짝 카드) 2차입자 **통째**의 분할 하중 (in situ SEM 압축) = wheatcroft2023
+# 가드: 본문 업로드 이름 '…Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_…' (Wiley 기본 이름의 변형) 은 저자명으로,
+#   SI 'batt202300032-sup-0001-misc_information.pdf' 는 원고번호로 잡는다 (SI 는 파일명의 '-sup-' 로 자동 SI 판정 → S 번호).
+wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem	wheatcroft
+wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem	batt202300032
+#   ↑ 2026-09-26.  16장 = 본문 Fig 1–7 · SI Fig S1–S7 · SI Table S1–S2 (본문에 표 없음), 전부 viewed.  **5장 수동 재크롭** (figures.json 의 recrop · auto_bbox):
+#   · fig_3  — 자동 bbox 가 쪽 전폭 (0, 41.8, 595.3, 539.1) → 머리말 괘선 + 오른쪽 Wiley 다운로드 도장 혼입 → 래스터 경계 (122.7, 64.6, 472.6, 535.1)
+#   · fig_S1 · fig_S7 — SI 절 제목 혼입 → 래스터 경계 +2 pt  ·  fig_S3 — 위 본문 문장 조각 혼입 → 래스터 경계 +2 pt
+#   · tab_S1 — 마지막 행 직후에서 끊겨 아래 괘선·각주 a)–c) 누락 → 캡션~각주 (66.0, 129.5, 531.0, 377.5)
+#   [!] '--slug wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem --clean' 을 돌리면 위 5장이 자동 bbox 로 되돌아간다
+#       (본문·SI 둘 다 안 주면 한쪽이 색인에서 빠진다).  ('--inbox --run --skip-done' 은 안전.)
+#   판독 원자료 = litdb/figures/<slug>/digitized.csv ← tools/litdb/wheatcroft2023_digitize.py (--check 로 본문 평균과 대조)
+#   ⭐ Fig 2f (평판·원뿔 P_f vs D = 207 ± 49 / 67 ± 21 의 원자료) · Fig 5–6 (SOC·입경) · SI Fig S4 (H_f) 가 이 카드의 근거다.
+#   (같은 절 · 같은 Zhao 그룹) 단결정 NMC622 C_ij + 소결 펠릿 M·H·K_c = sharma2023 ([Sedl26] 의 [23] 원문)
+# 가드: 파일명이 출판사 해시(1-s2.0-S2352431622001961-main.pdf / …-mmc1.pdf)라 제목 토큰이 안 겹친다
+#   → PII 조각으로 본문·SI 를 같이 잡는다 (SI 는 'mmc' 로 자동 판정 — 사본 이름 바꾸기 불필요).
+sharma2023_nmc_single_crystal_anisotropic_nanoindentation	s2352431622001961
+#   ↑ 2026-09-26.  12장 (본문 Fig 1–6 + SI Fig S1–S4 + SI Table S1–S2) **전부 손으로 다시 렌더** (figures.json 의 recrop / manual_crop, 전부 viewed):
+#   · fig_S1 = SI page 4(1-based) clip (93.6, 68.0, 518.4, 282.5) — 자동 크롭이 y 265.1 에서 멈춰 **패널 라벨 'h_min = 50/100/150nm' 이 잘렸다**
+#   · tab_S1 = SI page 2 clip (110, 68, 509, 450) — 자동 크롭이 **알고리즘 상자 윗선을 떨어뜨리고 5줄 캡션을 끌어들였다**
+#   · tab_S2 = SI page 3 clip (97, 68, 516, 310) — 자동 추출이 '거의 백지(1.000)' 로 **제외** (표가 캡션 위에 있다) → 수동 (벡터 표)
+#   · 나머지 9장 = 임베디드 래스터 경계 + 2 pt 로 좁힌 **백색 여백 제거** (내용 동일; 흰색 = 세 채널 > 244, 여백 14 px @300 dpi)
+#   [!] '--slug sharma2023_nmc_single_crystal_anisotropic_nanoindentation --clean' 을 돌리면 **12장 손질이 전부 사라진다**
+#       (tab_S2 소실 · fig_S1 라벨 잘림 · tab_S1 캡션 혼입이 돌아온다) + `digitized.csv` 의 축 보정 상수가 어긋난다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 figures.json 의 bbox 를 그대로 다시 쓴다.
+#   ⭐ Fig 5 (C_ij · 방위별 M) · Fig 6 (M · H · K_c) · SI Table S2 (K 식) · SI Fig S1 (h_min 감도) 가 이 카드의 근거다.
+#   판독 재현 = tools/litdb/sharma2023_verify.py → litdb/figures/<slug>/digitized.csv
+# ── SE 고유 전달물성 (σ_ion 단상 펠릿 · 적층압/제작압) ──────────────
+# 가드: ACS SI 파일명(nz1c01299_si_001.pdf)은 원고번호뿐이라 제목 토큰이 안 겹친다 → 원고번호 조각으로 SI 만 잡는다.
+#   본문 PDF("02. How to Measure a Reliable Ionic Conductivity…")는 자동 매칭으로 이미 붙어 있다 (이 줄은 SI 전용).
+#   같은 그룹의 2022 논문(cronau2022_…) 두 줄은 위 '소재 · 바인더 · 복합양극' 절에 있다 — 별개 논문이다.
+cronau2021_stack_pressure_ionic_conductivity	nz1c01299
+#   ↑ 2026-09-25.  SI 8장(fS1–fS7, tS1) 중 **3장이 수동 재크롭**이다 (figures.json 의 recrop):
+#   · fS1 — 자동 bbox 가 절 제목 "3. Results:" 를 포함 → 상단 y 92.0
+#   · fS5 — 캡션 앞 **빈 공백 줄**(y 312.8)을 캡션 시작으로 읽어 x축 제목 "Z′(ω) / Ω·cm²" 가 잘렸다 → 하단 y 326.0
+#   · tS1 — 위 Fig. S5 캡션·축제목 조각이 섞였다 → 상단 y 376.0
+#   [!] 이 슬러그에 '--clean' 금지 — 본문·SI 를 둘 다 주지 않으면 한쪽 그림이 색인에서 빠지고, 둘 다 줘도 세 재크롭이 되돌아간다.
+#   ⭐ fS2 패널 c (µC-Li₆PS₅Cl, 고적층압 평탄 ≈2.9–3.5 mS/cm, digitized) 가 우리 σ_grain = 3.0 의 출처 판정 근거다.
+#   디지타이즈 = tools/litdb/cronau2021_si_digitize.py → litdb/figures/<slug>/si_digitized.csv
+# ── Ketter 2025 Nat. Commun. 16:1411 — voxel 저항망(RN) + σ_ion/σ_e/κ 실측 (Zeier 그룹) ──
+ketter2025_resistor_network_models_predict_transport_properties	56514
+#   ↑ 2026-09-25. 출판사 이름 `s41467-025-56514-5.pdf`(본문) · `41467_2025_56514_MOESM1_ESM.pdf`(SI) 를 DOI 조각 56514 로 같이 잡는다.
+#   ⚠ SI 이름 `MOESM1_ESM` 은 SI_TAG(sup/mmc/si) 에 안 걸린다 → 크롭 때는 사본을 `…_Sup.pdf` 로 붙여 넘겼다
+#     (캡션이 "Figure S1:" 라 라벨은 어차피 S 번호로 나오지만, 판정이 갈리지 않게).
+#   ⚠ **31장 중 14장에 손이 들어가 있다** (figures.json 의 `recrop` · 전부 `viewed: true`, 백색여백 트림 >244 · 14 px):
+#     · 본문 fig_2·fig_3 — 자동 크롭이 x=410.9/332.7 pt 에서 멈춰 **오른쪽 패널이 잘렸다** (Fig 3 은 panel d = σ vs φ_NCM 통째로 누락)
+#       → 전폭 clip (33.7, 42.8, 561.3, 249.0) / (33.7, 42.8, 561.3, 255.5)
+#     · 본문 fig_4 — 위쪽 색 범례 라벨(LPSCl→NCM83) 잘림 → clip (33.7, 45.0, 300.8, 420.0)
+#     · 본문 fig_5 — 위쪽 띠(패널 라벨 a/c · σ_e 범례) 잘림 → clip (33.7, 42.8, 561.3, 238.5)
+#     · SI fig_S3·S4·S7·S8·S9·S12·S13·S14·S22 · tab_S1 — 그림 위에 **본문 문장이 섞였다** (S3 은 식 S8/S9 문단 통째)
+#       → 상단을 임베디드 래스터 윗변(tab_S1 은 "Table S1" 캡션 윗변) −4 pt 로 내렸다
+#   [!] '--slug ketter2025_resistor_network_models_predict_transport_properties --clean' 을 돌리면 위 14장이 되돌아간다.
+#   ⭐ fig_3 panel d(σ_e·σ_ion vs φ_NCM) 와 tab_S3(입력 전도도 표) 가 이 카드의 근거다 — 수치는 Source Data(MOESM3) 로 확인했다.
+# 가드: 파일명이 출판사 해시(1-s2.0-S0008622300002955-main.pdf)라 제목 토큰이 안 겹친다 → PII 조각으로 잡는다.
+endo2001_vgcf_basic_properties_battery_applications	s0008622300002955
+#   ↑ 2026-09-25. **16장(Fig 1–15 + Table 1) 전부 손으로 다시 잘랐다** (figures.json 의 recrop / manual_crop, 전부 viewed).
+#   이 PDF 의 그림은 전부 **가는 래스터 띠 모자이크**(그림당 125–542 조각 · 쪽당 최대 881)이고 두 단에 그림이 **나란히** 놓인다.
+#   자동 크롭은 16개 중 **9개**만 잡고 Fig 2+3 · 5+6 · 10+12 · 11+13 을 **한 장씩으로 합쳤으며**, Table 1 은 **쪽 전체**를 잡았다.
+#   → 클립 = 그림 영역 안 래스터 조각의 합집합 + 백색 여백 제거(흰색 = 세 채널 > 244, 여백 8 px @300 dpi).
+#     Table 1 = 3쪽(0-based 2) clip (43.0, 55.0, 504.0, 215.0) — 텍스트 표라 래스터가 없다.
+#   [!] '--slug endo2001_vgcf_basic_properties_battery_applications --clean' 을 돌리면 16장이 사라지고 합쳐진 9장이 돌아온다.
+#       ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig 7 (0.8 g/cm³ 압분체 ≈0.012 Ω cm) · Fig 8 (밀도 스윕) · Fig 6 (탄성률 영역) 이 이 카드의 근거다.
+oginni2026_computational_design_review	0926-1. nextmater_2026_oginni_computational_design   # 2026-09-26 논문 에이전트 · digest 제목=원제라 자동매칭도 되지만 명시
+zhang2026_xct_dem_cathode_calendering_peel_calibration	tomography-based
+#   ↑ 2026-09-26. 패턴 'tomography-based' = 업로드명(밑줄)·inbox명(공백) **양쪽에 다 들어가는 유일한 조각** (원제 "…via X-ray Tomography-Based Discrete Element Method").
+#   **13장(Fig 1–12 + Table I) 전부 손으로 다시 잘랐다** (figures.json 의 recrop / manual_crop, 전부 viewed).
+#   이 PDF 의 그림은 전부 **임베디드 래스터 1장씩**이다. 자동 크롭은 쪽 너비 띠라 fig_1 에 **본문 식 (7)·(8)**, fig_5·fig_6 에 **쪽 구분선**이 섞였고
+#   fig_3/5/7/8/10/12 는 좌우 여백 ≈ 65 pt. → 클립 = 래스터 bbox ± 1.5 pt @300 dpi + 백색 여백 제거(흰색 = 세 채널 > 244, 여백 8 px).
+#   Table I 은 **로마숫자 라벨이라 추출 0건** → 5쪽(1-based) clip (314.9, 543.5, 558.0, 659.0) pt = 윗 굵은 괘선 + 캡션 … 아래 괘선, 수동.
+#   [!] '--slug zhang2026_xct_dem_cathode_calendering_peel_calibration --clean' 을 돌리면 쪽 너비 크롭이 돌아오고 tab_1.png 가 사라진다.
+#       ('--inbox --run --skip-done' 은 안전.)
+#   ↑ 2026-11-16 보강 (68-1 번 파일 = 같은 판 · 그림 래스터 xref 12 개 같음 · 패턴 'tomography-based' 가 새 파일 이름에도 맞는다): 손 크롭 49 장 더함 = 식 25 (eq_*) · 근거 문단 20 (txt_*) · 패널 4 (fig_2d · 3b · 4b · 4c) + digitized.csv — '--clean' 이면 이것도 모두 사라진다.
+qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode	bilayer_cathode_for_graded
+qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode	bilayer cathode for graded
+#   ↑ 2026-09-27. 자동 매칭 실패 실측 (`--inbox --inbox_dir` 시험: 논문 0편 · 짝 못 찾음 2) — 카드 제목이 한국어라 토큰이 안 겹친다.
+#   업로드명(밑줄)·inbox명(공백) 양쪽에 드는 **고유한 한 조각이 없어** 두 줄로 적는다 (홑단어 'bilayer'·'graded' 는 이 랩 주제라 다음 PDF 를 가로챌 수 있다).
+#   손작업 8장: f1–f8 recrop (저자 래스터에 박힌 테두리 선 제거) · **f8 manual_crop** (캡션 p25 · 그림 p24 라 자동 추출이 건너뛴다).
+#   [!] 2026-09-27 부터 '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸려 멈추거나 건너뛴다. '--force_clean' 을 주면 f8 이 사라진다.
+sankar2026_fiber_scale_dem_carbon_felt_manufacturing	fiber-scale
+#   ↑ 2026-09-27. 'fiber-scale' = 업로드명·inbox명 양쪽에 드는 고유 조각 (원제 "Fiber-Scale Discrete Element Modeling Approach …"). 자동 매칭은 실패했다 (위와 같은 시험).
+#   손작업 4장: fig_4 · fig_6 · fig_7 (본문 줄 섞임) · fig_12 (오른쪽 빈 띠) recrop — 같은 가드가 막는다.
+li2026_li_kinetic_promoter_aqueous_mn_sulfur	kinetic_promoter   # 2026-09-27 논문 에이전트 · 'kinetic_promoter' = 업로드명(본문·SI)·inbox명(0927-1 본문·SI) 넷 모두에 드는 고유 조각 (inbox 안 다른 파일 0건 확인) · 동시 작업 중이라 --inbox 자동매칭은 시험하지 않고 명시 등록 · 크롭은 --pdf 두 개 + --clean 으로 32장(손작업 없음)
+# ── 점착 트랙 · 흑연 층간(C|C) 대조의 실험 앵커 ──────────────
+wang2015_graphite_cleavage_energy	measurement of the cleavage energy of graphite
+#   ↑ 2026-09-28 논문 에이전트. '--slug' 자동 매칭 실패 실측 ("PDF 를 못 찾았다" · digest 작성 전 실행 · 원인 미조사) → 이 줄로 고정.
+#   이 조각은 본문·SI 두 파일명에 모두 들어 있고 inbox 의 다른 파일에는 없다 (확인 시점 inbox = 이 두 편뿐).
+#   손작업 2장: fig_1 recrop (자동 크롭이 위 21 pt 를 잘라 GF2·패널 라벨 a/c 가 빠졌다) · fig_S1 manual_crop (캡션이 'Supplementary Figure 1(a)' 로 붙어 있고 그림 아래에 있어 번호 공백으로 떴다).
+#   [!] 그래서 '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸린다. '--force_clean' 을 주면 두 장이 되돌아간다/사라진다.
+# ── 탄소 전기촉매 · ORR (황화물 SE 물성 4축 밖 — 방법 참고용) ──────────
+gan2026_defective_carbon_orr_selectivity_review	gan_defective_carbon_orr
+#   ↑ 2026-09-29 논문 에이전트. '--slug' 자동 매칭 실패 실측 ("PDF 를 못 찾았다" · digest 작성 전 실행 — wang2015 와 같은 증상) → 이 줄로 고정.
+#   이 조각은 inbox 파일명(0929-1 … _MAIN.pdf)에만 들어 있다 (inbox 99개 중 1건 확인). 업로드 원본명('Unraveling_the_Catalytic_Mechanisms_of_Defective_Carbons…')에는 'gan_' 이 없다 — inbox 가 정본 위치.
+#   SI 없음 (리뷰 · Data availability: "no new data were generated").
+#   손작업 2장: tab_1 · tab_2 recrop — 자동 크롭이 두 표를 모두 18쪽 통째(bbox 37.6,63.4,590.2,794.2)로 떨궈 **바이트 동일**이었고 Table 2 의 19쪽 이어짐이 빠졌다.
+#     tab_1 = p.18 y 110.0–533.0 · tab_2 = p.18 y 536.0–716.0 + p.19 y 65.5–500.5 세로 이어붙임 (figures.json `recrop` 사유). 번호 공백(missing_labels) 은 0.
+#   [!] 그래서 '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸린다. '--force_clean' 을 주면 두 표가 다시 같은 쪽 통째 크롭으로 돌아간다.
+# ── 전기화학 모델 · 입도분포 (LFP 다입자) ────────────────────
+eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell	particle_size_distribution_of_an_lifepo4
+eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell	particle size distribution of an lifepo4
+#   ↑ 2026-09-29 논문 에이전트. 자동 매칭 실측 (`--inbox --inbox_dir` 임시 폴더, 업로드명 + inbox식 공백명 2 파일): 업로드명은 짝 못 찾음,
+#   공백명 '3. Determining the Particle Size …' 은 **inbox #3 앵커로 kim2026_li_argyrodite_sei_reactive_md 에 잘못 붙었다** — 이 두 줄이 그 오탐을 덮는다.
+#   카드 제목이 한국어라 토큰도 안 겹친다. 밑줄·공백 두 형태에 모두 드는 고유 조각이 없어 두 줄 (qin2026 과 같은 사정).
+#   손작업 15장: f1–f11 recrop (워터마크 문자열만 비운 사본에서 렌더 · 잉크 경계) · t1–t3 · tB1 manual_crop (괘선뿐인 표를 도구가 버림 · 'Table B.1:' 라벨 미인식).
+#   [!] '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸린다. '--force_clean' 을 주면 워터마크 낀 도구 크롭으로 돌아간다.
+tron2023_lpscl_ccd_ambient_pressure	critical_current_density_measurements_of_argyrodite
+tron2023_lpscl_ccd_ambient_pressure	critical current density measurements of argyrodite
+beutl2024_round_robin_coin_cell_sulfide_assb	round-robin_test_of_all-solid-state_battery
+beutl2024_round_robin_coin_cell_sulfide_assb	round-robin test of all-solid-state battery
+wang2024_hot_pressed_lpscl_pressure_invariant_conductivity	characterization_of_hot-pressed_li6ps5cl
+wang2024_hot_pressed_lpscl_pressure_invariant_conductivity	characterization of hot-pressed li6ps5cl
+larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity	hot_pressing_argyrodite_solid_electrolyte_powders
+larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity	hot pressing argyrodite solid electrolyte powders
+# 2026-11-09 stage A — 강체 + 무른 입자 혼합 압밀 3 편 (Cárdenas-Barrantes, LMGC) — 밑줄 · 공백 두 변형
+cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd	compaction_of_mixtures_of_rigid_and_highly_deformable_particles
+cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd	compaction of mixtures of rigid and highly deformable particles
+cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings	a_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid
+cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings	a micro-mechanical compaction model for granular mix of soft and rigid
+cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic	experimental_validation_of_a_micromechanically_based_compaction_law
+cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic	experimental validation of a micromechanically based compaction law
+# ── MPM · 입자 분해 접촉 (MPM + Contact Dynamics) — litdb stage B 2026-11-09 ──
+nezamabadi2022_mpm_cd_plastic_particle_compaction	modelling_the_compaction_of_plastic_particle_packings
+nezamabadi2022_mpm_cd_plastic_particle_compaction	modelling the compaction of plastic particle packings
+nguyen2017_mpm_bpm_deformable_particle_compaction	compaction_of_granular_materials_composed_of_deformable_particles
+nguyen2017_mpm_bpm_deformable_particle_compaction	compaction of granular materials composed of deformable particles
+# ── MPM 다물체 접촉 (Bardenhagen 2000 · 2001) — litdb stage C 2026-11-09 ──
+bardenhagen2000_mpm_granular_multibody_frictional_contact	the_material-point_method_for_granular_materials
+bardenhagen2000_mpm_granular_multibody_frictional_contact	the material-point method for granular materials
+bardenhagen2001_mpm_improved_contact_granular_stress_waves	an_improved_contact_algorithm_for_the_material_point_method
+bardenhagen2001_mpm_improved_contact_granular_stress_waves	an improved contact algorithm for the material point method
+# ── 초박형 복합 전해질 리뷰 (Alharbi 2026 · Preprints.org · 사용자 목록 119 번) — litdb 2026-11-10 ──
+alharbi2026_coupled_design_ultrathin_composite_se_review	coupled design principles for ultrathin composite solid electrolytes
+alharbi2026_coupled_design_ultrathin_composite_se_review	coupled_design_principles_for_ultrathin_composite_solid_electrolytes
+# ── 범용 MLIP 적용 영역 (Agarwal 2026 · ChemRxiv · 사용자 목록 118 번) — litdb 2026-11-10 · wang2026_lirich 머리말의 옛 'inbox #118' (2026-09-13) 과 번호가 겹쳐 수동 지정 ──
+agarwal2026_umlip_applicability_domain_ssb_interfaces	applicability domain of universal machine learning interatomic potentials
+agarwal2026_umlip_applicability_domain_ssb_interfaces	applicability_domain_of_universal_machine_learning_interatomic_potentials
+# ── MLS-MPM 원전 + CPIC 강체 결합 (Hu 외 2018 · ACM TOG 37(4) 150) — litdb 2026-11-10 · 보충 문서 파일명 (mlsmpm-supp) 에는 제목 조각이 없어 따로 한 줄 ──
+hu2018_mls_mpm_cpic_two_way_rigid_coupling	a_moving_least_squares_material_point_method_with_displacement_discontinuity
+hu2018_mls_mpm_cpic_two_way_rigid_coupling	a moving least squares material point method with displacement discontinuity
+hu2018_mls_mpm_cpic_two_way_rigid_coupling	mlsmpm-supp
+# ── 무른 구 3D 압밀 (Cárdenas-Barrantes 외 2022 · Soft Matter 18, 312) — litdb 2026-11-10 · 11-09 stage A 묶음의 3D 판 · 밑줄 · 공백 두 변형 ──
+cardenasbarrantes2022_soft_spheres_3d_compaction_nscd	three-dimensional_compaction_of_soft_granular_packings
+cardenasbarrantes2022_soft_spheres_3d_compaction_nscd	three-dimensional compaction of soft granular packings
+# ── MPM 기울기 분할 접촉 · 파괴 (Homel & Herbold 2017 · IJNME 109(7)) — litdb 2026-11-10 · 원본 = 출판사 웹 전문 페이지 캡처 두 장을 감싼 PDF (글자 층 없음 · 파일명에 제목 조각 없음) 라 자동 매칭 불가 → 수동 지정 · 그림은 전부 손 크롭 (도구 재추출 대상 아님) ──
+homel2017_mpm_field_gradient_partitioning_fracture_self_contact	17._upload_0c6f3c50
+# ── Li 덴드라이트 구속의 두 매개변수 공간 (Wang–Ye–Chen–Li 2022 · JACS Au · 사용자 목록 120 번) — litdb 2026-11-10 · 같은 해 · 같은 성의 wang2022_resistive… · wang2022_sulfide… 와 다른 논문이고 옛 inbox 번호 120 (2026-09-15 · kim2026_moisture… 의 파일명) 과도 겹쳐 수동 지정 ──
+wang2022_two_parameter_space_dendrite_constriction	a two-parameter space to tune solid electrolytes
+wang2022_two_parameter_space_dendrite_constriction	a_two-parameter_space_to_tune_solid_electrolytes
+# ── SE–전극 계면 열역학 (Zhu–He–Mo 2016 · J. Mater. Chem. A · 사용자 목록 124 번) — litdb 2026-11-10 · 같은 저자 · 같은 방법의 zhu2015_esw_grand_potential_origin (inbox 38) 과 제목 토큰 (solid electrolyte · stability · first principles) 이 겹쳐 수동 지정 ──
+zhu2016_first_principles_interface_stability_assb	first principles study on electrochemical and chemical stability of solid
+zhu2016_first_principles_interface_stability_assb	first_principles_study_on_electrochemical_and_chemical_stability_of_solid
+# ── SE 분해 부피 → 응력 FEM (Tian–Chakraborty–Talin–Eisenlohr–Qi 2020 · J. Electrochem. Soc. · 사용자 목록 123 번) — litdb 2026-11-10 · 옛 inbox 번호 123 (2026-09-22 · jeong2025_tough_adhesive_binder_shield_ncm811 의 파일명) 과 번호가 겹쳐 수동 지정 · SI 미입수 ──
+tian2020_electrochemo_mechanical_stress_assb	evaluation of the electrochemo-mechanically induced stress
+tian2020_electrochemo_mechanical_stress_assb	evaluation_of_the_electrochemo-mechanically_induced_stress
+# ── 구속 앙상블 SEI 설계 · K_crit (Fitzhugh–Chen–Wang–Ye–Li 2021 · Energy Environ. Sci. · 사용자 목록 121 번) — litdb 2026-11-10 · 옛 inbox 번호 121 (hyun_han_argyrodite_moisture_degradation_design_principles 의 파일명) 과 번호가 겹쳐 수동 지정 · 본문 + ESI ──
+fitzhugh2021_sei_design_constrained_ensemble	electrolyte-interphase design in constrained ensemble
+fitzhugh2021_sei_design_constrained_ensemble	electrolyte-interphase_design_in_constrained_ensemble
+# ── LSPS 코팅 고처리량 탐색 (Fitzhugh–Wu–Ye–Deng–Qi–Li 2019 · Adv. Energy Mater. · 사용자 목록 122 번) — litdb 2026-11-10 · 옛 inbox 번호 122 가 이미 세 편 (jung2026_sio2_cosubstitution… · xu2026_xlsdft… · ziemke2026_li3ocl… 의 파일명) 에 쓰였고 같은 1 저자의 fitzhugh2021_sei_design… 과도 갈라야 해서 수동 지정 · 본문 + SI ──
+fitzhugh2019_ht_functionally_stable_interfaces_sulfide	a high throughput search for functionally stable interfaces
+fitzhugh2019_ht_functionally_stable_interfaces_sulfide	a_high_throughput_search_for_functionally_stable_interfaces
+# ── LPSCl 입자 고속 나노압입 + 압력별 펠릿 밀도 (Var 외 2026 · J. Power Sources 668, 239292) — litdb 2026-11-10 · 밑줄 · 공백 두 변형 (본문 · Sup 둘 다 이 제목 조각을 갖는다) ──
+var2026_sulfide_se_mechanical_properties_local_indentation_pellet	the_mechanical_properties_of_solid_sulfur_electrolytes
+var2026_sulfide_se_mechanical_properties_local_indentation_pellet	the mechanical properties of solid sulfur electrolytes
+# ── 무른 원판 2D 압밀 식의 원전 (Cantor 외 2020 · PRL 124, 208003) — litdb 2026-11-10 · 11-09 stage A 묶음 (Cárdenas-Barrantes 계열) 의 2D 원전 · 밑줄 · 공백 두 변형 ──
+cantor2020_compaction_model_highly_deformable_particles	compaction_model_for_highly_deformable_particle_assemblies
+cantor2020_compaction_model_highly_deformable_particles	compaction model for highly deformable particle assemblies
+# ── 무기 SE 다섯 시편의 글러브박스 온도 가변 나노압입 (Papakyriakou 외 2021 · J. Power Sources 516, 230672) — litdb 2026-11-10 · 카드 제목이 한국어라 자동 매칭이 못 붙임 · 밑줄 · 공백 두 변형 (SI 없음) ──
+papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation	mechanical_behavior_of_inorganic_lithium-conducting_solid_electrolytes
+papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation	mechanical behavior of inorganic lithium-conducting solid electrolytes
+# ── 무른 오각형 2D 압밀 — 입자 모양 · 마찰 · 재배열 (Cárdenas-Barrantes 외 2021 · PRE 103, 062902) — litdb 2026-11-10 · 11-09 stage A 묶음 (Cárdenas-Barrantes 계열) 의 입자 모양판 · 밑줄 · 공백 두 변형 ──
+cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd	micromechanical_description_of_the_compaction_of_soft_pentagon_assemblies
+cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd	micromechanical description of the compaction of soft pentagon assemblies
+# ── 단결정 NMC/LPSCl 복합 양극 500 MPa 압밀 (Doerrer 외 2021 · ACS Appl. Mater. Interfaces 13, 37809) — litdb 2026-11-10 · 카드 제목이 한국어라 자동 매칭이 못 붙임 · 밑줄 · 공백 두 변형 (본문 · SI 공통 조각) ──
+doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density	high_energy_density_single-crystal_nmcli6ps5cl_cathodes
+doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density	high energy density single-crystal nmc
+# ── LGPS 원전 · '넓은 창 (>5 V)' 주장의 원전 (Kamaya 외 2011 · Nat. Mater. 10, 682 · 사용자 목록 125 번) — litdb 2026-11-10 · 제목 'A lithium superionic conductor' 가 짧고 흔한 낱말뿐이라 (xu2026_ndo… · fujimura2013… 등 'superionic conductor' 제목과 토큰이 겹친다) 수동 지정 · 본문 · Sup 공통 조각 · '.pdf' 까지 넣어 다른 제목의 앞부분과 안 겹치게 · 밑줄 · 공백 두 변형 ──
+kamaya2011_lgps_lithium_superionic_conductor	a lithium superionic conductor.pdf
+kamaya2011_lgps_lithium_superionic_conductor	a_lithium_superionic_conductor.pdf
+# ── LGPS 형 신 SE (LSiPSCl · Li9.6P3S12) 고출력 전고체 셀 (Kato 외 2016 · Nat. Energy 1, 16030 · 사용자 목록 126 번) — litdb 2026-11-10 · 자동 매칭은 붙지만 (제목 100 %) 'all-solid-state batteries' · 'superionic conductors' 가 흔한 토큰이라 뒤에 들어올 digest 와 겹치지 않게 고정 · 본문 · Sup 공통 조각 · 밑줄 · 공백 두 변형 ──
+kato2016_high_power_assb_lsipscl_superionic	high-power_all-solid-state_batteries_using_sulfide
+kato2016_high_power_assb_lsipscl_superionic	high-power all-solid-state batteries using sulfide
+# ── 아지로다이트 원전 (Deiseroth 외 2008 · Angew. Chem. Int. Ed. 47, 755 · 사용자 목록 127 번) — litdb 2026-11-10 · 업로드 파일명에서 아래첨자가 빠져 ('Li_PS_X') slug 의 'li6ps5x' 와 토큰이 안 겹친다 · 제목 조각 'a class of crystalline li' 로 지정 ('Li-Rich' 의 하이픈 · 밑줄 변형 앞에서 끊음) · 밑줄 · 공백 두 변형 · SI 없음 (본문에 SI 언급 자체가 없다) ──
+#   가드: fig_2 · fig_5 는 **손 재크롭**이다 (figures.json `recrop` 사유) — fig_2 = page 2(0-based 1) clip (47.5, 504.0, 298.5, 714.8) · fig_5 = page 3(0-based 2) clip (306.0, 50.0, 541.0, 347.0) @300 dpi.
+#   [!] '--slug deiseroth2008_li6ps5x_argyrodite_high_li_mobility --clean' 은 가드가 막는다 (자동 bbox 는 fig_2 에 Fig. 3b + 캡션 · fig_5 에 저널 로고를 끌고 온다). 다시 뽑으면 위 clip 을 그대로 쓴다.
+deiseroth2008_li6ps5x_argyrodite_high_li_mobility	a_class_of_crystalline_li
+deiseroth2008_li6ps5x_argyrodite_high_li_mobility	a class of crystalline li
+# ── 전고체전지 전망 Comment (Janek · Zeier 2016 · Nat. Energy 1, 16141 · 사용자 목록 128 번) — litdb 2026-11-10 · 제목이 짧고 'solid' · 'battery development' 가 흔한 낱말이라 뒤에 들어올 digest 와 겹치지 않게 수동 지정 · 본문만 (SI 없음) · 밑줄 · 공백 두 변형 ──
+janek2016_solid_future_battery_development	a_solid_future_for_battery_development
+janek2016_solid_future_battery_development	a solid future for battery development
+# ── MPM 발포체 치밀화 (Bardenhagen · Brydon · Guilkey 2005 · J. Mech. Phys. Solids 53, 597–617) — litdb 2026-11-11 · 카드 제목이 한국어 의역이라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
+bardenhagen2005_mpm_foam_densification_simulation	insight_into_the_physics_of_foam_densification
+bardenhagen2005_mpm_foam_densification_simulation	insight into the physics of foam densification
+# ── MPM 화학–역학 결합 (Gritton 외 2017 · Modelling Simul. Mater. Sci. Eng. 25, 045005) — litdb 2026-11-11 반입분의 누락 줄 보충 (같은 까닭 · 파일명에는 'chemical/mechanical' 의 빗금이 빠져 'chemicalmechanical') ──
+gritton2017_mpm_chemomechanical_coupling_silicon_anode	using_the_material_point_method_to_model_chemicalmechanical_coupling
+gritton2017_mpm_chemomechanical_coupling_silicon_anode	using the material point method to model chemical
+# ── DEM → MPFEM 분말압축 워크플로 (Mohammadhosseinzadeh · Ghorbani-Menghari · Kim · SoftwareX 33 (2026) 102495) — litdb 2026-11-11 그림 크롭 보강 · Elsevier 파일 이름 (PII) 에 제목 낱말이 없어 자동 매칭이 안 붙음 · 첫 digest 때의 업로드 이름 (PyCompact) 도 같이 ──
+pycompact2025_dem_mpfem_workflow	s2352711025004613
+pycompact2025_dem_mpfem_workflow	pycompact
+# ── 황화물 SE 압력 효과 (Doux 외 · J. Mater. Chem. A 8 (2020) 5049–5055) — litdb 2026-11-12 반입 · 카드를 만들기 전 자동 매칭이 이 PDF 둘을 wang2026_interface_stability_kinetics_sulfide_assb (제목 52 %) 에 잘못 붙였다 · 같은 1저자 · 같은 해의 다른 논문 doux2020_stack_pressure_assb (Adv. Energy Mater.) 와도 갈라 둔다 ──
+doux2020_pressure_effects_sulfide_se_jmca	pressure_effects_on_sulfide_electrolytes
+# ── 황화물 유리 압입 · 파괴인성 (McGrogan 외 · Adv. Energy Mater. 7 (2017) 1602011 · 저자 원고판) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
+mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation	compliant_yet_brittle_mechanical_behavior
+mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation	compliant yet brittle mechanical behavior
+# ── 황화물 SE 고압 in situ X 선 CT + 수치 모의 (Kodama 외 · J. Power Sources 462 (2020) 228160) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 ──
+kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation	high-pressure_in_situ_x-ray_computed_tomography
+# ── 복합 양극 SE 입경 · 치밀화 · operando EDXRD (Jeong 외 · Adv. Energy Mater. 14 (2024) 2304544) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 같은 1저자 성의 다른 카드 jeong2025_tough_adhesive_binder_shield_ncm811 (다른 논문) 과 갈라 둔다 · 밑줄 · 공백 두 변형 ──
+jeong2024_operando_densification_chemomechanics_se_size_composite_cathode	operando_investigation_on_the_role_of_densification
+jeong2024_operando_densification_chemomechanics_se_size_composite_cathode	operando investigation on the role of densification
+# ── 순수 Li₆PS₅Cl 다척도 치밀화 (Korjus 외 · Energy Storage Mater. 82 (2025) 104589) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 · 밑줄 · 공백 두 변형 ──
+korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens	investigating_the_densification_of_li6ps5cl
+korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens	investigating the densification of li6ps5cl
+# ── 복합 양극 CAM 질량비 × XCT NCM–NCM 배위수 · 2D 화학–역학 응력 (Park 외 · ACS Nano 19 (2025) 22262–22269) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 같은 성의 다른 카드 park2019 · park2020 · park2024 · park2026 (다른 논문) 과 갈라 둔다 · 밑줄 · 공백 두 변형 ──
+park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics	chemo-mechanical_behavior_and_stability_of_high-loading
+park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics	chemo-mechanical behavior and stability of high-loading
+# ── 압연 뒤 보관 중 두께 시계열 · 측정 유효 기간 (Kollenda 외 · Procedia CIRP 130 (2024) 470–478) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 · 밑줄 · 공백 두 변형 ──
+kollenda2024_time_sensitivity_calendered_electrode_springback_storage	time-sensitivity_of_intermediate_product_properties
+kollenda2024_time_sensitivity_calendered_electrode_springback_storage	time-sensitivity of intermediate product properties
+# ── 복합 양극 압력 의존 3D 구조 — 누른 채 X 선 CT · 기공 · NCM/LGPS 접촉 면적 분율 · 기하 경로 tortuosity · 이방 접촉 (Sakka 외 · J. Mater. Chem. A 10 (2022) 16602–16609) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
+sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps	pressure_dependence_on_the_three-dimensional_structure
+sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps	pressure dependence on the three-dimensional structure
+# ── 복합 양극 상별 나노압입 — targeted · 격자 (grid) 압입 + 통계 분해 · NMC532 / CB·PVDF (de Vasconcelos 외 · Extreme Mech. Lett. 9 (2016) 495–502) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
+devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode	grid_indentation_analysis_of_mechanical_properties
+devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode	grid indentation analysis of mechanical properties
+# ── 화학-기계 팽창 · Li 부분 몰 부피 · 구속 셀 operando 응력 · 압력별 OCV (Koerver 외 · Energy Environ. Sci. 11 (2018) 2142–2158) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
+koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb	chemo-mechanical_expansion_of_lithium_electrode_materials
+koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb	chemo-mechanical expansion of lithium electrode materials
+# ── 황화물 ASSB 복합 양극 전기화학–화학–역학 결합 2D FEM phase-field 파괴 모형 (Taghikhani 외 · J. Mech. Phys. Solids 198 (2025) 106060) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 · 밑줄 · 공백 두 변형 ──
+taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode	modeling_coupled_electro-chemo-mechanical_phenomena_within_all-solid-state
+taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode	modeling coupled electro-chemo-mechanical phenomena within all-solid-state
+# ── LIB 양극 (NMC111 + 탄소-바인더) 을 누른 채 나노 CT 로 본 압연 모사 (기둥 압축) · 3 상 미세구조 진화 + 3D 전기화학 모델 (Lu 외 · Joule 4 (2020) 2746–2768) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (본문 · Sup 둘 다 이 조각을 가진다) ──
+lu2020_insitu_nanoct_calendering_microstructural_evolution	microstructural_evolution_of_battery_electrodes_during_calendering
+lu2020_insitu_nanoct_calendering_microstructural_evolution	microstructural evolution of battery electrodes during calendering
+# ── 제조 모의 (CGMD) 압연 구조 → 겹침 후처리 · 복셀 메시 → 3D 전기화학 작업 흐름 (Ben Hadj Ali 외 · J. Power Sources 630 (2025) 236131) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 는 docx 라 도구 밖 · 손 크롭) ──
+benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode	a_computational_workflow_for_the_simulation_of_solid_state_battery
+benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode	a computational workflow for the simulation of solid state battery
+# ── 압연 선하중 ↔ 압연 뒤 코팅 밀도 · 기공률의 지수 포화 식 · 'compaction resistance' γ_C 원전 · LIB NCM 양극 / 흑연 음극 (Meyer 외 · J. Mater. Process. Technol. 249 (2017) 172–178) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) ──
+meyer2017_calendering_compaction_resistance_line_load_exponential_model	characterization_of_the_calendering_process_for_compaction
+meyer2017_calendering_compaction_resistance_line_load_exponential_model	characterization of the calendering process for compaction
+# ── 두 입자 접촉강성 측정법 — 한 알 (WPW) · 두 알 (WPPW) 압축을 같은 힘에서 빼 입자–입자 접촉만 남김 · 유리 구슬 0.8–3.0 mm · 최대 80 N (Paulick 외 · Granular Matter 17 (2015) 83–93) — litdb 2026-11-12 · 같은 저자 리뷰 (paulick2015_elastic_particle_properties_dem_review) 와 다른 논문
+paulick2015_particle_contact_stiffness_two_particle_method	a_new_method_for_the_determination_of_particle_contact_stiffness
+paulick2015_particle_contact_stiffness_two_particle_method	a new method for the determination of particle contact stiffness
+# ── SE 습식 분쇄 → 복합 양극 이온 tortuosity (König 외 · ACS Appl. Energy Mater. 6 (2023) 9356–9362) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형
+koenig2023_wet_milling_se_ion_tortuosity_composite_cathode	mitigating_the_ion_transport_tortuosity_in_composite_cathodes
+koenig2023_wet_milling_se_ion_tortuosity_composite_cathode	mitigating the ion transport tortuosity in composite cathodes
+# ── 균일 구의 무작위 느슨 충전 (RLP) — 유효 중력 → 0 극한 0.555 ± 0.005 · 전단 팽창 (dilatancy) 시작 · 유리 구 250 µm 를 밀도 맞춘 액체에 침강 (Onoda · Liniger · Phys. Rev. Lett. 64 (1990) 2727–2730) — litdb 2026-11-12
+onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset	random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset
+onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset	random loose packings of uniform spheres and the dilatancy onset
+# ── 액체 LIB 양극의 in situ X 선 CT 압입 + CT 기반 등가 구 DEM · 입자 파괴 위험 = 명목 응력 f_max/d² (Song 외 · Powder Technol. 453 (2025) 120667) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (본문 · 보충 자료 둘 다 이 낱말을 갖는다)
+song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage	insights_into_cathode_densification_of_calendering_process
+song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage	insights into cathode densification of calendering process
+# ── 박사 학위논문 (358 쪽 · 네 부분 PDF) — EEPA 접촉 모델 원전 · EDEM API · 철광석 미분 보정 · 사일로 (Morrissey · University of Edinburgh 2013) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 네 부분 파일 모두 이 낱말을 갖는다 · 밑줄 · 공백 두 변형
+morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis	discrete_element_modelling_of_iron_ore_pellets
+morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis	discrete element modelling of iron ore pellets
+# ── 압연 공정 모형 — 선하중 ↔ 압연 뒤 코팅 기공률의 Heckel 꼴 지수 식 · 끝값 = 0.4 × 압연 전 값 · 맞춤 수 γ_C 하나 = μ × 면적 부하 · 양극 활물질 다섯 (NCA · NCM111 · 622 · 811) · 부하 일곱 (Meyer 외 · J. Energy Storage 18 (2018) 371–379) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) · 같은 그룹 앞 논문 meyer2017_calendering_compaction_resistance_line_load_exponential_model 과 다른 논문 ──
+meyer2018_calendering_process_model_active_material_mass_loading	process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries
+meyer2018_calendering_process_model_active_material_mass_loading	process modeling of the electrode calendering of lithium-ion batteries
+# ── 분무 건조 알루미나 과립의 금형 안 X 선 단층 촬영 (꺼내지 않고 단계별 · 복셀 2.5 µm · ≤ 113 MPa) — Py 1.5–5 MPa ↔ 8 MPa 에서 '막 깨지기 시작' · 2 µm 초과 기공만 (전체 기공률 아님) · 방법만 전이 — litdb 2026-11-12 (kim2026 ref 43)
+cottrino2013_insitu_xct_granulated_alumina_die_compaction	characterization_by_x-ray_tomography_of_granulated_alumina_powder
+cottrino2013_insitu_xct_granulated_alumina_die_compaction	characterization by x-ray tomography of granulated alumina powder
+# ── 일본어 원문 (粉体工学会誌 61, 144) — 카드 제목이 한국어라 파일명 토큰과 안 겹쳐 손으로 (2026-11-12)
+yano2024_eepa_binary_mixture_plasticity_compression_dem	numerical_analysis_of_compression_properties_of_the_binary_mixture
+yano2024_eepa_binary_mixture_plasticity_compression_dem	numerical analysis of compression properties of the binary mixture
+# ── 가압 방식 — 등방 가압 (CIP · WIP · HIP) Focus Review · 자체 시연 (안티페로브스카이트 펠릿 단축 ↔ CIP ↔ WIP 기공률) · 기술경제 스프레드시트 (Dixit · Beamer 외 · ACS Energy Lett. 7 (2022) 3936) — litdb 2026-11-12 · 본문 + SI PDF (Sup1) 둘 다 이 낱말로 붙는다 · xlsx 둘은 커밋하지 않음
+dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review	the_role_of_isostatic_pressing_in_large-scale_production
+dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review	the role of isostatic pressing in large-scale production
+# ── 슬러리 도포 NCM111 (LiNbO₃ 코팅) + Li₆PS₅Cl 양극 시트의 온간 등방 가압 (WIP · 600 MPa 하나 · 상온–190 °C · 1 s–1 min) — 감압 뒤 싱크로트론 CT 의 void ratio (기공 + 탄소 복셀 분율 · 화소 0.65 µm) 0.19 → 0.057 · 0.042 · 0.039 · 두께 ≈170 → 104 → 94 µm · 압력별 값 없음 (Hayashi 외 · J. Jpn. Soc. Powder Powder Metallurgy 72 (2025) S1167–S1173) — litdb 2026-11-12 (benhadjali2026 ref 27 · 후보 N-64) · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음)
+hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode	application_of_warm_isostatic_pressing_to_densification_of_all_solid-state_composite_cathode_electrodes
+hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode	application of warm isostatic pressing to densification of all solid-state composite cathode electrodes
+# ── 출판본 (Powder Technol. 459, 120972) — Elsevier 파일명 (1-s2.0-S0032591025003675-main.pdf) 이 slug 토큰과 안 겹쳐 손으로 (2026-11-12)
+#   ⚠ 부록 그림 C.15–G.22 · 표 A.2 · E.3 · 식 48 · 글 19 · 영상 프레임 8 은 손 크롭 — 이 slug 로 --clean 을 돌리면 지워진다 (figures.json manual_crop 표지) · mp4 둘은 커밋하지 않는다
+zunker2025_dem_large_deformation_compaction	s0032591025003675-main
+# ── 같은 그룹의 첫 보고 (Powder Technol. 323, 581 · 온라인 2016) — 카드 제목이 한국어라 파일명 토큰과 안 겹쳐 손으로 · 본문 + SI 둘 다 같은 조각 (2026-11-12)
+kawaguchi2018_dry_coating_model_se_particle_powtec	dry_coating_of_electrode_particle_with_model_particle_of_sulfide
+kawaguchi2018_dry_coating_model_se_particle_powtec	dry coating of electrode particle with model particle of sulfide
+# ── 고체전지 역학 총설 (Kalnaus · Dudney · Westover · Herbert · Hackney · Science 381, eabg5998 (2023) · 사이클 중 응력 · 해소 기전 · 2 차 인용) — litdb 2026-11-12 (후보 N-5 · alharbi2026 [86] · lee2025_heckel ref 17 · yuan2026 ref 11) · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) ──
+kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review	the_critical_role_of_mechanics
+kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review	the critical role of mechanics
+# ── NMC111 2차입자 평판 압입 파괴 강도 (Hiramatsu–Oka S_t ≈ 2.8F_c/πd² · Weibull S_m 188 MPa · SI 표 S2 원 자료 129 입자) (Dang · Wang · Cheng · J. Electrochem. Soc. 166 (13) A2749–A2751 (2019)) — litdb 2026-11-12 (후보 N-10) · 카드 제목이 한국어라 손으로 · 본문 + SI ('_Sup_') 둘 다 같은 조각 · 밑줄 · 공백 두 변형
+#   ⚠ 크롭 27 장 = 손 크롭 22 (manual_crop 5: Fig. 1 · 2 · S2 · S4 · Table S2 · 식 3 · 근거 글 14) + 재크롭 5 (recrop: Fig. 3 · S1 · S3 · S5 · Table S1) — 이 slug 로 --clean 을 돌리면 손 크롭은 지워지고 재크롭은 자동 bbox 로 돌아간다 (figures.json 표지)
+dang2019_nmc111_secondary_particle_flat_punch_fracture_strength	fracture_behavior_of_single_lini0.33mn0.33co0.33o2_particles_studied_by_flat_punch
+dang2019_nmc111_secondary_particle_flat_punch_fracture_strength	fracture behavior of single lini0.33mn0.33co0.33o2 particles studied by flat punch
+# ── 암석 인장강도 — 불규칙 시편 · 구의 두 점 압축 (S_t ≑ 0.9 F₀/d² = 1.4 F₀/2πa² ≈ 2.8 F₀/πd² · 탄성 구 Legendre 급수 · 3D 동결 광탄성 · 8 암석 ↔ 원판 지름 압축) (Hiramatsu · Oka · Int. J. Rock Mech. Min. Sci. 3, 89–99 (1966)) — litdb 2026-11-12 (후보 N-11) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형
+#   ⚠ 크롭 46 장 = 도구 3 (recrop: Fig. 2 판 1 · Fig. 6 · Fig. 8) + 손 크롭 43 (manual_crop: 그림 7 · 식 23 · 근거 글 13) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭은 자동 bbox 로 돌아간다)
+hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load	determination_of_the_tensile_strength_of_rock
+hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load	determination of the tensile strength of rock
+# ── 단결정 NMC811 기저면 전단강도 vs 리튬화 (무압연 다공 양극 층을 경도 50.4–946 MPa 기판 위에서 Vickers 압입 · 층 견인력 = 기판 경도 · 뺀 뒤 SEM 슬립 띠 · 균열 분율 F(H) · Reuss + 기저면 단일 슬립 + 방위 분포 → τ_C 86 ± 12 → 39 ± 5 MPa) (Stallard · Vema · Hall · Dennis · Penrod · Grey · Deshpande · Fleck · J. Electrochem. Soc. 169, 040511 (2022)) — litdb 2026-11-12 (후보 N-12) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 · 같은 제1 저자 · 같은 해의 Joule 리뷰 (stallard2022_cathode_mechanical_properties_review) 와 다른 논문
+#   ⚠ 크롭 51 장 = 도구 9 (Fig. 1–8 · Table S1 — 그대로) + 손 크롭 42 (manual_crop: 패널 9 · 식 13 · 근거 글 20) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+stallard2022_nmc811_single_crystal_shear_strength_lithiation	effect_of_lithiation_upon_the_shear_strength_of_nmc811
+stallard2022_nmc811_single_crystal_shear_strength_lithiation	effect of lithiation upon the shear strength of nmc811
+# ── 습식 시트 황화물 복합 양극의 FIB-SEM 3D 재구성 정량 (LPN821 · LiNbO₃ 코팅 NCM622 · 231 MPa 적층 · 사이클 1 회 뒤 기공 14.99 % · 연결도 · L/H · 두 상 경계 · 기공 원천 분해) (Choi 외 · ACS Appl. Mater. Interfaces 10, 23740–23747 (2018)) — litdb 2026-11-12 (후보 N-14) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형
+#   ⚠ 크롭 32 장 = 도구 8 (다시 자른 것 0 · caption_fix 7) + 손 크롭 24 (manual_crop: 초록 그림 1 · 그림 1 패널 3 · 식 5 · 근거 글 15) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition	quantitative_analysis_of_microstructures_and_reaction_interfaces
+choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition	quantitative analysis of microstructures and reaction interfaces
+# ── MPM 입자 영역 추적 CPDI · extension instability 원전 (영역을 전체 변형 경사로 평행사변형 · 모서리 Q4 보간 기저 · 2D 평면 변형률 · neo-Hookean · MMS 두 건 + 자중 막대 · 외팔보 · 45° 돌린 영역) (Sadeghirad · Brannon · Burghardt · Int. J. Numer. Meth. Engng 86, 1435–1456 (2011)) — litdb 2026-11-12 (후보 N-15) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 ──
+#   ⚠ 크롭 87 장 = 그림 19 (도구 크롭 그대로 0 · recrop 15 · manual_crop 4 = Fig. 1 · 2 · 6 · 11) + 손 크롭 68 (manual_crop: 식 47 · MATLAB 목록 1 · 근거 글 20) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability	a_convected_particle_domain_interpolation_technique_to_extend
+sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability	a convected particle domain interpolation technique to extend
+# ── GIMP 원전 — MPM 보간을 변분형 + Petrov–Galerkin 으로 일반화 (입자 특성 함수 χ_p · 가중 S̄_vp · ∇S̄_vp 식 19–20 · MPM = 델타 특수형 식 34 · contiguous particle GIMP 상자 χ_p · C¹ 식 40) · 셀 넘김 잡음의 기전 · 1D 초탄성 막대 시험 넷 (준정적 중력 기둥 · 충격 · 셀당 입자 1/2/4 · 셀 크기 0.01–10 수렴) (Bardenhagen · Kober · CMES 5(6) 477–495 (2004)) — litdb 2026-11-12 (후보 N-16) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 크롭 78 장 = 도구 8 (다시 자른 것 1 = fig_7 · caption_fix 7) + 손 크롭 70 (manual_crop: 그림 3 = fig_1 · 2 · 10 · 식 47 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing	the_generalized_interpolation_material_point_method
+bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing	the generalized interpolation material point method
+# ── 습식 제조 모의 (CGMD) 압연 구조 위 3D 기계-전기화학 완전결합 반쪽 셀 (Ben Hadj Ali 외 · ChemRxiv v1 2026-03-22 · 10.26434/chemrxiv.15001135/v1) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 는 PDF 에 없음) ──
+#   ⚠ 크롭 55 장 = 도구 6 (Fig. 1–6 · 그대로 · Fig. 2 캡션 문자열만 정리) + 손 크롭 49 (manual_crop: 패널 13 · 식 16 · 근거 글 20 · 다시 자름 3) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode	fully_coupled_mechano-electrochemical_modeling_of_3d-resolved
+benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode	fully coupled mechano-electrochemical modeling of 3d-resolved
+# ── DEM 구름저항 (rolling resistance) 모델 네 부류 (A 방향 일정 토크 · B 점성 · C 탄소성 스프링–대시포트 · D 접촉 무관 = 평형 위반) · 일반 Model C (되굴림 가지 · 감쇠 스위치 f) · 2D PFC2D 기준 시험 셋 (평면 · 10° 경사 · 원판 25 개 정착) + 2D 광탄성 원판 모래더미 (안식각 27°) (Ai · Chen · Rotter · Ooi · Powder Technol. 206 (2011) 269–282) — litdb 2026-11-12 (후보 N-19) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 크롭 67 장 = 도구 17 (다시 자른 것 3 = fig_8 · fig_19 · tab_1 · caption_fix 9) + 손 크롭 50 (manual_crop: 그림 3 = fig_4 · 5 · 9 · 식 27 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+ai2011_rolling_resistance_contact_models_dem	assessment_of_rolling_resistance_models_in_discrete_element
+ai2011_rolling_resistance_contact_models_dem	assessment of rolling resistance models in discrete element
+# ── 캘린더링된 상용 NMC811 시트의 사이클 전 결함 (입자 ≈⅓ · 분리막 쪽 > 50 %) · 4.5 V 5 사이클 뒤 1차입자 사이 공극 · Mn 이동 (다중 분해능 X 선 CT + I14 XRD/XRF) (Heenan 외 · Adv. Energy Mater. 10, 2002655 (2020)) — litdb 2026-11-12 (후보 N-20) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형
+#   ⚠ 크롭 39 장 = 도구 16 (재크롭 9: Table 1 · SI 그림 S1–S8 · 캡션 고침 5) + 손 크롭 23 (manual_crop: 패널 2 · 그림 안 식 1 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
+heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct	identifying_the_origins_of_microstructural_defects
+heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct	identifying the origins of microstructural defects
+# ── NMC532 응집체 (as-received 이차입자 · PS 기지) · 소결 펠릿 · PVDF · CB/PVDF 의 건조 ↔ 1 M LiPF6-PC 속 나노압입 (Berkovich 85 nm · cube-corner 팝인 K_c) (de Vasconcelos · Sharma · Xu · Zhao · Exp. Mech. 59 (2019) 337–347) — litdb 2026-11-12 (후보 N-24) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ ESM = docx 10 개 (74921154-24._SupZ_00…09_…MOESM10…1_ESM.docx — 그림 S1–S8 · 표 S1–S2) · 크롭 63 장 = 도구 14 (그대로 3 · 다시 자름 11) + 손 49 (manual_crop: 그림 5 · 패널 15 · 식 9 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte	in-situ_nanoindentation_measurement_of_local_mechanical
+devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte	in-situ nanoindentation measurement of local mechanical
+# ── 크기 이원 (50 / 12.5 µm · 크기비 4) NCM 물성 구의 EEPA 탄소성 단축 압축 DEM — λp 0 · 0.38 · 0.5 · 0.7 (계산마다 모든 접촉 같음) · 400 MPa → 0.02 s 유지 → 제하 · 작은 입자 최적 몫이 소성으로 0.3 → 0.5 (Yano · Ohsaki · Nakamura · Watano · Adv. Powder Technol. 34 (2023) 104245) — litdb 2026-11-12 (후보 N-26) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 · 본문 + SI (Sup) 둘 다 이 낱말로 붙는다
+#   ⚠ 크롭 70 장 = 도구 17 (전부 다시 자름: 캡션 빠짐 · 이웃 그림 합침 · 쪽 전체 · 섞임) + 손 크롭 53 (manual_crop: 그림 · 표 5 = fig_2 · fig_3 · fig_11 · fig_S6 · tab_1 · 식 28 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
+yano2023_eepa_bimodal_size_plasticity_compression_dem	compression_properties_of_bimodal_powders_with_different_plasticities
+yano2023_eepa_bimodal_size_plasticity_compression_dem	compression properties of bimodal powders with different plasticities
+# ── NMC532 : CB : PVDF = 90 : 5 : 5 액체계 LIB 양극 롤 압연 (지름 200 mm · 압하율 10–40 %) 을 평판 근사 DEM (EDEM 2021 · EEPA · 3D RVE 100 µm) → 한 방향 FEM (ANSYS 2022 · Al 박) 으로 — 힘 사슬 밀도 · 방향 · 세기 · 집전체 손상 (Du · Zhang · Du · Yang · Zhao · J. Energy Storage 138 (2025) 118688) — litdb 2026-11-12 (후보 N-27) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 보충 자료 없음 · 크롭 70 장 = 도구 12 (전부 다시 자름: 그림 11 = 내장 원본 래스터에서 · 표 1 = 400 dpi 벡터 재렌더) + 손 58 (manual_crop: 패널 17 · 식 21 · 근거 글 20) + digitized.csv (163 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+du2025_dem_fem_force_chain_collector_damage_calendering	force_chain-induced_collector_damage_in_calendering
+du2025_dem_fem_force_chain_collector_damage_calendering	force chain-induced collector damage in calendering
+# ── 고밀도 압밀 DEM 의 접촉 법칙에 입자 Voronoï 국소 상대밀도 항을 더한 FE (MDEM · ABAQUS · 3D) 맞춤 법칙 — 단순 입방 격자에서 계수 함수 5 개를 맞춰 BCC · 무작위 15 입자 (YADE) 정수압으로 검증 · 고전 독립 접촉 ≈ 0.8 (무작위 0.85) · 새 법칙 ≈ 0.95 (Harthong · Jérier · Dorémus · Imbault · Donzé · Int. J. Solids Struct. 46 (2009) 3357–3364) — litdb 2026-11-12 (후보 N-29) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 · SI 없음
+#   ⚠ 크롭 46 장 = 도구 12 (전부 다시 자름: 캡션 빠짐 · 본문 폭 여백) + 손 크롭 34 (manual_crop: 식 14 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
+harthong2009_high_density_compaction_dem_voronoi_contact_law	modeling_of_high-density_compaction_of_granular_materials
+harthong2009_high_density_compaction_dem_voronoi_contact_law	modeling of high-density compaction of granular materials
+# ── 하이드로겔 514 알 3D 접촉력 실측 (일축 반복 압축 · 변형률 ≤ 13.4 %) 에 접촉 독립 DEM 과 다접촉 DEM 다섯 정식화 (반무한 탄성 변위를 겹침에 더함 · γ 1 개) 를 대조 (Brodu · Dijksman · Behringer · Phys. Rev. E 91, 032201 (2015)) — litdb 2026-11-12 (후보 N-30) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 보충 자료 없음 · 크롭 28 장 = 도구 6 (5 그대로 + 그림 6 다시 자름: 위의 식 (2) 를 삼킴) + 손 22 (manual_crop: 표 1 (로마 숫자 라벨이라 도구가 못 잡음) · 식 5 · 근거 글 16) + digitized.csv (1,498 행 · 벡터 경로) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+brodu2015_multiple_contact_dem_dense_granular	multiple-contact_discrete-element_model_for_simulating_dense_granular_media
+brodu2015_multiple_contact_dem_dense_granular	multiple-contact discrete-element model for simulating dense granular media
+# ── 2 날개 수직 원통 믹서 DEM — 단분산 5 mm 유리 유사 구 16,000 개 · 날 속도 2–100 rpm · 흐름 · 배위수 · Lacey 지수 · 힘 망 · 토크 · Table 1 = 이 계열 DEM 의 힘 · 토크 식 (Chandratilleke · Zhou · Yu · Bridgwater · Ind. Eng. Chem. Res. 49 (2010) 5467–5478) — litdb 2026-11-12 (후보 N-32) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 45 장 = 도구 15 (전부 다시 자름: 그림 14 캡션 빠짐 · 표 1 = 쪽 전체) + 손 크롭 30 (manual_crop: 식 10 = 식 1–4 + Table 1 여섯 행 · 근거 글 20) + digitized.csv (241 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer	effect_of_blade_speed_on_granular_flow_and_mixing
+chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer	effect of blade speed on granular flow and mixing
+# ── 탄성 구 두 개의 비스듬한 충돌 DEM — 접착 없음 = Hertz + Mindlin–Deresiewicz 증분 접선 (Thornton–Randall 규칙) · 접착 = JKR + Savkoor–Briggs 벗김 뒤 새 미끄럼 기준 T = μ(P + 2Pc) · PET 단섬유 마찰 실험 (Briscoe–Kremnitzer) 대조 (Thornton · Yin · Powder Technology 65 (1991) 153–166) — litdb 2026-11-12 (후보 N-33) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 쪽마다 스캔 한 장 (OCR 글자 층) · 크롭 90 장 = 도구 15 (전부 다시 자름: 쪽 너비 전체를 잘라 이웃 단 글이 섞임) + 손 75 (manual_crop: 그림 10 · 13 (도구가 놓침 · 백지로 뺌) · 식 53 · 근거 글 20) + digitized.csv (248 행 · 스캔 판독) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+thorntonyin1991_oblique_impact_elastic_spheres_adhesion	impact_of_elastic_spheres_with_and_without_adhesion
+thorntonyin1991_oblique_impact_elastic_spheres_adhesion	impact of elastic spheres with and without adhesion
+# ── DEM 계산 속도용 입자 강성 감소 (EDEM Hertz–Mindlin · 3D 구 · G 10⁴–10¹¹ Pa) — 단일 충돌 · 50 kg 블록 낙하 벌크 강성 (log–log 기울기 ≈0.59 [판독]) · 벌크 반발 · 안식각 · 쐐기 관입 · 평균 겹침 < 반지름의 0.3 % 면 안식각 · 관입은 큰 차 없음 (Lommen · Schott · Lodewijks · Particuology 12 (2014) 107–112) — litdb 2026-11-12 (후보 N-47) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 40 장 = 도구 10 (표 1 다시 자름: 쪽 아래 2/3 를 통째로 잡음 · 캡션 고침 4) + 손 30 (manual_crop: 그림 7 · 표 2 (도구가 놓침) · 패널 9a · 9b · 식 6 · 근거 글 20) + digitized.csv (182 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior	stiffness_effects_on_behavior_of_bulk_material
+lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior	stiffness effects on behavior of bulk material
+# ── 점착 분말 유동화 CFD-DEM (CCDM · 의사 3D 한 입자 두께 · 선형 스프링 κ 50 · 50,000 N/m × 표면 에너지 γ 0.37 · 3.7 mJ/m² · d 98 µm · N 45,000) — 침강 배위수 · 힘 · 변형 · γ 0.37 은 κ 와 무관하게 유동화 · γ 3.7 은 κ 50 이면 막힘 (블록 · 채널) · κ 50,000 이면 유동화 = 강성 선택이 점착 거동을 바꿈 · 힘 기준 같은 F_OFF 라도 결과가 갈림 (Moreno-Atanasio · Xu · Ghadiri · Chem. Eng. Sci. 62 (2007) 184–194) — litdb 2026-11-12 (후보 N-49) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 63 장 = 도구 15 (다시 자름 5: 그림 2 (여백 큼) · 그림 9 (실제는 그림 10 + 11 을 잡음) · 표 1 · 2 · 3 (쪽 통째) · 캡션 고침 10) + 손 48 (manual_crop: 그림 5 (도구가 놓침) · 패널 6 (2a–2d · 12a · 12b) · 식 21 · 근거 글 20) + digitized.csv (955 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem	computer_simulation_of_the_effect_of_contact_stiffness_and_adhesion
+morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem	computer simulation of the effect of contact stiffness and adhesion
+# ── 결합입자 모델 (BPM · LAMMPS BPM 패키지 · 점 입자 ~5000 개 × 입자 1024 개 · 다체 결합 항으로 ν −0.11–0.4) 로 선형 탄성 입자의 3D 등방 압밀을 재밍 너머 P/E_eff ~1 까지 · Hertz DEM 대조 (φ − φ_c ≈ 0.1 에서 갈림 · 같은 φ_MC 로는 압력 2 배 안 · DEM 의 φ_sphere > 1) (Clemmer · Monti · Lechman · Soft Matter 20 (2024) 1702–1718 · 2024-08-30 정정판) — litdb 2026-11-12 (후보 N-51) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 46 장 = 도구 15 (다시 자름 3: fig_5 · fig_11 · fig_16 위 회색 쪽 줄) + 손 31 (manual_crop: Fig. 3 (도구가 놓침 — 캡션 'Fig. 3' 이 다른 span) · 식 10 · 근거 글 20) + digitized.csv (275 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+clemmer2024_bpm_elastic_grain_compaction_beyond_jamming	a_soft_departure_from_jamming_the_compaction_of_deformable
+clemmer2024_bpm_elastic_grain_compaction_beyond_jamming	a soft departure from jamming the compaction of deformable
+# ── 결합 입자 모델 (BPM · LIGGGHTS 수정판 · 1.59 µm 1 차 구 응집체) 로 NMC111 2 차 입자 결합 파단을 계산한 압연 DEM (액체 LIB · 0–157.7 MPa · 압축 + 이완) — 같은 1 저자 · 같은 해 `xu2023_realistic_am_shape_cgmd_calendering` 과 다른 논문
+#   ⚠ 크롭 61 장 = 도구 15 (다시 자름 15: 그림 13 · 표 1 · SI 표 1 — 그림 S3 · S8 은 투명 마스크라 쪽 렌더로) + 손 46 (manual_crop: SI 표 2 · 3 · 패널 8 · 식 9 · 근거 문단 20 · 영상 정지 화면 6 · 표지 1) · 영상 mp4 셋은 커밋하지 않음
+xu2023_dem_bonded_particle_fracture_calendering	computational_model_for_predicting_particle_fracture
+xu2023_dem_bonded_particle_fracture_calendering	computational model for predicting particle fracture
+# ── INNOV 웹 앱 (GUI · ARTISTIC 서버 계산) — 구 좌표 · 영상 · 행렬 가져오기 또는 확률적 생성 (α · 겹침 · PSD · 화소 CBD w · ASSB 기공 상) → 2019 복셀화 다상 사면체 메시 → .mphtxt · .bdf · .mat · .stl · .ply · .tif (Chouchane · Franco · Batteries & Supercaps 4 (2021) 1451–1456 · 9 호 · Concept) — litdb 2026-11-16 (후보 N-73 · 정독 112) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · 같은 1 저자 `chouchane2019_innov_voxelization_multiphase_meshing` (ACS Omega 2019) 과 다른 논문
+#   ⚠ 크롭 35 장 = 도구 8 (다시 자름 8: 머리글 줄 · 내려받기 도장 · 옆 단 글 · Fig. S3 팝업 아래 절반 잘림) + 손 27 (manual_crop: 패널 7 · Fig. S1 (캡션이 다음 쪽) · SI 식 1 · 표지 1 · 근거 문단 15 · 영상 정지 화면 2) + digitized.csv (42 행) · 영상 mp4 는 커밋하지 않음
+chouchane2021_innov_webapp_stochastic_generation_meshing	an_invitation_to_engage_with_computational_modeling
+chouchane2021_innov_webapp_stochastic_generation_meshing	an invitation to engage with computational modeling
+# ── 나노 X 선 CT (16 nm 복셀) 로 재구성한 상용 LFP 양극의 REV (750 nm) 3D 미시 ⇄ 1D P2D 거시 동시 결합 다중 스케일 COMSOL 모델 · 열전도 유사 tortuosity (Kashkooli · Farhad · Lee · Feng · Litster · Komini Babu · Zhu · Chen · J. Power Sources 307 (2016) 496–509) — litdb 2026-11-16 (후보 밖 · 68 번 파일 · 정독 115) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · 조각은 본문 · SI 두 파일에 다 맞는다
+#   ⚠ 크롭 59 장 = 도구 15 (다시 자름 15: 그림 1–8 원 래스터 · 표 1 · 2 · 4 · 그림 S1 · S2 · S4 · S5) + 손 44 (manual_crop: 그래픽 초록 1 · 패널 8 · 그림 S3 · 표 3 · 식 14 · 근거 문단 19) + digitized.csv (106 행) · colorbar_extremes_printed.csv (36 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity	multiscale_modeling_of_lithium-ion_battery_electrodes
+kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity	multiscale modeling of lithium-ion battery electrodes
+# ── 싱크로트론 X 선 단층촬영 (TOMCAT · 복셀 0.37 µm) 으로 본 NMC111 액체 LIB 양극 16 개 (탄소 · 바인더 각 2–5 wt% × 롤 0 · 300 · 600 · 2000 bar) 의 입자 분할 · 공개 데이터 (Ebner · Geldmacher · Marone · Stampanoni · Wood · Adv. Energy Mater. 3 (2013) 845–850 · 정독 118 · 후보 N-66)
+#   ⚠ 크롭 44 장 = 도구 8 (다시 자름 8: 그림 1–3 여백 · 그림 S1 본문 줄 섞임 · 라벨 잘림 · S4 아래 줄 잘림 · S5 · S6 캡션 줄 섞임 · S6 · S7 빨간 틀 · S7 머리글) + 손 36 (manual_crop: 패널 9 · 표 S2 · S3 · 식 5 · 근거 문단 20) + digitized.csv (155 행)
+ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation	x-ray_tomography_of_porous_transition_metal_oxide
+ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation	transition metal oxide based lithium ion battery electrodes
+# ── 압연 NMC111 양극 CT (Ebner 2013 공개 자료) 의 접촉 방향 분포 fabric tensor + 구 DEM (Stershic · Simunovic · Nanda, J. Power Sources 297 (2015) 540–550) — 자동 매칭 실패 (slug ↔ 파일명 토큰 겹침 'fabric' · 'tensor' 둘뿐)
+#   ⚠ 크롭 68 장 = 도구 12 (다시 자름 12: 그림 8 = 박힌 원 래스터 · 표 4 = 쪽 전체 → 400 dpi) + 손 56 (그래픽 초록 1 · 패널 24 · 식 11 · 근거 문단 20) + digitized.csv 24 행
+stershic2015_fabric_tensor_calendering_nmc_xct_dem	modeling_the_evolution_of_lithium-ion_particle_contact_distributions
+stershic2015_fabric_tensor_calendering_nmc_xct_dem	modeling the evolution of lithium-ion particle contact distributions
+# ── 황화물 유리 (75Li₂S·25P₂S₅) 전극 혼합층 (NCM523 LiNbO₃ · 흑연) 의 이온 · 전자 유효 전도도 — 세 줄 TLM · electron-electron (T형) 연결의 물방울 두 끝 (Siroma · Sato · Takeuchi · Nagai · Ota · Ioroi, J. Power Sources 316 (2016) 215–223) — 자동 매칭 실패 (slug 를 연결형 낱말로 지어 파일명 토큰과 안 겹침)
+#   ⚠ 크롭 65 장 = 도구 12 (다시 자름 3: 표 1 = 쪽 전체 · 표 S1 = 그림 S1 c 섞임 · 그림 S1 = 패널 c 만 → SI 2 · 3 쪽 이어 붙임) + 손 53 (manual_crop: 그래픽 초록 1 · 패널 15 · 식 18 · 근거 문단 19) + digitized.csv 56 행 — --inbox --run 으로 다시 뽑지 말 것
+siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb	ac_impedance_analysis_of_ionic_and_electronic_conductivities
+siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb	ac impedance analysis of ionic and electronic conductivities
+# ── NCM622 2차 입자 크기 (d50 4.0 / 8.3 / 15.6 µm) × 탄소 없는 β-Li₃PS₄ 복합 양극 (7 : 3 wt) 의 용량 · 비활성 CAM · 부분 전도도 (Strauss · Bartsch · de Biasi · Kim · Janek · Hartmann · Brezesinski, ACS Energy Lett. 3 (2018) 992–996) — 자동 매칭 실패 (slug ↔ 파일명 토큰 겹침 'particle' · 'size' 둘뿐)
+#   ⚠ 크롭 43 장 = 도구 12 (다시 자름 3) + 손 31 (그래픽 초록 1 · 패널 14 · 식 2 · 근거 문단 14) + digitized.csv 75 행
+strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation	impact_of_cathode_material_particle_size_on_the_capacity
+strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation	impact of cathode material particle size on the capacity
+# ── 같은 NCM622 · Li₆PS₅Cl · C65 조성에서 무바인더 막자 손혼합 ('건식 혼합') 펠릿 ↔ NBR · 자일렌 슬러리 시트 · GITT 피복률 · 건식 볼밀 예비 혼합 · NCM622/흑연 파우치 전셀 (Nam · Oh · Jung · Jung, J. Power Sources 375 (2018) 93–101) — 자동 매칭 실패 (--inbox --only nam2018 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 40 장 = 도구 18 (다시 자름 12: 그림 1 · 2 = 서로 섞임 · 표 1 = 쪽 전체 · 표 2 = p.99 본문 · SI 그림 8 장 = 아래 잘림) + 손 22 (그래픽 초록 1 · SI 그림 S2 1 · 식 1 · 근거 문단 19) + digitized.csv 1046 행 — --inbox --run 으로 다시 뽑지 말 것
+nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch	toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety
+nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch	toward practical all-solid-state lithium-ion batteries with high energy density and safety
+# ── 황화물 유리 (75Li₂S·25P₂S₅) SE 입경 (d50 16 vs 3.8 µm) × NCM111 입경 (9.4 vs 5.3 µm) · 무탄소 75 : 25 wt · 330 MPa — 단면 SEM/EDX 분포 · NCM 균열 · 율속 (Sakuda · Takeuchi · Kobayashi, Solid State Ionics 285 (2016) 112–117) — 자동 매칭 실패 (slug ↔ 파일명 토큰 겹침 'electrode' · 'morphology' 둘뿐)
+#   ⚠ 크롭 35 장 = 도구 4 (다시 자름 4: 단 폭 여백 → 박힌 래스터 둘레 6 pt) + 손 31 (패널 12 · 근거 문단 19 · 식 0 = 원문에 식 없음) + digitized.csv 72 행 — --inbox --run 으로 다시 뽑지 말 것
+sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking	electrode_morphology_in_all-solid-state_lithium_secondary_batteries
+sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking	electrode morphology in all-solid-state lithium secondary batteries
+# ── LiCoO₂ (LiNbO₃ 선코팅) 위 PLD 80Li₂S·20P₂S₅ 막 · SE 입자 없이 / 10 wt% 더해 In 반쪽 셀 · EIS 계면 저항 · 압분 단면 TEM (Sakuda · Hayashi · Ohtomo · Hama · Tatsumisago, J. Power Sources 196 (2011) 6735–6741) — 자동 매칭 실패 (--inbox --only sakuda2011 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 26 장 = 도구 6 (다시 자름 2: 그림 7 = 위 테두리 잘림 · 표 1 = 쪽 전체) + 손 20 (그림 4 · 5 · 8 = 벡터 그림을 도구가 '그래픽 없음' 으로 버림 · 근거 문단 17) + digitized.csv 2292 행 — --inbox --run 으로 다시 뽑지 말 것
+sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode	all-solid-state_lithium_secondary_batteries_using_licoo2_particles_with_pulsed_laser_deposition
+sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode	all-solid-state lithium secondary batteries using licoo2 particles with pulsed laser deposition
+# ── 건식 충격 블렌딩 NCM523@Li₆PS₅Cl 코어–셸 복합 입자 + 도전재 (AB 는 껍질 안 · VGCF 는 입자 밖) · 360 MPa 이온 차단 셀 σ_ion · σ_e · 반쪽셀 율속 · CV (Hayakawa · Nakamura · Ohsaki · Watano, J. Power Sources 555 (2023) 232379) — 자동 매칭 실패 (--inbox --only hayakawa2023 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 43 장 = 도구 12 (다시 자름 9: 그림 2 · 8 · 9 · 10 여백 · 그림 4 · 6 · 7 쪽 폭 · SI 그림 S2 축 이름 잘림 · 표 1 = 쪽 머리글 + 본문 두 단) + 손 31 (그래픽 초록 1 · SI 그림 S1 1 · 패널 9 · 근거 문단 20 · 식 0 = 원문에 번호 식 없음) + digitized.csv 332 행 (벡터 경로 좌표) — --inbox --run 으로 다시 뽑지 말 것
+hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf	design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives
+hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf	design of active-material/solid-electrolyte composite particles with conductive additives
+# ── 복합 양극 혼합 (손 막자 ↔ 미니 진동밀) · OCP 이완 정적 CAM 이용률 · 56 셀 실험실 내 재현성 (Kissel · Schosland · … · Janek, Adv. Energy Mater. 15 (2025) 2405405) — 자동 매칭 실패 (--inbox --only kissel2025 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 47 장 = 도구 24 (다시 자름 15: SI 그림 15 장 전부 = 박힌 래스터 상자 · 그중 12 장은 도구 상자가 가로축 제목을 자르거나 두 단에 걸침) + 손 23 (식 3 · 근거 문단 20) + data_file_s1_extract.csv 56 행 — --inbox --run 으로 다시 뽑지 말 것
+kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells	quantifying_the_impact_of_cathode_composite_mixing_quality
+kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells	quantifying the impact of cathode composite mixing quality
+# ── 건식 PTFE 후막 흑연 음극의 첫 리튬화 PTFE 환원 분해 (0.3–0.55 V) 를 FEC 10 wt% 가 줄임 · 반쪽 셀 ICE 75.7 → 87.2 % · 1 사이클 뒤 나노압입 · SAICAS · 두께 · LFP 전셀 · 파우치 (Han · Noh · Chae … Song · Kwak · Choi, J. Energy Storage 96 (2024) 112693) — 자동 매칭 실패 (--inbox --only han2024 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 65 장 = 도구 23 (다시 자름 13: 본문 그림 2–6 = 단 폭 bbox 라 좌우 여백 과다 · SI 그림 S2 · S3 · S6 · S9 · S11 · S12 · S14 · S15 = 래스터 안 흰 여백) + 손 42 (패널 23 · 식 1 · 근거 문단 18) + digitized.csv 39 행 (래스터 축 틀 대응) — --inbox --run 으로 다시 뽑지 말 것
+han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode	mitigating_ptfe_decomposition_in_ultra_thick_dry-processed_anodes
+han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode	mitigating ptfe decomposition in ultra thick dry-processed anodes
+# ── 21 연구 그룹 실험실 간 전고체 펠릿 셀 재현성 (단결정 NMC 622 · Li₆PS₅Cl · In · 각자 조립 · 같은 전기화학 절차) (Puls · Nazmutdinova · Kalyk · … · Zeier · Vargas-Barbosa, Nat. Energy 9 (2024) 1310–1320) — 자동 매칭 실패 (--inbox --only puls2024 = 논문 0편 · 2026-11-16 확인 · SI 파일명엔 제목이 없어 MOESM1 조각을 따로 · 'SupZ' 는 SI_TAG 에 안 걸려 매칭표엔 '본문 후보 2개' 로 나온다 — SI 그림 · 표는 캡션 'Supplementary' 접두로 S 번호)
+#   ⚠ 크롭 92 장 = 도구 60 (다시 자름 39: 본문 그림 1 · 2 · 4 · 표 1 · SI 표 1 · 2 · 23 · SI 그림 32) + 손 32 (본문 그림 3 · SI 표 24 · 식 10 · 근거 문단 20) + source_data_cells_extract.csv 41 행 — --inbox --run 으로 다시 뽑지 말 것
+puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups	benchmarking_the_reproducibility_of_all-solid-state_battery
+puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups	41560_2024_1634_moesm1_esm
+# ── 같은 LiCoO₂ : 78Li₂S·22P₂S₅ 유리세라믹 : Super P (39 : 59 : 2) 복합 양극의 혼합 방법 셋 (건식 손 막자 · 초음파 + 톨루엔 습식 손 막자 · 초음파 + 습식 볼 믹서) · SEM/EDX · In 반쪽 코인셀 50 사이클 · EIS · dQ/dV (Kim · Eom · Noh · Shin, J. Power Sources 244 (2013) 476–481) — 자동 매칭 실패 (--inbox --only kim2013 = 논문 0편 · 2026-11-22 확인)
+#   ⚠ 크롭 33 장 = 도구 8 (다시 자름 8: 그림 1–6 = 좌우 여백 14–90 pt 로 고르지 않음 · 표 1 · 2 = PDF 5 쪽 전체 · 같은 파일) + 손 25 (패널 8 · 근거 문단 17) + digitized.csv 130 행 (래스터 눈금 맞춤) — --inbox --run 으로 다시 뽑지 말 것
+kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode	effect_of_mixing_method_on_the_properties_of_composite_cathodes
+kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode	effect of mixing method on the properties of composite cathodes
+# ── Li₅.₄PS₄.₄Cl₁.₆ (= 우리 DFT modelc 명목 조성) + PTFE 0.2 wt% 건식 SE 막 30 µm · 볼밀 섬유화 + 80 °C 열 캘린더 · 360 MPa 누른 채 EIS (막만 도선·접촉 1.04 Ω 빼기) · Al₂O₃ 스퍼터 Li · NCM523 전셀 (Zhang · Wu · Zhou · Weng · Yao, Nano Lett. 21 (2021) 5233–5239) — 자동 매칭 실패 (--inbox --only zhang2021 = 논문 0편 · 2026-11-22 확인 · 이 두 줄 뒤 1편 [수동 지정] · 본문 + SI 둘 다 같은 제목 조각 — SI 는 '_Sup_' 접두)
+#   ⚠ 크롭 52 장 = 도구 16 (다시 자름 9: 그림 1 · SI 그림 S3 · S4 · S5 · S8 · S9 · S10 · S11 = 좌우 여백 17–97 pt 로 고르지 않음 · SI 표 S1 = 17 + 18 쪽 이어붙임) + 손 36 (그래픽 초록 1 · 패널 19 · 식 2 · 근거 문단 14) + digitized.csv 104 행 — --inbox --run 으로 다시 뽑지 말 것
+zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible_sulfide_electrolyte_thin_membrane
+zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible sulfide electrolyte thin membrane
+# ── 수평 고전단 믹서 (칼날 5000 · 12,500 · 25,000 rpm · 팔 100 rpm · 30 min) 로 LiNbO₃ 코팅 NCM523 + Li₆PS₅Cl (84 : 16 wt%) 건식 혼합 · 막자 · 습식 대조 · 순 조성 · AM PSD · 360 MPa 이온 차단 셀 σ · 반쪽셀 (Hayakawa · Nakamura · Ohsaki · Watano, Adv. Powder Technol. 33 (2022) 103705) — 자동 매칭 실패 (--inbox --only hayakawa2022 = 논문 0편 · 2026-11-22 확인)
+#   ⚠ 크롭 57 장 = 도구 14 (다시 자름 14: 그림 3 · 13 = 오른 단 본문이 섞임 · 표 1 = 4 쪽 왼 단 전체 · 나머지 11 = 좌우 여백 ≈45–50 pt 로 고르지 않음) + 손 43 (패널 23 · 근거 문단 20) + digitized.csv 162 행 (벡터 경로 좌표) — --inbox --run 으로 다시 뽑지 말 것
+hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry_mixing_of_cathode_composite_powder_for_all-solid-state
+hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry mixing of cathode composite powder for all-solid-state
+# ── Li₃PS₄ 액상 진탕 합성 · 원료 Li₂S 크기 제어 (습식 볼밀 · 용해–석출) → LPS 1382 (인용) → 227 → 93 nm · σ 1.1 · 1.5 × 10⁻⁴ S/cm (Ohsaki · Yano · Hatada · Nakamura · Watano · Powder Technol. 387 (2021) 415–420) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 41 장 = 도구 13 (다시 자름 10: 그림 2 = 흐름도 위 절반 빠짐 · 그림 11 = 오른쪽 끝 글자 닿음 · 그림 3 · 4 · 5 · 6 · 7 · 8 · 10 · SI S2 = 좌우 여백 고르지 않음) + 손 28 (표 1 · 패널 8 · 근거 문단 19) + digitized.csv 23 행 — --inbox --run 으로 다시 뽑지 말 것
+ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size_control_of_sulfide-based_solid_electrolyte_particles
+ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size control of sulfide-based solid electrolyte particles
+# ── 전고체 복합 전극 이온 tortuosity 직류 실측 — 가상 AM Al₂O₃ 모양 · 크기 · 성형압 44–655 MPa (전자 차단 셀 · ΔE 100 mV) (Park · Jeong · Shin · Appl. Sci. 12 (2022) 12692) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 58 장 = 도구 9 (그림 1–9 · 전부 다시 자름: 래스터 이미지 합 + 6 pt · 캡션 칸에 다음 본문이 섞였음) + 손 49 (패널 23 · 식 7 · 근거 문단 19) + digitized.csv 198 행 — --inbox --run 으로 다시 뽑지 말 것
+park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical_effect_of_active_material_on_electrode_tortuosity
+park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical effect of active material on electrode tortuosity
+# ── PTFE 건식 후막 흑연 음극 + PVP 0.5 wt% 이원 바인더 (96 : 1 : 3 · 93 µm · 1.5 g/cc) · ICE 85.1 → 92.4 % · LiClO₄ 대조 · NCM811 전셀 9.9 mAh/cm² (Lee · Son · Han … Lee · Ryu · Choi · Chem. Eng. J. 503 (2025) 158271) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 77 장 = 도구 17 (전부 다시 자름: 래스터 사각 + 6 pt · 도구 상자가 쪽 폭 · 캡션 넷 오염 · 잘림) + 손 60 (SI 표 3 · 패널 38 · 근거 문단 19) + digitized.csv 96 행 — --inbox --run 으로 다시 뽑지 말 것
+lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode_interface-stabilizing_dry_process_employing_a_binary_binder
+lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode interface-stabilizing dry process employing a binary binder
+# ── 건식 R2R 10 mAh/cm² NCA 양극 — PTFE 섬유화 온도 · CB + 그래핀 도전재 · 2 단 압연 (1 차 90 / 140 MPa) · Carver 압밀 선도 0.8–770 MPa (J. Kim · K. Park · … · T. Song · U. Paik · Adv. Energy Mater. 14 (2024) 2303455) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 82 장 = 도구 34 (다시 자름 31: 본문 그림 1–5 = 래스터 사각형 + 6 pt · SI 그림 S1–S26 = 래스터 사각형 + 4 pt (도구 상자에 'WILEY-VCH' 머리글 로고가 섞였음) · SI 표 S1–S3 그대로) + 손 48 (패널 26 · 식 2 · 근거 문단 20) + digitized.csv 196 행 — --inbox --run 으로 다시 뽑지 말 것
+kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering	10_mah_cm_2_cathode_by_roll_to_roll_process
+kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering	10 mah cm 2 cathode by roll to roll process
+# ── 건식 혼합 '정도' (진동 볼밀 Retsch MM400 · 10 · 30 · 60 분) → 건식 PTFE NMC622 양극 (92 : 3 : 5 · ≈7.2 mAh/cm² · ≈153 µm) 접착 · Rct · 율속 역 U · 막 인장 단조 (R. Tao · … · J. Li · J. Power Sources 580 (2023) 233379) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 54 장 = 도구 17 (다시 자름 4: 본문 그림 1 · 2 = 래스터 사각형 + 6 pt · SI 그림 S5 · S6 = 래스터 사각형 + 4 pt (도구 상자가 쪽 폭)) + 손 37 (패널 19 · 근거 문단 18) + digitized.csv 292 행 — --inbox --run 으로 다시 뽑지 말 것
+tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode	unraveling_the_impact_of_the_degree_of_dry_mixing
+tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode	unraveling the impact of the degree of dry mixing
+# ── PTFE 건식 LFP 후막 양극 (LFP : Super P : PTFE = 97 : 1 : 2 · 2.3 g/cc) ↔ 습식 PVDF · 대칭 셀 R_ion 35.01 → 6.19 Ω · 7.8 mAh/cm² 흑연 전셀 300 사이클 (Kwon · Kim · Han … Kim · Song · Choi · Small Sci. 4 (2024) 2300302) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 75 장 = 도구 20 (전부 다시 자름: 래스터 사각 / 벡터 상자 + 6 pt → 내용 + 20 px · 표 S2 아래 괘선 · 표 S3 오른쪽 절반 잘림) + 손 55 (그림 1 · S5 · 표 S1 · 패널 33 · 식 1 · 근거 문단 18) + digitized.csv 225 행 — --inbox --run 으로 다시 뽑지 말 것
+kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low_resistance_lifepo4_thick_film_electrode_processed_with_dry
+kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low-resistance lifepo4 thick film electrode processed with dry
+# ── FFF 3D 프린팅 입자 모델 (LAMMPS RHEO: SPH 점성 BC + 고체 구 AM · 가정 냉각 상태 · BC 결합) · 압출 DEM 필라멘트 입력 · 한 가닥 17 / 한 층 9 / 두 층 18 · 두 층 빈 곳 38.6–40.2 % · τ_Y 1.73–1.82 · σ_e 0.0985–0.1912 S/m (P. Sun · F. Fernandez · P. Vigneaux · A.A. Franco · ChemRxiv 2026 · 동료 심사 전 · 10.26434/chemrxiv.15012329/v1) — litdb 2026-11-23 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 74 장 = 도구 7 (전부 다시 자름: 쪽 clip 사각형 안의 래스터 잉크 + 25 px · 그림 8 은 도구가 놓쳐 손으로) + 손 67 (그림 8 · 숨은 그림 4g 래스터 · 패널 20 · 식 25 · 근거 문단 20) + digitized.csv 90 행 — --inbox --run 으로 다시 뽑지 말 것
+sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved_modeling_of_fused_filament_fabrication
+sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved modeling of fused filament fabrication
+# ── 냉간분무 NMC622 : PVDF : CB 단일 입자 충돌 · 탄소성 결합구 DEM (Gallegos Tovar … Curtis · Surf. Coat. Technol. 541 (2026) 134102 · 최종판 15 쪽 + SI 9 쪽) — litdb 2026-11-23 기존 카드 보강 (처음 2026-11-02 = Journal Pre-proof) · 최종판 파일 이름이 자동 매칭에 안 붙는다
+#   ⚠ 크롭 55 장 = Pre-proof 렌더 그림 16 · SI 8 (최종판과 내용 같아 그대로) + 최종판에서 다시 렌더한 표 2 · 식 10 + 근거 문단 19 — 손작업 (manual_crop · recrop) · --inbox --run 으로 다시 뽑지 말 것
+tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond	cold_spray_deposition_of_cathode_composites_modeled_via_a_dem
+# ── 2026-11-24 배치 (Li 금속 음극 · 공극 · 점착 18 편) — 자동 매칭이 SI 를 못 붙이거나 0 편인 셋만
+masias2019_li_metal_elastic_plastic_creep_properties	masias2019_li_creep
+sandoval2025_electro_chemo_mechanics_anode_free_ssb	afssb2024_electro_chemo_mechanics
+# ── Ag/CB 인터레이어 Ag 두께 방향 분포 (Metzler 외 2025 · ACS Appl. Mater. Interfaces 17, 39089) — litdb 2026-11-24 · 업로드 파일명이 'agdist2025_…' 라 slug 토큰과 안 겹친다 (--inbox --only metzler2025 --dry = 0편) · 본문 · SI 공통 조각 ──
+metzler2025_ag_particle_distribution_carbon_interlayer_anode_free	agdist2025_ag_c_interlayer
+# ── 2026-11-24b 묶음 (Li 금속 음극 둘째 12 편) — 자동 매칭이 SI 를 못 붙인 하나만
+sandoval2025_operando_xray_tomography_li_growth_stripping_anode_free	sandoval2025b_operando_xct_li_growth
+# ── 2026-11-25 MPFEM · MPM–DEM 묶음 (1저자 업로드 파일명 = '<저자><연도>.pdf' 라 slug 와 연도 토큰만 겹친다 · zhou2019 는 다른 Zhou 2019 카드 (argyrodite) 와 갈라 둔다) — 제목 조각 + 업로드 파일명 ──
+zhou2019_mpfem_2d_copper_powder_die_compaction_release	particulate_scale_multiparticle_finite_element_method
+zhou2019_mpfem_2d_copper_powder_die_compaction_release	particulate scale multiparticle finite element method
+zhou2019_mpfem_2d_copper_powder_die_compaction_release	zhou2019.pdf
+huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction	multi-particle_fem_simulation_of_2d_compaction_on_binary
+huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction	multi-particle fem simulation of 2d compaction on binary
+huang2017_mpfem_2d_binary_al_sic_hard_soft_compaction	huang2017.pdf
+li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading	a_study_of_compaction_densification_behavior_of_composite_particles
+li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading	a study of compaction densification behavior of composite particles
+li2022_mpfem_3d_soft_hard_composite_compaction_vibration_unloading	li2022.pdf
+singer2022_partitioned_mpm_dem_coupling_kratos	a_partitioned_material_point_method_and_discrete_element_method
+singer2022_partitioned_mpm_dem_coupling_kratos	a partitioned material point method and discrete element method
+singer2022_partitioned_mpm_dem_coupling_kratos	singer2022.pdf

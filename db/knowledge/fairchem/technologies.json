@@ -1,0 +1,454 @@
+[
+  {
+    "technology_id": "uma-mole",
+    "label": "UMA with Mixture of Linear Experts",
+    "layer": "model architecture",
+    "what_it_does": "Shares an equivariant backbone across chemistry domains while routing task, charge, spin and composition information through expert modules.",
+    "paper_use": "Explain why a single model can expose multiple DFT-task identities without pretending those identities are interchangeable.",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/models/uma/nn/mole.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/models/uma/nn/mole.py",
+        "sha256": "9c1e431d2f9036d376f8bc84f3463c1a8a6cf37bd3c27ae820b5bc5c6f43a373"
+      }
+    ]
+  },
+  {
+    "technology_id": "pretrained-mlip",
+    "label": "pretrained_mlip model loader",
+    "layer": "inference API",
+    "what_it_does": "Resolves named checkpoints and returns a prediction unit for a selected task.",
+    "paper_use": "Record model ID, task ID, checkpoint source and package version with every result.",
+    "sources": [
+      {
+        "source_path": "docs/core/quickstart.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/quickstart.md",
+        "sha256": "df39f4007080dcf0286c85b2ceb1e52990216959bc198c97eadc685732d91fc2"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/pretrained_mlip.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_mlip.py",
+        "sha256": "469bc533a425c5a80054b424295f368068eaec1887938cc4f333496e85bace96"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+        "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+      }
+    ]
+  },
+  {
+    "technology_id": "fairchem-calculator",
+    "label": "FAIRChemCalculator",
+    "layer": "ASE integration",
+    "what_it_does": "Exposes MLIP energies, forces and stress through the ASE calculator interface.",
+    "paper_use": "Connect official inference to relaxations, MD and property workflows while preserving task metadata.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/ase_calculator.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/ase_calculator.md",
+        "sha256": "d63ffe289534ef2de48a4eaf28b72dab4e3fd8501f110f07de4be86a2cb9f31f"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/ase_calculator.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/ase_calculator.py",
+        "sha256": "45c9ce3605a4965f1161b4eb4520b028d03370623d09116ed10f2f083f3cfd75"
+      }
+    ]
+  },
+  {
+    "technology_id": "batch-inference",
+    "label": "Batch and Ray inference",
+    "layer": "scale-out inference",
+    "what_it_does": "Runs batched model inference and supports distributed workers for larger structure collections.",
+    "paper_use": "Useful for screening throughput, but batching does not create statistical independence or scientific validity.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/batch_inference.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/batch_inference.md",
+        "sha256": "9780bd7ed61fffc67eb55e579a7540e4152df5edff3fd6efe8e0c659cb220d43"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/_batch.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/_batch.py",
+        "sha256": "6863a6f7048d08d3be957bc189861f342304af9cd0614df2292652eab7ae295c"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/_ray_inference_cluster.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/_ray_inference_cluster.py",
+        "sha256": "b06b170d79e09c42eb554d1714b607401a4d45e9c359ae0e87fcada4a42205fa"
+      }
+    ]
+  },
+  {
+    "technology_id": "inference-batcher",
+    "label": "InferenceBatcher",
+    "layer": "streaming inference",
+    "what_it_does": "Collects multiple requests into efficient inference batches.",
+    "paper_use": "A possible service layer for a future webapp queue, separate from the evidence database.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/inference_batcher.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/inference_batcher.md",
+        "sha256": "11796b111210c7910eb5450c270827503acbdb82338b42437186c784d1831937"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/_batch.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/_batch.py",
+        "sha256": "6863a6f7048d08d3be957bc189861f342304af9cd0614df2292652eab7ae295c"
+      }
+    ]
+  },
+  {
+    "technology_id": "ase-datasets",
+    "label": "ASE-readable datasets",
+    "layer": "data ingestion",
+    "what_it_does": "Provides ASE-file, multi-structure and ASE-DB readers plus LMDB-oriented data tooling.",
+    "paper_use": "A reference for normalizing structures and labels before fine-tuning or evaluation.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/ase_dataset_creation.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/ase_dataset_creation.md",
+        "sha256": "13b310f7982a75cc02f973159e2deb891c681ec9553bdfa1479fc3e9c8efbba2"
+      },
+      {
+        "source_path": "src/fairchem/core/datasets/ase_datasets.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/datasets/ase_datasets.py",
+        "sha256": "86989618d52117e3fd4d5582bd246a062aeb8ed9daa657578dd14b4837621581"
+      }
+    ]
+  },
+  {
+    "technology_id": "training",
+    "label": "Configuration-driven training",
+    "layer": "model development",
+    "what_it_does": "Builds MLIP training runs from reusable model, data, optimizer and task configurations.",
+    "paper_use": "Keep the complete configuration and split policy as provenance; do not report only the checkpoint name.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/training.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/training.md",
+        "sha256": "1e6252a8bccd26e5569801a88086143e10971b57c0714e0ebd66e43b0ebaacc8"
+      },
+      {
+        "source_path": "src/fairchem/core/components/train/train_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/train/train_runner.py",
+        "sha256": "9906ad6e4e5583f7e35445456bdfb1298f55bfe005394da04d75c715eafe5007"
+      }
+    ]
+  },
+  {
+    "technology_id": "evaluation",
+    "label": "Evaluation workflows",
+    "layer": "validation",
+    "what_it_does": "Runs configured evaluation jobs and benchmark reducers.",
+    "paper_use": "Use chemistry-grouped, task-matched evaluation instead of interpreting random row splits as transfer performance.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/evaluation.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/evaluation.md",
+        "sha256": "187eb50682936562f844a809fc7f53505c064a45f1b0e282b3c3c9fb7c287055"
+      },
+      {
+        "source_path": "src/fairchem/core/components/evaluate/eval_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/evaluate/eval_runner.py",
+        "sha256": "2ecd1fdbdcdc5f394fc488a001a54e37741721f4cde4c44f9225d7976ed5d722"
+      }
+    ]
+  },
+  {
+    "technology_id": "fine-tuning",
+    "label": "Fine-tuning",
+    "layer": "domain adaptation",
+    "what_it_does": "Adapts a pretrained model using project-specific labeled structures.",
+    "paper_use": "For LPSCl, fine-tune only after DFT labels, split policy and target conventions are frozen.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/fine_tuning.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/fine_tuning.md",
+        "sha256": "eb35f1621c8b6a8531f99783abb1a889a0317b88d3658b1f8cbf02856243990d"
+      },
+      {
+        "source_path": "configs/uma/finetune/uma_sm_finetune_template.yaml",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/configs/uma/finetune/uma_sm_finetune_template.yaml",
+        "sha256": "511fb87c2d979095c8ed2fdd04f1f60b456fe82634e6390eed4a11c3bb86a9cd"
+      }
+    ]
+  },
+  {
+    "technology_id": "workflow-components",
+    "label": "Composable calculate workflows",
+    "layer": "orchestration",
+    "what_it_does": "Provides runners and recipes for single points, relaxations and derived properties.",
+    "paper_use": "Separate input generation, execution, collection and approval in our own workflow contract.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/workflows.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/workflows.md",
+        "sha256": "829b7a6e0fc990c01f7314e7e288377979851c36bf06fee0a06e3f8923a994a1"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_calculate_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_calculate_runner.py",
+        "sha256": "7170ee4cc67a56e81f03f3fe441f24507fb70a542c67ed7bd7501a05167bb5ad"
+      }
+    ]
+  },
+  {
+    "technology_id": "relaxation",
+    "label": "Geometry relaxation",
+    "layer": "atomistic workflow",
+    "what_it_does": "Relaxes atomic positions and, when requested, cell degrees of freedom.",
+    "paper_use": "Report optimizer, force/stress convergence and maximum steps; model output alone is not convergence.",
+    "sources": [
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/relaxation_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/relaxation_runner.py",
+        "sha256": "b8d8cc699db6cf5d974638934be9925cfd87cbf4e024db39aa0b3902b43c0f64"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/recipes/relax.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/recipes/relax.py",
+        "sha256": "8b3573d218e0366f93f4a5585aee85848d6b6387e7a281ff1c49ebf490191a72"
+      }
+    ]
+  },
+  {
+    "technology_id": "molecular-dynamics",
+    "label": "ASE molecular dynamics",
+    "layer": "atomistic workflow",
+    "what_it_does": "Runs MD with thermostat and trajectory utilities.",
+    "paper_use": "Distinct trajectories require explicit, recorded random seeds; preserve raw trajectories needed by retrospective gates.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/md_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/md_runner.py",
+        "sha256": "403579b89e9917bc572586bd6bd5155eac2e3be648fc057dc7cc5b2ddd4713eb"
+      },
+      {
+        "source_path": "src/fairchem/core/components/dynamics/ase_md_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/dynamics/ase_md_runner.py",
+        "sha256": "bc80b3605cd9d95b516c989f7d54db7ce81f1a2ff7854513f9b1b20343dfec89"
+      }
+    ]
+  },
+  {
+    "technology_id": "lammps",
+    "label": "LAMMPS integration",
+    "layer": "large-scale simulation",
+    "what_it_does": "Connects FAIR-Chem inference to LAMMPS workflows.",
+    "paper_use": "Potential route for larger MD after ASE-level equivalence and reproducibility checks.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/lammps.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/lammps.md",
+        "sha256": "80a0cfa0c11546dc9be76fdce82a40c6c5ec8ee978b45572c755f6ddc28d87c8"
+      },
+      {
+        "source_path": "packages/fairchem-lammps/pyproject.toml",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-lammps/pyproject.toml",
+        "sha256": "179ddbe3b19e51f33fe11e6482ed2fbacdad341c951434072017c65a030f9b52"
+      }
+    ]
+  },
+  {
+    "technology_id": "elasticity",
+    "label": "Elastic-property workflow",
+    "layer": "materials property",
+    "what_it_does": "Generates strained structures and evaluates elastic response.",
+    "paper_use": "Specify relaxed-ion versus clamped-ion semantics and reject nonphysical moduli before aggregation.",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/elastic.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/elastic.md",
+        "sha256": "05ef089bb15e1565dd79e55b7104498b03e809d3b64500336a4eb1436d325920"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/elasticity_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/elasticity_runner.py",
+        "sha256": "7daa2a119f699580e847e9c56a61fc585fbc6c4d9abcb347cce342cb89cbc10a"
+      }
+    ]
+  },
+  {
+    "technology_id": "phonons",
+    "label": "Phonon workflow",
+    "layer": "materials property",
+    "what_it_does": "Builds force-constant/phonon calculations around MLIP forces.",
+    "paper_use": "Use as a stability diagnostic only after supercell and displacement convergence checks.",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/phonons.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/phonons.md",
+        "sha256": "3b0dbcbf9191e7fd9d742b72c744b716e87a9faaac424a5adc653a7c22d75187"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/phonon_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/phonon_runner.py",
+        "sha256": "572d46c181a7715c6da4b5c8e3fb4ab6812e2be0d92cf6c0a6651b215dc0cceb"
+      }
+    ]
+  },
+  {
+    "technology_id": "thermal-conductivity",
+    "label": "Thermal-conductivity workflow",
+    "layer": "materials property",
+    "what_it_does": "Provides a recipe and benchmark runner for lattice thermal conductivity workflows.",
+    "paper_use": "Do not confuse this capability with ionic conductivity; the observables and validation are different.",
+    "sources": [
+      {
+        "source_path": "src/fairchem/core/components/calculate/recipes/thermal_conductivity.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/recipes/thermal_conductivity.py",
+        "sha256": "a392787dff9d64bb7aafc2cd18e1ef57bbddff7c5e6b3d3471082a5022e40c59"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/kappa_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/kappa_runner.py",
+        "sha256": "63941830b39fa73707ad936547ff7f9e0bca29d5448fc03376b85fac95f4e468"
+      }
+    ]
+  },
+  {
+    "technology_id": "formation-energy",
+    "label": "Formation-energy workflow",
+    "layer": "materials thermodynamics",
+    "what_it_does": "Combines predicted energies with task-specific elemental references.",
+    "paper_use": "Keep OMat reference energies and corrections isolated from Materials Project energy conventions.",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "sha256": "73e70e526c3a978b7c0ef732f2ff51c90814946d72d29a68feb2cca290cc4ae4"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/recipes/energy.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/recipes/energy.py",
+        "sha256": "a90920926039854ad9602b02a409205a2071cb67cd9d238b6df4aa63bfe3291a"
+      }
+    ]
+  },
+  {
+    "technology_id": "adsorbml",
+    "label": "AdsorbML",
+    "layer": "catalysis application",
+    "what_it_does": "Accelerates adsorption-energy searches using ML relaxations plus higher-level evaluation.",
+    "paper_use": "A pattern for coarse-to-expensive screening, not a directly transferable solid-electrolyte gate.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/examples_tutorials/adsorbml_walkthrough.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/adsorbml_walkthrough.md",
+        "sha256": "e66e3b5f528e4e2ff707bbb5a356f2d0ce2d440da7221aafbdcac272b4addb0f"
+      },
+      {
+        "source_path": "packages/fairchem-applications-AdsorbML/pyproject.toml",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-AdsorbML/pyproject.toml",
+        "sha256": "c12143868794887c35d833bdf7c67766fcd92848908c881e6f356cdcc64d4674"
+      }
+    ]
+  },
+  {
+    "technology_id": "cattsunami",
+    "label": "CatTSunami",
+    "layer": "catalysis application",
+    "what_it_does": "Builds transition-state workflows for catalytic surface reactions.",
+    "paper_use": "Borrow workflow ideas only; bulk-Li hopping has a different system and method contract.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/examples_tutorials/cattsunami_tutorial.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/cattsunami_tutorial.md",
+        "sha256": "9a8db9cba889a2ddb4646699868c6714c06c36fbcf59f7e9be64f8031dd4f472"
+      },
+      {
+        "source_path": "packages/fairchem-applications-cattsunami/pyproject.toml",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-cattsunami/pyproject.toml",
+        "sha256": "b3243d669c4dd9fa10fd13d96bb5dab017cf76435d460fd230de9194df073a7c"
+      }
+    ]
+  },
+  {
+    "technology_id": "fastcsp",
+    "label": "FastCSP",
+    "layer": "structure discovery application",
+    "what_it_does": "Accelerates molecular crystal structure prediction.",
+    "paper_use": "Relevant as a search/relax/rerank architecture, not as a chemistry-equivalent model for LPSCl.",
+    "sources": [
+      {
+        "source_path": "packages/fairchem-applications-fastcsp/pyproject.toml",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-fastcsp/pyproject.toml",
+        "sha256": "36494eda66bd5b7f65c7d4c7d637bed5417df986443f2221b9155fbbce523884"
+      },
+      {
+        "source_path": "docs/core/fair_chemistry_papers.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+        "sha256": "02bcb0c2b23eddd15b7c541364482ab35cd51fd90565c7e6581455014f53e9fb"
+      }
+    ]
+  },
+  {
+    "technology_id": "ocx",
+    "label": "OCx application tools",
+    "layer": "experiment-linked application",
+    "what_it_does": "Connects catalyst experiment data and modeling workflows.",
+    "paper_use": "A useful precedent for keeping experimental and computational evidence linked but not merged.",
+    "sources": [
+      {
+        "source_path": "packages/fairchem-applications-ocx/pyproject.toml",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-ocx/pyproject.toml",
+        "sha256": "7cb7bc69ef16f20b5d0531771cb6d58b945637875e05f5547623e1ea63129519"
+      },
+      {
+        "source_path": "docs/catalysts/datasets/ocx24.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/ocx24.md",
+        "sha256": "8bac7fc5c830b9583761d2791a8a060af9c3934f1f48cc75724cfc018cd509ff"
+      }
+    ]
+  },
+  {
+    "technology_id": "generative-models",
+    "label": "Generative structure models",
+    "layer": "candidate generation",
+    "what_it_does": "The documentation indexes several diffusion, flow-matching and language-model approaches for structure generation.",
+    "paper_use": "Potential future candidate generator; every generated structure still needs domain and stability validation.",
+    "sources": [
+      {
+        "source_path": "docs/core/generative_models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/generative_models.md",
+        "sha256": "f47a3b286d708bbae597d43ffdfcd86acd4b175e6004ade335db4073c61f207b"
+      },
+      {
+        "source_path": "docs/core/fair_chemistry_papers.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+        "sha256": "02bcb0c2b23eddd15b7c541364482ab35cd51fd90565c7e6581455014f53e9fb"
+      }
+    ]
+  },
+  {
+    "technology_id": "benchmark-reducers",
+    "label": "Benchmark reducers",
+    "layer": "evaluation infrastructure",
+    "what_it_does": "Aggregates task-specific benchmark outputs for discovery, adsorption, molecular and speed tests.",
+    "paper_use": "Reuse the idea of task-specific reducers; never force unrelated properties into one universal score.",
+    "sources": [
+      {
+        "source_path": "src/fairchem/core/components/benchmark/_benchmark_reducer.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/benchmark/_benchmark_reducer.py",
+        "sha256": "69e205493597c825cb386cc84fc491c0b54740d4d1fa2b1a4065fe88e14bfa4e"
+      },
+      {
+        "source_path": "src/fairchem/core/components/benchmark/systems.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/benchmark/systems.py",
+        "sha256": "ba0c6987f45ea1f4f643688d5b55e7400a0215df2fffadcb55a9692f4af65b39"
+      }
+    ]
+  }
+]

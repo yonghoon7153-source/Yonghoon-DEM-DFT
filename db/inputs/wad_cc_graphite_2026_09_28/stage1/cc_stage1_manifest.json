@@ -1,0 +1,1376 @@
+{
+ "schema": "cc_graphite_stage1/v1",
+ "date": "2026-09-28",
+ "prereg": "db/properties/wad_cc_graphite_prereg_2026_09_28.json",
+ "code_sha256": {
+  "tools/wad/cc_graphite.py": "ba91ce18a0af1c7e09ad721bf0d9f6ed3f336332bf24d1b852a67c3bc76e9354",
+  "tools/wad/build_aprime_interfaces.py": "85c7338c63266674d43403c6d6d0a73e6712433d884e9ef0221d3d80b93f29f7",
+  "tools/wad/build_aprime_s3.py": "b0e4d0e4b9435f230de478dc5d9da315796114d6dda7852fa61db4661b2b5726",
+  "tools/wad/collect_aprime_s4.py": "77612de773304868ae1845705a61edfd3650489225f7d6d2e7b94b143e3e5747",
+  "tools/wad/se_sym_slab.py": "7ec9e7b6c6538662d4c311a13b8af2f99c3103392e4722ac03724c371f23d3a1"
+ },
+ "constants": {
+  "A_C": 2.46604,
+  "A_C_V2": 2.4926313808779463,
+  "D_INIT": 3.35,
+  "GAP": 10.0,
+  "KPTS": [
+   18,
+   18,
+   1
+  ],
+  "ECUT": [
+   52.0,
+   520.0
+  ],
+  "SMEAR": "mv",
+  "DEGAUSS": 0.01
+ },
+ "models": {
+  "CC_S33_AB": {
+   "model": "CC_S33_AB",
+   "geometry": "S33",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 3,
+   "n_top_layers": 3,
+   "n_atoms": 12,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "stack": {
+    "n_layers": 6,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 34.4,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.84012,
+     "eopreg": 0.02907,
+     "region_A": [
+      28.9,
+      29.9
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "CC_S33_SP": {
+   "model": "CC_S33_SP",
+   "geometry": "S33",
+   "registry": "SP",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 3,
+   "n_top_layers": 3,
+   "n_atoms": 12,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "stack": {
+    "n_layers": 6,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "SP",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 34.4,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.84012,
+     "eopreg": 0.02907,
+     "region_A": [
+      28.9,
+      29.9
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "CC_S33_AA": {
+   "model": "CC_S33_AA",
+   "geometry": "S33",
+   "registry": "AA",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 3,
+   "n_top_layers": 3,
+   "n_atoms": 12,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "stack": {
+    "n_layers": 6,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AA",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 34.4,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.84012,
+     "eopreg": 0.02907,
+     "region_A": [
+      28.9,
+      29.9
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "CC_M41_AB": {
+   "model": "CC_M41_AB",
+   "geometry": "M41",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_atoms": 10,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "stack": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 31.05,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82287,
+     "eopreg": 0.03221,
+     "region_A": [
+      25.55,
+      26.55
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true
+   ]
+  },
+  "CC_M41_SP": {
+   "model": "CC_M41_SP",
+   "geometry": "M41",
+   "registry": "SP",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_atoms": 10,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "stack": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "SP",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 31.05,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82287,
+     "eopreg": 0.03221,
+     "region_A": [
+      25.55,
+      26.55
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true
+   ]
+  },
+  "CC_M41_AA": {
+   "model": "CC_M41_AA",
+   "geometry": "M41",
+   "registry": "AA",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_atoms": 10,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "stack": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AA",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 31.05,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82287,
+     "eopreg": 0.03221,
+     "region_A": [
+      25.55,
+      26.55
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true
+   ]
+  },
+  "CC_S44_AB": {
+   "model": "CC_S44_AB",
+   "geometry": "S44",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 4,
+   "n_top_layers": 4,
+   "n_atoms": 16,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "stack": {
+    "n_layers": 8,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25,
+     20.6,
+     23.95
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 41.1,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.86618,
+     "eopreg": 0.02433,
+     "region_A": [
+      35.6,
+      36.6
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "CC_M61_AB": {
+   "model": "CC_M61_AB",
+   "geometry": "M61",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "strain_vs_A_C_pct": 0.0,
+   "n_sub_layers": 6,
+   "n_top_layers": 1,
+   "n_atoms": 14,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.266606,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+   ],
+   "stack": {
+    "n_layers": 7,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25,
+     20.6
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 37.75,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.8543,
+     "eopreg": 0.02649,
+     "region_A": [
+      32.25,
+      33.25
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true
+   ]
+  },
+  "CC_M41_AB_V2a": {
+   "model": "CC_M41_AB_V2a",
+   "geometry": "M41",
+   "registry": "AB",
+   "lattice": "V2a",
+   "a_A": 2.49263138,
+   "strain_vs_A_C_pct": 1.0783,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_atoms": 10,
+   "n_C_contact_layer": 2,
+   "area_A2": 5.380799,
+   "fixed_idx": [
+    0,
+    1
+   ],
+   "lateral_fixed_idx": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "stack": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "endpoints": {
+    "c_A": 31.05,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82287,
+     "eopreg": 0.03221,
+     "region_A": [
+      25.55,
+      26.55
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   },
+   "d_init_A": 3.35,
+   "top_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true
+   ]
+  }
+ },
+ "structures_sha256": {
+  "CC_S33_AB_init_bound": "7a99b38526a6f79776246ef64b16e6d767b9d9f8113321795373c13046b3ce75",
+  "CC_S33_AB_init_far": "7ee94b4f8c072f834a03ac64f74f7521a6ff8e9004fd58f5ec2671dbb3e8a165",
+  "CC_S33_SP_init_bound": "94fa0c6fd97bb590eaa83eb595dea1ce608686e79b529e9b29ef3762d1e404e4",
+  "CC_S33_SP_init_far": "969743557944168eada18d29e86efeb38f74657964cad925f9716d4380a43650",
+  "CC_S33_AA_init_bound": "43c17d39f9317e65eae91a48c1a4f3fb437689db0e5ddb945c34c36e41d1db99",
+  "CC_S33_AA_init_far": "1bad8bc5c486d6381a6e447d14310f56257b66eea341073ea686a3769a4955e3",
+  "CC_M41_AB_init_bound": "d10c292a95b43aba7eb8f33f07ea4c3da73791ab30c0da67b94c0ba16c611509",
+  "CC_M41_AB_init_far": "d2b09df17a8a3904f674eedfcd2d5d62646d099ac024a258eeca2b18799ca1f5",
+  "CC_M41_SP_init_bound": "d47354d9108c270aa6aa01d620f1d2c44598a1c643f240bfa30f0017c927c323",
+  "CC_M41_SP_init_far": "de75f1ce49e4a55ad24c10832993acac9eb2d00a20e05a5a24ceb648a8d8658d",
+  "CC_M41_AA_init_bound": "553c1ea0409695b047e5c60e7ca26e45aa41d9a345c51bb95ad7122d7b3ac1d7",
+  "CC_M41_AA_init_far": "55c2376ec9429dd545c06250b76805bc5e9733f6be9bf1e2d051b2541ac612b5",
+  "CC_S44_AB_init_bound": "9e5d6e6e2a66231a1758c0239b98490034f9e30585502ae6edc08183e4da7718",
+  "CC_S44_AB_init_far": "8d878e2a5aa9e464bfdb48b0da639392d7093a7806a30e41be8accbb9636828b",
+  "CC_M61_AB_init_bound": "13ef60e40b30d1e0946b379cae986c7a6c06ca2fe4592a060e5d9babb6617737",
+  "CC_M61_AB_init_far": "711071e3fa4fb73e2af8a4a8167a9a89128f5f00291452b3792018d1e7a82823",
+  "CC_M41_AB_V2a_init_bound": "f14b15820da6440cec72864ba16868baf72ad411a5b20caf06969a6d82f4b563",
+  "CC_M41_AB_V2a_init_far": "f65ad2b6ddef2f82f6b646b805fe877cf3b2da489ca798b9aab37831198de4ac"
+ },
+ "jobs": [
+  {
+   "dir": "CC_S33_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "40049c8eb190d996b2dd3b18f3eb81fdfdbe1dcea9eb7826e84651b2dbf9469a",
+   "structure": "CC_S33_AB_init_bound",
+   "tags": {
+    "structure": "CC_S33_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_SP_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S33_SP",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "d42df70716fa2e9d2b4748fc954ee84dd8eeecddd39936ca8286fc2743634490",
+   "structure": "CC_S33_SP_init_bound",
+   "tags": {
+    "structure": "CC_S33_SP_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AA_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S33_AA",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "8f342f7031b23fbeac0ac7487de0c1eef3f79789f8a665a947cf1d055ad74543",
+   "structure": "CC_S33_AA_init_bound",
+   "tags": {
+    "structure": "CC_S33_AA_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "1763a86f722f8b257a93e0a0815234f02c1e668dc85ca876278ce46bac861b88",
+   "structure": "CC_M41_AB_init_bound",
+   "tags": {
+    "structure": "CC_M41_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_SP_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_SP",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "a6b8f550e2c0258100b80c8565b80dbea0974d750e4dc2605ddcac484f0d6635",
+   "structure": "CC_M41_SP_init_bound",
+   "tags": {
+    "structure": "CC_M41_SP_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AA_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_AA",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "0e0a63e9ef12b06f6a95137caa0ab3f60de47ab161617af7ba0f2a1eb95af3c8",
+   "structure": "CC_M41_AA_init_bound",
+   "tags": {
+    "structure": "CC_M41_AA_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S44_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_S44_AB",
+   "nat": 16,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.86618,
+    "eopreg": 0.02433
+   },
+   "pw_in_sha256": "184a5413be03cd5a0d3d2da28d16310d0a096b6cf3a8185c51d762cfd5ac65d0",
+   "structure": "CC_S44_AB_init_bound",
+   "tags": {
+    "structure": "CC_S44_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M61_AB_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M61_AB",
+   "nat": 14,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.8543,
+    "eopreg": 0.02649
+   },
+   "pw_in_sha256": "42d70dff96c0228dd52d1d9893c83dcc463bedda56e322ca43c7f469f6682016",
+   "structure": "CC_M61_AB_init_bound",
+   "tags": {
+    "structure": "CC_M61_AB_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_V2a_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "CC_M41_AB_V2a",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "b52166b46d26338b2b6f5f6eb76aeb787c93d5bd16776c9accdcd33c9355a763",
+   "structure": "CC_M41_AB_V2a_init_bound",
+   "tags": {
+    "structure": "CC_M41_AB_V2a_init_bound",
+    "stage": "1 · 제약 이완 (맨 아래층 고정 · 나머지 z 만)"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  }
+ ]
+}

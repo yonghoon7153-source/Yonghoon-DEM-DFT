@@ -1,0 +1,712 @@
+{
+ "slug": "jeon2026_concerted_li_motion_argyrodite_assi",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+  "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) Formation energies of 1800 Li6+xAs1−xSixS5I structures, deﬁned as Ef = E(Li6+xAs1−xSixS5I) −(5 + x)E(Li2S)/2 −(1 −x)E(As2S3)/2 −(1 + x) E(S) −xE(Si) −E(LiI), where E(Li6+xAs1−xSixS5I) is the energy per atom of Li6+xAs1−xSixS5I, and E(Li2S), E(As2S3), E(S), E(Si), and E(LiI) are the energies per atom of Li2S, As2S3, S, Si, and LiI, respectively. (b) T1, T2, T3, T4, T5, and T5a sites within LiS4 or LiS3I tetrahedra (gray) that share corners, edges, and faces with adjacent AsS4 tetrahedra (green). (c) Number of Li ions occupying the T2, T5, and T5a sites in the most stable Li6+xAs1−xSixS5I structure at each x.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    325.9
+   ],
+   "w": 2177,
+   "h": 1173,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) Bader charges (Q) of Li, As, Si, S, and I and (b) RDFs for the Li–S4d and Li–I pairs in the most stable Li6+xAs1−xSixS5I structure at each x. (c) Li cage structures drawn assuming that Li ions occupy all T5 and T5a sites within the cage, and representative intracage and intercage jump paths.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    432.8,
+    558.8,
+    705.7
+   ],
+   "w": 2177,
+   "h": 1138,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Electron localization function n(r) of AsS4 and SiS4 in Li6.75- As0.25Si0.75S5I: (a) three-dimensional representation at the localization level n = 0.8 and (b) two-dimensional representation on planes passing through three S16e, As/Si, and S16e ions.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    504.6,
+    298.0,
+    685.8
+   ],
+   "w": 1090,
+   "h": 756,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.568
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Formation energies of H2S released when argyrodites react with H2O: (a) Li6AsS5I and Li6.75As0.25Si0.75S5I and (b) Li6PS5Cl, Li6PS5Br, Li6PS5I, Li6AsS5I, and Li6SbS5I. The formation energy is deﬁned as Ef = [E(argyrodite; NS −1, NO + 1) + E(H2S)] −[E(argyrodite) + E(H2O)], where E(argyrodite) is the energy of the argyrodite, E(H2S) and E(H2O) are the energies of the H2S and H2O molecules, respectively, and NS and NO are the number of S and O atoms in the unit cell, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    239.9,
+    558.8,
+    646.9
+   ],
+   "w": 1091,
+   "h": 1697,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 AIMD simulation results of Li ions in Li6+xAs1−xSixS5I: (a) MSDs as a function of time at x = 0.75, (b) logarithmic diﬀusivities (ln D) as a function of inverse temperature at x = 0.75, (c) conductivity (s) and activation energy (Ea) as a function of time at x = 0.75, and (d) s and Ea values at x = 0, 0.25, 0.5, and 0.75. In (d), the green circles represent the measured s values.25",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    295.7
+   ],
+   "w": 2177,
+   "h": 1048,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 AIMD simulation results of Li6+xAs1−xSixS5I (x = 0 and 0.75) for 500 ps at T = 700 K: (a) isosurfaces of the Li probability density functions at an isosurface level of 2 × 10−4 Å−3, (b) number of Li jumps for T5 4 T5, T5 4 T2, T5 4 T4, T2 4 T2, T2 4 T1, and T4 4 T3 jumps between face-sharing tetrahedra, and (c) number of Li jumps for T5 / T4 / T5 and T2 / T2 intercage jumps.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    435.7,
+    558.8,
+    695.7
+   ],
+   "w": 2177,
+   "h": 1084,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.798
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) Trajectories of Li1, Li2, Li3, Li4, and Li5 and (b) the Li1–Li2, Li2–Li3, Li3–Li4, and Li4–Li5 distances (dLi1–Li2, dLi2–Li3, dLi3–Li4, and dLi4–Li5) in Li6AsS5I obtained from AIMD simulations at T = 700 K. In (a), the arrows indicate the positions of the Li ions at t = 0.0, 0.5, and 0.8 ps. In (b), the area shaded in red (green) indicates the time interval during which the T2 / T2 (T5 / T4 / T5) intercage jump of Li2 (Li4) occurs, and the dashed lines indicate the average Li–Li distance (3.33 Å) at T = 700 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    373.1,
+    558.8,
+    685.8
+   ],
+   "w": 2177,
+   "h": 1304,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 (a) Trajectories of Li1, Li2, Li3, Li4, and Li5 and (b) dLi1–Li2, dLi2–Li3, dLi3–Li4, and dLi4–Li5 in Li6.75As0.25Si0.75S5I obtained from AIMD simulations at T = 700 K. In (a), the arrows indicate the positions of the Li ions at t = 0.0, 0.5, and 1.0 ps. In (b), the area shaded in red (green) indicates the time interval during which the T2 / T2 (T5 / T4 / T5) intercage jump of Li2 (Li4) occurs, and the dashed lines indicate the average Li–Li distance (3.34 Å) at T = 700 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.9,
+    357.1
+   ],
+   "w": 2177,
+   "h": 1303,
+   "dpi": 300,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1 Convergence tests for the energy of Li6AsS5I with respect to (a) the plane-wave cutoff energy and (b) k-point mesh.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    402.3
+   ],
+   "w": 2013,
+   "h": 1402,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 Mean-square displacement (MSD) curves of Li ions in Li6+xAs1−xSixS5I for x = 0 and 0.75 at T = 700 K, obtained using different plane-wave cutoff energies and k-point meshes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    407.5
+   ],
+   "w": 2013,
+   "h": 1423,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 Mean-square displacements (MSD) of Li ions as a function of time in the most stable",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    399.0
+   ],
+   "w": 2013,
+   "h": 1388,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 Logarithmic diffusivities (lnD) as a function of inverse temperature in the most stable",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    398.9
+   ],
+   "w": 2013,
+   "h": 1388,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 Conductivities (σ) and activation energies (Ea) as a function of time in the most stable Li6+xAs1−xSixS5I structure at each x.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    368.3
+   ],
+   "w": 2013,
+   "h": 1260,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 Crystal structure of Li6AsS5I. Solid lines represent the 1 × 1 × 1 unit cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    467.7,
+    293.9
+   ],
+   "w": 1674,
+   "h": 950,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 Relative formation energies of Li6+xAs1−xSixS5I as a function of the number of Li ions occupying the T2, T4, T5, and T5a sites.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    406.4
+   ],
+   "w": 2013,
+   "h": 1419,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8 Radial distribution functions (RDFs) for the Li–S and Li–I pairs in the most stable",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    281.7
+   ],
+   "w": 2013,
+   "h": 899,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9 Relative energies of anion-ordered and anion-disordered Li6.75As0.25Si0.75S5I structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    533.5,
+    294.6
+   ],
+   "w": 1948,
+   "h": 953,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10 Atomic charges around Li ions diffusing along the T5 → T4 → T5 intercage path at x =",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    514.6
+   ],
+   "w": 2013,
+   "h": 1870,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11 Atomic charges around Li ions diffusing along the T2 → T2 intercage path at x = 0 and",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    387.3
+   ],
+   "w": 2013,
+   "h": 1339,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12 Logarithmic number of Li jumps (lnN) as a function of inverse temperature in the most",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    398.9
+   ],
+   "w": 2013,
+   "h": 1388,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13 Trajectories of Li ions in Li6AsS5I obtained from AIMD simulations at T = 700 K. A Li ion (red color) attempts the T5 → T4 → T5 intercage jump between t = 0.0 and 1.0 ps, and the",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    332.2
+   ],
+   "w": 2013,
+   "h": 1110,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 22,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14 Modified mean-square displacements (MSD) of Li ions as a function of in 𝜏",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    401.1
+   ],
+   "w": 2013,
+   "h": 1397,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Li ion conductivities (s) of iodine-containing argyrodite Li6MS5I (M = P, As, and Sb) and Li6þxM1\u0002xM",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    18.9,
+    557.8,
+    764.8
+   ],
+   "w": 2089,
+   "h": 2995,
+   "dpi": 289,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Energies above the convex hull (Ehull) and decomposition phases of Li6+xAs1−xSixS5I. The energy is deﬁned as Ehull = E(Li6+xAs1−xSixS5I) −(1 −x)E(Li6AsS5I) −xE(Li4SiS4) −xE(Li2S) −xE(LiI), where E(Li6+xAs1−xSixS5I) is the energy per atom of Li6+xAs1−xSixS5I, and E(Li6AsS5I), E(Li4SiS4), E(Li2S), and E(LiI) are the energies per atom of Li6AsS5I, Li4SiS4, Li2S, and LiI, respectively",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    18.9,
+    557.8,
+    764.8
+   ],
+   "w": 2090,
+   "h": 2995,
+   "dpi": 289,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Li diﬀusion properties of Li6+xAs1−xSixS5I. D0 is the pre-exponential factor, D is the diﬀusivity at T = 300 K, Ea is the activation energy, and s is the conductivity at T = 300 K. The error bounds in Ea, D, and s are presented in Table S5 System x D0 (cm2 s−1) D (cm2 s−1) Ea (eV) s (mS cm−1) Li6AsS5I 0 8.7 × 10−4 4.6 × 10−11 0.433 6.0 × 10−3 Li6.25As0.75Si0.25S5I 0.25 4.5 × 10−4 6.4 × 10−9 0.288 0.9 Li6.5As0.5Si0.5S5I 0.5 3.0 × 10−4 5.5 × 10−8 0.223 8.1 Li6.75As0.25Si0.75S5I 0.75 4.0 × 10−4 8.5 × 10−8 0.219 12.9",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    18.9,
+    557.8,
+    764.8
+   ],
+   "w": 2089,
+   "h": 2995,
+   "dpi": 289,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4.png",
+   "caption": "Table 4 Number of intercage jumps (Å−3 ns−1) occurring in Li6+xAs1−xSixS5I at T = 300 K. The error bounds in the number of intercage jumps are presented in Table S7",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    18.9,
+    557.8,
+    764.8
+   ],
+   "w": 2089,
+   "h": 2995,
+   "dpi": 289,
+   "src": "89._Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 23,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Lattice parameters and cell volumes of the most stable Li6+xAs1−xSixS5I structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    518.2,
+    724.0
+   ],
+   "w": 1881,
+   "h": 2736,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.983
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 24,
+   "file": "tab_S2.png",
+   "caption": "Table S2 AIMD results of Li ions in Li6+xAs1−xSixS5I for x = 0 and 0.75 at T = 700 K, obtained using different plane-wave cutoff energies and k-point meshes. D represents the diffusivity, and N",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    379.2
+   ],
+   "w": 2005,
+   "h": 1300,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 26,
+   "file": "tab_S4.png",
+   "caption": "Table S4 Average Bader charges (Q) of A and B, average distances (d) between A and B, and",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    252.1
+   ],
+   "w": 2005,
+   "h": 770,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 27,
+   "file": "tab_S5.png",
+   "caption": "Table S5 Error bounds of the activation energy (Ea), diffusivity (D), and conductivity (σ) for Li diffusion in Li6+xAs1−xSixS5I at T = 300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    265.5
+   ],
+   "w": 2005,
+   "h": 826,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 28,
+   "file": "tab_S6.png",
+   "caption": "Table S6 Topological criteria used to determine the Li sites in several Li-centered polyhedra that",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    377.5
+   ],
+   "w": 2005,
+   "h": 1293,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 29,
+   "file": "tab_S7.png",
+   "caption": "Table S7 Error bounds of the numbers of T5 → T4 → T5 and T2 → T2 intercage jumps in",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    265.5
+   ],
+   "w": 2005,
+   "h": 826,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 30,
+   "file": "tab_S8.png",
+   "caption": "Table S8 Number of jumps, number of Li ions involved in jumps, and duration of jumps for the",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    320.7
+   ],
+   "w": 2005,
+   "h": 1056,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 31,
+   "file": "tab_S9.png",
+   "caption": "Table S9 Number of jumps, number of Li ions involved in jumps, and duration of jumps for the",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    293.1
+   ],
+   "w": 2005,
+   "h": 941,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 32,
+   "file": "tab_S10.png",
+   "caption": "Table S10 Tracer diffusion coefficient (Dtr), charge diffusion coefficient (Dσ), Nernst–Einstein conductivity (σNE), collective conductivity (σcol), and Haven ratio (H) in Li6+xAs1−xSixS5I at T = 1000 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.0,
+    293.1
+   ],
+   "w": 2005,
+   "h": 941,
+   "dpi": 300,
+   "src": "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf",
+   "blank": 0.951
+  }
+ ]
+}

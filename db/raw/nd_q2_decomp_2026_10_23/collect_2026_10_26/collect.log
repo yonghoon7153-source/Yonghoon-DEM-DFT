@@ -1,0 +1,12 @@
+  기저 5상 (셀당 → 화학식당, Z = Li3PS4×4, Li2S×1, LiCl×2, Li3PO4×2, Nd2S3×4)
+  상 Pulay (끝 SCF − 마지막 BFGS, meV/원자): Li3PS4 0.006, Li2S 0.038, LiCl 0.045, Li3PO4 0.273, Nd2S3 0.033   ✓
+  doped                    ΔE_decomp =    -43.9 meV/atom  (원자 120 · 조성 ← QE 입력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/ndq2_collect/in/doped.in)
+  host                     ΔE_decomp =    -21.6 meV/atom  (원자 62 · 조성 ← QE 입력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/ndq2_collect/in/host.in)
+
+★ Y = ΔE_decomp(doped) − ΔE_decomp(host) = -22.26 meV/atom (보정 전) · 보정 (B 25) -22.26 · 범위 B 25.0: -22.26 · B 21.7: -22.26 · B 32.5: -22.26
+  분해능 2 meV/atom → Y < 0 이면 doped 의 분해 구동력이 더 크다 · Y > 0 이면 더 작다
+
+★ 더 안정: host  (차이 22.3 meV/atom)
+  ⚠ 이것은 E_above_hull 이 아니다 — **5상 기저 안에서의** 비교다. 기저 밖 더 낮은 분해 경로는 못 본다.
+
+✓ 타깃 2개 → /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/ndq2_collect/decomp_result.json

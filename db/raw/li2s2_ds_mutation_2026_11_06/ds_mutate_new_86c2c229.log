@@ -1,0 +1,17 @@
+변이 457 개 (DR 판 448 · 자리 옮김 5 · DS 9) · 자리 모두 한 번씩 · 모두 컴파일됨
+작업자 4 · 러너 첫 빨강 멈춤 켬 · 복사본 mut_ds_new_w*
+DR4_derived_exception_off        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR3_derived_any_change           ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DQ70_prior_nonsci_changed_off    ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DN4_hash_format_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DS2_exempt_any_status            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS1_exempt_ignores_mismatch      ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DR62_after_anchor_ignored        ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS3_pre_anchor_rule_off          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS4_dir_as_absent                ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DR P1-2: 경로 상태 — 없음 None · 정상 파일 sha256 · 디렉터리 nonfile:dir · 파일 링크 link:+내용 지문 · 깨진 링크 · 디렉터리 링크 nonfile:symlink · FIFO nonfile:other (진짜 부
+DS5_symlink_as_file              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DR P1-2: 경로 상태 — 없음 None · 정상 파일 sha256 · 디렉터리 nonfile:dir · 파일 링크 link:+내용 지문 · 깨진 링크 · 디렉터리 링크 nonfile:symlink · FIFO nonfile:other (진짜 부
+DS7_state_problem_lax            ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 DJ Q2 · DK P0-1 · P1-1 · DL P0 · Q2: 완료 단계 = MD 완료 기록으로 (프레임을 안 센다) — 최종 · 기록 맞음 = MD 완료 · 기록 없이 끝 경계 (1 ps 일정 4 ps · 0.7 ps 일정 1,750 스텝) = 완료
+DS6_derived_any_nonnull          ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DQ P1-1: 자동 대체는 판정이 읽은 입력 전부 (원자료 · md_init_raw.xyz · 실행 전 기록 · G4 밴드 카드 · 카드 값 · 도구 · 실행 환경) 가 같고 앞 판정이 판정 도중 예외 (입력 불일치 없음) 일 때만 — 다른 md_
+DS8_link_prefix_off              ⭕ 빨강 [melt_quench_uma] ·   ⛔ ⛔음성 회신 DR P1-2: 경로 상태 — 없음 None · 정상 파일 sha256 · 디렉터리 nonfile:dir · 파일 링크 link:+내용 지문 · 깨진 링크 · 디렉터리 링크 nonfile:symlink · FIFO nonfile:other (진짜 부
+DS9_provenance_is_file_only      ⭕ 빨강 [li2s2_stage1_runner] ·   ⛔ ⛔음성 회신 DR P1-2 (Codex 재현): raw 자리의 디렉터리 때문에 끝 판정이 오류 (지문 nonfile:dir) 였으면 디렉터리를 치우고 정상 raw 가 생겨도 '없음 → 생성' 으로 자동 대체하지 않는다 (발사 0) (27 · 발사 3 · None
+끝: 빨강 14 / 14

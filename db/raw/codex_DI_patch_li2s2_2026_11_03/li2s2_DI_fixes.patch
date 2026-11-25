@@ -1,0 +1,565 @@
+--- a/tools/ionic/melt_quench_uma.py
++++ b/tools/ionic/melt_quench_uma.py
+@@ -529,6 +529,7 @@
+ LI2S2_STATUSES = ("pass", "fail", "incomplete", "invalid")
+ DENSITY_REL_TOL = 1e-4          # 고정 밀도 대조 (gate_check NVT · 최종 구조) — 한 곳에서만 정한다
+ PROVENANCE_FILES = ("plan.json", "thermo.csv", "traj.xyz", "final.xyz", "result.json")
++ATTEMPT_NAME = "stage1_attempt.json"  # 러너가 실행 전에 쓰는 식별 기록 — 보존 폴더도 비용 검사 대상
+ LEDGER_NAME = "stage1_ledger.json"   # li2s2_stage1_runner.py 가 쓰는 비용 장부 — stage1_summary 가 상한을 여기서 다시 잰다
+ RUN_ID_RE = re.compile(r"^[0-9a-f]{32}$")   # 회신 DH P0-2 — 러너가 담금질마다 주는 실행 식별자 (plan.json run_id · 장부 run_id)
+ VERDICT_HISTORY = "stage1_verdict_history.jsonl"   # 회신 DH P1-5 — 판정을 덮어쓰기 전 이전 판정 전체 · 지문 변화 · 사유
+@@ -1152,6 +1153,43 @@
+     return out
+ 
+ 
++def attempt_inventory(out_root):
++    """현재 · 보존된 시드 폴더의 실행을 읽는다. plan 이 아직 없어도 실행 전 기록으로 장부와 잇는다.
++    기록을 모두 지우거나 root 밖으로 옮긴 실행을 복원하는 도구는 아니다. 기존 plan-only 실행은 신원을 읽되 추정하지 않는다.
++    """
++    found, invalid = {}, []
++    root = pathlib.Path(out_root)
++    for system in ("A", "B"):
++        parent = root / system
++        if not parent.is_dir():
++            continue
++        for rd in sorted(parent.iterdir()):
++            if not rd.is_dir():
++                continue
++            ids = []
++            for name in (ATTEMPT_NAME, "plan.json"):
++                p = rd / name
++                if not p.is_file():
++                    continue
++                try:
++                    rec = json.loads(p.read_text(encoding="utf-8"))
++                    rid, sysn, seed = rec.get("run_id"), rec.get("system"), rec.get("seed")
++                    if not (isinstance(rid, str) and RUN_ID_RE.fullmatch(rid)
++                            and sysn == system and type(seed) is int):
++                        raise ValueError("실행 식별 필드 불일치")
++                except (OSError, ValueError, AttributeError) as e:
++                    invalid.append(f"{p}: 실행 신원을 못 읽음 ({type(e).__name__})")
++                    continue
++                ids.append((rid, sysn, seed))
++            if len(set(ids)) > 1:
++                invalid.append(f"{rd}: 실행 전 기록과 plan 신원이 다름")
++            for rid, sysn, seed in set(ids):
++                if rid in found:
++                    invalid.append(f"run_id {rid} 산출물 폴더가 둘: {found[rid]['path']} · {rd}")
++                found[rid] = {"system": sysn, "seed": seed, "path": str(rd)}
++    return found, invalid
++
++
+ def ledger_check(out_root, verdicts, values):
+     """⭐ 회신 DH P0-1 — 장부 = **실행 목록**. 장부가 없으면 None (확인 못 함 → 통과 안 됨).
+     invalid (자료 · 기록 오류): 장부 꼴 · 비용이 유한한 비음수가 아님 · 비용 근거가 측정 · 보수 상한이 아님 · run_id 중복 ·
+@@ -1172,6 +1210,8 @@
+         invalid.append("장부 runs 가 목록이 아니다"); runs = []
+     tot = 0.0
+     for r in runs:
++        if not isinstance(r, dict):
++            invalid.append("장부 runs 원소가 객체가 아니다"); continue
+         key = f"{r.get('system')}{r.get('seed')}"
+         rid = r.get("run_id")
+         if isinstance(rid, str) and rid:
+@@ -1187,6 +1227,21 @@
+         if r.get("cost_basis") not in COST_BASES:
+             invalid.append(f"{key} 런 비용 근거 {r.get('cost_basis')!r} — 측정 · 보수 상한이 아니면 확정 비용이 아니다"); continue
+         tot += float(w)
++    inventory, inventory_bad = attempt_inventory(out_root)
++    invalid.extend(inventory_bad)
++    for rid, rec in inventory.items():
++        r = by_id.get(rid)
++        if r is None:
++            invalid.append(f"보존 포함 실행 {rid} ({rec['path']}) 이 장부에 없다")
++        elif (r.get("system"), r.get("seed")) != (rec["system"], rec["seed"]):
++            invalid.append(f"실행 {rid} 의 산출물 · 장부 계/시드가 다름")
++    # 실패를 보존 폴더로 옮겨 새 실행으로 대체해도 과학적 탈락은 사라지지 않는다.
++    for r in runs:
++        if not isinstance(r, dict) or r.get("verdict") != "fail":
++            continue
++        vv = verdicts.get((r.get("system"), r.get("seed")))
++        if vv is not None and vv.get("run_id") != r.get("run_id"):
++            invalid.append(f"{r.get('system')}{r.get('seed')}: 과학적 fail 실행을 다른 실행으로 대체했다")
+     for (s, sd), vv in verdicts.items():
+         if vv is None:
+             continue
+--- a/tools/ionic/li2s2_stage1_runner.py
++++ b/tools/ionic/li2s2_stage1_runner.py
+@@ -24,8 +24,15 @@
+   P0-3 그룹 정리는 대표 (직접 자식) 의 종료와 그룹 잔존을 따로 본다 — 대표가 먼저 끝나도 (TERM 에 죽든 rc 0 이든) 그룹을 TERM →
+        KILL → 비었는지 확인 · 못 비우면 런 항목을 닫지 않고 (stop_failed · 비용 미확정) 멈춘다 · 정상 종료 뒤에도 그룹을 정리한다
+   P1-4 첫 시드 녹음 invalid · 묶음 invalid = 자료 · 판독 · 기록 오류 → STOP code "invalid" (종료코드 27 · terminal 아님) —
+-       과학적 종료 (melt · track) 와 다르다. 재개: 원인을 고치고 그 시드 폴더를 옆으로 옮긴 뒤 --ack_stop (앞 런 비용은 장부에 남는다)
++       과학적 종료 (melt · track) 와 다르다. 재개: 원인을 고치고 그 시드 폴더를 같은 계 폴더 안에 보존한 뒤 해당 run_id의 STOP을 --ack_stop (앞 런 비용 유지)
+   P1-5 재판정은 덮어쓰기 전에 이전 판정 전체 · 지문 변화 · 사유를 <시드>/stage1_verdict_history.jsonl 에 남긴다 (드라이버)
++
++DI 수정:
++  · 보존된 seed 폴더의 plan/실행 전 기록까지 비용 장부와 대조한다. 보존은 같은 root의 A/B 아래에서 한다.
++  · 과학적 pass/fail은 재담금질하지 않는다. invalid만 이전 run_id에 연결된 STOP 확인으로 재시도한다.
++  · stage1_attempt.json을 실행 전에 작성한다. plan 이전 중단도 실행 신원을 잃지 않는다.
++  · /proc 판독 불가는 빈 그룹이 아니다. 종료 확인 불가이면 그룹 정리 실패/재개 거부로 남긴다.
++  · 실행·정리 경과는 monotonic, 고아 상한은 동일 호스트/boot의 BOOTTIME이다. 근거 없으면 비용 미확정.
+ 
+ 하는 일 (순서 A11 → B11 → A12 → B12 → … → B15 · 계를 번갈아):
+   ① 시작 전: 결정 active · 드라이버 sha16 = 고정값 · 카드 값 (드라이버 검사 통과) · 순서 = 카드 시드 전부 · 첫 시드 = 카드 first_seed ·
+@@ -41,7 +48,7 @@
+   ⑦ 장부 stage1_ledger.json (시드마다 시작 · heartbeat · 끝 · 벽시계 · rc · 판정 · closes_system · STOP 이력) · 로그 stage1.log
+ 
+ 종료코드: 0 1 단계 통과 (2 단계 시드는 stage1_summary.json) · 10 거부 (결정 · sha · 잠금 · 카드 · 순서 · 살아 있는 이전 담금질 · ack)
+-         20 트랙 멈춤 (묶음 판정) · 21 첫 시드 녹음 미충족 · 무효 (그 계를 닫음) · 22 상한 · 미완결 · 23 담금질 비정상 종료 ·
++         20 트랙 멈춤 (묶음 판정) · 21 첫 시드 녹음 미충족 (그 계를 닫음 · 자료 무효는 27) · 22 상한 · 미완결 · 23 담금질 비정상 종료 ·
+          24 끊긴 런 폴더 · 25 끝났는데 묶음이 대기 · 26 러너 중단 (예외 · Ctrl-C · 신호 — 그룹을 비웠는지는 STOP cleanup)
+          27 자료 · 판독 · 기록 오류 (invalid — 과학적 종료 아님 · 고친 뒤 폴더를 옆으로 옮기고 --ack_stop)
+ 
+@@ -50,20 +57,21 @@
+   · 끊긴 시드를 이어 돌리지 않는다 · 2 단계를 띄우지 않는다 (묶음 판정과 2 단계 시드만 적는다)
+   · 러너를 다시 띄우면 돌던 담금질을 넘겨받지 않는다 — 러너가 끝날 때 자기 담금질을 멈춘다 (그 시드는 사람이 정한다)
+   · 러너가 SIGKILL 로 죽으면 담금질 (자기 세션) 은 산다 — 재시작이 그 프로세스 그룹이 살아 있는 동안 거부하고, 죽은 뒤엔
+-    **보수 상한** (그룹이 죽은 것을 본 시각 − 시작) 을 비용으로 적는다 — 실제보다 크게 잡힐 수 있다 (상한 회계에는 안전 쪽)
++    동일 호스트·부팅 구간의 BOOTTIME 근거가 있을 때만 종료 확인까지를 **보수 상한**으로 적는다.
++    재부팅·옛 기록·시계 근거 부재이면 비용 미확정으로 막는다. UTC 시각 차로 대체하지 않는다
+   · 그룹에서 자기 pgid 를 바꾼 (setsid · setpgid) 손자는 이 그룹 밖이라 못 본다 · /proc 이 없는 OS 는 좀비도 '남음' 으로 셀 수 있다
+   · 판정 자체는 하지 않는다 — melt_quench_uma.py 의 melt_window_check · stage1_verdict · stage1_summary 를 부른다 (같은 worktree · sha 고정)
+   · flock 은 같은 기계의 로컬 파일시스템에서만 믿는다 (NFS 너머 두 기계의 동시 실행은 못 막는다)
+ 
+   python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root ~/work/runs/li2s2_dense_1103 \\
+           --python /home/kgy/apps/miniforge3/envs/uma/bin/python
+-  python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root … --print_cmd A:11   # 손 실행 명령 (기계값에서)
++  python3 tools/ionic/li2s2_stage1_runner.py --worktree ~/wt_li2s2 --run_root … --print_cmd A:11   # 명령 확인용 (손 실행은 공식 시드로 자동 편입하지 않음)
+   python3 tools/ionic/li2s2_stage1_runner.py --selftest
+ """
+ from __future__ import annotations
+-import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid
+-
+-EXPECTED_DRIVER_SHA16 = "bc325e25ef7f2bba"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
++import argparse, datetime, hashlib, importlib.util, json, os, pathlib, shlex, shutil, signal, subprocess, sys, tempfile, threading, time, traceback, uuid, socket, math
++
++EXPECTED_DRIVER_SHA16 = "ca81a6c3d554ce13"     # tools/ionic/melt_quench_uma.py — 바뀌면 이 줄도 같이 바꾸고 다시 리뷰한다
+ DECISION = "D-2026-11-03-li2s2-dense-window"
+ CARD_REL = "db/properties/lpscl_glass_dense_window_estimand_2026_11_03.json"
+ DRIVER_REL = "tools/ionic/melt_quench_uma.py"
+@@ -73,7 +81,7 @@
+       "invalid": 27}
+ TERMINAL_STOPS = ("melt", "track")       # --ack_stop 으로 못 넘긴다 — 그 계 · 트랙이 카드 규칙으로 **과학적으로** 닫혔다 (새 카드 · 새 run_root)
+ #: ⭐ 회신 DH P1-4 — "invalid" (자료 · 판독 · 기록 오류) 는 과학적 종료가 아니다: 계속 돌리지 않지만 terminal 도 아니다.
+-#:   고치는 법: 원인을 고치고 (도구 · 카드는 새 결정 · 새 sha) · 그 시드 폴더를 옆으로 옮긴 뒤 (예 seed11 → seed11.invalid_<날짜>) · --ack_stop.
++#:   고치는 법: 원인을 고치고 (도구 · 카드는 새 결정 · 새 sha) · 그 시드 폴더를 같은 계 폴더 안에 보존 (예 seed11 → seed11.invalid_<날짜>) · 해당 run_id의 STOP을 --ack_stop.
+ #:   과학적 종료 (melt · track) 의 "재개" 는 새 카드뿐이다 — 둘을 같은 절차로 다루지 않는다.
+ 
+ 
+@@ -164,28 +172,37 @@
+         """그 담금질의 **프로세스 그룹 전체**를 멈추고 기다린다 — 이름으로 잡지 않는다 (CLAUDE.md pkill 금지).
+         ⭐ 회신 DH P0-3: 대표 (직접 자식) 의 종료와 그룹의 잔존을 따로 본다 — 대표가 먼저 끝나도 남은 일꾼이 있으면 TERM → grace →
+         KILL → 다시 확인. 반환 {"leader_rc", "group_empty", "signals", "left"} — group_empty 가 거짓이면 '멈췄다' 로 적지 않는다."""
+-        pg, sent = self.p.pid, []
+-        self.p.poll()
+-        if self.p.returncode is None or _group_members(pg):
++        pg, sent, errors = self.p.pid, [], []
++        def members():
+             try:
+-                os.killpg(pg, signal.SIGTERM); sent.append("TERM")
++                return _group_members(pg)
++            except (OSError, ValueError, _GroupStateUnknown) as e:
++                msg = f"{type(e).__name__}: {e}"
++                if msg not in errors:
++                    errors.append(msg)
++                return None
++        def send(sig, label):
++            try:
++                os.killpg(pg, sig); sent.append(label)
+             except ProcessLookupError:
+                 pass
+-        t0 = time.time()
+-        while time.time() - t0 < grace_s:
++            except OSError as e:
++                errors.append(f"{label}: {type(e).__name__}: {e}")
++        self.p.poll()
++        if self.p.returncode is None or members() != []:
++            send(signal.SIGTERM, "TERM")
++        t0 = time.monotonic()
++        while time.monotonic() - t0 < grace_s:
+             self.p.poll()                                   # 대표를 거둔다 (좀비로 그룹을 붙들지 않게)
+-            if self.p.returncode is not None and not _group_members(pg):
++            if self.p.returncode is not None and members() == []:
+                 break
+             time.sleep(0.2)
+-        if self.p.returncode is None or _group_members(pg):
+-            try:
+-                os.killpg(pg, signal.SIGKILL); sent.append("KILL")
+-            except ProcessLookupError:
+-                pass
+-            t1 = time.time()
+-            while time.time() - t1 < kill_wait_s:
++        if self.p.returncode is None or members() != []:
++            send(signal.SIGKILL, "KILL")
++            t1 = time.monotonic()
++            while time.monotonic() - t1 < kill_wait_s:
+                 self.p.poll()
+-                if self.p.returncode is not None and not _group_members(pg):
++                if self.p.returncode is not None and members() == []:
+                     break
+                 time.sleep(0.2)
+         if self.p.returncode is None:
+@@ -195,45 +212,95 @@
+                 pass
+         if not self.fh.closed:
+             self.fh.close()
+-        left = _group_members(pg)
+-        return {"leader_rc": self.p.returncode, "group_empty": self.p.returncode is not None and not left,
+-                "signals": sent, "left": left}
++        left = members()
++        return {"leader_rc": self.p.returncode, "group_empty": self.p.returncode is not None and left == [],
++                "signals": sent, "left": left, "inspection_errors": errors}
+     @property
+     def returncode(self):
+         return self.p.returncode
+ 
+ 
++class _GroupStateUnknown(RuntimeError):
++    """프로세스 그룹의 부재를 확인할 수 없다. False/빈 목록으로 바꾸지 않는다."""
++
++
+ def _group_members(pgid):
+-    """그 프로세스 그룹에 남은 (좀비 아닌) 프로세스 pid — Linux 는 /proc 의 pgrp 로 센다 (대표가 먼저 죽어도 남은 일꾼을 본다 ·
+-    거둬지지 않은 좀비는 죽은 것으로). /proc 이 없으면 killpg(0) 로 '있다 · 없다' 만 (좀비도 있다로 셀 수 있다)."""
++    """Linux pgrp 생존자를 반환한다. 빈 목록은 부재 확인, 판독 불가는 예외다.
++    조회 중 소멸 (ENOENT/ESRCH)만 무시하며 권한·I/O·형식 오류를 빈 그룹으로 읽지 않는다.
++    다른 그룹을 읽지 못하는 환경에서는 killpg(0)의 ESRCH로도 자기 그룹의 부재를 확인한다.
++    setsid/setpgid로 그룹을 이탈한 자손은 대상 밖이다.
++    """
+     pgid = int(pgid)
+-    proc = pathlib.Path("/proc")
++    if pgid <= 0:
++        raise _GroupStateUnknown("pgid must be positive")
++    proc, out, errors = pathlib.Path("/proc"), [], []
+     if proc.is_dir():
+-        out = []
+-        for d in proc.iterdir():
+-            if not d.name.isdigit():
+-                continue
+-            try:
+-                st = (d / "stat").read_text()
+-            except OSError:
+-                continue
+-            rest = st[st.rfind(")") + 2:].split()          # state ppid pgrp …
+-            if len(rest) > 2 and rest[2] == str(pgid) and rest[0] != "Z":
+-                out.append(int(d.name))
+-        return out
++        try:
++            for d in proc.iterdir():
++                if not d.name.isdigit():
++                    continue
++                try:
++                    st = (d / "stat").read_text()
++                    close = st.rfind(")")
++                    rest = st[close + 2:].split()
++                    if close < 0 or len(rest) < 3:
++                        raise ValueError("malformed /proc stat")
++                    group = int(rest[2])
++                except (FileNotFoundError, ProcessLookupError):
++                    continue
++                except (OSError, ValueError) as e:
++                    errors.append(f"{d.name}: {type(e).__name__}"); continue
++                if group == pgid and rest[0] != "Z":
++                    out.append(int(d.name))
++        except OSError as e:
++            errors.append(type(e).__name__)
++        if out or not errors:
++            return out
++    # /proc unavailable or incomplete: only ESRCH proves absence; permission failure is unknown.
+     try:
+-        os.killpg(pgid, 0); return [pgid]
++        os.killpg(pgid, 0)
+     except ProcessLookupError:
+         return []
+-    except PermissionError:
+-        return [pgid]
++    except (OSError, AttributeError) as e:
++        raise _GroupStateUnknown(f"group {pgid}: {type(e).__name__} {errors}") from e
++    if errors:
++        raise _GroupStateUnknown(f"group {pgid}: unreadable process records {errors[:4]}")
++    return [pgid]
+ 
+ 
+ def _pg_alive(pgid):
+     try:
+         return bool(_group_members(pgid))
+     except Exception:
+-        return False
++        return None  # unknown is not dead; restart refuses it
++
++
++def _recovery_clock():
++    """같은 Linux 호스트·부팅 구간의 BOOTTIME. 재부팅·판독 불가이면 상한을 추정하지 않는다."""
++    try:
++        boot = pathlib.Path("/proc/sys/kernel/random/boot_id").read_text().strip()
++        if not boot:
++            return None
++        return {"host": socket.gethostname(), "boot_id": boot, "kind": "CLOCK_BOOTTIME",
++                "seconds": time.clock_gettime(time.CLOCK_BOOTTIME)}
++    except (OSError, AttributeError):
++        return None
++
++
++def _orphan_upper_hours(ent, now):
++    start = ent.get("start_recovery_clock")
++    if not isinstance(start, dict) or not isinstance(now, dict):
++        return None
++    keys = ("host", "boot_id", "kind")
++    if any(not start.get(k) or start.get(k) != now.get(k) for k in keys):
++        return None
++    try:
++        elapsed = (float(now["seconds"]) - float(start["seconds"])) / 3600.0
++        lower = float(ent.get("wall_h_so_far", 0.0))
++    except (KeyError, TypeError, ValueError):
++        return None
++    return elapsed if math.isfinite(elapsed) and math.isfinite(lower) and elapsed >= max(0.0, lower) else None
++
+ 
+ 
+ def _gpu_used_mib():
+@@ -292,7 +359,8 @@
+     deps = deps or {}
+     W, R = pathlib.Path(a.worktree), pathlib.Path(a.run_root)
+     R.mkdir(parents=True, exist_ok=True)
+-    sleep, clock, wall = deps.get("sleep", time.sleep), deps.get("clock", time.time), deps.get("wall", time.time)
++    sleep, clock, wall = deps.get("sleep", time.sleep), deps.get("clock", time.monotonic), deps.get("wall", time.time)
++    recovery_clock = deps.get("recovery_clock", _recovery_clock)
+     gpu_used, launch, pg_alive = deps.get("gpu_used", _gpu_used_mib), deps.get("launch", _Proc), deps.get("pg_alive", _pg_alive)
+     logf = open(R / "stage1.log", "a")
+     def log(*m):
+@@ -400,23 +468,19 @@
+         for ent in led["runs"]:
+             if ent.get("end") is None:
+                 pg = ent.get("pgid")
+-                if pg is not None and pg_alive(pg):
+-                    log(f"⛔ 장부의 {ent['system']}{ent['seed']} 담금질 (프로세스 그룹 {pg}) 이 아직 살아 있다 — 시작하지 않는다")
++                alive = pg_alive(pg) if pg is not None else None
++                if alive is not False:
++                    log(f"⛔ 장부의 {ent['system']}{ent['seed']} 담금질 (프로세스 그룹 {pg}) 이 살아 있거나 종료 확인 불가다 — 시작하지 않는다")
+                     return RC["refused"]
+-                rd = R / ent["system"] / f"seed{ent['seed']}"
+-                mt = max((f.stat().st_mtime for f in rd.iterdir() if f.is_file()), default=None) if rd.is_dir() else None
+-                lo = float(ent.get("wall_h_so_far") or 0.0)
+-                if mt is not None and ent.get("start_epoch") is not None:
+-                    lo = max(lo, (mt - float(ent["start_epoch"])) / 3600.0)
+-                # ⭐ 회신 DH P0-1 — heartbeat · 파일 시각은 **하한** 이다. 상한 회계에는 보수 상한 (지금 = 그룹이 죽은 것을 본 시각 − 시작) 을 쓴다
+-                if ent.get("start_epoch") is not None:
+-                    hi = max(lo, (wall() - float(ent["start_epoch"])) / 3600.0)
++                lo = ent.get("wall_h_so_far")
++                hi = _orphan_upper_hours(ent, recovery_clock())
++                if hi is not None:
+                     ent.update(end=_now(), wall_h=hi, wall_h_lower=lo, rc="unknown_runner_died", status="orphaned",
+-                               cost_basis="upper_bound", wall_h_basis="보수 상한 = 그룹이 죽은 것을 본 시각 − 시작 (하한 = 마지막 heartbeat · 파일 시각)")
+-                    log(f"  ⚠ 장부의 {ent['system']}{ent['seed']} 는 러너가 죽어 끝이 안 적혔다 — 고아 런 · 비용 보수 상한 {hi:.2f} h (하한 {lo:.2f})")
++                               cost_basis="upper_bound", wall_h_basis="동일 호스트·boot BOOTTIME 종료 확인 − 시작")
++                    log(f"  고아 런 비용 상한 {hi:.2f} h (단조 시계 · 그룹 종료 확인)")
+                 else:
+                     ent.update(end=_now(), wall_h=None, wall_h_lower=lo, rc="unknown_runner_died", status="orphaned", cost_basis="unknown")
+-                    log(f"  ⛔ 장부의 {ent['system']}{ent['seed']} 고아 런은 시작 시각이 없어 비용 상한을 못 낸다 — 묶음이 통과로 안 오른다")
++                    log("  ⛔ 고아 런의 동일 부팅 시계 근거가 없다 — 비용 미확정 · 통과 불가")
+                 save_ledger()
+         # ①-3 장부에 그 계를 닫은 사건이 있으면 거부 (STOP 을 지워도)
+         closed = [f"{r['system']}{r['seed']}" for r in led["runs"] if r.get("closes_system")]
+@@ -454,6 +518,18 @@
+                 return stop("resume", f"{sysn}{seed} 판정이 {sv} — 끝나지 않은 런 폴더 (덮어쓰지 않는다 · 사람이 정한다)", sys=sysn, seed=seed)
+             if rd.exists():
+                 return stop("resume", f"{sysn}{seed} 런 폴더가 판정 없이 있다 — 끊긴 런을 덮어쓰지 않는다 (사람이 정한다)", sys=sysn, seed=seed)
++            attempts = [x for x in led["runs"] if (x.get("system"), x.get("seed")) == (sysn, seed)]
++            retry_of, retry_stop = None, None
++            if attempts:
++                prev = attempts[-1]
++                if any(x.get("verdict") != "invalid" for x in attempts):
++                    return stop("invalid", f"{sysn}{seed}: 이전 실행이 과학적 pass/fail 또는 미해결이다 — 폴더 이동으로 재담금질하지 않는다",
++                                sys=sysn, seed=seed)
++                receipts = [x for x in led["stop_history"] if x.get("code") == "invalid"
++                            and x.get("run_id") == prev.get("run_id") and x.get("acked_at")]
++                if not receipts:
++                    return stop("resume", f"{sysn}{seed}: 이전 invalid run_id 에 결박된 복구 확인이 없다", sys=sysn, seed=seed)
++                retry_of, retry_stop = prev["run_id"], receipts[-1]["stop_id"]
+             walls = [float(r["wall_h"]) for r in led["runs"] if r.get("wall_h") is not None and r.get("status") == "ended"]
+             cum, worst = cost_so_far(), max(walls + [a.seed_worst_h])
+             if cum + worst > cap:
+@@ -471,11 +547,17 @@
+             cmd = build_cmd(a.python, W, R, sysn, seed, vals, mq, run_id=rid)
+             t0 = clock()
+             log(f"▶ {sysn}{seed} 담금질 — " + " ".join(cmd[2:]))
++            rd.mkdir(parents=True, exist_ok=False)
++            _write_json_atomic(rd / mq.ATTEMPT_NAME, {"system": sysn, "seed": seed, "run_id": rid,
++                                                     "retry_of": retry_of, "retry_stop_id": retry_stop})
++            ent = {"system": sysn, "seed": seed, "run_id": rid, "start": _now(), "start_epoch": wall(), "pgid": None,
++                   "start_recovery_clock": recovery_clock(), "retry_of": retry_of, "retry_stop_id": retry_stop,
++                   "status": "starting", "end": None, "wall_h": None, "wall_h_so_far": 0.0, "cum_before_h": cum}
++            led["runs"].append(ent); state["entry"], state["t0"] = ent, t0
++            save_ledger()
+             h = launch(cmd, R / f"quench_{sysn}{seed}.log")
+-            state["h"], state["t0"] = h, t0
+-            ent = {"system": sysn, "seed": seed, "run_id": rid, "start": _now(), "start_epoch": wall(), "pgid": getattr(h, "pid", None),
+-                   "status": "running", "end": None, "wall_h": None, "wall_h_so_far": 0.0, "cum_before_h": cum}
+-            led["runs"].append(ent); state["entry"] = ent
++            state["h"] = h
++            ent.update(pgid=getattr(h, "pid", None), status="running")
+             save_ledger()                                    # ⭐ 띄운 직후 — 러너가 죽어도 시작 사실이 남는다 (회신 DG P0-2)
+             need_melt = (seed == vals["first_seed"])
+             while h.poll() is None:
+@@ -515,13 +597,13 @@
+                                                 "그 계가 닫혀 트랙 전체 멈춤", sys=sysn, seed=seed, verdict=v.get("status"))
+                         return stop("invalid", f"{sysn}{seed} (계의 첫 시드) 녹음 판정 {mw['verdict']} · 시드 판정 {v.get('status')} — "
+                                                "자료 · 판독 오류로 멈춘 것이지 그 계가 기준을 못 넘었다는 증거가 아니다 (closes_system 아님)",
+-                                    sys=sysn, seed=seed, verdict=v.get("status"), melt=mw.get("message"))
++                                    sys=sysn, seed=seed, run_id=rid, verdict=v.get("status"), melt=mw.get("message"))
+                     if mw["verdict"] == "pass":
+                         need_melt = False
+                         log(f"  {sysn}{seed}: 녹음 판정 통과 (D_P {mw.get('D_framework_cm2_s')}) — 담금질 계속")
+             rc = h.returncode
++            cl = stop_child("담금질 대표가 끝났다 — 그룹에 남은 프로세스까지 정리")
+             el = (clock() - t0) / 3600.0
+-            cl = stop_child("담금질 대표가 끝났다 — 그룹에 남은 프로세스까지 정리")
+             if not finish(ent, rc, "ended", el, cleanup=cl):
+                 return stop("abnormal", f"{sysn}{seed} 대표는 rc {rc} 로 끝났는데 그룹이 남았다 (pid {cl.get('left')}) — 손으로 정리",
+                             sys=sysn, seed=seed, rc=rc, cleanup=cl)
+@@ -537,7 +619,7 @@
+             if sm["track"] == "stop_track":
+                 return stop("track", f"묶음 판정 stop_track — {sm.get('why')}", summary=sm)
+             if sm["track"] == "invalid":
+-                return stop("invalid", f"묶음 판정 invalid (자료 · 기록 오류 — 과학적 종료 아님) — {sm.get('why')}", summary=sm)
++                return stop("invalid", f"묶음 판정 invalid (자료 · 기록 오류 — 과학적 종료 아님) — {sm.get('why')}", summary=sm, run_id=rid, sys=sysn, seed=seed)
+             if sm["track"] == "cap_incomplete":
+                 return stop("cap", f"묶음 판정 상한 · 미완결 — {sm.get('why')}", cap_h=cap, summary=sm)
+         sm = mq.stage1_summary(R, values=vals, log=log)
+@@ -725,10 +807,16 @@
+         return td
+ 
+     def go(wt, scen=None, poll_s=3600.0, order=DEFAULT_ORDER, expect=None, rr=None, ack=None, mq=None,
+-           gpu=None, sleep_hook=None, pg_alive=None, seed_worst_h=21.0):
++           gpu=None, sleep_hook=None, pg_alive=None, seed_worst_h=21.0, cleanup_s=0.0, default_clock=False):
+         launched, clock = [], [0.0]
+         def launch(cmd, lp):
+-            return FakeQuench(cmd, lp, scen=scen, launched=launched)
++            h = FakeQuench(cmd, lp, scen=scen, launched=launched)
++            original_stop = h.stop
++            def cleanup(*args, **kwargs):
++                clock[0] += cleanup_s
++                return original_stop(*args, **kwargs)
++            h.stop = cleanup
++            return h
+         gq = list(gpu or [])
+         def gpu_used():
+             x = gq.pop(0) if gq else 100
+@@ -743,8 +831,24 @@
+         a = argparse.Namespace(worktree=str(wt), run_root=str(rr), python="python3", seed_worst_h=seed_worst_h,
+                                poll_s=poll_s, gpu_poll_s=60.0, start_max_mib=2000, order=order, ack_stop=ack,
+                                expect_sha=expect or sha16(pathlib.Path(wt) / DRIVER_REL))
+-        rc = run(a, {"mq": mq or real, "launch": launch, "gpu_used": gpu_used, "sleep": sleep, "clock": lambda: clock[0],
+-                     "pg_alive": pg_alive or (lambda pg: False)})
++        deps = {"mq": mq or real, "launch": launch, "gpu_used": gpu_used, "sleep": sleep,
++                "pg_alive": pg_alive or (lambda pg: False),
++                "recovery_clock": lambda: {"host": "fixture", "boot_id": "fixture", "kind": "CLOCK_BOOTTIME", "seconds": 7200.0}}
++        if not default_clock:
++            deps["clock"] = lambda: clock[0]
++            rc = run(a, deps)
++        else:
++            # Production clock default is exercised: wall time is corrected backwards during A11.
++            import types
++            saved_time = globals()["time"]
++            proxy = types.SimpleNamespace(**{k: getattr(saved_time, k) for k in dir(saved_time)})
++            proxy.monotonic = lambda: clock[0]
++            proxy.time = lambda: clock[0] - (14400.0 if clock[0] >= 14400.0 else 0.0)
++            globals()["time"] = proxy
++            try:
++                rc = run(a, deps)
++            finally:
++                globals()["time"] = saved_time
+         return rc, launched, rr
+     J = lambda p: json.loads(pathlib.Path(p).read_text(encoding="utf-8"))
+     tag = lambda L: [(p.sys, p.seed) for p in L]
+@@ -936,6 +1040,7 @@
+     os.utime(rr2 / "A/seed11/thermo.csv", (t_start + 3600, t_start + 3600))   # 마지막 기록 = 시작 + 1 h → 하한 1.5 h (heartbeat) · 상한 2.0 h 가 갈린다
+     _write_json_atomic(rr2 / "stage1_ledger.json", {"runs": [{"system": "A", "seed": 11, "start": "t", "start_epoch": t_start,
+                                                                "pgid": 4242, "status": "running", "end": None, "wall_h": None,
++                                                               "start_recovery_clock": {"host": "fixture", "boot_id": "fixture", "kind": "CLOCK_BOOTTIME", "seconds": 0.0},
+                                                                "wall_h_so_far": 1.5}]})
+     rc_al, L_al, _ = go(wt, rr=rr2, pg_alive=lambda pg: pg == 4242)
+     rc_or, L_or, _ = go(wt, rr=rr2)
+@@ -1030,6 +1135,81 @@
+         and last["changed"]["files"] == ["final.xyz"] and "재시작" in last["reason"] and last["prev"]["status"] == "pass"
+         and last["prev_provenance"]["files_sha256"]["final.xyz"] != last["new_provenance"]["files_sha256"]["final.xyz"],
+         "⛔음성 DH P1-5: 판정 뒤 final.xyz 가 바뀌면 묶음 무효 · 재시작 재판정은 통과지만 이전 판정 전체 · 지문 변화 · 사유가 이력에 남는다 (pass → pass)")
++    # 9) DI: fail 복구 금지 · 보존 실행 비용 · 그룹 판독 불가 · 정리 시간 · 단조 시계
++    rc_f, L_f, rr_f = go(wt, scen={("A", 12): {"final": "ps4_broken"}})
++    before_f = J(rr_f / "stage1_summary.json")
++    (rr_f / "A/seed12").rename(rr_f / "A/seed12.failed_selftest")
++    rc_f2, L_f2, _ = go(wt, rr=rr_f)
++    chk(rc_f == 0 and before_f["stage2"]["seeds"] == [11, 13] and rc_f2 == RC["invalid"] and not L_f2,
++        "DI 음성: 과학적 fail 폴더를 옮겨도 같은 시드를 재담금질하지 않는다")
++    r_hist = clone(rr_i)
++    hist_led = J(r_hist / "stage1_ledger.json")
++    retired_id = hist_led["runs"][0]["run_id"]
++    hist_led["runs"] = hist_led["runs"][1:]
++    _write_json_atomic(r_hist / "stage1_ledger.json", hist_led)
++    cost_hist = summ(r_hist)
++    chk(cost_hist["track"] == "invalid" and any(retired_id in e for e in cost_hist["cost"]["invalid"]),
++        "DI 음성: 보존된 invalid 실행의 비용 행만 없어져도 묶음 무효")
++    # Missing first-frame plan still has a pre-launch identity record.
++    r_planless = clone(rr_d)
++    (r_planless / "A/seed11/plan.json").unlink()
++    inv, inv_bad = real.attempt_inventory(r_planless)
++    chk(not inv_bad and len(inv) == 10 and (r_planless / "A/seed11" / real.ATTEMPT_NAME).is_file(),
++        "DI 양성: plan 전 중단에도 실행 전 기록의 run_id 로 장부와 연결한다")
++    rc_cc, L_cc, rr_cc = go(mk_wt(card=mk_card(stage1_cap_gpu_h=50.1)), seed_worst_h=5.0, cleanup_s=60.0)
++    cc = J(rr_cc / "stage1_ledger.json")
++    chk(rc_cc == RC["cap"] and len(L_cc) == 9
++        and all(abs(x["wall_h"] - (5.0 + 1.0 / 60.0)) < 1e-9 for x in cc["runs"]),
++        "DI 음성: 정상 종료 뒤 그룹 정리 60초도 비용에 포함하여 상한을 넘을 열 번째 실행을 차단한다")
++    rc_clk, L_clk, rr_clk = go(mk_wt(card=mk_card(stage1_cap_gpu_h=47.0)), seed_worst_h=5.0, default_clock=True)
++    clk = J(rr_clk / "stage1_ledger.json")
++    chk(rc_clk == RC["cap"] and clk["runs"][0]["wall_h"] == 5.0,
++        "DI 음성: 실제 러너 기본 시계 경로에서 벽시계가 4h 역행해도 실행 비용은 줄지 않는다")
++    start_clk = {"host": "fixture", "boot_id": "b1", "kind": "CLOCK_BOOTTIME", "seconds": 100.0}
++    eclk = {"start_recovery_clock": start_clk, "wall_h_so_far": 1.5}
++    chk(_orphan_upper_hours(eclk, {**start_clk, "seconds": 7300.0}) == 2.0
++        and _orphan_upper_hours(eclk, {**start_clk, "boot_id": "b2", "seconds": 7300.0}) is None
++        and _orphan_upper_hours(eclk, {**start_clk, "seconds": 0.0}) is None
++        and _orphan_upper_hours({}, start_clk) is None,
++        "DI 음성/양성: 고아 상한은 같은 부팅의 단조 시계만 · 부팅 변경/역행/근거 없음은 None")
++    rc_u, L_u, rr_u = go(wt, scen={("A", 11): {"group_stuck": True}})
++    su = J(rr_u / "STOP.json")
++    rc_u2, L_u2, _ = go(wt, rr=rr_u, ack=su["stop_id"], pg_alive=lambda pg: None)
++    chk(rc_u2 == RC["refused"] and not L_u2 and J(rr_u / "stage1_ledger.json")["runs"][0]["end"] is None,
++        "DI 음성: 이전 그룹 조회 불가(None)면 종료 확정 없이 재개 거부")
++    # Safe dependency injection: never send signals to a real OS process in this test.
++    import types, io
++    class DeniedStat:
++        def read_text(self):
++            raise PermissionError("fixture unreadable stat")
++    class ProcChild:
++        name = "424243"
++        def __truediv__(self, name):
++            return DeniedStat()
++    class ProcRoot:
++        def is_dir(self): return True
++        def iterdir(self): return iter([ProcChild()])
++    class FinishedLeader:
++        pid, returncode = 424242, 0
++        def poll(self): return 0
++    saved_os, saved_path, saved_sig = globals()["os"], globals()["pathlib"], globals()["signal"]
++    os_proxy = types.SimpleNamespace(**{k: getattr(saved_os, k) for k in dir(saved_os)})
++    sent = []
++    os_proxy.killpg = lambda pg, sig: sent.append(int(sig))
++    sig_proxy = types.SimpleNamespace(**{k: getattr(saved_sig, k) for k in dir(saved_sig)})
++    sig_proxy.SIGKILL = 9
++    globals()["os"], globals()["pathlib"], globals()["signal"] = os_proxy, types.SimpleNamespace(Path=lambda p: ProcRoot()), sig_proxy
++    try:
++        unknown = _pg_alive(424242)
++        proc = _Proc.__new__(_Proc); proc.p = FinishedLeader(); proc.fh = io.StringIO()
++        result = proc.stop(grace_s=0, kill_wait_s=0)
++        chk(unknown is None and result["group_empty"] is False and result["left"] is None and result["inspection_errors"],
++            "DI 음성: /proc 권한 오류는 빈 그룹이 아니며 정리 완료로 기록하지 않는다")
++        def gone(pg, sig): raise ProcessLookupError("gone")
++        os_proxy.killpg = gone
++        chk(_group_members(424242) == [], "DI 양성: /proc 일부 판독 불가라도 자기 그룹 ESRCH 확인이면 부재")
++    finally:
++        globals()["os"], globals()["pathlib"], globals()["signal"] = saved_os, saved_path, saved_sig
+     # 7) 진짜 프로세스 그룹 (POSIX) — _Proc.stop 이 자기 그룹 (자식 · 손자) 만 멈추고 기다린다 · 옆 프로세스는 안 건드린다
+     #    (회신 DG: '실제 Linux 프로세스 그룹 종료는 하지 않았다' — 가짜 담금질 시험이 못 보는 자리)
+     if os.name == "posix":

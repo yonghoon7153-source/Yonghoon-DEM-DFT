@@ -1,0 +1,352 @@
+{
+ "slug": "barai2021_delamination_cathode_llzo_multiscale",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+  "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic demonstration of the delamination observed at the cathode/solid-state electrolyte (cathode/SSE) interface (reproduced with permission from a review article published by Famprikis et al., Nature Materials (2019) 18 1278−1291, which is included as ref 2. Copyright 2019 Springer Nature). (b) Initial conﬁguration of the planar cathode/SSE interface, which is a zoomed-in portion of the cathode SSE interface. The orange region indicates cathode, red denotes the grain interior (GI), and yellow indicates the grain boundary (GB) region. (c) Schematic demonstration of the boundary conditions used for solving the transport equations. (d) Boundary conditions adopted for solving the mechanics/ stress-equilibrium equations. (e) Location of broken bonds (black cross marks) at the cathode/SSE interface and within the SSE. Substantial rupture of the interfacial region leads to the",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    271.7
+   ],
+   "w": 2151,
+   "h": 870,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Delamination occurs due to stress generation at the interface of cathode and solid-state electrolytes (SSEs). (a) Extent of stress at the interface depends on two diﬀerent mechanisms. The ﬁrst one is the stress due to the change in bulk concentration within the cathode particles, whereas the second mechanism is the stress generation from concentration variation because of microstructural heterogeneity (such as the diﬀerence in conductivity and exchange current density at the grain interior and grain boundary domains). (b) Due to the presence of microstructural heterogeneity (for example, GI and GB microstructures), current focusing is observed at the GB region during both charge (denoted by black squares) and discharge (depicted by red circles). (c) Distribution of strain energy density within the SSE (and cathode/SSE interface) as obtained from the change in bulk concentration",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    419.1
+   ],
+   "w": 1052,
+   "h": 1484,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Comparison between the performance curves as obtained with (solid black line) and without (dashed black line) interfacial delamination for NMC cathodes. Since the detachment between the cathode and SSE decreases the electrochemically active surface area, the interfacial overpotential increases as the delamination is taken into account. The three cathode/SSE microstructures, shown on top, indicate the fracture proﬁle at the beginning (A), at the end of charge (B), and after discharge process, respectively (C). Broken bonds are denoted by the black dots. It is evident that for NMC, majority of the delamination occurs at the end of charge process. However, the impact of this delamination on the performance curve is mostly reﬂected during the discharge. The entire charge−discharge was conducted at a current density of 1 A/m2 and within the potential window of 3.0−4.5 V. cathode and",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    323.1
+   ],
+   "w": 1052,
+   "h": 1084,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.748
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Performance curves for LCO cathodes as obtained with (denoted by the solid black line) and without (black dashed line) delamination. Interfacial delamination increases the activation over- potential, which is well reﬂected in the loss of discharge capacity at the end of the ﬁrst cycle. The fracture proﬁles at the beginning (A), at the end of charge (B), and end of discharge (C) are shown on top. It is evident that, for LCO, negligible interfacial fracture evolves at the end of charge. Majority of cathode/SSE detachment is observed during the discharge process, which also becomes evident from the deviation between the performance curves with and without delamination. The entire charge−discharge was conducted at a current density of 1 A/m2 and within the potential window of 3.2−4.1 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    129.7,
+    306.5,
+    389.3
+   ],
+   "w": 1051,
+   "h": 1083,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.739
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Comparison between the experimentally observed and computationally predicted charge-transfer resistance during the charge and discharge processes. The symbols indicate experimental observations, whereas the solid lines denote theoretical predictions. Data shown in red corresponds to the charge process, whereas data demonstrated in black indicates the discharge process. Decrease and increase in lithium stoichiometry during the charge and discharge processes have been demonstrated by the red and the black arrows, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    437.7,
+    570.5,
+    588.3
+   ],
+   "w": 1052,
+   "h": 629,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. CCCV charge and CC discharge curves for four diﬀerent grain sizes of solid-state electrolytes (SSEs). The corresponding grain sizes for large (black curve), medium (red curve), small (blue line), and very small (magenta curve) grains are demonstrated in Figure S2c. The applied current density has been maintained at 1 A/m2. (a) Charge−discharge curves for NMC cathodes operated between 3.2 and 4.5 V. For all of the grain sizes, the NMC cathode/SSE interface experiences delamination during the charge process because the cathode shrinks during charge that leads to tension at the interface. (b) Charge−discharge curves for LCO cathodes cycled between 3.2 and 4.1 V. Irrespective of the SSE grain size, LCO cathodes shrink during discharge leading to tensile forces at the interface. Hence, delamination in the LCO/SSE interface is observed during the discharge process. (c) Capacity fade ",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    200.4
+   ],
+   "w": 2151,
+   "h": 572,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. To understand the variation in cathode/SSE delamination with respect to SSE grain size, the evolution of strain energy density has been plotted for four diﬀerent grain sizes. (a) Normalized strain energy density proﬁle within SSE (and interfacial region) for large grains with size ∼150 nm. (b) Strain energy density within SSE (and interfacial region) for medium grains with size ∼100 nm. (c) Strain energy density proﬁle as observed inside the SSE with small grains of size ∼75 nm. (d) Normalized strain energy density proﬁle as observed inside SSE (and cathode/SSE interface) with very small grains of size ∼40 nm. It is evident from the strain energy density contour plots that with decreasing size of SSE grains, the magnitude of maximum strain energy density decreases. This can be attributed to the fact that SSEs with smaller grains contain multiple grain boundaries (GBs). These GB",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    206.2
+   ],
+   "w": 2151,
+   "h": 597,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.732
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Capacity fade and fractional delamination as observed at the cathode/SSE interface at diﬀerent applied current densities. (a) NMC cathode materials. (b) LCO cathode particles. The capacity fade is denoted by the black squares, and the corresponding values are given on the left axis. The red circles denote the fractional interfacial delamination, and the corresponding values are given on the right axis. Large grains of size 150 nm have been assumed to exist within the SSEs. For both NMC and LCO cathodes, the extent of delamination is independent of the current density. However, the capacity fade increases with increasing current density because, at higher currents, the interfacial polarization increases even for the same amount of delamination.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    342.2
+   ],
+   "w": 1051,
+   "h": 1164,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Interfacial delamination-induced capacity fade in cathode/ SSE systems over 10 cycles. (a) NMC cathode cycled between 3.2 and 4.4 V. (b) LCO cathodes cycled between 3.2 and 4.1 V. The applied current density is maintained constant at 1 A/m2. CCCV charge and CC discharge protocols have been adopted here. Four diﬀerent SSE grains with sizes ranging between 40 and 150 nm have been considered (as shown in Figure S2c). It is evident that decreasing the grain size helps to minimize the delamination-induced capacity fade over multiple cycles. This can be attributed to the existence of more GBs in SSE microstructures with smaller grain sizes and the ability of these soft GBs to accommodate the mechanical deformation of the cathode without generating a substantial amount of interfacial stress. helps to minimize the extent of interfacial delamination and subsequent capacity fade. It has ",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    333.9
+   ],
+   "w": 1051,
+   "h": 1129,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Altering the potential window of operation can minimize the cathode/SSE interfacial delamination-induced capacity fade. (a) For NMC cathodes, the partial molar volume of lithium within the cathode changes with concentration. For a wide potential window, such as 3.2−4.4 V, a sharp increase in the partial molar volume is observed at low concentration regimes (x < 0.4). If the potential window of operation is decreased to 4.1−3.2 V, the sharp increase in the partial molar volume is outside the regime of operation. (b) Capacity fade experienced by NMC cathodes over 10 cycles. The rate of delamination-induced capacity fade is around 0.5−1.0 mAh/(g cycle) while cycled between 3.2 and 4.4 V. However, as the potential window of operation is reduced to 3.2−4.1 V, the rate of capacity fade decreases to 0.1−0.3 mAh/(g cycle). This improvement in capacity retention is attributed to the de",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    323.5
+   ],
+   "w": 1052,
+   "h": 1086,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Phase map between the elastic modulus of the solid electrolyte and partial molar volume of lithium within the cathode material indicating domains where negligible (turquois region) and extensive (yellow portion) interfacial delaminations are observed. Two diﬀerent stability limits are demonstrated: (i) the top one for the cathode/LLZO interface with higher fracture energy and (ii) the bottom one for cathode/sulﬁde electrolyte interface with relatively lower fracture energies. Young’s modulus of the SSE has been plotted by normalizing it with respect to Young’s modulus of Li metal. It is evident that smaller lithium partial molar volume, and softer solid electrolytes, is beneﬁcial for preventing interfacial delamination at the cathode/electrolyte interface. Locations of diﬀerent combinations of NMC and LCO cathodes, and LLZO and sulﬁde solid electrolytes, have also been highlig",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    213.4
+   ],
+   "w": 1052,
+   "h": 627,
+   "dpi": 300,
+   "src": "11._Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 20,
+   "file": "fig_S1.png",
+   "caption": "Figure: S1. Demonstration of the cathode computational domain before (left image) and after (right image) the delithiation induced shrinkage. The computational cathode domain shrinks along both the radial (W2 < W1) and azimuthal (L2 < L1) direction. Hence adoption of a fixed boundary condition along the y-direction of the computational domain (or the azimuthal direction in the present context) is not completely justified. In the present context, in order to simulate the change in particle dimension along the vertical direction, a free boundary is adopted along the y-direction (see Figure 1(d) in the main manuscript).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    205.1,
+    548.8,
+    397.4
+   ],
+   "w": 2012,
+   "h": 802,
+   "dpi": 300,
+   "src": "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.582
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 21,
+   "file": "fig_S2.png",
+   "caption": "Figure: S2. Change in volume of the cathode material during the charge/discharge process is the main cause of delamination between cathode and solid-state-electrolytes (SSEs). Variation in volume of cathode during cycling depends on the partial molar volume of lithium within the respective cathode material. (a) Concentration dependent partial molar volume of lithium within NMC cathode. (b) Concentration dependent partial molar volume of lithium inside LCO cathode particle. (c) In order to minimize the extent of delamination at the cathode/SSE interface, four different grain-interior/grain-boundary (GI/GB) microstructures have been investigated. (c)(i) GI/GB microstructure with large grain size, 𝑑!\"#$%&~150𝑛𝑚. (c)(ii) GI/GB microstructure with medium grain size, 𝑑!\"#$%&~100𝑛𝑚. (c)(iii) GI/GB microstructure with small grains, 𝑑!\"#$%&~75𝑛𝑚. (c)(iv) GI/GB microstructure with very small grain",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    167.2,
+    548.9,
+    407.4
+   ],
+   "w": 2013,
+   "h": 1002,
+   "dpi": 300,
+   "src": "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.692
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 22,
+   "file": "fig_S3.png",
+   "caption": "Figure: S3. Representation of the two interfaces studied using first principles calculations. a) Interface of LLZO with the (101$4) surface of NMC811. b) Interface of LLZO with the (101$4) surface of NMC622.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    141.9,
+    549.0,
+    424.0
+   ],
+   "w": 2013,
+   "h": 1176,
+   "dpi": 300,
+   "src": "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.62
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 23,
+   "file": "fig_S4.png",
+   "caption": "Figure: S4. Impact of exchange current density on capacity fade and interfacial delamination. (a) NMC cathode materials cycled between 3.2V and 4.5V. (b) LCO cathode particles cycled between 3.2V and 4.1V. For both the cathodes, the applied current density is 1A/m2. It is evident that for both NMC and LCO, interfacial delamination is independent of the exchange current density. However, increasing exchange current helps to minimize the activation overpotential, and effectively leads to smaller capacity fade.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    154.5,
+    548.8,
+    500.8
+   ],
+   "w": 2012,
+   "h": 1444,
+   "dpi": 300,
+   "src": "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 24,
+   "file": "fig_S5.png",
+   "caption": "Figure: S5. (a) Demonstration of a modified computational domain with fixed boundary condition along the y-direction at the top and bottom boundary. (b) Influence of mechanics boundary condition on the extent of interfacial delamination for LLZO microstructures with different grain size. Fractional delamination under free boundary condition as shown in Figure 1(d) is denoted by the black square, whereas delamination under fixed boundaries is depicted by the red circles. No statistically significant difference in fractional delamination is observed between the two cases.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    176.4,
+    549.0,
+    349.7
+   ],
+   "w": 2013,
+   "h": 724,
+   "dpi": 300,
+   "src": "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.753
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 25,
+   "file": "fig_S6.png",
+   "caption": "Figure: S6. (a) Demonstration of the cathode/LLZO computational domain and subsequent evolution of interfacial delamination without any nanopores at the interface. Around 70% delamination is observed. (b) Evolution of interfacial microcracks for the same cathode/LLZO microstructure with incorporation of nanopores prior to running the charge simulation. The randomly distributed initial nanopores are denoted by the green cross (x) symbols. Extent of interfacial delamination is reduced to 35% after the first charge process when initial nanopores are taken into account. (c) Demonstration of the fractional delamination during the first charge process without (black square) and with (magenta and blue triangles) nanopores. The magenta and blue triangles indicate fractional delamination with 10% and 25% initial nanopores, respectively. It is evident that LLZO microstructures with larger grain si",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    162.6,
+    549.0,
+    331.2
+   ],
+   "w": 2013,
+   "h": 704,
+   "dpi": 300,
+   "src": "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf",
+   "blank": 0.567
+  }
+ ]
+}

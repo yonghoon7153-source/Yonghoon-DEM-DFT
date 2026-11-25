@@ -1,0 +1,30 @@
+&CONTROL
+    calculation = 'nscf'
+    prefix      = '${PREFIX}'
+    outdir      = './tmp'          ! reuse the SCF density already here
+    pseudo_dir  = './pseudo'
+    verbosity   = 'high'
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = ${NAT}
+    ntyp        = ${NTYP}
+    ecutwfc     = 60.0             ! MUST match the SCF that made ./tmp density
+    ecutrho     = 480.0
+    occupations = 'fixed'          ! insulator -> QE prints "highest occupied, lowest unoccupied level (ev)"
+    nbnd        = ${NBND}          ! comp1 160 / modelc 190  (N_occ + ~30% empty; verify vs SCF .out)
+/
+&ELECTRONS
+    conv_thr    = 1.0d-10
+/
+ATOMIC_SPECIES
+${ATOMIC_SPECIES}                  ! <-- copy verbatim from your scf.in
+
+CELL_PARAMETERS angstrom
+${CELL}                            ! <-- copy verbatim from your scf.in
+
+ATOMIC_POSITIONS angstrom
+${POSITIONS}                       ! <-- copy verbatim from your scf.in
+
+K_POINTS automatic
+8 8 8 0 0 0                        ! comp1 (cubic). modelc(rhombo a=b=7,c=35): use 6 6 2

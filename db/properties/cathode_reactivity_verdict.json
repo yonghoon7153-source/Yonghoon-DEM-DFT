@@ -1,0 +1,1125 @@
+{
+  "property": "cathode_reactivity_verdict",
+  "date": "2026-07-28",
+  "source_csv": "db/properties/cathode_reactivity_cascade.csv",
+  "method": "닫힌계 pseudo-binary dE_rxt (Richards/Ong 2016 eq 2, InterfacialReactivity, norm=True, use_hull_energy=True, MP GGA_GGA+U). 축은 양극 리튬화 상태(full=LiCoO2 / half=Li0.5CoO2) — Xiao 2019 F4 와 동일 정의.",
+  "honesty_header": [
+    "⛔ **게이트 통과 수를 성과로 인용하지 말 것.** 아래 gate_discrimination 이 vacuous 판정이면 'N종이 계면 반응성 게이트를 통과했다'는 서술 자체가 정보가 없다.",
+    "⛔ 컷 근처 ±20 meV 순위 주장 금지 — Xiao 100 meV 는 관례컷이고, Sundar 2025 의 '분해산물 전자전도도 미고려' 비판을 그대로 받는다.",
+    "⛔ Xiao 소환값(-339/-493)은 문헌값이다. 우리 값(-322.7/-454.9)과 같은 표에 넣되 **출처를 반드시 병기**하고 평균/혼합 금지.",
+    "⚠ li_scavenging 은 **화학량론 부호**지 속도가 아니다. '열역학적으로 Li 를 가져갈 수 있다'까지만 말하고 얼마나·얼마나 빨리는 말하지 않는다."
+  ],
+  "anchors": {
+    "ours_LPSCl_vs_LCO": {
+      "full": -322.7,
+      "half": -454.9
+    },
+    "xiao2019_summoned": {
+      "full": -339,
+      "half": -493
+    },
+    "agreement_ratio": {
+      "full": 0.952,
+      "half": 0.923
+    },
+    "note": "0.92-0.95배 = MP hull 세대 차 감안 시 사실상 논문 재현"
+  },
+  "gate_discrimination": {
+    "n_pairs": 94,
+    "n_pass": 89,
+    "n_fail": 5,
+    "n_coatings": 47,
+    "n_coatings_failing_any_state": 5,
+    "failing_coatings": [
+      "BaO",
+      "MnO",
+      "Na2O",
+      "Sb2O5",
+      "TiF4"
+    ],
+    "failing_rows": [
+      {
+        "coating": "Sb2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -107.3
+      },
+      {
+        "coating": "MnO",
+        "lithiation": "half",
+        "dE_rxt_meV": -126.1
+      },
+      {
+        "coating": "BaO",
+        "lithiation": "half",
+        "dE_rxt_meV": -131.4
+      },
+      {
+        "coating": "TiF4",
+        "lithiation": "full",
+        "dE_rxt_meV": -100.7
+      },
+      {
+        "coating": "Na2O",
+        "lithiation": "half",
+        "dE_rxt_meV": -131.8
+      }
+    ],
+    "vacuous": true,
+    "vacuous_criterion": "cascade_screening_funnel.json 의 unique_kill 규약 — G6 가 죽이는 코팅 중 G1–G4 를 통과해 살아 있던 것이 하나도 없으면 완전 중복(G2 와 동종). 임의 비율 문턱 쓰지 않음.",
+    "core_survivors_G1_G4": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+    ],
+    "unique_kill_vs_core": [],
+    "verdict": "89/94 쌍 통과, 코팅 단위로는 42/47종 통과. 탈락 5종(BaO, MnO, Na2O, Sb2O5, TiF4)이 **전부 이미 G1–G4 에서 죽어 있다** → unique_kill = 0, **완전 중복 게이트**(G2 와 동종). 물리는 맞다 — 황화물 SE↔산화물 양극은 큰 구동력, 산화물 코팅↔산화물 양극은 거의 0이고, 그게 코팅을 쓰는 이유 자체다. 하지만 우리 47종 안에서는 **새로 거르는 것이 없다**. 깔때기에 넣되 vacuous 배지 필수, 'N종이 계면 반응성을 통과했다'는 서술 금지."
+  },
+  "s1_condition_2": {
+    "question": "host LPSCl 보다 계면 반응성이 완화되는 코팅이 있는가",
+    "answer": "YES — 전 코팅이 host 보다 완화됨",
+    "detail": "host -322.7 meV/atom(만충) 대비 코팅들은 -107 ~ 0 구간. 47/47.",
+    "caveat": "⚠ 이 '성공'은 **자명하다**. 비교가 '황화물 vs 산화물 양극' 대 '산화물 vs 산화물 양극'이라 화학이 다르다. 코팅 개념 자체의 타당성을 재현한 것이지 후보 간 변별이 아니다."
+  },
+  "lithiation_asymmetry": {
+    "host_direction": "half_worse",
+    "host_values": {
+      "full": -322.7,
+      "half": -454.9
+    },
+    "n_like_host_half_worse": 9,
+    "n_unlike_host_full_worse": 18,
+    "unlike_host_examples": [
+      {
+        "coating": "TiF4",
+        "full": -100.7,
+        "half": -41.7,
+        "half_minus_full": 59.0,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "CrO3",
+        "full": -60.9,
+        "half": -7.2,
+        "half_minus_full": 53.7,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "ZrF4",
+        "full": -67.3,
+        "half": -15.1,
+        "half_minus_full": 52.2,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "AlF3",
+        "full": -45.6,
+        "half": 0.0,
+        "half_minus_full": 45.6,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "MoO3",
+        "full": -39.0,
+        "half": 0.0,
+        "half_minus_full": 39.0,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "V2O5",
+        "full": -35.5,
+        "half": 0.0,
+        "half_minus_full": 35.5,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Sb2O5",
+        "full": -107.3,
+        "half": -87.4,
+        "half_minus_full": 19.9,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Al2O3",
+        "full": -19.4,
+        "half": -0.0,
+        "half_minus_full": 19.4,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "B2O3",
+        "full": -91.0,
+        "half": -72.5,
+        "half_minus_full": 18.5,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "GeO2",
+        "full": -18.1,
+        "half": -0.0,
+        "half_minus_full": 18.1,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "YF3",
+        "full": -16.6,
+        "half": 0.0,
+        "half_minus_full": 16.6,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Ta2O5",
+        "full": -15.0,
+        "half": 0.0,
+        "half_minus_full": 15.0,
+        "direction": "full_worse"
+      }
+    ],
+    "interpretation": "**구동 화학이 다르다.** host LPSCl 은 탈리튬된 양극이 더 산화적이라 반충에서 나빠진다(S 산화가 구동). 산화물/불화물 코팅은 반대로 **Li 가 있을 때** 나빠지는 경우가 많다 — 구동력이 **Li 흡수**(Li 함유 삼원상 형성)이기 때문. → 두 계를 같은 '반응성' 언어로 묶어 서술하면 기구를 뭉갠다.",
+    "all": [
+      {
+        "coating": "Sb2O5",
+        "full": -107.3,
+        "half": -87.4,
+        "half_minus_full": 19.9,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "TiF4",
+        "full": -100.7,
+        "half": -41.7,
+        "half_minus_full": 59.0,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "B2O3",
+        "full": -91.0,
+        "half": -72.5,
+        "half_minus_full": 18.5,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Na2O",
+        "full": -74.4,
+        "half": -131.8,
+        "half_minus_full": -57.4,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "ZrF4",
+        "full": -67.3,
+        "half": -15.1,
+        "half_minus_full": 52.2,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "CrO3",
+        "full": -60.9,
+        "half": -7.2,
+        "half_minus_full": 53.7,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "AlF3",
+        "full": -45.6,
+        "half": 0.0,
+        "half_minus_full": 45.6,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "MnO",
+        "full": -40.4,
+        "half": -126.1,
+        "half_minus_full": -85.7,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "MoO3",
+        "full": -39.0,
+        "half": 0.0,
+        "half_minus_full": 39.0,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "V2O5",
+        "full": -35.5,
+        "half": 0.0,
+        "half_minus_full": 35.5,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Cr2O3",
+        "full": -23.5,
+        "half": -15.1,
+        "half_minus_full": 8.4,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Al2O3",
+        "full": -19.4,
+        "half": -0.0,
+        "half_minus_full": 19.4,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "GeO2",
+        "full": -18.1,
+        "half": -0.0,
+        "half_minus_full": 18.1,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "YF3",
+        "full": -16.6,
+        "half": 0.0,
+        "half_minus_full": 16.6,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Ta2O5",
+        "full": -15.0,
+        "half": 0.0,
+        "half_minus_full": 15.0,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "ScF3",
+        "full": -13.0,
+        "half": 0.0,
+        "half_minus_full": 13.0,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Ga2O3",
+        "full": -10.8,
+        "half": -0.0,
+        "half_minus_full": 10.8,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "MgF2",
+        "full": -8.0,
+        "half": 0.0,
+        "half_minus_full": 8.0,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Nb2O5",
+        "full": -5.2,
+        "half": -0.0,
+        "half_minus_full": 5.2,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "WO3",
+        "full": -2.5,
+        "half": 0.0,
+        "half_minus_full": 2.5,
+        "direction": "full_worse"
+      },
+      {
+        "coating": "Ag2O",
+        "full": 0.0,
+        "half": -39.8,
+        "half_minus_full": -39.8,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "BaO",
+        "full": 0.0,
+        "half": -131.4,
+        "half_minus_full": -131.4,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "CaF2",
+        "full": 0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "CaO",
+        "full": 0.0,
+        "half": -3.9,
+        "half_minus_full": -3.9,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "CoO",
+        "full": 0.0,
+        "half": -34.8,
+        "half_minus_full": -34.8,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "Cu2O",
+        "full": 0.0,
+        "half": -84.4,
+        "half_minus_full": -84.4,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "Fe2O3",
+        "full": -0.0,
+        "half": -0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "Gd2O3",
+        "full": -0.0,
+        "half": -0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "HfO2",
+        "full": 0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "In2O3",
+        "full": 0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "La2O3",
+        "full": -0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "LaF3",
+        "full": 0.0,
+        "half": -0.0,
+        "half_minus_full": -0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "Li2O",
+        "full": -0.0,
+        "half": -91.5,
+        "half_minus_full": -91.5,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "LiF",
+        "full": 0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "MgO",
+        "full": -0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "Nd2O3",
+        "full": 0.0,
+        "half": -0.0,
+        "half_minus_full": -0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "NdF3",
+        "full": 0.0,
+        "half": -0.0,
+        "half_minus_full": -0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "NiO",
+        "full": 0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "Sc2O3",
+        "full": 0.0,
+        "half": -0.0,
+        "half_minus_full": -0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "SiO2",
+        "full": 0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "Sm2O3",
+        "full": -0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "SnO2",
+        "full": 0.0,
+        "half": -0.0,
+        "half_minus_full": -0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "SrO",
+        "full": 0.0,
+        "half": -55.2,
+        "half_minus_full": -55.2,
+        "direction": "half_worse"
+      },
+      {
+        "coating": "TiO2",
+        "full": -0.0,
+        "half": -0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "Y2O3",
+        "full": -0.0,
+        "half": 0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "ZnO",
+        "full": -0.0,
+        "half": -0.0,
+        "half_minus_full": 0.0,
+        "direction": "tie"
+      },
+      {
+        "coating": "ZrO2",
+        "full": 0.0,
+        "half": -0.0,
+        "half_minus_full": -0.0,
+        "direction": "tie"
+      }
+    ]
+  },
+  "li_scavenging": {
+    "what": "반응식 좌변 양극(Co 함유)이 들고 온 Li 와 우변 Co 함유 상에 남은 Li 를 비교. 차이가 양수면 코팅 쪽 생성물이 Li 를 가져간 것.",
+    "why_it_matters": "**Xiao 게이트의 사각지대다.** Al2O3 -> LiAl5O8, WO3 -> Li2WO4, Nb2O5 -> LiNbO3, MgF2 -> LiF 는 전부 |dE| < 100 meV 로 통과하지만 양극에서 Li 를 빼앗는다. Al2O3 코팅의 Li inventory 소모는 실험적으로 알려진 현상인데 dE_rxt 는 이를 '양성'으로 분류한다. 게이트 통과 = 안전이 아니다.",
+    "n_rows_with_scavenging": 25,
+    "n_gate_blind_spot": 23,
+    "blind_spot_top": [
+      {
+        "coating": "MgF2",
+        "lithiation": "full",
+        "dE_rxt_meV": -8.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6667,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.6667,
+        "li_bearing_products_without_Co": [
+          "LiF"
+        ],
+        "reaction": "0.6667 LiCoO2 + 0.3333 MgF2 -> 0.3333 Mg(CoO2)2 + 0.6667 LiF"
+      },
+      {
+        "coating": "WO3",
+        "lithiation": "full",
+        "dE_rxt_meV": -2.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "Li2WO4"
+        ],
+        "reaction": "0.7143 LiCoO2 + 0.2857 WO3 -> 0.2857 Li2WO4 + 0.1429 Li(CoO2)2 + 0.1429 Co3O4"
+      },
+      {
+        "coating": "Nb2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -5.2,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "LiNbO3"
+        ],
+        "reaction": "0.2857 Nb2O5 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.5714 LiNbO3 + 0.1429 Li(CoO2)2"
+      },
+      {
+        "coating": "Ta2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -15.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "LiTaO3"
+        ],
+        "reaction": "0.2857 Ta2O5 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.1429 Li(CoO2)2 + 0.5714 LiTaO3"
+      },
+      {
+        "coating": "MoO3",
+        "lithiation": "full",
+        "dE_rxt_meV": -39.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "Li2MoO4"
+        ],
+        "reaction": "0.2857 MoO3 + 0.7143 LiCoO2 -> 0.1429 Li(CoO2)2 + 0.2857 Li2MoO4 + 0.1429 Co3O4"
+      },
+      {
+        "coating": "ScF3",
+        "lithiation": "full",
+        "dE_rxt_meV": -13.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "LiF"
+        ],
+        "reaction": "0.2857 ScF3 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.1429 Li(CoO2)2 + 0.2857 ScOF + 0.5714 LiF"
+      },
+      {
+        "coating": "ZrF4",
+        "lithiation": "full",
+        "dE_rxt_meV": -67.3,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6111,
+        "rhs_cathodic_li": 0.0926,
+        "scavenged_li": 0.5185,
+        "li_bearing_products_without_Co": [
+          "Li2ZrF6"
+        ],
+        "reaction": "0.3889 ZrF4 + 0.6111 LiCoO2 -> 0.01852 Co23O32 + 0.09259 Li(CoO2)2 + 0.2593 Li2ZrF6 + 0.1296 ZrO2"
+      },
+      {
+        "coating": "AlF3",
+        "lithiation": "full",
+        "dE_rxt_meV": -45.6,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6585,
+        "rhs_cathodic_li": 0.1463,
+        "scavenged_li": 0.5122,
+        "li_bearing_products_without_Co": [
+          "Li3AlF6"
+        ],
+        "reaction": "0.3415 AlF3 + 0.6585 LiCoO2 -> 0.0122 Co23O32 + 0.1463 Li(CoO2)2 + 0.08537 Al2CoO4 + 0.1707 Li3AlF6"
+      },
+      {
+        "coating": "MnO",
+        "lithiation": "full",
+        "dE_rxt_meV": -40.4,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.5,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.5,
+        "li_bearing_products_without_Co": [
+          "LiMnO2"
+        ],
+        "reaction": "0.5 MnO + 0.5 LiCoO2 -> 0.5 LiMnO2 + 0.5 CoO"
+      },
+      {
+        "coating": "Cr2O3",
+        "lithiation": "full",
+        "dE_rxt_meV": -23.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4286,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.4286,
+        "li_bearing_products_without_Co": [
+          "Li2CrO4",
+          "LiCrO2"
+        ],
+        "reaction": "0.5714 Cr2O3 + 0.4286 LiCoO2 -> 0.4286 Cr2CoO4 + 0.1429 LiCrO2 + 0.1429 Li2CrO4"
+      },
+      {
+        "coating": "B2O3",
+        "lithiation": "full",
+        "dE_rxt_meV": -91.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4128,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.4128,
+        "li_bearing_products_without_Co": [
+          "Li3B7O12",
+          "LiO8"
+        ],
+        "reaction": "0.4128 LiCoO2 + 0.5872 B2O3 -> 0.02752 LiO8 + 0.1284 Li3B7O12 + 0.1376 Co3(BO3)2"
+      },
+      {
+        "coating": "V2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -35.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6,
+        "rhs_cathodic_li": 0.2,
+        "scavenged_li": 0.4,
+        "li_bearing_products_without_Co": [
+          "LiVO3"
+        ],
+        "reaction": "0.6 LiCoO2 + 0.4 V2O5 -> 0.2 V2CoO6 + 0.4 LiVO3 + 0.2 Li(CoO2)2"
+      },
+      {
+        "coating": "Na2O",
+        "lithiation": "full",
+        "dE_rxt_meV": -74.4,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.4,
+        "li_bearing_products_without_Co": [
+          "Li2O"
+        ],
+        "reaction": "0.4 LiCoO2 + 0.6 Na2O -> 0.4 Na3CoO3 + 0.2 Li2O"
+      },
+      {
+        "coating": "YF3",
+        "lithiation": "full",
+        "dE_rxt_meV": -16.6,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4545,
+        "rhs_cathodic_li": 0.0909,
+        "scavenged_li": 0.3636,
+        "li_bearing_products_without_Co": [
+          "LiYF4"
+        ],
+        "reaction": "0.4545 LiCoO2 + 0.5455 YF3 -> 0.09091 Li(CoO2)2 + 0.3636 LiYF4 + 0.1818 YOF + 0.09091 Co3O4"
+      },
+      {
+        "coating": "ZrF4",
+        "lithiation": "half",
+        "dE_rxt_meV": -15.1,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3636,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.3636,
+        "li_bearing_products_without_Co": [
+          "Li2ZrF6"
+        ],
+        "reaction": "0.2727 ZrF4 + 0.7273 Li0.5Co1O2 -> 0.01299 Co23O32 + 0.4286 CoO2 + 0.1818 Li2ZrF6 + 0.09091 ZrO2"
+      },
+      {
+        "coating": "CrO3",
+        "lithiation": "full",
+        "dE_rxt_meV": -60.9,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6667,
+        "rhs_cathodic_li": 0.3333,
+        "scavenged_li": 0.3334,
+        "li_bearing_products_without_Co": [
+          "Li2CrO4"
+        ],
+        "reaction": "0.3333 CrO3 + 0.6667 LiCoO2 -> 0.1667 CrO2 + 0.3333 Li(CoO2)2 + 0.1667 Li2CrO4"
+      },
+      {
+        "coating": "TiF4",
+        "lithiation": "half",
+        "dE_rxt_meV": -41.7,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3333,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.3333,
+        "li_bearing_products_without_Co": [
+          "Li2TiF6"
+        ],
+        "reaction": "0.3333 TiF4 + 0.6667 Li0.5Co1O2 -> 0.5 CoO2 + 0.1667 Li2TiF6 + 0.1667 CoF2 + 0.1667 TiO2"
+      },
+      {
+        "coating": "CrO3",
+        "lithiation": "half",
+        "dE_rxt_meV": -7.2,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.3,
+        "li_bearing_products_without_Co": [
+          "Li2CrO4",
+          "LiCr3O8"
+        ],
+        "reaction": "0.4 CrO3 + 0.6 Li0.5Co1O2 -> 0.1 LiCr3O8 + 0.6 CoO2 + 0.1 Li2CrO4"
+      },
+      {
+        "coating": "B2O3",
+        "lithiation": "half",
+        "dE_rxt_meV": -72.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.2609,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.2609,
+        "li_bearing_products_without_Co": [
+          "Li3B7O12"
+        ],
+        "reaction": "0.5217 Li0.5Co1O2 + 0.4783 B2O3 -> 0.08696 Li3B7O12 + 0.1739 Co3(BO3)2 + 0.1957 O2"
+      },
+      {
+        "coating": "Ga2O3",
+        "lithiation": "full",
+        "dE_rxt_meV": -10.8,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3333,
+        "rhs_cathodic_li": 0.1111,
+        "scavenged_li": 0.2222,
+        "li_bearing_products_without_Co": [
+          "LiGa5O8"
+        ],
+        "reaction": "0.3333 LiCoO2 + 0.6667 Ga2O3 -> 0.2222 LiGa5O8 + 0.1111 Ga2CoO4 + 0.1111 Li(CoO2)2"
+      }
+    ],
+    "all": [
+      {
+        "coating": "MgF2",
+        "lithiation": "full",
+        "dE_rxt_meV": -8.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6667,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.6667,
+        "li_bearing_products_without_Co": [
+          "LiF"
+        ],
+        "reaction": "0.6667 LiCoO2 + 0.3333 MgF2 -> 0.3333 Mg(CoO2)2 + 0.6667 LiF"
+      },
+      {
+        "coating": "WO3",
+        "lithiation": "full",
+        "dE_rxt_meV": -2.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "Li2WO4"
+        ],
+        "reaction": "0.7143 LiCoO2 + 0.2857 WO3 -> 0.2857 Li2WO4 + 0.1429 Li(CoO2)2 + 0.1429 Co3O4"
+      },
+      {
+        "coating": "Nb2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -5.2,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "LiNbO3"
+        ],
+        "reaction": "0.2857 Nb2O5 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.5714 LiNbO3 + 0.1429 Li(CoO2)2"
+      },
+      {
+        "coating": "Ta2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -15.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "LiTaO3"
+        ],
+        "reaction": "0.2857 Ta2O5 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.1429 Li(CoO2)2 + 0.5714 LiTaO3"
+      },
+      {
+        "coating": "MoO3",
+        "lithiation": "full",
+        "dE_rxt_meV": -39.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "Li2MoO4"
+        ],
+        "reaction": "0.2857 MoO3 + 0.7143 LiCoO2 -> 0.1429 Li(CoO2)2 + 0.2857 Li2MoO4 + 0.1429 Co3O4"
+      },
+      {
+        "coating": "ScF3",
+        "lithiation": "full",
+        "dE_rxt_meV": -13.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.7143,
+        "rhs_cathodic_li": 0.1429,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "LiF"
+        ],
+        "reaction": "0.2857 ScF3 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.1429 Li(CoO2)2 + 0.2857 ScOF + 0.5714 LiF"
+      },
+      {
+        "coating": "TiF4",
+        "lithiation": "full",
+        "dE_rxt_meV": -100.7,
+        "gate_pass": "N",
+        "lhs_cathode_li": 0.5714,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.5714,
+        "li_bearing_products_without_Co": [
+          "Li2TiF6"
+        ],
+        "reaction": "0.4286 TiF4 + 0.5714 LiCoO2 -> 0.102 CoO2 + 0.02041 Co23O32 + 0.2857 Li2TiF6 + 0.1429 TiO2"
+      },
+      {
+        "coating": "ZrF4",
+        "lithiation": "full",
+        "dE_rxt_meV": -67.3,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6111,
+        "rhs_cathodic_li": 0.0926,
+        "scavenged_li": 0.5185,
+        "li_bearing_products_without_Co": [
+          "Li2ZrF6"
+        ],
+        "reaction": "0.3889 ZrF4 + 0.6111 LiCoO2 -> 0.01852 Co23O32 + 0.09259 Li(CoO2)2 + 0.2593 Li2ZrF6 + 0.1296 ZrO2"
+      },
+      {
+        "coating": "AlF3",
+        "lithiation": "full",
+        "dE_rxt_meV": -45.6,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6585,
+        "rhs_cathodic_li": 0.1463,
+        "scavenged_li": 0.5122,
+        "li_bearing_products_without_Co": [
+          "Li3AlF6"
+        ],
+        "reaction": "0.3415 AlF3 + 0.6585 LiCoO2 -> 0.0122 Co23O32 + 0.1463 Li(CoO2)2 + 0.08537 Al2CoO4 + 0.1707 Li3AlF6"
+      },
+      {
+        "coating": "MnO",
+        "lithiation": "full",
+        "dE_rxt_meV": -40.4,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.5,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.5,
+        "li_bearing_products_without_Co": [
+          "LiMnO2"
+        ],
+        "reaction": "0.5 MnO + 0.5 LiCoO2 -> 0.5 LiMnO2 + 0.5 CoO"
+      },
+      {
+        "coating": "Cr2O3",
+        "lithiation": "full",
+        "dE_rxt_meV": -23.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4286,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.4286,
+        "li_bearing_products_without_Co": [
+          "Li2CrO4",
+          "LiCrO2"
+        ],
+        "reaction": "0.5714 Cr2O3 + 0.4286 LiCoO2 -> 0.4286 Cr2CoO4 + 0.1429 LiCrO2 + 0.1429 Li2CrO4"
+      },
+      {
+        "coating": "B2O3",
+        "lithiation": "full",
+        "dE_rxt_meV": -91.0,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4128,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.4128,
+        "li_bearing_products_without_Co": [
+          "Li3B7O12",
+          "LiO8"
+        ],
+        "reaction": "0.4128 LiCoO2 + 0.5872 B2O3 -> 0.02752 LiO8 + 0.1284 Li3B7O12 + 0.1376 Co3(BO3)2"
+      },
+      {
+        "coating": "Sb2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -107.3,
+        "gate_pass": "N",
+        "lhs_cathode_li": 0.4,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.4,
+        "li_bearing_products_without_Co": [
+          "LiSbO3"
+        ],
+        "reaction": "0.6 Sb2O5 + 0.4 LiCoO2 -> 0.4 Co(SbO3)2 + 0.4 LiSbO3 + 0.1 O2"
+      },
+      {
+        "coating": "V2O5",
+        "lithiation": "full",
+        "dE_rxt_meV": -35.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6,
+        "rhs_cathodic_li": 0.2,
+        "scavenged_li": 0.4,
+        "li_bearing_products_without_Co": [
+          "LiVO3"
+        ],
+        "reaction": "0.6 LiCoO2 + 0.4 V2O5 -> 0.2 V2CoO6 + 0.4 LiVO3 + 0.2 Li(CoO2)2"
+      },
+      {
+        "coating": "Na2O",
+        "lithiation": "full",
+        "dE_rxt_meV": -74.4,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.4,
+        "li_bearing_products_without_Co": [
+          "Li2O"
+        ],
+        "reaction": "0.4 LiCoO2 + 0.6 Na2O -> 0.4 Na3CoO3 + 0.2 Li2O"
+      },
+      {
+        "coating": "YF3",
+        "lithiation": "full",
+        "dE_rxt_meV": -16.6,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.4545,
+        "rhs_cathodic_li": 0.0909,
+        "scavenged_li": 0.3636,
+        "li_bearing_products_without_Co": [
+          "LiYF4"
+        ],
+        "reaction": "0.4545 LiCoO2 + 0.5455 YF3 -> 0.09091 Li(CoO2)2 + 0.3636 LiYF4 + 0.1818 YOF + 0.09091 Co3O4"
+      },
+      {
+        "coating": "ZrF4",
+        "lithiation": "half",
+        "dE_rxt_meV": -15.1,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3636,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.3636,
+        "li_bearing_products_without_Co": [
+          "Li2ZrF6"
+        ],
+        "reaction": "0.2727 ZrF4 + 0.7273 Li0.5Co1O2 -> 0.01299 Co23O32 + 0.4286 CoO2 + 0.1818 Li2ZrF6 + 0.09091 ZrO2"
+      },
+      {
+        "coating": "CrO3",
+        "lithiation": "full",
+        "dE_rxt_meV": -60.9,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.6667,
+        "rhs_cathodic_li": 0.3333,
+        "scavenged_li": 0.3334,
+        "li_bearing_products_without_Co": [
+          "Li2CrO4"
+        ],
+        "reaction": "0.3333 CrO3 + 0.6667 LiCoO2 -> 0.1667 CrO2 + 0.3333 Li(CoO2)2 + 0.1667 Li2CrO4"
+      },
+      {
+        "coating": "TiF4",
+        "lithiation": "half",
+        "dE_rxt_meV": -41.7,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3333,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.3333,
+        "li_bearing_products_without_Co": [
+          "Li2TiF6"
+        ],
+        "reaction": "0.3333 TiF4 + 0.6667 Li0.5Co1O2 -> 0.5 CoO2 + 0.1667 Li2TiF6 + 0.1667 CoF2 + 0.1667 TiO2"
+      },
+      {
+        "coating": "CrO3",
+        "lithiation": "half",
+        "dE_rxt_meV": -7.2,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.3,
+        "li_bearing_products_without_Co": [
+          "Li2CrO4",
+          "LiCr3O8"
+        ],
+        "reaction": "0.4 CrO3 + 0.6 Li0.5Co1O2 -> 0.1 LiCr3O8 + 0.6 CoO2 + 0.1 Li2CrO4"
+      },
+      {
+        "coating": "B2O3",
+        "lithiation": "half",
+        "dE_rxt_meV": -72.5,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.2609,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.2609,
+        "li_bearing_products_without_Co": [
+          "Li3B7O12"
+        ],
+        "reaction": "0.5217 Li0.5Co1O2 + 0.4783 B2O3 -> 0.08696 Li3B7O12 + 0.1739 Co3(BO3)2 + 0.1957 O2"
+      },
+      {
+        "coating": "Ga2O3",
+        "lithiation": "full",
+        "dE_rxt_meV": -10.8,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3333,
+        "rhs_cathodic_li": 0.1111,
+        "scavenged_li": 0.2222,
+        "li_bearing_products_without_Co": [
+          "LiGa5O8"
+        ],
+        "reaction": "0.3333 LiCoO2 + 0.6667 Ga2O3 -> 0.2222 LiGa5O8 + 0.1111 Ga2CoO4 + 0.1111 Li(CoO2)2"
+      },
+      {
+        "coating": "Al2O3",
+        "lithiation": "full",
+        "dE_rxt_meV": -19.4,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.3333,
+        "rhs_cathodic_li": 0.1111,
+        "scavenged_li": 0.2222,
+        "li_bearing_products_without_Co": [
+          "LiAl5O8"
+        ],
+        "reaction": "0.3333 LiCoO2 + 0.6667 Al2O3 -> 0.2222 LiAl5O8 + 0.1111 Li(CoO2)2 + 0.1111 Al2CoO4"
+      },
+      {
+        "coating": "Cr2O3",
+        "lithiation": "half",
+        "dE_rxt_meV": -15.1,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.2,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.2,
+        "li_bearing_products_without_Co": [
+          "Li2CrO4"
+        ],
+        "reaction": "0.6 Cr2O3 + 0.4 Li0.5Co1O2 -> 0.3 CrO2 + 0.4 Cr2CoO4 + 0.1 Li2CrO4"
+      },
+      {
+        "coating": "Sb2O5",
+        "lithiation": "half",
+        "dE_rxt_meV": -87.4,
+        "gate_pass": "Y",
+        "lhs_cathode_li": 0.1818,
+        "rhs_cathodic_li": 0.0,
+        "scavenged_li": 0.1818,
+        "li_bearing_products_without_Co": [
+          "LiSb3O8"
+        ],
+        "reaction": "0.6364 Sb2O5 + 0.3636 Li0.5Co1O2 -> 0.3636 Co(SbO3)2 + 0.1818 LiSb3O8 + 0.1364 O2"
+      }
+    ]
+  },
+  "next": [
+    "cascade 깔때기에 G6 로 편입 — 단 vacuous 배지 + 'Li 흡수 축은 별개'라는 각주 필수",
+    "Li 흡수를 별도 진단축으로 등록(게이트 아님 — 화학량론 부호일 뿐)",
+    "NCM 으로 확장 시 재판정 (Ni 계는 산화력이 더 커 결과가 달라질 수 있음)",
+    "Nano Convergence 2026, 13, 27 (Li3Sc2(PO4)3, 17233종) 입수 후 대조 — 우리 1위 Sc2O3 와 원소 수렴"
+  ]
+}

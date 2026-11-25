@@ -1,0 +1,96 @@
+{
+ "plan": {
+  "system": "A",
+  "seed": 1,
+  "n_atoms": 400,
+  "composition": {
+   "Cl": 40,
+   "Li": 160,
+   "P": 40,
+   "S": 160
+  },
+  "start_density_g_cm3": 1.2,
+  "T_melt_K": 1200.0,
+  "T_final_K": 300.0,
+  "melt_ps": 100.0,
+  "quench_rate_K_s": 1000000000000.0,
+  "quench_ps": 900.0,
+  "hold_ps": 50.0,
+  "dt_fs": 2.0,
+  "save_ps": 1.0,
+  "G2_declared_before_results": true,
+  "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json",
+  "uma_inference_mode": "turbo"
+ },
+ "run": {
+  "quench_ps": 900.0,
+  "n_steps": {
+   "melt": 50000,
+   "quench": 450000,
+   "hold": 25000
+  },
+  "wall_min": 2667.0980226318043
+ },
+ "indicators": {
+  "PS4_fraction": 1.0,
+  "P_S_coord_hist": {
+   "4": 40
+  },
+  "bridging_S_P2S7_like": 1,
+  "P_P_bonds_P2S6_like": 0,
+  "Cl_Li_coord_hist": {
+   "3": 6,
+   "4": 29,
+   "5": 4,
+   "6": 1
+  },
+  "Cl_6coord_fraction": 0.025,
+  "ClCl_nearest_A": {
+   "median": 3.6799337395735305,
+   "min": 3.4815600165907954,
+   "in_window_fraction": 0.8,
+   "window_A": [
+    3.4,
+    3.9
+   ]
+  },
+  "S_Li8_fraction_Li2S_like": 0.0,
+  "S_Li_coord_hist": {
+   "0": 1,
+   "1": 1,
+   "2": 26,
+   "3": 108,
+   "4": 23,
+   "6": 1
+  },
+  "density_g_cm3": 1.5716739323798605,
+  "n_atoms": 400,
+  "cell_A": [
+   [
+    21.104549942118453,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    21.104549942118453,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    21.104549942118453
+   ]
+  ]
+ },
+ "E_final_eV": -1691.0449272440555,
+ "files": [
+  "initial.xyz",
+  "traj.xyz",
+  "thermo.csv",
+  "final.xyz",
+  "final.vasp",
+  "gr_partials.csv"
+ ],
+ "⛔": "지표만 찍었다 — 문턱 대조는 카드 §2 판정_지표. 이 시드 하나로 판정하지 않는다 (G3)."
+}

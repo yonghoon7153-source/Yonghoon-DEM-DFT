@@ -1,0 +1,75 @@
+{
+ "id": "wad_round2_vasp_result_2026_11_19",
+ "schema": "result/v1",
+ "record_kind": "result",
+ "date": "2026-11-20",
+ "track": "W_ad (DEM 협업) — 1저자 = 사용자 · 통지할 제3자 없음 (DEM 은 편지 상대)",
+ "citable": false,
+ "status": "외주 2차 최종 반송 집계 끝 (한 번) — G3 PASS · G4 PASS · G5_C PASS · δ_XC+vdW 미완료 (닫힘 · D-2026-11-17-wad-round2-interim-stage4-optb88-closed) · ②′ C–C 두 방법 (PBE+D3 · optB88) 다 OK · 은 a4 실패 (개정 4 로 이미 종료)",
+ "results_seen": true,
+ "card": "db/properties/wad_p2small_vasp_card_2026_10_15.json",
+ "raw": {
+  "dir": "db/raw/wad_round2_vasp_2026_10_22/final_return_2026_11_19",
+  "반송": "round2_return.tgz (sha256 ea819693343797ceccd2c6b24749f295eeed033f6eff69b7893606ca48745943 · 업체 .sha256 와 일치 · 구성원 285 = 11-17 중간본 261 + 단계 4 C–C PBE+D3 두 잡 24 · env.txt · status.tsv 는 덧붙임만 — diff_vs_interim_2026_11_19.txt)",
+  "업체_메모": "RETURN_NOTES.txt (원문 그대로 · TOTEN 표는 참고용 — 여기 옮기지 않는다)",
+  "업로드_zip": "UPLOAD_ZIP.sha256 (1ee33bfb…)",
+  "검사": "check_final_2026_11_19.txt",
+  "집계": "collect_round2_final_2026_11_19.json (sha256 0d0a8a85abfe0808377806aa000f9332866b83f98fac1c6fa542f4c813602bbc)",
+  "SHA256SUMS": "7 파일"
+ },
+ "검사_결과": "tools/wad/build_round2_vasp_package.py --check (도구 sha256 9dc2f98d… · 묶음 db/inputs/wad_round2_vasp_v5_2026_10_22 · MANIFEST 714324cc… · 등록부 999aa2da…) rc 3 — 24 잡 중 19 OK (단계 1 · 2 15 · C–C optB88 2 (파일럿) · C–C PBE+D3 2 (단계 4)) · 아닌 것 5 = optB88 4 (S_A bound INCOMPLETE_ATTEMPT {0 SCF_NOT_CONVERGED · r1A INCOMPLETE_ATTEMPT} · 나머지 셋 MISSING — 결정으로 닫힘) + 은 a4 SCF_NOT_CONVERGED (개정 4 종료) · 공통 환경 고장 0",
+ "집계": {
+  "명령": "--collect (같은 묶음 · 반송 · MANIFEST · 등록부) --uma db/raw/wad_p2small_uma_sp_2026_10_17/uma_energies_p2s_2026_10_17.json (sha256 ed0476af… · 10-22 회수 · 카드대로 반송 뒤 처음 넣음)",
+  "횟수": "한 번 (카드 '반송 다 온 뒤 --collect 한 번') — 다시 내지 않는다",
+  "종료_코드": "0 (= G5_C PASS · 공통 환경 고장 없음)",
+  "화면": "G3 PASS · G4 PASS · G5_C PASS · 80 % 발동 False · 신호 0 · 미완 ['P2S_Li_A_optB88_bound', 'P2S_Li_A_optB88_far', 'P2S_S_A_optB88_bound', 'P2S_S_A_optB88_far', 'V5_s_outer_A_G4_e70_far_a4'] → db/raw/wad_round2_vasp_2026_10_22/final_return_2026_11_19/collect_round2_final_2026_11_19.json"
+ },
+ "판정": {
+  "G3": "PASS (등록한 두 끝점 변화 검사)",
+  "G4": "PASS (k · σ · ENCUT 세 단계 다)",
+  "G5_C": "PASS (raw_criteria_met · 표본 기준 · 종결별 signed bias 기준 다 충족)",
+  "80%_규칙": "발동 없음",
+  "전하이동_신호": "0 (미평가 0) — 신호 없음 ≠ 중성 입증",
+  "공통_환경_고장": "없음 · 등록부 검증됨"
+ },
+ "G5_C_라벨": [
+  "VASP PAW · 코드가 P2 예측과 다르다",
+  "Gaussian σ 0.05 eV TOTEN 규약",
+  "S_A/PBE 대표 점검 — Li_A·optB88 수치 민감도 미검증 (선택 2)"
+ ],
+ "질문별_실패_전파": {
+  "G5_C": [],
+  "δ_XC+vdW": [
+   "P2S_Li_A_optB88_bound",
+   "P2S_Li_A_optB88_far",
+   "P2S_S_A_optB88_bound",
+   "P2S_S_A_optB88_far"
+  ],
+  "②′_C–C": [],
+  "은_a4": [
+   "V5_s_outer_A_G4_e70_far_a4"
+  ]
+ },
+ "값_자리": "W · Δ_C · ΔW · C–C 두 방법 차 값은 집계 JSON (samples · G3 · G4 · G5_C · delta_XC_vdW · CC_control) 에만 있다 — 이 기록 · 화면 · 용훈 포메이션 표에 옮기지 않는다 (위치만)",
+ "허용_서술 (카드 §5 · 결과 전 문구 그대로)": {
+  "G5_C_PASS": "「지정한 작은 LPSCl|흑연 모델 (SE 2층 · 흑연 2층) 의 사전 선택 표본 넷에서, 같은 기하·끝점·공통 D3 규약 아래 VASP 전자에너지와 UMA 예측에너지의 차이가 등록된 운영 기준 (표본 |Δ_C| ≤ 0.03 · 종결별 signed bias |mean Δ_C| ≤ 0.02 J/m²) 을 충족했다. 선택한 네 조건이 통과했다는 뜻이며, 일반적인 방법 오차 분포나 전체 P2 의 오차막대가 아니다. 다른 두께·조성·계면의 오차를 보증하지 않는다.」 + 라벨 'VASP PAW · 코드가 P2 예측과 다르다' · 'Gaussian σ 0.05 eV TOTEN 규약' · (선택 2) 'S_A/PBE 대표 점검 — Li_A·optB88 수치 민감도 미검증' · (far 신호가 있으면) '분리 끝점의 전자 상태 미확인'",
+  "②′_C–C": "「같은 VASP · 같은 동결 좌표에서 흑연 3|3 C–C 분리일의 두 방법 차이」 — 실험 값은 나란히 놓을 뿐 판정·보정에 쓰지 않는다",
+  "far_신호_라벨": "붙이지 않는다 — 전하이동 신호 0 (카드: 신호가 있을 때만 '분리 끝점의 전자 상태 미확인')"
+ },
+ "쓰지_않는_서술": [
+  "δ_XC+vdW 문장 (|δ|/|W_ref| = x %) — optB88 4 잡 닫힘으로 값 없음 (카드 ⏩_2026_11_17_δ_XC+vdW_닫음)",
+  "카드 §5 금지 목록 전부 (특히 'DFT 로 검증된 LPSCl|흑연 W' · S_A/PBE 대표 점검을 Li_A · optB88 까지의 수치 인증으로 · C–C 로 LPSCl–C 방향 정하기 · VASP 값과 QE 값 섞기)"
+ ],
+ "⛔": "VASP 비교군 — QE 값 (P1b · C–C · V2) 과 빼거나 한 표에 섞지 않는다 · 작은 LPSCl|흑연 모델 (SE 2층 · 흑연 2층) 의 사전 선택 표본 넷 결과다 · W 값은 용훈 포메이션 표에 싣지 않는다 (위치만)",
+ "다음": [
+  "은 V5 G5 집계 — a4 최종 실패 (개정 4) 를 넣고 V5 쪽 집계 (파이프라인 10-27 '은 V5 G5 집계와 DEM 회신 10 은 그 뒤 같이')",
+  "DEM 회신 10 초안 — V5 은 라벨 · LPSCl|Ag 재합의 · Ag|흑연 라벨 · CU 덧붙임 + 이번 탄소 G5_C 결과 (허용 서술 · 라벨 그대로)",
+  "업체에 round2 종결 알림 · 서버 run/ (stage-ⓐ WAVECAR 포함) 보존 여부 — 사용자"
+ ],
+ "by": "agent · 2026-11-20",
+ "⏩_2026_11_20_진행": {
+  "은_V5_G5": "끝 — db/properties/wad_aprime_v5_vasp_result_2026_10_15.json ⏩_2단계_G5_집계_2026_11_20 (G5 INCOMPLETE · 예정 상태 그대로 · 크기 민감 ③ ④)",
+  "업체_서버_run": "사용자 11-20 '알아서 놔둘거야 건엽은' — 업체가 알아서 둔다 · 우리 쪽 지시 없음 · round2 외주 끝",
+  "DEM_회신_10": "초안 작성 중 → kb/projects/wad_dem_reply_draft_2026_09_23.md 회신 10 절"
+ }
+}

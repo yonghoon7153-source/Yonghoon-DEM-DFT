@@ -1,0 +1,8 @@
+﻿# BV percolation barriers in eV (bvlain Morse-BVEL, softBV params) on OUR relaxed V0 cells, 2026-08-04.
+# Plausible absolute scale (comp1 E3D 0.273 ~ MD 0.253 eV) BUT family ranking INVERTED vs MD
+# (vacancy paradox in eV units) -> NOT for sigma/Ea ranking. See kb/concepts/bvse.md sec 8-9.
+system,formula,E_1D_eV,E_2D_eV,E_3D_eV,MD_Ea_eV,MD_src
+comp1,Cl4Li24P4S20,0.1953,0.2637,0.2734,0.253,deck 단일시드 계열
+modelc,Cl8Li27P5S22,0.2344,0.2441,0.4785,0.197±0.032,3-seed×3-T
+lpsocl,Cl8Li27OP5S21,0.2246,0.2441,0.5664,0.287±0.024,4-seed×3-T
+b2o3,B2Cl16Li58O3P8S41,0.2832,0.3223,0.9082,0.199±0.034,3-seed×3-T reseed

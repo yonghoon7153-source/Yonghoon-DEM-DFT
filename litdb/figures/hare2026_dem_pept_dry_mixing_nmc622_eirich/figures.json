@@ -1,0 +1,391 @@
+{
+ "slug": "hare2026_dem_pept_dry_mixing_nmc622_eirich",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Side on (a) and top-down (b) view of the Eirich EL1 mixer. The blue lines labelled 1 and 2 in (a) denote the planes along which granular temperature is calculated. 𝐷90 = 17 μm, and a solids density of 𝜌𝑝= 4650 kg∕m3. When compared to a conventional stirred tank, the fill height (25 mm) is low, due to the mixing pan being wider (165 mm) than it is tall (130 mm), to accommodate the option to angle the pan for other mixing/granulation processes. events using the PEPT-ML algorithm enables the tracer position to be obtained in three dimensions in Cartesian co-ordinates and time (x, y, z, t). This algorithm has the capability to further improve precision and confidence in tracer position by using a machine learning clustering algorithm [44] and has been applied previously for the wet blending of electrode materials [45] due to its excellent balance of temporal and spatial resolution [2",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    567.0,
+    267.8
+   ],
+   "w": 2232,
+   "h": 910,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Raw PEPT number field (a), PEPT number field after filtering (b), with both heat maps have 𝑥 and 𝑦 axis corresponding to the position within the ADAC camera. Raw PEPT data occupancy histogram (c) where the red line shows where the filtering limit is, and the resulting PEPT data occupancy histogram after filtering (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.1,
+    567.0,
+    372.1
+   ],
+   "w": 2232,
+   "h": 1347,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Depth-averaged Péclet number for 20 m/s tip-speed PEPT data.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.2,
+    415.4,
+    554.1,
+    598.1
+   ],
+   "w": 1017,
+   "h": 763,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. DEM velocity field (a) with filtered (b) and raw (c) PEPT data velocity field, as well as a parity plot (d) comparing the DEM and filtered PEPT velocities. For 10 m/s tip-speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.2,
+    567.0,
+    430.1
+   ],
+   "w": 2232,
+   "h": 1589,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.792
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. DEM velocity field (a) with filtered (b) and raw (c) PEPT data velocity field, as well as a parity plot (d) comparing the DEM and filtered PEPT velocities. For 20 m/s tip-speed. (280,300). The high velocity region increases with tip-speed for both the DEM and PEPT, and the velocity of the low region is similar for all DEM simulations but does appear to increase with tip-speed in the PEPT experiments.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.2,
+    567.0,
+    425.6
+   ],
+   "w": 2232,
+   "h": 1570,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. DEM velocity field (a) with filtered (b) and raw (c) PEPT data velocity field, as well as a parity plot (d) comparing the DEM and filtered PEPT velocities. For 30 m/s tip-speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.1,
+    567.0,
+    428.4
+   ],
+   "w": 2232,
+   "h": 1581,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.804
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Free surface of PEPT (left) and DEM (right) data at 10 m/s tip-speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.7,
+    462.8,
+    493.6,
+    643.1
+   ],
+   "w": 1634,
+   "h": 752,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.424
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Free surface of PEPT (left) and DEM (right) data at 20 m/s tip-speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.0,
+    53.3,
+    491.3,
+    231.8
+   ],
+   "w": 1615,
+   "h": 744,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.421
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Free surface of PEPT (left) and DEM (right) data at 30 m/s tip-speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    103.4,
+    271.1,
+    492.0,
+    453.7
+   ],
+   "w": 1620,
+   "h": 762,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.429
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Zoomed in view of the rotor and free surface at 10 m/s and 30 m/s tip-speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    98.3,
+    497.1,
+    497.2,
+    706.3
+   ],
+   "w": 1663,
+   "h": 873,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.232
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. DEM granular temperature field for 10 m/s (a) 20 m/s (b) and 30 m/s (c) tool speed at plane height of 1 mm above vessel bottom (plane 1 in Fig. 1(a)). Number density plots for granular temperature (d) comparing different tip speeds and averaging intervals between 5 s and 15 s simulation time.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    55.1,
+    567.0,
+    497.3
+   ],
+   "w": 2232,
+   "h": 1844,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 12,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. DEM granular temperature field for 10 m/s (a) 20 m/s (b) and 30 m/s (c) tool speed at plane height of 8 mm above vessel bottom (plane 2 in Fig. 1(a)). Number density plots for granular temperature (d) comparing different tip speeds and averaging intervals between 5 s and 15 s simulation time.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    46.1,
+    567.0,
+    484.1
+   ],
+   "w": 2232,
+   "h": 1826,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Granular temperature calculated for the granular gas region for 10 (a) and 30 (b) m/s tip-speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.0,
+    541.7,
+    498.4,
+    716.9
+   ],
+   "w": 1673,
+   "h": 731,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.409
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 13,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. X-axis Lacey mixing index calculated from the DEM simulation at 30 m/s tip-speed (a), and diagram showing each axis that particles were divided along for x, 𝑦 and z axes. was therefore selected. Three snapshots of this can be seen in Fig. 15, with each group separated before mixing 15(a), during the mixing where the 2 groups are partially-mixed 15(b), and when both groups have reached a mixed steady-state 15(c). consistency of coating by ensuring that many particles interact with one another and all of the regions of the mixer. The results show that each particle can be expected to experience all of the mixing regions within the vessel. The rapid and homogeneous nature of the particles’ intermingling shows that larger clumps of unmixed particles are highly unlikely, and will lead to each particle interacting with many other particles within a rapid timeframe. As such, any partic",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.3,
+    567.0,
+    248.4
+   ],
+   "w": 2232,
+   "h": 831,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 14,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. DEM simulation for 10 m/s with the particles split into 2 groups, before mixing (a), during mixing (b) and when fully mixed (c). With the Lacey mixing index for all tip-speeds for the 𝑥-axis (d), 𝑦-axis (e), and 𝑧-axis (f). significant improvements in sustainability both in a environmental and financial sense. With this work the diminishing returns with tip-speed show a clear avenue to reduce the energy use in the mixing process. Whilst the energy costs of mixing are modest compared to the drying step, future use of the validated DEM model allows for the exploration of mixer dynamics across a broader and denser parameter space for potentially a wider variety of electrode materials than would be feasible experimentally, with consequent advances possible in dry processing and product optimisation. Declaration of competing interest The authors declare the following financial intere",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    567.0,
+    484.5
+   ],
+   "w": 2232,
+   "h": 1813,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Average mixer Péclet number. Tip-speed Average Péclet number 10 m/s 14 959 20 m/s 2067 30 m/s 2440",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    746.9
+   ],
+   "w": 2212,
+   "h": 2983,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Literature review on DEM simulations for different mixer types. Mixer types are: a - helical ribbon, b - paddle blender, c - blade mixer, d - ploughshare. Author Type Tool speed Main findings Herman [50] a 0.1–1.7 m/s Scale-up reduces mixing efficiency and increases mixing time. Chandratilleke [51] a 0.3 m/s Mixing quality depends on fill level, particle properties and tool design. Halidan [52] a 0.2–2.1 m/s Impeller speed, fill level and tool design influence mixing performance. Jin [53,54] a 0.5–2.1 m/s Liquid addition improves mixing performance. Tsugeno [55] a 0.2–0.5 m/s Convection dominant mixing mechanism. Gao [56] a 0.2–1 m/s Optimal mixing performance depends on tool speed. Golshan [57] a 0.5–1 m/s Mixing quality enhanced by tool speed and filling method. Kaneko [58] a 0.3–0.6 m/s Mixing performance critically influenced by bed height. Qian [59] a 0.2–1 m/s Combining anc",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.0,
+    566.0,
+    769.9
+   ],
+   "w": 2164,
+   "h": 2998,
+   "dpi": 292,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3 DEM parameters used for NMC 622. Parameter Value particle diameter 𝑑𝑝 2 mm bulk density 𝜌𝑝 2500 kg/m3 shear modulus 𝐺 1 × 108 Pa Poisson’s ratio 𝜈 0.25 coefficient of restitution 𝑒𝑝𝑝 0.5 coefficient of restitution 𝑒𝑝𝑤 0.5 coefficient of stat. friction 𝜇𝑠,𝑝𝑝 0.9 coefficient of roll. friction 𝜇𝑟,𝑝𝑝 0.075 coefficient of stat. friction 𝜇𝑠,𝑝𝑤 0.9 coefficient of roll. friction 𝜇𝑟,𝑝𝑤 0.075 surface energy 𝛾𝑝𝑝 0.25 J/m2 surface energy 𝛾𝑝𝑤 0.04 J/m2 number of particles 𝑛𝑝 46 000 coarse graining factor 𝐶𝐺𝐹 200",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    746.9
+   ],
+   "w": 2212,
+   "h": 2983,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 7,
+   "file": "tab_4.png",
+   "caption": "Table 4 Summary of key statistics for PEPT experiment velocities, and DEM simulation velocities, all units are m/s. Dataset Median Mean St. Dev. PEPT - 10 m/s 0.590 0.599 0.204 DEM - 10 m/s 0.595 0.614 0.319 PEPT - 20 m/s 0.637 0.681 0.289 DEM - 20 m/s 0.636 0.659 0.388 PEPT - 30 m/s 0.670 0.762 0.362 DEM - 30 m/s 0.670 0.703 0.464",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.0,
+    566.0,
+    746.9
+   ],
+   "w": 2224,
+   "h": 2983,
+   "dpi": 300,
+   "src": "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf",
+   "blank": 0.825
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+&inputpp
+  prefix='401_conv', outdir='./tmp_401_conv', plot_num=8, filplot='fp_401_conv_8'
+/
+&plot
+  iflag=3, output_format=6, fileout='401_conv_8.cube'
+/

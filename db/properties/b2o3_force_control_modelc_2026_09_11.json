@@ -1,0 +1,36 @@
+{
+ "schema": "control_calculation/v1",
+ "date": "2026-09-11",
+ "제목": "힘 대조 카드 §4 3판 — **대조 잡** 결과: 설정 변경이 대조군을 흔들지 않는다",
+ "카드": "db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json (3판, content_digest 87091598…)",
+ "무엇을_물었나": "b2o3 때문에 전 점을 `occupations='smearing'/gaussian` 으로 바꾸는데, modelc 는 `fixed` 로 10/10 잘 수렴했다. 설정 변경이 **대조군의 힘을 움직이면** 비 R = dF(b2o3)/dF(modelc) 의 분모가 흔들린다.",
+ "설계": "modelc_s2_t10ps 한 점. 같은 좌표·같은 셀에 설정만 바꿔 두 번 계산하고 힘을 비교한다.",
+ "좌표_동일성_게이트": {
+  "요구": "카드 §8 무효조건 1번 — 스냅샷 좌표·격자가 두 계산에서 같아야 한다",
+  "확인": "ATOMIC_POSITIONS 블록 md5 = **bf6710fec368b7b8** (양쪽 동일)",
+  "판정": "✅ 통과"
+ },
+ "설정_차이_이것만_달랐다": {
+  "occupations": "fixed → smearing",
+  "smearing": "(없음) → gaussian",
+  "degauss": "(없음) → 0.01 Ry",
+  "mixing_mode": "local-TF → plain",
+  "mixing_ndim": "(없음) → 8",
+  "electron_maxstep": "600 → 200",
+  "동일": "ecutwfc 52 · ecutrho 520 · conv_thr 1e-8 · nosym .true. · K_POINTS gamma · 좌표"
+ },
+ "결과": {
+  "옛_fixed": {"경로": "~/work/runs/force_check_700K/modelc_s2_t10ps", "Total_force_Ry_bohr": 0.353129, "SCF_correction": 0.000149, "반복": 71},
+  "새_gaussian": {"경로": "~/work/runs/fc_control_smear/modelc_2_t10ps", "Total_force_Ry_bohr": 0.353134, "SCF_correction": 0.000126, "반복": 21, "smearing_contrib_mTS_Ry": 0.0, "수렴": "convergence has been achieved in 21 iterations (5.8E-09 Ry)"},
+  "차이": {"절대": 5e-06, "상대": 1.4e-05, "단위": "Ry/bohr (Total force 노름)"}
+ },
+ "판정": {
+  "결론": "✅ **대조군은 흔들리지 않는다.** 힘 차 5×10⁻⁶ Ry/bohr 은 두 계산의 SCF correction(1.3~1.5×10⁻⁴)보다 **한 자릿수 작다** — 수치 잡음 아래다.",
+  "왜_당연한가": "`smearing contrib. (-TS) = −0.00000000 Ry`. modelc 스냅샷은 갭이 열려 있어 gaussian smearing 이 분수점유를 하나도 만들지 않는다 ⇒ 점유수가 fixed 와 동일 ⇒ 힘이 같다. 예측과 실측이 맞았다.",
+  "b2o3_와의_대비": "같은 프로토콜에서 b2o3 700 K 스냅샷은 `-TS = −0.00318281 Ry` 다. **두 계가 이 축에서 갈린다** — 이것이 카드 3판 개정의 근거다.",
+  "덤": "gaussian 이 modelc 에서도 수렴을 **빠르게** 한다 (71회 → 21회).",
+  "⛔_이것이_주장하지_않는_것": "이 대조는 **설정 변경의 크기를 기록**한 것이지 §5 의 판정 문턱(R 2.0/1.25)을 건드리지 않는다. 카드가 그렇게 못박았다."
+ },
+ "다음": "20점 본실행 — `~/work/runs/force_check_700K_v2`. ⚠ 입력을 재생성한다(본배치 scf.in 은 local-TF 철회 9분 전 생성물).",
+ "출처": ["db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json §4 대조_잡_modelc_설정변경이_대조군을_흔드는가"]
+}

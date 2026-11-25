@@ -1,0 +1,22 @@
+  ✓ window 0.03 · E_hull 0.0 kept (not read as false) · too-big and deprecated skipped
+  ✓ the lowest observed polymorph is always added (LiCl rock salt lesson)
+  ✓ nothing in the window → lowest one only
+  ✓ fetch: one failure is recorded, others written, other-formula docs dropped, host appended
+  ✓ collect: runs, records and the one baseline found
+  ✓ phase: UMA minimum over converged candidates (unconverged lower one ignored) · polymorph flag · missing kept as missing
+  ✓ planted dissolution energies recovered per key atom (Al · O) with the lower host
+  ✓ the H1 column differs by exactly the host energy difference
+  ✓ non-neutral and missing-phase configurations get no value (never 0)
+  ✓ CSV de and raw energies agree
+  ✓ host-composition (null control) configuration: no dissolution value, rearrangement energy vs each host
+  ✓ G1 refuses a host that does not reproduce the Stage-1 baseline
+  ✓ G1 refuses a different base file (md5)
+  ✓ G2 refuses a missing reservoir
+  ✓ +U mixing flag: oxides/fluorides of Co Cr Fe Mn Mo Ni V W only
+  ✓ by precursor: slot median of copies → min over slots (gap · median · copy spread of the argmin slot) · reason when none
+  ✓ eligible precursors: non-neutral (AlCl3) and host-composition (Li2S) ones are not fetched
+G1 baseline reproduced: True (max |Δ| 1.0000000000065512e-05) · G2 reservoirs: True · CSV vs raw max 5.921189464667501e-16
+host used H2_comp1_k444 {'H1_canonical': -3.99999, 'H2_comp1_k444': -4.01} · configs {'ok': 4, 'non_neutral': 1, 'missing_phase': 1, 'null_control': 1}
+precursors with a value 2/5 · Spearman vs Stage-1 de nan · min vs median None · argmin copy spread > 0.05 eV: {'n_over_0p05_eV': 1, 'max': 0.19999999999998863}
+  ✓ files: label CSV has the two eligible precursors · blank (not 0) for the non-neutral one
+selftest: 18/18

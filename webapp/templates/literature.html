@@ -1,0 +1,499 @@
+{% extends "base.html" %}
+{# 탭 이름이 축 하나(DFT)를 대표하면 다른 축(DEM 117편, 54 %)을 찾는 사람이 지나친다. #}
+{% block title %}Literature · litdb{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Literature</h1>
+    {# 헤드라인은 **완성 digest 만** 센다 — 뼈대 5편은 스스로 인용을 금지한 빈 카드다. #}
+    <div class="sub">litdb · 완성 digest <b>{{ counts.full }}</b>편{% if counts.skeleton %}
+      <span class="muted">(+ 뼈대 {{ counts.skeleton }}편 = 목록 {{ counts.all }})</span>{% endif %}
+      · 발표덱 {{ counts.talk }}건 ·
+      <b>DFT·MLIP</b>(전해질 화학) ↔ <b>DEM·MPM</b>(미세구조·역학) ·
+      카드를 누르면 <b>digest</b>(논문 한 편을 읽고 남긴 정독 노트)가 열린다</div></div>
+</div>
+
+<div class="track-tabs">
+  <button class="tt active" data-track="all" onclick="setTrack(this)">전체 <span>{{ counts.all }}</span></button>
+  <button class="tt tt-dft" data-track="dft" onclick="setTrack(this)">⚛ DFT · MLIP <span>{{ counts.dft }}</span></button>
+  <button class="tt tt-dem" data-track="dem" onclick="setTrack(this)">🧱 DEM · MPM <span>{{ counts.dem }}</span></button>
+  {# 발표덱은 data-track="talk" 인데 탭이 all/dft/dem 뿐이라 **골라 볼 방법이 없었다.** #}
+  <button class="tt" data-track="talk" onclick="setTrack(this)"
+          title="학회 발표덱 — 인용 등급이 논문보다 한 단계 낮다">🎤 발표덱 <span>{{ counts.talk }}</span></button>
+  <button class="tt" id="sortbtn" onclick="toggleSort()" style="margin-left:auto"
+          title="기본은 digest 등록일 최신순 — 누르면 가나다순">🔤 가나다순</button>
+</div>
+
+{% if recent %}
+{# 🆕 최근 {{ recent_days }}일. 정렬만으로는 "새로 들어온 것"이 안 보인다(215장 그리드의 첫 줄일 뿐).
+   ⚠ 손으로 쓴 목록이 아니다 — 오늘 날짜에서 파생되므로 시간이 지나면 저절로 비워진다. #}
+<div class="v3-band is-open" style="margin-top:14px">
+  <div class="v3-band-cell" style="flex:1 1 100%">
+    <div class="v3-band-t">🆕 최근 {{ recent_days }}일에 들어온 digest {{ recent|length }}편</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:7px">
+      {% for p in recent %}
+      <button type="button" class="v3-chip" onclick="openPaper('{{ p.id }}')"
+              title="{{ p.title|plain }}">{{ p.id }}<span class="v3-chip-n">{{ p.digested }}</span></button>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if pis %}
+<div class="pi-bar" style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+  <span class="muted" style="font-size:.76rem;margin-right:2px">연구책임자</span>
+  <button class="pi-chip active" data-pi="" onclick="setPI(this)"
+          style="border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">전체</button>
+  {% for p in pis %}
+  <button class="pi-chip" data-pi="{{ p.key }}" onclick="setPI(this)"
+          title="{{ (p.en)|plain }} · {{ (p.aff)|plain }}{% if p.our %} · 우리 연구실 계보{% endif %}"
+          style="border:1px solid {{ p.color }}44;background:{{ p.color }}12;color:{{ p.color }};border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    {% if p.our %}★ {% endif %}{{ p.ko if p.ko != '—' else p.en }}<span class="muted" style="margin-left:4px">{{ p.n }}</span>
+  </button>
+  {% endfor %}
+</div>
+<div class="muted" style="font-size:.72rem;margin-top:5px">
+  ★ = 우리 연구실 계보 · 태그는 digest <b>머리말의 저자·소속 줄</b>만 스캔한다
+  (본문 인용·부정문에서 이름을 줍지 않도록 <span class="mono">≠ / 아님 / 외부 그룹</span> 이후를 잘라냄).
+</div>
+{% endif %}
+
+
+{% if tmeta %}
+<div class="topic-bar" style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+  <span class="muted" style="font-size:.76rem;margin-right:2px">주제</span>
+  <button class="tp-chip active" data-tp="" onclick="setTP(this)"
+          style="border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">전체</button>
+  {% for k, m in tmeta.items() %}
+  <button class="tp-chip" data-tp="{{ k }}" onclick="setTP(this)" title="{{ m.desc|plain }}"
+          style="border:1px solid {{ m.color }}44;background:{{ m.color }}12;color:{{ m.color }};border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    {{ m.label }}<span class="muted" style="margin-left:4px">{{ tcounts[k] }}</span>
+  </button>
+  {% endfor %}
+  {# digest 본문에 `⛔ 인용 금지` 계열 문장이 있는 것만 거른다 (219편 중 {{ counts.ban }}편).
+     ⚠ 원장이 아니라 **산문 스캔**이다 — 아래 주의문에 그대로 적어 둔다. #}
+  <button class="tp-chip" data-tp="__ban" onclick="setTP(this)"
+          title="digest 본문에 인용 제한 문구가 있는 논문만 (원장 판정이 아니라 문자열 스캔)"
+          style="border:1px solid #be123c55;background:#be123c14;color:#be123c;border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    ⛔ 인용제한<span class="muted" style="margin-left:4px">{{ counts.ban }}</span>
+  </button>
+  {% if counts.skeleton %}
+  <button class="tp-chip" data-tp="__skel" onclick="setTP(this)"
+          title="아직 실물을 안 읽은 뼈대 카드만 — 인용하지 않는다"
+          style="border:1px solid #6b728055;background:#6b728014;color:#6b7280;border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    🌱 뼈대<span class="muted" style="margin-left:4px">{{ counts.skeleton }}</span>
+  </button>
+  {% endif %}
+  <button class="tp-chip" id="favchip" data-tp="__fav" onclick="setTP(this)" title="별을 누른 논문만"
+          style="border:1px solid #f59e0b55;background:#f59e0b14;color:#b45309;border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    ★ 즐겨찾기<span class="muted" style="margin-left:4px" id="favn">0</span>
+  </button>
+</div>
+{% if tprimer %}
+<details style="margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)">
+  <summary style="cursor:pointer;font-size:.8rem;font-weight:600">📘 {{ tprimer.title }}</summary>
+  <div style="font-size:.78rem;line-height:1.65;margin-top:8px;white-space:pre-wrap">{{ tprimer.body|join('\n')|mdlite }}</div>
+</details>
+{% endif %}
+<div class="muted" style="font-size:.72rem;margin-top:5px">
+  ⚠ 주제 태그는 <b>손으로 큐레이션</b>한다(<span class="mono">litdb/topics.json</span>).
+  검색창은 제목·id·type <b>+ 잘라둔 그림·표 캡션</b>까지 훑는다 —
+  "Nyquist"·"Arrhenius"·"Rietveld" 처럼 제목엔 없고 그림에만 있는 말로도 찾힌다
+  (캡션으로만 걸린 논문은 <span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:0 4px;font-weight:700">🔍 캡션</span> 표시).
+  그림에 <b>내가 달아 둔 코멘트</b>도 같이 훑는다 — 그쪽에서 걸리면
+  <span style="background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 4px;font-weight:700">💬 코멘트</span> 로 갈라 표시한다(논문 원문과 섞지 않는다).
+  그래도 <b>본문 전수</b>는 아니라("screening" 제목 7편 vs 본문 13편) 태그를 따로 둔다.
+  <br>⚠ <span style="color:#be123c;font-weight:700">⛔ 인용제한</span> 배지는
+  digest 본문에서 <span class="mono">인용 금지</span> 계열 문장을 <b>문자열로 찾은 것</b>이다 —
+  <b>원장 판정이 아니다</b>(원장은 <a href="/governance">/governance</a> ·
+  <span class="mono">db/properties/citation_hazards.json</span>).
+  <b>배지가 없다고 인용 가능이라는 뜻이 아니고</b>, 무엇이 금지인지는 digest 본문에서 확인해야 한다.
+  ("인용 금지 <b>해제</b>" 는 세지 않는다.)
+</div>
+{% endif %}
+<input class="search" placeholder="검색 (제목·id·주제·그림 캡션·내 코멘트)..." oninput="filt(this.value)">
+
+{# ── 논문 카드 한 장. 뼈대 묶음과 본 그리드가 **같은 마크업**을 쓰게 매크로로 뺀다. ──
+   ⚠ 캡션·코멘트 색인(data-fig/data-cmt)은 여기에 굽지 않는다 — 279 KB 였다.
+     검색을 시작하면 /api/lit-index 에서 한 번 받아 온다(아래 ensureIdx). #}
+{% macro pcard(p) %}
+<div class="card paper track-{{ p.track }}" data-track="{{ p.track }}" data-pi="{{ p.pis|join(',') }}"
+     data-tp="{{ p.topics|join(',') }}" data-id="{{ p.id }}" id="{{ p.id }}"
+     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }} {{ p.digested }} {{ p.topics|join(' ')|lower }} {% for k in p.pis %}{{ PI[k].ko }} {{ PI[k].en|lower }} {% endfor %}"
+     data-digested="{{ p.digested }}"
+     {% if p.ban_n %}data-ban="{{ p.ban_n }}"{% endif %}{% if p.skeleton %} data-skel="1"{% endif %}
+     onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
+  <div class="paper-top">
+    {# ⚠ 별은 카드 열기(onclick)와 겹치므로 stopPropagation 필수 #}
+    <button class="favbtn" data-id="{{ p.id }}" onclick="event.stopPropagation();toggleFav(this)"
+            title="즐겨찾기" aria-label="즐겨찾기"
+            style="border:0;background:none;cursor:pointer;font-size:.95rem;line-height:1;padding:0 4px 0 0;color:#d1d5db">☆</button>
+    <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
+    {# ⛔ digest 본문의 인용 제한 문구 (산문 스캔 — 원장 판정이 아니다). #}
+    {% if p.ban_n %}<span title="digest 본문에 인용 제한 문구 {{ (p.ban_n)|plain }}곳 — 첫 줄: {{ (p.ban)|plain }}&#10;(원장 판정이 아니라 문자열 스캔이다)"
+      style="flex:none;background:#be123c18;color:#be123c;border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">⛔ 인용제한 {{ p.ban_n }}</span>{% endif %}
+    {# 🌱 뼈대 — 카드 스스로 인용을 금지한다. 62 KB 정독 digest 와 같은 모양이면 안 된다. #}
+    {% if p.skeleton %}<span title="research-agent 가 만든 빈 카드다 — 실물(PDF·SI)을 읽어야 digest 가 된다. ⏳ 문서 대기 가 남아 있으면 인용하지 않는다."
+      style="flex:none;background:#6b728018;color:#6b7280;border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">🌱 뼈대 · 인용금지</span>{% endif %}
+    {# ⚠ [:38] 하드 컷은 한글 낱말 중간에서 잘려 "…실험 없" 처럼 보인다.
+     .ptype 에 이미 ellipsis 가 있으니 CSS 에 맡긴다.
+     ⚠ 뼈대의 type 은 `⏳ 문서 대기 (exp|DFT|…)` 플레이스홀더 **원문**이라 안 찍는다. #}
+    {% if p.type and not p.skeleton %}<span class="ptype" title="{{ p.type|plain }}" style="min-width:0">{{ p.type|mdlite }}</span>{% endif %}
+    {# PDF 에서 잘라둔 그림이 있는 논문 표시 (tools/litdb/extract_figures.py) #}
+    <span class="figmatch" title="제목이 아니라 그림 캡션에서 찾았어요" style="display:none;flex:none;
+      background:#fef9c3;color:#854d0e;border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">🔍 캡션</span>
+    {# 내가 그림에 적어 둔 코멘트에서 걸린 경우 — 논문 원문(캡션)과 확실히 구분한다 #}
+    <span class="cmtmatch" title="내가 적어 둔 코멘트에서 찾았어요" style="display:none;flex:none;
+      background:var(--accent-soft);color:var(--accent);border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">💬 코멘트</span>
+    {% if figcount.get(p.id) %}<span title="크로핑된 논문 그림 {{ (figcount[p.id])|plain }}개 — 열면 본문 Fig 언급에 링크된다"
+      style="flex:none;background:var(--accent-soft);color:var(--accent);border-radius:5px;
+             padding:1px 6px;font-size:.67rem;font-weight:700">🖼 {{ figcount[p.id] }}</span>{% endif %}
+  </div>
+  {% if p.topics %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
+    {% for t in p.topics %}<span title="{{ tmeta[t].desc|plain }}"
+      style="background:{{ tmeta[t].color }}18;color:{{ tmeta[t].color }};border-radius:5px;padding:1px 7px;font-size:.67rem;font-weight:700">
+      {{ tmeta[t].label }}</span>{% endfor %}
+  </div>{% endif %}
+
+  {% if p.pis %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
+    {% for k in p.pis %}<span title="{{ (PI[k].en)|plain }} · {{ (PI[k].aff)|plain }}"
+      style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
+      {% if PI[k].our %}★{% endif %}{{ PI[k].ko if PI[k].ko != '—' else PI[k].en }}</span>{% endfor %}
+  </div>{% endif %}
+  {# 제목 안의 마크다운 강조는 **색**으로 (카드 제목은 이미 굵어 볼드로는 안 갈린다) #}
+  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ p.title_html|safe }}</div>
+  {# ⚠ id 가 길면(banik2022_substitutions_oxidative_stability_argyrodite 등) flex 안에서
+     안 줄어들어 **날짜를 카드 밖으로 밀어낸다**(2026-08-03 실측). flex item 은 기본
+     min-width:auto 라 내용보다 작아지지 않는다 — min-width:0 을 줘야 줄어들고,
+     그래야 ellipsis 가 먹는다. 날짜는 flex:none 으로 항상 지킨다. #}
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
+    <span class="mono muted" title="{{ p.id|plain }}"
+          style="font-size:.7rem;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.id }}</span>
+    {% if p.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap;flex:0 0 auto" title="논문 에이전트 digest 등록일">📅 {{ p.digested }}</span>{% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+{# ── 🎤 발표덱을 논문 그리드 **위**로 ────────────────────────────────────────
+   종전엔 899 KB 페이지의 97 % 지점(871 KB)에 있어서 215장을 끝까지 굴리는 것이
+   유일한 접근 경로였다.
+   ⚠⚠ 인용등급 경고 callout 은 이 묶음에 **붙어서 같이** 움직인다 — 노출을 올리면서
+      경고를 원래 자리에 두고 오면 등급 체계가 무너진다(litdb/talks/README.md). #}
+{% if talks %}
+<h2 style="margin-top:26px;font-size:1rem">🎤 학회 발표자료 <span class="muted" style="font-weight:400;font-size:.8rem">({{ talks|length }}건)</span></h2>
+<div class="callout cal-warn" style="margin-top:8px">
+  <b>발표 덱은 아래 논문 수({{ count }}편)에 합산하지 않는다.</b> peer-review를 거치지 않았고 방법 명세가
+  슬라이드 수준이라 <b>소환값보다 한 단계 낮은 신뢰 등급</b>이다 — 덱 수치를 우리 db 절대값과 같은 표에 넣지 말 것.
+  덱은 <b>부재의 증거가 아니므로</b> "저 그룹은 ~을 안 한다"는 서술은 논문 실물에서만 나온다.
+  (규율 전문: <span class="mono">litdb/talks/README.md</span>)
+</div>
+<div class="grid grid-3" style="margin-top:12px">
+{% for t in talks %}
+{# ⚠ id·data-id 가 없어서 ⌘K 가 거는 `/literature#<id>` 가 아무 데도 안 걸렸다
+   (899 KB 페이지 맨 위로 떨어지고 끝). 논문 카드와 같은 앵커를 준다. #}
+<div class="card paper" data-track="talk" data-pi="{{ t.pis|join(',') }}"
+     data-id="{{ t.id }}" id="{{ t.id }}"
+     data-t="{{ t.title|lower }} {{ t.id|lower }} talk 발표 {{ t.speaker|lower }} {% for k in t.pis %}{{ PI[k].ko }} {{ PI[k].en|lower }} {% endfor %}"
+     data-digested="{{ t.digested }}"
+     {% if t.ban_n %}data-ban="{{ t.ban_n }}"{% endif %}
+     onclick="openPaper('{{ t.id }}')" onkeydown="_kbd(event)"
+     tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
+  <div class="paper-top"><span class="tbadge" style="background:#fef9c3;color:#854d0e">TALK</span>
+    {% if t.session %}<span class="ptype" title="{{ t.session|plain }}" style="min-width:0">{{ t.session|mdlite }}</span>{% endif %}</div>
+  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ t.title_html|safe }}</div>
+  {% if t.speaker %}<div class="muted" style="font-size:.76rem;margin-top:4px">{{ t.speaker }}</div>{% endif %}
+  {% if t.pis %}<div style="margin-top:5px">{% for k in t.pis %}<span title="{{ (PI[k].en)|plain }} · {{ (PI[k].aff)|plain }}"
+    style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
+    {% if PI[k].our %}★{% endif %}{{ PI[k].ko if PI[k].ko != '—' else PI[k].en }}</span>{% endfor %}</div>{% endif %}
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
+    <span class="mono muted" title="{{ t.id|plain }}"
+          style="font-size:.7rem;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.id }}</span>
+    {% if t.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap;flex:0 0 auto">📅 {{ t.digested }}</span>{% endif %}
+  </div>
+  {# 모달은 훑기용이다. 40 KB 넘는 digest 를 정독하려면 전체 페이지가 필요하다.
+     ⚠ onclick 이 카드 전체에 걸려 있으므로 stopPropagation 하지 않으면 모달이 같이 뜬다. #}
+  <div style="margin-top:8px">
+    <a class="btn" href="/talk/{{ t.id }}" onclick="event.stopPropagation()"
+       style="font-size:.7rem;padding:3px 9px">📖 전체 페이지로 정독</a>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+{# ── 📄 논문 digest ───────────────────────────────────────────────────────── #}
+<h2 style="margin-top:30px;font-size:1rem">📄 논문 digest
+  <span class="muted" style="font-weight:400;font-size:.8rem">(완성 {{ counts.full }}편 · 기본 정렬 = digest 등록일 최신순)</span></h2>
+<div class="grid grid-3" id="plist" style="margin-top:12px">
+{% for p in papers if not p.skeleton %}{{ pcard(p) }}{% endfor %}
+</div>
+<div class="muted" id="nores" style="display:none;margin-top:20px">검색 결과 없음</div>
+
+{% if counts.skeleton %}
+{# 🌱 뼈대는 **접는다, 지우지 않는다** — 무엇을 채워야 하는지가 이 목록의 값이다.
+   ⚠ 검색어가 뼈대에 걸리면 아래 apply() 가 이 <details> 를 자동으로 편다. #}
+<details class="v3-fold" id="skelfold" style="margin-top:24px">
+  <summary>🌱 뼈대 {{ counts.skeleton }}편 — 아직 실물을 안 읽은 빈 카드 (인용하지 않는다)</summary>
+  <div class="muted" style="font-size:.76rem;line-height:1.65;margin:8px 0 4px">
+    research-agent 가 alert 에서 만든 카드다. 헤더가 스스로 금지한다 —
+    “<span class="mono">⏳ 문서 대기</span> 가 하나라도 남아 있으면 이 카드를 <b>인용하지 않는다</b>.”
+    위 헤드라인 <b>{{ counts.full }}편</b>에는 들어가지 않는다(목록 총계 {{ counts.all }}편).
+    승격은 사람이 한다 — <span class="mono">litdb/_INDEX_proposals.md</span> 규율.
+  </div>
+  <div class="grid grid-3" id="skellist" style="margin-top:10px">
+  {% for p in papers if p.skeleton %}{{ pcard(p) }}{% endfor %}
+  </div>
+</details>
+{% endif %}
+
+<div class="modal" id="pmodal" role="dialog" aria-modal="true" aria-labelledby="ptitle" onclick="if(event.target===this){this.classList.remove('open');window.figrefClose&&figrefClose()}">
+  <div class="modal-body" id="pmbox" style="max-width:840px;width:100%">
+    <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
+      <span style="display:flex;gap:6px;align-items:center">
+        <span id="pfigbadge" class="muted" style="font-size:.74rem"></span>
+        <span id="pnotebadge" class="muted" style="font-size:.74rem"></span>
+        {# 그림 목록이 digest 맨 끝이라 긴 논문은 한참 굴려야 닿는다 — 한 번에 점프.
+           한 번 더 누르면 읽던 자리(본문 위)로 되돌아온다. 단축키 F / Esc 는 닫기. #}
+        {# 형광펜 — **기본은 꺼짐**. 읽다가 드래그만 해도 칠해지면 사고라, 켠 동안만 칠한다.
+           켠 상태에서: 드래그 = 칠하기 · 칠한 곳 클릭 = 지우기. 저장은 글 지문 기준이라
+           문서를 다시 렌더해도 따라간다(메모 anchor 와 같은 방식). #}
+        {# 📖 정독 — 모달은 훑기용이고 digest 는 58~63 KB 다. 발표덱에만 있던 버튼을
+           논문에도 준다. href 는 서버가 준 rel 로 정한다(papers/ ↔ talks/). #}
+        <a class="btn sm" id="pfull" href="#" style="display:none"
+           title="목차·문서내 검색이 있는 전체 페이지로">📖 전체 페이지</a>
+        <button class="btn sm" id="docpen" onclick="window.docnotePenToggle&&docnotePenToggle()"
+                title="형광펜을 켜요 — 켜면 드래그로 칠할 수 있어요">🖍 형광</button>
+        <button class="btn sm" id="pfigjump" style="display:none"
+                onclick="jumpFigs()" title="그림 목록으로 (단축키 F · 다시 누르면 위로)">🖼 그림 ↓</button>
+        <button class="btn sm" onclick="document.getElementById('pmodal').classList.remove('open');window.figrefClose&&figrefClose()">✕ 닫기</button></span></div>
+    <div class="doc" id="pbody" style="border:none;box-shadow:none;border-radius:0"></div>
+  </div>
+</div>
+<script src="/static/js/figref.js?v={{ asset_version }}"></script>
+<script src="/static/js/docnote.js?v={{ asset_version }}"></script>
+<script>
+var curTrack='all', curQ='', curPI='', curTP='', sortMode=false, origOrder=null;
+// ⚠ 즐겨찾기는 서버에 안 올린다 — 개인 표시라 브라우저에만 둔다(localStorage).
+//   litdb 는 여러 사람이 보는 화면이고, 남의 별이 내 화면에 뜨면 오히려 방해가 된다.
+var FAVK='litdb_fav_v1';
+function favSet(){try{return new Set(JSON.parse(localStorage.getItem(FAVK)||'[]'))}catch(e){return new Set()}}
+// ⚠ [].slice.call(Set) 은 [] 를 돌려준다 (Set 에 length 가 없다). 이것 때문에 저장이
+//   항상 빈 배열이 돼서 별이 안 눌리는 것처럼 보였다. Array.from 이 유일하게 맞다.
+function favSave(s){try{localStorage.setItem(FAVK,JSON.stringify(Array.from(s)))}catch(e){}}
+function paintFav(){
+  var f=favSet();
+  document.querySelectorAll('.favbtn').forEach(function(b){
+    var on=f.has(b.dataset.id);
+    b.textContent=on?'★':'☆'; b.style.color=on?'#f59e0b':'#d1d5db';
+  });
+  var n=document.getElementById('favn'); if(n)n.textContent=f.size;
+}
+function toggleFav(b){
+  var f=favSet(), id=b.dataset.id;
+  if(f.has(id))f.delete(id); else f.add(id);
+  favSave(f); paintFav();
+  if(curTP==='__fav')apply();          // 즐겨찾기 필터 중이면 즉시 반영
+  // ⚠ 별을 눌렀다고 **필터로 자동 전환하지 않는다** — 여러 개 별표하는 중에 목록이
+  //   사라져 버리기 때문. 대신 칩 카운트를 잠깐 강조해서 "담겼다"를 보여 준다.
+  var chip=document.getElementById('favchip');
+  if(chip){chip.style.transition='none';chip.style.transform='scale(1.12)';
+    setTimeout(function(){chip.style.transition='transform .25s';chip.style.transform='';},10);}
+}
+/* 기본 순서는 **서버가 digest 등록일 내림차순으로** 준다(data.list_papers).
+   그래서 이 토글은 반대편(가나다순)을 맡는다.
+   ⚠ tie-breaker 는 그대로 유지 — digest 날짜가 없는 2편(bzox… · hollmann2025…)이
+     조용히 사라지지 않게 잡아 주는 장치다. */
+function toggleSort(){
+  var plist=document.getElementById('plist');
+  var cards=[].slice.call(plist.querySelectorAll('.paper'));
+  if(!origOrder) origOrder=cards.slice();          // 서버가 준 날짜순
+  sortMode=!sortMode;
+  var btn=document.getElementById('sortbtn');
+  btn.classList.toggle('active',sortMode);
+  btn.textContent = sortMode ? '📅 최신 digest순' : '🔤 가나다순';
+  btn.title = sortMode ? '지금 가나다순 — 누르면 날짜순(기본)으로'
+                       : '지금 날짜순(기본) — 누르면 가나다순으로';
+  var arr = sortMode
+    ? cards.slice().sort(function(a,b){return a.dataset.t.localeCompare(b.dataset.t)
+        || (b.dataset.digested||'').localeCompare(a.dataset.digested||'');})
+    : origOrder;
+  arr.forEach(function(c){plist.appendChild(c);});
+}
+/* 캡션·코멘트 색인은 페이지에 안 굽고 /api/lit-index 에서 **검색 시작할 때** 받는다.
+   (종전 data-fig 279 KB + data-cmt 20 KB 가 899 KB 페이지의 1/3 이었다.)
+   ⚠ 방금 단 코멘트는 comments.js 가 카드에 data-cmt 를 직접 박는다 —
+     그 값이 색인보다 **먼저** 이긴다(안 그러면 새로고침 전엔 안 걸린다). */
+var LITIDX=null, LITIDX_LOADING=false;
+function idxOf(c, kind){
+  if(kind==='cmt' && c.dataset.cmt!=null) return c.dataset.cmt;
+  return (LITIDX && LITIDX[kind] && LITIDX[kind][c.dataset.id]) || '';
+}
+function ensureIdx(){
+  if(LITIDX||LITIDX_LOADING) return;
+  LITIDX_LOADING=true;
+  fetch('/api/lit-index').then(function(r){return r.json()})
+    .then(function(d){LITIDX=d; apply();})
+    .catch(function(){LITIDX={fig:{},cmt:{}};});   // 못 받아도 제목·id 검색은 산다
+}
+// 캡션 색인은 "<key> <캡션>" 을 ¦ 로 이은 것 — 그림 단위로 세고 이름을 만든다
+function figHits(idx, q){
+  var n=0, names=[];
+  (idx||'').split('\u00a6').forEach(function(p){
+    if(p.indexOf(q)<0) return;
+    n++;
+    if(names.length<8){
+      var k=(p.split(' ')[0]||'');
+      names.push(!k ? '그림'            // 키를 못 찾은 경우(figures.json 이 바뀐 뒤 등)
+        : k==='@' ? '본문 메모'          // digest 여백 메모 (docnote.js) — 그림이 아니다
+        : (k[0]==='t'?'Table ':(k[0]==='s'?'Scheme ':'Fig '))+k.slice(1).toUpperCase());
+    }
+  });
+  if(n>names.length) names.push('외 '+(n-names.length)+'장');
+  return {n:n, names:names};
+}
+function apply(){
+  var n=0, nskel=0;
+  document.querySelectorAll('.paper').forEach(function(c){
+    var okT = curTrack==='all' || c.dataset.track===curTrack;
+    var okP = !curPI || (c.dataset.pi||'').split(',').indexOf(curPI)>=0;
+    // 제목·id·주제로 먼저, 없으면 **그림 캡션 → 내 코멘트** 순 (걸린 경로를 카드에 표시)
+    var inMeta = !curQ || (c.dataset.t||'').indexOf(curQ)>=0;
+    var mk = (!inMeta && curQ) ? figHits(idxOf(c,'fig'), curQ) : null;
+    var inFig = !!(mk && mk.n);
+    var ck = (!inMeta && curQ) ? figHits(idxOf(c,'cmt'), curQ) : null;
+    var inCmt = !!(ck && ck.n);
+    var okQ = inMeta || inFig || inCmt;
+    var fb = c.querySelector('.figmatch');
+    if(fb){
+      fb.style.display = inFig ? '' : 'none';
+      if(inFig){ fb.textContent = '🔍 캡션 ' + mk.n;
+                 fb.title = mk.names.join(', ') + ' 캡션에서 찾았어요 (제목에는 없음)'; }
+    }
+    var cb = c.querySelector('.cmtmatch');
+    if(cb){
+      cb.style.display = inCmt ? '' : 'none';
+      if(inCmt){
+        // 본문 여백 메모만 걸렸으면 📝 로 — 그림 코멘트와 섞어 부르면 어디를 열지 모른다
+        var onlyNote = ck.names.length && ck.names.every(function(x){return x==='본문 메모';});
+        cb.textContent = (onlyNote?'📝 메모 ':'💬 코멘트 ') + ck.n;
+        cb.title = ck.names.join(', ') + ' 에 내가 적어 둔 글에서 찾았어요 (제목에는 없음)'; }
+    }
+    var okTP = !curTP ? true
+             : curTP==='__fav'  ? favSet().has(c.dataset.id||'')
+             : curTP==='__ban'  ? !!c.dataset.ban          // digest 본문 인용 제한 문구
+             : curTP==='__skel' ? !!c.dataset.skel         // 뼈대(문서 대기)
+             : (c.dataset.tp||'').split(',').indexOf(curTP)>=0;
+    var show = okT && okP && okQ && okTP; c.style.display=show?'':'none'; if(show)n++;
+    if(show && c.dataset.skel) nskel++;
+  });
+  // 뼈대 묶음은 접혀 있다 — 거기서 걸린 게 있으면 **자동으로 편다**(안 그러면 없는 셈).
+  var sf=document.getElementById('skelfold');
+  if(sf && (curQ||curTP)) sf.open = nskel>0;
+  document.getElementById('nores').style.display=n?'none':'';
+}
+function setPI(b){curPI=b.dataset.pi;
+  document.querySelectorAll('.pi-chip').forEach(function(x){x.classList.remove('active');x.style.outline=''});
+  b.classList.add('active'); b.style.outline='2px solid currentColor';
+  apply();}
+function setTP(b){curTP=(curTP===b.dataset.tp)?'':b.dataset.tp;   // 같은 칩 다시 누르면 해제
+  document.querySelectorAll('.tp-chip').forEach(function(x){x.classList.remove('active');x.style.outline=''});
+  if(curTP){b.classList.add('active'); b.style.outline='2px solid currentColor';}
+  else{var a=document.querySelector('.tp-chip[data-tp=""]'); if(a)a.classList.add('active');}
+  apply();}
+function setTrack(b){curTrack=b.dataset.track;
+  document.querySelectorAll('.track-tabs .tt').forEach(function(x){x.classList.remove('active')});
+  b.classList.add('active'); apply();}
+function filt(q){curQ=q.toLowerCase().trim(); if(curQ)ensureIdx(); apply();}
+/* 그림 목록으로 점프 / 되돌아오기 — 모달 스크롤 컨테이너는 #pmbox */
+var _figBack=null;
+function jumpFigs(){
+  var box=document.getElementById('pmbox'), st=document.querySelector('#pbody .figstrip');
+  if(!box||!st) return;
+  var btn=document.getElementById('pfigjump');
+  if(_figBack!==null){                       // 두 번째 클릭 = 읽던 자리로
+    box.scrollTo({top:_figBack, behavior:'smooth'});
+    _figBack=null; if(btn){btn.textContent='🖼 그림 ↓'; btn.title='그림 목록으로 (단축키 F)';}
+    return;
+  }
+  _figBack=box.scrollTop;
+  // ⚠ offsetTop 은 offsetParent 에 따라 달라진다(창을 끌면 #pmbox 가 position:relative 가 된다)
+  //   — 화면 좌표 차이로 계산하면 어떤 상태에서도 맞는다.
+  // ⚠ 제목줄이 sticky 라 그 높이만큼 빼지 않으면 그림 목록 머리가 제목줄에 가린다.
+  var head=box.querySelector('.modal-head');
+  var pad=(head?head.offsetHeight:0)+8;
+  box.scrollTo({top: box.scrollTop + st.getBoundingClientRect().top
+                     - box.getBoundingClientRect().top - pad, behavior:'smooth'});
+  st.classList.remove('figjump'); void st.offsetWidth; st.classList.add('figjump');
+  setTimeout(function(){st.classList.remove('figjump');},2600);
+  if(btn){btn.textContent='↑ 읽던 자리'; btn.title='본문에서 읽던 자리로 (단축키 F)';}
+}
+// F = 그림으로/되돌아오기 (글 쓰는 중이면 제외)
+document.addEventListener('keydown',function(e){
+  if(e.key!=='f'&&e.key!=='F'&&e.key!=='ㄹ') return;
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+  if(!document.getElementById('pmodal').classList.contains('open')) return;
+  if(e.target.closest('input,textarea,select,[contenteditable]')) return;
+  e.preventDefault(); jumpFigs();
+});
+function openPaper(id){
+  document.getElementById('ptitle').textContent=id;
+  document.getElementById('pbody').innerHTML='<span class="muted">로딩...</span>';
+  document.getElementById('pfigbadge').textContent='';
+  document.getElementById('pfigjump').style.display='none';
+  document.getElementById('pfull').style.display='none';
+  _figBack=null; document.getElementById('pfigjump').textContent='🖼 그림 ↓';
+  if(window.figrefClose)figrefClose();
+  document.getElementById('pmodal').classList.add('open');
+  fetch('/api/paper/'+id).then(r=>r.json()).then(function(d){
+    var b=document.getElementById('pbody'); b.innerHTML=d.html;
+    if(window.mdFixEmphasis){} // 서버 렌더라 별도 보정 불필요
+    var full=document.getElementById('pfull');
+    if(full && d.rel){
+      full.href = (d.rel.indexOf('litdb/talks/')===0 ? '/talk/' : '/paper/') + id;
+      full.style.display='';
+    }
+    // 크로핑된 논문 그림 붙이기 — 본문 Fig 언급 링크화 + 하단 카드 (figref.js)
+    var n=window.figrefAttach?figrefAttach(b,d.figures||[],document.getElementById('pmbox')):0;
+    var figs=d.figures||[];
+    if(figs.length){
+      // 캡션 있는 장수·본문 링크·내 코멘트 수를 한 줄에 (어디까지 정리됐는지 바로 보이게)
+      var nc=figs.reduce(function(a,f){return a+(f.comments||0);},0);
+      var ncap=figs.filter(function(f){return (f.caption||'').length>12;}).length;
+      var el=document.getElementById('pfigbadge');
+      el.textContent='🖼 '+figs.length+'개'+(ncap?' · 캡션 '+ncap:'')
+                    +(n?' · 본문 링크 '+n:'')+(nc?' · 💬 '+nc:'');
+      el.title=figs.length+'장 크로핑 · 캡션 읽힌 '+ncap+'장 · 본문 Fig 언급 링크 '+n
+              +'곳'+(nc?' · 내가 단 코멘트 '+nc+'건':' · 코멘트 없음');
+      document.getElementById('pfigjump').style.display='';
+    }
+    // 여백 메모 — figref 가 본문을 다 손본 **뒤에** 달아야 형광펜이 안 지워진다.
+    // rel 은 서버가 준 것을 쓴다 (papers/ ↔ talks/ 를 화면이 알 수 없다).
+    if(window.mountDocNotes && d.rel) mountDocNotes(b, d.rel, document.getElementById('pmbox'));
+  });
+}
+paintFav();
+// ⌘K/딥링크로 온 경우 ?open=<id> 자동 오픈, ?fig=<키> 면 그 그림까지 데려간다
+// ⛔ 2026-09-09 (1저자 보고) — 그림 코멘트를 눌러도 그림으로 안 내려갔다.
+//   `data-fig` 도 있고 키 매핑도 있었는데 **딥링크가 그 키를 안 실었다**(data.py note_url).
+//   이제 실으므로 여기서 받는다. 그림은 본문을 연 **뒤에** 그려지므로 잠깐 기다린다.
+(function(){var q=new URLSearchParams(location.search);
+  var m=q.get('open'), fk=q.get('fig');
+  if(!(m&&/^[a-z0-9_]+$/i.test(m)&&document.querySelector('.paper[onclick*="'+m+'"]')))return;
+  openPaper(m);
+  if(!fk||!/^[a-z0-9]{1,12}$/i.test(fk))return;
+  var tries=0;
+  // ⚠ 속성 이름을 쪼개 쓴다 — test_caption_index_not_baked_into_dom 이 HTML 전체에서
+  //   그 속성 이름 + 등호를 찾아 "캡션 색인이 DOM 에 구워졌나" 를 판정한다.
+  //   그 검사는 옳고(279 KB 사고 방지), 여기 스크립트 리터럴이 오탐을 만들 뿐이다.
+  //   ⚠ 그래서 **주석에도 그 문자열을 쓰면 안 된다** (2026-09-09 실측으로 잡혔다).
+  var FA='data-'+'fig';
+  (function seek(){
+    var el=document.querySelector('['+FA+'="'+fk+'"]');
+    if(el){el.scrollIntoView({block:'center',behavior:'smooth'});
+      el.classList.add('dn-flash');
+      setTimeout(function(){el.classList.remove('dn-flash');},2200);return;}
+    // 그림 목록이 늦게 그려질 수 있다 — 최대 6초까지만 기다리고 조용히 포기한다
+    if(++tries<40)setTimeout(seek,150);
+  })();})();
+</script>
+{% endblock %}

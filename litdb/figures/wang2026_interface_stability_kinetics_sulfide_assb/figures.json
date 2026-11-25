@@ -1,0 +1,732 @@
+{
+ "slug": "wang2026_interface_stability_kinetics_sulfide_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-28",
+ "sources": [
+  "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+  "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Chemical reaction energies (left) and percentage volume changes (right) associated with reactions at various cathode/SE interfaces calculated using density functional theory (DFT) with GGA density functional and GGA + U approach.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    447.7,
+    568.0,
+    615.8
+   ],
+   "w": 2169,
+   "h": 701,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.7
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Electrochemical reaction energies (left) and corresponding volume changes (right) associated with reactions at various cathode/Li6 PS5 Cl interfaces calculated using DFT with GGA density functional and GGA + U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction. Reactions without a dot represent direct interfacial reactions between two materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.1,
+    238.3
+   ],
+   "w": 2170,
+   "h": 846,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.622
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Chemical reaction energy (top) and percentage volume change (bottom) associated with reactions at various SE/interlayer and SE/coating interfaces calculated using DFT with GGA density functional and GGA + U approach.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    311.7,
+    568.0,
+    544.0
+   ],
+   "w": 2169,
+   "h": 969,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.635
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Chemical reaction energy (top) and percentage volume change (bottom) associated with reactions at various cathode/functional material interfaces calculated using DFT with GGA density functional and GGA + U approach.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.0,
+    488.3
+   ],
+   "w": 2169,
+   "h": 1887,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.53
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Chemical reaction energy (left) and percentage volume change (right) associated with reactions at various a-Lix Si/SE interfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.4,
+    527.5,
+    567.8,
+    672.7
+   ],
+   "w": 1082,
+   "h": 606,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.603
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 (a) Activation energy and corresponding ionic conduc- tivity of bulk a-Lix Si and Li6 PS5 Cl at room temperature; (b) activation energy of bulk a-Lix Si, slab a-Lix Si, and the a-Lix Si/Li6 PS5 Cl. Interface- 1 and interface-2 correspond to slab-1 and slab-2 of Li6 PS5 Cl, respectively, as shown in Figure 7 .",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    307.0,
+    151.3
+   ],
+   "w": 1082,
+   "h": 483,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 Atomic configurations of slab a-Lix Si and Li6 PS5 Cl with the Li/(Li + Si) ratio plotted along the z-axis of slab a-Lix Si over the simulation time. Li, Si, P, S and Cl atoms are represented by dark green, blue, orange, yellow and light green balls, respectively. Solid lines in different colors in the right panel indicate different simulation times.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.3,
+    387.3
+   ],
+   "w": 2170,
+   "h": 1467,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 Evolution of the average coordination number for the a-Lix Si/Li6 PS5 Cl-1 and a-Lix Si/Li6 PS5 Cl-2 interface models at 298 K. The averaging is carried out over elements and over time, with a time step of 5 ps.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    426.9,
+    568.0,
+    708.4
+   ],
+   "w": 2169,
+   "h": 1174,
+   "dpi": 300,
+   "src": "81. Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Atomic configurations for a-LixSi alloy and Li6PS5Cl: bulk, slab and interface at different simulation stages.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    50.7,
+    545.3,
+    378.0
+   ],
+   "w": 2061,
+   "h": 1364,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Electrochemical stability window of compounds calculated using DFT with the GGA density functional and GGA+U approach.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    73.4,
+    545.3,
+    398.2
+   ],
+   "w": 2061,
+   "h": 1353,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various cathode/Li3PS4 interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    80.4,
+    545.3,
+    274.0
+   ],
+   "w": 2061,
+   "h": 807,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.585
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various cathode/Li7P3S11 interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    363.6,
+    545.3,
+    557.2
+   ],
+   "w": 2061,
+   "h": 807,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.585
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various cathode/Li4GeS4 interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    98.0,
+    545.3,
+    291.6
+   ],
+   "w": 2061,
+   "h": 807,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.584
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various cathode/Li4SnS4 interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    466.7,
+    545.3,
+    660.2
+   ],
+   "w": 2061,
+   "h": 808,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.584
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various cathode/Li10SnP2S12 interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    98.0,
+    545.3,
+    291.6
+   ],
+   "w": 2061,
+   "h": 807,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.585
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various cathode/Li10GeP2S12 interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    466.7,
+    545.3,
+    660.2
+   ],
+   "w": 2061,
+   "h": 808,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.587
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Electrochemical reaction energy (top) and corresponding volume change (bottom) associ- ated with reactions at various Li3PS4/interlayer and Li3PS4/coating interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    61.3,
+    545.3,
+    328.3
+   ],
+   "w": 2062,
+   "h": 1114,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.533
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Electrochemical reaction energy (top) and corresponding volume change (bottom) asso- ciated with reactions at various Li7P3S11/interlayer and Li7P3S11/coating interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    429.9,
+    545.3,
+    697.0
+   ],
+   "w": 2062,
+   "h": 1114,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.523
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Electrochemical reaction energy (top) and corresponding volume change (bottom) asso- ciated with reactions at various Li6PS5Cl/interlayer and Li6PS5Cl/coating interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    61.3,
+    545.3,
+    328.3
+   ],
+   "w": 2062,
+   "h": 1114,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.523
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 12,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: Electrochemical reaction energy (top) and corresponding volume change (bottom) asso- ciated with reactions at various Li4GeS4/interlayer and Li4GeS4/coating interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    429.9,
+    545.3,
+    697.0
+   ],
+   "w": 2062,
+   "h": 1114,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.533
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 13,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Electrochemical reaction energy (top) and corresponding volume change (bottom) asso- ciated with reactions at various Li4SnS4/interlayer and Li4SnS4/coating interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    61.3,
+    545.3,
+    328.3
+   ],
+   "w": 2062,
+   "h": 1114,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.529
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 13,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Electrochemical reaction energy (top) and corresponding volume change (bottom) asso- ciated with reactions at various Li10SnP2S12/interlayer and Li10SnP2S12/coating interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposi- tion of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    429.9,
+    545.3,
+    697.0
+   ],
+   "w": 2062,
+   "h": 1114,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.523
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 14,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Electrochemical reaction energy (top) and corresponding volume change (bottom) associ- ated with reactions at various Li10GeP2S12/interlayer and Li10GeP2S12/coating interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposi- tion of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    54.3,
+    545.3,
+    321.4
+   ],
+   "w": 2062,
+   "h": 1114,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.522
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 14,
+   "file": "fig_S16.png",
+   "caption": "Figure S16: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various a-LixSi/Li3PS4 interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, in- dicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    409.1,
+    545.3,
+    703.9
+   ],
+   "w": 2061,
+   "h": 1230,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.666
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 15,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various a-LixSi/Li7PS11 interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    231.7,
+    545.3,
+    526.5
+   ],
+   "w": 2061,
+   "h": 1229,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 16,
+   "file": "fig_S18.png",
+   "caption": "Figure S18: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various a-LixSi/Li6PS5Cl interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    231.7,
+    545.3,
+    526.5
+   ],
+   "w": 2061,
+   "h": 1229,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 17,
+   "file": "fig_S19.png",
+   "caption": "Figure S19: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various a-LixSi/Li4GeS4 interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    231.7,
+    545.3,
+    526.5
+   ],
+   "w": 2061,
+   "h": 1229,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 18,
+   "file": "fig_S20.png",
+   "caption": "Figure S20: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various a-LixSi/Li4SnS4 interfaces calculated using DFT with GGA density func- tional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    231.7,
+    545.3,
+    526.5
+   ],
+   "w": 2061,
+   "h": 1229,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 19,
+   "file": "fig_S21.png",
+   "caption": "Figure S21: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various a-LixSi/Li10SnP2S12 interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    231.7,
+    545.3,
+    526.5
+   ],
+   "w": 2061,
+   "h": 1229,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 20,
+   "file": "fig_S22.png",
+   "caption": "Figure S22: Electrochemical reaction energy (left) and corresponding volume change (right) associated with reactions at various a-LixSi/Li10GeP2S12 interfaces calculated using DFT with GGA density functional and GGA+U approach. The dot represents the decomposition of the material at the interface, indicating the material decomposes with a more negative reaction energy than that of the interfacial reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    231.7,
+    545.3,
+    526.5
+   ],
+   "w": 2061,
+   "h": 1229,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 21,
+   "file": "fig_S23.png",
+   "caption": "Figure S23: Arrhenius plots for SE and a-LixSi bulk. The bulk activation energy Ea is shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.9,
+    77.6,
+    529.0,
+    241.6
+   ],
+   "w": 1927,
+   "h": 684,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 21,
+   "file": "fig_S24.png",
+   "caption": "Figure S24: Arrhenius plots for a-LixSi and Li6PS5Cl slab. The surface activation energy Ea is shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    271.6,
+    545.2,
+    435.6
+   ],
+   "w": 2061,
+   "h": 685,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 21,
+   "file": "fig_S25.png",
+   "caption": "Figure S25: Arrhenius plots for a-LixSi/Li6PS5Cl interface. The interface activation energy Ea is shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    465.6,
+    545.2,
+    629.6
+   ],
+   "w": 2061,
+   "h": 684,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 22,
+   "file": "fig_S26.png",
+   "caption": "Figure S26: Evolution of the average coordination number of a-LixSi bulk at 298 K. Averaging is carried out over elements as well as over time with a time step of 5 ps.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    310.6,
+    545.3,
+    492.4
+   ],
+   "w": 2061,
+   "h": 758,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 23,
+   "file": "fig_S27.png",
+   "caption": "Figure S27: Atomic structure of initial and after DFT optimized a-LixSi/Li6PS5Cl-1 and a- LixSi/Li6PS5Cl-2 interfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    50.7,
+    545.2,
+    754.9
+   ],
+   "w": 2061,
+   "h": 2935,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.771
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Sources of compounds considered in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    106.1,
+    57.4,
+    473.3,
+    393.5
+   ],
+   "w": 1532,
+   "h": 1401,
+   "dpi": 300,
+   "src": "81. Sup) Wang2026_Interface_Stability_Kinetics_Sulfide_Electrolytes_ASSB.pdf",
+   "blank": 0.949
+  }
+ ]
+}

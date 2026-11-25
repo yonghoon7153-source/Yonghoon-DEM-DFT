@@ -1,0 +1,62 @@
+{
+ "kind": "collect_inputs",
+ "note": "--collect 는 스크래치 폴더에 아래 저장소 파일을 이 이름으로 복사해 돌렸다 (sha256 일치 확인) — decomp_result.json · collect.log 안의 /tmp 경로는 그 스크래치다",
+ "files": {
+  "Li3PS4.out": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Li3PS4/scf.out",
+   "sha256": "422a0c7ab5ef70bc64ae4bc9baa29dcd7453174d83537d657af44b69dc20585f"
+  },
+  "Li2S.out": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Li2S/scf.out",
+   "sha256": "d7e154c6b8199a476fe5381034e95337bc5ac2757c65f24b472293f554b256b1"
+  },
+  "LiCl.out": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/LiCl/scf.out",
+   "sha256": "df43fda1d98efee5790a2543d77f23aa9248597ff75edae2656e8df5c4d4abb6"
+  },
+  "Li3PO4.out": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Li3PO4/scf.out",
+   "sha256": "1686ab034db633865060c491ad2729220b0b8334f95617823a8e671f7066be59"
+  },
+  "Nd2S3.out": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Nd2S3/scf.out",
+   "sha256": "154009aca442e8afb9b4629fb828aabd17f4abe529b62f1e476ab9eca784d8c3"
+  },
+  "host.out": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/host/scf.out",
+   "sha256": "38b423c643114dee034107d99f743e1ec22d7eb5e55502c811daafe37fe518dc"
+  },
+  "in/Li3PS4.in": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Li3PS4/scf.in",
+   "sha256": "8b3d5bb5a7a16b2ae43103f6b23d89f801dc7fc22c356f634036f1a36e33f2c3"
+  },
+  "in/Li2S.in": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Li2S/scf.in",
+   "sha256": "6636e127b89eb418a7f885019360584616a577008c399699146b77cead8dc93e"
+  },
+  "in/LiCl.in": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/LiCl/scf.in",
+   "sha256": "dd859b1801b069d1652d65cd8631c3919e83311f8db4cbeec6dd485987293ef4"
+  },
+  "in/Li3PO4.in": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Li3PO4/scf.in",
+   "sha256": "3f09083173f921b34ba85af952dcca36323fb844049d4f4184c9c0e6faa6e9dc"
+  },
+  "in/Nd2S3.in": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Nd2S3/scf.in",
+   "sha256": "2d16da16fce5c3decf6e01b1c33dd565c59e7f5d85da73980207caa5194a10ed"
+  },
+  "in/host.in": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/run_kgy/host/scf.in",
+   "sha256": "0bc040dec744594990466240df95ab734854de59feb2a7a5cf9aff2faf9eccef"
+  },
+  "doped.out": {
+   "repo_path": "db/raw/nd_q2_decomp_2026_10_23/step1/kprobe_k331_extract.txt",
+   "sha256": "26cae35ae661b9efffd0edbbdc6129bb4be8d4c8d359f98a6aa02720ad3e784e"
+  },
+  "in/doped.in": {
+   "repo_path": "db/raw/nd_q3_bader_2026_10_19/scf_input_copy.in",
+   "sha256": "adbd6f707af0c3b92209dad10fa08fa2ab8633b66a75d0947651dd4665f3f4e2"
+  }
+ }
+}

@@ -1,0 +1,353 @@
+{
+ "slug": "feng2020_li_deficient_argyrodite_cl_disorder",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-13",
+ "sources": [
+  "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+  "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Crystal structure of cubic Li6PS5Cl (F43m) with ordered packing of Cl (Wyckoff 4a) and S (Wyckoff 4d). (b) Site disorder induced by S2\u0001 (4d)/ Cl\u0001 (4a). (c) Rietveld reﬁnement of high-resolution XRD of Li6PS5Cl. (d) Powder x-ray diffraction (PXRD) patterns of Li6\u0001xPS5\u0001xCl1þx, x ¼ 0, 0.3, 0.5, 0.7, and 0.8. (e) Change in Bragg diffraction peaks at 52.5\u0003 and 52.7\u0003 as a function of x in Li6\u0001xPS5\u0001xCl1þx. (f) The lattice parameters obtained from reﬁnement of PXRD patterns in (d) as a function of x in Li6\u0001xPS5\u0001xCl1þx.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.7,
+    384.8,
+    561.9
+   ],
+   "w": 1473,
+   "h": 2136,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Experimental measurements and AIMD cal- culations illustrating the impacts of S2\u0001/Cl\u0001 mixing at 4d sites on ion conduction: (a) The Arrhenius plots of ionic conductivity as a function of temperature for Li6\u0001xPS5\u0001xCl1þx (x ¼ 0, 0.3, 0.5, and 0.7) obtained from variable-temperature impedance measurements. (b) The Arrhenius plots of Li-ion diffusivity as a function of temperature for Li6PS5Cl (without S2\u0001/Cl\u0001 mixing at 4d sites), Li6PS5Cl (S2\u0001/Cl\u0001 mixing 7:1 at 4d), and Li5.25PS4.25Cl1.75 (S2\u0001/Cl\u0001 mixing 1:3 at 4d) obtained from AIMD calculations. (c–e) The Li-ion probability densities of Li6PS5Cl (without S2\u0001/Cl\u0001 mixing at 4d sites), Li6PS5Cl (with S2\u0001/Cl\u0001 mixing 7:1 at 4d sites), and Li5.25PS4.25Cl1.75 (S2\u0001/Cl\u0001 mixing 1:3 at 4d sites). The probability densities of Li ions are obtained from AIMD simulations at 600 K with 100 ps, and the isosurfaces are plotted at isovalues of the m",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.7,
+    384.8,
+    383.3
+   ],
+   "w": 1473,
+   "h": 1392,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Li occupancies at 24g and 48h sites in DFT optimized structures of Li6PS5Cl (without S2\u0001/Cl\u0001 mixing), Li6PS5Cl (S2\u0001/Cl\u0001 mixing 7:1 at 4d), and Li5.25PS4.25Cl1.75 (S2\u0001/Cl\u0001 mixing 1:3 at 4d). Li at 48h sites is shown in Li(S/Cl)4 tetrahedra and Li at 24g sites is represented by white balls.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    165.0
+   ],
+   "w": 2218,
+   "h": 482,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Li site occupancy in Li6\u0001xPS5\u0001xCl1þx (x ¼ 0, 0.3, 0.5, and 0.7) probed by solid-state 6Li NMR: (a) 6Li magic-angle-spinning (MAS, 25 kHz) NMR spectra. (b) Normalized Li site fractions and ionic conductivity in Li6\u0001xPS5\u0001xCl1þx (x ¼ 0, 0.3, 0.5, and 0.7). and 4d sites. This shift of Li ions towards 24g sites can also be clearly found in the Li-deﬁcient and Cl-rich structures, for example, Li5.25PS4.25Cl1.75 in Fig. 3. Furthermore, the tendency of Li occupying 24g sites increases with increased S2\u0001/Cl\u0001 mixing at 4d sites. These DFT calculation ﬁndings echo with experimental results obtained from high-resolution 6Li NMR as discussed in the following. The 6Li NMR spectra of Li6\u0001xPS5\u0001xCl1þx (x ¼ 0, 0.3, 0.5, and 0.7) are shown in Fig. 4a. Two distinct Li resonances, assigned to Li24g and Li48h, are identiﬁed in all Li6\u0001xPS5\u0001xCl1þx. In stoichiometric Li6PS5Cl, Liþ can occupy both 24g an",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    202.9,
+    563.7,
+    387.7
+   ],
+   "w": 2218,
+   "h": 771,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. 7Li NMR T1 relaxation time of Li6\u0001xPS5\u0001xCl1þx (x ¼ 0, 0.3, 0.5, and 0.7) as an indicator of ion mobility.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    424.1,
+    294.7,
+    659.1
+   ],
+   "w": 1097,
+   "h": 981,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) The schematic of distinct P environments induced by different levels of S2\u0001/Cl\u0001 mixing at 4d/4a sites. (b) 31P NMR spectra of Li6\u0001xPS5\u0001xCl1þx, x ¼ 0, 0.3, 0.5, and 0.7. (c) The ionic conductivity and the normalized 31P integral of P1, P2, and P3 NMR resonances as a function of x in Li6-xPS5-xCl1þx.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    350.8
+   ],
+   "w": 2218,
+   "h": 1256,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) The schematic of S2\u0001/Cl\u0001 mixing at 4d/4a sites. 35Cl NMR spectra showing the Cl (4a) resonance (b) and the Cl (4d) resonance site (* denoting the spining side bands of the Cl (4d) resonance) (c) in Li6\u0001xPS5\u0001xCl1þx, x ¼ 0, 0.3, 0.5, and 0.7. (d) The correlation of ionic conductivity with the normalized 35Cl NMR integrals as a function of Cl content.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    396.7,
+    563.6,
+    700.7
+   ],
+   "w": 2218,
+   "h": 1268,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Detection of ion transport pathways in Li6PS5Cl with 6Li →7Li tracer-exchange NMR: (a) 6Li NMR spectra before/after tracer exchange. The difference spectrum shows both Li sites are 6Li enriched. (b) Simulation results of the 6Li NMR spectrum after 6Li →7Li tracer-exchange. Red dashed line denotes the simulation. (c) Comparisons of Li site fractions before/after 6Li →7Li tracer-exchange. The 6Li NMR integrals are normalized based on the 6Li (48h) integral in pristine Li6PS5Cl. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the web version of this article). increased 7Li T1 NMR relaxation times suggest faster Liþ motion as x increases in Li6\u0001xPS5\u0001xCl1þx. Thus, the fast ion conduction in Li6\u0001xPS5\u0001xCl1þx is at least partially attributed to increased Liþ mobility. the \u000125 ppm one to Cl\u0001 at 4a sites. The 9-ppm resonance grows with increa",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    208.2
+   ],
+   "w": 2218,
+   "h": 662,
+   "dpi": 300,
+   "src": "Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The Nyquist plots of Li6−xPS5−xCl1+x, x = 0, 0.3, 0.5, 0.7, and 0.8.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    416.8,
+    474.6,
+    677.9
+   ],
+   "w": 1628,
+   "h": 1089,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The variable-temperature Nyquist plots of Li6−xPS5−xCl1+x (x = 0, 0.3, 0.5, and 0.7).",
+   "rotated_deg": 0,
+   "bbox": [
+    95.1,
+    69.1,
+    503.0,
+    355.6
+   ],
+   "w": 1700,
+   "h": 1194,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) 7Li NMR spectra of Li6−xPS5−xCl1+x (x = 0, 0.3, 0.5, and 0.7) and (b) 7Li chemical shifts as a function of x in Li6−xPS5−xCl1+x (x = 0, 0.3, 0.5, and 0.7).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    377.8,
+    514.1,
+    592.3
+   ],
+   "w": 1793,
+   "h": 894,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. 35Cl NMR spectra of Li5.7PS4.7Cl1.3 and Li5.7PS4.7Cl0.3I1.",
+   "rotated_deg": 0,
+   "bbox": [
+    145.0,
+    70.2,
+    453.2,
+    323.5
+   ],
+   "w": 1285,
+   "h": 1056,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. 31P NMR spectra of Li6PS5Cl before/after 6L i→ 7Li tracer-exchange.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.8,
+    380.4,
+    484.2,
+    534.1
+   ],
+   "w": 1544,
+   "h": 641,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. XRD patterns (a) and Nyquist plot (b) of Li6PS5Cl sintered at 500 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.1,
+    564.3,
+    502.2,
+    727.9
+   ],
+   "w": 1706,
+   "h": 682,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. 6Li (a) and 31P (b) NMR spectra of Li6PS5Cl sintered at 500 ℃ and 550 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.6,
+    92.9,
+    504.7,
+    303.5
+   ],
+   "w": 1726,
+   "h": 878,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Rietveld refinement of powder X-ray diffraction pattern of Li6PS5Cl at room temperature.a Atom Wyckoff x/a y/b z/c Occu. Uiso/Å 2 Li1 48h 0.32685 0.0132 0.67315 0.4 0.0471 Li2 24g 0.25 0.00614 0.75 0.286 0.0471 Cl1 4a 0 0 1 0.633 0.0375 Cl2 4d 0.25 0.25 0.75 0.367 0.0279 P1 4b 0 0 0.5 1 0.0281 S1 16e 0.1198 -0.1198 0.6198 1 0.0447 S2 4d 0.25 0.25 0.75 0.633 0.0279 S3 4a 0 0 1 0.367 0.0375 aλ = 0.41275 Å . Space group: F -4 3 m. a = 9.848 Å . Rwp = 9.3 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.3,
+    305.7,
+    507.6,
+    557.2
+   ],
+   "w": 1739,
+   "h": 1049,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 7,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Comparison of common performance metrics in Li-Argyrodite. Jump rate, τ 7Li T1 (ms) 7Li ω0/2π (Hz)d",
+   "rotated_deg": 0,
+   "bbox": [
+    90.3,
+    73.2,
+    505.2,
+    734.8
+   ],
+   "w": 1730,
+   "h": 2758,
+   "dpi": 300,
+   "src": "Sup) Feng2020 EnergyStorageMater Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x.pdf",
+   "blank": 0.86
+  }
+ ],
+ "missing_labels": []
+}

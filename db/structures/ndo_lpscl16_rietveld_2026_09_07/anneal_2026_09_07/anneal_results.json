@@ -1,0 +1,414 @@
+{
+  "provenance": {
+    "timestamp_iso": "2026-09-07T21:10:53.894138+09:00",
+    "python_version": "3.11.15",
+    "platform": "Linux-6.8.0-110-generic-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "hostname": "kserver116-27",
+    "ase_version": "3.28.0",
+    "numpy_version": "2.4.4",
+    "scipy_version": "1.17.1",
+    "fairchem_version": "unknown",
+    "torch_version": "2.8.0+cu128",
+    "uma_model_name": "uma-s-1p1",
+    "uma_task_name": "omat",
+    "git_commit": "5d8471b97735a0551171097349a7f89812b4cd4e",
+    "git_branch": "claude/friendly-meitner-lldvar",
+    "git_dirty": false
+  },
+  "temperature_K": 500.0,
+  "time_ps": 20.0,
+  "n_done": 6,
+  "results": [
+    {
+      "name": "ndo_lpscl16_n4fu_O-bo4",
+      "seed": 31667,
+      "rng_streams": {
+        "velocities": 31667,
+        "langevin": 1031670
+      },
+      "struct_sha256": {
+        "input": "b915ca5c1626842b",
+        "post_md": "617f0bc16e30f238",
+        "post_relax": "31b0c7e8f87d5c66"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "db/structures/ndo_lpscl16_rietveld_2026_09_07/ndo_lpscl16_n4fu_O-bo4.xyz",
+      "n_atoms": 54,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -203.24564913257473,
+      "E_md_final": -230.37844353756805,
+      "E_post_relax": -234.18500021756736,
+      "delta_E_anneal_meV_per_atom": -572.9509460183822,
+      "cell_pre": [
+        [
+          9.7977,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          9.7977,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.7977
+        ]
+      ],
+      "cell_post": [
+        [
+          9.7977,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          9.7977,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.7977
+        ]
+      ],
+      "volume_pre": 940.5294795138328,
+      "volume_post": 940.5294795138328,
+      "t_md_s": 2527.407882452011,
+      "t_relax_s": 12.833555459976196,
+      "n_relax_steps": 51,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n4fu_O-bo4/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n4fu_O-bo4/post_relax.xyz"
+    },
+    {
+      "name": "ndo_lpscl16_n4fu_O-distributed",
+      "seed": 45232,
+      "rng_streams": {
+        "velocities": 45232,
+        "langevin": 1045235
+      },
+      "struct_sha256": {
+        "input": "913a00253da8d1e1",
+        "post_md": "fc0fa01aa91e89f8",
+        "post_relax": "e8b55b99c5a4bbec"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "db/structures/ndo_lpscl16_rietveld_2026_09_07/ndo_lpscl16_n4fu_O-distributed.xyz",
+      "n_atoms": 54,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -193.26596017575088,
+      "E_md_final": -233.8343771729733,
+      "E_post_relax": -236.98380095852386,
+      "delta_E_anneal_meV_per_atom": -809.5896441254256,
+      "cell_pre": [
+        [
+          9.7977,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          9.7977,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.7977
+        ]
+      ],
+      "cell_post": [
+        [
+          9.7977,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          9.7977,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.7977
+        ]
+      ],
+      "volume_pre": 940.5294795138328,
+      "volume_post": 940.5294795138328,
+      "t_md_s": 2545.1750338077545,
+      "t_relax_s": 13.794144630432129,
+      "n_relax_steps": 56,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n4fu_O-distributed/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n4fu_O-distributed/post_relax.xyz"
+    },
+    {
+      "name": "ndo_lpscl16_n4fu_O-free_s",
+      "seed": 4960,
+      "rng_streams": {
+        "velocities": 4960,
+        "langevin": 1004963
+      },
+      "struct_sha256": {
+        "input": "3c683b75a3a7624d",
+        "post_md": "0751e86dd95b0ddc",
+        "post_relax": "a280362105acedf8"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "db/structures/ndo_lpscl16_rietveld_2026_09_07/ndo_lpscl16_n4fu_O-free_s.xyz",
+      "n_atoms": 54,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -199.78418972519157,
+      "E_md_final": -231.1554598270847,
+      "E_post_relax": -235.1547842166725,
+      "delta_E_anneal_meV_per_atom": -655.011009101499,
+      "cell_pre": [
+        [
+          9.7977,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          9.7977,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.7977
+        ]
+      ],
+      "cell_post": [
+        [
+          9.7977,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          9.7977,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          9.7977
+        ]
+      ],
+      "volume_pre": 940.5294795138328,
+      "volume_post": 940.5294795138328,
+      "t_md_s": 2553.179379940033,
+      "t_relax_s": 14.450992822647095,
+      "n_relax_steps": 61,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n4fu_O-free_s/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n4fu_O-free_s/post_relax.xyz"
+    },
+    {
+      "name": "ndo_lpscl16_n5fu_O-bo4",
+      "seed": 28660,
+      "rng_streams": {
+        "velocities": 28660,
+        "langevin": 1028663
+      },
+      "struct_sha256": {
+        "input": "6c7e352670d9c765",
+        "post_md": "e9f38f6b4b02cd9d",
+        "post_relax": "04651e1158be828a"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "db/structures/ndo_lpscl16_rietveld_2026_09_07/ndo_lpscl16_n5fu_O-bo4.xyz",
+      "n_atoms": 66,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -250.63614730384546,
+      "E_md_final": -281.57802306911213,
+      "E_post_relax": -285.3021150273767,
+      "delta_E_anneal_meV_per_atom": -525.241935205019,
+      "cell_pre": [
+        [
+          6.928020110031437,
+          0.0,
+          0.0
+        ],
+        [
+          3.4640100550157196,
+          5.999841413216687,
+          0.0
+        ],
+        [
+          17.320050275078597,
+          9.999735688694479,
+          28.28352366219598
+        ]
+      ],
+      "cell_post": [
+        [
+          6.928020110031437,
+          0.0,
+          0.0
+        ],
+        [
+          3.4640100550157196,
+          5.999841413216687,
+          0.0
+        ],
+        [
+          17.320050275078597,
+          9.999735688694479,
+          28.28352366219598
+        ]
+      ],
+      "volume_pre": 1175.661849392291,
+      "volume_post": 1175.661849392291,
+      "t_md_s": 2550.4794285297394,
+      "t_relax_s": 13.161723375320435,
+      "n_relax_steps": 51,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n5fu_O-bo4/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n5fu_O-bo4/post_relax.xyz"
+    },
+    {
+      "name": "ndo_lpscl16_n5fu_O-distributed",
+      "seed": 31727,
+      "rng_streams": {
+        "velocities": 31727,
+        "langevin": 1031730
+      },
+      "struct_sha256": {
+        "input": "45d13c9c87eb1296",
+        "post_md": "95df106dc72cfb61",
+        "post_relax": "6359f3e24a7d311b"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "db/structures/ndo_lpscl16_rietveld_2026_09_07/ndo_lpscl16_n5fu_O-distributed.xyz",
+      "n_atoms": 66,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -240.36919243795757,
+      "E_md_final": -283.26813526923166,
+      "E_post_relax": -287.8741308682933,
+      "delta_E_anneal_meV_per_atom": -719.7717943990266,
+      "cell_pre": [
+        [
+          6.928020110031437,
+          0.0,
+          0.0
+        ],
+        [
+          3.4640100550157196,
+          5.999841413216687,
+          0.0
+        ],
+        [
+          17.320050275078597,
+          9.999735688694479,
+          28.28352366219598
+        ]
+      ],
+      "cell_post": [
+        [
+          6.928020110031437,
+          0.0,
+          0.0
+        ],
+        [
+          3.4640100550157196,
+          5.999841413216687,
+          0.0
+        ],
+        [
+          17.320050275078597,
+          9.999735688694479,
+          28.28352366219598
+        ]
+      ],
+      "volume_pre": 1175.661849392291,
+      "volume_post": 1175.661849392291,
+      "t_md_s": 2552.7265071868896,
+      "t_relax_s": 23.173075675964355,
+      "n_relax_steps": 81,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n5fu_O-distributed/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n5fu_O-distributed/post_relax.xyz"
+    },
+    {
+      "name": "ndo_lpscl16_n5fu_O-free_s",
+      "seed": 24371,
+      "rng_streams": {
+        "velocities": 24371,
+        "langevin": 1024374
+      },
+      "struct_sha256": {
+        "input": "e7a23a8b879d626e",
+        "post_md": "dfcf1f218dae2f75",
+        "post_relax": "744c193cbd0ddf0b"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "db/structures/ndo_lpscl16_rietveld_2026_09_07/ndo_lpscl16_n5fu_O-free_s.xyz",
+      "n_atoms": 66,
+      "temperature_K": 500.0,
+      "time_ps": 20.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -247.26267958557028,
+      "E_md_final": -282.0429232185704,
+      "E_post_relax": -285.9340040134813,
+      "delta_E_anneal_meV_per_atom": -585.9291579986515,
+      "cell_pre": [
+        [
+          6.928020110031437,
+          0.0,
+          0.0
+        ],
+        [
+          3.4640100550157196,
+          5.999841413216687,
+          0.0
+        ],
+        [
+          17.320050275078597,
+          9.999735688694479,
+          28.28352366219598
+        ]
+      ],
+      "cell_post": [
+        [
+          6.928020110031437,
+          0.0,
+          0.0
+        ],
+        [
+          3.4640100550157196,
+          5.999841413216687,
+          0.0
+        ],
+        [
+          17.320050275078597,
+          9.999735688694479,
+          28.28352366219598
+        ]
+      ],
+      "volume_pre": 1175.661849392291,
+      "volume_post": 1175.661849392291,
+      "t_md_s": 2575.9786026477814,
+      "t_relax_s": 27.208102226257324,
+      "n_relax_steps": 98,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n5fu_O-free_s/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/nd_anneal_2026_09_07/ndo_lpscl16_n5fu_O-free_s/post_relax.xyz"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+figure,series,x_name,x,y_name,y,note
+fig7,"A marble (Mine City) · AVERAGE (~40 tests, big mark)",(St)d_kg_per_cm2,42.4,(St)i_kg_per_cm2,39.0,"fig_7.png — PDF p.14 (printed p.98) rendered at 300 dpi = native 1-bit CCITT scan; axis calibration from tick-label centres (x: 0/50/100/150 kg/cm2 -> 93.5/323.0/564.5/794.0 px, fit px = 92.3 + 4.686·X, residual <= 3.6 px = 0.8 kg/cm2; y: 0/50/100/150 -> 758.5/523.0/291.3/57.9 px, fit py = 757.7 - 4.667·Y, residual <= 1.4 px) in the clip 160,55,375,262 pt; marker centre read by eye on 4x and 8x zooms with a 1-unit grid (+-1 kg/cm2); author's 1:1 line sits ~0.7 unit above the label-calibrated diagonal; symbol -> rock from the 6x legend zoom (A filled+ring, B double ring, C black with white right sliver, D right half black, E circled cross, F dashed open circle, G circle with dot, H filled); big = the paper's 'six bigger circular marks' (averages of ~40 tests) - only 4 identifiable (A x2, B x2); H cluster = merged filled disks, count and centres uncertain | ratio (St)i/(St)d = 0.92"
+fig7,"A marble (Mine City) · AVERAGE (~40 tests, big mark)",(St)d_kg_per_cm2,66.4,(St)i_kg_per_cm2,67.3,ratio (St)i/(St)d = 1.014
+fig7,"B sandstone (Izumi-Sagan) · AVERAGE (~40 tests, big mark)",(St)d_kg_per_cm2,85.6,(St)i_kg_per_cm2,86.0,ratio (St)i/(St)d = 1.005
+fig7,"B sandstone (Izumi-Sagan) · AVERAGE (~40 tests, big mark)",(St)d_kg_per_cm2,146.3,(St)i_kg_per_cm2,147.9,line end overlaps | ratio (St)i/(St)d = 1.011
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,42.0,(St)i_kg_per_cm2,55.7,ratio (St)i/(St)d = 1.326
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,42.5,(St)i_kg_per_cm2,50.9,ratio (St)i/(St)d = 1.198
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,63.4,(St)i_kg_per_cm2,47.3,right outline missing (C/D?) | ratio (St)i/(St)d = 0.746
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,62.8,(St)i_kg_per_cm2,80.2,ratio (St)i/(St)d = 1.277
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,72.2,(St)i_kg_per_cm2,75.8,touches line | ratio (St)i/(St)d = 1.05
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,71.2,(St)i_kg_per_cm2,67.6,ratio (St)i/(St)d = 0.949
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,74.1,(St)i_kg_per_cm2,90.5,ratio (St)i/(St)d = 1.221
+fig7,C limestone (Ookanō mine) · single test,(St)d_kg_per_cm2,85.2,(St)i_kg_per_cm2,96.7,ratio (St)i/(St)d = 1.135
+fig7,C or D (glyph ambiguous) · single test,(St)d_kg_per_cm2,103.1,(St)i_kg_per_cm2,141.0,glyph ambiguous | ratio (St)i/(St)d = 1.368
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,34.1,(St)i_kg_per_cm2,60.1,ratio (St)i/(St)d = 1.762
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,39.6,(St)i_kg_per_cm2,32.5,ratio (St)i/(St)d = 0.821
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,53.9,(St)i_kg_per_cm2,62.6,ratio (St)i/(St)d = 1.161
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,67.3,(St)i_kg_per_cm2,76.1,ratio (St)i/(St)d = 1.131
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,68.1,(St)i_kg_per_cm2,57.7,ratio (St)i/(St)d = 0.847
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,82.5,(St)i_kg_per_cm2,134.6,ratio (St)i/(St)d = 1.632
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,97.8,(St)i_kg_per_cm2,97.5,on line | ratio (St)i/(St)d = 0.997
+fig7,D dolomite (Ookanō mine) · single test,(St)d_kg_per_cm2,100.1,(St)i_kg_per_cm2,101.3,on line | ratio (St)i/(St)d = 1.012
+fig7,E andesite (Manza mine) · single test,(St)d_kg_per_cm2,54.1,(St)i_kg_per_cm2,35.5,ratio (St)i/(St)d = 0.656
+fig7,E andesite (Manza mine) · single test,(St)d_kg_per_cm2,80.8,(St)i_kg_per_cm2,69.4,ratio (St)i/(St)d = 0.859
+fig7,E andesite (Manza mine) · single test,(St)d_kg_per_cm2,87.8,(St)i_kg_per_cm2,48.9,ratio (St)i/(St)d = 0.557
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,14.5,(St)i_kg_per_cm2,10.5,broken ring | ratio (St)i/(St)d = 0.724
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,24.5,(St)i_kg_per_cm2,16.5,arc only | ratio (St)i/(St)d = 0.673
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,19.7,(St)i_kg_per_cm2,33.1,arc only | ratio (St)i/(St)d = 1.68
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,33.7,(St)i_kg_per_cm2,39.5,ratio (St)i/(St)d = 1.172
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,36.3,(St)i_kg_per_cm2,32.1,arc only | ratio (St)i/(St)d = 0.884
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,38.0,(St)i_kg_per_cm2,25.5,arc only | ratio (St)i/(St)d = 0.671
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,37.2,(St)i_kg_per_cm2,21.6,arc only | ratio (St)i/(St)d = 0.581
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,49.6,(St)i_kg_per_cm2,61.1,dashed | ratio (St)i/(St)d = 1.232
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,114.4,(St)i_kg_per_cm2,120.4,"dashed, faint | ratio (St)i/(St)d = 1.052"
+fig7,F tuff (Manza mine) · single test,(St)d_kg_per_cm2,115.0,(St)i_kg_per_cm2,115.9,"dashed, faint | ratio (St)i/(St)d = 1.008"
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,17.2,(St)i_kg_per_cm2,20.7,ratio (St)i/(St)d = 1.203
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,20.3,(St)i_kg_per_cm2,24.1,ratio (St)i/(St)d = 1.187
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,23.6,(St)i_kg_per_cm2,21.2,ratio (St)i/(St)d = 0.898
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,24.3,(St)i_kg_per_cm2,26.1,ratio (St)i/(St)d = 1.074
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,25.6,(St)i_kg_per_cm2,27.3,ratio (St)i/(St)d = 1.066
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,21.6,(St)i_kg_per_cm2,29.9,ratio (St)i/(St)d = 1.384
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,31.5,(St)i_kg_per_cm2,30.0,on line | ratio (St)i/(St)d = 0.952
+fig7,G tuff (Shakanai mine) · single test,(St)d_kg_per_cm2,125.4,(St)i_kg_per_cm2,112.1,ratio (St)i/(St)d = 0.894
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,12.5,(St)i_kg_per_cm2,24.3,isolated disk | ratio (St)i/(St)d = 1.944
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,11.1,(St)i_kg_per_cm2,20.0,merged | ratio (St)i/(St)d = 1.802
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,14.2,(St)i_kg_per_cm2,18.8,merged | ratio (St)i/(St)d = 1.324
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,11.1,(St)i_kg_per_cm2,17.7,merged | ratio (St)i/(St)d = 1.595
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,15.9,(St)i_kg_per_cm2,17.0,"merged, uncertain | ratio (St)i/(St)d = 1.069"
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,11.7,(St)i_kg_per_cm2,15.4,merged | ratio (St)i/(St)d = 1.316
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,14.0,(St)i_kg_per_cm2,15.4,"merged, uncertain | ratio (St)i/(St)d = 1.1"
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,16.7,(St)i_kg_per_cm2,15.3,merged | ratio (St)i/(St)d = 0.916
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,8.7,(St)i_kg_per_cm2,12.9,merged blob | ratio (St)i/(St)d = 1.483
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,8.9,(St)i_kg_per_cm2,11.3,merged blob | ratio (St)i/(St)d = 1.27
+fig7,H mudstone (Shakanai mine) · single test (merged cluster),(St)d_kg_per_cm2,11.1,(St)i_kg_per_cm2,11.5,merged blob | ratio (St)i/(St)d = 1.036
+fig5,(σθ)θ=0 at r/a ≈ 0 · 2θ0 = 0° (θ0 = 0°),r_over_a,0,sigma_theta_tension_over_F_2pi_a2,1.4,"fig_5.png — PDF p.12 (printed p.96) at 300 dpi = native scan; per-panel x calibration from tick labels (0 -> axis line, 2 units = 30.9 px; panel 3 = 31.0 px); reading of the two near-coincident curves (m = 3 solid, m = 5 dotted) as one line, +-0.15; x axis = -σ/(F/2πa²) (tension plotted left of 0)"
+fig5,(σr)θ=0 at r/a ≈ 0 · 2θ0 = 0° (θ0 = 0°),r_over_a,0,minus_sigma_r_compression_over_F_2pi_a2,5.2,same reading method
+fig5,(σθ)θ=0 zero crossing · 2θ0 = 0° (θ0 = 0°),r_over_a,≈0.62–0.65,sigma_theta,0,rough read (r/a tick labels not exactly on ticks)
+fig5,(σθ)θ=0 at r/a ≈ 0 · 2θ0 = 6° (θ0 = 3°),r_over_a,0,sigma_theta_tension_over_F_2pi_a2,1.3,same reading method
+fig5,(σr)θ=0 at r/a ≈ 0 · 2θ0 = 6° (θ0 = 3°),r_over_a,0,minus_sigma_r_compression_over_F_2pi_a2,5.1,same reading method
+fig5,(σθ)θ=0 zero crossing · 2θ0 = 6° (θ0 = 3°),r_over_a,≈0.62–0.65,sigma_theta,0,rough read (r/a tick labels not exactly on ticks)
+fig5,(σθ)θ=0 at r/a ≈ 0 · 2θ0 = 10° (θ0 = 5°),r_over_a,0,sigma_theta_tension_over_F_2pi_a2,1.2,same reading method
+fig5,(σr)θ=0 at r/a ≈ 0 · 2θ0 = 10° (θ0 = 5°),r_over_a,0,minus_sigma_r_compression_over_F_2pi_a2,5.2,same reading method
+fig5,(σθ)θ=0 zero crossing · 2θ0 = 10° (θ0 = 5°),r_over_a,≈0.63–0.66,sigma_theta,0,rough read (r/a tick labels not exactly on ticks)

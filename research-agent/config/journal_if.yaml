@@ -1,0 +1,93 @@
+# =====================================================================
+# 저널 Impact Factor 테이블
+#   source : JCR 2024 (2025년 6월 발표) 기준 근사값. 매년 6월 갱신할 것.
+#   match  : 소문자 정규화 후 정확 일치 → 별칭(aliases) → 부분 일치 순으로 매칭
+#   IF 값은 우선순위 정렬용 근사값이며 공식 수치는 Clarivate JCR을 확인.
+# =====================================================================
+updated: "2025-06"
+default_if: 3.0
+preprint_servers: ["arxiv", "chemrxiv", "biorxiv", "ssrn", "research square", "preprints.org"]
+
+journals:
+  # ---- 최상위 (IF ≥ 30) ----
+  - { name: "Nature",                                   if: 48.5, aliases: ["nature (london)"] }
+  - { name: "Science",                                  if: 45.8 }
+  - { name: "Nature Energy",                            if: 56.0, aliases: ["nat energy", "nat. energy"] }
+  - { name: "Nature Materials",                         if: 38.5, aliases: ["nat mater", "nat. mater."] }
+  - { name: "Nature Reviews Materials",                 if: 79.8, aliases: ["nat rev mater"] }
+  - { name: "Nature Nanotechnology",                    if: 34.9, aliases: ["nat nanotechnol"] }
+  - { name: "Nature Chemistry",                         if: 19.2, aliases: ["nat chem"] }
+  - { name: "Chemical Society Reviews",                 if: 40.4, aliases: ["chem soc rev"] }
+  - { name: "Chemical Reviews",                         if: 51.4, aliases: ["chem rev"] }
+  - { name: "Joule",                                    if: 38.6 }
+  - { name: "Energy & Environmental Science",           if: 30.5, aliases: ["energy environ sci", "ees", "energy & environmental science"] }
+  - { name: "Progress in Materials Science",            if: 37.0, aliases: ["prog mater sci"] }
+  - { name: "Nano-Micro Letters",                       if: 31.6, aliases: ["nano-micro lett", "nano micro letters"] }
+  - { name: "Advanced Materials",                       if: 26.8, aliases: ["adv mater", "adv. mater."] }
+  - { name: "Advanced Energy Materials",                if: 25.5, aliases: ["adv energy mater", "adv. energy mater."] }
+  # ---- 상위 (15 ≤ IF < 30) ----
+  - { name: "Energy Storage Materials",                 if: 19.3, aliases: ["energy storage mater", "ensm"] }
+  - { name: "ACS Energy Letters",                       if: 19.3, aliases: ["acs energy lett"] }
+  - { name: "Advanced Functional Materials",            if: 19.0, aliases: ["adv funct mater", "afm"] }
+  - { name: "Matter",                                   if: 17.5 }
+  - { name: "Nano Energy",                              if: 16.9 }
+  - { name: "Nature Communications",                    if: 15.7, aliases: ["nat commun", "nat. commun.", "nature comm"] }
+  - { name: "Angewandte Chemie International Edition",  if: 16.1, aliases: ["angew chem int ed", "angewandte chemie", "angew. chem."] }
+  - { name: "Journal of the American Chemical Society", if: 15.0, aliases: ["j am chem soc", "jacs"] }
+  - { name: "ACS Nano",                                 if: 15.8 }
+  - { name: "InfoMat",                                  if: 22.7 }
+  - { name: "eScience",                                 if: 42.9 }
+  - { name: "Carbon Energy",                            if: 20.5 }
+  - { name: "SusMat",                                   if: 20.0 }
+  - { name: "Materials Today",                          if: 21.1, aliases: ["mater today"] }
+  - { name: "Advanced Science",                         if: 14.1, aliases: ["adv sci"] }
+  - { name: "Chemical Engineering Journal",             if: 13.2, aliases: ["chem eng j", "cej"] }
+  - { name: "Energy & Environmental Materials",         if: 13.8, aliases: ["energy environ mater", "eem"] }
+  - { name: "Journal of Energy Chemistry",              if: 14.0, aliases: ["j energy chem"] }
+  - { name: "Small",                                    if: 12.1 }
+  - { name: "Nano Letters",                             if: 9.1,  aliases: ["nano lett"] }
+  - { name: "Journal of Materials Chemistry A",         if: 9.5,  aliases: ["j mater chem a", "jmca"] }
+  - { name: "ACS Applied Materials & Interfaces",       if: 8.2,  aliases: ["acs appl mater interfaces", "acs ami"] }
+  - { name: "Chemistry of Materials",                   if: 7.0,  aliases: ["chem mater"] }
+  - { name: "Journal of Power Sources",                 if: 8.1,  aliases: ["j power sources", "jps"] }
+  - { name: "npj Computational Materials",              if: 9.7,  aliases: ["npj comput mater"] }
+  - { name: "Energy Materials",                         if: 11.2 }
+  - { name: "Advanced Materials Interfaces",            if: 4.3 }
+  - { name: "ACS Applied Energy Materials",             if: 5.5,  aliases: ["acs appl energy mater"] }
+  - { name: "Electrochimica Acta",                      if: 5.5,  aliases: ["electrochim acta"] }
+  - { name: "Journal of The Electrochemical Society",   if: 3.9,  aliases: ["j electrochem soc", "jes"] }
+  - { name: "Batteries & Supercaps",                    if: 4.6,  aliases: ["batteries supercaps", "batt supercaps"] }
+  - { name: "Batteries",                                if: 4.6 }
+  - { name: "Solid State Ionics",                       if: 3.0 }
+  - { name: "Journal of Physical Chemistry C",          if: 3.3,  aliases: ["j phys chem c", "jpcc"] }
+  - { name: "Journal of Physical Chemistry Letters",    if: 4.8,  aliases: ["j phys chem lett", "jpcl"] }
+  - { name: "Physical Review B",                        if: 3.2,  aliases: ["phys rev b", "prb"] }
+  - { name: "Physical Review Materials",                if: 3.1,  aliases: ["phys rev mater"] }
+  - { name: "Computational Materials Science",          if: 3.1,  aliases: ["comput mater sci"] }
+  - { name: "Powder Technology",                        if: 4.5,  aliases: ["powder technol"] }
+  - { name: "Advanced Powder Technology",               if: 4.2,  aliases: ["adv powder technol"] }
+  - { name: "Granular Matter",                          if: 2.4 }
+  - { name: "Computers and Geotechnics",                if: 5.3,  aliases: ["comput geotech"] }
+  - { name: "Journal of Energy Storage",                if: 8.9,  aliases: ["j energy storage"] }
+  - { name: "Applied Energy",                           if: 10.1, aliases: ["appl energy"] }
+  - { name: "Frontiers in Chemistry",                   if: 3.8,  aliases: ["front chem"] }
+  - { name: "Frontiers in Energy Research",             if: 2.6 }
+  - { name: "Materials",                                if: 3.1 }
+  - { name: "Energies",                                 if: 3.0 }
+  - { name: "RSC Advances",                             if: 3.9 }
+  - { name: "Scientific Reports",                       if: 3.8,  aliases: ["sci rep"] }
+  - { name: "Communications Materials",                 if: 7.5,  aliases: ["commun mater"] }
+  - { name: "Nature Reviews Chemistry",                 if: 38.0 }
+  - { name: "Chem",                                     if: 19.1 }
+  - { name: "ACS Materials Letters",                    if: 9.6 }
+  - { name: "Journal of Materials Science & Technology", if: 11.2 }
+  - { name: "Acta Materialia",                          if: 8.3,  aliases: ["acta mater"] }
+  - { name: "Journal of the Mechanics and Physics of Solids", if: 5.0, aliases: ["j mech phys solids", "jmps"] }
+  - { name: "International Journal of Mechanical Sciences", if: 7.3 }
+  - { name: "Extreme Mechanics Letters",                if: 4.3 }
+  - { name: "Electrochemistry Communications",          if: 4.7 }
+  - { name: "Journal of Electroanalytical Chemistry",   if: 4.1 }
+  - { name: "ChemSusChem",                              if: 7.5 }
+  - { name: "ChemElectroChem",                          if: 3.5 }
+  - { name: "Energy Technology",                        if: 3.6 }
+  - { name: "Physical Chemistry Chemical Physics",      if: 2.9,  aliases: ["phys chem chem phys", "pccp"] }

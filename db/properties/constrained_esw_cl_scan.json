@@ -1,0 +1,205 @@
+{
+  "method": "strain-explicit constrained ESW (Fitzhugh leading-order edge shift phi += K_eff*DeltaV/n_e). MP GGA_GGA+U volumes; LiS4/SCl3/Li5PS4Cl2 excluded.",
+  "k_eff_GPa": [
+    0.0,
+    10.0,
+    20.0
+  ],
+  "results": {
+    "LPSCl0.5": {
+      "composition": "Li6.5PS5.5Cl0.5",
+      "v_se_A3_per_fu": 264.5,
+      "oxidation_onset": {
+        "phi0_V": 2.256,
+        "rxn": "Li6.5P1S5.5Cl0.5 -> Li3PS4 + 0.5 LiCl + 1.5 S + 3 Li",
+        "DeltaV_A3": -22.7,
+        "n_e": 3.0,
+        "eps_RXN": -0.0859,
+        "products_vol": "0.25Li3PS4(166.5) + 0.25LiCl(21.2) + 0.0469S(54.0)",
+        "missing_vol": []
+      },
+      "reduction_onset": {
+        "phi0_V": 1.242,
+        "rxn": "Li6.5P1S5.5Cl0.5 + 5 Li -> 5.5 Li2S + 0.5 LiCl + P",
+        "DeltaV_A3": 40.7,
+        "n_e": 5.0,
+        "eps_RXN": 0.154,
+        "products_vol": "5.5Li2S(257.5) + 0.25LiCl(21.2) + 0.0238P(26.5)",
+        "missing_vol": []
+      },
+      "window_vs_k_eff": {
+        "0.0": {
+          "reduction_V": 1.242,
+          "oxidation_V": 2.256,
+          "width_V": 1.014
+        },
+        "10.0": {
+          "reduction_V": 0.734,
+          "oxidation_V": 1.784,
+          "width_V": 1.05
+        },
+        "20.0": {
+          "reduction_V": 0.226,
+          "oxidation_V": 1.311,
+          "width_V": 1.086
+        }
+      }
+    },
+    "LPSCl1.0": {
+      "composition": "Li6PS5Cl",
+      "v_se_A3_per_fu": 254.16,
+      "oxidation_onset": {
+        "phi0_V": 2.256,
+        "rxn": "Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li",
+        "DeltaV_A3": -9.2,
+        "n_e": 2.0,
+        "eps_RXN": -0.0361,
+        "products_vol": "0.25Li3PS4(166.5) + 0.5LiCl(42.4) + 0.0313S(36.0)",
+        "missing_vol": []
+      },
+      "reduction_onset": {
+        "phi0_V": 1.242,
+        "rxn": "Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P",
+        "DeltaV_A3": 48.9,
+        "n_e": 5.0,
+        "eps_RXN": 0.1923,
+        "products_vol": "5Li2S(234.1) + 0.5LiCl(42.4) + 0.0238P(26.5)",
+        "missing_vol": []
+      },
+      "window_vs_k_eff": {
+        "0.0": {
+          "reduction_V": 1.242,
+          "oxidation_V": 2.256,
+          "width_V": 1.014
+        },
+        "10.0": {
+          "reduction_V": 0.632,
+          "oxidation_V": 1.969,
+          "width_V": 1.337
+        },
+        "20.0": {
+          "reduction_V": 0.021,
+          "oxidation_V": 1.682,
+          "width_V": 1.661
+        }
+      }
+    },
+    "LPSCl1.5": {
+      "composition": "Li5.5PS4.5Cl1.5",
+      "v_se_A3_per_fu": 245.0,
+      "oxidation_onset": {
+        "phi0_V": 2.256,
+        "rxn": "Li5.5P1S4.5Cl1.5 -> Li3PS4 + 1.5 LiCl + 0.5 S + Li",
+        "DeltaV_A3": 3.2,
+        "n_e": 1.0,
+        "eps_RXN": 0.0129,
+        "products_vol": "0.25Li3PS4(166.5) + 0.75LiCl(63.6) + 0.0156S(18.0)",
+        "missing_vol": []
+      },
+      "reduction_onset": {
+        "phi0_V": 1.242,
+        "rxn": "Li5.5P1S4.5Cl1.5 + 5 Li -> 4.5 Li2S + 1.5 LiCl + P",
+        "DeltaV_A3": 55.8,
+        "n_e": 5.0,
+        "eps_RXN": 0.2278,
+        "products_vol": "4.5Li2S(210.7) + 0.75LiCl(63.6) + 0.0238P(26.5)",
+        "missing_vol": []
+      },
+      "window_vs_k_eff": {
+        "0.0": {
+          "reduction_V": 1.242,
+          "oxidation_V": 2.256,
+          "width_V": 1.014
+        },
+        "10.0": {
+          "reduction_V": 0.545,
+          "oxidation_V": 2.456,
+          "width_V": 1.91
+        },
+        "20.0": {
+          "reduction_V": -0.151,
+          "oxidation_V": 2.655,
+          "width_V": 2.807
+        }
+      }
+    },
+    "modelc": {
+      "composition": "Li5.4P1S4.4Cl1.6",
+      "v_se_A3_per_fu": 243.29,
+      "oxidation_onset": {
+        "phi0_V": 2.256,
+        "rxn": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li",
+        "DeltaV_A3": 5.5,
+        "n_e": 0.8,
+        "eps_RXN": 0.0226,
+        "products_vol": "0.25Li3PS4(166.5) + 0.8LiCl(67.8) + 0.0125S(14.4)",
+        "missing_vol": []
+      },
+      "reduction_onset": {
+        "phi0_V": 1.242,
+        "rxn": "Li5.4P1S4.4Cl1.6 + 5 Li -> 4.4 Li2S + 1.6 LiCl + P",
+        "DeltaV_A3": 57.1,
+        "n_e": 5.0,
+        "eps_RXN": 0.2347,
+        "products_vol": "4.4Li2S(206.0) + 0.8LiCl(67.8) + 0.0238P(26.5)",
+        "missing_vol": []
+      },
+      "window_vs_k_eff": {
+        "0.0": {
+          "reduction_V": 1.242,
+          "oxidation_V": 2.256,
+          "width_V": 1.014
+        },
+        "10.0": {
+          "reduction_V": 0.529,
+          "oxidation_V": 2.685,
+          "width_V": 2.156
+        },
+        "20.0": {
+          "reduction_V": -0.184,
+          "oxidation_V": 3.114,
+          "width_V": 3.298
+        }
+      }
+    },
+    "LPSCl2.0": {
+      "composition": "Li5PS4Cl2",
+      "v_se_A3_per_fu": 233.0,
+      "oxidation_onset": {
+        "phi0_V": 2.385,
+        "rxn": "Li5P(S2Cl)2 -> 0.5 P2S7 + 2 LiCl + 0.5 S + 3 Li",
+        "DeltaV_A3": -4.4,
+        "n_e": 3.0,
+        "eps_RXN": -0.0189,
+        "products_vol": "0.125P2S7(125.8) + 1LiCl(84.8) + 0.0156S(18.0)",
+        "missing_vol": []
+      },
+      "reduction_onset": {
+        "phi0_V": 1.242,
+        "rxn": "Li5P(S2Cl)2 + 5 Li -> 4 Li2S + 2 LiCl + P",
+        "DeltaV_A3": 65.6,
+        "n_e": 5.0,
+        "eps_RXN": 0.2816,
+        "products_vol": "4Li2S(187.3) + 1LiCl(84.8) + 0.0238P(26.5)",
+        "missing_vol": []
+      },
+      "window_vs_k_eff": {
+        "0.0": {
+          "reduction_V": 1.242,
+          "oxidation_V": 2.385,
+          "width_V": 1.143
+        },
+        "10.0": {
+          "reduction_V": 0.423,
+          "oxidation_V": 2.293,
+          "width_V": 1.87
+        },
+        "20.0": {
+          "reduction_V": -0.396,
+          "oxidation_V": 2.202,
+          "width_V": 2.598
+        }
+      }
+    }
+  }
+}

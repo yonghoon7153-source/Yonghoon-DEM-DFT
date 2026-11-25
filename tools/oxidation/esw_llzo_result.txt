@@ -1,0 +1,28 @@
+# LLZO grand-potential ESW — gabia (kserver116-27) run, 2026-06-23
+# Command: python3 esw_grand_potential.py --target "Li7La3Zr2O12:LLZO" --elements Li La Zr O --out esw_llzo.json
+# Method: PhaseDiagram.get_element_profile (Mo/Ong/Ceder); MP GGA_GGA+U corrected hull; Li opened.
+# Same method/hull as our LPSCl comp1 (onset 2.256 V) → directly comparable.
+
+[mp_api] 143 entries in La-Li-O-Zr (GGA_GGA+U hull)
+μ_Li(metal) reference = -1.9089 eV/atom
+
+=== LLZO  Li7La3Zr2O12  ===
+  nominal Li content n_Li = 7.000
+  OCV self-decomposition (no Li flux) @ 0.05 V → Li7La3Zr2O12 -> Li6Zr2O7 + 0.5 Li2O + 1.5 La2O3
+  ↓ reduction (cathodic) limit ≈ 0.04 V → Li7La3Zr2O12 + 6.667 Li -> 0.6667 Zr3O + 6.833 Li2O + 1.5 La2O3
+  ↑ oxidation (anodic)   limit ≈ 2.88 V → Li7La3Zr2O12 -> Li6Zr2O7 + 0.25 Li2O2 + 1.5 La2O3 + 0.5 Li
+  full profile (7 breakpoints):
+    V= 0.00  Li=  7.000  Li7La3Zr2O12 + 7 Li -> 0.5 Zr4O + 7 Li2O + 1.5 La2O3
+    V= 0.04  Li=  6.667  Li7La3Zr2O12 + 6.667 Li -> 0.6667 Zr3O + 6.833 Li2O + 1.5 La2O3
+    V= 0.05  Li=  0.000  Li7La3Zr2O12 -> Li6Zr2O7 + 0.5 Li2O + 1.5 La2O3
+    V= 2.88  Li= -0.500  Li7La3Zr2O12 -> Li6Zr2O7 + 0.25 Li2O2 + 1.5 La2O3 + 0.5 Li
+    V= 3.15  Li= -3.500  Li7La3Zr2O12 -> 1.75 Li2O2 + La2Zr2O7 + 0.5 La2O3 + 3.5 Li
+    V= 3.22  Li= -6.562  Li7La3Zr2O12 -> 0.4375 LiO8 + La2Zr2O7 + 0.5 La2O3 + 6.563 Li
+    V= 3.84  Li= -7.000  Li7La3Zr2O12 -> La2Zr2O7 + 0.5 La2O3 + 1.75 O2 + 7 Li
+
+# --- Interpretation (summary) ---
+# Reduction limit  ≈ 0.04 V (OCV self-decomp 0.05 V; cubic Li7La3Zr2O12 metastable on GGA hull → Al/Ta doping stabilizes)
+# Oxidation onset  ≈ 2.88 V  (O2- -> peroxide Li2O2), staircase: peroxide(2.88) -> superoxide(3.22) -> O2 gas(3.84)
+# ESW width        ≈ 2.84 V  (0.04-2.88)
+# vs LPSCl comp1   : 1.24 / 2.256 V (S2- -> S0).  Oxidation onset DELTA = +0.63 V (O 2p deeper than S 3p).
+# Matches review Calc 0.05 / 2.91 V within 0.03 V.

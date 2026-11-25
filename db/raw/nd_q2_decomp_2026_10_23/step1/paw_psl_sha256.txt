@@ -1,0 +1,6 @@
+785699766999b40fd07ed2b82069dffc3391c15ada838377ce03ee1b379642af  /data/work/pseudo/Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+18a3835e6437aa953c8a5b783aae1f5b8c83e48f0fa699f8992f6754bdc35101  /data/work/pseudo/Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF
+7bad261e718f8ece9fcf82dc4ec6a2c7b06badd552f95ad6f1faaf2183b58dd1  /data/work/pseudo/P.pbe-n-kjpaw_psl.1.0.0.UPF
+7c4b6ed541f83d0afdf5c1d3a8c611340f073f3e2b11e95b7963bb2ee26929aa  /data/work/pseudo/O.pbe-n-kjpaw_psl.0.1.UPF
+050bc08cac9e419863a5e35267110217be51cd560fe8db9bf7a4e1ed40611a6f  /data/work/pseudo/S.pbe-nl-kjpaw_psl.1.0.0.UPF
+b31db101b8b2754ad93f530a6c831e17dba53ef167d2ac5fac98ef7d49f2803a  /data/work/pseudo/Cl.pbe-nl-kjpaw_psl.1.0.0.UPF

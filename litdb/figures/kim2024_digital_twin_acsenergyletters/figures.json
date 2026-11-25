@@ -1,0 +1,125 @@
+{
+ "slug": "kim2024_digital_twin_acsenergyletters",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) A comprehensive overview of multiscale simulations from molecules to pack for analyzing material properties and battery performance. (b) Scheme for various components in the battery microstructure and their structural properties. new avenues for understanding and improving battery perform- ance. multiscale basis. From a simulation perspective, density functional theory (DFT) and molecular dynamics (MD) simulations allow us to predict the thermodynamic behavior and stability of materials through the interactions at the atomic and molecular levels, such as potential, diffusion behavior, activation energy, and crystal/lattice stability.15−17 Extending these atomic/molecular analyses to the particle and electrode scales reveals that the intrinsic properties of the materials cannot be fully realized, and various performances and characteristics, such as physical and chemical pro",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    382.5
+   ],
+   "w": 2151,
+   "h": 1368,
+   "dpi": 300,
+   "src": "18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf",
+   "blank": 0.713
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Schematic illustration of digital twin simulation for rechargeable batteries. (b) Variations in electrochemical performance across different battery components or designs, with liquid and solid electrolytes as one example. Reproduced with permission from ref 24. Copyright 2020 Springer Nature. Reproduced with permission from ref 25. Copyright 2023 Royal Society of Chemistry. (c) Digital twin-driven microstructure analysis delving into the relationship between intrinsic material properties and the effective properties of the electrode by identifying the hidden parameters within the microstructure. (d) Prediction and optimization of battery design through uncovering hidden structural parameters. ACS Energy Lett. 2024, 9, 5225−5239 5227 https://doi.org/10.1021/acsenergylett.4c01931",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    665.9
+   ],
+   "w": 2151,
+   "h": 2549,
+   "dpi": 300,
+   "src": "18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf",
+   "blank": 0.751
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic representation of the 3D digital twin structure formation methodologies for rechargeable batteries. (Top) Top-down approach: actual structural images of electrodes or separators are obtained through imaging techniques, such as probe microscopy, electron microscopy, and X-ray tomography, followed by structural reconstruction.48,49 This approach ensures the acquisition of reliable structures with respect to the structural information such as the morphology and distribution of components. Reproduced from ref 48. Available under a CC- BY 4.0 license. Copyright 2016 Elsevier. Reproduced with permission from ref 50. Copyright 2023 Elsevier. (Bottom) Bottom-up approach: structural design information, including composition, morphology, distribution, and density, is used to stochastically generate the 3D virtual structure. This is validated through comparison with experimental",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    578.8
+   ],
+   "w": 2151,
+   "h": 2186,
+   "dpi": 300,
+   "src": "18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf",
+   "blank": 0.535
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Digital twin microstructure-resolved structural analysis. (a) Size distribution and morphology analysis of the gap in the STEM-based reconstructed carbon layer. Reproduced from ref 76. Available under a CC-BY 4.0 license. Copyright 2022 John Wiley and Sons. (b) Orientation of each individual NCM particle. Reproduced from ref 56. Available under a CC-BY 4.0 license. Copyright 2020 Springer Nature. (c) Connectivity analysis in solid and pore phases. Reproduced from ref 77. Available under a CC-BY 4.0 license. Copyright 2024 John Wiley and Sons. Reproduced with permission from ref 32. Copyright 2021 Elsevier. Reproduced with permission from ref 78. Copyright 2020 Elsevier. (d) Visualization of contact loss at the particle, electrode, and electrolyte layers. Reproduced with permission from ref 79. Copyright 2018 Elsevier. Reproduced from ref 80. Available under a CC-BY 4.0 license.",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    274.3
+   ],
+   "w": 2151,
+   "h": 917,
+   "dpi": 300,
+   "src": "18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Digital twin microstructure-driven (multi)physics analysis. (a) The impact of parameters for electrode design and manufacturing on electrochemical properties. Reproduced with permission from ref 50. Copyright 2023 Elsevier. Reproduced with permission from ref 91. Copyright 2020 American Chemical Society. Reproduced from ref 68. Available under a CC-BY 4.0 license. Copyright 2023 Elsevier. (b) Mechanical simulation for compression characteristics of separators. Reproduced with permission from ref 69. Copyright 2024 Elsevier. (c) Mesoscopic scale computational fluid dynamics-specialized Lattice Boltzmann method for effective electrolyte infiltration. Reproduced from ref 92. Available under a CC-BY 4.0 license. Copyright 2022 Elsevier. (d) von Mises stress prediction depending on lithiation. Reproduced with permission from ref 51. Copyright 2023 John Wiley and Sons. Reproduced fro",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    464.1
+   ],
+   "w": 2151,
+   "h": 1708,
+   "dpi": 300,
+   "src": "18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf",
+   "blank": 0.587
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Perspective on digital twin battery simulation. (a) Schematic diagram of the advanced methodology for constructing digital twin structures for multiscale upscaling modeling using the application of AI technologies. (b) Digital twin dynamic simulation of various electrode and separator behaviors for more precise predictions of battery performance and lifespan. Overcoming these hurdles is essential for unlocking the full potential of digital twin simulations. From these perspectives, we emphasize the need for innovative simulation techniques, particularly in multiscale modeling and dynamic simulation. This review highlights the potential of digital twin technologies to advance the rechargeable batteries, offering valuable guidance for future research and development as outlined below. ACS Energy Lett. 2024, 9, 5225−5239 5233 https://doi.org/10.1021/acsenergylett.4c01931",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    665.5
+   ],
+   "w": 2151,
+   "h": 2547,
+   "dpi": 300,
+   "src": "18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf",
+   "blank": 0.711
+  }
+ ]
+}

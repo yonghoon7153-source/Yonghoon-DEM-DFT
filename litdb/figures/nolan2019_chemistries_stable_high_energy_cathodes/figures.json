@@ -1,0 +1,332 @@
+{
+ "slug": "nolan2019_chemistries_stable_high_energy_cathodes",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-12",
+ "sources": [
+  "108. Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+  "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Thermodynamic analysis of the stability between cathode and contacting materials. (a) Illustration of cathode particles coated with Li3PO4 at lithiated and delithiated states. (b) Mutual reaction energy of LiPO3−LiCoO2 (red), LiPO3−Li0.5CoO2 (orange), Li3PO4−LiCoO2 (green), and Li3PO4−Li0.5CoO2 (green) as a function of the mixing fraction in the pseudobinary. The minimum mutual reaction energy (star) corresponds to the possible reaction with lowest energy. (c) Heatmap of the minimum mutual reaction energies of diﬀerent compositions of lithium phosphates with lithiated and delithiated LCO.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    382.7,
+    306.5,
+    559.5
+   ],
+   "w": 1051,
+   "h": 738,
+   "dpi": 300,
+   "src": "108. Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Decomposition energies of lithium ternary oxides with cathodes at lithiated and delithiated states. The color of each square in the heatmap corresponds to the minimum decomposition energy (Ed) of the cathode and contacting material. Groups of materials with the same elemental composition are ordered by increasing lithium content down the column. Only compositions where M is at its highest common oxidation state are considered. equilibrium with a lower decomposition energy Ed of −39 meV/atom High-Voltage Cathodes. High-voltage cathodes such as LMNO and LCP were found to be even more unstable with the lithium ternary oxides compared to layered cathodes LCO and LNO, as shown by a greater magnitude of Ed with a greater number of materials. Similar to the delithiated layered cathodes, the delithiated high-voltage cathodes CoPO4 (CP) and Ni0.5Mn1.5O4 (MNO) are also less stable with l",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    398.4
+   ],
+   "w": 2151,
+   "h": 1398,
+   "dpi": 300,
+   "src": "108. Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.632
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Heatmap of decomposition energies Ed of binary oxides with cathodes, similar to Figure 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    472.9,
+    287.8
+   ],
+   "w": 1744,
+   "h": 937,
+   "dpi": 300,
+   "src": "108. Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.625
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Heatmap of decomposition energies Ed of selected lithium polyanion compounds (composition Li−M−X−O, where X = B, Si, or P) with cathodes, similar to Figure 2. materials may be mediated by Li+ interstitials, which may have a high formation energy at high voltage.49−52 As suggested by our thermodynamic computation, minor reactions may be favorable between some binary oxides (such as SiO2 and Al2O3) and the cathode, which may beneﬁcially introduce some Li into the material to improve Li-ion transport53 and form strong chemical bonding between the coating and cathode. In experiments, an Al2O3 coating on LCO was found to form LiAlO2 on LCO particle surfaces, consistent with our calculation.54 Binary Oxides. To explore materials with better stability with delithiated cathodes, we next analyzed binary oxides, which do not contain Li (Figure 3). In agreement with the trend above about ",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    307.2,
+    570.5,
+    498.3
+   ],
+   "w": 2151,
+   "h": 797,
+   "dpi": 300,
+   "src": "108. Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.665
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Heatmap of decomposition energies Ed of lithium ternary ﬂuorides with cathodes, similar to Figure 2. (b) Grouped boxplot of decomposition energies of all cathodes with lithium ternary oxides, binary oxides, lithium polyanion phosphates, and lithium ternary ﬂuorides. The center line of each box indicates the median of the data set, the outer edges represent the ﬁrst and third quartiles, and the end points are marked by either the most extreme value on either end or 1.5 times the interquartile range, whichever is smaller. Data outside of the end points are marked individually as gray circles. life and capacity retention of both LNMO55 and LCP56,57 solid electrolytes with high Li+ conductivity and good stability with LCO cathodes.63,66 cathodes. In addition, some lithium phosphates such as NASICON are solid electrolyte materials58,59 and are reported to exhibit excellent oxida",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    330.0
+   ],
+   "w": 2151,
+   "h": 1112,
+   "dpi": 300,
+   "src": "108. Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Swarmplot comparing the minimum mutual decomposition energy Ed of all the lithium ternary oxide (Li-M-O) compounds with each of the cathodes. The pseudo-binary of the Li-M-Os and each cathode is denoted by a cluster of points. Within each cluster, a point represents a single Li-M-O compound. The color of the point indicates the lithium content of the composition. In each cluster, points are grouped by their lithium content. Delithiated cathodes tend to react more vigorously with the most lithiated compounds (Li content 0.45-0.5 or greater) than lithiated cathodes. The decomposition energies of LNO cathodes are more negative than the LCO cathodes, which indicates they tend to have slightly larger decomposition energies.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    592.7,
+    208.3
+   ],
+   "w": 2195,
+   "h": 594,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Scatterplots of the most abundant phase in the phase equilibria (y-axis) versus the decomposition energy (x-axis) of pseudo-binaries of the lithium ternary oxides and LCO (top) and LNO (bottom) cathodes. The Li-M-O or M-O phase (M = Co or Ni) with the largest coefficient in the phase equilibria was considered to be the most abundant phase for that pseudo- binary (normalized to one atom per formula unit). Each point represents a pseudo-binary of a different compound. The pseudo-binaries that are stable were not included.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    361.0,
+    542.3,
+    571.0
+   ],
+   "w": 1985,
+   "h": 876,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Stability heatmap of lithiated and delithiated (prefix “d-”) NMC111 (LiMn0.3Co0.3Ni0.3O2) and NCA (LiAl0.05Co0.15Ni0.8O2) cathodes compared to LNO, LCO, LMNO, and LCP (for lithium ternary nonmetal oxides). The results showed that LNO can be a good proxy to NCA and NMC for thermodynamic stability.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    536.0,
+    467.5
+   ],
+   "w": 1959,
+   "h": 1674,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.7
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Boxplot comparing the decomposition energies of each of the groups of binary oxides with all the cathodes. Data outside the endpoints are marked individually as gray circles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    540.1,
+    231.6
+   ],
+   "w": 1976,
+   "h": 691,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Boxplot of the decomposition energies of the lithium ternary oxides, binary oxides, and polyanion compounds with each of the cathodes. Data outside the endpoints are marked individually as gray circles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    287.6,
+    536.0,
+    446.4
+   ],
+   "w": 1959,
+   "h": 663,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Boxplot of calculated cathodic limits for the classes of binary oxides.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    468.8,
+    203.3
+   ],
+   "w": 1679,
+   "h": 573,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Boxplot of calculated anodic limits for each materials class.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    272.9,
+    457.3,
+    414.7
+   ],
+   "w": 1631,
+   "h": 592,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Boxplot of calculated cathodic limits for each materials class.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    470.7,
+    460.0,
+    615.4
+   ],
+   "w": 1642,
+   "h": 604,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 7,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Cathodic vs anodic limits of all lithium-containing materials studied. (a) Colored by materials classes. (b) Colored by decomposition energy with LiCoO2. Outlined green area indicates region where there is overlap between the electrochemical window of the cathode and the coating, with the type of overlap specified by the legend. Overlap of the electrochemical windows of the two materials does not necessarily mean the two materials are stable.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    95.1,
+    573.5,
+    288.7
+   ],
+   "w": 2115,
+   "h": 808,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 7,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Decomposition energy of LiCoPO4 with Li-M-O oxides vs the anodic and cathodic limits of the oxides. The materials with higher anodic limit (oxidiation limit) in generally exhibit better interface stability.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    401.0,
+    563.9,
+    582.0
+   ],
+   "w": 2075,
+   "h": 756,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Lithium ternary oxide compounds stable with LiCoO2 and Li0.5CoO2, stable with LiNiO2 and Li0.5NiO2, stable with LiNiO2, Li0.5NiO2, and Li0.25NiO2, and stable with all of these cathodes. Stable with LCO and L0.5CO Stable with LNO and L0.5NO Stable with LNO, L0.5NO, and L0.25NO Stable with all Li5IO6 Li2GeO3 Li5IO6 Li2GeO3 Li5IO6 Li5IO6 Li3AsO4 Li2PtO3 Li3AsO4 Li2PtO3 Li3AsO4 Li3AsO4 LiClO4 Li4WO5 LiClO4 Li4WO5 LiClO4 LiClO4 Li2SeO4 LiBO2 Li2SeO4 Li3NbO4 Li2SeO4 Li2SeO4 LiAuO2 Li3NbO4 LiAuO2 Li4TeO5 LiAuO2 LiAuO2 LiNO3 Li4TeO5 LiNO3 Li3TaO4 LiNO3 LiNO3 Li2PdO3 Li3TaO4 Li2PdO3 Li6B4O9 Li2PdO3 Li2PdO3 LiReO4 Li6B4O9 LiReO4 Li2SnO3 LiReO4 LiReO4 Li2MoO4 LiTaO3 Li2MoO4 Li2MoO4 Li2MoO4 Li2CrO4 Li2WO4 Li2CrO4 Li2CrO4 Li2CrO4 Li3VO4 Li2SnO3 Li3VO4 Li3VO4 Li3VO4 Li2CO3 LiFeO2 Li2CO3 Li2CO3 Li2CO3 Li3PO4 LiNbO3 Li3PO4 Li3PO4 Li3PO4 Li2SO4 LiAl5O8 Li2SO4 Li2SO4 Li2SO4 LiGaO2 Li2B4O7 LiGaO2",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    549.6,
+    400.2
+   ],
+   "w": 2011,
+   "h": 1388,
+   "dpi": 300,
+   "src": "108. Sup) Nolan2019_Solid_State_Chemistries_Stable_with_High_Energy_Cathodes.pdf",
+   "blank": 0.926
+  }
+ ]
+}

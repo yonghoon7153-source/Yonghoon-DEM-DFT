@@ -1,0 +1,11 @@
+# roessler2019_dem_cohesive_aor_cylinder_lift_calibration — 손 판독 (2026-10-13). 크롭 = 같은 폴더 fig_*.png (원본 300 dpi).
+# 정밀도: 상대 굽힘 y_rel ±1 %p · 누적 질량 ±3 % · 입경 (로그 축) ±10 %. 본문에 숫자가 있으면 본문값을 쓸 것 (printed 열).
+figure,panel,series,x,x_unit,y,y_unit,printed,note
+6,-,experimental PSD,0.2 / 0.3 / 0.45 / 0.5 / 1.0 / 3.15,mm,2 / 10 / 43 / 55 / 78 / 100,% mass,max 3.15 mm (본문),d50 ≈ 0.45–0.5 mm [판독]
+6,-,simulation upscaled PSD,5.5 / 7.5 / 10 / 12.7,mm,78 / 88 / 95 / 100,% mass,5.5–12.7 mm (본문),실험 PSD 의 위 22 % 꼬리 모양만 옮긴 것으로 보인다
+7,-,AoR three repeats (left ; right flank),1 / 2 / 3,repeat,40.4;52.3 / 54.9;84.3 / 52.1;48.6,deg,yes (그림 안 인쇄),범위 40.4–84.3° (본문)
+10,-,y_rel h=80 mm (exp),20 / 40 / 80,z mm,2 / 1 / 0,%,,
+10,-,y_rel h=100 mm (exp),20 / 40 / 80 / 100,z mm,5 / 4 / 1 / 0,%,,
+10,-,y_rel h=120 mm (exp),20 / 40 / 80 / 120,z mm,12.5 / 11 / 5 / 0,%,,
+10,-,y_rel h=140 mm (exp),20 / 40 / 80 / 120 / 140,z mm,24 / 20.5 / 11 / 2 / 0,%,≈26 % at z 20 (본문),본문 26 % ↔ 그림 ≈ 24 %
+16,-,best-fit profile deviation,80 / 100 / 120 / 140,h mm,2.7 / 2.9 / 6.3 / 5.4,%,yes (본문),전체 4.4 %

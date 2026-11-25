@@ -1,0 +1,17 @@
+{
+ "model": "AGC_N3_top_fcc",
+ "k": 12,
+ "decision": "D-2026-10-05-wad-agc-kprobe12",
+ "A_A2": 21.523194956359582,
+ "W_k6_J_m2": 0.5129835422617702,
+ "W_k9_J_m2": 0.492739261243266,
+ "W_k12_J_m2": 0.48778200314394266,
+ "dW_k12_minus_k9_J_m2": -0.004957258099323347,
+ "threshold_abs_dW": 0.01,
+ "status": "CONVERGED_AT_K9",
+ "jobs": {
+  "AGC_N3_top_fcc_K12_bound": "OK",
+  "AGC_N3_top_fcc_K12_far": "OK"
+ },
+ "reading": "9×9×1 에서 k 수렴으로 읽는다 — 헤드라인 처리는 1저자 결정"
+}

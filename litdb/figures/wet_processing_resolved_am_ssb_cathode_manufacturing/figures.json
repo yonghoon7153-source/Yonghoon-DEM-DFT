@@ -1,0 +1,163 @@
+{
+ "slug": "wet_processing_resolved_am_ssb_cathode_manufacturing",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Slice of a tomography image in which the different phases are resolved according to their gray scale. Almost black pixels correspond to pores, while the dark gray pixels are indicative of the SE/binder/CB agglomerates. The lighter, circular shaped objects represent the active material particles.",
+   "bbox": [
+    31.6,
+    446.3,
+    296.8,
+    702.1
+   ],
+   "w": 1106,
+   "h": 1067,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.16
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic representation of the process used to extract the particle shapes from tomography images. Slices of tomography images (left), in which the different phases are resolved according to their gray scale value are segmented into the different material phases. A Fast Random Forest classification is used to assign each voxel into their different phases (center). Here, the purple phase represents the AM, red are pores and the yellow phase corresponds to a mixture of binder, carbon black and SE. The set of classified tomography images is used to extract AM particle skeleton from the tomography data, represented on the right.",
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    171.5
+   ],
+   "w": 2227,
+   "h": 510,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. An illustration of how the high resolution particles look before (left snapshot) and after (right snapshot) the coarsening procedure described in the text.",
+   "bbox": [
+    34.7,
+    227.8,
+    560.6,
+    299.5
+   ],
+   "w": 2192,
+   "h": 300,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.815
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Snapshots of each simulation step illustrating the manufacturing process. First, an image showing the initial structure is shown. Once this structure is equilibrated in the isochoric-isobaric ensemble (NPT), we get the equilibrated slurry microstructure. The corresponding final microstructure is dried by shrinking the CBD with solvent to simulate the solvent removal and once again equilibrated in NPT to attain a dry electrode microstructure. The left image shows the slurry after its initial equilibration. Bright blue spheres illustrate the CB-solvent domain. AM and SE are obscured by the CB domain. An electrode after solvent removal is shown in the center. Yellow spheres correspond to the solid-electrolyte particles, green particles are the realistically shaped AM and dark blue depicts the CB domain after the solvent is removed. On the right-hand side one can see a calendered ele",
+   "bbox": [
+    31.6,
+    327.4,
+    566.0,
+    597.6
+   ],
+   "w": 2228,
+   "h": 1127,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Volume fraction distribution of Active Material, CBD, Pores and Solid Electrolyte Network as a function of the distance from the current collector after performing calendering simulations to different degrees. The volume fraction is defined as the percentage of a given material within a distance [z, z +Δz] from the current collector, relative to the volume within this volume element. All studied microstructures are in their relaxed state, after the springback has occured. Volume fraction of active material (top left), CBD (top right), pores (bottom left) and solid electrolyte (bottom right) are shown. Different calendering degrees are color coded. 6",
+   "bbox": [
+    31.6,
+    335.1,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1530,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Porosity of the formulation with respect to the calendering degree. Each data point corresponds to a simulated measurement, in which the error bars represent the standard error of the data under study.",
+   "bbox": [
+    300.6,
+    49.4,
+    565.8,
+    232.5
+   ],
+   "w": 1106,
+   "h": 764,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Evolution of normalized interface between different material constitu­ ents present in the electrode after springback at different calendering degrees. A normalized interfacial area is defined as the total interfacial area between two material constituents divided by the area of the studied microstructure. Error bars represent the standard error. nature of these particles in our simulations. In essence, once contact has been established between two or more spheres, no matter how much the microstructure is compressed, two phases will not be able to increase their contact area, since we do not allow for much overlap between the different spheres during the calendering stage in the first place. The increased understanding of the effects of manufacturing on the microstructure, allowed by the simulation, enables us to study and explain the electronic and ionic conductivity of the syst",
+   "bbox": [
+    31.6,
+    49.4,
+    297.0,
+    272.3
+   ],
+   "w": 1107,
+   "h": 930,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Evolution of the electronic conductivity (left) and ionic conductivity (right) of the formulation shown as a function of the different calendering degree. The conductivity values are normalized to the bulk electronic conductivity of the CBD and the ionic conductivity of the SE. All values are obtained from the structures after they have relaxed. Error bars are representative of the standard error of the values obtained from simulation repetitions. 8",
+   "bbox": [
+    31.6,
+    557.4,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 644,
+   "dpi": 300,
+   "src": "44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf",
+   "blank": 0.958
+  }
+ ]
+}

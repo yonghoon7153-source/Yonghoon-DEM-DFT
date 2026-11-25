@@ -1,0 +1,113 @@
+figure,series,x,y,x_unit,y_unit,note
+fig4a,experiment,0,48.0,MPa,porosity %,"blue circle (error bar); Table 1 prints 47.97 ± 0.87"
+fig4a,experiment,80,28.6,MPa,porosity %,"blue circle; Table 1 prints 27.75 ± 0.23 at 80 MPa (mismatch 0.9 %p)"
+fig4a,experiment,120,27.8,MPa,porosity %,"blue circle; no 120 MPa row in Table 1 (value equals Table 1's 80 MPa porosity)"
+fig4a,experiment,150,25.2,MPa,porosity %,"blue circle (error bar); Table 1 prints 25.17 ± 1.2; text p.7 says 25.16"
+fig4a,sim_theoretical_volume,0,50.0,MPa,porosity %,"red square partly hidden by the orange triangle (visible part 50.3; full-square centre 50.0)"
+fig4a,sim_theoretical_volume,12.4,44.4,MPa,porosity %,red square (after relaxation)
+fig4a,sim_theoretical_volume,40.0,42.3,MPa,porosity %,red square (after relaxation)
+fig4a,sim_theoretical_volume,79.8,38.1,MPa,porosity %,red square (after relaxation)
+fig4a,sim_theoretical_volume,120.0,32.7,MPa,porosity %,red square (after relaxation)
+fig4a,sim_theoretical_volume,157.6,29.2,MPa,porosity %,"red square (after relaxation); text p.7 prints 29.12 % for the 157.7 MPa run"
+fig4a,sim_meshing,0,50.0,MPa,porosity %,orange triangle (bbox centre)
+fig4a,sim_meshing,12.4,45.2,MPa,porosity %,orange triangle
+fig4a,sim_meshing,39.9,43.2,MPa,porosity %,orange triangle
+fig4a,sim_meshing,80.0,39.1,MPa,porosity %,orange triangle
+fig4a,sim_meshing,120.0,34.7,MPa,porosity %,orange triangle
+fig4a,sim_meshing,157.6,31.9,MPa,porosity %,orange triangle
+fig4b,compression_pressure,5,3.2,compression degree %,MPa,blue curve (median of column)
+fig4b,compression_pressure,8,8.5,compression degree %,MPa,blue curve
+fig4b,compression_pressure,10,13.9,compression degree %,MPa,"blue curve; text p.5 prints 14.2 MPa at 10 %"
+fig4b,compression_pressure,12,22.1,compression degree %,MPa,blue curve (arrow excluded)
+fig4b,compression_pressure,15,32.6,compression degree %,MPa,blue curve (arrow excluded)
+fig4b,compression_pressure,20,50.9,compression degree %,MPa,"blue curve (legend/arrow excluded); text prints 50.3 MPa at 20 %"
+fig4b,compression_pressure,25,73.4,compression degree %,MPa,blue curve
+fig4b,compression_pressure,30,99.7,compression degree %,MPa,"blue curve; text prints 98.7 MPa at 30 %"
+fig4b,compression_pressure,35,124.7,compression degree %,MPa,blue curve
+fig4b,compression_pressure,38,143.0,compression degree %,MPa,blue curve
+fig4b,compression_pressure,39.5,153.4,compression degree %,MPa,"blue curve; text prints 157.7 MPa at 40 %"
+fig4b,relaxation_pressure,26,0.0,compression degree %,MPa,red curve — plane no longer loaded below ≈26–27 %
+fig4b,relaxation_pressure,27,0.5,compression degree %,MPa,red curve
+fig4b,relaxation_pressure,28,1.7,compression degree %,MPa,red curve
+fig4b,relaxation_pressure,29,4.0,compression degree %,MPa,red curve
+fig4b,relaxation_pressure,30,7.4,compression degree %,MPa,red curve
+fig4b,relaxation_pressure,35,44.1,compression degree %,MPa,red curve
+fig4b,relaxation_pressure,38,99.2,compression degree %,MPa,red curve
+fig4b,bonds_remaining_compression,5,99.9,compression degree %,normalized bonds %,green triangles (whole electrode)
+fig4b,bonds_remaining_compression,10,99.2,compression degree %,normalized bonds %,green
+fig4b,bonds_remaining_compression,15,98.7,compression degree %,normalized bonds %,green
+fig4b,bonds_remaining_compression,20,98.2,compression degree %,normalized bonds %,"green; text: 1.8 % broken at 50 MPa"
+fig4b,bonds_remaining_compression,25,97.3,compression degree %,normalized bonds %,green
+fig4b,bonds_remaining_compression,30,95.5,compression degree %,normalized bonds %,"green; text: 4.5 % broken at 100 MPa"
+fig4b,bonds_remaining_compression,35,92.5,compression degree %,normalized bonds %,green
+fig4b,bonds_remaining_compression,38,90.2,compression degree %,normalized bonds %,green
+fig4b,bonds_remaining_compression,39,88.9,compression degree %,normalized bonds %,"green; text: 11.1 % broken at 150 MPa"
+fig4b,bonds_remaining_relaxation,0-40,88.1,compression degree %,normalized bonds %,flat green line plotted over the whole axis during relaxation
+fig5b,snapshot_pressure,12.8,25.1,compression degree %,MPa,magenta point (same run as Fig 5c/5d snapshots)
+fig5b,snapshot_pressure,19.9,50.0,compression degree %,MPa,magenta point
+fig5b,snapshot_pressure,25.3,75.6,compression degree %,MPa,magenta point
+fig5b,snapshot_pressure,30.1,100.2,compression degree %,MPa,magenta point
+fig5b,snapshot_pressure,35.1,124.5,compression degree %,MPa,magenta point
+fig5b,snapshot_pressure,39.3,150.2,compression degree %,MPa,magenta point
+fig5b,particle_bonds_remaining,20,99.4,compression degree %,normalized bonds %,"selected particle 11.96 µm (426 primaries, 1748 bonds)"
+fig5b,particle_bonds_remaining,25,99.0,compression degree %,normalized bonds %,selected particle
+fig5b,particle_bonds_remaining,30,96.9,compression degree %,normalized bonds %,selected particle
+fig5b,particle_bonds_remaining,32,96.5,compression degree %,normalized bonds %,selected particle
+fig5b,particle_bonds_remaining,33,94.3,compression degree %,normalized bonds %,selected particle
+fig5b,particle_bonds_remaining,34,91.2,compression degree %,normalized bonds %,selected particle
+fig5b,particle_bonds_remaining,35,89.3,compression degree %,normalized bonds %,selected particle
+fig5b,particle_bonds_remaining,37,87.9,compression degree %,normalized bonds %,selected particle
+fig5b,particle_bonds_remaining,38-40,83.5,compression degree %,normalized bonds %,"selected particle; text: 17 % broken after 40 %"
+figS6b,particle_bonds_remaining,5,99.2,compression degree %,normalized bonds %,particle near the current collector
+figS6b,particle_bonds_remaining,6,97.7,compression degree %,normalized bonds %,near collector
+figS6b,particle_bonds_remaining,10,94.1,compression degree %,normalized bonds %,near collector
+figS6b,particle_bonds_remaining,15,89.3,compression degree %,normalized bonds %,near collector
+figS6b,particle_bonds_remaining,20,85.1,compression degree %,normalized bonds %,near collector
+figS6b,particle_bonds_remaining,25,73.2,compression degree %,normalized bonds %,near collector
+figS6b,particle_bonds_remaining,30,67.7,compression degree %,normalized bonds %,near collector
+figS6b,particle_bonds_remaining,35,58.4,compression degree %,normalized bonds %,near collector
+figS6b,particle_bonds_remaining,39.7,54.0,compression degree %,normalized bonds %,near collector
+figS7b,particle_bonds_remaining,29,99.9,compression degree %,normalized bonds %,particle near the top surface
+figS7b,particle_bonds_remaining,35,99.5,compression degree %,normalized bonds %,near top
+figS7b,particle_bonds_remaining,37,99.2,compression degree %,normalized bonds %,near top
+figS7b,particle_bonds_remaining,38,96.5,compression degree %,normalized bonds %,near top
+figS7b,particle_bonds_remaining,39.7,91.4,compression degree %,normalized bonds %,"near top; text: <10 % fractured"
+figS8,bottom,0,13420,compression degree %,number of bonds,blue circles (bottom third)
+figS8,bottom,10,13130,compression degree %,number of bonds,bottom
+figS8,bottom,20,12730,compression degree %,number of bonds,bottom
+figS8,bottom,30,12230,compression degree %,number of bonds,bottom
+figS8,bottom,35,11680,compression degree %,number of bonds,bottom
+figS8,bottom,40,11100,compression degree %,number of bonds,bottom
+figS8,middle,0,12680,compression degree %,number of bonds,red squares (middle third)
+figS8,middle,20,12660,compression degree %,number of bonds,middle
+figS8,middle,30,12350,compression degree %,number of bonds,middle
+figS8,middle,35,12100,compression degree %,number of bonds,middle
+figS8,middle,40,11730,compression degree %,number of bonds,middle
+figS8,top,0,12370,compression degree %,number of bonds,green triangles (top third)
+figS8,top,20,12350,compression degree %,number of bonds,top
+figS8,top,30,12180,compression degree %,number of bonds,top
+figS8,top,35,11820,compression degree %,number of bonds,top
+figS8,top,40,11160,compression degree %,number of bonds,top
+figS2f,micro_xct_porosity,0,51.1,MPa,porosity %,red circle (macro pores vs AM two-phase segmentation)
+figS2f,micro_xct_porosity,100,26.2,MPa,porosity %,red circle
+figS2f,micro_xct_porosity,120,23.5,MPa,porosity %,red circle
+figS2f,micro_xct_porosity,150,21.4,MPa,porosity %,red circle
+figS2f,micro_xct_tortuosity_factor,0,1.53,MPa,tortuosity factor,green triangle (method not printed)
+figS2f,micro_xct_tortuosity_factor,100,4.00,MPa,tortuosity factor,green triangle
+figS2f,micro_xct_tortuosity_factor,120,5.84,MPa,tortuosity factor,green triangle
+figS2f,micro_xct_tortuosity_factor,150,7.82,MPa,tortuosity factor,green triangle
+figS3,unbroken_bonds,0.1e6,0.7,sigma value (unit not printed),unbroken bonds %,blue point (test conditions not printed)
+figS3,unbroken_bonds,0.3e6,78.7,sigma value (unit not printed),unbroken bonds %,blue point
+figS3,unbroken_bonds,0.5e6,93.8,sigma value (unit not printed),unbroken bonds %,blue point
+figS3,unbroken_bonds,0.8e6,96.7,sigma value (unit not printed),unbroken bonds %,blue point
+figS3,unbroken_bonds,1.0e6,96.8,sigma value (unit not printed),unbroken bonds %,blue point
+figS4b,spring_back_degree,12.5,31.2,MPa (max pressure),spring back degree %,blue point (definition h2/h1 × 100 %)
+figS4b,spring_back_degree,40.0,37.7,MPa (max pressure),spring back degree %,blue point
+figS4b,spring_back_degree,80.0,36.3,MPa (max pressure),spring back degree %,blue point
+figS4b,spring_back_degree,120.0,33.0,MPa (max pressure),spring back degree %,blue point
+figS4b,spring_back_degree,157.7,32.6,MPa (max pressure),spring back degree %,blue point
+figS5,bond_breaks,5.8-6.1,21,AM diameter µm,number of bonds broken,two overlapping blue points (after 10 % compression)
+figS5,bond_breaks,6.9,21,AM diameter µm,number of bonds broken,blue point
+figS5,bond_breaks,8.5,51,AM diameter µm,number of bonds broken,blue point
+figS5,bond_breaks,10.2,57,AM diameter µm,number of bonds broken,blue point
+figS5,bond_breaks,11.0,93,AM diameter µm,number of bonds broken,"largest plotted particle; most other points ≈0 (dense row 1.9–10.7 µm, not counted)"

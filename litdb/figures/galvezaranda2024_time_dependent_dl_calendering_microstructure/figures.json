@@ -1,0 +1,272 @@
+{
+ "slug": "galvezaranda2024_time_dependent_dl_calendering_microstructure",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-11",
+ "sources": [
+  "galvez2024_main.pdf",
+  "galvez2024_si.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Diagram illustrating the initial stages of the manufacturing process of lithium-ion battery electrodes. b) Schematic representation of our deep-learning model for 3D electrode microstructure prediction during the calendering process. The approach allows to obtain a time series of the electrode microstructure evolution during its calendering and allows us to predict the ﬁnal relaxation of it, all this as a function of the desired CD, which is used as an input of the model and in the real calendering process. Four phases are deﬁned in the model: pores, CBD, AM, and void (region on top of the electrode). In the ﬁgure, h and hcal refer to the uncalendered and calendered electrode thicknesses respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    550.1,
+    567.7
+   ],
+   "w": 2118,
+   "h": 2072,
+   "dpi": 300,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.673
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Architecture of the 1D-CNN employed for our time-series electrode calendering simulation. The network consists of the following layers: input layer, hidden layers (convolution, batch normalization, max-pooling, dropout layers, and fully connected layers), and output layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.7,
+    552.9,
+    208.7
+   ],
+   "w": 2118,
+   "h": 576,
+   "dpi": 300,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.614
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic representation of the framework presented in the current work, starting from the 3D microstructure data reconstruction from DEM data, to train a CNN over a time series. After training, the model performance is assessed through evaluation and electrode functional metrics.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.0,
+    272.7
+   ],
+   "w": 2118,
+   "h": 844,
+   "dpi": 300,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.397
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Graph of loss, a) MSE and b) MAE, for training and validation datasets using model D during the network training. Blue and orange curves refer to training and validation sets, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    568.7,
+    552.8,
+    700.9
+   ],
+   "w": 2118,
+   "h": 552,
+   "dpi": 300,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) DEM target microstructures over time versus DL-predicted microstructures over time. b) Evolution of the volume of the four diﬀerent phases (AM, CBD, Pores & Void) in number of voxels (# voxels) units versus time of the testing data, Microstructure I at a 45% CD. c) R2 score comparing DEM target versus DL predicted over time.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    535.7
+   ],
+   "w": 2118,
+   "h": 1940,
+   "dpi": 300,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Evolution of the volume of the 4 diﬀerent phases (AM, CBD, Pores & Void) in number of voxels (# voxels) units versus time of the testing data, microstructure II at a) 35% CD and microstructure III at c) 25% and e) 45% CD. R2 score comparing DEM target versus DL predicted over time of the testing data, microstructure II at b) 35% CD and microstructure III at d) 25% and f) 45% CD.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.2,
+    552.9,
+    511.7
+   ],
+   "w": 2118,
+   "h": 1841,
+   "dpi": 300,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Calculated porosity of DEM training data (blue triangles) versus DEM testing data (green circles) versus DL predicted data (red crosses) of microstructure a) I, c) II, e) III, and g) IV. Diﬀusivity of DEM training data (blue triangles) versus DEM testing data (green circles) versus DL predicted data (red crosses) of microstructure b) I, d) II, f) III, and h) IV.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.0,
+    691.3
+   ],
+   "w": 2118,
+   "h": 2587,
+   "dpi": 300,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. DL predicted microstructure evolution during calendering at 25 % CD. Phases are shown separately for visualization purposes. Pore, CBD and AM phases are the yellow, red, and blue voxels respectively. Each timeframe corresponds to 75 microseconds.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.9,
+    78.6,
+    531.4,
+    524.4
+   ],
+   "w": 1937,
+   "h": 1858,
+   "dpi": 300,
+   "src": "galvez2024_si.pdf",
+   "blank": 0.688
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of some of the diﬀerent CNN architectures explored in the present work with their corresponding MSE for training and validation sets.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2145,
+   "h": 2996,
+   "dpi": 284,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2. Summary of testing data used to study our DL model performance.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2145,
+   "h": 2996,
+   "dpi": 284,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 9,
+   "file": "tab_3.png",
+   "caption": "Table 3. Contact surface area between the three phases: Pore, CBD, and AM. Surface units are given in voxel.2",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2145,
+   "h": 2996,
+   "dpi": 284,
+   "src": "galvez2024_main.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of the optimized CNN architecture used for our DL model Layer (type) Output Shape Param # conv1d (Conv1D) (None, 2, 256) 554496256 batch_normalization (BatchNormalization) (None, 2, 256) 1024 max_pooling1d (MaxPooling1D) (None, 2, 256) 0 conv1d_1 (Conv1D) (None, 2, 256) 65792 batch_normalization_1 (BatchNormalization) (None, 2, 256) 1024 max_pooling1d_1 (MaxPooling1D) (None, 2, 256) 0 conv1d_2 (Conv1D) (None, 2, 256) 65792 batch_normalization_2 (BatchNormalization) (None, 2, 256) 1024 max_pooling1d_2 (MaxPooling1D) (None, 2, 256) 0 dropout (Dropout) (None, 2, 256) 0 flatten (Flatten) (None, 512) 0 dense (Dense) (None, 150) 76950 dense_1 (Dense) (None, 722000) 109022000 Total params: 663 729 862 Trainable params: 663 728 326 Non-trainable params: 1536",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    503.4,
+    463.1
+   ],
+   "w": 1824,
+   "h": 1654,
+   "dpi": 300,
+   "src": "galvez2024_si.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Summary of the calculated porosity, diffusivity, and tortuosity factor of the DEM test data vs. DL predicted data. 4 different initial electrode microstructures are compared corresponding to the 96 % AM and 4 % CBD formulation. Porosity (%) Diffusivity (×10-12 m2/s) Tortuosity factor CD (%) Train Test data DL prediction Train Test data DL prediction Train Test data DL prediction data data data 20 31.09 17.44 8.13 25 26.79 13.42 11.46 30 24.94 8.53 16.56 35 22.46 5.92 19.23 Microstructure I 40 19.86 3.17 21.19 45 19.07 18.54 1.83 1.83 34.01 34.01 50 21.25 1.26 49.42 20 28.07 12.86 9.87 25 26.90 11.37 10.14 30 22.37 2.68 30.34 35 20.01 20.14 2.24 2.09 35.70 36.58 Microstructure II 40 19.86 1.74 38.01 45 20.60 1.12 58.68 50 20.39 0.87 73.76 20 29.09 12.35 9.38 25 28.06 27.04 10.58 10.34 9.74 10.16 30 23.56 2.74 30.34 35 21.67 2.14 35.79 Microstructure III 40 19.76 1.65 39.15 45 19",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    532.5,
+    604.1
+   ],
+   "w": 1945,
+   "h": 2241,
+   "dpi": 300,
+   "src": "galvez2024_si.pdf",
+   "blank": 0.646
+  }
+ ]
+}

@@ -1,0 +1,106 @@
+{
+ "decision": "D-2026-11-10-cascade-axes-bundle2",
+ "card": "db/properties/cascade_axes_bundle2_estimand_2026_11_10.json",
+ "started_utc": "2026-11-10T13:14:00Z",
+ "host": "kserver116-27",
+ "python": "/data/apps/miniforge3/envs/uma/bin/python",
+ "pymatgen": "2026.3.23",
+ "mp_api": "0.46.1",
+ "thermo_types": [
+  "GGA_GGA+U"
+ ],
+ "correction_names_sample_Li-Ni-O": [
+  "MP2020 GGA/GGA+U mixing correction (Ni)",
+  "MP2020 anion correction (oxide)",
+  "MP2020 anion correction (ozonide)",
+  "MP2020 anion correction (peroxide)",
+  "MP2020 anion correction (superoxide)"
+ ],
+ "n_entries_sample_Li-Ni-O": 241,
+ "tools_sha16": {
+  "tools/oxidation/interface_reactivity_v2.py": "e7e261191e6db9da",
+  "tools/oxidation/sei_product_gaps.py": "f92cc6e94686192c",
+  "tools/cascade/run_axis_ncm_gabia.sh": "29ffd34db528d2e0",
+  "tools/oxidation/esw_grand_potential.py": "343a1f2f337b259b",
+  "tools/cascade/analyze_cathode_reactivity.py": "c14120c63fb50d9f"
+ },
+ "repo_head": "24305f66be913bfe6fdfc037b6b4b011e370db3c",
+ "mp_db_version_before": "2026.09.28",
+ "invocations": [
+  {
+   "started_utc": "2026-11-10T13:14:00Z",
+   "host": "kserver116-27",
+   "resume": "0",
+   "repo_head": "24305f66be913bfe6fdfc037b6b4b011e370db3c",
+   "tools_sha16": {
+    "tools/oxidation/interface_reactivity_v2.py": "e7e261191e6db9da",
+    "tools/oxidation/sei_product_gaps.py": "f92cc6e94686192c",
+    "tools/cascade/run_axis_ncm_gabia.sh": "29ffd34db528d2e0",
+    "tools/oxidation/esw_grand_potential.py": "343a1f2f337b259b",
+    "tools/cascade/analyze_cathode_reactivity.py": "c14120c63fb50d9f"
+   },
+   "pymatgen": "2026.3.23",
+   "mp_api": "0.46.1",
+   "mp_db_version_before": "2026.09.28",
+   "axis": "vol",
+   "finished_utc": "2026-11-10T13:44:02Z",
+   "mp_db_version_after": "2026.09.28"
+  },
+  {
+   "started_utc": "2026-11-10T13:46:43Z",
+   "host": "kserver116-27",
+   "resume": "0",
+   "repo_head": "24305f66be913bfe6fdfc037b6b4b011e370db3c",
+   "tools_sha16": {
+    "tools/oxidation/interface_reactivity_v2.py": "e7e261191e6db9da",
+    "tools/oxidation/sei_product_gaps.py": "f92cc6e94686192c",
+    "tools/cascade/run_axis_ncm_gabia.sh": "29ffd34db528d2e0",
+    "tools/oxidation/esw_grand_potential.py": "343a1f2f337b259b",
+    "tools/cascade/analyze_cathode_reactivity.py": "c14120c63fb50d9f"
+   },
+   "pymatgen": "2026.3.23",
+   "mp_api": "0.46.1",
+   "mp_db_version_before": "2026.09.28",
+   "axis": "win",
+   "finished_utc": "2026-11-10T13:51:29Z",
+   "mp_db_version_after": "2026.09.28"
+  }
+ ],
+ "lanes": {
+  "designs_vol": {
+   "rc": 0,
+   "rows": 273,
+   "ok": 273,
+   "duplicate_pairs": 0,
+   "volumes_refused": 9,
+   "window_crosscheck_differ": 0
+  },
+  "host_vol": {
+   "rc": 0,
+   "rows": 3,
+   "ok": 3,
+   "duplicate_pairs": 0,
+   "volumes_refused": 0,
+   "window_crosscheck_differ": 0
+  },
+  "designs_win": {
+   "rc": 0,
+   "rows": 91,
+   "ok": 91,
+   "duplicate_pairs": 0,
+   "volumes_refused": 0,
+   "window_crosscheck_differ": 0
+  },
+  "host_win": {
+   "rc": 0,
+   "rows": 1,
+   "ok": 1,
+   "duplicate_pairs": 0,
+   "volumes_refused": 0,
+   "window_crosscheck_differ": 0
+  }
+ },
+ "finished_utc": "2026-11-10T13:51:29Z",
+ "mp_db_version_after": "2026.09.28",
+ "same_mp_version": true
+}

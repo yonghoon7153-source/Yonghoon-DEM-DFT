@@ -1,0 +1,33 @@
+li2s B 측정 가능 조건 카드 ① 단계 판독 · B 650 K /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 · 대조 잡 A 600 K /data/work/runs/lpscl_glass_md_v2_2026_09_30 · n_boot 400 · 골격 네 기준 {'①_P_frac_frames_changed_max': 0.05, '②_S_moved_max': 0, '③_SS_new_pairs_max': 0, '④_S_transient_max': 5}
+도구 sha16 · glass_v2_readout.py 427a7649be56534a · msd_diffusive_check.py a2c06ce2bde2e733 · quench_ss_event.py 02d61d82e9b64cc0 · aimd_jump_stats.py 46eff8d348cb5641 · melt_quench_uma.py 47c7e0aab5d14fbd · disorder_ensemble_diffusion.py c3e2d358ee53cefa
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed1 (kgy)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed2 (gabia)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed3 (kgy)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed4 (gabia)
+  … /data/work/runs/lpscl_glass_md_v2_2026_09_30 seed5 (gabia)
+  … /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 seed1 (kgy)
+  … /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 seed2 (gabia)
+  … /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 seed3 (kgy)
+  … /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 seed4 (gabia)
+  … /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14 seed5 (gabia)
+■ B 650 K — N_B = 5/5 (C1 ∧ 최종 C2) · C2 통과 5 · 경계 0 · 미통과 0 · C1 5/5 · R 집합 [2, 4, 5] · 골격 이동 [1, 3]
+   seed1 kgy   C1 통과 (49.9 Å²) · β_MTO 0.8678 · σ 거리 끝 b256 2.931 · 앞 b192 3.62 → **통과** | 골격 이동 (① 0.00875 · ② 2 · ③ 0 · ④ 0) | N_eff 1770 · T 653.54±49.23 K · p90² 중앙 66.84 · 최대 94.29 · (d/2)² 49.24 · 초과 창 8/8
+   seed2 gabia C1 통과 (55.4 Å²) · β_MTO 0.8946 · σ 거리 끝 b256 4.149 · 앞 b192 3.286 → **통과** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 1935 · T 652.68±47.65 K · p90² 중앙 68.07 · 최대 72.32 · (d/2)² 49.43 · 초과 창 8/8
+   seed3 kgy   C1 통과 (52.3 Å²) · β_MTO 0.8759 · σ 거리 끝 b256 3.044 · 앞 b192 2.976 → **통과** | 골격 이동 (① 0.0105 · ② 2 · ③ 0 · ④ 0) | N_eff 1650 · T 654.02±47.89 K · p90² 중앙 68.13 · 최대 74.53 · (d/2)² 51.55 · 초과 창 8/8
+   seed4 gabia C1 통과 (46.6 Å²) · β_MTO 0.8733 · σ 거리 끝 b256 2.424 · 앞 b192 2.26 → **통과** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 2090 · T 651.71±49.46 K · p90² 중앙 55.5 · 최대 73.66 · (d/2)² 50.81 · 초과 창 7/8
+   seed5 gabia C1 통과 (47.9 Å²) · β_MTO 0.8820 · σ 거리 끝 b256 3.367 · 앞 b192 3.741 → **통과** | 골격 통과 (① 0.0 · ② 0 · ③ 0 · ④ 0) | N_eff 1953 · T 651.49±48.99 K · p90² 중앙 60.89 · 최대 82.81 · (d/2)² 51.48 · 초과 창 8/8
+   ⛔ 두 계 N_eff 의 비는 사실상 MSD 의 비다 (N_eff ∝ n_Li × max MSD · Li 48 대 45) — D 의 비처럼 읽지 않는다 (회신 CX)
+   B 시드 간 상대 산포 (R 집합 · 기록) n 3 · IQR/중앙 0.0963 · max/min 1.1976 · sd(ln D) 0.0975
+■ 골격 네 지표 분포 — 모든 런 (통과 포함 · 개정 CX §4) · B 650 K | A 600 K (지금 다시 읽음) | B 600 K (10-14 기록)
+   ①_P_frac (문턱 0.05): B650 [s1:0.00875 s2:0.0 s3:0.0105 s4:0.0 s5:0.0] 범위 0.0–0.0105 · 중앙 0.0 · 문턱 초과 0 | A600 [s1:0.0 s2:0.0 s3:0.006 s4:0.0 s5:0.00425] 범위 0.0–0.006 · 중앙 0.0 · 문턱 초과 0 | B600 [s1:0.0025 s2:0.0 s3:0.003 s4:0.0 s5:0.0] 범위 0.0–0.003 · 중앙 0.0 · 문턱 초과 0
+   ②_S_moved (문턱 0): B650 [s1:2 s2:0 s3:2 s4:0 s5:0] 범위 0–2 · 중앙 0 · 문턱 초과 2 | A600 [s1:0 s2:0 s3:0 s4:0 s5:0] 범위 0–0 · 중앙 0 · 문턱 초과 0 | B600 [s1:0 s2:0 s3:0 s4:0 s5:0] 범위 0–0 · 중앙 0 · 문턱 초과 0
+   ③_SS_new (문턱 0): B650 [s1:0 s2:0 s3:0 s4:0 s5:0] 범위 0–0 · 중앙 0 · 문턱 초과 0 | A600 [s1:0 s2:0 s3:0 s4:0 s5:0] 범위 0–0 · 중앙 0 · 문턱 초과 0 | B600 [s1:0 s2:0 s3:0 s4:0 s5:0] 범위 0–0 · 중앙 0 · 문턱 초과 0
+   ④_S_transient (문턱 5): B650 [s1:0 s2:0 s3:0 s4:0 s5:0] 범위 0–0 · 중앙 0 · 문턱 초과 0 | A600 [s1:0 s2:0 s3:1 s4:0 s5:2] 범위 0–2 · 중앙 0 · 문턱 초과 0 | B600 [s1:1 s2:0 s3:1 s4:0 s5:0] 범위 0–1 · 중앙 0 · 문턱 초과 0
+■ p90² 창 초과 (기록 · 게이트 아님 · 650 K 는 포화 예상): B650 [s1:8/8 s2:8/8 s3:8/8 s4:7/8 s5:8/8] 포화 4/5 | A600 [s1:6/8 s2:8/8 s3:6/8 s4:7/8 s5:7/8] 포화 1/5 | B600 [s1:6/8 s2:8/8 s3:4/8 s4:4/8 s5:3/8] 포화 1/5
+   대조 잡 ① A 600 K ↔ v2 마감: D/중앙 같음 (최대 차 0.0) · p90² 5/5 같음
+   대조 잡 ② A 600 K ↔ 10-14 판독 기록 (n_boot 400): 같음 (C1 · β · C2 · σ 거리 · 골격 네 값 · p90² 창)
+→ 갈래 (규칙 적용 · 확정은 외부 1저자): b2 (N_B = 5/5 ≥ 3) — ② 단계 A 650 K × 5 (카드 §1b · 새 GPU 공존 결정 · 예외 (7) 은 소멸) · B R 집합 3 · ⚠ B R 집합 3 < 4 — ② 를 돌려도 R 은 없다 (b2c 로 정해짐)
+   문장 (단서 안): 「같은 게이트로 a-Li₃PS₄ 유리는 650 K 에서 측정 가능했다 (N_B = 5/5 · 경계 0 · 미통과 0 · C1 5/5 · 골격 이동 2 · 600 K 는 1/5) — 이 셀 · 프로토콜에서 B 의 측정 가능 온도는 600 K 와 650 K 사이다.」
+   다음: B R 집합 3 < 4 라 ② 단계의 목적 (R) 이 이미 불가 — 카드 문자 규칙은 'N_B ≥ 3 → A 650 K' 다 · A 650 K 실행 여부는 결과 편지로 외부 1저자 확인 (새 GPU 공존 결정도 필요)
+-> /data/work/runs/lpscl_glass_bmeas_650K_2026_10_14/readout_bmeas/readout_bmeas_b.json
+rc=0

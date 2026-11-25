@@ -1,0 +1,22 @@
+{
+  "tag": "SO2_mp-aaaabpak",
+  "vbm": 0.5107,
+  "cbm": 3.0306,
+  "gap": 2.5199000000000003,
+  "verdict": "절연체",
+  "nelec": 36.0,
+  "nbnd": 32,
+  "nk": 260,
+  "spin_polarized": false,
+  "total_magnetization_bohr": 0.0,
+  "n_occ_up": 18,
+  "n_occ_dn": 18,
+  "occ_source": "no spin",
+  "qe_homo": 0.5107,
+  "qe_lumo": 3.0306,
+  "qe_check": "일치",
+  "edges_by_spin": null,
+  "n_occ_bands": 18,
+  "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+  "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators"
+}

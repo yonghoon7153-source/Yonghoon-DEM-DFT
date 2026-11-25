@@ -1,0 +1,7 @@
+[2026-10-14 02:05:48] == cascade As₂S₃ 보충 · DRY-RUN · repo 38670f5eb · /data/work/wt_cascade_as2s3_1013
+[2026-10-14 02:05:49] selftest 셋 ✓
+  안정창 대상 (rank 1): As2S3_x020_cP4baS4a_s03, As2S3_x050_cP4baCl4d_s01, As2S3_x100_cP4baS16e_s03
+  계면 조성식 As2S3:As2Cl4Li28P2S20 (종당 rank 1 첫 행 규칙)
+  JSONL 에 이미 있는 As2S3 행: cascade_interface_90.jsonl 0 · cascade_interface_li.jsonl 0 · cascade_interface_carbon.jsonl 0
+[2026-10-14 02:05:50] 계획 ① 안정창 → db/properties/oxidation_stability_cascade_as2s3_addendum_2026_10_13.json · ② 계면 LCO·LNO·LMO / Li / C → JSONL 셋에 이어 붙임 · ③ 산물 밴드갭 → db/properties/cascade_product_gaps.json 덮어씀
+[2026-10-14 02:05:50] DRY-RUN 끝 (MP 조회 0) ✅

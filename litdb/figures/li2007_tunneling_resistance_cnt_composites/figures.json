@@ -1,0 +1,100 @@
+{
+  "slug": "li2007_tunneling_resistance_cnt_composites",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-11-03",
+  "sources": [
+    "4._Dominant_role_of_tunneling_resistance_in_the_electrical_conductivity_of_carbon_nanotube_based_composites.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 2,
+      "file": "fig_1.png",
+      "caption": "FIG. 1. (Color online) Computational model of contact resistance of crossing CNTs in a composite with an insulating film in between. (a) An illustration of multilayer CNT-based composites. (b) A representative layer. (c) Intertube insulating matrix of thickness t in the contact area. (d) Two crossing CNTs of diameter d.",
+      "rotated_deg": 0,
+      "bbox": [
+        308.5,
+        488.4,
+        566.0,
+        703.3
+      ],
+      "w": 1074,
+      "h": 896,
+      "dpi": 300,
+      "src": "4._Dominant_role_of_tunneling_resistance_in_the_electrical_conductivity_of_carbon_nanotube_based_composites.pdf",
+      "blank": 0.786,
+      "caption_note": "text-layer artefacts fixed (ligatures, line-break hyphens, APL bracket glyphs) - checked against the rendered page",
+      "viewed": true
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 3,
+      "file": "fig_2.png",
+      "caption": "FIG. 2. (Color online) Contact resistance due to electric tunneling effect in CNT/epoxy or alumina composites.",
+      "rotated_deg": 0,
+      "bbox": [
+        326.0,
+        49.0,
+        549.0,
+        206.9
+      ],
+      "w": 930,
+      "h": 660,
+      "dpi": 300,
+      "src": "4._Dominant_role_of_tunneling_resistance_in_the_electrical_conductivity_of_carbon_nanotube_based_composites.pdf",
+      "blank": 0.85,
+      "caption_note": "text-layer artefacts fixed (APL bracket glyphs, ligatures, line-break hyphens) - checked against the rendered page",
+      "viewed": true
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 4,
+      "file": "fig_3.png",
+      "caption": "FIG. 3. (Color online) The dominant effect of contact resistance on the conductivity of composites.",
+      "rotated_deg": 0,
+      "bbox": [
+        74.6,
+        49.0,
+        273.7,
+        166.2
+      ],
+      "w": 831,
+      "h": 490,
+      "dpi": 300,
+      "src": "4._Dominant_role_of_tunneling_resistance_in_the_electrical_conductivity_of_carbon_nanotube_based_composites.pdf",
+      "blank": 0.896,
+      "caption_note": "text-layer artefacts fixed (APL bracket glyphs, ligatures, line-break hyphens) - checked against the rendered page",
+      "viewed": true
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 4,
+      "file": "fig_4.png",
+      "caption": "FIG. 4. (Color online) The effects of contact resistance and CNT content on the conductivity of composite films.",
+      "rotated_deg": 0,
+      "bbox": [
+        62.4,
+        575.8,
+        285.7,
+        738.7
+      ],
+      "w": 932,
+      "h": 680,
+      "dpi": 300,
+      "src": "4._Dominant_role_of_tunneling_resistance_in_the_electrical_conductivity_of_carbon_nanotube_based_composites.pdf",
+      "blank": 0.866,
+      "caption_note": "text-layer artefacts fixed (ligatures, line-break hyphens, APL bracket glyphs) - checked against the rendered page",
+      "viewed": true
+    }
+  ],
+  "missing_labels": []
+}

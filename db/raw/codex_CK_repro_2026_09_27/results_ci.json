@@ -1,0 +1,504 @@
+{
+  "identity": {
+    "manifest": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+    "tool": "1d0f4566ab93694c39a3031d041a4751383c5df23db8eacc84e079fc176424be",
+    "verified_files": 93
+  },
+  "positive_sealed": {
+    "G3": {
+      "threshold": 0.01,
+      "d3_g3_budget": 0.001,
+      "dW_i": 0.00500000039287779,
+      "d3_diffdiff_i": -2.5124738400883473e-08,
+      "dW_ii": 0.009000000707176492,
+      "d3_diffdiff_ii": -6.332975371892147e-07,
+      "status": "PASS"
+    },
+    "G4": {
+      "e70": {
+        "variant": "ENCUT 650",
+        "W": 0.5099999996646999,
+        "dW": 0.009999999993421549,
+        "d3_same_geom_diff_eV": {
+          "bound": 0.0,
+          "far": 0.0
+        },
+        "status": "PASS"
+      },
+      "k1": {
+        "variant": "k 4×3×1",
+        "W": 0.48999999967784774,
+        "dW": -0.009999999993430597,
+        "d3_same_geom_diff_eV": {
+          "bound": 0.0,
+          "far": 0.0
+        },
+        "status": "PASS"
+      },
+      "s05": {
+        "variant": "SIGMA ½",
+        "W": 0.49999999967127834,
+        "dW": 0.0,
+        "d3_same_geom_diff_eV": {
+          "bound": 0.0,
+          "far": 0.0
+        },
+        "status": "PASS"
+      },
+      "status": "PASS"
+    },
+    "G5": {
+      "Delta_J_m2": {
+        "①": -7.834865839440042e-08,
+        "②": 3.3125236065245645e-07,
+        "③": -7.472426765686713e-07,
+        "④": 4.568607652744028e-07,
+        "⑤": -4.5533282022613975e-07
+      },
+      "group_mean": {
+        "s_outer": -6.74763726560279e-08,
+        "li_outer": -1.4519095564713425e-07
+      },
+      "per_sample_max": 0.1,
+      "group_mean_max": 0.05,
+      "uma_errors": [],
+      "overall_mean_info": -9.856220585247044e-08,
+      "raw_error_criteria_met": true,
+      "pp_registry_validated": true,
+      "usage_eligible": true,
+      "note": "①·⑤ 는 far 를 공유 — 독립 5 회 검증이 아니다 · ±0.10/±0.05 를 새 계면의 신뢰구간으로 옮기지 않는다 · PASS ≠ DEM 전달 승인 (카드 DEM 합의 별도)",
+      "status": "PASS",
+      "residual_endpoint_diag_3b_prime": {
+        "dDelta_J_m2": {
+          "i": 2.551761540958708e-08,
+          "ii": 6.340047127850745e-07
+        },
+        "⚠": "진단 기록 (3b′ · 비준 전 · 판정 아님) — δΔ = δW_PBE − δW_UMA"
+      }
+    },
+    "rc": 0,
+    "jobs_not_ok": []
+  },
+  "positive_cli": {
+    "rc": 0,
+    "tail": "  ① W 0.49999999967127834 · W_PBE -0.04106707820934746 · ΔD3 0.5410670778806258 · D3 쌍 오차 7.801994161837911e-08 · 총 W 인용 True\n  ② W 0.49999999967127834 · W_PBE -0.04678217934418122 · ΔD3 0.5467821790154596 · D3 쌍 오차 -3.3158108359021554e-07 · 총 W 인용 True\n  ③ W 0.49999999967127834 · W_PBE -0.09077411684705589 · ΔD3 0.5907741165183342 · D3 쌍 오차 7.469139564619809e-07 · 총 W 인용 True\n  ④ W 0.49999999967127834 · W_PBE -0.0913358812591723 · ΔD3 0.5913358809304506 · D3 쌍 오차 -4.571894925975428e-07 · 총 W 인용 True\n  ⑤ W 0.4499999997041523 · W_PBE 0.04309082063817243 · ΔD3 0.40690917906597984 · D3 쌍 오차 4.5503696843862684e-07 · 총 W 인용 True\n  G3 PASS · G4 PASS · G5 PASS · 미완 [] · 등록부 검증됨\n"
+  },
+  "pilot_replaced_id": {
+    "status": "PILOT_NOT_SEALED",
+    "unsealed_status": "OK",
+    "cli": {
+      "rc": 3,
+      "tail": "  ① W None · W_PBE None · ΔD3 None · D3 쌍 오차 None · 총 W 인용 False · D3 쌍 오차 미산출 / G3 INCOMPLETE / G4 INCOMPLETE\n  ② W 0.49999999967127834 · W_PBE -0.04678217934418122 · ΔD3 0.5467821790154596 · D3 쌍 오차 -3.3158108359021554e-07 · 총 W 인용 False · G3 INCOMPLETE / G4 INCOMPLETE\n  ③ W 0.49999999967127834 · W_PBE -0.09077411684705589 · ΔD3 0.5907741165183342 · D3 쌍 오차 7.469139564619809e-07 · 총 W 인용 False · G3 INCOMPLETE / G4 INCOMPLETE\n  ④ W 0.49999999967127834 · W_PBE -0.0913358812591723 · ΔD3 0.5913358809304506 · D3 쌍 오차 -4.571894925975428e-07 · 총 W 인용 False · G3 INCOMPLETE / G4 INCOMPLETE\n  ⑤ W None · W_PBE None · ΔD3 None · D3 쌍 오차 None · 총 W 인용 False · D3 쌍 오차 미산출 / G3 INCOMPLETE / G4 INCOMPLETE\n  G3 INCOMPLETE · G4 INCOMPLETE · G5 INCOMPLETE (분모 5 고정 · 교체 금지) · 미완 ['V5_s_outer_A_far'] · 등록부 검증됨\n"
+    }
+  },
+  "pilot_same_id_changed_output": {
+    "status": "PILOT_NOT_SEALED",
+    "unsealed_status": "OK",
+    "cli": {
+      "rc": 3,
+      "tail": "  ① W None · W_PBE None · ΔD3 None · D3 쌍 오차 None · 총 W 인용 False · D3 쌍 오차 미산출 / G3 INCOMPLETE / G4 INCOMPLETE\n  ② W 0.49999999967127834 · W_PBE -0.04678217934418122 · ΔD3 0.5467821790154596 · D3 쌍 오차 -3.3158108359021554e-07 · 총 W 인용 False · G3 INCOMPLETE / G4 INCOMPLETE\n  ③ W 0.49999999967127834 · W_PBE -0.09077411684705589 · ΔD3 0.5907741165183342 · D3 쌍 오차 7.469139564619809e-07 · 총 W 인용 False · G3 INCOMPLETE / G4 INCOMPLETE\n  ④ W 0.49999999967127834 · W_PBE -0.0913358812591723 · ΔD3 0.5913358809304506 · D3 쌍 오차 -4.571894925975428e-07 · 총 W 인용 False · G3 INCOMPLETE / G4 INCOMPLETE\n  ⑤ W None · W_PBE None · ΔD3 None · D3 쌍 오차 None · 총 W 인용 False · D3 쌍 오차 미산출 / G3 INCOMPLETE / G4 INCOMPLETE\n  G3 INCOMPLETE · G4 INCOMPLETE · G5 INCOMPLETE (분모 5 고정 · 교체 금지) · 미완 ['V5_s_outer_A_far'] · 등록부 검증됨\n"
+    }
+  },
+  "titel_paths": {
+    "prefix1_rc1": {
+      "status": "OK",
+      "attempt": "r1",
+      "r1_ignored": null,
+      "conflicts": null
+    },
+    "prefix3_rc1": {
+      "status": "OK",
+      "attempt": "r1",
+      "r1_ignored": null,
+      "conflicts": null
+    },
+    "wrong_order_rc1": {
+      "status": "POTCAR_MISMATCH",
+      "attempt": "0",
+      "r1_ignored": "첫 시도 상태 POTCAR_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+      "conflicts": [
+        "POTCAR_MISMATCH: OUTCAR TITEL ['PAW_PBE P 06Sep2000', 'PAW_PBE Li_sv 10Sep2004'] ≠ POTCAR.titel ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000', 'PAW_PBE S 06Sep2000', 'PAW_PBE Cl 06Sep2000', 'PAW_PBE Ag 02Apr2005'] (접두 아님 — 다른 종·날짜·순서·추가)"
+      ]
+    },
+    "wrong_date_rc1": {
+      "status": "POTCAR_MISMATCH",
+      "attempt": "0",
+      "r1_ignored": "첫 시도 상태 POTCAR_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+      "conflicts": [
+        "POTCAR_MISMATCH: OUTCAR TITEL ['PAW_PBE Li_sv 10Sep2099'] ≠ POTCAR.titel ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000', 'PAW_PBE S 06Sep2000', 'PAW_PBE Cl 06Sep2000', 'PAW_PBE Ag 02Apr2005'] (접두 아님 — 다른 종·날짜·순서·추가)"
+      ]
+    },
+    "extra_species_rc1": {
+      "status": "POTCAR_MISMATCH",
+      "attempt": "0",
+      "r1_ignored": "첫 시도 상태 POTCAR_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+      "conflicts": [
+        "POTCAR_MISMATCH: OUTCAR TITEL ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000', 'PAW_PBE S 06Sep2000', 'PAW_PBE Cl 06Sep2000', 'PAW_PBE Ag 02Apr2005', 'PAW_PBE Fe 06Sep2000'] ≠ POTCAR.titel ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000', 'PAW_PBE S 06Sep2000', 'PAW_PBE Cl 06Sep2000', 'PAW_PBE Ag 02Apr2005'] (접두 아님 — 다른 종·날짜·순서·추가)"
+      ]
+    },
+    "half_line_rc1": {
+      "status": "TITEL_TRUNCATED",
+      "attempt": "0",
+      "r1_ignored": "첫 시도 상태 TITEL_TRUNCATED 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+      "conflicts": [
+        "TITEL_TRUNCATED: OUTCAR 마지막 TITEL 'PAW_PBE Li_sv 10Sep' 이 기대 'PAW_PBE Li_sv 10Sep2004' 의 앞부분 문자열 — 잘린 줄일 수 있어 **자동 확인 불가** (모순 확정 아님 · 통과·재시도 자격 없음 · 원문 확인·새 승인으로만 해제)"
+      ]
+    },
+    "successful_prefix2": {
+      "status": "POTCAR_UNVERIFIED",
+      "attempt": "0",
+      "r1_ignored": "첫 시도 상태 POTCAR_UNVERIFIED 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+      "conflicts": null
+    }
+  },
+  "r1_seal_reuse": {
+    "fresh_registry": "OK",
+    "old_registry": "PILOT_NOT_SEALED",
+    "selected_attempt": "r1"
+  },
+  "contradiction_not_rescued": {
+    "encut400_rc1": {
+      "status": "SETTINGS_MISMATCH",
+      "r1_ignored": "첫 시도 상태 SETTINGS_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)"
+    },
+    "encut400_nonconv": {
+      "status": "SETTINGS_MISMATCH",
+      "r1_ignored": "첫 시도 상태 SETTINGS_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)"
+    },
+    "other_pp_rc1": {
+      "status": "POTCAR_INCONSISTENT",
+      "r1_ignored": null
+    }
+  },
+  "empty_final_records": {
+    "TOTEN": {
+      "status": "ENERGY_UNPARSEABLE",
+      "parsed": {
+        "TOTEN_eV": null,
+        "E_sigma0_eV": -993.6845255,
+        "E_noentropy_eV": -993.6795255,
+        "Edisp_eV": -56.49371
+      }
+    },
+    "sigma0": {
+      "status": "ENERGY_UNPARSEABLE",
+      "parsed": {
+        "TOTEN_eV": -993.6895255,
+        "E_sigma0_eV": null,
+        "E_noentropy_eV": -993.6795255,
+        "Edisp_eV": -56.49371
+      }
+    },
+    "noentropy": {
+      "status": "OK",
+      "parsed": {
+        "TOTEN_eV": -993.6895255,
+        "E_sigma0_eV": -993.6845255,
+        "E_noentropy_eV": null,
+        "Edisp_eV": -56.49371
+      }
+    },
+    "Edisp": {
+      "status": "D3_UNVERIFIED",
+      "parsed": {
+        "TOTEN_eV": -993.6895255,
+        "E_sigma0_eV": -993.6845255,
+        "E_noentropy_eV": -993.6795255,
+        "Edisp_eV": null
+      }
+    },
+    "Edisp_nextline": {
+      "status": "D3_UNVERIFIED",
+      "parsed": {
+        "TOTEN_eV": -993.6895255,
+        "E_sigma0_eV": -993.6845255,
+        "E_noentropy_eV": -993.6795255,
+        "Edisp_eV": null
+      }
+    }
+  },
+  "actual_raw_outcar": {
+    "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+    "TOTEN_eV": -1151.29778848,
+    "E_sigma0_eV": -1151.29228248,
+    "Edisp_eV": -28.80731
+  },
+  "actual_dipol_evidence": [
+    [
+      "min pos cut 520/560"
+    ],
+    []
+  ],
+  "runner_positive": {
+    "rc": 0,
+    "members": [
+      "MANIFEST.sha256",
+      "run/env.txt",
+      "run/status.tsv",
+      "run/V5_s_outer_A_bound/IBZKPT",
+      "run/V5_s_outer_A_bound/INCAR",
+      "run/V5_s_outer_A_bound/KPOINTS",
+      "run/V5_s_outer_A_bound/OSZICAR",
+      "run/V5_s_outer_A_bound/OUTCAR",
+      "run/V5_s_outer_A_bound/POSCAR",
+      "run/V5_s_outer_A_bound/POTCAR.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.titel",
+      "run/V5_s_outer_A_bound/attempt.json",
+      "run/V5_s_outer_A_bound/stdout.log",
+      "run/V5_s_outer_A_far/IBZKPT",
+      "run/V5_s_outer_A_far/INCAR",
+      "run/V5_s_outer_A_far/KPOINTS",
+      "run/V5_s_outer_A_far/OSZICAR",
+      "run/V5_s_outer_A_far/OUTCAR",
+      "run/V5_s_outer_A_far/POSCAR",
+      "run/V5_s_outer_A_far/POTCAR.sha256",
+      "run/V5_s_outer_A_far/POTCAR.species.sha256",
+      "run/V5_s_outer_A_far/POTCAR.titel",
+      "run/V5_s_outer_A_far/attempt.json",
+      "run/V5_s_outer_A_far/stdout.log"
+    ],
+    "forbidden": [],
+    "tail": "✓ V5_s_outer_A_bound\n✓ V5_s_outer_A_far\n✅ 끝 — V5_vasp_return.tgz 와 .sha256 을 보내 주세요\n"
+  },
+  "runner_seal_reuse": {
+    "V5_s_outer_A_bound": "OK",
+    "V5_s_outer_A_far": "OK"
+  },
+  "runner_sha_check": {
+    "rc": 0,
+    "output": "V5_vasp_return.tgz: OK\n",
+    "stderr": ""
+  },
+  "runner_pack_only": {
+    "result": {
+      "rc": 0,
+      "members": [
+        "MANIFEST.sha256",
+        "run/env.txt",
+        "run/status.tsv",
+        "run/V5_s_outer_A_bound/IBZKPT",
+        "run/V5_s_outer_A_bound/INCAR",
+        "run/V5_s_outer_A_bound/KPOINTS",
+        "run/V5_s_outer_A_bound/OSZICAR",
+        "run/V5_s_outer_A_bound/OUTCAR",
+        "run/V5_s_outer_A_bound/POSCAR",
+        "run/V5_s_outer_A_bound/POTCAR.sha256",
+        "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+        "run/V5_s_outer_A_bound/POTCAR.titel",
+        "run/V5_s_outer_A_bound/attempt.json",
+        "run/V5_s_outer_A_bound/stdout.log",
+        "run/V5_s_outer_A_far/IBZKPT",
+        "run/V5_s_outer_A_far/INCAR",
+        "run/V5_s_outer_A_far/KPOINTS",
+        "run/V5_s_outer_A_far/OSZICAR",
+        "run/V5_s_outer_A_far/OUTCAR",
+        "run/V5_s_outer_A_far/POSCAR",
+        "run/V5_s_outer_A_far/POTCAR.sha256",
+        "run/V5_s_outer_A_far/POTCAR.species.sha256",
+        "run/V5_s_outer_A_far/POTCAR.titel",
+        "run/V5_s_outer_A_far/attempt.json",
+        "run/V5_s_outer_A_far/stdout.log"
+      ],
+      "forbidden": [],
+      "tail": "✅ 포장만 다시 했다 — V5_vasp_return.tgz 와 .sha256 을 보내 주세요 (계산은 다시 돌리지 않았다)\n"
+    },
+    "files_unchanged": true,
+    "reported": [
+      "run/V5_s_outer_A_far/CHG",
+      "run/V5_s_outer_A_far/CHGCAR",
+      "run/V5_s_outer_A_far/POTCAR",
+      "run/V5_s_outer_A_far/WAVECAR",
+      "run/V5_s_outer_A_far/vasprun.xml"
+    ]
+  },
+  "runner_partial_pp_failure": {
+    "result": {
+      "rc": 1,
+      "members": [
+        "MANIFEST.sha256",
+        "run/env.txt",
+        "run/status.tsv",
+        "run/V5_s_outer_A_bound/INCAR",
+        "run/V5_s_outer_A_bound/KPOINTS",
+        "run/V5_s_outer_A_bound/POSCAR",
+        "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+        "run/V5_s_outer_A_far/INCAR",
+        "run/V5_s_outer_A_far/KPOINTS",
+        "run/V5_s_outer_A_far/POSCAR",
+        "run/V5_s_outer_A_far/POTCAR.species.sha256"
+      ],
+      "forbidden": [],
+      "tail": "⛔ POTCAR P 없음\n⛔ V5_s_outer_A_bound 준비 실패 (기존 폴더 · 입력 · POTCAR) — 재시도 대상 아님\n⛔ POTCAR P 없음\n⛔ V5_s_outer_A_far 준비 실패 (기존 폴더 · 입력 · POTCAR) — 재시도 대상 아님\n⚠ 일부 잡 실패 — 그대로 반송해 주세요 (실패도 기록입니다)\n"
+    },
+    "potcar_left": []
+  },
+  "find_failure": {
+    "rc": 4,
+    "members": [
+      "MANIFEST.sha256",
+      "run/env.txt",
+      "run/status.tsv",
+      "run/V5_s_outer_A_bound/IBZKPT",
+      "run/V5_s_outer_A_bound/INCAR",
+      "run/V5_s_outer_A_bound/KPOINTS",
+      "run/V5_s_outer_A_bound/OSZICAR",
+      "run/V5_s_outer_A_bound/OUTCAR",
+      "run/V5_s_outer_A_bound/POSCAR",
+      "run/V5_s_outer_A_bound/POTCAR.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.titel",
+      "run/V5_s_outer_A_bound/attempt.json",
+      "run/V5_s_outer_A_bound/stdout.log",
+      "run/V5_s_outer_A_far/IBZKPT",
+      "run/V5_s_outer_A_far/INCAR",
+      "run/V5_s_outer_A_far/KPOINTS",
+      "run/V5_s_outer_A_far/OSZICAR",
+      "run/V5_s_outer_A_far/OUTCAR",
+      "run/V5_s_outer_A_far/POSCAR",
+      "run/V5_s_outer_A_far/POTCAR.sha256",
+      "run/V5_s_outer_A_far/POTCAR.species.sha256",
+      "run/V5_s_outer_A_far/POTCAR.titel",
+      "run/V5_s_outer_A_far/attempt.json",
+      "run/V5_s_outer_A_far/stdout.log"
+    ],
+    "forbidden": [],
+    "tail": "⛔ 포장: run/ 열거 실패\n⛔ 포장 실패 — 디스크·권한을 확인한 뒤 PACK_ONLY=1 로 다시\nREVIEW_FIND_FAILURE\n",
+    "old_pair_preserved": true
+  },
+  "sort_failure": {
+    "rc": 4,
+    "members": [
+      "MANIFEST.sha256",
+      "run/env.txt",
+      "run/status.tsv",
+      "run/V5_s_outer_A_bound/IBZKPT",
+      "run/V5_s_outer_A_bound/INCAR",
+      "run/V5_s_outer_A_bound/KPOINTS",
+      "run/V5_s_outer_A_bound/OSZICAR",
+      "run/V5_s_outer_A_bound/OUTCAR",
+      "run/V5_s_outer_A_bound/POSCAR",
+      "run/V5_s_outer_A_bound/POTCAR.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.titel",
+      "run/V5_s_outer_A_bound/attempt.json",
+      "run/V5_s_outer_A_bound/stdout.log",
+      "run/V5_s_outer_A_far/IBZKPT",
+      "run/V5_s_outer_A_far/INCAR",
+      "run/V5_s_outer_A_far/KPOINTS",
+      "run/V5_s_outer_A_far/OSZICAR",
+      "run/V5_s_outer_A_far/OUTCAR",
+      "run/V5_s_outer_A_far/POSCAR",
+      "run/V5_s_outer_A_far/POTCAR.sha256",
+      "run/V5_s_outer_A_far/POTCAR.species.sha256",
+      "run/V5_s_outer_A_far/POTCAR.titel",
+      "run/V5_s_outer_A_far/attempt.json",
+      "run/V5_s_outer_A_far/stdout.log"
+    ],
+    "forbidden": [],
+    "tail": "⛔ 포장: 정렬 실패\n⛔ 포장 실패 — 디스크·권한을 확인한 뒤 PACK_ONLY=1 로 다시\nREVIEW_SORT_FAILURE\n",
+    "old_pair_preserved": true
+  },
+  "tar_create_failure": {
+    "rc": 4,
+    "members": [
+      "MANIFEST.sha256",
+      "run/env.txt",
+      "run/status.tsv",
+      "run/V5_s_outer_A_bound/IBZKPT",
+      "run/V5_s_outer_A_bound/INCAR",
+      "run/V5_s_outer_A_bound/KPOINTS",
+      "run/V5_s_outer_A_bound/OSZICAR",
+      "run/V5_s_outer_A_bound/OUTCAR",
+      "run/V5_s_outer_A_bound/POSCAR",
+      "run/V5_s_outer_A_bound/POTCAR.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.titel",
+      "run/V5_s_outer_A_bound/attempt.json",
+      "run/V5_s_outer_A_bound/stdout.log",
+      "run/V5_s_outer_A_far/IBZKPT",
+      "run/V5_s_outer_A_far/INCAR",
+      "run/V5_s_outer_A_far/KPOINTS",
+      "run/V5_s_outer_A_far/OSZICAR",
+      "run/V5_s_outer_A_far/OUTCAR",
+      "run/V5_s_outer_A_far/POSCAR",
+      "run/V5_s_outer_A_far/POTCAR.sha256",
+      "run/V5_s_outer_A_far/POTCAR.species.sha256",
+      "run/V5_s_outer_A_far/POTCAR.titel",
+      "run/V5_s_outer_A_far/attempt.json",
+      "run/V5_s_outer_A_far/stdout.log"
+    ],
+    "forbidden": [],
+    "tail": "⛔ 포장: tar 실패\n⛔ 포장 실패 — 디스크·권한을 확인한 뒤 PACK_ONLY=1 로 다시\nREVIEW_TAR_CREATE_FAILURE\n",
+    "old_pair_preserved": true
+  },
+  "tar_list_failure": {
+    "rc": 4,
+    "members": [
+      "MANIFEST.sha256",
+      "run/env.txt",
+      "run/status.tsv",
+      "run/V5_s_outer_A_bound/IBZKPT",
+      "run/V5_s_outer_A_bound/INCAR",
+      "run/V5_s_outer_A_bound/KPOINTS",
+      "run/V5_s_outer_A_bound/OSZICAR",
+      "run/V5_s_outer_A_bound/OUTCAR",
+      "run/V5_s_outer_A_bound/POSCAR",
+      "run/V5_s_outer_A_bound/POTCAR.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.titel",
+      "run/V5_s_outer_A_bound/attempt.json",
+      "run/V5_s_outer_A_bound/stdout.log",
+      "run/V5_s_outer_A_far/IBZKPT",
+      "run/V5_s_outer_A_far/INCAR",
+      "run/V5_s_outer_A_far/KPOINTS",
+      "run/V5_s_outer_A_far/OSZICAR",
+      "run/V5_s_outer_A_far/OUTCAR",
+      "run/V5_s_outer_A_far/POSCAR",
+      "run/V5_s_outer_A_far/POTCAR.sha256",
+      "run/V5_s_outer_A_far/POTCAR.species.sha256",
+      "run/V5_s_outer_A_far/POTCAR.titel",
+      "run/V5_s_outer_A_far/attempt.json",
+      "run/V5_s_outer_A_far/stdout.log"
+    ],
+    "forbidden": [],
+    "tail": "⛔ 포장: 묶음 구성원 열람 실패 — 검사할 수 없으면 보내지 않는다\n⛔ 포장 실패 — 디스크·권한을 확인한 뒤 PACK_ONLY=1 로 다시\nREVIEW_TAR_LIST_FAILURE\n",
+    "old_pair_preserved": true
+  },
+  "second_mv_failure": {
+    "rc": 4,
+    "members": [
+      "MANIFEST.sha256",
+      "run/env.txt",
+      "run/status.tsv",
+      "run/V5_s_outer_A_bound/IBZKPT",
+      "run/V5_s_outer_A_bound/INCAR",
+      "run/V5_s_outer_A_bound/KPOINTS",
+      "run/V5_s_outer_A_bound/OSZICAR",
+      "run/V5_s_outer_A_bound/OUTCAR",
+      "run/V5_s_outer_A_bound/POSCAR",
+      "run/V5_s_outer_A_bound/POTCAR.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.species.sha256",
+      "run/V5_s_outer_A_bound/POTCAR.titel",
+      "run/V5_s_outer_A_bound/attempt.json",
+      "run/V5_s_outer_A_bound/stdout.log",
+      "run/V5_s_outer_A_far/IBZKPT",
+      "run/V5_s_outer_A_far/INCAR",
+      "run/V5_s_outer_A_far/KPOINTS",
+      "run/V5_s_outer_A_far/OSZICAR",
+      "run/V5_s_outer_A_far/OUTCAR",
+      "run/V5_s_outer_A_far/POSCAR",
+      "run/V5_s_outer_A_far/POTCAR.sha256",
+      "run/V5_s_outer_A_far/POTCAR.species.sha256",
+      "run/V5_s_outer_A_far/POTCAR.titel",
+      "run/V5_s_outer_A_far/attempt.json",
+      "run/V5_s_outer_A_far/stdout.log"
+    ],
+    "forbidden": [],
+    "tail": "⛔ 포장: 승격(mv) 실패 — 새 tgz + 옛 sha 가 남을 수 있다 · sha256sum -c 로 확인\n⛔ 포장 실패 — 디스크·권한을 확인한 뒤 PACK_ONLY=1 로 다시\nREVIEW_MV_FAILURE\n",
+    "old_pair_preserved": false
+  },
+  "done": {
+    "note": "Synthetic calculations only; source unchanged; temporary fixtures removed on exit."
+  }
+}

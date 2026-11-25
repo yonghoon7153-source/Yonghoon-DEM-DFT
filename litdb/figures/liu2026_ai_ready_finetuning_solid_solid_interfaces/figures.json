@@ -1,0 +1,91 @@
+{
+ "slug": "liu2026_ai_ready_finetuning_solid_solid_interfaces",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-09",
+ "sources": [
+  "a9f742ec-94._An_AIready_finetuning_framework_for_accurate_MLIPs_in_solidsolid_battery_interfaces.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Overview of the FIRE framework: (A) comparison between from-scratch training and fine-tuning paradigms; (B) replay-augmented continual fine-tuning strategy that lever- ages both pretraining and task-specific datasets; (C) efficient sampling workflow, including a pre-fine-tuned model for robust MD generation, dimensionality reduction, and diversity- based selection of representative configurations.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    79.0,
+    612.0,
+    618.7
+   ],
+   "w": 2550,
+   "h": 2249,
+   "dpi": 300,
+   "src": "a9f742ec-94._An_AIready_finetuning_framework_for_accurate_MLIPs_in_solidsolid_battery_interfaces.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Model evaluation of the FIRE approach: (A) atomic configurations of the six bat- tery materials studied in this work, from left to right: Na/Na3SbS4, LiCl/GaF3, Li2CO3/LiF, Li3PS4/Li3B11O18, Li/Li6PS5Cl, and Li7La3Zr2–xMxO12 (M = Ta, Nb); (B) the corresponding force predicted by fine-tuned model with respect to that of DFT calculation; (C) model evaluation via RMSE for energy and force, respectively. For comparison, results collected from literature and vanilla fine-tuning are shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.3,
+    118.3,
+    612.0,
+    548.9
+   ],
+   "w": 2382,
+   "h": 1796,
+   "dpi": 300,
+   "src": "a9f742ec-94._An_AIready_finetuning_framework_for_accurate_MLIPs_in_solidsolid_battery_interfaces.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Data efficiency of the FIRE approach: (A–B) PCA projections of sampled config- urations for Na/Na3SbS4 and Li7La3Zr2–xMxO12 (M = Ta, Nb), showing broader structural coverage with increasing dataset size; (C–D) data-efficiency benchmarks: replay-argumented fine-tuning achieves the lowest energy and force errors with reduced computational cost, out- performing vanilla fine-tuning, random sampling, and from-scratch training.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    92.5,
+    612.0,
+    607.6
+   ],
+   "w": 2550,
+   "h": 2147,
+   "dpi": 300,
+   "src": "a9f742ec-94._An_AIready_finetuning_framework_for_accurate_MLIPs_in_solidsolid_battery_interfaces.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4: Property predictions from FIRE-generated fine-tuned MLIP models. (A) First column: Optimized structures of T Na3SbS4, LLZTO, and LPSCl. Second column: Mean square displacement (MSD) curves from MACE-MD simulations at relevant temperatures. Third column: Room-temperature impedance spectra with equivalent circuit fits. (B) Comparison of predicted Young’s modulus and Poisson’s ratio against experimental values. Young’s modulus was obtained by spatially averaging AFM nanomechanical maps. Refer- ence values of Poisson’s ratios are taken from: T Na3SbS4,55 LLZTO,56 and LPSCl.3 (C) Scaling of MD wall time per simulation step. MLIP-based MD maintains nearly constant cost up to 3456 atoms, in contrast to the cubic scaling behavior of VASP-based MD.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    167.9,
+    546.2,
+    484.1
+   ],
+   "w": 2001,
+   "h": 1319,
+   "dpi": 300,
+   "src": "a9f742ec-94._An_AIready_finetuning_framework_for_accurate_MLIPs_in_solidsolid_battery_interfaces.pdf",
+   "blank": 0.76
+  }
+ ]
+}

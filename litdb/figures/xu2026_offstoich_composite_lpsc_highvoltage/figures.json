@@ -1,0 +1,613 @@
+{
+ "slug": "xu2026_offstoich_composite_lpsc_highvoltage",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-27",
+ "sources": [
+  "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+  "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic illustration of precursor-stoichiometry-driven composite-phase reconstruction in CP-LPSC-x. Regulation of the Li2S-P2S5-LiCl precursor ratio generates a composite sulfide electrolyte consisting of a Cl-rich LPSC-like matrix, a P2S6 4−-containing thiophosphate secondary phase, and LiCl, thereby promoting Li+ transport, electrolyte densification, reduced electronic conductivity, and high-voltage cathode-side interfacial stability. 2",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    381.8,
+    565.7,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1375,
+   "dpi": 300,
+   "src": "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.651
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Phase evolution and thiophosphate-framework reconstruction regulated by local stoichiometry in CP-LPSC-x electrolytes. (a) XRD patterns of nominal Li6- xPS5-xCl1+x samples with x = 0, 0.1, 0.3, 0.5, and 0.7. The enlarged region highlights the evolution of non-argyrodite secondary-phase reflections and LiCl-related reflections, marked by asterisks and triangles, respectively. (b) Raman spectra and the enlarged region showing the evolution of the P2S6 4−-related band. (c,d) S 2p and P 2p XPS spectra showing the composition-dependent evolution of PS4 3−-related and P2S6 4−-related species. (e) Relative peak-area fractions of PS4 3−-related and P2S6 4−-related species extracted from the S 2p and P 2p XPS fitting results. 3",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    238.0,
+    565.8,
+    692.6
+   ],
+   "w": 2227,
+   "h": 1895,
+   "dpi": 300,
+   "src": "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.803
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Densification behavior, transport properties, and local structural evolution of CP-LPSC-x electrolytes. (a-c) Surface SEM images of cold-pressed LPSC, CP- LPSC-0.1, and CP-LPSC-0.5 electrolyte pellets prepared at 500 MPa. (d) Nyquist plots of CP-LPSC-x electrolytes with x = 0, 0.1, 0.3, 0.5, and 0.7 at 30 ◦C. (e) Ionic and electronic conductivities of the CP-LPSC-x series at 30 ◦C. (f) Arrhenius plots of ionic conductivity measured from 40 to 80 ◦C. (g) 7Li MAS NMR spectra of LPSC and CP-LPSC-0.5. (h) 31P MAS NMR spectra of LPSC and CP-LPSC-0.5, showing the retained Cl-rich LPSC-like phosphorus environment and the emergence of P2S6 4−-related phosphorus environments in CP-LPSC-0.5. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    302.5,
+    565.8,
+    692.6
+   ],
+   "w": 2227,
+   "h": 1626,
+   "dpi": 300,
+   "src": "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.674
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Electrochemical performance of all-solid-state cells assembled with a Li–In alloy anode, a single-crystal NCM811 composite cathode, and either LPSC or CP- LPSC-0.5 as the solid electrolyte. (a) Initial charge-discharge profiles at 0.1C with an upper cutoff voltage of 4.3 V vs. Li+/Li. (b) Corresponding dQ dV−1 profiles during the initial charge-discharge process. (c) Long-term cycling performance at 0.5C under a 4.3 V cutoff voltage. (d) Long-term cycling performance at 1C under a 4.3 V cutoff voltage. (e) EIS spectra collected after 100 cycles. (f) Rate performance from 0.1C to 3C and subsequent recovery at 0.1C. (g) Long-term cycling per­ formance at 1C under a 4.5 V cutoff voltage. (h) Comparison of initial discharge capacity at 1C and capacity retention after 500 cycles at 1C for the CP-LPSC-0.5- based cells and representative reported sulfide-electrolyte-based all-solid-stat",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    293.8,
+    565.8,
+    673.4
+   ],
+   "w": 2227,
+   "h": 1582,
+   "dpi": 300,
+   "src": "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Dynamic interfacial kinetics and Li+ transport behavior of all-solid-state cells assembled with a Li–In alloy anode, a single-crystal NCM811 composite cathode, and either LPSC or CP-LPSC-0.5 as the solid electrolyte. (a,b) Operando EIS spectra collected during the initial charge-discharge process. (c,d) Two- dimensional DRT heat maps converted from the operando EIS data, showing the evolution of impedance contributions over different relaxation-time regions as a function of cell voltage. (e) GITT voltage profiles. (f) Apparent Li+ diffusion coefficients derived from the GITT measurements as a function of state of charge. (g) State-of-charge-dependent internal resistance extracted from the GITT profiles. 7",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    348.6,
+    565.8,
+    689.4
+   ],
+   "w": 2227,
+   "h": 1421,
+   "dpi": 300,
+   "src": "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Cathode-side interfacial chemical evolution and structural integrity of composite cathodes in LPSC-based and CP-LPSC-0.5-based all-solid-state cells. (a,b) The S 2p and P 2p XPS spectra collected from the cathode side after cycling. (c) SEM and BSE images of LPSC-based and CP-LPSC-0.5-containing composite cathodes before cycling and after 100 cycles. (d,e) Raman spectra collected from the cathode side after the first charge and subsequent discharge. (f) High-resolution S 2p XPS spectra of the LPSC-based cell after charge to 4.5 V vs. Li+/Li and discharge to 2.8 V vs. Li+/Li. (g) High-resolution S 2p XPS spectra of the CP-LPSC-0.5-based cell after charge to 4.5 V vs. Li+/Li and discharge to 2.8 V vs. Li+/Li; S-SEE denotes the combined sulfide-electrolyte-derived sulfur contribution used for comparison with P2Sn-related species. examined at selected charge and discharge states [28]",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.1,
+    566.0,
+    322.0
+   ],
+   "w": 2228,
+   "h": 1134,
+   "dpi": 300,
+   "src": "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.696
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. High-resolution Cl 2p XPS spectra of (a) pristine LPSC and CP-LPSC-x electrolytes with x = (b) 0.1, (c) 0.3, (d) 0.5, and (e) 0.7.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.5,
+    514.0,
+    325.0
+   ],
+   "w": 1792,
+   "h": 1070,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. SEM images of (a) pristine LPSC and CP-LPSC-x powders with x = (b) 0.1, (c) 0.3, (d) 0.5, and (e) 0.7.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    435.9,
+    513.8,
+    645.7
+   ],
+   "w": 1791,
+   "h": 875,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.27
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Representative SEM image of CP-LPSC-0.5 used for elemental mapping analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.9,
+    73.8,
+    490.5,
+    241.7
+   ],
+   "w": 1653,
+   "h": 701,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.524
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. EDS elemental maps of Cl, S, and P for CP-LPSC-0.5, showing the microscale distribution of the main constituent elements.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    359.4,
+    513.9,
+    454.7
+   ],
+   "w": 1792,
+   "h": 398,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.266
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Surface SEM images of cold-pressed (a) CP-LPSC-0.3 and (b) CP-LPSC-0.7 electrolyte pellets prepared at 500 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.6,
+    514.0,
+    196.7
+   ],
+   "w": 1792,
+   "h": 514,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.327
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Representative ImageJ threshold-segmented binary images of cold-pressed (a) LPSC and CP-LPSC-x electrolyte pellets with x = (b) 0.1, (c) 0.3, (d) 0.5, and (e) 0.7 prepared at 500 MPa, used for apparent surface porosity analysis. The dark regions represent surface pores/voids.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    314.6,
+    513.9,
+    530.4
+   ],
+   "w": 1792,
+   "h": 900,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.721
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. Apparent surface porosity of cold-pressed LPSC and CP-LPSC-x electrolyte pellets estimated from SEM images using ImageJ.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    514.0,
+    308.4
+   ],
+   "w": 1792,
+   "h": 995,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. Cross-sectional SEM images of cold-pressed (a) pristine LPSC and CP-LPSC-x pellets with x = (b) 0.1, (c) 0.3, (d) 0.5, and (e) 0.7.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    399.3,
+    521.2,
+    617.5
+   ],
+   "w": 1822,
+   "h": 911,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.304
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. Direct-current polarization curves of LPSC and CP-LPSC-x electrolytes used to evaluate electronic conductivity. The inset shows the enlarged steady-state current region.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    513.9,
+    308.4
+   ],
+   "w": 1792,
+   "h": 995,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. Composition-dependent Li+ migration activation energies of LPSC and CP-LPSC-x electrolytes derived from variable-temperature impedance measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    420.6,
+    514.1,
+    659.4
+   ],
+   "w": 1792,
+   "h": 996,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. Temperature-dependent electronic-transport behavior of LPSC and CP-LPSC-0.5. DC polarization curves of (a) LPSC and (b) CP-LPSC-0.5 measured from 40 to 80 °C. (c) Arrhenius plots of electronic conductivity and the corresponding apparent electronic activation energies.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.2,
+    514.0,
+    199.0
+   ],
+   "w": 1792,
+   "h": 542,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. Deconvolution of the 31P MAS NMR spectrum of CP-LPSC-0.5. The fitted peaks at approximately 86, 84, and 82 ppm are assigned to S2Cl2-, SCl3-, and Cl4-type local configurations around the central P atom, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    334.8,
+    509.5,
+    573.6
+   ],
+   "w": 1773,
+   "h": 995,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 12,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. (a) Equivalent circuit used to fit the post-cycling EIS spectra of the LPSC- and CP-LPSC- 0.5-based cells. (b) Fitted 𝑅𝑠, 𝑅𝑔𝑏, and 𝑅𝑐𝑡 values obtained after 100 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    511.6,
+    308.4
+   ],
+   "w": 1782,
+   "h": 995,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14. Cycling performance of Li-In||SE||NCM811 cells using conventional Cl-rich LPSC1.5, physically mixed LPSC1.5 + 15 wt% LiCl, and CP-LPSC-0.5 as the solid electrolytes under identical testing conditions at 1 C (1 C = 200 mA g⁻¹) within 2.8–4.3 V vs Li⁺/Li at 30 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    420.6,
+    514.0,
+    659.4
+   ],
+   "w": 1792,
+   "h": 996,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15. Cycling performance of the CP-LPSC-0.5-based all-solid-state cell with an NCM811 active-material loading of approximately 22.3 mg cm-2. The cell was activated for two cycles at 0.05 C and two cycles at 0.2 C, followed by cycling at 0.5 C within 2.8–4.3 V vs. Li⁺/Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    513.9,
+    308.4
+   ],
+   "w": 1792,
+   "h": 995,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 13,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16. Discharge profiles of Li-In||SE||NCM811 cells based on CP-LPSC-0.5 (upper panel) and LPSC (lower panel) at different rates from 0.1 C to 3 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    420.6,
+    514.0,
+    659.4
+   ],
+   "w": 1792,
+   "h": 996,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17. Initial charge/discharge profiles of Li-In||LPSC||NCM811 and Li-In||CP-LPSC- 0.5||NCM811 cells at 0.1 C with an upper cutoff voltage of 4.5 V vs. Li+/Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    511.6,
+    308.4
+   ],
+   "w": 1782,
+   "h": 995,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 14,
+   "file": "fig_S18.png",
+   "caption": "Fig. S18. DRT spectra of the LPSC-based Li-In||SE||NCM811 cell collected at selected voltages during the first charge/discharge process.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    420.6,
+    513.8,
+    659.4
+   ],
+   "w": 1792,
+   "h": 996,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 15,
+   "file": "fig_S19.png",
+   "caption": "Fig. S19. DRT spectra of the CP-LPSC-0.5-based Li-In||SE||NCM811 cell collected at selected voltages during the first charge/discharge process.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    513.8,
+    308.4
+   ],
+   "w": 1791,
+   "h": 995,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 15,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20. EIS and DRT analysis of LPSC- and CP-LPSC-0.5-based cells during high-voltage cycling. (a) Nyquist plots collected after the 1st and 200th cycles at 1 C with an upper cutoff voltage of 4.5 V vs. Li+/Li. All EIS measurements were performed after discharge to 2.8 V vs. Li+/Li. (b) Corresponding DRT spectra of the LPSC- and CP-LPSC-0.5-based cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    398.9,
+    516.7,
+    555.8
+   ],
+   "w": 1803,
+   "h": 655,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 16,
+   "file": "fig_S21.png",
+   "caption": "Fig. S21. Interfacial sulfur-species evolution of the CP-LPSC-0.5-based cathode after repeated cycling. (a) Raman spectra collected after the 20th charge to 4.5 V and the subsequent discharge to 2.8 V vs. Li+/Li. (b) Corresponding high-resolution S 2p XPS spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.6,
+    513.9,
+    245.0
+   ],
+   "w": 1792,
+   "h": 727,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Geometric densities of LPSC and CP-LPSC-x electrolyte pellets under different compaction pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    73.2,
+    512.9,
+    754.4
+   ],
+   "w": 1783,
+   "h": 2839,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 17,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Key cell configurations and testing conditions for the literature benchmark in Fig. 4h.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.1,
+    499.1,
+    754.4
+   ],
+   "w": 1726,
+   "h": 2836,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 17,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Peak-area ratios extracted from the S 2p XPS spectra of LPSC- and CP-LPSC-0.5-based cathodes at selected charged and discharged states.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.1,
+    513.0,
+    754.4
+   ],
+   "w": 1784,
+   "h": 2836,
+   "dpi": 300,
+   "src": "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.957
+  }
+ ],
+ "missing_labels": []
+}

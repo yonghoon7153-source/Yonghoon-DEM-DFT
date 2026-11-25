@@ -1,0 +1,117 @@
+{
+  "_readme": [
+    "litdb 주제 태그 레지스트리 — 손으로 큐레이션한다(휴리스틱 금지).",
+    "UI 검색은 제목/id/type 만 훑으므로 'screening' 을 쳐도 제목에 그 단어가 있는 7편만 잡힌다.",
+    "본문 전수 감사 결과 실제 스크리닝 계열은 13편이었다 → 여기에 명시적으로 등록한다.",
+    "gloss = 대학원생 1년차가 처음 봐도 따라오게 쓴 설명. 세 문장 규칙:",
+    "  ① 무엇을 몇 개 중에서 걸렀나  ② 무슨 잣대(descriptor/gate)로 걸렀나  ③ 우리에게 왜 중요한가.",
+    "caution = 이 논문 값을 우리 문맥으로 옮길 때 걸리는 것 (없으면 생략)."
+  ],
+  "_topics": {
+    "DFT-screening": {
+      "label": "DFT-screening",
+      "color": "#2563eb",
+      "desc": "제일원리 계산으로 후보를 대량으로 거르는 논문. 계산이 걸러내는 주체다."
+    },
+    "exp-screening": {
+      "label": "exp-screening",
+      "color": "#c05621",
+      "desc": "실험을 고처리량으로 돌려 거르는 논문(조합 합성 등). 계산이 아니라 실험이 깔때기다."
+    },
+    "descriptor": {
+      "label": "descriptor",
+      "color": "#7c3aed",
+      "desc": "스크리닝의 **잣대 자체**를 만들거나 검증하는 논문. 깔때기의 각 단이 쓰는 판정 기준."
+    }
+  },
+  "_primer": {
+    "title": "계산 스크리닝이 뭔가 — 3분 입문",
+    "body": [
+      "**문제**: 후보 물질이 수천~수만 개인데 정밀 계산(AIMD·NEB)은 하나에 며칠씩 걸린다. 전수 계산은 불가능하다.",
+      "**해법 = 깔때기(funnel)**. 싸고 거친 잣대로 대부분을 먼저 버리고, 살아남은 소수에만 비싼 계산을 쓴다.",
+      "",
+      "전형적인 4단 깔때기:",
+      "  1단 **조성·구조 필터** (거의 공짜) — DB에서 Li 함유·특정 골격만 뽑기. 12,000 → 수백",
+      "  2단 **열역학 게이트** (DFT 단일점) — hull 위 에너지, 전기화학 창(ESW), 계면 반응. 수백 → 수십",
+      "  3단 **대리모형(surrogate)** (ML 또는 MLIP) — 분류기·MLIP-MD 로 순위만 매긴다. 수십 → 몇",
+      "  4단 **정밀 계산** (AIMD·NEB·실험) — 최종 후보만.",
+      "",
+      "**핵심 감각 세 가지**",
+      "- **descriptor(기술자)** = 값싼 계산으로 얻는 숫자인데, 비싼 정답(전도도 등)과 상관이 있어야 쓸모가 있다.",
+      "  좋은 descriptor 하나가 논문 하나가 된다 (Jun2022 의 '이온-우리 크기 균일도'가 그 예).",
+      "- **surrogate 는 정량이 아니라 순위용이다.** Kahle2020 의 pinball 모형은 D 절대값 재현에 실패했지만",
+      "  상위 사분위를 71% 맞춰서 깔때기로는 유효했다. **순위가 맞으면 깔때기는 돈다.**",
+      "- **깔때기는 놓친 것(false negative)을 못 센다.** 1단에서 버린 게 정답이었어도 아무도 모른다.",
+      "  그래서 스크리닝 논문은 '찾았다'는 말은 해도 '이게 최고다'는 말을 못 한다.",
+      "",
+      "**우리 캠페인에서의 위치**: 우리 47-dopant cascade 가 정확히 이 깔때기 구조다.",
+      "Xiao2019(열역학 게이트)가 방법 계보의 조상이고, Sendek2017(ML 분류기)이 우리 TabPFN 계획의 원형이다."
+    ]
+  },
+
+  "sendek2017_ml_screening_12k_conductors": {
+    "topics": ["DFT-screening", "descriptor"],
+    "gloss": "ICSD 에 있는 리튬 함유 결정 **12,831종 전수**를 대상으로, 실험 전도도가 알려진 40종으로 학습한 **로지스틱 회귀 분류기**를 돌려 superionic 후보를 걸렀다. 잣대는 AIMD 가 아니라 **구조에서 바로 뽑는 값싼 기술자 5개**(Li–Li 거리, Li 부격자 연결성, 음이온 골격 등)라 12,000종에 돌릴 수 있었고, 여기에 열역학 게이트(hull·ESW)를 겹쳐 21종까지 좁혔다. **우리 TabPFN 계획(M1–M3)의 직계 원형** — '값싼 기술자 + 작은 라벨셋 + 게이트' 라는 구성이 그대로다.",
+    "caution": "라벨이 40종뿐이라 분류기의 일반화 근거가 약하다. 이 논문 자체도 확률을 '순위'로만 쓰고 절대 판정으로 안 쓴다."
+  },
+  "fujimura2013_ml_conductivity_origin": {
+    "topics": ["DFT-screening", "descriptor"],
+    "gloss": "ML×이온전도 예측의 **1세대 앵커(2013)**. 고온 AIMD 에서 뽑은 기술자와 문헌 실험 σ 95점을 **SVR(커널 회귀)** 로 묶어, 아직 안 재본 조성의 저온(373 K) 전도도 지도를 그렸다. '비싼 AIMD 를 몇 개만 돌리고 나머지는 회귀로 채운다'는 발상 자체가 여기서 시작한다 — 지금의 MLIP 스크리닝이 하는 일의 원형이다.",
+    "caution": "라벨이 문헌 소환값이라 측정 조건이 제각각이다. 절대 σ 가 아니라 경향으로 읽어야 한다."
+  },
+  "kahle2020_ht_aimd_screening": {
+    "topics": ["DFT-screening"],
+    "gloss": "실험 구조 저장소(ICSD+COD) **전수를 MD 로** 스크리닝한다는 무모한 문제를, **pinball 대리모형**(호스트 격자를 얼리고 Li 만 움직이는 값싼 MD)으로 1차를 돌리고 살아남은 것만 본격 AIMD 로 재는 2단 구조로 풀었다. 이 논문의 진짜 가치는 후보 목록이 아니라 **MD 통계 규율**이다 — MSD 창을 데이터로 검증하고(5/10/20/30 vs 40 ps), 블록 분산으로 오차막대를 붙이고, 수렴 기준을 자동화했다.",
+    "caution": "pinball 은 **정량 D 재현에 실패**했다(Fig 15 산포). 그런데 상위 사분위를 71% 맞춰 랭킹용으로는 유효했다 — surrogate 를 어디까지 믿을지의 교과서 사례."
+  },
+  "xiao2019_cathode_coating_screening": {
+    "topics": ["DFT-screening"],
+    "gloss": "고체전지 **양극 코팅재**를 열역학만으로 거른 원형 논문(Ceder 그룹). 후보를 (i) 양극과 안 싸우나 (ii) 전해질과 안 싸우나 (iii) 전기화학 창이 넓나 — **게이트 세 개를 순서대로** 통과시켜 좁히고, 마지막에 NEB 로 Li 이동장벽만 확인했다. **우리 47-dopant cascade 의 직계 조상**이고, '게이트식 고처리량 열역학 스크리닝' 이라는 형식 자체를 여기서 가져왔다.",
+    "caution": "실험 검증 0. 그리고 저자 일부가 코팅 조성 특허를 냈다고 명시돼 있다."
+  },
+  "jun2022_argyrodite_ion_cage_size_descriptor": {
+    "topics": ["DFT-screening", "descriptor"],
+    "gloss": "**descriptor 를 만드는 논문**이 어떻게 생겼는지 보여주는 표본. argyrodite 안에서 Li 가 지나다니는 '이온 우리(ion cage)' 의 **크기가 얼마나 고른가**를 숫자 하나로 정의하고, 그게 AIMD 전도도와 상관됨을 보여 **AIMD 없이 후보를 고를 수 있게** 했다. 우리와 같은 argyrodite 계열이라 문맥이 제일 가깝다.",
+    "caution": "실험 0, 순수 계산. 우리 BVSE 병목 지표와 개념이 겹치지만 정의가 달라 값을 바로 대응시키면 안 된다."
+  },
+  "kim2026_hts_li3sc2po43_coating_midni_ncm": {
+    "topics": ["DFT-screening"],
+    "gloss": "**MLIP(SevenNet) 를 깔때기에 넣은 최신형**. DFT+AIMD 로 다 못 볼 규모를 MLIP 로 1차 스크리닝하고 살아남은 것만 DFT 로 재채점해, mid-Ni NCM 계면을 안정화하는 코팅으로 Li₃Sc₂(PO₄)₃ 를 뽑았다. 우리 cascade + M6 의 **직접 대조군**이다.",
+    "caution": "우리 M6 판정과 충돌하는 부분이 있다 — digest §9 참조. 같은 질문에 다른 답이 나온 사례라 그 차이의 원인을 봐야 한다."
+  },
+  "kim2025_csp_metastable_edge_sharing_sse": {
+    "topics": ["DFT-screening"],
+    "gloss": "앞의 것들이 **이미 있는 구조**를 걸렀다면, 이건 **구조 자체를 만들어낸다**(CSP, 결정구조 예측). USPEX 진화탐색 + MTP 능동학습으로 후보 구조를 생성하고 그중 준안정 edge-sharing 상이 전도도가 더 높다는 걸 찾았다. 깔때기의 입구를 'DB 에 있는 것' 에서 '아직 만들어진 적 없는 것' 으로 넓힌 방향이다.",
+    "caution": "준안정상이라 실제로 합성되는지는 별개 문제. 계산이 예측한 상의 합성 가능성은 이 논문이 답하지 않는다."
+  },
+  "sundar2025_oxide_coating_screening_lpscl": {
+    "topics": ["DFT-screening"],
+    "gloss": "DFT 고처리량 스크리닝으로 황화물 전해질 **분말 표면 코팅**을 고르고, 그걸 **ALD 로 실제 입혀서 XPS·EIS·CCD 로 검증**한 논문. 계산→실험 폐루프가 한 편 안에 다 들어있어, 스크리닝 결과가 실험에서 어떻게 확인되는지 보기에 좋다.",
+    "caution": "우리는 격자 안을 도판트로 바꾸고 이 논문은 입자 표면을 덮는다 — **다른 레버**다. 우리 cascade 의 descriptor 와 직접 대응시키면 안 된다."
+  },
+  "anderson2024_llzo_comprehensive_dopant_screening": {
+    "topics": ["exp-screening"],
+    "gloss": "**계산이 아니라 실험이 깔때기인 경우.** LLZO 가넷에 넣을 수 있는 도판트를 조합 합성으로 대량 제작하고 PXRD/Rietveld·EIS·CV 로 한 번에 걸렀다. 우리가 계산으로 하는 일을 실험으로 하면 어떤 모양인지 보여주는 대조군이고, '스크리닝'이 계산만의 단어가 아님을 보여준다.",
+    "caution": "**산화물 가넷이라 우리 황화물과 계가 다르다.** 자체 DFT/AIMD 를 하나도 안 한다 — 이식 가능한 건 방법·논증 구조이지 숫자가 아니다."
+  },
+  "zhu2015_esw_grand_potential_origin": {
+    "topics": ["descriptor"],
+    "gloss": "깔때기의 **2단에서 쓰는 잣대**를 만든 논문. 고체전해질의 전기화학 안정성 창(ESW)을 grand potential 로 계산하는 방법을 세웠고, 이후 거의 모든 스크리닝 논문이 이 게이트를 쓴다. 우리 db 의 oxidation grand-potential 도 여기 계보다.",
+    "caution": null
+  },
+  "richards2016_interface_stability_pseudobinary": {
+    "topics": ["descriptor"],
+    "gloss": "역시 **게이트를 만든 논문** — 전해질과 전극이 접촉면에서 서로 잡아먹는지를 pseudo-binary 방식으로 계산한다. Xiao2019 깔때기의 (i)(ii) 단이 바로 이 방법이다.",
+    "caution": null
+  },
+  "zhu2020_air_stable_se_design_principles": {
+    "topics": ["descriptor"],
+    "gloss": "**대기 안정성**을 스크리닝 잣대로 세운 논문. 황화물이 수분과 만나 H₂S 를 내는 문제를 열역학으로 판정하는 기준을 준다. 우리 SDCP 곁사슬이 SO₃Li 로 바뀌면 그 위험이 줄어든다는 논의(예비보고서 §5.3)가 이 기준 위에 서 있다.",
+    "caution": null
+  },
+  "wang2022_sulfide_thermal_stability_th_descriptor": {
+    "topics": ["descriptor"],
+    "gloss": "황화물 전해질의 **열 안정성**을 값싼 이론 기술자로 예측한다. 스크리닝 깔때기에 '열적으로도 버티나' 라는 단을 하나 더 붙일 때 쓰는 잣대다.",
+    "caution": null
+  }
+}

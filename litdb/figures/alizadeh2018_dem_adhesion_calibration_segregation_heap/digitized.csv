@@ -1,0 +1,36 @@
+# alizadeh2018_dem_adhesion_calibration_segregation_heap — 손 판독 (2026-10-13). 크롭 = 같은 폴더 fig_*.png (원본 300 dpi).
+# 정밀도: 각도 ±0.5 deg · CoV ±0.02 · S_n ±0.03 · ffc ±0.1 · 질량분율 ±0.003 · 비운동에너지 ±0.001 J/kg. 오차막대 = 그림 막대 반폭 (정의는 원문 "variations").
+# 그림 안에 숫자로 인쇄된 값 (Fig 7 의 AoR · Γ, Fig 14 의 CoV · AoR) 은 printed 열에 따로 적었다 — 그쪽을 쓸 것.
+figure,panel,series,x,x_unit,y,y_unit,err_halfwidth,printed,note
+6,-,AoR experiment,0,PEG wt%,31.0,deg,0.5,,Γ 축 0 (위 축) · 본문 31.0
+6,-,AoR DEM,0,PEG wt%,31.0,deg,,,
+6,-,AoR experiment,0.5,PEG wt%,37.0,deg,1.0,,
+6,-,AoR DEM,0.5,PEG wt%,38.0,deg,,37.6 (본문 · Γ 0.046),
+6,-,AoR experiment,1.5,PEG wt%,48.0,deg,2.5,,
+6,-,AoR DEM,1.5,PEG wt%,44.0,deg,,45 (Fig 7 라벨),
+6,-,AoR experiment,2.5,PEG wt%,48.5,deg,3.0,,
+6,-,AoR DEM,2.5,PEG wt%,48.5,deg,,48 (Fig 7 라벨),
+6,-,AoR experiment,3.5,PEG wt%,55.5,deg,2.5,,
+6,-,AoR DEM,3.5,PEG wt%,56.5,deg,,57 (Fig 7 라벨),
+7,-,DEM Γ (printed in figure),0 / 0.5 / 1.5 / 2.5 / 3.5,PEG wt%,0.0 / 0.05 / 0.15 / 0.25 / 0.35,J/m2,,yes,그림 안 인쇄값
+10,-,CoV front (2D) experiment before coating,-,-,1.33,CoV,0.12,,
+10,-,CoV front (2D) DEM before coating,-,-,1.44,CoV,,,
+10,-,CoV front (2D) experiment after coating,-,-,0.83,CoV,0.12,,감소 38 % (본문 '최소 40 %')
+10,-,CoV front (2D) DEM after coating,-,-,0.94,CoV,,,감소 35 %
+12,-,CoV by depth layer uncoated,1 (back wall) .. 8 (front wall),layer,0.94 / 0.44 / 0.36 / 0.30 / 0.41 / 0.42 / 0.51 / 0.77,CoV,,,평균 0.519 = Fig 14 CoV_enz 0.52
+12,-,CoV by depth layer coated,1 .. 8,layer,0.38 / 0.38 / 0.38 / 0.29 / 0.30 / 0.31 / 0.37 / 0.45,CoV,,,평균 0.358 = Fig 14 CoV_enz 0.36
+13,-,S_n experiment front before,-,-,2.65,S_n,0.27,,= 1.33 / CoV_r 0.50
+13,-,S_n DEM front before,-,-,2.88,S_n,,,= 1.44 / 0.50
+13,-,S_n DEM whole heap before,-,-,1.57,S_n,,,⇒ CoV ≈ 0.33 (× CoV_r 0.21)
+13,-,S_n experiment front after,-,-,1.66,S_n,0.16,,
+13,-,S_n DEM front after,-,-,1.88,S_n,,,
+13,-,S_n DEM whole heap after,-,-,0.86,S_n,,,감소 45 % (본문 '70 % 넘게' · 결론 '40 %')
+14,-,AoR full heap DEM dry / sticky EP,-,-,36.0 / 37.6,deg,,yes,실험 36.4 / 38.0 (본문)
+14,-,CoV_enz Γ_EP 0.0 / 0.25,-,-,0.52 / 0.36,CoV,,yes,
+14,-,CoV_TAED dry / sticky,-,-,0.74 / 0.76,CoV,,yes,본문은 '0.76 → 0.74' (순서 반대)
+15,-,ffc uncoated,2 / 4 / 6 / 8,kPa,6.15 / 6.55 / 5.75 / 6.55,ffc,,,평균 6.25 (본문 6.3)
+15,-,ffc coated,2 / 4 / 6 / 8,kPa,4.6 / 4.6 / 4.2 / 4.25,ffc,,,평균 4.41 (본문 4.4)
+16,-,mass fraction at funnel outlet TAED,0.2-2.2,s,≈ 0.053,-,,,요동 0.04–0.07
+16,-,mass fraction at funnel outlet EP,0.2-2.2,s,≈ 0.020,-,,,요동 0.007–0.03
+19,-,specific KE coated placebo,1.74 / 1.98,s,0.022 / 0.0025,J/kg,,,
+19,-,specific KE uncoated placebo,1.74 / 1.94,s,0.015 / ≈0,J/kg,,,충돌 직전 ≈ 1.2 J/kg (inset)

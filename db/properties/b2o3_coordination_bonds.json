@@ -1,0 +1,49 @@
+{
+  "method": "pymatgen Voronoi/nn bond lengths on b2o3_relaxV0.cif",
+  "B_coordination": {
+    "B58": {
+      "S_bonds_A": [
+        1.822,
+        1.824,
+        1.828
+      ],
+      "4th_neighbor": "Li @2.43 (NOT S)",
+      "motif": "trigonal BS3"
+    },
+    "B59": {
+      "S_bonds_A": [
+        1.801,
+        1.839,
+        1.846
+      ],
+      "4th_neighbor": "Li @2.85 (NOT S)",
+      "motif": "trigonal BS3"
+    }
+  },
+  "P_coordination": {
+    "PS4_normal": "P60/61/63/64/65/67 = 4xS @2.05-2.08",
+    "P62": {
+      "O_bonds_A": [
+        1.549,
+        1.56
+      ],
+      "S_bonds_A": [
+        2.048,
+        2.103
+      ],
+      "motif": "PS2O2 phosphate"
+    },
+    "P66": {
+      "O_bonds_A": [
+        1.56
+      ],
+      "S_bonds_A": [
+        2.047,
+        2.065,
+        2.081
+      ],
+      "motif": "PS3O phosphate"
+    }
+  },
+  "verdict": "B = trigonal BS3 (3 S @1.80-1.85, 4th neighbor is Li NOT S -> NOT BS4). O = phosphate on P (P-O 1.55-1.56, PS2O2+PS3O). No B-O. Geometric confirmation of the BS3+free-S+phosphate story (matches DOS site-PDOS, ESW, hull, literature)."
+}

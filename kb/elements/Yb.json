@@ -1,0 +1,46 @@
+{
+  "symbol": "Yb",
+  "name": "Ytterbium",
+  "Z": 70,
+  "role": "란타나이드 aliovalent 도펀트(Yb2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. Eu처럼 +3/+2 혼합원자가: Yb³⁺(4f¹³, 한-홀)/Yb²⁺(4f¹⁴ 완전충만, 특히 안정). Yb²⁺=4f¹⁴는 계열에서 드문 완충만 clean 케이스(닫힌껍질, 반자성). Yb³⁺는 ~1 μm 레이저(Yb:YAG, 단순 2-다양체 ²F₇/₂-²F₅/₂)·상향변환 증감제. Yb³⁺면 P 자리 치환+O 동반(P-O-Yb 가정); Li 계면서 Yb³⁺→Yb²⁺ 환원이 진단 레버.",
+  "oxidation_states": ["+3", "+2"],
+  "electronegativity": 1.10,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 6s²",
+    "valence_orbitals": "4f¹⁴ 6s² — Yb³⁺면 4f¹³(개방껍질, S=1/2, ²F₇/₂; 한 개의 f-홀), Yb²⁺면 4f¹⁴(완전충만, 닫힌껍질, 반자성)",
+    "band_character": "Yb³⁺=4f¹³은 한-홀 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일); 채운 4f¹³ + 한 홀이 갭 근처 국재. Yb²⁺=4f¹⁴는 완전충만 닫힌껍질 → 계열에서 드물게 clean(DFT+U·스핀분극 불필요, 반자성; Lu³⁺와 함께 완충만 clean 예). 즉 원자가에 따라 +U 필요 여부가 갈림. O 2p→Yb 5d 엣지",
+    "bonding": "Yb–O 이온성(Yb2O3 Yb³⁺ / YbO Yb²⁺, hard-산 친산소 앵커), Yb–Cl/Yb–S; 4f는 5s²5p⁶에 가려 결합은 5d/6s. Yb³⁺의 4f¹³ 홀은 명시 투영 필요, Yb²⁺의 4f¹⁴는 core-like 완충"
+  },
+  "ionic_radius_A": {
+    "Yb3+_VI": 0.868,
+    "Yb3+_VIII": 0.985,
+    "Yb2+_VI": 1.02,
+    "Yb2+_VIII": 1.14,
+    "_note": "Shannon 1976: Yb³⁺ VI 0.868 A, VIII 0.985; Yb²⁺ VI 1.02, VIII 1.14(크게 팽창). 란탄족 수축상 Tm(0.880)>Yb(0.868)>Lu(0.861); Yb³⁺는 계열 두 번째로 작은 Ln³⁺. Li⁺(0.76)보다 큼. Yb²⁺는 환원 시 국소 케이지 확장."
+  },
+  "representative_compounds": [
+    {"formula": "Yb2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Yb³⁺ + O 공급원", "note": "cubic bixbyite(C-type); Yb 4d5/2 ~187 eV, Yb 3d5/2 ~1530 eV(Yb³⁺)"},
+    {"formula": "YbO (Yb²⁺)", "context": "환원형 산화물", "battery_role": "Yb²⁺(4f¹⁴, 닫힌껍질) 산화물; 환원 분위기 지표", "note": "Yb 3d5/2 ~1520 eV(Yb²⁺)로 Yb³⁺(~1530)와 ~10 eV 구분; Li 금속 환원서 Yb³⁺→Yb²⁺ 경로 시사"},
+    {"formula": "Yb-O in doped argyrodite (P-O-Yb bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Yb와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Yb는 +2 환원 가능(Yb²⁺는 clean)"},
+    {"formula": "YbCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Yb³⁺ 염화물; 대체 Yb 원료", "note": "환원 시 YbCl2(Yb²⁺)로 갈 수 있음 → 염화물 계면상도 원자가 변동 주의"}
+  ],
+  "sei_relevance": "Yb는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Yb³⁺가 친산소 hard-산 앵커(P-O-Yb 가정) — Nd/La 계보와 동일. Eu와 마찬가지로 +2/+3 혼합원자가라 Li 금속 계면 환원서 Yb³⁺→Yb²⁺(4f¹⁴ 완충 안정)가 XPS(~10 eV 이동)로 뚜렷이 추적됨 — inert La/Nd/Gd엔 없는 진단 레버. 다만 환원 종착점 Yb²⁺가 닫힌껍질 반자성 clean 종이라 SEI 관점에선 '안정한 절연 산화물'로 귀결될 수 있음(Eu²⁺와 유사한 환원-후-안정 시나리오). 정직히: Yb-argyrodite 직접 문헌 부재 → Nd/La 유비 + Eu식 혼합원자가 진단 병기.",
+  "xps": [
+    {"core": "Yb 4d5/2", "BE_eV": 187.0, "assignment": "Yb³⁺ in Yb2O3 (4d 다중구조; 근사 위치)", "ref": "Yb2O3 XPS 문헌 / xpsdatabase"},
+    {"core": "Yb 3d5/2 (Yb²⁺)", "BE_eV": 1520.0, "assignment": "Yb²⁺(4f¹⁴) 예리선; Yb³⁺(4f¹³ 다중항)는 ~10 eV 높이(~1530 eV) — 원자가 판별 지표", "ref": "Yb 혼합원자가 3d XPS 문헌"},
+    {"core": "Yb 4f", "BE_eV": null, "assignment": "참고: Yb 4f는 원자가대 근처 얕은 준위 — Yb²⁺(4f¹⁴)는 예리한 doublet, Yb³⁺(4f¹³)는 다중항으로 원자가 프로브(위치는 화합물 의존 → 생략)", "ref": "n/a"}
+  ],
+  "raman": [
+    {"cm1": 380, "assignment": "Yb2O3 cubic bixbyite Fg 격자모드(주 라만선 대역, Y2O3 계열과 유사)", "ref": "Yb2O3 Raman 문헌"}
+  ],
+  "dos_character": "원자가에 따라 처리가 갈리는 대표 케이스. Yb³⁺=4f¹³(한-홀, S=1/2)는 부분점유 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일); 4f¹³+홀이 갭 근처 국재. Yb²⁺=4f¹⁴는 완전충만 닫힌껍질 -> DFT+U·스핀분극 불필요한 clean 종(반자성; 채운 4f¹⁴는 core-like 깊은 준위, Lu³⁺와 동류). O 2p->Yb 5d 엣지. Yb³⁺의 4f 홀만 명시 투영(projwfc)하면 되고 Yb²⁺면 4f를 core로 처리 가능.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Yb³⁺ VI 0.868 / Yb²⁺ VI 1.02)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Yb³⁺ 4f¹³ 한-홀; Yb²⁺ 4f¹⁴는 clean이라 +U 불필요)",
+    "Yb³⁺ ~1 μm 레이저(Yb:YAG, ²F₇/₂-²F₅/₂)·상향변환 증감제 — 4f 광학 응용 맥락",
+    "Yb2O3/YbO XPS — Yb 4d5/2 ~187 eV, Yb 3d5/2 ~1520(Yb²⁺)/~1530 eV(Yb³⁺), ~10 eV 원자가 분리 (xpsdatabase)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Yb2O3/YbO XPS 표준 · DFT+U 4f 프로토콜); Yb는 Eu처럼 +2/+3 혼합원자가이며 Yb²⁺(4f¹⁴)가 계열의 완충만 clean 예 — inert La/Nd 유비에 원자가 의존 +U 단서 부기 — 우리 db 절대값과 분리."
+}

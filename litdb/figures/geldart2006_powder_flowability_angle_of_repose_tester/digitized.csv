@@ -1,0 +1,15 @@
+# geldart2006_powder_flowability_angle_of_repose_tester — 손 판독 (2026-10-13). 크롭 = 같은 폴더 fig_*.png (300 dpi 렌더 · 원 래스터 139–204 dpi).
+# 맞춤식 (power law · linear) 은 그림 안에 **인쇄** 된 값이다 (printed=yes) — 어느 곡선의 식인지는 그림 화살표 · 선 모양으로 판독 (FRF = 위 곡선 · 점선).
+# 정밀도: 각도 ±0.5 deg · HR ±0.02 · d_sv ±1 µm.
+figure,panel,series,x,x_unit,y,y_unit,printed,note
+5,-,HR fit FRF mixtures,7-63,dsv um,HR = 2.65 dsv^-0.19 (R2 1.00),-,yes,화살표 = 위 곡선 (FRF 점)
+5,-,HR fit FCC mixtures,7-79,dsv um,HR = 2.77 dsv^-0.21 (R2 0.99),-,yes,화살표 = 아래 곡선 (FCC 점)
+5,-,HR reference lines,-,-,1.25 / 1.4,HR,yes,Geldart 분류 경계
+6,-,AOR fit FRF mixtures,7-63,dsv um,theta = 88.3 dsv^-0.26 (R2 0.97),deg,yes,
+6,-,AOR fit FCC mixtures,7-79,dsv um,theta = 79.7 dsv^-0.25 (R2 0.97),deg,yes,
+6,-,AOR reference line,-,-,40,deg,yes,자유 흐름 ↔ 점착 기준 (Geldart 1990)
+6,-,AOR range,7 / 79,dsv um,≈ 55 / ≈ 27,deg,,가장 고운 · 가장 굵은 혼합물
+7,-,AOR vs HR FRF (dashed),1.2-1.86,HR,theta = 36.2 HR - 13.4 (R2 0.97),deg,yes,
+7,-,AOR vs HR FCC (solid),1.1-1.8,HR,theta = 29.8 HR - 5.4 (R2 0.97),deg,yes,두 직선은 HR 1.25 에서 31.85° 로 만난다 [우리 산술]
+10,-,AOR starch vs sample mass,50 / 100 / 200,g,36.91 / 36.91 / 34.75,deg,yes (Table 1),
+11,-,AOR avicel vs sample mass,50 / 100 / 150,g,38.4 / 38.3 / 37.0,deg,yes (Table 1),

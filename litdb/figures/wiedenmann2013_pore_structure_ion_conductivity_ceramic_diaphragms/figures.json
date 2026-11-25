@@ -1,0 +1,224 @@
+{
+ "slug": "wiedenmann2013_pore_structure_ion_conductivity_ceramic_diaphragms",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic 2-D representation of the parameters characterizing a pore structure with three intersecting pore paths. The dotted line connecting the entrance and exit points i and j has the length leff. The sample has the length L and geometric tortuosity τgeo of a pore path is defined by the ratio leff/L. τgeo and the minimal pore radius along the pore path (constriction) determine the mass transport through a porous system.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    487.6,
+    561.0,
+    648.2
+   ],
+   "w": 1051,
+   "h": 670,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.949,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Reconstructed 2-D cross sections from x-ray absorption tomography of investigated mineral diaphragms (end mem- bers ol 1, ol 4, wo 1, and wo 4). The cross sections are oriented perpendicular to the migration direction (z direction) of the ion conductivity experiment. Bright phase: particles (upper row: isometric olivine; lower row: fibrous wollastonite), dark phase: pores filled with epoxy.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    65.4,
+    561.0,
+    501.6
+   ],
+   "w": 2126,
+   "h": 1819,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.384,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Voxel skeleton representing the pore space of a percolating pore system. (a) 3-D section of a sample. The thickness and color of the segments reflects the pore radii. (b) Medial axis line skeleton of the pipe segments shown in Figure 3a. Green squares mark source and sink nodes within the z bounding faces. (c) 2-D section of the line skeleton. The red path is the shortest connection between a pair of source and sink nodes. The ratio between the path length and the length of the sample cubical is defined as the geometric tortuosity of the pore path. Black paths correspond to all paths between one source node and all other sink nodes. (d) Shortest path network connecting all pairs of source and sink nodes in the z planes.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    65.4,
+    561.0,
+    493.3
+   ],
+   "w": 2126,
+   "h": 1784,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.798,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Tomography-based c-PSD(solid lines) and simulated MIP-PSD(dashed lines) of investigated diaphragms. Olivine- (a) and wollastonite-diaphragms (b). PSDs normalized to 100% for olivine (c) and wollastonite (d). The curves are deter- mined according to the pore size concept of M€unch and Holzer (2008).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    403.8,
+    561.0,
+    705.7
+   ],
+   "w": 2126,
+   "h": 1259,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.879,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Reconstructed sample volumes and 3-D pore path visualization of the diaphragm series (based on x-ray absorption tomography, edge length: 488 mm). Porosities increase from left to right. For all investigated diaphragms, the geometric tortuosities are nearly constant. Mineral par- ticles show a random distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    65.4,
+    561.1,
+    537.7
+   ],
+   "w": 2126,
+   "h": 1969,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.644,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Archie’s formation factor F vs. total porosity etot (filled circles for olivine, open triangles for wollastonite). The dashed line represents a hypothetical series of sam- ples with straight tubes parallel to the applied field and equal diameter (no constriction) as pores, that is, samples for which m 5 1. (b) Conductivities measured by EIS for both diaphragm series vs. the corresponding total poros- ity. The dotted trend lines are fitted according to Archie’s law1. (c) Electric and geometric tortuosities of the diaphragm series vs. the total porosity etot.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    65.4,
+    303.1,
+    547.2
+   ],
+   "w": 1051,
+   "h": 2009,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.96,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Effective conductivity reff measured by EIS vs. cal- culated conductivities from tomographic investiga- tions (filled circles for olivine, open triangles for wollastonite).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    538.1,
+    561.0,
+    694.7
+   ],
+   "w": 1051,
+   "h": 653,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.953,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) Constrictivity δelc vs. the total porosity εtot (filled circles for olivine, open triangles for wollastonite). The error bars indicate 5.0% of the εtot values (estimated) and 7.1% of the δelc values (calculated according to Eq. 14). The dotted trend lines are fitted according to Archie’s law¹. (b) Effective porosity εeff vs. total porosity εtot of the diaphragms series. The error bars indicate 5.0% of the εtot values (estimated) and 8.7% of the εeff values (calculated according to Eq. 17). (c) Conductivity σ vs. effective porosity εeff of the investigated diaphragm series.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    65.4,
+    561.0,
+    553.4
+   ],
+   "w": 1051,
+   "h": 2035,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.968,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of Quantitative Results for Various Parameters That Were Determined in This Study",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    68.0,
+    557.0,
+    227.5
+   ],
+   "w": 2092,
+   "h": 665,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.898,
+   "manual_crop": "auto crop was the whole PDF p.4 (printed 1449, body text included); clip = table title top to the end of the table footnote, full width (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2. Average Values of Geometric Tortuosities (τgeo) in the z Direction, Amount of Considered Pore Paths (n) and Standard Deviations (SD) for Investigated Diaphragms",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    68.0,
+    299.0,
+    200.5
+   ],
+   "w": 1017,
+   "h": 553,
+   "dpi": 300,
+   "src": "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf",
+   "blank": 0.899,
+   "manual_crop": "auto crop was the whole PDF p.7 (printed 1452, body text and Fig. 4 included); clip = left-column table title top to the bottom rule of the table (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

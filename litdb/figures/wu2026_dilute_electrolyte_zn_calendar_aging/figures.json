@@ -1,0 +1,732 @@
+{
+ "slug": "wu2026_dilute_electrolyte_zn_calendar_aging",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-08",
+ "sources": [
+  "93a04a0e-74._Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+  "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Fig. 1: Schematics of electrolyte design principle between traditional electrolyte and our electrolyte, calendar aging process, and Zn2+ solvation structure. (A) Design principle on",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    279.6,
+    549.0,
+    635.5
+   ],
+   "w": 2013,
+   "h": 1484,
+   "dpi": 300,
+   "src": "93a04a0e-74._Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 11,
+   "file": "fig_2.png",
+   "caption": "Fig. 2: Reducing salt concentration and substituting D2O to decrease water reactivity. (A)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    106.0,
+    549.0,
+    474.8
+   ],
+   "w": 2013,
+   "h": 1538,
+   "dpi": 300,
+   "src": "93a04a0e-74._Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.781
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 15,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Incorporating Li2SO4 and DMF to facilitate stable SEI formation. (A-B) TEM images",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    106.0,
+    549.0,
+    442.4
+   ],
+   "w": 2013,
+   "h": 1403,
+   "dpi": 300,
+   "src": "93a04a0e-74._Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.342
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 18,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Comprehensive analysis of calendar aging performance. (A) Comparison of capacity",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    106.0,
+    549.0,
+    512.6
+   ],
+   "w": 2013,
+   "h": 1695,
+   "dpi": 300,
+   "src": "93a04a0e-74._Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 20,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Comprehensive analysis of cycling performance. (A) CE performance at 1 mA cm-2 and 1 mAh cm-2 at 25 °C with a cutoff voltage of 0.5 V. (B) Voltage polarization profiles in different",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    445.2,
+    549.0,
+    695.4
+   ],
+   "w": 2013,
+   "h": 1044,
+   "dpi": 300,
+   "src": "93a04a0e-74._Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1. Simulation of bonding energy difference between free water molecules",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    63.4,
+    549.0,
+    388.0
+   ],
+   "w": 2013,
+   "h": 1354,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Fig. 2. The effect of Zn2+ concentration on the water reactivity. Fourier Transform Infrared Spectroscopy (FTIR) spectra between 700 and 4,000 cm-1 with different salt concentrations in (A, C) H2O-based electrolyte and (B, D) D2O-based electrolyte.2 Source data are",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    460.9
+   ],
+   "w": 2013,
+   "h": 1646,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Fig. 3. (A) Calendar aging performance and (B) ionic conductivity of",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    249.2
+   ],
+   "w": 2013,
+   "h": 764,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.815
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig. 4. Tafel analysis. (A-B) Tafel plot of different electrolytes derived by LSV",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    547.6,
+    444.7
+   ],
+   "w": 2007,
+   "h": 1578,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Fig. 5. Long-term stability in electrolytes with low Zn2+ concentration.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    511.0
+   ],
+   "w": 2013,
+   "h": 1855,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Fig. 6. Selection of cations and organic additives. (A) Different cations with their ionic potentials. (B) Organic molecules with different dielectric constant and DN.3 Source",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    241.2
+   ],
+   "w": 2013,
+   "h": 731,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.654
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Fig. 7. Cation concentration effects on electrolyte ionic conductivity. EIS",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    546.3
+   ],
+   "w": 2013,
+   "h": 2002,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Fig. 8. (A-B) Bruce Vincent method and (C) apparent transference number. Error",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    523.0
+   ],
+   "w": 2013,
+   "h": 1905,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Fig. 9. Zn deposition morphology at 1 mA cm-2 and 1 mAh cm-2 across",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    223.7
+   ],
+   "w": 2013,
+   "h": 658,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.394
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Fig. 10. FIB-SEM cross-sectional images. (A-B) 2 M ZnSO4 and (C-D) our optimized electrolyte. All samples were prepared by depositing 3 mAh cm-2 Zn metal on graphite paper substrate at 20 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    360.0
+   ],
+   "w": 2013,
+   "h": 1226,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.502
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Fig. 11. FFTs and zone-axis identification. FFTs and HETEM images from the",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    310.8
+   ],
+   "w": 2013,
+   "h": 1020,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.153
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Fig. 12. (A-C) Three SAED patterns collected from different regions and overlaid",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    217.8
+   ],
+   "w": 2013,
+   "h": 633,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.232
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Fig. 13. Incorporating DMF to facilitate stable SEI formation. TEM-EDS",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    149.5
+   ],
+   "w": 2013,
+   "h": 349,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.18
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 19,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Fig. 14. Post-cycling XPS analysis on the surface. (A) C 1s, (B) N 1s, and (C) S 2p. Samples were obtained from electrodes after 3 cycles at 1 mAh cm-2 and 1 mA cm-2. Source",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    189.4
+   ],
+   "w": 2013,
+   "h": 515,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 20,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Fig. 15. A schematic summarizing how concentration, isotopic substitution, and",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    289.9
+   ],
+   "w": 2013,
+   "h": 933,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Fig. 16. TGC Quantification of inactive Zn species left after stripping by the TGC method with 1Z5L electrolyte under 1 mA cm-2 and 1 mAh cm-2 on graphite paper substrate. The percentage of unreacted Zn0, unreacted Zn2+, and reversible Zn. Source data are",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    302.6
+   ],
+   "w": 2013,
+   "h": 987,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.757
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 22,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Fig. 17. Comprehensive analysis of calendar aging performance. CE without",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    312.6
+   ],
+   "w": 2013,
+   "h": 1028,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.771
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 23,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Fig. 18. Voltage profile and capacity retention at 0 oC at 1 mA cm-2. Source data",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    275.3
+   ],
+   "w": 2013,
+   "h": 873,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 24,
+   "file": "fig_S19.png",
+   "caption": "Supplementary Fig. 19. Characterizations of the as-prepared ZMO/C cathode material. TG analysis. Source data are provided as a Source Data file.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    275.3
+   ],
+   "w": 2013,
+   "h": 873,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 25,
+   "file": "fig_S20.png",
+   "caption": "Supplementary Fig. 20. XRD patterns of different cathode materials. (A) ZnMn2O4 (ZMO).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    275.8
+   ],
+   "w": 2013,
+   "h": 875,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 26,
+   "file": "fig_S21.png",
+   "caption": "Supplementary Fig. 21. (A) CE of Graphite paper||ZMO anode-free cell in various electrolytes,",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    206.8
+   ],
+   "w": 2013,
+   "h": 587,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 27,
+   "file": "fig_S22.png",
+   "caption": "Supplementary Fig. 22. Voltage profiles of 1 mAh cm-2 plated Zn metal on graphite paper substrate with current density 1 mA cm-2. (A-B) Voltage profile with 24 h calendar aging. (C)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    454.6
+   ],
+   "w": 2013,
+   "h": 1620,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 28,
+   "file": "fig_S23.png",
+   "caption": "Supplementary Fig. 23. Voltage profiles of Zn||LMO full cell at a 4 C charge/discharge rate.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    294.0
+   ],
+   "w": 2013,
+   "h": 950,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 29,
+   "file": "fig_S24.png",
+   "caption": "Supplementary Fig. 24. Capacity retained comparison after 24 h calendar aging with 1Z5L, where",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    268.0
+   ],
+   "w": 2013,
+   "h": 842,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 30,
+   "file": "fig_S25.png",
+   "caption": "Supplementary Fig. 25. Comprehensive analysis of 5Z5L. (A) CE performance at 1 mA cm-2 and 1 mAh cm-2 using Cu foil as substrate. (B) CE performance at 1 mA cm-2 and 1 mAh cm-2 using graphite paper as substrate. (C) Zn plating/stripping stability test at 1 mA cm-2 and 1 mAh cm-2. Source data are provided as a Source Data file.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    550.4,
+    204.3
+   ],
+   "w": 2019,
+   "h": 577,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 31,
+   "file": "fig_S26.png",
+   "caption": "Supplementary Fig. 26. Zn||LMO hybrid cell cycling performance under different conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    552.0,
+    169.7
+   ],
+   "w": 2025,
+   "h": 432,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 32,
+   "file": "fig_S27.png",
+   "caption": "Supplementary Fig. 27. Batteries’ formation cycles performance. (A) 2 formation cycles of",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    251.8
+   ],
+   "w": 2013,
+   "h": 775,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 33,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. Free energy of complexes in water solvent relative to Zn(H2O)6 and Li(H2O)4 respectively.7",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.6,
+    548.0,
+    296.9
+   ],
+   "w": 2005,
+   "h": 952,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 34,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2. All fitted slopes and the calculated transfer coefficients from Tafel plots.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.6,
+    548.0,
+    761.2
+   ],
+   "w": 2005,
+   "h": 2891,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 35,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3. d-spacings with uncertainty measured from three SAED patterns in",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.6,
+    548.0,
+    327.6
+   ],
+   "w": 2005,
+   "h": 1084,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 36,
+   "file": "tab_S4.png",
+   "caption": "Supplementary Table 4. The error between the raw and fitted data using the equivalent circuit",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.6,
+    548.0,
+    341.5
+   ],
+   "w": 2005,
+   "h": 1142,
+   "dpi": 300,
+   "src": "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf",
+   "blank": 0.942
+  }
+ ]
+}

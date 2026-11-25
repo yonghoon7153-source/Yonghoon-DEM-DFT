@@ -1,0 +1,43 @@
+{
+  "symbol": "Tl",
+  "name": "Thallium",
+  "Z": 81,
+  "role": "13족 무거운 post-transition 금속 — 6s² inert pair(고립전자쌍)가 강해 Tl⁺(6s²)가 Tl³⁺(6s⁰)보다 안정한 게 특징(가벼운 동족 B/Al/Ga/In이 +3 지배인 것과 반대). Tl⁺(VI 1.50 Å)는 K⁺/Rb⁺과 비슷한 반경이라 생물학적으로 K⁺를 모방(강한 독성). 배터리 원소는 아니고, inert pair 효과의 대표 예로 인용됨.",
+  "oxidation_states": ["+1", "+3"],
+  "electronegativity": 1.62,
+  "ionic_radius_A": {
+    "Tl+_VI": 1.5,
+    "Tl+_VIII": 1.59,
+    "Tl+_XII": 1.7,
+    "Tl3+_IV": 0.75,
+    "Tl3+_VI": 0.885,
+    "_note": "Shannon 1976: Tl+ VI 1.50 A(Rb+ 1.52와 유사 -> K+/Rb+ 모방), VIII 1.59, XII 1.70; Tl3+ IV 0.75, VI 0.885 A. Tl+가 6s² inert pair로 크고 안정, Tl3+는 강산화성이라 드묾."
+  },
+  "representative_compounds": [
+    {"formula": "Tl2O3", "context": "Tl³⁺ 산화물", "battery_role": "배터리 역할 미미 — n형 반도체(좁은 gap)", "note": "bixbyite; Tl 4f7/2 ~118.6 eV(Tl³⁺). Tl³⁺는 강산화성이라 Tl⁺로 환원되기 쉬움"},
+    {"formula": "TlBr", "context": "Tl⁺ 할라이드 / 검출기", "battery_role": "없음 — 감마·X선 실온 검출기 소재", "note": "CsCl-type; Tl 4f7/2 ~119.2 eV(Tl⁺). 큰 Tl⁺가 무거운 원자번호로 방사선 검출에 유리"},
+    {"formula": "Tl2O / TlCl", "context": "Tl⁺ 산화물·할라이드", "battery_role": "없음", "note": "Tl2O는 강염기성(Tl⁺가 알칼리처럼 거동); Tl 4f7/2 ~119.1 eV(Tl⁺). inert-pair 6s² 안정 Tl⁺의 대표상"}
+  ],
+  "sei_relevance": "(일반적) 해당 없음에 가까움 — Tl은 native SE·전극 원소가 아니고 독성이 커 전지에 쓰이지 않음. inert pair(6s²)로 Tl⁺가 안정하다는 전자구조적 특징이 주된 인용 포인트이고, Tl⁺가 K⁺/Rb⁺ 반경을 모방한다는 결정화학적 유사성이 부수적.",
+  "xps": [
+    {"core": "Tl 4f7/2", "BE_eV": 118.6, "assignment": "Tl2O3 / Tl³⁺ (4f 스핀궤도 분리 ~4.4 eV)", "ref": "NIST XPS DB"},
+    {"core": "Tl 4f7/2", "BE_eV": 119.1, "assignment": "Tl2O·TlBr / Tl⁺ (Tl⁺가 Tl³⁺보다 살짝 높은 BE — 예상과 반대 경향, 최종상태 효과)", "ref": "NIST XPS DB; LLNL TlBr XPS"},
+    {"core": "Tl 4f7/2", "BE_eV": 117.1, "assignment": "Tl metal / Tl⁰ (환원 극단)", "ref": "International XPS Database (Tl metal)"}
+  ],
+  "raman": [],
+  "dos_character": "Tl⁺는 6s²6p⁰ — 5d¹⁰은 깊은 반코어, 채워진 6s² 고립전자쌍이 VBM 근처에 stereochemically active 상태를 넣고 빈 6p가 CBM 하단을 이룸(Tl⁺ 상은 대체로 좁은 gap 반도체). Tl³⁺(6s⁰)는 강산화성. inert-pair 특성상 6s가 상대론적으로 안정화돼 산화보다 Tl⁺를 선호.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p¹",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹",
+    "valence_orbitals": "6s² 6p¹ (4f¹⁴5d¹⁰ 반코어) — Tl⁺면 6s² 고립전자쌍(inert pair, 6p¹만 잃음), Tl³⁺면 6s⁰6p⁰",
+    "band_character": "(일반 전자구조) 상대론적 inert pair로 6s²가 안정화 -> Tl⁺(6s²) 지배; Tl⁺ 상은 채워진 6s가 VBM 근처, 빈 6p가 CBM으로 대체로 좁은 gap 반도체(Tl2O3 등). Tl³⁺는 강산화성이라 환원되기 쉬움",
+    "bonding": "Tl–O·Tl–할라이드에서 Tl⁺는 6s² 고립전자쌍으로 왜곡된 배위(stereochemically active); Tl 6s/6p–음이온 p 혼성. Tl⁺가 알칼리(K/Rb)처럼 큰 1가로 거동"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Tl+ VI 1.50 A, Tl3+ VI 0.885 A)",
+    "NIST XPS DB / LLNL TlBr XPS — Tl 4f7/2 (Tl2O3 ~118.6, Tl+ ~119.1, metal ~117.1 eV)",
+    "WebElements / CRC — Pauling EN 1.62, [Xe]4f14 5d10 6s2 6p1, 6s² inert pair"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii); SSB 앵커 없음(비캠페인 원소)"
+}

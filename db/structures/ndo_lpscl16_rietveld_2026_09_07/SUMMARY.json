@@ -1,0 +1,80 @@
+[
+ {
+  "name": "ndo_lpscl16_n4fu_O-bo4",
+  "n_fu": 4,
+  "nat": 54,
+  "formula": "Cl6Li26Nd2O3P2S15",
+  "charge": 0,
+  "min_width_A": [
+   9.798,
+   9.798,
+   9.798
+  ],
+  "O_motif": "bo4"
+ },
+ {
+  "name": "ndo_lpscl16_n4fu_O-distributed",
+  "n_fu": 4,
+  "nat": 54,
+  "formula": "Cl6Li26Nd2O3P2S15",
+  "charge": 0,
+  "min_width_A": [
+   9.798,
+   9.798,
+   9.798
+  ],
+  "O_motif": "distributed"
+ },
+ {
+  "name": "ndo_lpscl16_n4fu_O-free_s",
+  "n_fu": 4,
+  "nat": 54,
+  "formula": "Cl6Li26Nd2O3P2S15",
+  "charge": 0,
+  "min_width_A": [
+   9.798,
+   9.798,
+   9.798
+  ],
+  "O_motif": "free_s"
+ },
+ {
+  "name": "ndo_lpscl16_n5fu_O-bo4",
+  "n_fu": 5,
+  "nat": 66,
+  "formula": "Cl8Li31Nd2O3P3S19",
+  "charge": 0,
+  "min_width_A": [
+   5.657,
+   5.657,
+   28.284
+  ],
+  "O_motif": "bo4"
+ },
+ {
+  "name": "ndo_lpscl16_n5fu_O-distributed",
+  "n_fu": 5,
+  "nat": 66,
+  "formula": "Cl8Li31Nd2O3P3S19",
+  "charge": 0,
+  "min_width_A": [
+   5.657,
+   5.657,
+   28.284
+  ],
+  "O_motif": "distributed"
+ },
+ {
+  "name": "ndo_lpscl16_n5fu_O-free_s",
+  "n_fu": 5,
+  "nat": 66,
+  "formula": "Cl8Li31Nd2O3P3S19",
+  "charge": 0,
+  "min_width_A": [
+   5.657,
+   5.657,
+   28.284
+  ],
+  "O_motif": "free_s"
+ }
+]

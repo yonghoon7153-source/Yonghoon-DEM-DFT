@@ -1,0 +1,37 @@
+metal,case,voltage_V,to_phosphate_pct,to_sulfide_pct,to_other_pct,phosphate_phase
+Ni,no Nd (Li-matched control),2.5,0.0,99.99,0.0,
+Ni,no Nd (Li-matched control),3.0,0.0,99.98,0.0,
+Ni,no Nd (Li-matched control),3.5,7.44,59.98,32.56,Ni(PO3)2
+Ni,no Nd (Li-matched control),4.0,22.8,77.2,0.0,Ni(PO3)2
+Ni,no Nd (Li-matched control),4.3,13.25,86.76,0.0,Ni(PO3)2
+Ni,no Nd (Li-matched control),4.5,7.51,92.49,0.0,NiP4O11
+Ni,Nd2O3@LPSCl1.6 x=0.02,2.5,0.0,99.99,0.0,
+Ni,Nd2O3@LPSCl1.6 x=0.02,3.0,0.0,100.02,0.0,
+Ni,Nd2O3@LPSCl1.6 x=0.02,3.5,6.01,61.09,32.91,Ni(PO3)2
+Ni,Nd2O3@LPSCl1.6 x=0.02,4.0,21.03,78.97,0.0,Ni(PO3)2
+Ni,Nd2O3@LPSCl1.6 x=0.02,4.3,10.08,89.93,0.0,Ni(PO3)2
+Ni,Nd2O3@LPSCl1.6 x=0.02,4.5,8.1,91.9,0.0,NiP4O11
+Co,no Nd (Li-matched control),2.5,0.0,100.0,0.0,
+Co,no Nd (Li-matched control),3.0,0.0,100.0,0.0,
+Co,no Nd (Li-matched control),3.5,0.0,100.0,0.0,
+Co,no Nd (Li-matched control),4.0,0.0,100.0,0.0,
+Co,no Nd (Li-matched control),4.3,0.0,100.0,0.0,
+Co,no Nd (Li-matched control),4.5,0.0,100.0,0.0,
+Co,Nd2O3@LPSCl1.6 x=0.02,2.5,0.0,100.0,0.0,
+Co,Nd2O3@LPSCl1.6 x=0.02,3.0,0.0,100.0,0.0,
+Co,Nd2O3@LPSCl1.6 x=0.02,3.5,0.0,100.0,0.0,
+Co,Nd2O3@LPSCl1.6 x=0.02,4.0,0.0,100.0,0.0,
+Co,Nd2O3@LPSCl1.6 x=0.02,4.3,0.0,100.0,0.0,
+Co,Nd2O3@LPSCl1.6 x=0.02,4.5,0.0,100.0,0.0,
+Mn,no Nd (Li-matched control),2.5,100.0,0.0,0.0,LiMnPO4
+Mn,no Nd (Li-matched control),3.0,100.0,0.0,0.0,LiMnPO4
+Mn,no Nd (Li-matched control),3.5,100.0,0.0,0.0,Mn(PO3)2
+Mn,no Nd (Li-matched control),4.0,100.0,0.0,0.0,Mn(PO3)2
+Mn,no Nd (Li-matched control),4.3,100.0,0.0,0.0,MnP4O11
+Mn,no Nd (Li-matched control),4.5,100.0,0.0,0.0,MnP4O11
+Mn,Nd2O3@LPSCl1.6 x=0.02,2.5,100.0,0.0,0.0,LiMnPO4
+Mn,Nd2O3@LPSCl1.6 x=0.02,3.0,100.0,0.0,0.0,LiMnPO4
+Mn,Nd2O3@LPSCl1.6 x=0.02,3.5,100.0,0.0,0.0,Mn(PO3)2
+Mn,Nd2O3@LPSCl1.6 x=0.02,4.0,100.0,0.0,0.0,Mn(PO3)2
+Mn,Nd2O3@LPSCl1.6 x=0.02,4.3,100.0,0.0,0.0,MnP4O11
+Mn,Nd2O3@LPSCl1.6 x=0.02,4.5,100.0,0.0,0.0,MnP4O11

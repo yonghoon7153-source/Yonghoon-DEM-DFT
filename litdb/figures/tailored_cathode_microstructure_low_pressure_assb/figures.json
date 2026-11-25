@@ -1,0 +1,106 @@
+{
+ "slug": "tailored_cathode_microstructure_low_pressure_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/42. tailored-cathode-composite-microstructure-enables-long-cycle-life-at-low-pressure-for-all-solid-state-batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Characterizations of the cathode composites. FIB-SEM cross-sectional images for the coarse-LPSC cathode composite (a) and the fine-LPSC cathode composite (b). Schematic diagram of the cathode composite and Li+ ion tortuosity for the coarse-LPSC cathode composite (c) and the fine-LPSC cathode composite (d). (e) Nyquist plots of the coarse-LPSC and fine-LPSC cathode composites, along with the equivalent circuit model. (f) Corresponding DRT plots for both cathode composites. between CAM and SSE, leading to improved performance.15 A hierarchical composite structure that combines small (∼300 nm to 4 μm) and large (∼20 μm) Li5.5PS4.5Cl1.5 particles with CAM was shown to result in a lower tortuosity and faster lithium (Li) ion transport.16 Research has shown that coating an SSE layer onto the surface of CAM particles can establish intimate interfacial contact, leading to improved perf",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    448.0
+   ],
+   "w": 2151,
+   "h": 1641,
+   "dpi": 300,
+   "src": "42. tailored-cathode-composite-microstructure-enables-long-cycle-life-at-low-pressure-for-all-solid-state-batteries.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical performance of ASSBs employing the coarse-LPSC cathode composite and fine-LPSC cathode composite at 0.1 C, 30 °C, and different pressures. Charge−discharge voltage profiles for the coarse-LPSC cathode composite (a) and the fine-LPSC cathode composite (b) under 30, 10, and 2 MPa. (c) Cycling performance of the coarse-LPSC cathode composite and fine-LPSC cathode composite under 30, 10, and 2 MPa. are shown in Figure 1f. Figure S16 provides a detailed analysis of the seven peaks, labeled P1−P7, with a focus on the changes observed in peaks P1 to P4. Notably, the grain boundary resistance at P1 decreases, while its time constant increases from 0.5 to 1.4 μs for the fine-LPSC cathode composite. Since the time constant (τ) is the product of resistance (R) and capacitance (C), the increase in time constant indicates a rise in the capacitance at the grain boundaries, wh",
+   "bbox": [
+    0.0,
+    51.4,
+    594.9,
+    392.4
+   ],
+   "w": 2479,
+   "h": 1421,
+   "dpi": 300,
+   "src": "42. tailored-cathode-composite-microstructure-enables-long-cycle-life-at-low-pressure-for-all-solid-state-batteries.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. GITT curves of the coarse-LPSC cathode composite and fine-LPSC cathode composite at 30 (a), 10 (b), and 2 MPa (c) after 100 cycles. Nyquist and corresponding DRT plots for the coarse-LPSC cathode composite and fine-LPSC cathode composite at 30 MPa (d, g), 10 MPa (e, h), and 2 MPa (f, i) after 1 and 100 cycles. 85.6% capacity, a significant improvement of 35.2%. The rate capability was also evaluated by cycling the cells at various current densities (0.1, 0.2, 0.3, and 0.5 C) for five cycles, as shown in Figure S18. The fine-LPSC cathode composite exhibited 40% and 50% higher capacity than the coarse-LPSC cathode composite at 0.3 and 0.5 C, respectively. These results demonstrate that the fine-LPSC cathode composite signifi- cantly enhances the long-term cycling stability and rate performance of NCM811 in ASSBs, particularly at lower stack pressures (2 MPa). finding supports the",
+   "bbox": [
+    0.0,
+    51.4,
+    607.4,
+    475.4
+   ],
+   "w": 2531,
+   "h": 1767,
+   "dpi": 300,
+   "src": "42. tailored-cathode-composite-microstructure-enables-long-cycle-life-at-low-pressure-for-all-solid-state-batteries.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Structural stability. (a−f) FIB-SEM cross-sectional image of the coarse-LPSC cathode composite and fine-LPSC cathode composite after 100 cycles at 30, 10, and 2 MPa. (g−i) XRD patterns of the coarse-LPSC cathode composite and fine-LPSC cathode composite after 100 cycles at 30, 10, and 2 MPa. implying severe decay of the crystal structure and interface. Specifically, at 2 MPa, the resistance of the coarse-LPSC cathode composite increases by 545 Ω, while the fine-LPSC cathode composite sees an increase of only 34 Ω. We attribute this to a more uniform stress exerted by the NCM811/LPSC composite during cycling. The effect of pressure in mitigating degradation is thus more pronounced with coarse-LPSC composites. Finally, we note that the Li/SSE interface also deteriorates with cycling at all pressures. However, the fine- LPSC composite cells experience a smaller increase in the Li/",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    441.1
+   ],
+   "w": 2151,
+   "h": 1612,
+   "dpi": 300,
+   "src": "42. tailored-cathode-composite-microstructure-enables-long-cycle-life-at-low-pressure-for-all-solid-state-batteries.pdf",
+   "blank": 0.565
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of the CAM utilization Configuration Minimum Overlap CAM Utilization Coarse-LPSC 0% 94% 2% 83% 5% 56% 10% 20% Fine-LPSC 0% 100% 2% 100% 5% 94% 10% 28%",
+   "bbox": [
+    310.4,
+    276.2,
+    560.5,
+    402.0
+   ],
+   "w": 1043,
+   "h": 525,
+   "dpi": 300,
+   "src": "42. tailored-cathode-composite-microstructure-enables-long-cycle-life-at-low-pressure-for-all-solid-state-batteries.pdf",
+   "blank": 0.867
+  }
+ ]
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "rank": 0,
+    "ewald_eV": -1044.8233,
+    "name": "cfg0000_E-1044.823",
+    "B_sites": [
+      7,
+      14
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 1,
+    "ewald_eV": -1044.8233,
+    "name": "cfg0001_E-1044.823",
+    "B_sites": [
+      0,
+      7
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 2,
+    "ewald_eV": -1044.8233,
+    "name": "cfg0002_E-1044.823",
+    "B_sites": [
+      14,
+      21
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 3,
+    "ewald_eV": -1044.8233,
+    "name": "cfg0003_E-1044.823",
+    "B_sites": [
+      21,
+      28
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 4,
+    "ewald_eV": -1044.8233,
+    "name": "cfg0004_E-1044.823",
+    "B_sites": [
+      0,
+      28
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 5,
+    "ewald_eV": -1043.8282,
+    "name": "cfg0005_E-1043.828",
+    "B_sites": [
+      14,
+      28
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 6,
+    "ewald_eV": -1043.8282,
+    "name": "cfg0006_E-1043.828",
+    "B_sites": [
+      7,
+      28
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 7,
+    "ewald_eV": -1043.8282,
+    "name": "cfg0007_E-1043.828",
+    "B_sites": [
+      0,
+      21
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 8,
+    "ewald_eV": -1043.8282,
+    "name": "cfg0008_E-1043.828",
+    "B_sites": [
+      7,
+      21
+    ],
+    "n_Li_fill": 31
+  },
+  {
+    "rank": 9,
+    "ewald_eV": -1043.8282,
+    "name": "cfg0009_E-1043.828",
+    "B_sites": [
+      0,
+      14
+    ],
+    "n_Li_fill": 31
+  }
+]

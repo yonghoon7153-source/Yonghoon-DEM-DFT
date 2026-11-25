@@ -1,0 +1,160 @@
+{
+ "slug": "malifarge2017_tortuosity_symmetric_cell_impedance_tlm",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Transmission line representing the equivalent electric circuit of a porous electrode. The top-line stands for the solid phase electronic path while the bottom-line stands for the liquid phase ionic path.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    604.8,
+    288.2,
+    722.5
+   ],
+   "w": 1081,
+   "h": 491,
+   "dpi": 300,
+   "src": "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf",
+   "blank": 0.933,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Nyquist plot representation of model simulations using identical parameters for the P2D model (black cross) and TLM with α = 1 (blue line) and α = 0.95 (blue dotted-line). The three domains dividing the Nyquist plot diagram are indicated, to support discussion in text.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.8,
+    289.1,
+    303.4
+   ],
+   "w": 1081,
+   "h": 1012,
+   "dpi": 300,
+   "src": "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf",
+   "blank": 0.935,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Impact of the electrode geometry on the impedance diagrams of graphite symmetric coin cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.9,
+    556.0,
+    211.4
+   ],
+   "w": 1080,
+   "h": 628,
+   "dpi": 300,
+   "src": "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf",
+   "blank": 0.905,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. TLM ﬁt examples of a thin (4.8 mg.cm−2) (circles) and a thick (15.7 mg.cm−2) (diamonds) electrodes with similar porosity values (∼40%).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.5,
+    288.2,
+    541.4
+   ],
+   "w": 1080,
+   "h": 2005,
+   "dpi": 300,
+   "src": "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf",
+   "blank": 0.967,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Variation of the interfacial pseudo-capacitance Q0 as a function of the active material fraction ε1 for the whole set of graphite electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    60.8,
+    555.2,
+    218.4
+   ],
+   "w": 1081,
+   "h": 658,
+   "dpi": 300,
+   "src": "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf",
+   "blank": 0.957,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Fitted pore tortuosity using the TLM model, represented against porosity for four different electrode loadings; Bruggeman relation (black- dotted line) in comparison with a power law ﬁt (dotted line) of each electrode loading.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.7,
+    289.0,
+    473.3
+   ],
+   "w": 1081,
+   "h": 1721,
+   "dpi": 300,
+   "src": "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf",
+   "blank": 0.927,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "I",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table I. List of the model parameters used for graphite symmetric cell simulations at 25◦C (a: assumed, m: measured, s: set, dj: Djian et al.,51 e: Ender et al.,47 lu: Lundgren et al.28).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.5,
+    575.0,
+    284.0,
+    748.5
+   ],
+   "w": 1045,
+   "h": 724,
+   "dpi": 300,
+   "src": "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf",
+   "blank": 0.897,
+   "manual_crop": "auto extractor returned no table for Table I (its caption and rows were swallowed into the Fig. 4 caption text); clip = left-column caption top to the last table row on PDF p.5 = printed E3332 (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

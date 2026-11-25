@@ -1,0 +1,101 @@
+{
+ "card": "db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json (Nd) · db/properties/b2o3_site_screen_estimand_2026_10_14.json (B)",
+ "host": "modelc_V0_k663 × (1,1,2) — 정본 Cl 배열 고정 (Ewald 로 다시 뽑지 않는다)",
+ "compound": "Nd2O3",
+ "git_head": "4be682d644edecdc371c454f2e2868cef1285b36",
+ "commands": [
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_q826kyac/modelc_1x1x2.xyz --compound Nd2O3 --x_compound 0.25 --cation_site P_4b --anion_site S_16e --method random --vacancy_method random --seed 2000 --n_seeds 100 --out /tmp/site10_q826kyac/MP_random",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_q826kyac/modelc_1x1x2.xyz --compound Nd2O3 --x_compound 0.25 --cation_site P_4b --anion_site S_16e --method random --vacancy_method near_cation --seed 2500 --n_seeds 100 --out /tmp/site10_q826kyac/MP_near_cation",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_q826kyac/modelc_1x1x2.xyz --compound Nd2O3 --x_compound 0.25 --cation_site Li_24g --anion_site S_16e --method random --vacancy_method random --seed 4000 --n_seeds 100 --out /tmp/site10_q826kyac/MLi_random",
+  "/usr/bin/python3 /home/user/Yonghoon-DEM-DFT/tools/doping/substitute_compound.py --base /tmp/site10_q826kyac/modelc_1x1x2.xyz --compound Nd2O3 --x_compound 0.25 --cation_site Li_24g --anion_site S_16e --method random --vacancy_method near_cation --seed 4500 --n_seeds 100 --out /tmp/site10_q826kyac/MLi_near_cation"
+ ],
+ "budget": {
+  "n_each": 6,
+  "seeds_per_vacancy_method": 100,
+  "vacancy_methods": [
+   "random",
+   "near_cation"
+  ]
+ },
+ "stats": {
+  "MP": {
+   "generated": 200,
+   "rejected_O_same_PS4": 128,
+   "pool": 72,
+   "kept": 6
+  },
+  "MLi": {
+   "generated": 200,
+   "rejected_O_same_PS4": 48,
+   "pool": 152,
+   "kept": 6
+  }
+ },
+ "files": {
+  "MP/NdMP_00.xyz": {
+   "source": "MP_near_cation/Nd2O3_x250_s84.xyz",
+   "ewald_eV": -2246.0156,
+   "sha256": "6d659d12136c89956261d94b973cc996dd8ea8dd3b360b67266a67f4244fc236"
+  },
+  "MP/NdMP_01.xyz": {
+   "source": "MP_random/Nd2O3_x250_s63.xyz",
+   "ewald_eV": -2245.9932,
+   "sha256": "b739af1b3cf6dde28b2949039bb22a18fc3efdc8e043404fba2c260e7f86e57b"
+  },
+  "MP/NdMP_02.xyz": {
+   "source": "MP_near_cation/Nd2O3_x250_s26.xyz",
+   "ewald_eV": -2241.8888,
+   "sha256": "1d061070505e7bf526b5f1a3e84ed164e111b87357b8540dde92ef69f9196bb5"
+  },
+  "MP/NdMP_03.xyz": {
+   "source": "MP_random/Nd2O3_x250_s79.xyz",
+   "ewald_eV": -2241.8355,
+   "sha256": "6f096d2e4317b0fd97b2de6f1faf991eda2b38704efcd83d2be796573636bca3"
+  },
+  "MP/NdMP_04.xyz": {
+   "source": "MP_near_cation/Nd2O3_x250_s68.xyz",
+   "ewald_eV": -2241.1463,
+   "sha256": "62a5465c56bddf5d7325397b5571c2b77b382ef3d423a56c38d479fd736c220d"
+  },
+  "MP/NdMP_05.xyz": {
+   "source": "MP_random/Nd2O3_x250_s17.xyz",
+   "ewald_eV": -2230.8276,
+   "sha256": "bd71da7e9b9d9f36cb372f99f4500dae80a36c23e6206f3886592d370dd5683d"
+  },
+  "MLi/NdMLi_00.xyz": {
+   "source": "MLi_near_cation/Nd2O3_x250_s27.xyz",
+   "ewald_eV": -2420.2334,
+   "sha256": "b8906420b994865dafb5da4640d0f2f5335cca013c91688360a7738845948ffa"
+  },
+  "MLi/NdMLi_01.xyz": {
+   "source": "MLi_near_cation/Nd2O3_x250_s31.xyz",
+   "ewald_eV": -2418.5975,
+   "sha256": "886871435670f4a4d8cab1889a713717e7fc90fbdb0d43254a1d8353ae9a7be9"
+  },
+  "MLi/NdMLi_02.xyz": {
+   "source": "MLi_near_cation/Nd2O3_x250_s90.xyz",
+   "ewald_eV": -2418.3314,
+   "sha256": "0ccd6a256d06e6e3402b861f81f5f2112f7a5f4bf80f6dd22da9f9cef3d5bfa3"
+  },
+  "MLi/NdMLi_03.xyz": {
+   "source": "MLi_near_cation/Nd2O3_x250_s40.xyz",
+   "ewald_eV": -2418.0366,
+   "sha256": "193296c283672c621ed0663479e6c1af541d5e0eb53c527a1da503ce7f5accb7"
+  },
+  "MLi/NdMLi_04.xyz": {
+   "source": "MLi_near_cation/Nd2O3_x250_s53.xyz",
+   "ewald_eV": -2415.5126,
+   "sha256": "693ab35e4736824cb65f173a4088c5717c1d1698b932cd59067d39eca982ef2a"
+  },
+  "MLi/NdMLi_05.xyz": {
+   "source": "MLi_near_cation/Nd2O3_x250_s92.xyz",
+   "ewald_eV": -2415.1651,
+   "sha256": "2c39ce5f319b1387681ae5645e620025c0310b34a524e9f1395cd612055b73eb"
+  },
+  "host/Ndhost_00.xyz": {
+   "source": "site10_q826kyac/modelc_1x1x2.xyz",
+   "ewald_eV": -2389.4513,
+   "sha256": "6f55983da879498f40107ddd5dbd9acec3daa12adffead6bac8e1b2826b7f720"
+  }
+ }
+}
