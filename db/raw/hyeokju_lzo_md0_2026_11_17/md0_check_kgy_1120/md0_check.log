@@ -1,6 +1,0 @@
-WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
-  bulk_B144: 힘 MAE 0.0261 eV/Å · 원소별 Li 0.010 · O 0.035 · Zr 0.032 · 상대 E RMSE 0.32 meV/atom → G1 True · G2 True · 통과
-  interface_I142_liouter_aLZO16: 힘 MAE 0.0306 eV/Å · 원소별 Cl 0.013 · Li 0.015 · O 0.034 · P 0.038 · S 0.051 · Zr 0.051 · 상대 E RMSE 0.48 meV/atom → G1 True · G2 True · 통과
-
-★ 두 모델 다 통과 → MD-1 결과 전 개정으로 (카드 §4)
-→ /home/kgy/work/runs/hj_md0_1117/md0_verdict.json

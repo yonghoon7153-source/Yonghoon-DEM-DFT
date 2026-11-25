@@ -1,6 +1,0 @@
-&DOS
-  prefix = 'Li2ZrO3_mp-aaaaagdw'
-  outdir = './tmp'
-  fildos = 'Li2ZrO3_mp-aaaaagdw.dos'
-  degauss = 0.007
-/

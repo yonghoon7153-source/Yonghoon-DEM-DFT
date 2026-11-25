@@ -1,6 +1,0 @@
-&DOS
-  prefix = 'MnS2_mp-aaacfzcu'
-  outdir = './tmp'
-  fildos = 'MnS2_mp-aaacfzcu.dos'
-  degauss = 0.007
-/

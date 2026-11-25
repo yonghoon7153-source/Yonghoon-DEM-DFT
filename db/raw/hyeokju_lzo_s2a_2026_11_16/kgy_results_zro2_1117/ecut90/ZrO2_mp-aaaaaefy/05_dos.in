@@ -1,6 +1,0 @@
-&DOS
-  prefix = 'ZrO2_mp-aaaaaefy'
-  outdir = './tmp'
-  fildos = 'ZrO2_mp-aaaaaefy.dos'
-  degauss = 0.007
-/

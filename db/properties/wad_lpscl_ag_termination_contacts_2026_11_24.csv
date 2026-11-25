@@ -1,5 +1,0 @@
-termination,registry,n_atoms,area_A2,Ag_contact_S_free,Ag_contact_S_PS4,Ag_contact_Li,Ag_contact_Cl,min_gap_SE_to_Ag_A,cutoffs,source
-S-outer,A,332,202.21,4,0,8,0,2.122,Ag-S<=2.9 Li-Ag<=3.0 Cl-Ag<=3.0 A (MIC) · S_PS4 = S with a P within 2.5 A,db/raw/wad_se_pairs_uma_2026_10_01/relax/P1_<term>/<reg>/relaxed.extxyz (UMA+D3 relaxed)
-S-outer,B,332,202.21,4,0,8,0,2.139,Ag-S<=2.9 Li-Ag<=3.0 Cl-Ag<=3.0 A (MIC) · S_PS4 = S with a P within 2.5 A,db/raw/wad_se_pairs_uma_2026_10_01/relax/P1_<term>/<reg>/relaxed.extxyz (UMA+D3 relaxed)
-Li-PS4-outer,A,308,202.21,0,8,4,0,2.24,Ag-S<=2.9 Li-Ag<=3.0 Cl-Ag<=3.0 A (MIC) · S_PS4 = S with a P within 2.5 A,db/raw/wad_se_pairs_uma_2026_10_01/relax/P1_<term>/<reg>/relaxed.extxyz (UMA+D3 relaxed)
-Li-PS4-outer,B,308,202.21,0,8,4,0,2.164,Ag-S<=2.9 Li-Ag<=3.0 Cl-Ag<=3.0 A (MIC) · S_PS4 = S with a P within 2.5 A,db/raw/wad_se_pairs_uma_2026_10_01/relax/P1_<term>/<reg>/relaxed.extxyz (UMA+D3 relaxed)

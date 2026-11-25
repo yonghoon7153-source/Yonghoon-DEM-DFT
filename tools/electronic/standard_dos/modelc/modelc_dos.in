@@ -1,6 +1,0 @@
-&DOS
-    prefix='modelc'
-    outdir='./tmp'
-    fildos='modelc.dos'
-    DeltaE=0.01
-/

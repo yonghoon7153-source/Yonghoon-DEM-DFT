@@ -1,30 +1,0 @@
-
-═══ ZrO2 (ZrO2) ═══
-Retrieving SummaryDoc documents:   0%|          | 0/20 [00:00<?, ?it/s]Retrieving SummaryDoc documents: 100%|██████████| 20/20 [00:00<00:00, 224895.66it/s]
-  mp-id            공간군           E_hull   원자       갭 자성    관측
-  mp-aaaaaefy      P2_1/c        0.0000   12   3.532 Unkno ✅
-  mp-aaabsens      Pbca          0.0095   24   3.463 Unkno ⚠ 예측
-  mp-aaacpsqk      Pbca          0.0133   24   3.579 Unkno ✅
-  mp-aaabfrjx      Pca2_1        0.0167   12   3.703 Unkno ✅
-  mp-aaaaadva      P4_2/nmc      0.0271    6   3.882 Unkno ✅
-  mp-aaabqyzx      Pnma          0.0280   12   3.960 Unkno ⚠ 예측
-  mp-aaabqzzr      Pnma          0.0288   12   3.211 Unkno ⚠ 예측
-  mp-aaabsdus      P4/n          0.0473   30   3.317 Unkno ⚠ 예측
-  mp-aaabqxzn      I4_1/amd      0.0482    6   3.726 Unkno ⚠ 예측
-  mp-aaaaacif      Fm-3m         0.0557    3   3.124 Unkno ✅
-  mp-aaabseop      Pbca          0.0609   24   3.590 Unkno ⚠ 예측
-  mp-aaabsdur      P4_2/mnm      0.0627    6   3.435 Unkno ⚠ 예측
-  mp-aaabsdxk      Pbcn          0.0627   36   3.576 Unkno ⚠ 예측
-  mp-aaabsena      Pnma          0.0883   24   3.613 NM    ⚠ 예측
-  mp-aaabraab      C2/m          0.0911   12   4.184 Unkno ⚠ 예측
-  mp-aaaaablb      Pnma          0.1031   12   2.859 NM    ✅
-  mp-aaabqymn      Pnma          0.1135   12   3.406 Unkno ⚠ 예측
-  mp-aaabsdvr      C2/m          0.1305    9   3.825 Unkno ⚠ 예측
-  mp-aaacswew      P1            0.2227   90   2.911 NM    ⚠ 예측
-  mp-aaackqlk      Pmm2          0.6057   72   0.000 FM    ⚠ 예측
-Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving MaterialsDoc documents: 100%|██████████| 1/1 [00:00<00:00, 21183.35it/s]
-Retrieving CoreTaskDoc documents:   0%|          | 0/1 [00:00<?, ?it/s]Retrieving CoreTaskDoc documents: 100%|██████████| 1/1 [00:00<00:00, 22550.02it/s]
-  갭 출처: aaafdgia = GGA NSCF Line → GGA
-  ✓ hyeokju_ZrO2_mp-aaaaaefy · P2_1/c · 12 원자 · E_hull 0.0 · MP 갭 3.5322
-
-출처 기록 → db/properties/hyeokju_lzo_s2a_zro2_structures_provenance_2026_11_17.json  (문제 0 건)

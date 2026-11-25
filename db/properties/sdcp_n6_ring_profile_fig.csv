@@ -1,8 +1,0 @@
-﻿# n=6 D. Loewdin spin per thiophene ring, %. spin_pct_ring_atoms = ring atoms only (July definition; sums to backbone 79.7). spin_pct_incl_ring_H = reference including the terminal alpha-H of ring0/ring5 (sums to 79.5; the -0.2 is spin polarization on ring5's H). Re-analysis 2026-09-08 (gabia analyze_n6_v2.log), no recomputation.
-ring_index,ring_label,spin_pct_ring_atoms,spin_pct_incl_ring_H,definition
-0,ring0,3.8,3.8,ring atoms only (July definition)
-1,ring1,7.3,7.3,ring atoms only (July definition)
-2,ring2,9.4,9.4,ring atoms only (July definition)
-3,ring3,15.9,15.9,ring atoms only (July definition)
-4,ring4,23.3,23.3,ring atoms only (July definition)
-5,ring5,20.0,19.8,ring atoms only (July definition)

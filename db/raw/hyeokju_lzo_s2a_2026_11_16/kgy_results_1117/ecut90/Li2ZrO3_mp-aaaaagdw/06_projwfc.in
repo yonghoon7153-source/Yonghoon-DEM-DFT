@@ -1,7 +1,0 @@
-&PROJWFC
-  prefix = 'Li2ZrO3_mp-aaaaagdw'
-  outdir = './tmp'
-  filpdos = 'Li2ZrO3_mp-aaaaagdw'
-  degauss = 0.007
-  ngauss = 0
-/

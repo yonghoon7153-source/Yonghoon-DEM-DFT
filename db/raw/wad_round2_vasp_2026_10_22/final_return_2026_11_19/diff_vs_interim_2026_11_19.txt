@@ -1,6 +1,0 @@
-# 11-17 중간본 (interim_return_2026_11_17/round2_return.tgz · sha256 117c85a6…) 대 11-19 최종본 (이 폴더 round2_return.tgz · sha256 ea819693…)
-# 구성원 내용 sha256 대조 (python tarfile · 이 세션 2026-11-20)
-interim 261 · final 285 · 중간본에만 0 · 최종본에만 24 · 내용 바뀜 2
-최종본에만: run/CC_S33_AB_pbed3_bound/ · run/CC_S33_AB_pbed3_far/ (각 12 파일 — IBZKPT INCAR KPOINTS OSZICAR OUTCAR POSCAR POTCAR.sha256 POTCAR.species.sha256 POTCAR.titel attempt.json attempt.start stdout.log)
-바뀜: run/env.txt (7707 → 8767 B · 앞부분 그대로 · 17 줄 덧붙임) · run/status.tsv (1401 → 1528 B · 앞부분 그대로 · 2 줄 덧붙임)
-반송 MANIFEST.sha256 의 sha256 = 714324cca0d0f05e39966543e3ffa76956fe51109e13f192cad6dc7f8e04cfed (보낸 묶음과 같음)

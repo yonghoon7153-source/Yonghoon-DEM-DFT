@@ -1,5 +1,0 @@
-# gabia /data/work/pseudo 2026-11-16 23:52:23
-4449e4b2026dd225cbf03a6cd6c9364f  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
-0234752ac141de4415c5fc33072bef88  O.pbe-n-kjpaw_psl.0.1.UPF
-5db81b1e868ab7776c4564c113de050b  Zr_pbe_v1.uspp.F.UPF
-# SSSP json
