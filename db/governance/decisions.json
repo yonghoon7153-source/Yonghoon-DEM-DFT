@@ -14646,6 +14646,81 @@
     "근거_발화": "사용자 2026-11-23 (대피 세션 · 채팅): 카드 요약 ('이 카드 이대로 비준해 주시면 … kgy 블록') 뒤 'ㅇㅇ kgy에서 진행하자'",
     "decision_digest": "sha256:ba2bcb041f472ceba0121adfc19787110c15ee300c856758020408ab1c03f032"
    }
+  },
+  {
+   "id": "D-2026-11-25-b2o3-site-dft-amend1",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "b2o3.site_dft.formation_balanced",
+   "slot": "b2o3_b_site_dft_formation_balanced_amend1",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc10"
+    ],
+    "tasks": [
+     "site_preference_balanced"
+    ],
+    "methods": [
+     "qe-uspp-paw__pbe-scf-fixedcell-relax"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "B 자리 DFT 개정 1 (결과 전) — 단일점 · 이완 SCF 믹싱 local-TF β 0.2 (12 점 전부 · 새 폴더) · 기계 V100 32 GB · 실행 11-28/29 예약",
+   "statement": "카드 db/properties/b2o3_site_dft_estimand_2026_11_23.json 의 ⏩_개정_1_2026_11_25_결과_전 이 정의다. 바뀌는 것은 SCF 경로 설정 (mixing) 과 기계뿐 — 보고량 · 판정 규칙 · 다른 DFT 설정은 그대로.",
+   "rationale": "kgy 단일점이 57 Å 막대 셀에서 첫 SCF 오차 2–5 만 Ry (9 단계 29 Å 셀은 ≈ 100 Ry) · 반복 2 Davidson 평균 74.6 회 · addusdens_g 의 8.99 GB 장치 할당 실패 (OOM) — 사용자 11-25 선택.",
+   "decision_state": "active",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/b2o3_site_dft_estimand_2026_11_23.json",
+   "amends": "D-2026-11-23-b2o3-site-dft",
+   "evidence": [
+    "db/properties/b2o3_site_dft_runlog_2026_11_23.json",
+    "db/raw/b2o3_bo_stage9_dft_2026_11_20/sp/sp_FB_1_cfg0040/scf.out"
+   ],
+   "reopen_criteria": [
+    "새 믹싱에서도 단일점이 수렴하지 않으면 멈추고 다시 묻는다 (다음 개정)",
+    "V100 에 안 들어가거나 못 쓰면 기계만 다시 묻는다"
+   ],
+   "track": {
+    "name": "우리 DFT 기준선 (B₂O₃)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-25",
+     "session": "본 세션 claude/friendly-meitner-lldvar"
+    }
+   ],
+   "_note": "active — 사용자 결정 2026-11-25 (AskUserQuestion · 결과 전) · 실행은 11-28/29 예약 (🔔 용훈 포메이션) · 실행 전에 도구 (믹싱 덮어쓰기 · G2 재생성) 와 V100 준비를 먼저 한다.",
+   "status_history": [
+    {
+     "at": "2026-11-25",
+     "state": "proposed",
+     "by": "claude",
+     "note": "kgy 단일점 정체 · OOM 진단 뒤 AskUserQuestion 두 개 (믹싱 · 기계) — 결과 전"
+    },
+    {
+     "at": "2026-11-25",
+     "state": "active",
+     "by": "사용자",
+     "note": "선택 — 사용자 2026-11-25 AskUserQuestion (실행은 11-28/29 예약) — ① '[b2o3 B-site single points · run around 11-28/29] … Change the SCF mixing for all 12 points before seeing results?' → 'local-TF · β 0.2 (Recommended)' ② '… BMLi_00 crashed because the augmentation-charge step (addusdens_g) tried to allocate an extra 8.99 GB on the GPU … Which machine?' → 'V100 32 GB (Recommended)' — 결과 전 (단일점 수렴 0 건)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-25T01:55:49Z",
+    "commit": "90d1ec083667662b55696d584422ccb0e89499ed",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-25 AskUserQuestion (실행은 11-28/29 예약) — ① '[b2o3 B-site single points · run around 11-28/29] … Change the SCF mixing for all 12 points before seeing results?' → 'local-TF · β 0.2 (Recommended)' ② '… BMLi_00 crashed because the augmentation-charge step (addusdens_g) tried to allocate an extra 8.99 GB on the GPU … Which machine?' → 'V100 32 GB (Recommended)' — 결과 전 (단일점 수렴 0 건)",
+    "decision_digest": "sha256:f3be76f0b1cabdcd86a51b94027d303857a71fd51a85220614e9fd7d1568c78d"
+   }
   }
  ]
 }
