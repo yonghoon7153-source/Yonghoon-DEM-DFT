@@ -23,6 +23,9 @@ evidenceScope: multi-source-primary
 > **충돌 0 의 조건은 하나다 — 대피하는 동안 friendly 에 아무도 쓰지 않는다.** 이 카드를 담은 커밋 ("Evacuation handoff card 2026-11-25") 이 friendly 세션의 마지막 커밋이다.
 > 원격 (kgy · gabia · V100) 블록도 friendly 로 push 하지 않는다. 그러면 복귀는 `git merge --ff-only` 한 줄이다 (사용자 로컬 웹앱 메모 커밋이 끼면 ■6 의 --no-ff 갈래).
 >
+> ⚠ **11-25 16:06–16:32 KST 에 litdb 정리 세션이 friendly 에 7 커밋을 올렸다** (MPFEM · MPM–DEM digest 4 편 · Yoo 2026 권 번호 · 파일을 지웠다가 되살린 한 쌍 — 순삭제 0) —
+> 이 카드 커밋 b7d8efde 와 머지 커밋 8c9c6ab6 (충돌 0 · 양쪽이 같이 고친 파일 0) 로 합쳤다. 대피 동안에도 그 세션이 friendly 에 litdb 를 더 올릴 수 있다 → 복귀는 ■6 의 --no-ff 갈래일 수 있다.
+>
 > ⚠ 원격 상태 마지막 실측 = **2026-11-25 13:19 KST** (gabia 11b watch) · kgy 큐 세움 확인 11-25 10:4x (블록 5c 출력). 그 뒤는 사용자가 붙여 주는 출력으로만 쓴다.
 
 ## 0. 새 세션 (서브) 에 붙여 넣을 프롬프트
@@ -37,9 +40,9 @@ evidenceScope: multi-source-primary
 ■ 1. 브랜치 (제일 먼저)
 - 이 세션 브랜치 = 너의 시스템 지시에 적힌 개발 브랜치 (아래 <이 세션 브랜치>).
 - git fetch origin claude/friendly-meitner-lldvar
-- git log --oneline -4 origin/claude/friendly-meitner-lldvar → 맨 위가 "Evacuation handoff card 2026-11-25" 커밋이어야 한다
-  (그 아래 22f6e466 "W_ad shared report: back button works inside the webapp frame" · 67b7e513 "… section numbers … become links").
-  카드 커밋 위에 커밋이 더 있으면 누가 올렸는지 (git log --format='%h %an %ad %s') 본다 — 사용자 로컬 웹앱 메모
+- git log --oneline -4 origin/claude/friendly-meitner-lldvar → 맨 위가 "Evacuation handoff card 2026-11-25 — …" 커밋이어야 한다
+  (그 아래 8c9c6ab6 머지 커밋 · b7d8efde "Evacuation handoff card 2026-11-25" · c2b6ab3a 'litdb: add volume 90 …' 등 litdb 정리 세션 7 커밋 · 22f6e466 "W_ad shared report: back button …").
+  카드 커밋 위에 커밋이 더 있으면 누가 올렸는지 (git log --format='%h %an %ad %s') 본다 — litdb 정리 세션 ('litdb: …') · 사용자 로컬 웹앱 메모
   (`notes: 화면에서 쓴 메모·형광펜`) · 사용자 회수 커밋은 정상이다 (알리기만). 그 밖의 것이면 사용자에게 묻는다. 카드 커밋이 없으면 멈추고 말한다.
 - 이 세션 브랜치가 friendly 끝을 포함하지 않고 아직 내 커밋도 없으면 friendly 끝에서 시작한다:
     git checkout -B <이 세션 브랜치> origin/claude/friendly-meitner-lldvar
@@ -64,7 +67,7 @@ evidenceScope: multi-source-primary
   python3 tools/kb_wiki.py lint | tail -1                 # RESULT: 0 errors
   python3 tools/db/validate_canonical.py | tail -3        # 거버넌스 결정 205 · 판정 8 · 그래프 무결성 ✅ · 배선 전부 일치
   python3 tools/convention_check.py | tail -1             # RESULT: 0 위반
-  python3 tools/litdb/build_index.py --check > /tmp/bi.log; echo $?    # 0 (DFT 280/280 · 어느 인덱스에도 없는 digest 0)
+  python3 tools/litdb/build_index.py --check > /tmp/bi.log; echo $?    # 0 (digest 672 · DFT 280/280 · 어느 인덱스에도 없는 digest 0)
   python3 -m pytest -q webapp/tests/test_collab_reports.py | tail -1   # 17 passed
 
 ■ 4. 지금 상태와 할 일 — 인계 카드 §1–§4. 요약:
@@ -79,8 +82,9 @@ evidenceScope: multi-source-primary
 - W_ad 공유 보고서: 11-25 에 7 절 세 양 표 · 절 번호 링크 91 · ↩ 돌아가기 (웹앱 iframe 대응) — 공유 HTML 을 고치면 웹앱 COLLAB_REPORTS note 도 같이 (CLAUDE.md).
 - 원격: gabia = 11b MD · kgy = 우리 잡 없음 (남의 python3 7.7 GB) · V100 = 11-28/29 예약 · 새 계산 승인은 개정 1 의 단일점 12 (+ 단계 2) 뿐.
 
-■ 5. 머지 충돌을 안 만드는 규칙 (friendly 에는 사용자 로컬 웹앱만 쓸 수 있다 — 그 파일은 건드리지 않는다)
-- ⛔ 손대지 않는다: db/file_comments.json · db/file_highlights.json · db/note_images/ (사용자 로컬 웹앱이 friendly 에 쓴다).
+■ 5. 머지 충돌을 안 만드는 규칙 (friendly 에는 사용자 로컬 웹앱 · litdb 정리 세션이 쓸 수 있다 — 그 파일은 건드리지 않는다)
+- ⛔ 손대지 않는다: db/file_comments.json · db/file_highlights.json · db/note_images/ (사용자 로컬 웹앱이 friendly 에 쓴다) ·
+  litdb 정리 세션이 만든 digest · 그림 (11-25 의 MPFEM · MPM–DEM 넷 등 — 고칠 거리가 있으면 사용자에게 알린다).
 - 생성 파일은 손으로 고치지 않는다 — kb/index.md (python3 tools/kb_wiki.py index) · kb/reviews/INDEX.md (python3 tools/kb_wiki.py reviews --write).
 - litdb: litdb/INDEX.md · litdb/comparison_vs_ours.md · litdb/figures/_sources.json · litdb/pdf_map.tsv · litdb/_curation/wishlist.md 는 **행을 덧붙이기만** 한다
   (논문 에이전트는 digest · 그림 · report 만 쓰고 공유 파일은 이 세션이 합친다 — 선례 batch_2026_11_25b).
