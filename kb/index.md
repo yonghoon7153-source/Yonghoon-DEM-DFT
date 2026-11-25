@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-24 · managed-files: 649
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-25 · managed-files: 650
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 440건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 441건)
+- 2026-11-25 · `kb/projects/handoff_2026_11_25_evacuation.md` — 대피 인계 — 2026-11-25 (friendly 세션 토큰 소진 예상 · 오버나잇 → 서브 브랜치 · 머지 때 충돌 0 · b2o3 11b gabia 진행 · B 자리 DFT 11-28/29 예약 (V100)) · 진행
 - 2026-11-24 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-24 · `kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md` — ES 프롬프트 — W_ad a5 묶음 Codex ER (NO-GO) 고침 확인: 같은 트리 관문 위에 — 준비 폴더의 실행 기록 보존 · 끝 기록 · WAVECAR 지우기 전 관문 · 0 스텝은 0 행으로 설명될 때만 · 이력 줄 벽시계 = 끝 기록 · 기록 명령 · 포장 배타 잠금 · 중간 반송본 대비 관측 사실 후퇴 거부 · 끝 기록 잡 · 변형 · stage · POTCAR 해시 — 업체 발송 GO 여부 · 발송 · 회신 수령 2026-11-24 — NO-GO (P0 2 · …
 - 2026-11-24 · `kb/reviews/codex_ES_reply_wad_a5_er_fixes_2026_11_24.md` — ES 회신 — W_ad a5 묶음 1da64d0be (MANIFEST 50beb026…) · NO-GO (P0 2 · P1 2 · P2 1) · 회신 수령 2026-11-24 · NO-GO — 업체 발송 보류
@@ -26,7 +27,6 @@
 - 2026-11-22 · `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…
 - 2026-11-22 · `kb/reviews/codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md` — EO 프롬프트 — W_ad a5 묶음 Codex EN (NO-GO · P0 1 · P1 3 · P2 1 · P3 1) 고침 확인: 끊긴 단의 원문 검사 · killed.json 대조 · 중단 영수증 · 시작점 유실 · 옛 반송 묶음 — 업체 발송 GO 여부 · 발송 2026-11-23 (사용자) · 회신 NO-GO 수령 2026…
 - 2026-11-22 · `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…
-- 2026-11-20 · `kb/reviews/internal_EM_prompt_wad_a5_package_2026_11_20.md` — EM 프롬프트 — 은 e70 far 재시도 a5 묶음 발송 전 독립 리뷰 · 발송 · 회신 수령 2026-11-20
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -531,7 +531,7 @@
 - `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안)  (2026-11-09 · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_22.md` — 주간 정리 2026-11-16 ~ 11-22 (주간보고 초안)  (2026-11-23 · 초안 (2026-11-23 · 도는 계산은 마지막 보고 기준 — ga…)
 
-## projects/ (65)
+## projects/ (66)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -564,6 +564,7 @@
 - `kb/projects/handoff_2026_11_20_evacuation.md` — 대피 인계 — 2026-11-20 (friendly 세션 사용 한도 → 서브 세션 · 머지 때 충돌 0 · W_ad 은 a5 고침 이어하기 · [혁주] MD-1 판독)  (2026-11-20 · 진행)
 - `kb/projects/handoff_2026_11_23_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-20 를 friendly 로 · fast-forward (2026-11-23) · litdb 정리 세션 · 로컬 웹앱 · W_ad ES 편지는 본 세션에서  (2026-11-23 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…)
 - `kb/projects/handoff_2026_11_24_litdb18_resume.md` — litdb 18편 병렬 정리 — 이어가기 카드 (2026-11-24 밤 · 세션이 끊겨도 이어지게)  (2026-11-24 · 끝)
+- `kb/projects/handoff_2026_11_25_evacuation.md` — 대피 인계 — 2026-11-25 (friendly 세션 토큰 소진 예상 · 오버나잇 → 서브 브랜치 · 머지 때 충돌 0 · b2o3 11b gabia 진행 · B 자리 DFT 11-28/29 예약 (V100))  (2026-11-25 · 진행)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
 - `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획  (2026-11-22 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…)
@@ -712,4 +713,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 656개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 672개 (정본 목록: litdb/INDEX.md)
