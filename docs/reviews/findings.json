@@ -18491,7 +18491,27 @@
    "found_by": "본 세션 자체 — push 직후 git show --stat 대조 (11-25 16:27 KST)",
    "opened_in": "docs/session_20260923_progress.md",
    "title": "litdb 정본 가지에 파일 29,431 개를 모두 지우는 커밋 083ae7a3c 를 push 했다 (11-25 16:27 KST · Yoo 2026 카드에 권 90 을 넣으려던 일) — --no-checkout 작업 트리의 sparse checkout 이 채워지지 않아 색인이 빈 채로 commit 됐고, 셸의 set -e 가 python · git add 실패에서 멈추지 않았다 · 약 6 분 뒤 2fbda84e2 (트리 = 269dffa10 · 둘째 부모 269dffa10 · 강제 push 없음) 로 되살리고 c2b6ab3a7 로 원래 고침을 넣었다",
-   "note": "되살림 확인 = 파일 수 29,431 · 269dffa10 대비 바뀐 파일 = Yoo 카드 하나 (3 줄) · 첫 되살림 시도 (부모 = 083ae7a3c 하나) 는 빈 트리가 경계라 git 이 전체를 다시 싸서 보내려다 HTTP 500 (멈춤) · 막을 것 (⬜ J27) = 정본 가지 push 전 파일 수 · 지운 줄 대조 도구 + CLAUDE.md 의 litdb 절차 (전체 작업 트리) 를 따른다 + 셸 연쇄는 && 로 (set -e 에 기대지 않는다) · 되살림 커밋은 정본 가지에만 있어 이 가지에서 조상 판정이 안 되므로 open 으로 둔다"
+   "note": "되살림 확인 = 파일 수 29,431 · 269dffa10 대비 바뀐 파일 = Yoo 카드 하나 (3 줄) · 첫 되살림 시도 (부모 = 083ae7a3c 하나) 는 빈 트리가 경계라 git 이 전체를 다시 싸서 보내려다 HTTP 500 (멈춤) · 막을 것 (⬜ J27) = 정본 가지 push 전 파일 수 · 지운 줄 대조 도구 + CLAUDE.md 의 litdb 절차 (전체 작업 트리) 를 따른다 + 셸 연쇄는 && 로 (set -e 에 기대지 않는다) · 되살림 커밋은 정본 가지에만 있어 이 가지에서 조상 판정이 안 되므로 open 으로 둔다 · J27 (11-25 밤 · 서브 세션) = 막는 도구는 아직 만들지 않았다 (다음 커밋 후보 · 시험 먼저 · 정본 push 전 파일 수 · 지운 파일 대조 · 어긋나면 push 거부) · 그때까지 서브 세션의 정본 push = push 전 `git diff --stat --diff-filter=D origin/claude/friendly-meitner-lldvar..HEAD` 가 빈 줄인지 손으로 본다 (서브 세션의 상태표 커밋 도구 = sparse 작업 트리 `litdb-ctl` 이라 같은 위험이 있다 · 대조 (J27 · `git log --since=2026-11-20 --grep='_curation status'` 34 커밋 × `git show --diff-filter=D`) = 지운 파일이 있는 커밋은 `53ca4c213` 하나 · 지운 것 = 대피 스냅샷 `litdb/_curation/evac/snap/main_unpushed.bundle` (B 에 push 안 된 커밋이 0 이 되어 스냅샷이 뺀 것 · 설계대로 · 다음 `c32e89830` 에서 다시 생김) · 그 밖 지움 0 → 도구를 만들 때 이 스냅샷 자리는 허용 목록에 둔다)"
+  },
+  {
+   "id": "MRISK-01",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "본 세션 GitHub 조사 11-25 (docs/reviews/mcp_skill_survey_20261125/survey.md §1 표 · 99 행 · 291–292 행 · 317 행 · J27 반입)",
+   "opened_in": "docs/reviews/mcp_skill_survey_20261125/survey.md",
+   "title": "Taichi 유지보수 중단 주장 (확인 전 · 위험) — Quadrants (Genesis 의 Taichi 포크 · Apache-2.0) README 가 \"원 Taichi 는 더 이상 유지보수되지 않는다\" 고 적는다 · 우리 MPM (`scripts/mpm3d_compaction.py` 등) 은 Taichi 위에 있다",
+   "note": "근거 = Quadrants README 한 줄 [README] + Taichi GitHub 마지막 push 2026-10-05 [API] (조사 시점) · Taichi 쪽 공식 발표는 확인하지 않았다 (확인 전) · 지금 이주하지 않는다 (봉인 · 비트 같음 대조가 먼저) · 이주 후보 = Quadrants · NVIDIA Warp (Apache-2.0) — 아이디어 · 시험 후보만 · 다음 = Taichi 쪽 공지 · 판 · 설치 가능 판 (Python 3.8 · 3.11 · CUDA 드라이버) 을 확인해 위험 크기를 다시 적는다"
+  },
+  {
+   "id": "MFEM-01",
+   "severity": "P3",
+   "status": "wontfix",
+   "owner": "claude",
+   "found_by": "본 세션 11-25 MPFEM 회전 시험 (Kratos · MOOSE · 우리 MPM 갱신식) 뒤 1저자 결정",
+   "opened_in": "docs/reviews/dem_redesign_direction_20261109/mpfem_20261125/README.md",
+   "title": "DEM 회전 (객관성) 시험 — MPFEM 1 단계의 회전 시험 (소성 뒤 30° 강체 회전 · 되돌린 응력 대조) 을 DEM 에는 하지 않는다",
+   "decision_note": "1저자 11-25 19:19 KST *\"DEM 회전 시험 = 안 함\"* (본 세션 기록) · 회전 시험 결과 = Kratos 유한 변형 J2 실패 (0.435–0.566 σy) · MOOSE 통과 (2.1e-12 σy) · 우리 MPM 갱신식 1/N 수렴 → Kratos 탈락 · MOOSE 주 경로 · 기록 = mpfem_20261125/README.md (개발 자료)"
   }
  ]
 }

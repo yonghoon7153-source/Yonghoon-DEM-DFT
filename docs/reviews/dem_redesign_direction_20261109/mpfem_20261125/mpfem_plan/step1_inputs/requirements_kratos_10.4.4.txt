@@ -1,0 +1,28 @@
+# MPFEM plan step 1 - Kratos 10.4.4 + numpy 2.4.6, hash-pinned (PyPI JSON, read 2026-11-25).
+# Two wheels per package: cp311 (cloud container, Python 3.11.18) and cp312 (WSL, Python 3.12.3).
+# pip picks the wheel that matches the interpreter and checks it against the listed hashes.
+# Install into a venv OUTSIDE the repository:
+#   python3 -m pip install --no-deps --require-hashes --no-cache-dir -r requirements_kratos_10.4.4.txt
+# ConstitutiveLawsApplication is required: the J2 / finite-strain plasticity laws live there.
+# Sizes (wheel, MB): core 34.8 | structural 9.7 | contact 17.1-17.2 | meshing 8.3 | linear solvers 3.0 | laws 8.3 | numpy 16.6-16.9
+KratosMultiphysics==10.4.4 \
+    --hash=sha256:2e07f53f25ba978b0361974a769365c406fe2f25eb7d73bc9057b5a6754f36f2 \
+    --hash=sha256:bff506b4ff8c06bc3fdd8427f29076ac8772f608e2c994fde190e100d5995f3c
+KratosStructuralMechanicsApplication==10.4.4 \
+    --hash=sha256:b26120c94fa4acd3e0e41ca571dc0bd7dd90e156291b28be766f7ceb6caed271 \
+    --hash=sha256:a9062371fc9de10b6ee12045fa51730cd6cf0b9f410f342999e3e8c694bbc523
+KratosContactStructuralMechanicsApplication==10.4.4 \
+    --hash=sha256:f0a13a318f4b1679d6fdbcec32901a7f40cad04079538d3976caa99bb9967856 \
+    --hash=sha256:8840ce47e3146125f7673365f5a08b3ef98fa545319354402221d30c7c9024b6
+KratosMeshingApplication==10.4.4 \
+    --hash=sha256:aa55b1250bc10a633757fc298897befcf61fa94cb5e2fe139189fa834754d606 \
+    --hash=sha256:f9f3b9f913efc6f61609b6bd176b09b34eccdaa49b00fa6d176602359411ef49
+KratosLinearSolversApplication==10.4.4 \
+    --hash=sha256:cd86b563ef9a1602140f7db4e2dcd8d3ed1c08de4f9a8aec3c04bdd5d66e5e6f \
+    --hash=sha256:fda6b33d856dd580c1d1d515aef20b1562a430d95582ccf75a9f302f7b9598b0
+KratosConstitutiveLawsApplication==10.4.4 \
+    --hash=sha256:eb61a9e7edbbbc3e96b078872948759bdb7a3c8272a03281882fd577e0414af9 \
+    --hash=sha256:29c7623d77c9f0052c56bc0dcabf75ffcdd6cb9d0e06aa6dc1ee76c5b80572fb
+numpy==2.4.6 \
+    --hash=sha256:89cd468399cfd2504718f0ba50e410dca55a170b61a02ad92bb18c8a65186e93 \
+    --hash=sha256:90f9849678c75fe7afa2d348ac842c168b0a4d3d61919687216dfc547976d853

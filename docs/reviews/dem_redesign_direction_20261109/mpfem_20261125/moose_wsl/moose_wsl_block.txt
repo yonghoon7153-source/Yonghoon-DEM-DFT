@@ -1,0 +1,277 @@
+# MOOSE 설치 + 회전 시험 블록 (WSL) - 1저자 11-25 (가-1) - 파일 셋을 ~/moose_setup 에 쓰고, md5 가 맞으면 설치 + 시험을 돌린다
+mkdir -p ~/moose_setup
+cat > ~/moose_setup/rot_test.i <<'RT_EOF'
+# MPFEM step 1 (MOOSE) - rotation check after plastic flow (development data, 1저자 11-25 (가-1)).
+# Single HEX8 element, all nodes prescribed (homogeneous F = Q(th) diag(1/ly, ly, 1)).
+# t 0..100 : isochoric plane-strain compression, ly 1 -> 0.85
+# t 100..400: rigid rotation 0 -> 30 deg about z in 300 steps
+# Criteria fixed before the run: R1 back-rotated stress diff <= 1e-3 sy ; R2 von Mises at t=100 within 2 % of sy
+E = 1e7
+nu = 0.45
+sy = 4e5
+
+[GlobalParams]
+  displacements = 'disp_x disp_y disp_z'
+[]
+
+[Mesh]
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 3
+    nx = 1
+    ny = 1
+    nz = 1
+  []
+[]
+
+[Variables]
+  [disp_x]
+  []
+  [disp_y]
+  []
+  [disp_z]
+  []
+[]
+
+[Kernels]
+  [sdx]
+    type = StressDivergenceTensors
+    variable = disp_x
+    component = 0
+    use_displaced_mesh = true
+  []
+  [sdy]
+    type = StressDivergenceTensors
+    variable = disp_y
+    component = 1
+    use_displaced_mesh = true
+  []
+  [sdz]
+    type = StressDivergenceTensors
+    variable = disp_z
+    component = 2
+    use_displaced_mesh = true
+  []
+[]
+
+[Functions]
+  [ly]
+    type = ParsedFunction
+    expression = 'if(t<=100, 1-0.15*t/100, 0.85)'
+  []
+  [th]
+    type = ParsedFunction
+    expression = 'if(t<=100, 0, 0.5235987755982988*(t-100)/300)'
+  []
+  [ux]
+    type = ParsedFunction
+    expression = 'cos(a)*x/b - sin(a)*b*y - x'
+    symbol_names = 'b a'
+    symbol_values = 'ly th'
+  []
+  [uy]
+    type = ParsedFunction
+    expression = 'sin(a)*x/b + cos(a)*b*y - y'
+    symbol_names = 'b a'
+    symbol_values = 'ly th'
+  []
+[]
+
+[BCs]
+  [bx]
+    type = FunctionDirichletBC
+    variable = disp_x
+    boundary = 'left right bottom top back front'
+    function = ux
+  []
+  [by]
+    type = FunctionDirichletBC
+    variable = disp_y
+    boundary = 'left right bottom top back front'
+    function = uy
+  []
+  [bz]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 'left right bottom top back front'
+    value = 0
+  []
+[]
+
+[Materials]
+  [elasticity]
+    type = ComputeIsotropicElasticityTensor
+    youngs_modulus = ${E}
+    poissons_ratio = ${nu}
+  []
+  [strain]
+    type = ComputeFiniteStrain
+  []
+  [j2]
+    type = IsotropicPlasticityStressUpdate
+    yield_stress = ${sy}
+    hardening_constant = 0
+  []
+  [stress]
+    type = ComputeMultipleInelasticStress
+    inelastic_models = 'j2'
+  []
+[]
+
+[AuxVariables]
+  [sxx]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [syy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [szz]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [sxy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  [svm]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+[]
+
+[AuxKernels]
+  [sxx]
+    type = RankTwoAux
+    rank_two_tensor = stress
+    variable = sxx
+    index_i = 0
+    index_j = 0
+  []
+  [syy]
+    type = RankTwoAux
+    rank_two_tensor = stress
+    variable = syy
+    index_i = 1
+    index_j = 1
+  []
+  [szz]
+    type = RankTwoAux
+    rank_two_tensor = stress
+    variable = szz
+    index_i = 2
+    index_j = 2
+  []
+  [sxy]
+    type = RankTwoAux
+    rank_two_tensor = stress
+    variable = sxy
+    index_i = 0
+    index_j = 1
+  []
+  [svm]
+    type = RankTwoScalarAux
+    rank_two_tensor = stress
+    variable = svm
+    scalar_type = VonMisesStress
+  []
+[]
+
+[Postprocessors]
+  [sxx]
+    type = ElementAverageValue
+    variable = sxx
+  []
+  [syy]
+    type = ElementAverageValue
+    variable = syy
+  []
+  [szz]
+    type = ElementAverageValue
+    variable = szz
+  []
+  [sxy]
+    type = ElementAverageValue
+    variable = sxy
+  []
+  [svm]
+    type = ElementAverageValue
+    variable = svm
+  []
+[]
+
+[Executioner]
+  type = Transient
+  solve_type = NEWTON
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
+  dt = 1
+  end_time = 400
+  nl_abs_tol = 1e-6
+  nl_rel_tol = 1e-10
+[]
+
+[Outputs]
+  csv = true
+[]
+RT_EOF
+cat > ~/moose_setup/check_rot.py <<'CK_EOF'
+# Reads rot_test_out.csv and prints R1 / R2 (criteria fixed before the run).
+import csv, math, sys
+SY = 4e5
+rows = list(csv.DictReader(open(sys.argv[1], encoding='utf-8')))
+def at(t):
+    for r in rows:
+        if abs(float(r['time']) - t) < 1e-9:
+            return {k: float(v) for k, v in r.items()}
+    raise SystemExit('no row at t=%s' % t)
+a, b = at(100.0), at(400.0)
+th = math.radians(30.0)
+c, s = math.cos(th), math.sin(th)
+bxx = c * c * b['sxx'] + s * s * b['syy'] + 2 * c * s * b['sxy']
+byy = s * s * b['sxx'] + c * c * b['syy'] - 2 * c * s * b['sxy']
+bxy = -c * s * b['sxx'] + c * s * b['syy'] + (c * c - s * s) * b['sxy']
+diff = max(abs(bxx - a['sxx']), abs(byy - a['syy']), abs(bxy - a['sxy']), abs(b['szz'] - a['szz']))
+r1 = diff <= 1e-3 * SY
+r2 = abs(a['svm'] / SY - 1.0) <= 0.02
+print('ROT_TEST t100 sxx=%.6g syy=%.6g szz=%.6g sxy=%.6g svm/sy=%.6f' % (a['sxx'], a['syy'], a['szz'], a['sxy'], a['svm'] / SY))
+print('ROT_TEST t400 sxx=%.6g syy=%.6g szz=%.6g sxy=%.6g' % (b['sxx'], b['syy'], b['szz'], b['sxy']))
+print('ROT_TEST diff/sy=%.3e  R1=%s  R2=%s  rows=%d' % (diff / SY, 'PASS' if r1 else 'FAIL', 'PASS' if r2 else 'FAIL', len(rows)))
+CK_EOF
+cat > ~/moose_setup/install_and_test.sh <<'IN_EOF'
+# MOOSE (pre-built conda package) install + rotation check on WSL - 1저자 11-25 (가-1) - development data
+# run: bash ~/moose_setup/install_and_test.sh   (writes ~/moose_setup/install.log)
+M=$HOME/moose_setup
+mkdir -p "$M" && cd "$M" || exit 1
+LOG=$M/install.log
+exec > >(tee -a "$LOG") 2>&1
+echo "== 0 check $(date)"
+uname -sr; ldd --version | head -n 1; echo "cores $(nproc)"; free -g | sed -n '1,2p'; df -h "$HOME" | tail -n 1
+FREE_GB=$(df -BG --output=avail "$HOME" | tail -n 1 | tr -dc '0-9')
+if [ "${FREE_GB:-0}" -lt 8 ]; then echo "STOP: free disk ${FREE_GB} GB < 8 GB"; exit 1; fi
+echo "== 1 miniforge"
+if [ -x "$HOME/miniforge/bin/conda" ]; then echo "miniforge exists"; else
+  curl -L -o Miniforge3-Linux-x86_64.sh https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh && bash Miniforge3-Linux-x86_64.sh -b -p "$HOME/miniforge" || { echo "STOP: miniforge install failed"; exit 1; }
+fi
+source "$HOME/miniforge/etc/profile.d/conda.sh" || { echo "STOP: conda.sh"; exit 1; }
+echo "== 2 moose env"
+conda config --add channels https://conda.software.inl.gov/public
+if conda env list | grep -qE '^moose '; then echo "env moose exists"; else
+  conda create -y -n moose moose || { echo "STOP: conda create failed"; exit 1; }
+fi
+conda activate moose || { echo "STOP: activate"; exit 1; }
+echo "== 3 executable"
+EXE=""
+for c in moose-opt moose combined-opt; do if command -v "$c" >/dev/null 2>&1; then EXE=$(command -v "$c"); break; fi; done
+ls "$CONDA_PREFIX/bin" | grep -iE 'moose|combined' | head -n 10
+if [ -z "$EXE" ]; then echo "STOP: no moose executable found"; exit 1; fi
+echo "EXE=$EXE"; "$EXE" --version 2>&1 | head -n 5
+echo "== 4 rotation test"
+mkdir -p "$M/rot" && cd "$M/rot" && cp "$M/rot_test.i" . && "$EXE" -i rot_test.i > run.log 2>&1; echo "moose rc=$?"
+tail -n 5 run.log
+if [ -f rot_test_out.csv ]; then python3 "$M/check_rot.py" rot_test_out.csv; else echo "STOP: no csv"; grep -iE 'error|\*\*\*' run.log | head -n 20; fi
+echo "== done $(date)"
+du -sh "$HOME/miniforge" 2>/dev/null
+IN_EOF
+cd ~/moose_setup && if [ "$(cat rot_test.i check_rot.py install_and_test.sh | md5sum | cut -c1-32)" = 2c39781e4103d9f1d8fa4562610776a2 ]; then bash install_and_test.sh; else echo "⛔ 붙여넣기가 깨짐 (md5 다름) — 아무것도 안 함"; fi

@@ -1,0 +1,180 @@
+{
+    "problem_data": {
+        "problem_name": "onedisk_A3_dyn_V0",
+        "parallel_type": "OpenMP",
+        "echo_level": 1,
+        "start_time": 0.0,
+        "end_time": 0.0102
+    },
+    "solver_settings": {
+        "solver_type": "Dynamic",
+        "model_part_name": "Structure",
+        "domain_size": 3,
+        "echo_level": 1,
+        "analysis_type": "non_linear",
+        "model_import_settings": {
+            "input_type": "mdpa",
+            "input_filename": "SET_BY_DRIVER"
+        },
+        "material_import_settings": {
+            "materials_filename": "SET_BY_DRIVER"
+        },
+        "time_stepping": {
+            "time_step": 2.5e-05
+        },
+        "solving_strategy_settings": {
+            "type": "newton_raphson",
+            "advanced_settings": {}
+        },
+        "convergence_criterion": "contact_residual_criterion",
+        "displacement_relative_tolerance": 1e-06,
+        "displacement_absolute_tolerance": 1e-12,
+        "residual_relative_tolerance": 1e-06,
+        "residual_absolute_tolerance": 1e-09,
+        "max_iteration": 30,
+        "compute_reactions": true,
+        "move_mesh_flag": true,
+        "linear_solver_settings": {
+            "solver_type": "LinearSolversApplication.sparse_lu"
+        },
+        "contact_settings": {
+            "mortar_type": "ALMContactFrictionless",
+            "contact_displacement_relative_tolerance": 1e-06,
+            "contact_displacement_absolute_tolerance": 1e-12,
+            "contact_residual_relative_tolerance": 1e-06,
+            "contact_residual_absolute_tolerance": 1e-09
+        },
+        "time_integration_method": "implicit",
+        "scheme_type": "bossak",
+        "damp_factor_m": -0.3,
+        "newmark_beta": 0.25,
+        "rayleigh_alpha": 0.0,
+        "rayleigh_beta": 0.0
+    },
+    "processes": {
+        "constraints_process_list": [
+            {
+                "python_module": "assign_vector_variable_process",
+                "kratos_module": "KratosMultiphysics",
+                "process_name": "AssignVectorVariableProcess",
+                "Parameters": {
+                    "model_part_name": "Structure",
+                    "variable_name": "DISPLACEMENT",
+                    "interval": [
+                        0.0,
+                        1e+30
+                    ],
+                    "constrained": [
+                        false,
+                        false,
+                        true
+                    ],
+                    "value": [
+                        null,
+                        null,
+                        0.0
+                    ]
+                }
+            },
+            {
+                "python_module": "assign_vector_variable_process",
+                "kratos_module": "KratosMultiphysics",
+                "process_name": "AssignVectorVariableProcess",
+                "Parameters": {
+                    "model_part_name": "Structure.TopPlate",
+                    "variable_name": "DISPLACEMENT",
+                    "interval": [
+                        0.0,
+                        1e+30
+                    ],
+                    "constrained": [
+                        true,
+                        true,
+                        false
+                    ],
+                    "value": [
+                        0.0,
+                        "-1.996548746*t",
+                        null
+                    ]
+                }
+            },
+            {
+                "python_module": "assign_vector_variable_process",
+                "kratos_module": "KratosMultiphysics",
+                "process_name": "AssignVectorVariableProcess",
+                "Parameters": {
+                    "model_part_name": "Structure.BottomPlate",
+                    "variable_name": "DISPLACEMENT",
+                    "interval": [
+                        0.0,
+                        1e+30
+                    ],
+                    "constrained": [
+                        true,
+                        true,
+                        false
+                    ],
+                    "value": [
+                        0.0,
+                        0.0,
+                        null
+                    ]
+                }
+            }
+        ],
+        "loads_process_list": [],
+        "contact_process_list": [
+            {
+                "python_module": "alm_contact_process",
+                "kratos_module": "KratosMultiphysics.ContactStructuralMechanicsApplication",
+                "process_name": "ALMContactProcess",
+                "Parameters": {
+                    "model_part_name": "Structure",
+                    "contact_model_part": {
+                        "0": [
+                            "DiskSurface",
+                            "PlateSurfaces"
+                        ]
+                    },
+                    "assume_master_slave": {
+                        "0": [
+                            "DiskSurface"
+                        ]
+                    },
+                    "contact_type": "Frictionless",
+                    "search_parameters": {
+                        "type_search": "in_radius_with_obb",
+                        "search_factor": 3.5,
+                        "dynamic_search": false,
+                        "check_gap": "check_mapping"
+                    }
+                }
+            }
+        ]
+    },
+    "output_processes": {
+        "vtk_output": [
+            {
+                "python_module": "vtk_output_process",
+                "kratos_module": "KratosMultiphysics",
+                "process_name": "VtkOutputProcess",
+                "Parameters": {
+                    "model_part_name": "Structure",
+                    "output_control_type": "step",
+                    "output_interval": 20.0,
+                    "file_format": "binary",
+                    "output_path": "SET_BY_DRIVER",
+                    "write_deformed_configuration": true,
+                    "nodal_solution_step_data_variables": [
+                        "DISPLACEMENT",
+                        "REACTION"
+                    ],
+                    "gauss_point_variables_in_elements": [
+                        "CAUCHY_STRESS_VECTOR"
+                    ]
+                }
+            }
+        ]
+    }
+}

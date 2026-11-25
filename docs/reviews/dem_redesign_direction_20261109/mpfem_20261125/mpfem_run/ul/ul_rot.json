@@ -1,0 +1,108 @@
+{
+ "label": "DEVELOPMENT_ONLY",
+ "criteria": "R1 <= 1e-3 sy after 300-step 30 deg; R2 sigma_eq within 2 % of sy",
+ "results": [
+  {
+   "tag": "C1_control_finite_TL",
+   "element": "TotalLagrangianElement3D8N",
+   "law": "FiniteStrainIsotropicPlasticity3DVonMisesVonMises",
+   "n_rot_steps": 300,
+   "unregistered_variables": [],
+   "sigma_before_xx_yy_zz_xy": [
+    230940.1076758504,
+    -230940.1076758502,
+    -4.998961907275352e-10,
+    -7.75752015563895e-27
+   ],
+   "sigma_eq_end_over_sy": 0.9999999999999999,
+   "rot_max_abs_diff_over_sy": 0.5630245426584546,
+   "R1_pass": false,
+   "R2_pass": true
+  },
+  {
+   "tag": "C1_control_finite_TL",
+   "element": "TotalLagrangianElement3D8N",
+   "law": "FiniteStrainIsotropicPlasticity3DVonMisesVonMises",
+   "n_rot_steps": 1,
+   "unregistered_variables": [],
+   "sigma_before_xx_yy_zz_xy": [
+    230940.1076758504,
+    -230940.1076758502,
+    -4.998961907275352e-10,
+    -7.75752015563895e-27
+   ],
+   "sigma_eq_end_over_sy": 0.9999999999999999,
+   "rot_max_abs_diff_over_sy": 0.43406638413298837,
+   "R1_pass": null,
+   "R2_pass": true
+  },
+  {
+   "tag": "C2_smallgeneric_UL",
+   "element": "UpdatedLagrangianElement3D8N",
+   "law": "SmallStrainIsotropicPlasticity3DVonMisesVonMises",
+   "n_rot_steps": 300,
+   "unregistered_variables": [],
+   "sigma_before_xx_yy_zz_xy": [
+    2024187.293401958,
+    1567168.2936066608,
+    1737796.6621264603,
+    -1.3513905566187525e-27
+   ],
+   "sigma_eq_end_over_sy": 1.0000000000000007,
+   "rot_max_abs_diff_over_sy": 0.4947375797935976,
+   "R1_pass": false,
+   "R2_pass": true
+  },
+  {
+   "tag": "C2_smallgeneric_UL",
+   "element": "UpdatedLagrangianElement3D8N",
+   "law": "SmallStrainIsotropicPlasticity3DVonMisesVonMises",
+   "n_rot_steps": 1,
+   "unregistered_variables": [],
+   "sigma_before_xx_yy_zz_xy": [
+    2024187.293401958,
+    1567168.2936066608,
+    1737796.6621264603,
+    -1.3513905566187525e-27
+   ],
+   "sigma_eq_end_over_sy": 1.0000000000000007,
+   "rot_max_abs_diff_over_sy": 0.49473757979360483,
+   "R1_pass": null,
+   "R2_pass": true
+  },
+  {
+   "tag": "C3_smallJ2_UL",
+   "element": "UpdatedLagrangianElement3D8N",
+   "law": "SmallStrainJ2Plasticity3DLaw",
+   "n_rot_steps": 300,
+   "unregistered_variables": [],
+   "sigma_before_xx_yy_zz_xy": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "sigma_eq_end_over_sy": 0.0,
+   "rot_max_abs_diff_over_sy": 0.0,
+   "R1_pass": true,
+   "R2_pass": false
+  },
+  {
+   "tag": "C3_smallJ2_UL",
+   "element": "UpdatedLagrangianElement3D8N",
+   "law": "SmallStrainJ2Plasticity3DLaw",
+   "n_rot_steps": 1,
+   "unregistered_variables": [],
+   "sigma_before_xx_yy_zz_xy": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "sigma_eq_end_over_sy": 0.0,
+   "rot_max_abs_diff_over_sy": 0.0,
+   "R1_pass": null,
+   "R2_pass": false
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+{
+  "steps": [
+    ["select.deselect", {}],
+    ["image.adjustments.levels", {"inBlack": 12, "inWhite": 238, "gamma": 1, "outBlack": 0, "outWhite": 255}]
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "steps": [
+    ["select.deselect", {}],
+    ["image.crop", {"x": 0, "y": 125, "width": 2400, "height": 1350, "targetWidth": 1280, "targetHeight": 720, "resample": "bicubic", "deleteCroppedPixels": true, "contentAware": false}],
+    ["image.mode.bits8", {}]
+  ]
+}

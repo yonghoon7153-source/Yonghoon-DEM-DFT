@@ -1,0 +1,7 @@
+# OPTIONAL - gmsh 4.15.2 (GPLv2+), one wheel for all CPython versions (py2.py3-none-manylinux_2_24_x86_64).
+# libgmsh.so.4.15 needs libGLU.so.1 (readelf NEEDED list). libGLU.so.1 is NOT present in the cloud
+# container (ldconfig, 2026-11-25), so "import gmsh" is expected to fail there. make_disk_mesh.py has a
+# numpy mesher that builds the same O-grid; gmsh matters again for step 3 (3D spheres).
+#   python3 -m pip install --no-deps --require-hashes --no-cache-dir -r requirements_gmsh_optional.txt
+gmsh==4.15.2 \
+    --hash=sha256:4076a948ce22625330d1413d4982e22b5c69fc2f0f7951f5df64c778cf54108c

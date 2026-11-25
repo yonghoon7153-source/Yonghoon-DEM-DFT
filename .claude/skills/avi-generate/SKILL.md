@@ -126,7 +126,7 @@ description: 1저자가 "AVI 생성" · "AVI 만들어" · "영상 만들어" ·
 5. **읽는 꼴을 따로 적는다** — 대본에 '화면 자막' 칸과 'TTS 읽는 꼴' 칸 (예: 66.5 % → "육십육 점 오 퍼센트" · 10⁻⁴ → "십의 마이너스 사 제곱" · DEM → "디이엠" · MPM → "엠피엠" · 화학식은 1저자가 정한 읽는 법).  사전 = `docs/avi/pronunciation.md` 에 쌓는다.
 6. **물음은 물음처럼** — 물음 문장에 표지 → TTS 억양 · 감정 설정 → §7 억양 점검.
 7. **강조 낱말 하나** — 문장마다 있으면 표시 (화면 쌓기 · 남보라와 같은 낱말).
-8. **맺음** — 요약 한 줄 + 시청자에게 물음 하나 (레퍼런스 A 꼴) · 판매 안내 없음.
+8. **맺음** — 요약 한 줄 + 시청자에게 물음 하나 (레퍼런스 A 꼴) · 판매 안내 없음 · ★ 끝맺음 (1저자 11-25 · ep01 v3.4 P3-3) = *"지금까지 「<제목>」 (이)라는 제목으로 발표했습니다. 시청 (청취) 해 주셔서 감사합니다."* 꼴 (제목 = 그 편의 제목 그대로 · ep01 v3.4 = 두 문장 s11_l11a · s11_l11b).
 
 TTS 시트 (`docs/avi/<편>/tts_sheet.tsv`) 칸: 번호 · 장면 · 화면 자막 · 읽는 꼴 · 빠르기 배율 · 톤 · 감정 · 뒤 쉼 (s) · 물음 · 강조 낱말 · 메모.
 
@@ -394,7 +394,7 @@ v3 가 S7 수치 점검을 지난 뒤에도 1저자가 끝소리 · 한 문장�
 - `docs/avi/<편>/` 의 `brief.md` · `sources.md` · `tts_sheet.tsv` · `description.md` · `qc_report.json` (ep01 은 `script_header.md` · `qc.md` 가 그 몫 일부)
 - `docs/avi/tools/lint_script.py` (대본 검사기 · §6 S2) · `scene_check.py` (§8) · 받아쓰기 (ASR) 대조 도구 (§7) · `tts_elevenlabs.py` (API 를 쓸 때만 · Typecast = `avi_typecast.py`)
 - 정본 S7 청취 후보 셋 (§7-2) 의 편 전체 순위 도구 — 지금 = ep01 v3.1 편별 도구 (`creak_all.py` · `end_jitter.py` · `census.py` · 리포 밖) · 다음 편에 쓸 수 없으면 미측정 (강약 · 이어지는 말 · 숨 = `avi_prosody.py` 로 옮김 · 11-25 J26)
-- `docs/avi/<편>/review/` — S3 · S4 대본 리뷰 기록 · S9b `final_flow_review.md` (ep01 = 아직 없음 · 새 단계 한 바퀴에서 만든다)
+- `docs/avi/<편>/review/` — S3 · S4 대본 리뷰 기록 · S9b `final_flow_review.md` (ep01 = v3.3 판 검수 = 11-25 J27 반입 · v3.4 바뀐 곳 검수 = 본 세션 몫)
 - `docs/video_reference/<영상 ID>_transcript.md` — 전사 (지금 판 = 작업 폴더의 `reference_content/`)
 
 ## 15. 근거 — 레퍼런스가 말한 것 ↔ 이 스킬에서 우리가 정한 것

@@ -1,0 +1,71 @@
+{
+ "label": "DEVELOPMENT_ONLY",
+ "added_after": "K-2 P5d failed (sudden 30 deg)",
+ "cases": [
+  {
+   "law": "HyperElastic3DLaw",
+   "ly_end": 0.99,
+   "n_rot_steps": 1,
+   "max_abs_diff_Pa": 1.9281287677586079e-10,
+   "diff_over_sigma_y": 4.820321919396519e-16,
+   "s0_xx_yy_zz_xy": [
+    0.05884235014488487,
+    -125944.9735243582,
+    -57197.9291528034,
+    0.0
+   ]
+  },
+  {
+   "law": "FiniteStrainIsotropicPlasticity3DVonMisesVonMises",
+   "ly_end": 0.85,
+   "n_rot_steps": 1,
+   "max_abs_diff_Pa": 174117.79741999146,
+   "diff_over_sigma_y": 0.4352944935499787,
+   "s0_xx_yy_zz_xy": [
+    -0.0022262209328827534,
+    -465087.85097474343,
+    -231914.75269192568,
+    0.0
+   ]
+  },
+  {
+   "law": "FiniteStrainIsotropicPlasticity3DVonMisesVonMises",
+   "ly_end": 0.85,
+   "n_rot_steps": 30,
+   "max_abs_diff_Pa": 225360.34186567203,
+   "diff_over_sigma_y": 0.5634008546641801,
+   "s0_xx_yy_zz_xy": [
+    -0.0022262209328827534,
+    -465087.85097474343,
+    -231914.75269192568,
+    0.0
+   ]
+  },
+  {
+   "law": "FiniteStrainIsotropicPlasticity3DVonMisesVonMises",
+   "ly_end": 0.85,
+   "n_rot_steps": 300,
+   "max_abs_diff_Pa": 226452.0311785025,
+   "diff_over_sigma_y": 0.5661300779462562,
+   "s0_xx_yy_zz_xy": [
+    -0.0022262209328827534,
+    -465087.85097474343,
+    -231914.75269192568,
+    0.0
+   ]
+  },
+  {
+   "law": "FiniteStrainIsotropicPlasticity3DVonMisesVonMises",
+   "ly_end": 0.999,
+   "n_rot_steps": 1,
+   "max_abs_diff_Pa": 3.537934389896691e-10,
+   "diff_over_sigma_y": 8.844835974741727e-16,
+   "s0_xx_yy_zz_xy": [
+    0.007654489355328502,
+    -12547.734804360625,
+    -5646.477217442071,
+    0.0
+   ]
+  }
+ ]
+}

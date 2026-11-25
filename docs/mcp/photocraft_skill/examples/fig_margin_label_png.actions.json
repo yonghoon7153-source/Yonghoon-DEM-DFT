@@ -1,0 +1,8 @@
+{
+  "steps": [
+    ["select.deselect", {}],
+    ["image.imageSize", {"resolution": 300, "resample": "none"}],
+    ["image.canvasSize", {"width": 0, "height": 80, "relative": true, "anchor": "bottom", "extensionColor": "white"}],
+    ["type.create", {"x": 10, "y": 60, "text": "(a)", "font": "Aptos", "size": 12, "color": "#000000"}]
+  ]
+}

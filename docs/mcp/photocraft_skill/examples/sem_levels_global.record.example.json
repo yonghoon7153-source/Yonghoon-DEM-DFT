@@ -1,0 +1,39 @@
+{
+ "_주의": "꼴 예시 — 실제로 돌린 기록이 아니다. <…> 는 pc_actions.py run 이 채우는 자리.",
+ "schema": "pc-lab-record/1",
+ "created_utc": "<YYYY-MM-DDThh:mm:ssZ>",
+ "mode": "data",
+ "note": "SEM 단면 — 전체 레벨만 (입력 12–238 → 0–255, 감마 1)",
+ "source_ref": "<장비 · 시료 · 촬영일 · 원자료 보관 위치 (1저자)>",
+ "tool": {
+  "bin": "photocraft-cli",
+  "bin_sha256": "<sha256>",
+  "version": "photocraft-cli <판> (<커밋>, <날짜>)",
+  "os": "<platform.platform()>",
+  "python": "<판>"
+ },
+ "argv": ["photocraft-cli", "run", "in/sem_cs_01.png",
+  "--cmd", "select.deselect", "--params", "{}",
+  "--cmd", "image.adjustments.levels", "--params", "{\"inBlack\":12,\"inWhite\":238,\"gamma\":1,\"outBlack\":0,\"outWhite\":255}",
+  "--cmd", "document.inspect",
+  "--out", "out/sem_cs_01_lv.png", "--metadata", "none", "--no-gpu"],
+ "returncode": 0,
+ "warnings": [],
+ "commands_reported": ["select.deselect", "image.adjustments.levels", "document.inspect"],
+ "input": {"name": "sem_cs_01.png", "sha256": "<sha256>"},
+ "actions": {"name": "sem_levels_global.actions.json", "sha256": "<sha256>",
+  "steps": [["select.deselect", {}], ["image.adjustments.levels", {"inBlack": 12, "inWhite": 238, "gamma": 1, "outBlack": 0, "outWhite": 255}]]},
+ "final_doc": {"width": "<px>", "height": "<px>", "mode": "Grayscale", "depth": 8, "resolution": "<ppi>", "hasSelection": false},
+ "history": ["<PhotoCraft 가 남긴 단계 이름들 — 예: Levels>"],
+ "output": {"name": "sem_cs_01_lv.png", "sha256": "<sha256>", "bytes": "<n>", "pixel_sha256": "<sha256>"},
+ "checks": {
+  "allowlist": "ok",
+  "input_unchanged": true,
+  "metadata": {"public_safe": true, "gps": false, "items": ["pHYs"]},
+  "pointop": {"verdict": "PASS_LINEAR", "offset": [0, 0],
+   "channels": [{"distinct_inputs": "<n>", "conflicts": 0, "monotone": "up",
+                 "fit": {"slope": "<≈ 255/226>", "intercept": "<≈ −13.5>", "max_residual": "<≤ 1>", "points": "<n>"}}],
+   "examples": []}
+ },
+ "ok": true
+}
