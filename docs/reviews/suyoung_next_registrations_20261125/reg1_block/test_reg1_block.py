@@ -367,6 +367,8 @@ class CheckOnlyTests(unittest.TestCase):
     def test_check_only_passes_with_plan_seeds_and_reader_self_check(self):
         out = self.result.stdout
         self.assertEqual(self.result.returncode, 0, out + self.result.stderr)
+        # The driver's own sub-check also prints CHECK_ONLY_OK mid-way; the block's last line is distinct.
+        self.assertEqual(out.strip().splitlines()[-1], "CONTACT_MINI_CHECK_ONLY_OK")
         for text in ("CHECK_ONLY_OK", "MPM_STEPS 0", "PLAN_MATCHES_REGISTRATION reg1 50/50", "READER_SELFCHECK_OK",
                      "ENVIRONMENT_OK", "CORES ", "SEED G1 cells=48 points_per_disk=7213 outline=256",
                      "SEED G2 cells=48 points_per_disk=7213 outline=512", "QUEUE_TOTAL arms=50"):
@@ -464,6 +466,22 @@ class QueueTests(unittest.TestCase):
         self.assertEqual((rows["FAST"]["rc"], rows["NEXT"]["rc"]), (0, 0))
         self.assertEqual(collections.Counter(starts), collections.Counter(["SLOW", "FAST", "NEXT"]))
         self.assertGreaterEqual(rows["SLOW"]["elapsed_including_wrapper_s"], .6)
+
+    def test_a_closed_screen_does_not_lose_the_execution_record(self):
+        # Added after the first implementation (reproduced before the fix): if the screen pipe
+        # closes (terminal gone), the queue still finishes and execution.json is still written.
+        run = scratch(self) / "run"
+        run.mkdir()
+
+        class Closed(io.TextIOBase):
+            def write(self, text):
+                raise BrokenPipeError("screen closed")
+        with contextlib.redirect_stdout(Closed()):
+            execution = qu().run_queue([dict(arm="A", limit_s=30), dict(arm="B", limit_s=30)], (0, 1),
+                                       {0: [0, 0], 1: [0, 1]}, lambda a, c: [sys.executable, "-c", "pass"], run,
+                                       poll_s=.05)
+        self.assertTrue(execution["complete"])
+        self.assertEqual(set(json.loads((run / "execution.json").read_bytes())["arms"]), {"A", "B"})
 
     def test_same_physical_core_is_refused(self):
         run = scratch(self) / "run"
@@ -708,6 +726,26 @@ class ReaderArmTests(unittest.TestCase):
         rec, _ = one_arm(self, "R1-G2-S-P-V0-08", synth().Spec(nan_at=100))
         self.assertFalse(rec["usable"])
         self.assertIn("NONFINITE", rec["reasons"])
+
+    def test_nonfinite_displacement_does_not_break_the_summary(self):
+        # Added after the first implementation (reproduced before the fix): a held arm's report
+        # fields must stay JSON-safe when its first-force sample has a non-finite displacement.
+        rec, folder = one_arm(self, "R1-G1-PLATE-P-V0-08")
+        step = rec["first_force"]["step_on"]
+
+        def poison(lines):
+            cells = lines[step + 1].split(",")
+            cells[6] = "nan"
+            lines[step + 1] = ",".join(cells)
+            return lines
+        rewrite_trace(folder, poison)
+        row = dict(arm=rec["name"], cpu=0, physical_core=[0, 0], threads=1, rc=0, killed=False, attempts=1)
+        again = rd().read_arm(ctx(), rec["name"], folder, row, {0: [0, 0], 1: [0, 1]}, CONTAINER_ENV)
+        self.assertFalse(again["usable"])
+        self.assertIn("NONFINITE", again["reasons"])
+        self.assertIsNone(again["first_force"])
+        json.dumps(rd().canonical({k: again[k] for k in ("first_force", "monitors", "reasons")}), allow_nan=False)
+        self.assertEqual(rd().canonical({"a": math.nan, "b": [math.inf, 1.5]}), {"a": None, "b": [None, 1.5]})
 
     def test_missing_column_is_held(self):
         rec, folder = one_arm(self, "R1-G2-S-P-V0-08")
