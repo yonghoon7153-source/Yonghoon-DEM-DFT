@@ -57,7 +57,7 @@ def run_block(root, text, mode="pass", extra_env=None):
 
 
 def runs(home):
-    return sorted(glob.glob(os.path.join(home, "moose_step1", "run_*")))
+    return sorted(p for p in glob.glob(os.path.join(home, "moose_step1", "run_*")) if os.path.isdir(p))
 
 
 # ---------------------------------------------------------------- tests
@@ -86,6 +86,13 @@ def t_round_trip_and_full_flow(root):
     assert data["all_pass"] is True, data
     assert re.search(r"ALL .*PASS", out), out
     assert os.path.exists(os.path.join(r[0], "inputs", "SHA256SUMS"))
+    import tarfile
+    with tarfile.open(os.path.join(r[0], "result_small.tgz")) as tf:
+        names = tf.getnames()
+    for want in ("check_step1.json", "run_info.txt", "m13/out.csv", "m26/run.log",
+                 "smoke_m13/out.csv", "inputs/SHA256SUMS"):
+        assert any(n.endswith(want) for n in names), (want, names)
+    assert not any(n.endswith(".e") or n.endswith(".msh") for n in names), names
     with open(os.path.join(root, "args.log")) as f:
         calls = f.read()
     assert "Executioner/end_time=12" in calls, calls          # the smoke
@@ -190,6 +197,40 @@ def t_block_has_no_network_or_personal_strings(root):
     assert not re.search(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", text), "IPv4-like string"
     assert not re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", text), "e-mail-like"
     assert "/home/" not in text and "/mnt/c/" not in text, "absolute user path"
+
+
+def t_block_safe_for_interactive_paste(root):
+    """No '!' history-expansion trigger and no TAB anywhere in the block (any bash version)."""
+    text = build(os.path.join(root, "b.txt"))
+    assert "\t" not in text, "TAB in block"
+    hits = [l for l in text.splitlines() if re.search(r"!(?![ =(]|$)", l)]
+    assert not hits, hits[:3]
+
+
+def _skip(d, names):
+    return [n for n in names if n in ("__pycache__", "tests")
+            or (n.startswith("run_") and os.path.isdir(os.path.join(d, n)))]
+
+
+def t_builder_refuses_hazards(root):
+    clean = os.path.join(root, "clean")
+    shutil.copytree(TOP, clean, ignore=_skip)
+    r = subprocess.run([sys.executable, os.path.join(clean, "build_block.py"),
+                        "--out", os.path.join(clean, "x.txt")], capture_output=True, text=True)
+    assert r.returncode == 0, "unmodified copy must build: " + r.stdout + r.stderr
+    for bad, word in (("# use !important here\n", "history"), ("x = 1\t# tab\n", "TAB")):
+        dst = os.path.join(root, "copy_" + word)
+        shutil.copytree(TOP, dst, ignore=_skip)
+        p = os.path.join(dst, "check_step1.py")
+        with open(p, encoding="ascii") as f:
+            text = f.read()
+        with open(p, "w", encoding="ascii") as f:
+            f.write(bad + text)
+        r = subprocess.run([sys.executable, os.path.join(dst, "build_block.py"),
+                            "--out", os.path.join(dst, "x.txt")], capture_output=True, text=True)
+        msg = r.stdout + r.stderr
+        assert r.returncode != 0 and not os.path.exists(os.path.join(dst, "x.txt")), msg
+        assert word in msg, msg
 
 
 TESTS = [v for k, v in sorted(globals().items()) if k.startswith("t_")]

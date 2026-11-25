@@ -45,7 +45,7 @@ def force(approach, k=2.0e6, k2=3.0e6):
     return k * pen + k2 * pen * pen if pen > 0 else 0.0
 
 
-def make_rows(end_time=407.0, dt=1.0, A0=None, k=2.0e6, tag="m13"):
+def make_rows(end_time=407.0, dt=1.0, A0=None, k=2.0e6, k2=3.0e6, tag="m13"):
     """t = 0 row of zeros (MOOSE initial output) then one row per step."""
     A0 = disk_area(tag) if A0 is None else A0
     rows = [dict((c, 0.0) for c in COLUMNS)]
@@ -54,7 +54,7 @@ def make_rows(end_time=407.0, dt=1.0, A0=None, k=2.0e6, tag="m13"):
         t = i * dt
         u_top, u_bot = -V * t, V * t
         h = H0 + u_top - u_bot
-        F = force(u_bot - u_top, k=k)
+        F = force(u_bot - u_top, k=k, k2=k2)
         A = A0
         for _ in range(60):
             syy = -F * h / A

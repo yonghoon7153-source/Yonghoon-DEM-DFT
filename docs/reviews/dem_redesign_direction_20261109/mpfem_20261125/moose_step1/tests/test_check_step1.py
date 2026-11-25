@@ -205,7 +205,7 @@ def t_missing_column(root):
 
 
 def t_no_contact(root):
-    rows = syn.make_rows(k=0.0)
+    rows = syn.make_rows(k=0.0, k2=0.0)
     rc, text, data = full(root, make_case(root, "a", rows=rows), make_case(root, "b", "m26"))
     assert rc == 1, text
     for key in ("P1", "P2", "P4"):
@@ -287,7 +287,7 @@ def t_smoke_ok(root):
 
 
 def t_smoke_no_contact(root):
-    d = make_case(root, "s", rows=syn.make_rows(end_time=12.0, k=0.0))
+    d = make_case(root, "s", rows=syn.make_rows(end_time=12.0, k=0.0, k2=0.0))
     rc, text = run(["smoke", "--case", d, "--end-time", "12"])
     assert rc == 1, text
     assert "contact" in text.lower(), text
