@@ -7571,7 +7571,7 @@ COLLAB_REPORTS = (
      "earlier": ({"rel": "docs/collab/lzo_coated_nca_lpscl_progress_2026_11_17.html", "label": "계산 진행 보고 (11-17)"},)},
     {"slug": "wad-dem", "nav_parent": "/adhesion", "rel": "docs/collab/wad_dem_interface_adhesion_report_2026_11_24.html",
      "title": "Ag–C 층 계면 점착 에너지 (DEM 입력) — DFT 쪽 진행 보고", "date": "2026-11-24",
-     "track": "W_ad (DEM-DFT)", "note": "11-25 보강 — 문헌 3 편 더 (33 편) · 8-3 합금 층 서술을 가넷 한정으로 바로잡음 · 값은 그대로", "earlier": ()},
+     "track": "W_ad (DEM-DFT)", "note": "11-25 보강 — 문헌 3 편 더 (33 편) · 8-3 합금 층 서술을 가넷 한정으로 바로잡음 · 7 절에 세 양 (흡착 에너지 · W · γLi) 비교 표 · 값은 그대로", "earlier": ()},
     # 2026-11-24 (사용자 '권고대로') — CEI 페이지 둘. 실험 쪽 1저자에게 보낸 설명 페이지다 (docs/collab 밖 · db/properties/cei_figs/).
     #   index.html 은 같은 폴더의 PNG 9 장을 상대 경로로 부른다 → 보기 화면 iframe 은 /reports/cei/<그림> (app.collab_report_asset) 로 받는다.
     #   ⚠ 처음 결속 검사에 들어갔을 때 경고 상자 넷이 유령 결속 (원장에 없는 claim id) 으로 잡혔다 → 같은 날 인용위험 원장에 CONDITIONAL 로
