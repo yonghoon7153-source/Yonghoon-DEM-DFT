@@ -5,7 +5,8 @@
 
 `webapp/app.py` 는 봉인 32 (`scripts/run_network_194_parallel.py` CODE_FILES) 라 라우트를 새로 만들 수 없다.
 그래서 Rint 설명 페이지와 같은 길로 간다 — Flask 기본 정적 폴더 (`webapp/static/dem_method_figs/`) 에 페이지와
-그림 사본 (`files/`) 을 두고, 사이드바 (`templates/base.html` · 봉인 밖) 에서 링크한다.  사본은
+그림 사본 (`files/`) 을 두고, 사이드바에서 링크한다 (11-25 부터 트랙 묶음 50kg (후막) 아래 = 표 `webapp/track_pages.py` ·
+`templates/base.html` 이 그린다 · 둘 다 봉인 밖 · 그 전엔 base.html 일반 자리).  사본은
 `scripts/sync_dem_method_figs_to_webapp.py` 가 원본 (`docs/50kg/report_y4/figs/p0_dem_method/`) 에서 복사하고
 `--check` 가 바이트 대조한다.  이 시험이 지키는 것:
 
@@ -16,7 +17,8 @@
   ④ 그림 여섯 — 이름 · 미리보기 · 크기 (in) = README 표 = PNG 픽셀 / dpi = SVG pt / 72 · 설명 = README 표의 그 줄 그대로 ·
      PNG · SVG 내려받기 링크 (download)
   ⑤ 페이지가 거는 모든 파일 = 200 · 원본과 바이트 같음 · 원본 폴더의 모든 파일이 걸려 있다
-  ⑥ 사이드바 (base.html) 에 링크 · 렌더된 화면 (/worklog) 에 보인다 · app.py 에 이 페이지 라우트 없음
+  ⑥ 사이드바 = 트랙 표 50kg (후막) 아래 한 줄 (글 · 출처 주석) · base.html 에 손으로 적지 않음 (일반 자리 없음) ·
+     렌더된 화면 (/worklog) 에 한 번 · 토글 안 50kg (후막) 밑 · app.py 에 이 페이지 라우트 없음
   ⑦ `../` 경로 탈출 = 404 · 새는 글 없음
   ⑧ 사본 대조 (sync 스크립트 함수 · `--check` CLI) = 같음 · 음성 대조 (바이트 하나 바뀜 · 빠짐 · 남음 · 빈 원본) 를 잡는다
   ⑨ 보이는 글에 천 단위 콤마 없음 · SVG 사본에 스크립트 없음 (정적 경로 = 인증 면제)
@@ -312,16 +314,37 @@ def main():
             chk(f'files/{name} mimetype image/svg+xml',
                 rr.status_code == 200 and (rr.mimetype or '') == 'image/svg+xml')
 
-    print('── ⑥ 사이드바 링크 · 렌더된 화면')
+    print('── ⑥ 사이드바 — 트랙 묶음 50kg (후막) 아래에만 · 렌더된 화면')
+    #  11-25 — 1저자 *"이것도 트랙 페이지에 넣어"*: 사이드바 줄의 집이 base.html 일반 자리 → 트랙 표 (webapp/track_pages.py ·
+    #  base.html 이 TRACK_NAV 로 그린다 · 시험 webapp/test_track_reports.py) 의 50kg (후막) 아래.  주소는 그대로.
+    #  지키는 것: 표에서 50kg 아래 한 줄 (글 그대로 · 바로 앞 출처 주석 = 이 시험) · base.html 에 손으로 적지 않음 ·
+    #  렌더된 사이드바에 한 번 · 토글 (트랙 페이지) 안 · 50kg (후막) 트랙 줄 밑.
     base = open(BASE, encoding='utf-8').read()
-    m = re.search(r'<a href="' + re.escape(PAGE_URL) + r'"[^>]*>(.*?)</a>', base, re.S)
-    chk('base.html 사이드바에 링크', m is not None)
-    chk(f'그 링크 글 = "{SIDEBAR_LABEL}"', m is not None and SIDEBAR_LABEL in m.group(1))
+    import track_pages as _tp
+    tp_src = open(os.path.join(HERE, 'track_pages.py'), encoding='utf-8').read()
+    hits = [(t['slug'], p) for t in _tp.TRACKS for p in (t.get('pages') or ()) if p.get('url') == PAGE_URL]
+    chk(f'트랙 표에 줄 하나 — 50kg (후막) (slug kg50) 아래에만 (찾은 것 {[s for s, _p in hits]})',
+        [s for s, _p in hits] == ['kg50'])
+    chk(f'그 줄 글 = "{SIDEBAR_LABEL}"', len(hits) == 1 and hits[0][1].get('label') == SIDEBAR_LABEL)
+    cm = re.search(r"((?:[ \t]*#[^\n]*\n)+)[ \t]*dict\(label='" + re.escape(SIDEBAR_LABEL) + "'", tp_src)
+    cblk = cm.group(1) if cm else ''
+    chk('그 줄 바로 앞 출처 주석 (트랙 표) = 이 시험 이름 · "트랙 묶음으로 옮김" (옛 "제자리에도 남는다" 없음)',
+        'webapp/test_dem_method_figs_page.py' in cblk and '트랙 묶음으로 옮김' in cblk and '제자리' not in cblk)
+    chk('base.html 은 표로 그린다 (TRACK_NAV) · 이 페이지 주소를 손으로 적지 않는다 (일반 자리 없음)',
+        'TRACK_NAV' in base and f'href="{PAGE_URL}"' not in base)
     r2 = c.get('/worklog')
     page2 = r2.get_data(as_text=True)
-    m2 = re.search(r'<a href="' + re.escape(PAGE_URL) + r'"[^>]*>(.*?)</a>', page2, re.S)
-    chk('렌더된 화면 (/worklog) 사이드바에 링크 · 글이 보인다',
-        r2.status_code == 200 and m2 is not None and SIDEBAR_LABEL in m2.group(1))
+    sm = re.search(r'<nav class="sidebar"[^>]*>(.*?)</nav>', page2, re.S)
+    side = sm.group(1) if sm else ''
+    tm = re.search(r'<details\b[^>]*class="[^"]*\bnav-subfold\b[^"]*"[^>]*>.*?</details>', side, re.S)
+    tog = tm.group(0) if tm else ''
+    m2 = re.search(r'<a href="' + re.escape(PAGE_URL) + r'"[^>]*>(.*?)</a>', tog, re.S)
+    chk('렌더된 화면 (/worklog) 사이드바에 한 번 · 토글 (트랙 페이지) 안 · 글이 보인다',
+        r2.status_code == 200 and side.count(f'href="{PAGE_URL}"') == 1 and m2 is not None and SIDEBAR_LABEL in m2.group(1))
+    i_kg = tog.find('href="/reports#track-kg50"')
+    i_nx = tog.find('<li class="nav-track"', i_kg) if i_kg >= 0 else -1
+    kg_blk = tog[i_kg:(i_nx if i_nx >= 0 else len(tog))] if i_kg >= 0 else ''
+    chk('그 줄은 렌더된 토글에서 50kg (후막) 트랙 줄 밑 (다음 트랙 줄 앞)', f'href="{PAGE_URL}"' in kg_blk)
     app_src = open(APP, encoding='utf-8').read()
     chk('app.py 에 이 페이지 라우트 · 경로 없음 (봉인 32 무변경 · 정적 폴더로만)', 'dem_method_figs' not in app_src)
 

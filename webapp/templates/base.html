@@ -60,6 +60,7 @@
          늘 보이는 첫 줄 '공유 보고서' (/reports) + 그 밑 접힘 토글 '트랙 페이지 N' (<details> · JS 없음 · 지금 화면이 그 안이면 열린 채로).
          ⛔ 트랙 · 화면 줄을 여기 손으로 적지 않는다 — 표는 webapp/track_pages.py 하나 (app.py context processor 의 TRACK_NAV 가 그때 읽는다).
          옛 트랙 전용 줄 (이종기술 · 믹서 · Rint 설명 · DEM 재설계 계획서 (수영) · MPM 설명 · Q&A) 은 토글 안으로 옮겼다 (주소 그대로 · 출처 주석은 표로) ·
+         일반 줄 'DEM 방법 그림 (2D)' 도 11-25 50kg (후막) 아래로 옮겼다 (1저자 *"이것도 트랙 페이지에 넣어"* · 주소 그대로 · 그 자리엔 일반 줄 없음) ·
          배지 = 표에 등록된 화면 · 보고서 수만 · 시험 webapp/test_track_reports.py #}
       {%- set _tn = TRACK_NAV(active|default('')) %}
       <li class="nav-group-head"><a href="/reports" class="{% if active == 'reports' %}active{% endif %}"
@@ -88,13 +89,6 @@
         <div class="nav-err" role="alert">⚠ 트랙 목록을 못 읽었다 ({{ _tn.error }}) — 표 webapp/track_pages.py</div>
         {%- endif %}
       </li>
-      {# 11-02: 2D DEM 방법 그림 (50kg 4차년도 보고 0쪽 · 1저자 11-01 *"2d로 지금 그림 넣은것들 webapp에 넣고 뽑을거야"*).
-         app.py 는 봉인 32 라 라우트 없이 정적 페이지 (webapp/static/dem_method_figs/) 를 링크한다 ·
-         그림 사본 = scripts/sync_dem_method_figs_to_webapp.py (--check = docs 원본과 바이트 같음) · 시험 webapp/test_dem_method_figs_page.py #}
-      <li><a href="/static/dem_method_figs/index.html"
-             title="50kg 4차년도 보고 0쪽 — DEM 해석 절차 · 접촉 모델 그림 (2D 모식 계산 · 그림용) · PNG · SVG 내려받기">
-        <span class="icon">&#x1F5BC;&#xFE0F;</span> DEM 방법 그림 (2D)
-      </a></li>
       <li><a href="/audit" class="{% if active == 'audit' %}active{% endif %}">
         <span class="icon">&#x2705;</span> Trust Audit
       </a></li>

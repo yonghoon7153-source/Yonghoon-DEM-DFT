@@ -88,8 +88,10 @@ TRACKS = (
     dict(slug='kg50', name='50kg (후막)', group=None,
          what='50 kg 과제 후막 전극 DEM — 4 차년도 보고',
          pages=(
-             # 일반 도구 줄 'DEM 방법 그림 (2D)' 은 사이드바 제자리에도 남는다 (그 페이지 머리 = '50kg 4차년도 보고 0쪽') —
-             #   시험 webapp/test_dem_method_figs_page.py
+             # 11-02: 2D DEM 방법 그림 (50kg 4차년도 보고 0쪽 · 1저자 11-01 *"2d로 지금 그림 넣은것들 webapp에 넣고 뽑을거야"*).
+             #   정적 페이지 (webapp/static/dem_method_figs/) 를 링크한다 · 그림 사본 = scripts/sync_dem_method_figs_to_webapp.py
+             #   (--check = docs 원본과 바이트 같음) · 11-25 사이드바 트랙 묶음으로 옮김 (주소 그대로 · 1저자 *"이것도 트랙 페이지에 넣어"* ·
+             #   일반 자리 줄은 뺐다) · 시험 webapp/test_dem_method_figs_page.py
              dict(label='DEM 방법 그림 (2D)', url='/static/dem_method_figs/index.html', icon='\U0001F5BC️',
                   title='50kg 4차년도 보고 0쪽 — DEM 해석 절차 · 접촉 모델 그림 (2D 모식 계산 · 그림용) · PNG · SVG 내려받기'),
          )),
@@ -135,7 +137,7 @@ NOT_REPORTS = (
     dict(kind='file', rel='docs/50kg/report_y4/meeting_20261104/tools/stress_prerelax/render.html',
          why='3D 응력 그림을 그리는 렌더 틀 (글 없음 · 도구)'),
     dict(kind='file', rel='webapp/static/dem_method_figs/index.html',
-         why='그림 · 자료 받기 화면 — 사이드바 일반 줄과 50kg 트랙 화면으로 연다 · 보기 틀에서는 json · txt · md 받기 링크가 막힌다 (자산 규칙 밖)'),
+         why='그림 · 자료 받기 화면 — 사이드바 트랙 묶음 50kg (후막) 아래 화면 줄로 연다 (11-25 · 일반 줄은 뺐다) · 보기 틀에서는 json · txt · md 받기 링크가 막힌다 (자산 규칙 밖)'),
 )
 
 TRACKS_BY_SLUG = {t['slug']: t for t in TRACKS}

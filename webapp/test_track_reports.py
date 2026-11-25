@@ -12,7 +12,8 @@
   ③ 라우트 — /reports · /reports/<slug> 200 · raw = 파일 바이트 · ?download=1 = attachment · 없는 slug 404 ·
      자산 = 보고서가 상대 경로로 부르는 그림 · 자료가 200 · html · 폴더 밖 · 숨은 이름 · 허용 밖 확장자 404 · 심볼릭 링크 밖 = 거부
   ④ 사이드바 — '공유 보고서' 줄 (토글 밖 · 바로 앞) + <details> 토글 '트랙 페이지 N' · 트랙 N 줄 · 배지 = 표에서 센 수 ·
-     화면 없는 트랙 = '화면 없음' · 옮긴 줄 (Rint 설명 · DEM 재설계 계획서 (수영) · MPM 설명 · Q&A · 믹서 · 이종기술) = 토글 안 · URL 그대로 ·
+     화면 없는 트랙 = '화면 없음' · 옮긴 줄 (Rint 설명 · DEM 재설계 계획서 (수영) · MPM 설명 · Q&A · 믹서 · 이종기술 ·
+     DEM 방법 그림 (2D) = 50kg (후막) 아래에만 · 11-25) = 토글 안 · URL 그대로 · 토글 바로 뒤 일반 줄 = Trust Audit ·
      일반 줄 = 토글 밖 · 순서 그대로 · 지금 화면이 토글 안이면 열림 · JS 없음 · 표를 못 읽으면 '못 읽었다' (빈 줄로 숨기지 않는다)
   ⑤ 보기 화면 — iframe = raw · docnote.js · 메모 저장 = 이 브라우저 (localStorage) · 파일이 없으면 '파일 없음' (빼지 않는다)
   ⑥ 묶음 규칙 — app.py 는 track_pages 를 함수 안에서만 import (import 직후 sys.modules 에 없다) · 194 실행기 지연 import 표 한 줄 ·
@@ -48,16 +49,18 @@ MOD = HERE / 'track_pages.py'
 FORMATION = ['[Rint ②]', 'Ⓐ DEM 신뢰성', 'Ⓑ DEM → MPM 연계', 'Ⓒ 코팅 활물질 믹싱', '[DEM 우선 (수영)]',
              'LHS 접촉망', 'LHS DEM 런', '50kg (후막)', '이종기술']
 #: 토글 안으로 옮긴 트랙 전용 줄 — 옛 사이드바의 URL · 글 그대로 (즐겨찾기가 안 깨지게).
+#: 11-25 오후: 'DEM 방법 그림 (2D)' 도 (1저자 *"이것도 트랙 페이지에 넣어"*) — 일반 자리에서 빼고 50kg (후막) 아래에만 (주소 그대로).
+DEM_FIGS_URL = '/static/dem_method_figs/index.html'
 MOVED = [('/hetero', '이종기술'), ('/mixer', '믹서 (이력 · 침대)'),
          ('/static/explain/rint_overview_20261021.html', 'Rint 설명'),
          ('/static/explain/dem_redesign_plan_20261110.html', 'DEM 재설계 계획서 (수영)'),
-         ('/static/explain/mpm_basics_20261116.html', 'MPM 설명 · Q&amp;A')]
-#: 제자리에 남는 일반 도구 줄 — 옛 사이드바 순서 그대로.
+         ('/static/explain/mpm_basics_20261116.html', 'MPM 설명 · Q&amp;A'),
+         (DEM_FIGS_URL, 'DEM 방법 그림 (2D)')]
+#: 제자리에 남는 일반 도구 줄 — 옛 사이드바 순서 그대로 (DEM 방법 그림 (2D) 은 11-25 트랙 묶음으로 옮겼다 → MOVED).
 GENERAL = [('/', 'Dashboard'), ('/group', 'Group 비교'), ('/archive', '보관함'), ('/mpm-lab', 'MPM 뷰어'),
            ('/step5', 'STEP5 열화'), ('/eis', 'EIS / DRT'), ('/emod', '유효 영률 · 응력'), ('/predictor', 'ML Predictor'),
            ('/litdb', '논문 litdb'), ('/seminar', '연구 세미나'), ('/worklog', '작업일지 · 주간보고'), ('/videos', '영상 (AVI)'),
-           ('/static/dem_method_figs/index.html', 'DEM 방법 그림 (2D)'), ('/audit', 'Trust Audit'), ('/ledger', '판정 원장'),
-           ('/ledger/before-after', '비포 / 애프터')]
+           ('/audit', 'Trust Audit'), ('/ledger', '판정 원장'), ('/ledger/before-after', '비포 / 애프터')]
 #: 지금 화면이 토글 안 화면이면 토글이 열린 채로 와야 하는 주소 · 닫힌 채로 와야 하는 주소.
 OPEN_ON = ['/mixer', '/mixer/story', '/mixer/lit', '/hetero', '/hetero/transcript']
 CLOSED_ON = ['/seminar', '/reports', '/worklog']
@@ -379,6 +382,11 @@ def main():
         lab = _html.unescape(label)
         chk(f'옮긴 줄 = 토글 안 · URL 그대로 · 글 그대로 — {lab}', (_link_text(tog, url) or '').endswith(lab))
         chk(f'옮긴 줄이 토글 밖에 남지 않는다 — {lab}', f'href="{url}"' not in rest)
+    #  11-25 — 'DEM 방법 그림 (2D)' 은 50kg (후막) 트랙 밑에만 (일반 자리 없음 · 사이드바 전체에 한 번 · 표에서도 kg50 하나)
+    kg_blk = dict(zip(t_slugs, blocks)).get('kg50', '')
+    chk('DEM 방법 그림 (2D) = 50kg (후막) 트랙 밑에만 (사이드바에 한 번 · 그 트랙 블록 안 · 표에서도 kg50 하나)',
+        side.count(f'href="{DEM_FIGS_URL}"') == 1 and f'href="{DEM_FIGS_URL}"' in kg_blk
+        and [s for s, p in pages if p.get('url') == DEM_FIGS_URL] == ['kg50'])
     pos = []
     for url, label in GENERAL:
         t_ = _link_text(rest, url)
@@ -387,10 +395,12 @@ def main():
     chk('일반 줄 순서 = 옛 순서 그대로', all(p >= 0 for p in pos) and pos == sorted(pos))
     rep_at = rest.find('href="/reports"')
     chk('"공유 보고서" 줄 = 토글 밖 · 글 "공유 보고서"', rep_at >= 0 and (_link_text(rest, '/reports') or '').endswith('공유 보고서'))
-    chk('"공유 보고서" 줄이 토글 바로 앞 (같은 묶음 · 영상 (AVI) 뒤 · DEM 방법 그림 앞)',
+    #  11-25 — 토글 바로 뒤 일반 줄 = Trust Audit (그 사이에 있던 일반 줄 'DEM 방법 그림 (2D)' 은 50kg (후막) 아래로 옮겼다)
+    nxt = re.search(r'<a href="([^"]+)"', side[side.find('</details>'):]) if '</details>' in side else None
+    chk('"공유 보고서" 줄이 토글 바로 앞 (같은 묶음 · 영상 (AVI) 뒤) · 토글 바로 뒤 줄 = Trust Audit',
         rep_at >= 0 and side.find('href="/reports"') < side.find('<details')
         and side.find('href="/videos"') < side.find('href="/reports"')
-        and side.find('</details>') < side.find('href="/static/dem_method_figs/index.html"', side.find('</details>')))
+        and nxt is not None and nxt.group(1) == '/audit')
     chk('토글에 JS 없음 (on…= 속성 · script 없음 · <details> 만)', bool(tog) and not re.search(r'\son[a-z]+\s*=', tog)
         and '<script' not in side)
     for path in OPEN_ON:
