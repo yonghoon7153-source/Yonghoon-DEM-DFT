@@ -18339,92 +18339,159 @@
   {
    "id": "AVI-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰 (스킬 핀 7b208b19c · 재료 ZIP 4b36a1e2… · 영상 ZIP 2421ffeb… · 문서 · 제작 기록 · MP4 헤더 · SRT ↔ 타임라인 306 · 화면 표본 셋 · 새 렌더 · TTS · 음향 재측정 · 계산 0)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "독립 대본 리뷰의 판본 동결이 없다 — r1 진행 중 제작 조수가 대본을 바꿨고, r2 의 P1 0 은 특정 사본에 대한 판정인데 그 뒤 승인된 권고로 15 줄을 바꾸고 한 문장씩 합치고 더해도 총 128 문장이라 문장 수로 같은 판본을 확인할 수 없다 · r2 가 읽은 scenes.json 과 최종 공개 사본의 해시가 다르다",
-   "note": "판정문 지적표 AVI-01 · Q2.  최소 수정 = S3 시작 · 재시작 · 끝에 읽기 전용 사본 해시 대조 · 수정 뒤 영향 구간 재확인과 저자 승인을 최종 제작 입력에 연결 · 스킬에 넣을 문장 = 판정문 Q2 그대로.  처분 = docs/reviews/avi_skill_fix_plan_20261125.md (⬜ 1저자)."
+   "note": "판정문 지적표 AVI-01 · Q2.  최소 수정 = S3 시작 · 재시작 · 끝에 읽기 전용 사본 해시 대조 · 수정 뒤 영향 구간 재확인과 저자 승인을 최종 제작 입력에 연결 · 스킬에 넣을 문장 = 판정문 Q2 그대로.  처분 = docs/reviews/avi_skill_fix_plan_20261125.md (⬜ 1저자).",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    ".claude/skills/avi-generate/SKILL.md §4-1 (S3 판본 동결 · 읽기 전용 사본 · 해시 · 시작 · 끝 대조) · S4 (다시 적용 범위 · 승인 뒤 바뀌면 다시)",
+    "docs/reviews/avi_skill_q4_check_20261125.md (독립 대조 · 재대조)"
+   ],
+   "verification_note": "스킬 문장 고침 — 실행 시험 없음 · 다음 편 S3 에서 실제로 쓸 때 확인 · Codex 미검증 (Q4 = 독립 대조만)."
   },
   {
    "id": "AVI-02",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰 (스킬 핀 7b208b19c · 공개 꾸러미 정적 재현)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "공개 꾸러미 script.md 34 행 (참고 문헌 머리) 에 스킬이 공개 금지한 리포 커밋 식별자 2 개 · 10–17 행에 1저자 지시 · 제작 이력이 있는데 episode.json 은 public · 공개 검사 ok=true",
-   "note": "우리 트리 재현 (등록 사본): 34 행 hex 토큰 2 · 10–17 행 = 제작 이력 (1저자 말 · 목소리 ID · 내부판 폴더 이름) · 공개 검사 규칙 7 (IP · 루프백 · 주소 포트 · 홈 경로 · 내부판 파일 이름 · 잡 번호 · 철회값) 에 커밋 식별자 · 제작 이력 규칙 없음.  바깥 게시 증거 없음.  같은 MP4 로 시청자용 대본 · 공개 부속물을 바꿔 고칠 수 있다 (판정문 Q5).  처분 = 수정 계획 Q1 · Q2."
+   "note": "우리 트리 재현 (등록 사본): 34 행 hex 토큰 2 · 10–17 행 = 제작 이력 (1저자 말 · 목소리 ID · 내부판 폴더 이름) · 공개 검사 규칙 7 (IP · 루프백 · 주소 포트 · 홈 경로 · 내부판 파일 이름 · 잡 번호 · 철회값) 에 커밋 식별자 · 제작 이력 규칙 없음.  바깥 게시 증거 없음.  같은 MP4 로 시청자용 대본 · 공개 부속물을 바꿔 고칠 수 있다 (판정문 Q5).  처분 = 수정 계획 Q1 · Q2.",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    "webapp/test_video_page.py::K1–K1d (리포 커밋 식별자 · git 못 쓰면 공개판 거부)",
+    "webapp/test_video_page.py::K2 (제작 표지)",
+    "webapp/test_video_page.py::K3–K5b (시청자 대본 · 공개 장면 투영)",
+    "webapp/test_video_page.py::K8 (공개판에 제작 기록 역할 = 등록 거부)",
+    "webapp/test_video_page.py::K10–K10f (지금 기준에 걸린 옛 공개판 = 공개 보류 · 캐시 열쇠 · TTL)"
+   ],
+   "verification_note": "고치기 전 코드 + 새 시험 = 81 통과 · 30 실패 · K10 에서 멈춤 → 122/122 · 실물 대조 = 옛 ep01 공개 꾸러미가 공개 보류 (까닭 셋) · ep01 재포장 (v3.2 · 리포 밖) 은 아직 · Codex 미검증."
   },
   {
    "id": "AVI-03",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰 (스킬 핀 7b208b19c · 제작 지시 원문 10 통 대조)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "내부판 로컬 TTS 규칙이 스킬 본문에 없다 — 제작 지시 10 번째는 내부판 로컬 TTS 를 지정하지만 정본 S6 과 기본 음성 · 예비 서비스 설명을 그대로 읽으면 내부편 오디션 · 재합성에도 바깥 서비스를 고를 여지가 있고 smart 모드는 앞뒤 문장까지 보낸다 (실제 전송 증거 없음)",
-   "note": "우리 트리: 스킬 · CLAUDE.md 본문에 '내부판 = 로컬 TTS' 없음 (요청서 Q5 의 1저자 11-25 말로만).  최소 수정 = S0 에 청중 공개 범위 · 바깥 TTS 전송 범위를 따로 · S6 호출 전에 판 구분 · 실제 전송 본문 · 문맥 대조 · 내부판 = 로컬 고정 (판정문 Q5 ③).  처분 = 수정 계획 AVI-03 줄 · 내부 1 분판 (로컬 XTTS-v2) 에 바로 적용."
+   "note": "우리 트리: 스킬 · CLAUDE.md 본문에 '내부판 = 로컬 TTS' 없음 (요청서 Q5 의 1저자 11-25 말로만).  최소 수정 = S0 에 청중 공개 범위 · 바깥 TTS 전송 범위를 따로 · S6 호출 전에 판 구분 · 실제 전송 본문 · 문맥 대조 · 내부판 = 로컬 고정 (판정문 Q5 ③).  처분 = 수정 계획 AVI-03 줄 · 내부 1 분판 (로컬 XTTS-v2) 에 바로 적용.",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    ".claude/skills/avi-generate/SKILL.md S0 (공개 범위 · 바깥 TTS 전송 범위 따로) · S6 (내부판 = 로컬 TTS 고정 · 오디션 · 재시도 · 예비 포함)",
+    "webapp/test_video_page.py::K9 (avi_melo · avi_xtts · 첫머리 torch 안 부름)"
+   ],
+   "verification_note": "voice-auto 입구 검사 (docs/avi/tools/avi.py) 는 이번에 옮기지 않았다 (작업 폴더 판 · 다음 묶음) — 지금은 스킬 규칙 + 조수 지시로 지킨다 · Codex 미검증."
   },
   {
    "id": "AVI-04",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰 (스킬 핀 7b208b19c)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "S10 에서 공개 등록한 뒤 S11 에 1저자가 듣는 순서 — 공개판은 앱에 닿는 이용자가 볼 수 있어 (스킬 §13) 저자 청취 전에 후보가 열릴 경로가 있다 (실제 제3자 접근 확인 안 됨)",
-   "note": "최소 수정 = S10 = 비공개 검토 후보 준비까지 · S11 에서 들은 같은 MP4 와 공개 부속물 묶음에 공개 승인을 기록한 뒤 등록 (판정문 Q1 문장).  처분 = 수정 계획 Q3 (S10 = 내부판 등록 · 웹앱 코드 변경 없음)."
+   "note": "최소 수정 = S10 = 비공개 검토 후보 준비까지 · S11 에서 들은 같은 MP4 와 공개 부속물 묶음에 공개 승인을 기록한 뒤 등록 (판정문 Q1 문장).  처분 = 수정 계획 Q3 (S10 = 내부판 등록 · 웹앱 코드 변경 없음).",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    ".claude/skills/avi-generate/SKILL.md S10 (검토 후보 · 이 컴퓨터만 · --internal) · S11 (승인 둘) · §13-1",
+    "webapp/test_video_page.py::K10 · K10b (걸린 공개판 = 다른 컴퓨터 404 · 이 컴퓨터 보류 배지)",
+    "webapp/test_video_page.py::K13 · K13b (공개판 등록 = 판 대조 기록 · 기록 없는 등록 공개판 = 보류)"
+   ],
+   "verification_note": "실제 제3자 접근 확인은 없다 (판정문과 같음) · Codex 미검증."
   },
   {
    "id": "AVI-05",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰 (제작 기록 · 음성 점검 보고 · 문장별 음량 표 인용 · 음향 재측정 0)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "S7 이 1저자가 들은 세 문제 (문장 끝 기계음 · 한 문장의 과도한 음량 · 문장 안 숨) 를 높이 · 전체 음량 · 쉼 길이로는 검출하지 못했다",
-   "note": "최소 수정 = S7 에 끝소리 · 국소 음량 · 문장 안 저레벨 소리 청취 후보 · 문맥 재청취 · 처분 기록 · 정상 강조 · 어미 보존.  판정문 Q4 잠정 기준 (같은 목소리 · 종결형에서 두 지표 각각 상위 10 % · 이웃 두 문장 평균과 ±2.5 LU · 말 중앙보다 약 18 dB 낮은 0.18 s 이상) = 다음 편 청취 선별용 (합격선 아님) · ep01 한 편에는 검출률 · 오탐률을 추정할 정답 집합이 없다."
+   "note": "최소 수정 = S7 에 끝소리 · 국소 음량 · 문장 안 저레벨 소리 청취 후보 · 문맥 재청취 · 처분 기록 · 정상 강조 · 어미 보존.  판정문 Q4 잠정 기준 (같은 목소리 · 종결형에서 두 지표 각각 상위 10 % · 이웃 두 문장 평균과 ±2.5 LU · 말 중앙보다 약 18 dB 낮은 0.18 s 이상) = 다음 편 청취 선별용 (합격선 아님) · ep01 한 편에는 검출률 · 오탐률을 추정할 정답 집합이 없다.",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    ".claude/skills/avi-generate/SKILL.md §7-2 (청취 후보 셋 · 저자가 짚은 위치 · 처분 · 귀 확인 전 = 수치 개선 · 청취 대기)",
+    "docs/avi/tools/avi_audio.py --selftest (v3.1 · 숨 · 문장 음량 · rc 0)",
+    "webapp/test_video_page.py::K9"
+   ],
+   "verification_note": "문턱 = 판정문 Q4 잠정값 · 귀 판정 = 1저자 · Codex 미검증."
   },
   {
    "id": "AVI-06",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰 (스킬 · 제작 지시 · DECISIONS 대조)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "음성 예산 원장의 뜻이 흔들린다 — 스킬 기본 ×3 · ep01 별도 ×4 승인 · 끝말을 바꾸면 줄의 다시 찍기 횟수가 초기화 · 운영 중 수동 재합성 · 어느 원장을 쓰느냐에 따라 '상한 이내' 의 뜻이 달라진다 (v3 자동 보고와 v3.1 원장은 다른 시점)",
-   "note": "최소 수정 = S4 에서 절대 예산 · 분모 고정 · 같은 편 자동 · 수동 · 실패 호출 누계 · 재시작 · 끝말 변경에도 잔여 예산을 이어 씀 (판정문 Q3)."
+   "note": "최소 수정 = S4 에서 절대 예산 · 분모 고정 · 같은 편 자동 · 수동 · 실패 호출 누계 · 재시작 · 끝말 변경에도 잔여 예산을 이어 씀 (판정문 Q3).",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    ".claude/skills/avi-generate/SKILL.md S4 · §7-1 (절대 예산 · 분모 고정 · 한 원장 누계 · 끝말 바꿈 · 재시작에도 남은 예산 이어 씀 · 원장 글자 ↔ 과금 확인 구분)"
+   ],
+   "verification_note": "스킬 문장 고침 — 실행 시험 없음 · Codex 미검증."
   },
   {
    "id": "AVI-07",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰 (점검 기록 대조)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "'자동 걸림 0' 을 '이번 판 전 프레임 · 전 검사 항목 직접 통과' 로 읽을 수 있다 — v3.1 0.5 초 표본은 전판과 기계 비교 · 수정 구간 확대 확인 12 장 · 새 10 fps 필름 0 곳 · 빈 화면 후보 5 곳 별도 처분",
-   "note": "최소 수정 = 표본 · 직접 본 부분 · 이전 판 근거 · 미측정 · 허용한 예외를 구분 · 2 fps / 10 fps 표본 사이의 30 fps 한 프레임 이상은 '검출 0' 범위에 넣지 않는다."
+   "note": "최소 수정 = 표본 · 직접 본 부분 · 이전 판 근거 · 미측정 · 허용한 예외를 구분 · 2 fps / 10 fps 표본 사이의 30 fps 한 프레임 이상은 '검출 0' 범위에 넣지 않는다.",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    ".claude/skills/avi-generate/SKILL.md S8 · §8 · §13-4 (표본 · 직접 본 곳 · 이전 판 근거 · 미측정 · 허용 예외 칸)",
+    "webapp/test_video_page.py::K11–K11d · K12 · K12b (판 대조 다섯 · 공개판 = 다 잼 · 검토 후보 = 미측정 기록)"
+   ],
+   "verification_note": "Codex 미검증."
   },
   {
    "id": "AVI-08",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 반박 리뷰",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "S7 표에 강조 · 이어지는 말 · 숨이 '만드는 중' 이라 적혔는데 ep01 점검에는 이미 그 지표들이 있다 — 본문 기본 도구와 편별 임시 도구의 차이가 드러나지 않는다",
-   "note": "최소 수정 = 지표마다 정본 도구 · 편별 도구 · 미측정 중 하나와 사용 판 · 다음 편에서 그 도구를 못 쓰면 미측정."
+   "note": "최소 수정 = 지표마다 정본 도구 · 편별 도구 · 미측정 중 하나와 사용 판 · 다음 편에서 그 도구를 못 쓰면 미측정.",
+   "claimed_fixed_sha": "ebb3241ce",
+   "evidence_tests": [
+    ".claude/skills/avi-generate/SKILL.md §7 표 (지표마다 정본 도구 · 편별 도구 · 미측정 · 쓴 판)",
+    "webapp/test_video_page.py::K9"
+   ],
+   "verification_note": "Codex 미검증."
   },
   {
    "id": "SELF-199",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 11-25 AVI 스킬 판정 Q3 · Q4 (요청서 §2 대조)",
    "opened_in": "docs/reviews/codex_review_avi_skill_20261125.md",
    "title": "요청서 §2 의 과장 둘 — ③ '124 곳 −10 dB' 를 들숨 124 곳처럼 적었다 (실제 = 문장 안 저레벨 구간을 감쇠한 수 · 들숨으로 확인한 수 아님 · 1저자에게도 '들숨 124 곳' 이라고 말했다) · 음성 '실제 사용 15,572 / 19,048 자' 의 근거로 다른 시점의 v3 자동 보고 (15,401) 를 같이 걸었다",
-   "note": "고침 = docs/reviews/codex_avi_skill_rebuttal_request_20261125.md 머리 정정 배너 (반입 커밋 · claimed_fixed = J26 기록 때).  교훈 = 측정이 고른 구간 수를 물리 사건 수로 부르지 않는다 · 누계 숫자는 시점 하나에 묶는다."
+   "note": "고침 = docs/reviews/codex_avi_skill_rebuttal_request_20261125.md 머리 정정 배너 (반입 커밋 · claimed_fixed = J26 기록 때).  교훈 = 측정이 고른 구간 수를 물리 사건 수로 부르지 않는다 · 누계 숫자는 시점 하나에 묶는다.",
+   "claimed_fixed_sha": "0bed3ddba",
+   "evidence_tests": [
+    "docs/reviews/codex_avi_skill_rebuttal_request_20261125.md 머리 정정 배너 (SELF-199 · 반입 커밋)"
+   ],
+   "verification_note": "1저자에게도 \"들숨 124 곳\" 이라고 말했다 — 정정은 이 배너와 수정 계획 §2 로만 · Codex 미검증."
+  },
+  {
+   "id": "SELF-200",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "본 세션 자체 — push 직후 git show --stat 대조 (11-25 16:27 KST)",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "litdb 정본 가지에 파일 29,431 개를 모두 지우는 커밋 083ae7a3c 를 push 했다 (11-25 16:27 KST · Yoo 2026 카드에 권 90 을 넣으려던 일) — --no-checkout 작업 트리의 sparse checkout 이 채워지지 않아 색인이 빈 채로 commit 됐고, 셸의 set -e 가 python · git add 실패에서 멈추지 않았다 · 약 6 분 뒤 2fbda84e2 (트리 = 269dffa10 · 둘째 부모 269dffa10 · 강제 push 없음) 로 되살리고 c2b6ab3a7 로 원래 고침을 넣었다",
+   "note": "되살림 확인 = 파일 수 29,431 · 269dffa10 대비 바뀐 파일 = Yoo 카드 하나 (3 줄) · 첫 되살림 시도 (부모 = 083ae7a3c 하나) 는 빈 트리가 경계라 git 이 전체를 다시 싸서 보내려다 HTTP 500 (멈춤) · 막을 것 (⬜ J27) = 정본 가지 push 전 파일 수 · 지운 줄 대조 도구 + CLAUDE.md 의 litdb 절차 (전체 작업 트리) 를 따른다 + 셸 연쇄는 && 로 (set -e 에 기대지 않는다) · 되살림 커밋은 정본 가지에만 있어 이 가지에서 조상 판정이 안 되므로 open 으로 둔다"
   }
  ]
 }

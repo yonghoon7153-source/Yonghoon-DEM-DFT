@@ -1,0 +1,32 @@
+{
+  "scope": "DEVELOPMENT_ONLY",
+  "source_job": "368315",
+  "bed": "ps_7_3_r45",
+  "pressure_endpoint_MPa": 1,
+  "sequence_status": "PARTIAL_RETURN",
+  "sequence_reason": null,
+  "arms": {
+    "UB": {
+      "status": "TECHNICAL_RECEIPT_MATCH",
+      "job_id": "368469",
+      "report_sha256": "942690f0195e6c437394a48fd6c671a7798e9647eebe3828bd45149167021001",
+      "origin_verdict_sha256": "5d57792c99ae8d5ef977116490dc818d201e1efdfa05d7551812a9893f6c34bb",
+      "primary_status": "OK",
+      "recorded_rho_pct": 14.119653870965948,
+      "bracket_pct": [
+        14.092497208514931,
+        14.13752116125779
+      ],
+      "trajectory_status": "LIFT_CAP",
+      "surface_um": null,
+      "union_bracket_pct": [
+        14.092497208514931,
+        14.13752116125779
+      ]
+    }
+  },
+  "selected_comparison": null,
+  "requires_endpoint_and_bracket_review": true,
+  "gravity_qualification": "GT1_GT2_AMENDMENT_PENDING",
+  "validation_against_experiment": "NOT_ESTABLISHED"
+}
