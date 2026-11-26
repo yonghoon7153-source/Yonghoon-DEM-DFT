@@ -1,0 +1,280 @@
+{
+ "slug": "shao2026_lis_liquid_quasisolid_allsolid_comparative_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. A 2D taxonomy of lithium-sulfur systems referred to in this review, categorized by both electrolyte type and active material conversion mecha- nism. LELSB: liquid electrolyte Li-S battery, LHCE: localized highly concentrated electrolyte, WSE: weakly solvating electrolyte, SPAN: sulfurized polyacry- lonitrile, PQSSE: polymer-based quasi-solid-state electrolyte, IQSSE: inorganic-based quasi-solid-state electrolyte, ASSLSB: all-solid-state Li-S battery. Here, for the purposes of simplifying the taxonomy, we have classiﬁed the varying cell types according to the principal, theoretical reaction mechanism, recognizing that in practice multiple parallel reaction mechanisms may co-exist. Note that the conversion mechanism in LHCE and WSE involves both solid–solid and solid–liquid–solid pathways.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.0,
+    550.1,
+    299.7
+   ],
+   "w": 2118,
+   "h": 954,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Radar plots summarizing key advantage and disadvantages of each Li-S electrolyte system. Radial values are assigned qualitatively based on the relative ranking of each system, with best performance at the outermost edge and weaker performance at the center. a) Liquid electrolyte Li-S batteries (LELSB), b) all solid-state Li-S batteries (ASSLSB), c) Liquid electrolyte with quasi-solid state conversion mechanism (LEQSSM) including cells with carbonate electrolyte, localized highly concentrated electrolyte (LHCE) or weakly solvating electrolyte (WSE), and sulfurized polyacrylonitrile (SPAN)-based cathodes, and d) hybrid solid state electrolyte (QSSE) cells with polymer (PQSSE) and inorganic (IQSSE) electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    412.7
+   ],
+   "w": 2118,
+   "h": 1428,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Eﬀects of using DOL/DME liquid electrolyte without (a) and with (b) LiNO3 additive on the positive and negative electrode interfaces. Refer- ences for mechanisms illustrated: catalysis and reversibility;[2,11] SEI species[2,29,30] solubility;[29] gas evolution.[10,31]",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.0,
+    437.7
+   ],
+   "w": 2118,
+   "h": 1531,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.65
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Overview of capacity voltage proﬁles and conversion chemistry mechanisms in (a,b) liquid electrolyte Li-S battery (LELSB), (c,d) Li-S battery with liquid electrolyte and quasi-solid state conversion mechanism (LEQSSM), (e,f) Li-S battery with hybrid quasi-solid state electrolyte with inorganic component (IQSSE) or gel-like polymer (PQSSE), and (g,h) all-solid-state Li-S battery (ASSLSB). Schematics illustrate discharge proceeding from top to bottom of each sketch.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.7,
+    550.0,
+    673.5
+   ],
+   "w": 2118,
+   "h": 2513,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Frequency of reporting of LiNO3 electrolyte concentration in 264 samples reported in 100 articles, separated into samples with minimum discharge voltage cutoﬀ≥1.7 V (upper half of axes) and <1.7V (lower half of axes). Horizontal axes show LiNO3 concentration (converted to molality using reported LiNO3 and LiTFSI concentration where originally reported as wt.%); vertical axis shows number of samples using the indicated LiNO3 concentration and voltage cutoﬀrange, with oﬀset axis showing relative frequency within meta-analysis study. For example, 19 samples report the use of 0.1M LiNO3 combined with a minimum discharge voltage ≥1.7 V. Data from.[16]",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    441.7
+   ],
+   "w": 2118,
+   "h": 1548,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Schematic diagram of CEI formation in micropore opening during the ﬁrst cycle (a) and following carbonate electrolyte decomposition during the ﬁrst discharge cycle (b). After Wang et al.[77]",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    248.7
+   ],
+   "w": 2118,
+   "h": 744,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 12,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Summary of sulfur – Li2S conversion mechanisms in SPAN. Sulfur moieties from,[94] A—C) after,[93,104–106] D) after.[93,104–106]",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    501.4,
+    462.0
+   ],
+   "w": 1916,
+   "h": 1631,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 13,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Schematics representing Li+ ion, electrolyte salt anion, and solvent molecule conﬁgurations in diﬀerent electrolyte systems: a) conventional liquid electrolyte (LELSB), b) highly concentrated electrolyte (HCE), c) localised high concentration electrolyte (LHCE), d) weakly solvating electrolyte (WSE), and densely packed ion cluster electrolyte (DPIE). Highlighted mechanisms include i) aggregates, ii) contact ion pairs, iii) Li+ ion transfer. After.[107–112]",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    234.8
+   ],
+   "w": 2118,
+   "h": 684,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 16,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Sulfur to LiPS conversion mechanism in a) IQSSE and b) PQSSE. As in LELSBs, soluble LiPS species form, but the solid or gel-like components of the hybrid QSSE prevent diﬀusion. IQSSE after,[130,131] PQSSE after.[127,132,133]",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.2,
+    550.1,
+    367.6
+   ],
+   "w": 2118,
+   "h": 1236,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.595
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 23,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Schematic overview of key features and challenges of ASSLSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.7,
+    550.8,
+    236.7
+   ],
+   "w": 2110,
+   "h": 693,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.631
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1.png",
+   "caption": "Table 1. Comparison of performance and parameters for LEQSSM Li-S cells with microporous carbon and covalently bonded SPAN electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    70.8,
+    545.8,
+    342.5
+   ],
+   "w": 2096,
+   "h": 1134,
+   "dpi": 300,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 17,
+   "file": "tab_2.png",
+   "caption": "Table 2. Composition and performance of recently reported PQSSEs.",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    589.3,
+    776.4
+   ],
+   "w": 2269,
+   "h": 2997,
+   "dpi": 280,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 18,
+   "file": "tab_3.png",
+   "caption": "Table 3. Composition and performance of recently reported IQSSEs.",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    589.3,
+    776.4
+   ],
+   "w": 2269,
+   "h": 2997,
+   "dpi": 280,
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "blank": 0.966
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ]
+}

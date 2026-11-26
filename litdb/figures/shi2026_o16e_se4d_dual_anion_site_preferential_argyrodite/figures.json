@@ -1,0 +1,847 @@
+{
+ "slug": "shi2026_o16e_se4d_dual_anion_site_preferential_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+  "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 (a,b) Schematic illustration of the proposed oxygen-source-manipulated anion regulation mechanism model at 4d and 16e sites in Li argyrodite electrolytes; (c,d) Schematic illustration of multiple advantages of anion-regulated LPSOSeCl solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    568.0,
+    557.3
+   ],
+   "w": 2169,
+   "h": 2174,
+   "dpi": 300,
+   "src": "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.571
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 (a,b) Migration energy barriers of O incorporation into 4d and 16e sites of Li6 PS5 Cl with different oxygen precursors (Li2 O and P2 O5 ). (c,d) XRD patterns, (e,f) Raman spectra of Li2 O (LPSOA Cl) and P2 O5 (LPSOB Cl) substituted electrolytes with gradient doping amounts. (g) P 2p and (h) S 2p XPS spectra of LPSOA Cl, LPSOB Cl, and pristine LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.1,
+    569.3
+   ],
+   "w": 2170,
+   "h": 2226,
+   "dpi": 300,
+   "src": "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.701
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 (a,b) Electrochemical impedance spectra and (c) Arrhenius plots of LPSOCl SSEs; (d–f) Lithium-ion migration trajectories of LPSCl and obtained site-regulated type LPSOA Cl and LPSOB Cl electrolyte; (g) Electrochemical impedance spectrum, (h) Arrhenius plots and (l) LSV results of LPSCl, LPSSeCl, LPSOSeCl; (j) The PDOS, (k) Charge density difference and BVSE analysis of Li-ion migration in (l) O-doped and (m) Se-doped LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.1,
+    623.3
+   ],
+   "w": 2170,
+   "h": 2449,
+   "dpi": 300,
+   "src": "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.699
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 (a) XRD Rietveld refinement patterns of LPSOSeCl; (b) Normalized Se K-edge XANES spectra and (c) FT of k3 -weighted Se K-edge EXAFS spectra of LPSOSeCl, Li2 Se. WT-EXAFS spectrum of (d) LPSOSeCl and (e) Li2 Se at the Se K-edge. (f) H2 S release curves of the obtained SSEs of LPSCl, LPSOB Cl and LPSOSeCl; (g) In situ Raman spectra of LPSOSeCl and LPSCl exposed to air; (h) Schematic illustration of difficulty level of PS4 , PS3 O (O16e) units reacting with H2 O based on DFT calculations; (i) Adsorption energies ( ΔEads ) of H2 O at LPSCl and LPSSeCl (110) furfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.2,
+    487.3
+   ],
+   "w": 2170,
+   "h": 1884,
+   "dpi": 300,
+   "src": "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.691
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Critical current density test of the Li||Li symmetric cell with (a) LPSCl, (b) LPSSeCl, (c) LPSOSeCl. (d) Galvanostatic cycling at 0.2 mA cm− 2 and 0.2 mAh cm− 2 ; (e) The comparison of cycle performance and CCD with reported Li symmetric cells with SSEs; (f) Galvanostatic cycling of LPSCl and LPSOSeCl Li symmetric cells at 0.5 mA cm− 2 and 0.5 mAh cm− 2 and (g) Corresponding partial enlargement curve; The structure snapshots of the (h) Li/LPSCl interface and (j) Li/LPSSeOCl interface after AIMD simulation at 1, 25, and 50 ps and (i,k) corresponding radial distribution function heat maps of P–S pair and Li–P pair; Color: aquamarine for Li, dark-blue for P, orange for S, red for Se, claret for O, turquoise for Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.1,
+    538.3
+   ],
+   "w": 2170,
+   "h": 2095,
+   "dpi": 300,
+   "src": "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.666
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 (a) Long cycle performance of NCM811|SSE|Li full cells with LPSOSeCl and LPSCl; (b) Rate capability of the NCM811|SSE|Li-In full cells with LPSOSeCl and LPSCl; Charge and discharge curves of NCM811|SSE|Li-In full cells with (c) LPSOSeCl and (d) LPSCl and the corresponding (e) specific capacity vs . cycle number plots at 0.3 C; (f) P 2p and (g) S 2p XPS of the cathode/SSE interfaces after cycling; (h) The photographs of the lit LED devices by LPSOSeCl pouch cell after bending and cutting; (i) Comparison of cycling stability and specific capacity with previously reported works.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.3,
+    471.6
+   ],
+   "w": 2171,
+   "h": 1817,
+   "dpi": 300,
+   "src": "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Structure models after O incorporation into 4d and 16e sites of Li₆PS₅Cl",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.7,
+    532.5,
+    261.0
+   ],
+   "w": 1869,
+   "h": 782,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Crystal structure of (a) LPSCl, (b) Li2O-substituted LPSOACl and (c) P2O5-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.5,
+    511.5,
+    295.5
+   ],
+   "w": 1782,
+   "h": 956,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Schematic diagram of the synthesis process of the proposed oxygen-source-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.5,
+    511.3,
+    212.9
+   ],
+   "w": 1781,
+   "h": 591,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.407
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: SEM of (a) LPSCl, (b) Li2O-substituted LPSOACl and (c) P2O5-substituted",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.5,
+    514.4,
+    184.7
+   ],
+   "w": 1794,
+   "h": 485,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.302
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: XRD Rietveld refinement patterns of (a) LPSOACl and (b) LPSOBCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.1,
+    511.3,
+    211.3
+   ],
+   "w": 1781,
+   "h": 577,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Statistical analysis of PS43- structural Raman integrity of Li2O and P2O5",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.5,
+    514.4,
+    351.2
+   ],
+   "w": 1794,
+   "h": 1158,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Trend of Li+ ionic conductivity changes with two different doping routes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.5,
+    511.5,
+    210.8
+   ],
+   "w": 1782,
+   "h": 603,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.638
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Direct-current polarization curves of LPSCl, Li2O-substituted LPSOACl",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    85.1,
+    514.4,
+    292.9
+   ],
+   "w": 1794,
+   "h": 867,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 13,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Cell volume of the LPSCl, LPSOACl, LPSOBCl and LPSOSeCl electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.9,
+    514.4,
+    293.7
+   ],
+   "w": 1794,
+   "h": 941,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 14,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Linear sweep voltammetry plots of the (a) LPSOACl and (b)LPSOBCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.3,
+    511.3,
+    247.3
+   ],
+   "w": 1781,
+   "h": 747,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 15,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Direct-current polarization curves of the LPSCl, LPSSeCl and LPSOSeCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.9,
+    514.4,
+    291.1
+   ],
+   "w": 1794,
+   "h": 919,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 16,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: BVSE energy profile of pristine LPSCl. The 1D migration pathway along",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    82.7,
+    514.3,
+    264.0
+   ],
+   "w": 1793,
+   "h": 756,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 17,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: SEM images and EDS mapping of the (a) LPSCl and (b) LPSOSeCl",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.0,
+    514.4,
+    305.8
+   ],
+   "w": 1794,
+   "h": 975,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.362
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 18,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Li XPS of LPSCl, LPSSeCl, LPSOSeCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.3,
+    474.0,
+    351.4
+   ],
+   "w": 1625,
+   "h": 1160,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 19,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: The apparatus used to measure H2S gas concentration.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    83.8,
+    426.2,
+    294.2
+   ],
+   "w": 1426,
+   "h": 877,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.374
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 20,
+   "file": "fig_S16.png",
+   "caption": "Figure S16: H2S release curves of the obtained SSEs of LPSCl and LPSSeCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.1,
+    473.4,
+    274.3
+   ],
+   "w": 1623,
+   "h": 868,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 21,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: Reaction activation energy of PS4 and PS3O units when reacted with H2O",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.3,
+    514.4,
+    243.0
+   ],
+   "w": 1794,
+   "h": 712,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 22,
+   "file": "fig_S18.png",
+   "caption": "Figure S18: XRD patterns of the (a) LPSCl and (b) LPSOSeCl electrolytes before and",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.2,
+    514.4,
+    212.2
+   ],
+   "w": 1794,
+   "h": 585,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 23,
+   "file": "fig_S19.png",
+   "caption": "Figure S19: Nyquist plots of the (a) LPSCl and (b) LPSOSeCl before and after moist",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.8,
+    514.4,
+    244.6
+   ],
+   "w": 1794,
+   "h": 725,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 24,
+   "file": "fig_S20.png",
+   "caption": "Figure S20: Critical current density test of the Li | LPSOACl | Li symmetric cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.7,
+    486.9,
+    311.3
+   ],
+   "w": 1679,
+   "h": 1021,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 25,
+   "file": "fig_S21.png",
+   "caption": "Figure S21: Critical current density test of the Li | LPSOBCl | Li symmetric cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.0,
+    486.6,
+    320.4
+   ],
+   "w": 1678,
+   "h": 1031,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 26,
+   "file": "fig_S22.png",
+   "caption": "Figure S22: Li 1s XPS spectra of LPSOSeCl electrolyte after Li symmetric cell",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    83.0,
+    514.1,
+    326.2
+   ],
+   "w": 1793,
+   "h": 1015,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 27,
+   "file": "fig_S23.png",
+   "caption": "Figure S23: Voltage profile of Li|LPSSeCl|Li symmetric cell galvanostatic cycling at",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.8,
+    514.4,
+    241.7
+   ],
+   "w": 1794,
+   "h": 701,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 28,
+   "file": "fig_S24.png",
+   "caption": "Figure S24: The radial distribution function heat maps of Li-S pair at Li/LPSCl",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.2,
+    514.4,
+    296.2
+   ],
+   "w": 1794,
+   "h": 960,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.517
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 29,
+   "file": "fig_S25.png",
+   "caption": "Figure S25: The radial distribution function heat maps of Li-S, Li-Se and Li-O pair at",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.9,
+    514.4,
+    351.3
+   ],
+   "w": 1794,
+   "h": 1161,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.612
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 30,
+   "file": "fig_S26.png",
+   "caption": "Figure S26: The DFT simulation results of (a) interface energies at Li | Li2O, Li | Li2S",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.0,
+    514.4,
+    228.0
+   ],
+   "w": 1794,
+   "h": 650,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 31,
+   "file": "fig_S27.png",
+   "caption": "Figure S27: Charge and discharge curves of (a) NCM811| LPSCl |Li full cell and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.2,
+    514.4,
+    228.8
+   ],
+   "w": 1794,
+   "h": 658,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 32,
+   "file": "fig_S28.png",
+   "caption": "Figure S28: EIS spectra with representative fits of the NCM811| LPSCl |Li-In full cell",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.0,
+    514.4,
+    309.0
+   ],
+   "w": 1794,
+   "h": 1001,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 33,
+   "file": "fig_S29.png",
+   "caption": "Figure S29: Cycle performance and Rate capability of the NCM811|SSE|Li-In full",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.7,
+    511.3,
+    241.9
+   ],
+   "w": 1781,
+   "h": 702,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 34,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Detailed crystallographic information of Li6PS4.6O0.4(a)Cl obtained from",
+   "rotated_deg": 0,
+   "bbox": [
+    81.1,
+    76.2,
+    514.5,
+    463.4
+   ],
+   "w": 1807,
+   "h": 1614,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 35,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Detailed crystallographic information of Li6PS4.6O0.4(b)Cl obtained from",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    76.2,
+    513.3,
+    469.2
+   ],
+   "w": 1785,
+   "h": 1638,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 36,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Detailed crystallographic information of Li6PS4.2Se0.4O0.4Cl obtained from",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    76.2,
+    513.3,
+    498.3
+   ],
+   "w": 1785,
+   "h": 1760,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 37,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Structural parameters extracted from the Se K-edge χ(R) space spectra fitting",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    76.2,
+    513.4,
+    342.3
+   ],
+   "w": 1785,
+   "h": 1110,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 38,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Activation energies obtained from three independent cells",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    76.2,
+    509.2,
+    189.8
+   ],
+   "w": 1768,
+   "h": 474,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 39,
+   "file": "tab_S6.png",
+   "caption": "Table S6: Comparison of CCD and cycling performance of different types of sulfide",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    76.2,
+    529.0,
+    609.6
+   ],
+   "w": 1931,
+   "h": 2223,
+   "dpi": 300,
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "blank": 0.931
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

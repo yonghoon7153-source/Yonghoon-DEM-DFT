@@ -1,0 +1,120 @@
+{
+ "slug": "gadea2026_sse_hce_lhce_wse_lis_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Electrochemical challenges associated to LSBs and their control through solvation structures engineered by advanced electrolytes. a Schematic diagram showing the discharge-charge LSBs reactions and the challenges associated with conventional LSBs. b Schematic diagram explaining each electrolyte system.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    567.2,
+    515.7
+   ],
+   "w": 2224,
+   "h": 1967,
+   "dpi": 300,
+   "src": "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf",
+   "blank": 0.325
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Most relevant data on HCEs and their comparison with conventional electrolytes. a Comparison of the galvanostatic cycling of Li-S cells using conven- tional electrolyte (G2:LiTFSI (7:1)) and HCE (G2:LiTFSI (0.8:1)). SEM images of Li plated on Cu in the b G2:LiTFSI (7:1), c (1.33:1), and d (0.8:1) electrolytes, respec- tively. Reproduced from Pang et al.39. Copyright (2018), with permission from",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    546.5,
+    288.5
+   ],
+   "w": 2137,
+   "h": 1021,
+   "dpi": 300,
+   "src": "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Most relevant data on LHCEs and their comparison with conventional electrolytes. a Schematic diagram of Li+ transport in LHCEs, and ionic con- ductivities dependent on salt concentration in LHCEs, reproduced from Zhang et al.50 with permission from American Chemical Society. b Performance of stack- cell-type pouch cell containing DME and DME-TFTFE electrolytes, reproduced",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    546.5,
+    291.8
+   ],
+   "w": 2137,
+   "h": 1035,
+   "dpi": 300,
+   "src": "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf",
+   "blank": 0.447
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Most relevant data on WSEs and their comparison with conventional electrolytes. a The characteristics and key factors of WSEs, reproduced with per- mission from Chen et al.71 with copyright from Elsevier. b Photograph of 0.1 M Li2S6 (based on stoichiometric amounts of S8 and Li2S) in different electrolyte solvents, reproduced from Gao et al.72, licensed under CC BY 4.0. c Molecular differences between DME and THP solvents d Pouch cell cycling performance of the THP-based",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    546.5,
+    371.4
+   ],
+   "w": 2137,
+   "h": 1366,
+   "dpi": 300,
+   "src": "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Comparative analysis of electrolyte classes used in LSBs, highlighting solvation structure, transport properties, and environmental trade-offs.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    546.5,
+    323.4
+   ],
+   "w": 2137,
+   "h": 1166,
+   "dpi": 300,
+   "src": "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf",
+   "blank": 0.923
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}

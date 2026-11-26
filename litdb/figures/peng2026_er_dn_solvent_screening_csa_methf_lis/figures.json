@@ -1,0 +1,1627 @@
+{
+ "slug": "peng2026_er_dn_solvent_screening_csa_methf_lis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+  "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Rationale of solvent classification and screening criterion. (a) Illustration of the dissolution of Li salts in a solvent based on the Born−Haber cycle. (b) The three main types of Li salts (LiTFSI, LiNO3, and LiPSs) in the electrolyte of Li−S batteries. (c) Scheme illustrating the dissociation of Li salts through a high εr solvent. (d) Schematic illustrating the coordination environment of Li+ via a high DN solvent. (e) The solvent classification based on DN and εr. The detailed parameters of selected solvents are listed in Tables S2−S8. LiPSs but exacerbate their shuttle effect, while low DN solvents suppress dissolution at the expense of S conversion kinetics.24 particularly in binary solvent electrolyte systems. Therefore, it is imperative to bridge the fundamental gap between the nanoscopic screening criteria and macroscopic electrochemical performance. (ii) The Gutmann’s ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    522.6
+   ],
+   "w": 2151,
+   "h": 1952,
+   "dpi": 300,
+   "src": "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.695
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrolyte solvent screening criterion for practical Li−S batteries. (a) Ten combinations of binary solvent electrolyte formulas. The seven key evaluation parameters of these electrolyte formulas: (b) polarization voltage at 400 h and cycle life of Li||Li asymmetric cells, (c) avg SCs of Li||Li2S6 coin cells, (d) ΔVnuc and deposition capacity of Li2S from Li||S cells at 0.2 C, and (e) avg capacity and avg CE based on Li||S cells at 0.2 C. (f) Schematic illustration of the electrolyte screening process based on key parameters. gradient solvation structure with CSA occupying the inner solvation shell and MeTHF enveloping the outer shell, which could effectively suppress the shuttle effect of LiPSs. Moreover, correlations among Li2S electrodeposition, electrode interfacial chemistry, and LiPSs conversion kinetics are also revealed. The Li−S coin cell employing CSA/MeTHF electroly",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    428.1
+   ],
+   "w": 2151,
+   "h": 1558,
+   "dpi": 300,
+   "src": "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Solvent−solvent interaction in LiPSs solvation structures. 17O NMR spectra of 0.1 M Li2S6 in (a) CSA, (b) MeTHF, (c) DME, and (d) DOL. (e) 7Li NMR spectra and (f, g) 1H−1H COSY NMR of 0.1 M Li2S6 in DME:DOL and CSA:MeTHF. (h) Schematic illustration of the CSA:MeTHF interaction. (i) DLi2S6 of 0.1 M Li2S6 in CSA:MeTHF and DME:DOL, as determined by the Stokes−Einstein equation. and deposition capacity of Li2S, and (4) average capacity and average CE (Figure 2f and Table S12). Figure S24). Conversely, [S] in a saturated Li2S6/MeTHF solution is only 0.6 mol L−1, lower than that in DOL (1.0 mol L−1). The conventional DD electrolyte, with moderate LiPSs solubility, exhibits a typical solid−liquid−solid conversion process (Figure S21). This process prior forms a two- dimensional (2D) Li2S deposition morphology, leading to low S utilization and significant corrosion with LMA.35 Coupling",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    360.9
+   ],
+   "w": 2151,
+   "h": 1278,
+   "dpi": 300,
+   "src": "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Elucidation of the conversion process in the cathode. (a) Charge−discharge curve, (b) corresponding EIS spectra, and (c) corresponding SEM images of the Li||Li2S6 cell using CSA/MeTHF electrolyte at different stages of cycling under 0.1 C. DRT analysis of EIS at different SoCs based on Li||Li2S6 cells using (d) CSA/MeTHF and (e) DD electrolytes. (f) GITT curves, (g) polarization decoupling analysis, and (h) polarization distribution at different DoDs of the Li||S coin cell using the CSA/MeTHF electrolyte with a MS of 4.5 mg cm−2 and E/S of 4 μL mg−1. Additionally, 7Li NMR diffusion-ordered spectroscopy (DOSY) was employed to analyze the diffusion process of Li+ in LiPSs solutions.39 As shown in Figure S26, 2D DOSY results display well-resolved 7Li chemical shift signals. Notably, 0.1 M Li2S6 in CSA:MeTHF exhibits a diffusion rate of Li+ (DLi layer, implying a gradient solvation",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    413.7
+   ],
+   "w": 2151,
+   "h": 1498,
+   "dpi": 300,
+   "src": "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.768
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical performance of Li−S cells. (a) Cycling performance and (b) initial charge−discharge curves of Li||S coin cells with a MS of 1.1 mg cm−2 and E/S ratio of 16.7 μL mg−1 at 0.2 C using various electrolytes. Cycling performance of Li||S coin cells with (c) MS of 3.0 mg cm−2 and E/S ratio of 7.4 μL mg−1 at 0.1 C, (d) MS of 6.3 mg cm−2 and E/S ratio of 4.2 μL mg−1 at 0.05 C, and (e) MS of 8.6 mg cm−2 and E/S ratio of 3.6 μL mg−1 at 0.05 C. (f) Electrochemical performance comparison of Li||S coin cells using CSA/MeTHF electrolyte with reported works.33,36,41,46−53 The detailed parameters from the reported works are given in Table S13. The solid−liquid−solid conversion in Li−S batteries involves a unique multistep, multielectron, multispecies, and multiphase (termed as “4M”) conversion redox process. Within this process, Li2S deposition behavior and its conversion kineti",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    317.9
+   ],
+   "w": 2151,
+   "h": 1099,
+   "dpi": 300,
+   "src": "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 13,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The DN values of CSA, MOPA, ACE, TFBA, TFPA, MTBE, DMM, and CPME were determined by 23Na NMR.6 The detailed data was listed in Table S1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    64.6,
+    534.6,
+    244.8
+   ],
+   "w": 1956,
+   "h": 751,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 14,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Lattice energies of LiNO3 and LiTFSI.28",
+   "rotated_deg": 0,
+   "bbox": [
+    168.2,
+    65.2,
+    431.8,
+    214.3
+   ],
+   "w": 1100,
+   "h": 623,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 15,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The nucleophilic reactions between LiPSs and EC or PC.30",
+   "rotated_deg": 0,
+   "bbox": [
+    70.5,
+    65.2,
+    528.7,
+    239.1
+   ],
+   "w": 1910,
+   "h": 726,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 16,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The 1st discharge curve of Li||S cell using 1 M LiTFSI in EC/DEC (1:1 by volume).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    491.1,
+    197.1
+   ],
+   "w": 1775,
+   "h": 551,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 17,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (a) Optical images of Li foils immersion in N-methylaniline and pyridine after 1 h, respectively. (b) Possible reaction mechanism between N-methylaniline and Li metal. (c) Open- circuit voltage evolution of the Li||S cell with 1 M LiTFSI in pyridine during 12 h resting stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    283.1
+   ],
+   "w": 1956,
+   "h": 909,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 18,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Synthetic route of CSA.",
+   "rotated_deg": 0,
+   "bbox": [
+    121.5,
+    65.2,
+    477.6,
+    147.2
+   ],
+   "w": 1484,
+   "h": 343,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 19,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. 1H NMR spectrum of CSA in CDCl3.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.0,
+    65.2,
+    507.8,
+    257.2
+   ],
+   "w": 1704,
+   "h": 801,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 20,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. 13C NMR spectrum of CSA in CDCl3.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.0,
+    65.2,
+    507.8,
+    279.0
+   ],
+   "w": 1704,
+   "h": 892,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.972
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 21,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Calculated ESP values of DMSO, CSA, DME, MeTHF, and TTE.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.2,
+    65.2,
+    524.9,
+    181.0
+   ],
+   "w": 1879,
+   "h": 484,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.751
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 22,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Raman spectra of (a) the N–S–N vibration from CSA and (b) the C–O–C vibration",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    223.0
+   ],
+   "w": 1956,
+   "h": 659,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 23,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. 7Li NMR spectra of LiTFSI: CSA: MeTHF electrolytes (1:x:6, where x = 2, 4, 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    203.8
+   ],
+   "w": 1956,
+   "h": 579,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 24,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. (a) Cycling performance and (b) the 1st galvanostatic charge−discharge (GCD)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.7,
+    215.1
+   ],
+   "w": 1957,
+   "h": 626,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 25,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Raman spectra of (a) DMSO/CSA (S/M-S), (b) CSA/DME (M-S/M), (c) DME/MeTHF (M/W), and (d) DME/DOL (DD) electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    382.2
+   ],
+   "w": 1956,
+   "h": 1322,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 26,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Raman spectra of (a) DMSO/DME (S/M), (b) DMSO/MeTHF (S/W), and (c)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.6,
+    214.0
+   ],
+   "w": 1957,
+   "h": 621,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 27,
+   "file": "fig_S15.png",
+   "caption": "Figure S15 Raman spectra of (a) DMSO/TTE (S/N), (b) CSA/TTE (M-S/N), (c) DME/TTE (M/N), and (d) MeTHF/TTE (W/N) electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    380.7
+   ],
+   "w": 1956,
+   "h": 1316,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 28,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Cycling performance of Li||Li symmetric cells with a capacity of 0.5 mAh cm−2 at a current density of 0.5 mA cm−2, magnified voltage profiles, and SEM images of the cycled LMA after 400 h in Li||Li cells using (a) S/M-S, (b) S/M, (c) S/W, (d) S/N, and (e) M-S/M electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.7,
+    575.4
+   ],
+   "w": 1957,
+   "h": 2127,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 29,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Cycling performance of Li||Li symmetric cells with a capacity of 0.5 mAh cm−2 at a current density of 0.5 mA cm−2, magnified voltage profiles, and SEM images of the cycled LMA after 400 h in Li||Li cells using (a) M-S/W, (b) M-S/N, (c) M/W, (d) M/N, (e) W/N and (f) DD electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.7,
+    665.5
+   ],
+   "w": 1957,
+   "h": 2502,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.782
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 30,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. LiPSs SCs of Li||Li2S6 coin cells at various potentiostatic charging voltages using (a) S/M-S, (b) S/M, (c) S/W, (d) S/N, (e) M-S/M, (f) M-S/W, (g) M-S/N, (h) M/W, (i) M/N, (j) W/N, and (k) DD electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.7,
+    574.3
+   ],
+   "w": 1957,
+   "h": 2123,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 31,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. The initial GCD curves and cycling performance of Li||S cells at 0.2 C using (a) S/M-S, (b) S/M, (c) S/W, (d) S/N, and (e) M-S/M electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    563.8
+   ],
+   "w": 1956,
+   "h": 2079,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 32,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. The initial GCD curves and cycling performance of Li||S cells at 0.2 C using (a) M-S/W, (b) M-S/N, (c) M/W, (d) M/N, (e) W/N, and (f) DD electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.0,
+    661.4
+   ],
+   "w": 1954,
+   "h": 2485,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 33,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Schematic diagram of design rationale of gradient solvation structure (M-S/W).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.6,
+    65.2,
+    529.4,
+    446.7
+   ],
+   "w": 1912,
+   "h": 1591,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 34,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Optical photographs of Li2S8, Li2S6, Li2S4, and Li2S2 with a concentration of 10 mM in (a) CSA:MeTHF and (b) DME:DOL.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    85.5,
+    534.4,
+    387.4
+   ],
+   "w": 1955,
+   "h": 1259,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.673
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 35,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Ionic conductivities of Li2S4, Li2S6, and Li2S8 with a concentration of 0.1 M in CSA:MeTHF and DME:DOL.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    212.5
+   ],
+   "w": 1956,
+   "h": 615,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 36,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. The solubilities of [S] based on the saturated Li2S6 solution in DOL, DME, MeTHF,",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    537.5,
+    231.3
+   ],
+   "w": 1968,
+   "h": 693,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 37,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. The RDF (g(r)) and solvent coordination number around S62− in 0.2 M Li2S6 + 1.0 M LiTFSI in (a, c) CSA:MeTHF and (b, d) DD solutions.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    342.7
+   ],
+   "w": 1956,
+   "h": 1158,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 38,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. 7Li DOSY result and DLi+,sol. of 0.1 M Li2S6 in (a) CSA:MeTHF and (b) DME:DOL.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    537.7,
+    218.1
+   ],
+   "w": 1969,
+   "h": 638,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 39,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. (a) Viscosity measurements and (b) DLS analysis of 0.1 M Li2S6 in different",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.5,
+    218.5
+   ],
+   "w": 1956,
+   "h": 640,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 40,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. The chronoamperometry profiles of Li||Li2S8 coin cells at 2.05 V in (a)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.3,
+    215.5
+   ],
+   "w": 1955,
+   "h": 627,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 41,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. Schematic illustrations of the (a) 2DP, (b) 2DI, (c) 3DP, and (d) 3DI deposition models.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    78.8,
+    534.6,
+    514.3
+   ],
+   "w": 1956,
+   "h": 1815,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.767
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 42,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. Fitted I-t curves with corresponding Li2S nucleation models.",
+   "rotated_deg": 0,
+   "bbox": [
+    117.2,
+    65.2,
+    482.9,
+    218.5
+   ],
+   "w": 1524,
+   "h": 640,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 43,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. SEM images of cycled Li2S cathodes after chronoamperometry tests using (a)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    78.8,
+    534.6,
+    214.8
+   ],
+   "w": 1956,
+   "h": 567,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.614
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 44,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. The dissolution test of Li2S in Li||Li2S8 coin cells using (a) CSA/MeTHF and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    217.0
+   ],
+   "w": 1956,
+   "h": 634,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 45,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. CV curves at 0.05 mV s–1 using CSA/MeTHF and DD electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.4,
+    65.2,
+    497.9,
+    206.1
+   ],
+   "w": 1653,
+   "h": 588,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 46,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. (a) Magnified region of the onset peaks R1 from S8 to Li2S4 and (b) corresponding Tafel plots, (c) magnified region of the onset peaks R2 from Li2S4 to Li2S and (d) corresponding Tafel plots, (e) magnified region of the onset peaks O1 from Li2S to Li2S4 and (f) corresponding Tafel plots, by Li||S coin cells using CSA/MeTHF and DD electrolytes at a scan rate of 0.05 mV s−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.5,
+    322.9
+   ],
+   "w": 1957,
+   "h": 1075,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 47,
+   "file": "fig_S35.png",
+   "caption": "Figure S35. Contour plots of the reduction process from CV curves in (a) CSA/MeTHF and (b) DD electrolytes. Contour plots of the oxidation process from CV curves in (c) CSA/MeTHF and (d) DD electrolytes at the scan rates ranging from 0.05 to 0.3 mV s–1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    355.1
+   ],
+   "w": 1956,
+   "h": 1209,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.647
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 48,
+   "file": "fig_S36.png",
+   "caption": "Figure S36. CV curves at scan rates from 0.05 to 0.3 mV s–1 and linear relationship between peak current and square root scan rate (v1/2) for R1, R2, and O1 of Li||S cells using (a, c) CSA/MeTHF and (b, d) DD electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.5,
+    353.2
+   ],
+   "w": 1955,
+   "h": 1201,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 49,
+   "file": "fig_S37.png",
+   "caption": "Figure S37. Calculated Li+ diffusion coefficients (DLi+-CV) based on the Randles-Sevick equation.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    192.6
+   ],
+   "w": 1956,
+   "h": 532,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 50,
+   "file": "fig_S38.png",
+   "caption": "Figure S38. (a) The charge–discharge curve, (b) corresponding EIS spectra, and (c) corresponding SEM images of the Li||Li2S6 cell using DD electrolyte at different stages under 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.6,
+    247.8
+   ],
+   "w": 1957,
+   "h": 762,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.67
+  },
+  {
+   "key": "fS39",
+   "kind": "figure",
+   "label": "S39",
+   "page": 51,
+   "file": "fig_S39.png",
+   "caption": "Figure S39. Detailed DRT analyses of EIS data at different SoCs for Li||Li2S6 cells using CSA/MeTHF electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.6,
+    452.7
+   ],
+   "w": 1957,
+   "h": 1616,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS40",
+   "kind": "figure",
+   "label": "S40",
+   "page": 52,
+   "file": "fig_S40.png",
+   "caption": "Figure S40. Detailed DRT analyses of EIS data at different SoCs for Li||Li2S6 cells using DD electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.7,
+    341.6
+   ],
+   "w": 1957,
+   "h": 1153,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS41",
+   "kind": "figure",
+   "label": "S41",
+   "page": 53,
+   "file": "fig_S41.png",
+   "caption": "Figure S41. S 2p XPS spectra of the cycled cathode at various SoCs using CSA/MeTHF electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    307.1
+   ],
+   "w": 1956,
+   "h": 1009,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "fS42",
+   "kind": "figure",
+   "label": "S42",
+   "page": 54,
+   "file": "fig_S42.png",
+   "caption": "Figure S42. S 2p XPS spectra of the cycled cathode at various SoCs using DD electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.6,
+    65.2,
+    523.4,
+    307.1
+   ],
+   "w": 1862,
+   "h": 1009,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS43",
+   "kind": "figure",
+   "label": "S43",
+   "page": 55,
+   "file": "fig_S43.png",
+   "caption": "Figure S43. Cycling performance of Li||Li2S6 coin cells at 0.2 C using various electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.1,
+    65.2,
+    524.9,
+    205.0
+   ],
+   "w": 1876,
+   "h": 584,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS44",
+   "kind": "figure",
+   "label": "S44",
+   "page": 56,
+   "file": "fig_S44.png",
+   "caption": "Figure S44. SEM images of the S cathodes and LMAs after 20 cycles in Li||Li2S6 coin cells using (a, c) CSA/MeTHF and (b, d) DD electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    326.6
+   ],
+   "w": 1956,
+   "h": 1090,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.538
+  },
+  {
+   "key": "fS45",
+   "kind": "figure",
+   "label": "S45",
+   "page": 57,
+   "file": "fig_S45.png",
+   "caption": "Figure S45. S 2p XPS depth profiles of cycled LMA after 20 cycles in Li||Li2S6 coin cells using DD and CSA/MeTHF electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    304.1
+   ],
+   "w": 1956,
+   "h": 997,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS46",
+   "kind": "figure",
+   "label": "S46",
+   "page": 58,
+   "file": "fig_S46.png",
+   "caption": "Figure S46. (a) GITT curves, (b) polarization decoupling analysis, (c) polarization distribution at different DoDs of the Li||S coin cell using the DD electrolyte with a mass loading of 4.5 mg cm−2 and E/S of 4 μL mg−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    533.9,
+    358.9
+   ],
+   "w": 1953,
+   "h": 1225,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "fS47",
+   "kind": "figure",
+   "label": "S47",
+   "page": 59,
+   "file": "fig_S47.png",
+   "caption": "Figure S47. (a) EIS curves and (b) corresponding ηohm of Li||S cells using CSA/MeTHF and",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.5,
+    231.3
+   ],
+   "w": 1956,
+   "h": 693,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS48",
+   "kind": "figure",
+   "label": "S48",
+   "page": 60,
+   "file": "fig_S48.png",
+   "caption": "Figure S48. (a) Comparison of ηcon and (b) ηact at different DoDs using CSA/MeTHF and DD",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    215.5
+   ],
+   "w": 1956,
+   "h": 627,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS49",
+   "kind": "figure",
+   "label": "S49",
+   "page": 61,
+   "file": "fig_S49.png",
+   "caption": "Figure S49. (a) ∆Elow derived from the initial cycle of Li||S coin cells at 0.1 C using various electrolytes. Selected galvanostatic charge–discharge profiles of Li||S coin cells under 0.1 C with S loading of 3.0 mg cm−2 and E/S ratio of 7.4 μL mg−1 using (b) CSA/MeTHF and (c) DD",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.7,
+    192.2
+   ],
+   "w": 1957,
+   "h": 530,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "fS50",
+   "kind": "figure",
+   "label": "S50",
+   "page": 62,
+   "file": "fig_S50.png",
+   "caption": "Figure S50. Selected galvanostatic charge–discharge profiles of Li||S coin cells under 0.05 C with a high Ms of 6.3 mg cm−2 and a low E/S ratio of 4.2 μL mg−1 using CSA/MeTHF electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    78.8,
+    537.7,
+    187.0
+   ],
+   "w": 1969,
+   "h": 452,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS51",
+   "kind": "figure",
+   "label": "S51",
+   "page": 63,
+   "file": "fig_S51.png",
+   "caption": "Figure S51. Selected galvanostatic charge–discharge profiles of Li||S coin cells under 0.05 C with high Ms of 8.6 mg cm−2 and low E/S ratio of 3.6 μL mg−1 using CSA/MeTHF electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.6,
+    200.5
+   ],
+   "w": 1956,
+   "h": 565,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS52",
+   "kind": "figure",
+   "label": "S52",
+   "page": 64,
+   "file": "fig_S52.png",
+   "caption": "Figure S52. (a) Schematic diagram and (b) the component of Li−S pouch cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.4,
+    65.2,
+    494.9,
+    217.0
+   ],
+   "w": 1627,
+   "h": 634,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "fS53",
+   "kind": "figure",
+   "label": "S53",
+   "page": 65,
+   "file": "fig_S53.png",
+   "caption": "Figure S53. (a) The initial discharge curve and (b) cycling performance of the Li−S pouch cell using CSA/MeTHF electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.7,
+    185.5
+   ],
+   "w": 1956,
+   "h": 502,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS54",
+   "kind": "figure",
+   "label": "S54",
+   "page": 66,
+   "file": "fig_S54.png",
+   "caption": "Figure S54. Synthetic route of TFBA.",
+   "rotated_deg": 0,
+   "bbox": [
+    121.5,
+    85.5,
+    477.6,
+    160.0
+   ],
+   "w": 1484,
+   "h": 311,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS55",
+   "kind": "figure",
+   "label": "S55",
+   "page": 67,
+   "file": "fig_S55.png",
+   "caption": "Figure S55. 1H NMR spectrum of TFBA in CDCl3.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    65.2,
+    506.1,
+    276.6
+   ],
+   "w": 1722,
+   "h": 882,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.972
+  },
+  {
+   "key": "fS56",
+   "kind": "figure",
+   "label": "S56",
+   "page": 68,
+   "file": "fig_S56.png",
+   "caption": "Figure S56. 13C-NMR spectrum of TFBA in CDCl3.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    65.2,
+    506.1,
+    284.2
+   ],
+   "w": 1722,
+   "h": 914,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS57",
+   "kind": "figure",
+   "label": "S57",
+   "page": 69,
+   "file": "fig_S57.png",
+   "caption": "Figure S57. 19F-NMR spectrum of TFBA in CDCl3.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    65.2,
+    506.1,
+    263.1
+   ],
+   "w": 1722,
+   "h": 826,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.978
+  },
+  {
+   "key": "fS58",
+   "kind": "figure",
+   "label": "S58",
+   "page": 70,
+   "file": "fig_S58.png",
+   "caption": "Figure S58. Raman spectra of TFBA, DOL, and TFBA/DOL electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.7,
+    65.2,
+    481.4,
+    209.5
+   ],
+   "w": 1512,
+   "h": 602,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS59",
+   "kind": "figure",
+   "label": "S59",
+   "page": 71,
+   "file": "fig_S59.png",
+   "caption": "Figure S59. LiPSs SCs of Li||Li2S6 coin cells at various potentiostatic charging voltages using TFBA/DOL electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.2,
+    534.1,
+    199.0
+   ],
+   "w": 1954,
+   "h": 559,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS60",
+   "kind": "figure",
+   "label": "S60",
+   "page": 72,
+   "file": "fig_S60.png",
+   "caption": "Figure S60. (a) Cycling performance of Li||Li symmetric cells with a capacity of 0.5 mAh cm−2 at a current density of 0.5 mA cm−2, and (b) magnified voltage profiles at 400 h using TFBA/DOL electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.6,
+    188.1
+   ],
+   "w": 1957,
+   "h": 513,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS61",
+   "kind": "figure",
+   "label": "S61",
+   "page": 73,
+   "file": "fig_S61.png",
+   "caption": "Figure S61. (a) Cycling performance of the Li||S cell and (b) the initial GCD curve under 0.2 C using TFBA/DOL electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    65.2,
+    534.7,
+    191.5
+   ],
+   "w": 1957,
+   "h": 527,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 74,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The DN of solvent and the corresponding 23Na NMR shift from the references.6",
+   "rotated_deg": 0,
+   "bbox": [
+    193.2,
+    97.3,
+    637.8,
+    285.4
+   ],
+   "w": 1854,
+   "h": 785,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 75,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Properties of solvents in Region I (0 ≤ DN < 19 kcal mol−1 and 20 ≤ εr < 100).",
+   "rotated_deg": 0,
+   "bbox": [
+    180.4,
+    65.7,
+    639.3,
+    512.0
+   ],
+   "w": 1913,
+   "h": 1861,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 77,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Properties of solvents in Region II (25 ≤ DN < 40 kcal mol−1 and 1 ≤ εr < 20).",
+   "rotated_deg": 0,
+   "bbox": [
+    196.9,
+    65.7,
+    636.3,
+    364.3
+   ],
+   "w": 1832,
+   "h": 1245,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 78,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Properties of Region S solvents (25 ≤ DN < 40 kcal mol−1 and 20 ≤ εr < 100).",
+   "rotated_deg": 0,
+   "bbox": [
+    169.9,
+    65.7,
+    649.1,
+    488.9
+   ],
+   "w": 1998,
+   "h": 1765,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 80,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Properties of Region M-S solvents (19 ≤ DN < 25 kcal mol−1 and 20 ≤ εr < 100).",
+   "rotated_deg": 0,
+   "bbox": [
+    187.9,
+    65.7,
+    641.6,
+    420.6
+   ],
+   "w": 1891,
+   "h": 1480,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 81,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Properties of Region M solvents (19 ≤ DN < 25 kcal mol−1 and 1 ≤ εr < 20).",
+   "rotated_deg": 0,
+   "bbox": [
+    183.4,
+    65.7,
+    646.8,
+    317.9
+   ],
+   "w": 1932,
+   "h": 1052,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 82,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Properties of Region W solvents (10 ≤ DN < 19 kcal mol−1 and 1 ≤ εr < 20).",
+   "rotated_deg": 0,
+   "bbox": [
+    176.7,
+    65.7,
+    641.6,
+    506.2
+   ],
+   "w": 1938,
+   "h": 1837,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 83,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Properties of Region N solvents (0 ≤ DN < 10 kcal mol−1 and 1 ≤ εr < 20). −1) εr Solvents Abbreviation Structural formula DN (kcal mol",
+   "rotated_deg": 0,
+   "bbox": [
+    177.4,
+    65.7,
+    643.1,
+    518.8
+   ],
+   "w": 1941,
+   "h": 1889,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 85,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Selected five representative solvents and their properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    66.1,
+    738.4,
+    319.2
+   ],
+   "w": 2736,
+   "h": 1056,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 86,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Binary solvents-based electrolytes formulas.",
+   "rotated_deg": 0,
+   "bbox": [
+    130.1,
+    66.1,
+    687.4,
+    455.1
+   ],
+   "w": 2322,
+   "h": 1622,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 87,
+   "file": "tab_S11.png",
+   "caption": "Table S11. The density, viscosity, and ionic conductivity of various electrolytes at 25°C. No. Abbreviation (Free LiNO3) Electrolyte configurations Ratio Density (g cm−3) Viscosity (mPa s) Ionic conductivity (mS cm−1)",
+   "rotated_deg": 0,
+   "bbox": [
+    72.3,
+    66.1,
+    766.9,
+    462.7
+   ],
+   "w": 2895,
+   "h": 1653,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 88,
+   "file": "tab_S12.png",
+   "caption": "Table S12. Statistical results of electrolyte performance evaluated using seven descriptors.",
+   "rotated_deg": 0,
+   "bbox": [
+    91.8,
+    66.1,
+    769.2,
+    464.7
+   ],
+   "w": 2823,
+   "h": 1662,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 89,
+   "file": "tab_S13.png",
+   "caption": "Table S13. Performance comparison of Li−S coin cells using our electrolyte and other reported state-of-the-art electrolytes under harsh conditions (MS ≥ 3 mg cm −2 and E/S ratio ≤ 8 μL mg−1).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    66.1,
+    794.0,
+    508.5
+   ],
+   "w": 2993,
+   "h": 1820,
+   "dpi": 296,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS14",
+   "kind": "table",
+   "label": "S14",
+   "page": 91,
+   "file": "tab_S14.png",
+   "caption": "Table S14. The detailed parameters of 3 Ah-level Li–S pouch cell using CSA/MeTHF electrolyte. Parameters Values Cathode 4.4 g Anode 1.6 g Separator 0.4 g Current collector 1.5 g",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    66.1,
+    533.5,
+    428.7
+   ],
+   "w": 1947,
+   "h": 1512,
+   "dpi": 300,
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "blank": 0.973
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 12,
+   "caption_below": false
+  }
+ ]
+}

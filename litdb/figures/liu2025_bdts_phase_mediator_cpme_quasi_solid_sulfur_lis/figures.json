@@ -1,0 +1,871 @@
+{
+ "slug": "liu2025_bdts_phase_mediator_cpme_quasi_solid_sulfur_lis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+  "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Schematics of the proposed surface-localized solvation-mediated QSSSR. a, With the conventional dilute ether-based electrolytes where DOL and DME are typical solvents, the Li–S cells undergo dissolution–precipitation sulfur reaction, suffering from polysulfides shuttle, unstable lithium metal anode and high electrolyte volume. b, With the proposed electrolytes, in which CPME is the solvent and BDTS is the additive, the Li–S cells show stabilized Li anode and undergo a surface-localized solvation-mediated QSSSR that promises to decouple from the electrolyte volume. c, Detailed description of the phase- mediated QSSSR mechanism: in the case of global QSSSR (dotted lines), the sulfur redox reaction proceeds via formation of ‘quasi-solid’ polysulfides Li2Sx(s)",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    52.0,
+    565,
+    342
+   ],
+   "w": 2230,
+   "h": 1209,
+   "dpi": 300,
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.455,
+   "bbox_extractor": [
+    33.7,
+    65.9,
+    398.6,
+    341.0
+   ],
+   "recrop": "2026-11-26 (litdb-curator) — tool crop [33.7, 65.9, 398.6, 341.0] cut off the right half of the full-width figure; recut to page graphics extent"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Characterizations of the electrolyte solvation structure. a, The Raman spectra of the LiTFSI–CPME and LiTFSI–DME electrolytes featuring TFSI− band. b, The 7Li NMR spectra showing the 7Li chemical shift and FWHM. c–g, The AIMD simulation results: the Li–O radial distribution functions (left axis) and the Li–O coordination number (right axis) for LiTFSI–CPME electrolyte (c) and",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    52.0,
+    565,
+    478
+   ],
+   "w": 2230,
+   "h": 1776,
+   "dpi": 300,
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.924,
+   "bbox_extractor": [
+    29.5,
+    65.9,
+    359.1,
+    477.3
+   ],
+   "recrop": "2026-11-26 (litdb-curator) — tool crop [29.5, 65.9, 359.1, 477.3] cut off the right half of the full-width figure; recut to page graphics extent"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Electrode reaction behaviour using LiTFSI–CPME and LiTFSI–DME electrolytes. a, The GITT measurements showing the quasi-equilibrium voltage profiles for Li–S cells (current pulses of 0.05 C for 20 min and relaxations for 2 h). b, The Li–S cell cycling performance in LiTFSI–CPME, LiTFSI–DME, LiTFSI– LiNO3–DOL–DME and a representative LHCE ((MTHF)2–LiTFSI with 50 vol%",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    52.0,
+    565,
+    377
+   ],
+   "w": 2230,
+   "h": 1355,
+   "dpi": 300,
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.74,
+   "bbox_extractor": [
+    33.7,
+    65.9,
+    302.0,
+    376.1
+   ],
+   "recrop": "2026-11-26 (litdb-curator) — tool crop [33.7, 65.9, 302.0, 376.1] cut off the right half of the full-width figure; recut to page graphics extent"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | The phase-mediating effects in the BDTS–LiTFSI–CPME electrolyte. a, Voltage profiles of cells using BDTS or S8 as the active material in LiTFSI–CPME. b, UV–vis spectra showing the complexing-enabled solvation of Li2S6 in LiTFSI– CPME: the BDTSRed solution (5 mM) and the BDTSRed–Li2S6 solution (1:1 by mole). Inset: the clear BDTSRed–Li2S6 solution. c, The proposed mechanism for BDTS reduction and its complexing with Li2S6: BDTS forms two radicals (Radical I and Radical II) after C–S bond breaking (lowest unoccupied molecular orbital levels shown) and each radical accepts one electron to form BDTSRed I and BDTSRed II.",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    52.0,
+    565,
+    433
+   ],
+   "w": 2230,
+   "h": 1589,
+   "dpi": 300,
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.743,
+   "bbox_extractor": [
+    33.7,
+    88.0,
+    318.1,
+    432.0
+   ],
+   "recrop": "2026-11-26 (litdb-curator) — tool crop [33.7, 88.0, 318.1, 432.0] cut off the right half of the full-width figure; recut to page graphics extent"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Operando X-ray investigations on the sulfur speciation dynamics. a,b, The contour plot of the XRD patterns for a Li–S cell in LiTFSI–CPME electrolyte, with the corresponding voltage profiles: discharge process (a) and charge process (b). The diffraction signals of crystalline S8 (asterisk) and Li2S (diamond) are labelled in the pattern. c, The normalized diffraction peak intensity showing the evolutions of crystalline S8 and Li2S in the LiTFSI–CPME,",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    52.0,
+    565,
+    365
+   ],
+   "w": 2230,
+   "h": 1305,
+   "dpi": 300,
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.609,
+   "bbox_extractor": [
+    33.7,
+    71.0,
+    363.6,
+    363.6
+   ],
+   "recrop": "2026-11-26 (litdb-curator) — tool crop [33.7, 71.0, 363.6, 363.6] cut off the right half of the full-width figure; recut to page graphics extent"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Electrochemical performances of Li–S cells in the BDTS–LiTFSI–CPME electrolyte. a–c, The rate capability of Li–S cells in BDTS–LiTFSI–CPME: the voltage profiles from 0.1 C to 10 C (a), the voltage profiles with discharging rates of 0.2 C to 16 C and constant charging rate of 0.5 C at 55 °C (b) and a comparison of the BDTS–LiTFSI–CPME cells to representative reported cells based on QSSSR",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    52.0,
+    565,
+    421
+   ],
+   "w": 2230,
+   "h": 1539,
+   "dpi": 300,
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.939,
+   "bbox_extractor": [
+    33.7,
+    275.4,
+    315.5,
+    420.5
+   ],
+   "recrop": "2026-11-26 (litdb-curator) — tool crop [33.7, 275.4, 315.5, 420.5] cut off the right half of the full-width figure; recut to page graphics extent"
+  },
+  {
+   "key": "fED1",
+   "kind": "figure",
+   "label": "ED1",
+   "page": 13,
+   "file": "fig_ED1.png",
+   "caption": "Extended Data Fig. 1 | Evaluation of BDTS-LiTFSI-CPME electrolyte under rigid conditions. (a-c) Li–S coin cells with fixed discharge capacity at 55 °C: (a) with 5.0 μL mg-1 electrolyte and 2.0 mg cm-2 -sulfur (discharge/charge rate of 0.3 C/0.2 C); (b) with 5.0 μL mg-1 electrolyte and 3.0 mg cm-2 -sulfur (discharge/charge rate of",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.0,
+    526.1,
+    330.2
+   ],
+   "w": 2053,
+   "h": 1197,
+   "dpi": 300,
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.901,
+   "relabel": "2026-11-26 (litdb-curator) — extractor keyed Extended Data Fig. 1 (main p13) as S1, which collided with the real Supplementary Fig. 1 (SI p5); renamed to ED1"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. DFT calculations for the solvation energy of Li-complexes with different coordination numbers. (a) 3-fold coordination, (b) 4-fold coordination. Discussions on Supplementary Figure 3. We have made attempt to address the validity of the 3-fold coordination by performing DFT further calculations. Specifically, the solvation energies for Li+ coordination complexes with a 3-fold coordination Li+ complex (Supplementary Figure 3a) and a 4-fold coordination Li+ complex (Supplementary Figure 3b) in CPME can be calculated according to the following formula (equation R1)14-16,",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    74.3,
+    550.3,
+    218.7
+   ],
+   "w": 2094,
+   "h": 603,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 13,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. Characterizations of LiTFSI-CPME and THF-based high concentration electrolytes. (a) The dynamic viscosity of various electrolytes measured at 25 °C. LiTFSI-LiNO3-DOL- DME refers to the classical ether electrolyte (1M LiTFSI, 2wt% LiNO3 in DOL/DME (1/1 by volume)). The diluted (THF)2-LiTFSI refers to a (THF)2-LiTFSI (2:1 by mole) electrolyte diluted with equivoluminal toluene. (b-c) AIMD simulation results showing the solvation structures of concentrated electrolyte (THF)3-LiTFSI: (b) a snapshot of the electrolyte; (c) three representative types of Li+-coordination complexes, including the solvent separated ion pair (SSIP), bidentate contact ion pair (CIP), and aggregates. THF: tetrahydrofuran. Discussions on Supplementary Figure 5. Owing to the weakly solvating nature of CPME, the LiTFSI- CPME electrolyte is inherently a sparingly solvating electrolyte (SSE) in a ",
+   "rotated_deg": 0,
+   "bbox": [
+    16.8,
+    69.2,
+    550.3,
+    390.8
+   ],
+   "w": 2223,
+   "h": 1341,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 14,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6. Investigation of lithium stability. (a-c) Electrochemical performances of LiCu cells: (a) Coulombic efficiency of LiCu cells and the corresponding voltage profiles in (b) LiTFSI- DME and (c) LiTFSI-CPME electrolytes. (d-k) X-ray photoelectron spectroscopy (XPS) characterizations of the Li metal SEI: High-resolution XPS spectra of (d) C 1s, (e) O 1s, (f) Li 1s, (g) F 1s, (h) N 1s, (i) S 2p formed in the two electrolytes. The raw data and fitted peaks are shown in each spectrum. The statistical results showing the percentage of elements (quantified from the survey spectra) on the Li metal SEI formed in LiLi symmetric cells: (j) Lithium, carbon and oxygen atoms, (k) sulfur, nitrogen and fluorine 13",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.0,
+    550.3,
+    639.6
+   ],
+   "w": 2093,
+   "h": 2379,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 16,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7. Characterizations of redox behaviors of BDTS molecules. (a) Voltage profiles of BDTS as the active material in LiTFSI-CPME electrolyte, showing a low discharge plateau between 1.5-1.6V in the 1st discharge which we define as the BDTS activation step. (b) The derived dQ/dV profiles of BDTS in LiTFSI-CPME electrolyte, showing the reduction and oxidation potentials. Note the BDTS in (a) and (b) is dissolved in electrolyte with a concentration of 50 mM. (c) The cyclic voltammetry curves of BDTS in LiTFSI-CPME electrolyte. (d) CV curves of elemental sulfur in LiTFSI- CPME electrolyte (scan rate of 0.1 mV s-1). Discussions on Supplementary Figure 7. The active BDTS first experiences an activation process in the first discharge, and then smooth redox within 1.2-3 V (Supplementary Figure 7a, b). The CV curves clearly show the activation process at 1.439 V for BDTS, and af",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    254.7,
+    550.3,
+    379.2
+   ],
+   "w": 2093,
+   "h": 519,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 18,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Figure 9. Ultraviolet and visible (UV-vis) spectra showing the chemical interactions between BDTS and sulfur species. Note that in these experiments CPME is used as the solvent, with 1M LiTFSI as the supporting salt in the solution. (a) The UV-vis spectra of BDTS and its reduced state (BDTSRed). The inset shows digital photos of BDTS and BDTSRed solutions. (b-c) Investigations of the BDTSRed and Li2S6 at different molar ratios: (b) digital photos of BDTSRed-Li2S6 solutions at different molar ratios; (c) UV-vis spectra of BDTSRed-Li2S6 solutions at molar ratios of 1:1, 1:2, 1:3. (d) UV-vis spectra of BDTSRed- Li2S6 solutions within 24 hours and after 24 hours of preparation; the inset shows the digital photos. (e-f) UV-vis spectra showing the absence of complexing and dissolution of S8/Li2S with the presence of 5 mM BDTSRed: (e) the supernatant of a BDTSRed-S8 mixture (1:1 b",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    553.2,
+    599.0
+   ],
+   "w": 2105,
+   "h": 2221,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 20,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Figure 10. Changes in the calculated Mulliken charges of important atoms in the BDTS during reduction. (a) The reduction from Radical I to BDTSRed I, and (b) the reduction from Radical II to BDTSRed II. The yellow, grey, blue, purple and white balls represent S, C, N, Li and H atoms. Discussions on Supplementary Figure 10. We conducted DFT calculations to analyze the possible mechanism of BDTS reduction. As discussed in the main text (Figure 4c inset), the lowest unoccupied molecular orbit (LUMO) of BDTS indicates preferable C-S bond breaking during reduction thus generating radicals (Radical I and Radical II). For Radical I, we note that the two sulfur atoms (S10 and S12) exhibit both rather negative and nearly identical Mulliken charges, and when Radical I accept one electron and one Li+ (Supplementary Figure 10a). This projects that these two symmetric sulfur atoms in BD",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    263.3,
+    550.3,
+    461.0
+   ],
+   "w": 2093,
+   "h": 824,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 21,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Figure 11. The mesomeric effect and its impact on BDTSRed-Li2Sx complexing. (a) The molecular structure showing the BDTSRed I (dithiocarbamate) and its mesomeric form, BDTSRed I (meso) (thioureide). The right inset schematically shows the binding effect of BDTSRed I (meso) on “quasi-solid” polysulfides, forming the localized solvation at the vicinity of polysulfides particle surface. (b) Optimized geometries of BDTSRed I (meso)-Li2S6 complexes with the calculated binding energy. The right inset shows the configuration of BDTSRed I (meso) and Li2S6. (c) DFT calculations showing the complexes of BDTSRed-Li2S4 with the binding energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.4,
+    553.8,
+    534.2
+   ],
+   "w": 2108,
+   "h": 1938,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 22,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Figure 12. Electrochemical behavior of the Li-S cell with BDTS-LiTFSI-CPME. (a) The galvanostatic intermittent titration technique (GITT) voltage profiles, showing the equipotential discharge plateaus at 2.2 V with an obvious voltage dip at ~400 mAh g-1-sulfur. (b) The discharge-charge curves of the cell for the initial two cycles. Discussions on Supplementary Figure 12. We demonstrate that the addition of BDTS enhances the LiPSs dissolution by forming BDTSRed-LiPSs complex. Importantly, the LiPSs solvation is still very limited from the global perspective and accounts for ~15 wt% of the total sulfur in a cell if assuming an electrolyte/sulfur ratio of 5 L mg-1-sulfur. Such a limited LPS solvation does not lead to the shuttle problem, as experimentally evidenced by the GITT charge voltage profile (Supplementary Figure 12a), but impressively, significantly improves the reac",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    553.1,
+    253.2
+   ],
+   "w": 2105,
+   "h": 781,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 24,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Figure 14. The enhanced reaction kinetics by the BDTS phase mediator. (a) Charge voltage profiles of micro-sized Li2S cathode in BDTS-LiTFSI-CPME and LiTFSI-CPME electrolytes. (b-c) EIS measurements of Li-S cells (with sulfur cathodes) that are discharged at half of the capacity: (b) The Nyquist plot and the equivalent circuit; R1 is the ohmic resistance, R2 is resistance from the SEI, R3 is the resistance from the charge transfer process, and Ws is the lithium-ion diffusion process. (c) The EIS fitting results for the CPME-LiTFSI cell and BDTS-LiTFSI-CPME cell. Discussions on Supplementary Figure 14. We fabricated cells using micron-sized Li2S as active materials and measured its charge overpotential in the first cycle. Note that the cell was first discharged in order to activate BDTS to form BDTSRed. As shown from Supplementary Figure 14a, the BDTS- LiTFSI-CPME Li2S cell ",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    104.2,
+    553.1,
+    450.1
+   ],
+   "w": 2105,
+   "h": 1442,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 26,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Figure 16. The demonstration of universality for phase-mediating strategy. The effect of BDTS on various sparingly solvating electrolytes. (a) (THF)2-LiTFSI electrolyte with 50% vol. hydrofluoroether (HFE), (b) (DOL-DME)2-LiTFSI electrolyte with 40% vol. toluene, in which the volume ratio of DOL and DME is 1:1. The subscript 2 represents that the molar ratio of solvent and lithium salt is 2:1. Discussions on Supplementary Figure 16. We evaluated the phase mediating effect of BDTS on other sparingly solvating electrolytes (SSEs), and the results indicate that BDST as phase mediator is effective in enhancing the Li-S cycling in other SSEs, confirming the strategy is universal, to different extents for different systems. The first evidence is provided by a classical localized high concentration electrolyte of (THF)2-LiTFSI with 50% vol. hydrofluoroether (HFE) as cosolvent. As ",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    70.2,
+    550.3,
+    401.6
+   ],
+   "w": 2093,
+   "h": 1382,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 27,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Figure 17. Operando XRD investigations on the sulfur reaction mechanism. (a) The contour plot of the XRD patterns for a Li-S cell in LiTFSI-CPME. (b-c) XRD waterfall diagrams showing the XRD patterns during discharging/charging of the Li-S cells in LiTFSI-CPME electrolyte: (b) discharge process, (c) charge process. (d) Selected diffraction patterns at the end of discharge, showing the (111) peak of crystalline Li2S. (e) The averaged Li2S crystallite size form in different electrolytes (estimated from the coherent length perpendicular to the (111) plane). The error bar means standard deviation (SD). Data are presented as mean values +/- SD. The data are derived from the last five XRD curves (sample number=5), and the circle represents the data points. Discussions on Supplementary Figure 17. From the operando XRD patterns, we clearly observe the gradual consumption of element",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.4,
+    550.3,
+    563.5
+   ],
+   "w": 2093,
+   "h": 2059,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 30,
+   "file": "fig_S19.png",
+   "caption": "Supplementary Figure 19. Rate performance of Li-S cells in different electrolytes (55 °C). (a-b) LiTFSI-CPME electrolyte with different BDTS concentrations: (a) 20 mM BDTS, (b) 100 mM BDTS. (c) The cell using LiTFSI-CPME. (d) The cell using LHCE, (MTHF)2-LiTFSI/TTE (MTHF: methyl- tetrahydrofuran, TTE: 1,1,2,2-tetrafluoroethyl 2,2,2-trifluoroethyl ether; (MTHF)2-LiTFSI indicates a 2:1 molar ratio). (e) The cell using LiTFSI-LiNO3-DOL-DME. (f) The cell with BDTS-LiTFSI-CPME with a low discharge cutoff voltage. Note that the discharge rate and charge rates are set as the same. Discussions on Supplementary Figure 19. Different BDTS concentrations of 0, 20, 50 and 100 mM are investigated. The results show that a low BDTS concentration of 20 mM can enhance the sulfur reaction kinetics (4C rate in Supplementary Figure 19a), and a higher BDTS concentration of 50 mM would further enlarge such eff",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.1,
+    550.3,
+    451.4
+   ],
+   "w": 2094,
+   "h": 1595,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 31,
+   "file": "fig_S20.png",
+   "caption": "Supplementary Figure 20. Cycling stability of BDTS-LiTFSI-CPME cell under a discharge/charge rate of 5C/0.2C.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    550.3,
+    287.3
+   ],
+   "w": 2093,
+   "h": 922,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 32,
+   "file": "fig_S21.png",
+   "caption": "Supplementary Figure 21. Electrochemical behavior of Li-S cell under lean electrolyte conditions. Discharge-charge curves of BDTS-LiTFSI-CPME cell. The discharge capacity is set as a constant value of 800 mAh g-1-sulfur.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    550.3,
+    293.3
+   ],
+   "w": 2093,
+   "h": 947,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 33,
+   "file": "fig_S22.png",
+   "caption": "Supplementary Figure 22. Electrochemical cycling performance of Li-S cell under lean electrolyte conditions. Discharge-charge curves of BDTS-LiTFSI-CPME cell. The voltage cutoff window is set as 1.9-3 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.0,
+    550.2,
+    283.4
+   ],
+   "w": 2093,
+   "h": 907,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 34,
+   "file": "fig_S23.png",
+   "caption": "Supplementary Figure 23. Electrochemical behavior of BDTS-LiTFSI-CPME Li-S cell under practical conditions of lean electrolyte and high sulfur loading. (a) Discharge-charge curves at 0.1C of Li-S cell with 3 mg cm-2 sulfur loading and 5 L mg-1 electrolyte. (b) Discharge-charge curves at 0.1C of Li-S cell with 5.1 mg cm-2 sulfur loading and 4 L mg-1 electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    67.6,
+    550.3,
+    260.0
+   ],
+   "w": 2093,
+   "h": 803,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 35,
+   "file": "fig_S24.png",
+   "caption": "Supplementary Figure 24. Effects of conductive carbon hosts on Li-S cells. KB: ketjen black, aligned carbon nanotube (ACNT), activated carbon (AC). Discussions on Supplementary Figure 24. The available surface area and pore structure of conductive hosts affect the QSSSR performances. We have performed experiments by using various carbon materials as the conductive sulfur hosts, including the Ketjen black (KB), aligned carbon nanotube (ACNT), and activated carbon (AC). KB is a mesoporous carbon with high specific surface area (SSA) of ~1400 m2/g; ACNT has a much smaller SSA of ~180 m2/g with fewer pore structures, while AC has the highest SSA of 3300 m2/g, with abundant micropores contributing to more than 95% of the total SSA. The electrochemical performances of the cells using the three cathodes (same electrolyte of BDTS- LiTFSI-CPME) are shown in Supplementary Figure 24. We can see tha",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    77.8,
+    550.3,
+    263.4
+   ],
+   "w": 2093,
+   "h": 774,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 38,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3. Pouch cell parameters. Parameters Value Cell energy density 331 Wh kg -1 Cell capacity 2.4 Ah Negative/positive ratio 1.87 Areal sulfur loading 4 mg cm -2 Sulfur mass fraction 63.8% Thickness of Li foil 125 m Electrolyte/sulfur ratio 3 L mg -1 Cathode size 68 mm ´ 96 mm Anode size 71 mm ´ 99 mm Number of cathode layer 4 Number of anode layer 5 Thickness of separator 16 m Thickness of Al foil 13 m",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    67.5,
+    429.5,
+    428.4
+   ],
+   "w": 1586,
+   "h": 1504,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 40,
+   "file": "tab_S5.png",
+   "caption": "Supplementary Table 5. Prices of solvents, salts and additives. Solvent/salt/additive Price (USD/kg) Supplier LiTFSI 829 DoDoChem CPME 69 Energy Chemical BDTS 100 Adamas DOL 117 DoDoChem DME 95 DoDoChem LiNO3 1105 Adamas EC 97 DoDoChem DEC 83 DoDoChem FEC 304 DoDoChem LiPF6 345 DoDoChem",
+   "rotated_deg": 0,
+   "bbox": [
+    134.8,
+    68.4,
+    463.5,
+    352.1
+   ],
+   "w": 1371,
+   "h": 1183,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 42,
+   "file": "tab_S6.png",
+   "caption": "Supplementary Table 6. Lennard-Jones parameters for Classical MD simulations. Types σi (Å) εi (kcal∙mol-1) qi (e) Li+ 1.20 6.2472 1 S of TFSI- 3.55 0.25 1.02 F of TFSI- 2.90 0.06 -0.16 O of TFSI- 2.96 0.17 -0.53 N of TFSI- 3.25 0.17 -0.66 C of TFSI- 3.50 0.066 0.35 O of DME 3.00 0.17 -0.8 C of DME 3.50 0.066 0.5 H of DME 2.50 0.030 -0.04 O of CPME 2.90 0.140 -0.4192 C1 = -0.3726 C2 = 0.0927 C of CPME 3.50 0.066 C3 = -0.1874 C4 = -0.1811 C5 = -0.1795 C6 = -0.2183 H1 = 0.1947 H2 = 0.1122 H3 = 0.1013 H4 = 0.0918 H of CPME 2.50 0.030 H5 = 0.0933 H6 = 0.0983 Note: The atom representation of CPME is shown below.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    64.9,
+    518.4,
+    488.3
+   ],
+   "w": 1956,
+   "h": 1765,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 43,
+   "file": "tab_S7.png",
+   "caption": "Supplementary Table 7. Bond parameters for Classical MD simulations. Types Bonds r0 (Å) kb (kcal∙mol-1∙Å-2) S-O 1.437 637.07 C-F 1.323 441.92 TFSI- S-C 1.818 233.03 N-S 1.570 374.88 O-C 1.410 320.00 CPME C-C 1.529 268.00 C-H 1.090 340.00 O-C 1.410 320.00 DME C-C 1.529 268.00 C-H 1.090 340.00",
+   "rotated_deg": 0,
+   "bbox": [
+    108.8,
+    68.4,
+    489.6,
+    329.8
+   ],
+   "w": 1588,
+   "h": 1090,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 44,
+   "file": "tab_S8.png",
+   "caption": "Supplementary Table 8. Angle parameters for Classical MD simulations. Types Angles θ0 (degrees) kθ (kcal∙mol-1∙rad-2) O-S-O 118.5 115.80 F-C-F 107.1 93.33 S-C-F 111.8 82.93 TFSI- O-S-C 102.6 103.97 O-S-N 113.6 94.29 N-S-C 103.5 91.30 S-N-S 125.6 80.19 O-C-C 109.5 50.00 C-O-C 109.5 60.00 O-C-H 109.5 35.00 CPME C-C-H 110.7 37.50 C-C-C 112.7 58.35 H-C-H 107.8 33.00 O-C-C 109.5 50.00 C-O-C 109.5 60.00 DME O-C-H 109.5 35.00 H-C-H 107.8 33.00 C-C-H 110.7 37.50",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    68.4,
+    491.2,
+    502.9
+   ],
+   "w": 1843,
+   "h": 1811,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 45,
+   "file": "tab_S9.png",
+   "caption": "Supplementary Table 9. Dihedral parameters for Classical MD simulations. Types Dihedrals an (kcal∙mol-1) F-C-S-O a1 = 0.0 a2 = 0.0 a3 = 0.3466 a4 = 0.0 S-N-S-O a1 = 0.0 a2 = 0.0 a3 = -0.0036 a4 = 0.0 TFSI- F-C-S-N a1 = 0.0 a2 = 0.0 a3 = 0.3158 a4 = 0.0 S-N-S-C a1 = 7.933 a2 = -2.4893 a3 = -0.764 a4 = 0.0 O-C-C-C a1 = 1.711 a2 = -0.5 a3 = 0.663 a4 = 0.0 C-O-C-C a1 = 0.650 a2 = -0.25 a3 = 0.67 a4 = 0.0 O-C-C-H a1 = 0.0 a2 = 0.0 a3 = 0.468 a4 = 0.0 CPME C-O-C-H a1 = 0.0 a2 = 0.0 a3 = 0.76 a4 = 0.0 C-C-C-C a1 = 1.3 a2 = -0.2 a3 = 0.2 a4 = 0.0 C-C-C-H a1 = 0.0 a2 = 0.0 a3 = 0.3 a4 = 0.0 H-C-C-H a1 = 0.0 a2 = 0.0 a3 = 0.3 a4 = 0.0 C-O-C-H a1 = 0.0 a2 = 0.0 a3 = 0.76 a4 = 0.0 C-O-C-C a1 = 0.650 a2 = -0.25 a3 = 0.67 a4 = 0.0 DME H-C-C-H a1 = 0.0 a2 = 0.0 a3 = 0.3 a4 = 0.0 O-C-C-H a1 = 0.0 a2 = 0.0 a3 = 0.468 a4 = 0.0 O-C-C-O a1 = -0.55 a2 = 0.0 a3 = 0.0 a4 = 0.0",
+   "rotated_deg": 0,
+   "bbox": [
+    99.8,
+    68.4,
+    498.6,
+    485.1
+   ],
+   "w": 1663,
+   "h": 1737,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. The characterizations of electrolyte structures. (a-b) The Raman spectra of (a) LiTFSI-DME electrolyte and (b) LiTFSI-CPME electrolyte, with the raw data and peak fitting showing the presence of solvent separated ion pair (SSIP), monodentate contact ion pair (CIP) and bidentate CIP. (c) The crystalline structure of solid LiTFSI salt showing the coordination of TFSI anion to Li+ ions via oxygen atoms: (left) Unit cells of solid LiTFSI, and (right) enlarged structure showing the Li+- coordination environments. The CIF profile of LiTFSI was obtained from Materials Project.13 (d) AIMD simulation results showing two Li+ coordination complexes for LiTFSI-DME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    392
+   ],
+   "w": 2147,
+   "h": 1334,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py missed this SI figure (vector, 'no region'); cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. AIMD simulations on the Li+ coordination environments of LiTFSI-CPME and LiTFSI-DME electrolytes with different LiTFSI concentrations. (a-c) Li-O radial distribution functions and coordination numbers for (a) 1M LiTFSI-CPME, (b) 2M LiTFSI-CPME and (c) 3M LiTFSI- CPME electrolytes. In these simulations, the initial geometries were set in a way similar to that in the solid LiTFSI. (d) AIMD simulations for 1M LiTFSI-CPME electrolyte with the initial geometry set in a way of satisfying 4-fold Li+ coordination. (e) AIMD simulations for 1M LiTFSI-CPME electrolyte with the initial geometry set as separated Li and TFSI. (f) Statistical fractions of different Li-complexes.",
+   "rotated_deg": 0,
+   "bbox": [
+    28,
+    72,
+    555,
+    494
+   ],
+   "w": 2197,
+   "h": 1759,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py missed this SI figure (vector, 'no region'); cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. Classical MD simulation results for LiTFSI-CPME and LiTFSI-DME electrolytes, showing the Li-O radial distribution functions (black line) and coordination numbers (red line). (a) 0.5 M LiTFSI in CPME, (b) 1 M LiTFSI in CPME, (c) 2 M LiTFSI in CPME, (d) 3 M LiTFSI in CPME. (e) Typical Li+ complexes with different coordination numbers for LiTFSI-CPME electrolyte. (f) Classical MD simulation for 1M LiTFSI-DME. (g) Typical Li+ complexes with different coordination numbers for LiTFSI-CPME electrolyte. (h) Statistical fractions of different Li+ complexes.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    561
+   ],
+   "w": 2147,
+   "h": 2038,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py missed this SI figure (vector, 'no region'); cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 17,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure 8. Rate capability and cycling stability of BDTS molecules. (a) The voltage profiles of active BDTS at different rates from 0.1 C to 4 C, showing the ultra-high rate capability and rapid redox kinetics. (b) The long-term cycling stability of BDTS at a 1 C rate. The BDTS active material was cast on carbon paper with an areal loading of 1.0 mg cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    451
+   ],
+   "w": 2147,
+   "h": 1580,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py missed this SI figure (vector, 'no region'); cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 23,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Figure 13. Measurements of charge transfer process of sulfur in LiTFSI-CPME and BDTS-LiTFSI-CPME electrolytes. (a) Current density-voltage (I-V) curves of S8 electrodes measured with a Li metal counter electrode using the linear sweep voltammetry (LSV), and (d) the derived Tafel plots. The exchange current density is labelled in the figure.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    265
+   ],
+   "w": 2147,
+   "h": 805,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py missed this SI figure (vector, 'no region'); cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 25,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Figure 15. Li-S cell performances in CPME electrolyte with LiI as redox mediator (55 °C). (a-b) Cycling under different C-rate: (a) discharge rate of 0.5C and charge rate of 0.2C, (b) discharge rate of 2C and charge rate of 0.5C. (c-d) Rate capability: (c) 20 mM LiI, (d) 50 mM LiI.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    384
+   ],
+   "w": 2147,
+   "h": 1300,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py missed this SI figure (vector, 'no region'); cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 29,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Figure 18. The sulfur K-edge XANES spectra of a BDTS-LiTFSI-CPME Li-S cell measured at discharge of 350 mA h g-1, and at charge of 400 mAh g-1.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    301
+   ],
+   "w": 2147,
+   "h": 955,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py missed this SI figure (vector, 'no region'); cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 36,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. Summaries of crystalline phases of sulfur during the charge process. Electrolyte solutions Sulfur phase before 1st discharge Sulfur pahse after charge Reaction mechanism Ref. 1M LiTFSI, 0.1M LiNO3 in TEGDME/DOL a-S Coexistence of a-S and -S Catholyte 26 1M LiTFSI in DOL/DME (1/2 by weight) a-S -S Catholyte 27 1M LiTFSI, 0.2M LiNO3 in DOL/DME a-S -S Catholyte 28 G2-LiTFSI (1/1 by mole) a-S a-S QSSSR 20 G2-LiTFSI (7/1 by mole) a-S -S Catholyte 20 THF-LiTFSI (12/1 by mole) a-S -S Catholyte 22 THF-LiTFSI (2/1 by mole), with 50% vol. hydrofluoroether as cosolvent a-S Coexistence of a-S and -S QSSSR 22 THF-LiTFSI (2/1 b",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    650
+   ],
+   "w": 2147,
+   "h": 2409,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py cropped the TOC page (p2/p3) instead of the table page; cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 37,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2. Summary of rate capability of Li-S cells reported in the literature. No. Highest C-rate Specific capacity (mAh g-1-sulfur) Sulfur reaction Ref. 1 8 557.3 Catholyte 31 2 5 662 Catholyte 32 3 10 680 Catholyte 33 4 6 800 Catholyte 34 5 5 730 Catholyte 35 6 5 887 Catholyte 36 7 4 910 Catholyte 37 8 7 703 Catholyte 38 9 6 916 Catholyte 39 10 4 420 Catholyte 40 11 5 438 Catholyte 41 12 0.5 360 Conventional QSSSR 42 13 0.3 800 Conventional QSSSR 17 14 0.2 1000 Conventional QSSSR 20 15 0.2 900 Conventional QSSSR 43 16 2 600 Conventional QSSSR 44 17 2.5 200 Conventional QSSSR 45 This work (",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    72,
+    555,
+    425
+   ],
+   "w": 2147,
+   "h": 1471,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py cropped the TOC page (p2/p3) instead of the table page; cut by hand from caption/graphics bbox"
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 39,
+   "file": "tab_S4.png",
+   "caption": "Supplementary Table 4. Weight of pouch cell components Components Weight Electrodes and separators 6.21g Electrolyte 6.00g Package and tabs 3.36g Total 15.57g",
+   "rotated_deg": 0,
+   "bbox": [
+    140,
+    72,
+    455,
+    225
+   ],
+   "w": 1313,
+   "h": 638,
+   "dpi": 300,
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "manual_crop": "added 2026-11-26 (litdb-curator) — extract_figures.py cropped the TOC page (p2/p3) instead of the table page; cut by hand from caption/graphics bbox"
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 8,
+   "caption_below": false
+  }
+ ],
+ "missing_labels_resolved": "2026-11-26 (litdb-curator) — S2, S4, S8, S13, S15, S18 cut by hand (manual_crop)"
+}

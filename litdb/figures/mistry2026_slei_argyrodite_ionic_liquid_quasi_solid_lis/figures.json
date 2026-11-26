@@ -1,0 +1,247 @@
+{
+ "slug": "mistry2026_slei_argyrodite_ionic_liquid_quasi_solid_lis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+  "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 FIB-SEM cross-sectional imaging (a and c) and EDX elemental mapping (b and d) of the Li5.5PS4.5Cl1.5 surface after immersion for 250 hours in 1 M LiTFSI in DOL–DME (1 : 1) (a and b) and in 0.5 M LiTFSI in EMIMTFSI (c and d). (b) and (d) show superimposed maps of chlorine (purple) and ﬂuorine (yellow), with additional elemental maps shown in Fig. S1. This journal is © The Royal Society of Chemistry 2026 Faraday Discuss., 2026, 269, 369–382 | 371",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    318.2,
+    388.6,
+    571.8
+   ],
+   "w": 1388,
+   "h": 1058,
+   "dpi": 300,
+   "src": "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.116
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a and b) Nyquist plots showing time-resolved electrochemical impedance spec- troscopy (EIS) of cells with the architecture blocking electrode/liquid electrolyte/Li5.5- PS4.5Cl1.5/liquid electrolyte/blocking electrode over a period of 250 h. (a) 1 M LiTFSI in DOL–DME (1 : 1) (blue). (b) 0.5 M LiTFSI in EMIM–TFSI (orange). (c) Plot showing evolution of the area-speciﬁc resistance of the solid–liquid electrolyte interphase (RSLEI) based on equivalent circuit modelling (Fig. S2).",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    26.0,
+    386.6,
+    546.7
+   ],
+   "w": 1379,
+   "h": 2171,
+   "dpi": 300,
+   "src": "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 XPS core level spectra of: pristine Li5.5PS4.5Cl1.5 (bottom of each panel), Li5.5- PS4.5Cl1.5 immersed in 1 M LiTFSI in DOL–DME (1 : 1) for 250 h (middle), and Li5.5PS4.5Cl1.5 immersed in 0.5 M LiTFSI in EMIMTFSI for 250 h (top). (a) P 2p region showing P2Sx (yellow) and PS4 3−(pink). (b) S 2p region showing SO4 2−(red), SO3 2−(orange), P2Sx (yellow), Li2Sx (brown), PS4 3−(pink), and Li2S (purple). (c) Cl 2p region showing Li5.5PS4.5Cl1.5/LiCl (light green). (d) C 1s region showing C–F (–CF3) (dark blue), C]O (light blue), C–O (dark green), O]C–O (grey), and C–C/C–H (teal green). All binding energies are corrected to the C 1s peak at 284.8 eV.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    26.0,
+    388.6,
+    347.9
+   ],
+   "w": 1388,
+   "h": 1342,
+   "dpi": 300,
+   "src": "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.432
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Estimation of Cl-free organic overlayer thickness using HAXPES. (a) Core-level HAXPES of the Cl 1s region for: pristine Li5.5PS4.5Cl1.5 (bottom, purple), Li5.5PS4.5Cl1.5 immersed in 1 M LiTFSI in DOL–DME (1 : 1) for 250 h (middle, blue), and Li5.5PS4.5Cl1.5 in 0.5 M LiTFSI in EMIMTFSI for 250 h (top, orange). Visual analysis of the background intensity relative to the Cl 1s peak intensity, and ﬁtting of the background, enables esti- mation of the Cl-free overlayer thickness (see Experimental). (b) Schematic showing how HAXPES can be used to estimate the Cl-free organic overlayer thickness. Unlike XPS, HAXPES penetrates 10s of microns into the SLEI, enabling the Cl-free overlayer (yellow/ orange/red), to be diﬀerentiated from the buried Cl-containing inorganic decomposition layer (blue/green) and the bulk solid electrolyte (green). Fitted HAXPES Cl 1s and S 1s spectra are shown in ",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    368.5,
+    388.6,
+    502.1
+   ],
+   "w": 1388,
+   "h": 557,
+   "dpi": 300,
+   "src": "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.547
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Galvanostatic cycling of a symmetric cell with the architecture: Li–In/LiTFSI– EMIMTFSI/Li5.5PS4.5Cl1.5/LiTFSI–EMIMTFSI/Li–In at a current density of 0.1 mA cm−2 for 100 hours.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    26.0,
+    386.5,
+    232.4
+   ],
+   "w": 1379,
+   "h": 861,
+   "dpi": 300,
+   "src": "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1: EDX elemental distribution mapping corresponding with secondary electron imaging shown in Figure 1. The left image in each pair shows elemental mapping of a Li5.5PS4.5Cl1.5 disk after immersion for 250 hours in 1 M LiTFSI in DOL-DME (1:1). The right image in each pair shows elemental mapping of a Li5.5PS4.5Cl1.5 disk after immersion for 250 hours in 0.5 M LiTFSI in EMIMTFSI. The maps show the elemental distributions of carbon (orange), oxygen (red), sulfur (green), phosphorous (pink), chlorine (blue), nitrogen (light blue), and fluorine (yellow).",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    584.7
+   ],
+   "w": 2481,
+   "h": 2329,
+   "dpi": 300,
+   "src": "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.413
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2: Fitting of the time-resolved electrochemical impedance spectroscopy shown in Figure 2. a) The equivalent circuit model used to fit the data: (Rbulk+gbCbulk+gb)(RSLEICSLEI)CPE. Individual fittings of the first and final Nyquist plots for symmetric cells using the liquid electrolytes: b) 1 M LiTFSI in DOL-DME (1:1) (blue), and c) 0.5 M LiTFSI in EMIMTFSI (orange).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.8,
+    60.8,
+    558.2,
+    347.7
+   ],
+   "w": 2173,
+   "h": 1196,
+   "dpi": 300,
+   "src": "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. Graph showing the normalised capacitances of bulk + grain boundary transport processes (green), and transport through the solid-liquid electrolyte interphase (pink) with time. Capacitances remain largely stable with time. Blue points show capacitances of transport processes in the symmetric cell with 1 M LiTFSI in DOL-DME (1:1) liquid electrolyte, and orange points show capacitances of transport processes in the symmetric cell with 0.5 M LiTFSI in EMIMTFSI liquid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    381.2,
+    559.8,
+    702.7
+   ],
+   "w": 2181,
+   "h": 1340,
+   "dpi": 300,
+   "src": "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4: HAXPES of (a) the S 1s region, and (b) the Cl 1s region for: Pristine Li5.5PS4.5Cl1.5 (bottom), Li5.5PS4.5Cl1.5 immersed in 1 M LiTFSI in DOL-DME (1:1) for 250 h (middle), and Li5.5PS4.5Cl1.5 in 0.5 M LiTFSI in EMIMTFSI for 250 h (top). Fittings show the presence of SO42− species (red), SO32− species (orange), Li2Sx species (brown) and PS43− species (pink), and Li5.5PS4.5Cl1.5/LiCl (light green).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.8,
+    60.8,
+    560.8,
+    314.7
+   ],
+   "w": 2184,
+   "h": 1059,
+   "dpi": 300,
+   "src": "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.412
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 3,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5: Powder X-ray diffraction of pristine Li5.5PS4.5Cl1.5. Symbols indicate reference PXRD patterns: Li5.5PS4.5Cl1.5 (orange star) and common impurity phases of Li2CO3 (red oval), Li2S (blue crescent) and LiCl (purple diamond). It is possible that some of the impurities are observed due to side reactions from moisture sensitivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    348.8,
+    561.6,
+    683.4
+   ],
+   "w": 2188,
+   "h": 1395,
+   "dpi": 300,
+   "src": "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of binding energies and assigned chemical species used for the ﬁtting of P 2p, S 2p, Cl 2p and C 1s spectral regions. All binding energies are corrected to the C 1s peak at 284.8 eV Spectral region Binding energy (eV) Species Colour Ref. P 2p 132.6 P2Sx Yellow 48 131.6 PS4 3− Pink S 2p 169.0 SO4 Red 45 and 49 167.0 SO3 Orange 164.0 P2Sx Yellow 162.0 Li2Sx Brown 161.0 PS4 3− Pink 159.0 Li2S Purple Cl 2p 198.4 Li5.5PS4.5Cl1.5/LiCl Light green 50 C 1s 293.1 C–F Dark blue 50 and 51 288.7 C]O Light blue 286.3 C–O Dark green 286.0 O]C–O Grey 284.8 C–C Teal green",
+   "rotated_deg": 0,
+   "bbox": [
+    56.7,
+    24.4,
+    385.5,
+    261.6
+   ],
+   "w": 1371,
+   "h": 990,
+   "dpi": 300,
+   "src": "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "blank": 0.947
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  },
+  {
+   "src": "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}
