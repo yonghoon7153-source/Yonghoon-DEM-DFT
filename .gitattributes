@@ -14,3 +14,6 @@
 #    증거는 봉인값과 같은 바이트여야 제3자 대조가 선다 ⇒ 변환하지 않는다.
 docs/reviews/codex_*_evidence_*/** -text
 docs/reviews/codex_*_supplement_*/** -text
+#  ★ Antigravity 판정 증거도 같은 이유로 바이트 그대로 둔다 (2026-11-26 · relay 편성 · 스킬 §3).
+docs/reviews/agy_*_evidence_*/** -text
+docs/reviews/agy_*_supplement_*/** -text

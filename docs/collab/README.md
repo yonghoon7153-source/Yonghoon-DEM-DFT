@@ -8,6 +8,9 @@
 |---|---|---|
 | `docs/collab/claude_to_codex/` | Claude | `claude/sdcp-dem-manuscript-si-pqwtv8` |
 | `docs/collab/codex_to_claude/` | Codex 작업 창 | `codex/<트랙>` (Claude 가 cherry-pick 하면 이 가지에도 들어온다) |
+| `docs/collab/claude_to_agy/` | Claude | 그때의 Claude 작업 가지 (11-26 추가 · 첫 쪽지 때 생긴다) |
+| `docs/collab/agy_to_claude/` | Antigravity (agy) 앱 | `agy/<트랙>-<MMDD>` (권고 · Claude 가 cherry-pick 하면 작업 가지에도 들어온다) |
 
 - 쪽지는 정보다 — 발사 · 발송 · 비준 · 기계 실행은 늘 1저자 승인 뒤.
-- 쪽지 안에 자기 `codex/*` 커밋 SHA 를 인용하지 않는다 (cherry-pick 뒤 바뀐다) — 자리 표시 `<<sha:커밋 제목 앞 낱말>>` → Claude 가 새 SHA 표를 쪽지로 보낸다.
+- 쪽지 안에 자기 `codex/*` · `agy/*` 커밋 SHA 를 인용하지 않는다 (cherry-pick 뒤 바뀐다) — 자리 표시 `<<sha:커밋 제목 앞 낱말>>` → Claude 가 새 SHA 표를 쪽지로 보낸다.
+- 11-26 — Antigravity 를 Codex 와 같은 꼴로 더했다 (대피 · 반박 · 실무 교차검증 · 1저자가 따로 켠 앱 · 손 왕복).  편성 · 첫 프롬프트 · 표지 = 스킬 `.claude/skills/relay/SKILL.md`.
