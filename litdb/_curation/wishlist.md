@@ -802,3 +802,14 @@ litdb 확인 = 정본 `litdb/papers/` 파일 목록 611 장 (`git ls-tree`) + `g
 - [본 세션 · 11-25b] Liu, An, Fang, … Pang **"Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries"** — *Nat. Chem.*, 17, 614 (2025). DOI 10.1038/s41557-025-01735-w | 같은 그룹 전작 (이 논문 ref 26) — '표면 국소 용액 영역' 개념의 원전
 - [본 세션 · 11-25b] Gadea, Soria-Fernández, Santiago, Carriazo, Castillo **"Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries"** — *Commun. Mater.*, 7, 9 (Crossref 발행 2025). DOI 10.1038/s43246-025-01026-4 | SSE 설계 리뷰 — 분야 지도
 - [본 세션 · 11-25b] Shao, Pang, Bird, Robinson, Shearing **"Contemporary Trends in Lithium-Sulfur Battery Design: A Comparative Review of Liquid, Quasi-Solid, and All-Solid-State Architectures and Mechanisms"** — *Adv. Energy Mater.*, 16, e03239 (2026 · Crossref 발행 2025). DOI 10.1002/aenm.202503239 | 액체 → 준고체 → 전고체 Li–S 사다리 (이 논문 ref 7) — 우리 전고체 Li–S 카드 묶음의 지도
+
+## ⏩ 2026-11-26 — 11-25b 후보 8 편 digest 끝 (논문 에이전트 · API 실행 · 사용자 WSL)
+위 '2026-11-25b 묶음 1 편 — 다음 후보 8 편' 이 전부 litdb 에 들어왔다 (원 줄은 그대로 둔다 · append-only). 결속 = INDEX 행 · comparison 참조 키 + 판정 §J-98..J-105.
+- ✅ Mistry … *Faraday Discuss.* 269, 369 → `papers/mistry2026_slei_argyrodite_ionic_liquid_quasi_solid_lis.md` · §J-98
+- ✅ Yu … Nazar *Nat. Mater.* 24, 1082 → `papers/yu2025_cng_host_suppress_argyrodite_oxidation_lis.md` · §J-99
+- ✅ Zhang … *ACS Nano* 20, 21459 → `papers/zhang2026_fpds_siloxane_dip_mediator_quasi_solid_lis.md` · §J-100
+- ✅ Lai, Liao, Manthiram *Angew.* 65, e22940 → `papers/lai2026_mtbe_moderately_solvating_ether_cosolvent_lis.md` · §J-101
+- ✅ Peng … *ACS Energy Lett.* 11, 4125 → `papers/peng2026_er_dn_solvent_screening_csa_methf_lis.md` · §J-102
+- ✅ Liu … Pang *Nat. Chem.* 17, 614 → `papers/liu2025_bdts_phase_mediator_cpme_quasi_solid_sulfur_lis.md` · §J-103
+- ✅ Gadea … Castillo *Commun. Mater.* 7, 9 → `papers/gadea2026_sse_hce_lhce_wse_lis_review.md` · §J-105
+- ✅ Shao … Shearing *Adv. Energy Mater.* 16, e03239 → `papers/shao2026_lis_liquid_quasisolid_allsolid_comparative_review.md` · §J-104

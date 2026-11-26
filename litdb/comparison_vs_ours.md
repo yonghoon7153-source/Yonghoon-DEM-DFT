@@ -92,6 +92,15 @@
 | **[Guan26FeCo]** 🔧🔴 **방법 원전 (CHE 반응 사다리 감사)** · ⛔ **액체 Li–S — A–D 물성 4축 진입 금지** | Zefeng Guan/…/**Jiliang Zhu\*** (쓰촨대) 2026 *J. Energy Chem.* Journal Pre-proof (DOI 10.1016/j.jechem.2026.09.072) — "Fe/Co codoping and sulfur-vacancy engineering regulating Li₂S electrocrystallization in practical lithium–sulfur pouch cells" | ✅ `papers/guan2026_feco_vs_in2s3_li2s_electrocrystallization.md` — 판정 §J-66 | exp 주 + DFT 보조 (VASP-PBE 슬랩 · NEB 0) |
 | **[Luo26Sep]** 🔧 **방법 원전 (보고 규약 반례)** · ⛔ **액체 Li–S 분리막 리뷰 — A–D 물성 4축 진입 금지** | **Yun Luo**/F. Zhang/**Nanping Deng\***/**Jingge Ju\***/…/**Weimin Kang\*** (Tiangong Univ.) 2026 ***Small* e76191** (DOI 10.1002/smll.76191) — "Tailoring Lithium–Sulfur Battery Separators via Crystal Engineering: From Fundamental Modulation to Multidimensional Synergy" | ✅ `papers/luo2026_lis_separator_crystal_engineering_review.md` — 판정 §J-67 | 리뷰 (자체 계산 · 실험 0) |
 | **[Shen26CoSol]** 🔧🔴 **방법 원전 (AIMD 용매화 표본 · 분자 결합에너지 기준 · 방법 없는 β-S₈ 면 흡착 · 성능 주장 감사)** · ⛔ **액체 (SSE) 전해질 Li–S — A–D 물성 4축 진입 금지** | **Chunli Shen**#/**Lujun Zhu**#/…/**Yatao Liu\***/…/**Quanquan Pang\*** (北京大 · 北京化工大 · IHEP CAS) 2026 ***ACS Nano* ASAP** (DOI 10.1021/acsnano.6c12314) — "Interacting Cosolvents-Regulated Solvation for Rapid Quasi-Solid-State Sulfur Reactions in Li–S Batteries" | ✅ `papers/shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis.md` — 판정 §J-96 | exp 주 + 계산 보조 (VASP PBE-D3 AIMD 50 ps · Gaussian B3LYP-D3(BJ) · 슬랩 방법 미기재) |
+| **[Shi26OSe]** 🔧🔴 **O · Se 이중 음이온 자리 선택 argyrodite — DFT '혼입 장벽' (방법 전무) · BVSE 위상 전이 주장 감사** · ⛔ **A–D 물성 4축 진입 금지** (§J-97 에만) | **Yaru Shi**#/**Libin Hu**#/**Qiuhong Li**#/…/**Yong Jiang\***/**Shuixin Xia\***/**Jiujun Zhang\*** (上海大 · 上海理工大 · 福州大) 2026 ***Adv. Energy Mater.* e71857** (DOI 10.1002/aenm.71857) — "Function-Decoupled Dual-Anion Doping via Site-Preferential Regulation Enables High-Performance Lithium Argyrodite Electrolytes" | ✅ `papers/shi2026_o16e_se4d_dual_anion_site_preferential_argyrodite.md` — 판정 §J-97 | exp 주 + 계산 보조 (VASP · AIMD 50 ps · BVSE) |
+| **[Mis26SLEI]** 🔧 **argyrodite 분리막 \| 액체 전해질 계면 (SLEI) 시간분해 EIS · XPS 귀속 감사** · ⛔ **준고체 Li–S — A–D 물성 4축 진입 금지** (§J-98 에만) | **Jaimini Jessica Mistry**/…/**Dominic Spencer-Jolly\*** (Univ. of Birmingham · Faraday Institution) 2026 ***Faraday Discuss.* 269, 369** (DOI 10.1039/d6fd00058d) — "Solid–liquid electrolyte interphases in quasi-solid-state lithium–sulfur batteries with argyrodite-type solid electrolyte separators" | ✅ `papers/mistry2026_slei_argyrodite_ionic_liquid_quasi_solid_lis.md` — 판정 §J-98 | exp (계산 0) |
+| **[Yu25CNG]** ⭐🔧 **argyrodite 산화 억제 (탄소 숙주) — 우리 축 B 의 실측 짝 · DFT 계면 결합 크기 감사** · ⛔ **DFT 결합값 인용 금지 · 우리 산화 개시와는 부등호로만** (§J-99) | **Zhuo Yu**/B. Singh/Y. Yu/**Linda F. Nazar\*** (Univ. of Waterloo) 2025 ***Nat. Mater.* 24, 1082** (DOI 10.1038/s41563-025-02238-2) — "Suppressing argyrodite oxidation by tuning the host structure for high-areal-capacity all-solid-state lithium–sulfur batteries" | ✅ `papers/yu2025_cng_host_suppress_argyrodite_oxidation_lis.md` — 판정 §J-99 | exp 주 + DFT 보조 (VASP PBE-PAW · TS-vdW) |
+| **[Zhang26FPDS]** 🔧🔴 **음이온 풍부 용매화 + 산화환원 매개 (DIP) — 매개체 자체 용량 · 기준 없는 결합에너지 · 성능 주장 감사** · ⛔ **액체 Li–S — A–D 물성 4축 진입 금지** (§J-100 에만) · ⚠ `[Zhang26AIMS]` · `[Zhang26PI3]` · `[Zhang26ODry]` 와 다른 편 | Xinmin Zhang/…/**Yaping Feng\***/**Yatao Liu\*** (北京化工大 · 北京大 · 南开大) 2026 ***ACS Nano* 20, 21459** (DOI 10.1021/acsnano.6c10639) — "Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry" | ✅ `papers/zhang2026_fpds_siloxane_dip_mediator_quasi_solid_lis.md` — 판정 §J-100 | exp 주 + 계산 보조 (CP2K BLYP-D3 AIMD · 분자 DFT) |
+| **[Lai26MtBE]** 🔧 **중간 용매화 저밀도 에테르 공용매 — 용해도 측정 없는 '용해 제한' · 성능 주장 감사** · ⛔ **액체 Li–S — A–D 물성 4축 진입 금지** (§J-101 에만) · ⚠ `[Lai]` (계면 반증 주장) 와 다른 논문 | **Tianxing Lai**/K. Liao/**Arumugam Manthiram\*** (UT Austin) 2026 ***Angew. Chem. Int. Ed.* 65, e22940** (DOI 10.1002/anie.202522940) — "Modulating Li⁺ and Polysulfide Solvation with Low-Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries" | ✅ `papers/lai2026_mtbe_moderately_solvating_ether_cosolvent_lis.md` — 판정 §J-101 | exp 주 + 고전 MD 보조 |
+| **[Peng26Solv]** 🔧🔴 **용매 선별 틀 (DN × εr) — 표 중복 · 사후 문턱 · COSY · DLS 해석 감사** · ⛔ **액체 Li–S — A–D 물성 4축 진입 금지** (§J-102 에만) | **Lin Peng**#/**Lishan Lin**#/…/**Luyi Chen\***/**Yuepeng Cai\***/**Qifeng Zheng\*** (华南师范大) 2026 ***ACS Energy Lett.* 11, 4125** (DOI 10.1021/acsenergylett.6c00790) — "Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries" | ✅ `papers/peng2026_er_dn_solvent_screening_csa_methf_lis.md` — 판정 §J-102 | exp 주 + 고전 MD 보조 |
+| **[Liu25BDTS]** 🔧🔴 **상 매개 (BDTS) · CPME 약용매화 — AIMD Li⁺ 2 개 · 연속 용매화 DFT · 율 비교 조건 감사** · ⛔ **액체 Li–S — A–D 물성 4축 진입 금지** (§J-103 에만) · ⚠ `[Shen26CoSol]` 과 같은 그룹 | **Yatao Liu**/Y. An/…/**Ruqiang Zou\***/**Quanquan Pang\*** (北京大 · 北京化工大) 2025 ***Nat. Chem.* 17, 614** (DOI 10.1038/s41557-025-01735-w) — "Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries" | ✅ `papers/liu2025_bdts_phase_mediator_cpme_quasi_solid_sulfur_lis.md` — 판정 §J-103 | exp 주 + 계산 보조 (PAW-PBE-D3 AIMD · 연속 용매화 DFT) |
+| **[Shao26LiSRev]** 🔧🔴 **리뷰 판정 — Li–S 세 구조 비교 · 'LiNO₃ 없이' 를 자기 표가 반증 · ASSLSB SE 산화 서술** · ⛔ **자체 계산 · 실험 0 — A–D 물성 4축 진입 금지** (§J-104 에만) | Yiheng Shao/B. Pang/L. Bird/J. B. Robinson/**Paul R. Shearing\*** (Univ. of Oxford · UCL · Faraday Institution) 2026 ***Adv. Energy Mater.* 16, e03239** (DOI 10.1002/aenm.202503239) — "Contemporary Trends in Lithium-Sulfur Battery Design: A Comparative Review of Liquid, Quasi-Solid, and All-Solid-State Architectures and Mechanisms" | ✅ `papers/shao2026_lis_liquid_quasisolid_allsolid_comparative_review.md` — 판정 §J-104 | 리뷰 (외부) · 자체 계산 0 · 2차 인용 |
+| **[Gad26SSE]** 🔧 **리뷰 판정 — 약용매화 전해질 (HCE · LHCE · WSE) 분류 · SPAN 교락 · 주관 레이더** · ⛔ **자체 계산 · 실험 0 — A–D 물성 4축 진입 금지** (§J-105 에만) | **Sergi Gadea**/**Asier Soria-Fernández**/**Alexander Santiago\***/D. Carriazo/**Julen Castillo\*** (CIC energiGUNE) 2026 ***Commun. Mater.* 7, 9** (DOI 10.1038/s43246-025-01026-4) — "Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries" | ✅ `papers/gadea2026_sse_hce_lhce_wse_lis_review.md` — 판정 §J-105 | 리뷰 (외부) · 자체 계산 0 · 2차 인용 |
 | **[He26Cl4D]** ⚠ **미출판 원고** · 수분 축 (B④) · ⚠ DFT 장벽 홉 수 모순 | Xiaoya He†/Haoran Zhang†/Xinyang Yue†/…/Liwei Chen\*/Zhaoxin Yu\*/Xi Liu\*/Chuying Ouyang\*/Ziyang Ning\*/Yujun Xie\* (SJTU + CATL + 宁夏大) 2026 원고 (저널 · DOI n/a) — "**Visualizing surface-reaction-driven chloride migration and cascading failure in sulfide solid electrolytes**" — Li₆PS₅Cl vs Li₅.₅PS₄.₅Cl₁.₅ 의 1000 ppm H₂O 열화를 cryo-4D-STEM 으로 입자 안에서 지도화 + VASP CI-NEB Cl 장벽 + DFMS 실란 표면처리 | ✅ `papers/he2026_cryo4dstem_chloride_migration_moisture_argyrodite.md` | exp 주 + DFT 보조 |
 | **[Qian26]** | Qian/Dean/Kochetkov/Chen/Huang/**Nazar** 2026 Angew (e9983580) — **SE 입자 유기(데칸산) 표면코팅**: 수분(39 % RH 2 h σ 91 %) + 양극(무코팅 NCM85 150cyc 96 %) + 음극(대칭셀 1000 h) 동시. **[Adeli]/[Zuo]와 동일 Waterloo/Nazar 그룹** | ✅ `papers/qian2026_decanoate_coating_lpscl_moisture_interface.md` | exp + DFT보조(슬랩 표면E·분자흡착) |
 | **[Qian25]** | **Lanting Qian⁺**/**Yangyang Huang⁺**/Dean/**Kochetkov**/**B. Singh**/**Nazar\*** 2025 *Angew. Chem. Int. Ed.* **64**, e202413591 (Univ. Waterloo; BASF+NSERC; OA CC-BY) — "**Engineering Stable Decomposition Products on Cathode Surfaces…**": **LiPO₂F₂(LiPOF) 를 NCM85 입자에 1 wt% 용액코팅(~35 nm 비정질, 소결 0)**. 근거는 **convex-hull 3종**(element profile / 닫힌 pseudo-binary / grand-potential 계면반응, VASP+pymatgen+MP). **[Adeli]→[Zuo]→본 논문(2025)→[Qian26](2026)** = Waterloo/Nazar 라인 4번째, **[Qian26] 과 1저자 동일** | ✅ `papers/qian2025_lipo2f2_coating_stable_cei.md` | DFT(hull) + exp |
@@ -7837,6 +7846,126 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 | 성능 (`Fig. 5e` · `Fig. S18`–`S20` · `Fig. 5h`) | 800 mAh g⁻¹ × 200 cyc · 고율 우위 · 5.2 mAh cm⁻² × 50 cyc · 2.44 Ah × 40 cyc | 흩어짐 0 평탄선 + `Fig. S19` 방전 ≈2.0 V 끝 → **용량 제한** · 0.5–3 C 는 CPME 가 높다 · 50 cyc ≈3.5 mAh cm⁻² · 파우치 40 cyc ≈61 % · 포장 제외 · 함의 평균 전압 ≈1.82 V (우리 산수) | ⚠🔴 문헌 성능 주장 판별법의 실례 |
 
 ⛔ 인용 금지 — AIMD CN ≈0.5 를 정량으로 · 0.21 eV 를 '강한 특이 상호작용' 으로 · `Fig. S8` 결합에너지를 용액 용매화 세기로 · β-S₈ 흡착값을 면 선택성으로 · `Fig. 5e` 를 유지율로 · 이 논문의 Li₂S (액체 셀 방전 산물 · Scherrer ≈4.5–7.5 nm) 를 우리 SEI 트랙 Li₂S 결정 NEB (CONDITIONAL · `HZ-sei-neb-li2s-cc-cellconv`) 옆에.
+
+### J-97. 🔧🔴 **방법 원전 — [Shi26OSe] O · Se 이중 음이온 자리 선택 argyrodite (*Adv. Energy Mater.* 2026): '전구체가 O 자리를 정한다' 는 방법 없는 혼입 장벽뿐 · 자리 에너지 없음 · Se 의 ≈40 % 는 4d 밖 · BVSE 차 ≤ 0.011 eV 를 위상 전이로 읽음** (2026-11-26 신설)
+
+> 📎 출처: `papers/shi2026_o16e_se4d_dual_anion_site_preferential_argyrodite.md` (크롭 41 장 중 15 장 실독 + 확대 3 패널 · 2026-11-26 API 실행). ⛔ A–D 물성 4축에 행을 만들지 않는다. 트랙: 우리 DFT 기준선 (사용자 1저자) — 우리 LPSOCl (O@16e 구성) 과 같은 계열 · CEI 트랙 (1저자 = 실험 쪽) 의 O 자리 서술과 닿는다 — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| O '혼입 장벽' (DFT) | Li₂O 경로 1.33/2.17 · P₂O₅ 경로 2.41/1.49 eV | 방법 전무 · 그림은 매끈한 사인 꼴 (영상 점 없음) · 자리 에너지 (열역학) 를 안 냈다 · 홉 수 검산 (ν₀ 10¹³ s⁻¹ 가정 · 500 °C · 2 h): 2.41 eV 경로도 N ≈14 (`collect_neb.py::hop_check`) | 🔴 자리 선호 근거 아님 |
+| O · Se 자리 (Rietveld · EXAFS) | A: O@4d 0.228/f.u. (명목 0.4 의 57 %) · B: O@16e 0.376 (94 %) · Se@4d 0.247 (62 %) · CN(Se–P) 0.45 ± 0.18 | A 는 x ≥ 0.4 에서 Li₂S · LiCl 불순물 — 'O 가 4d' 와 'O 가 덜 들어감' 이 안 갈린다 · Se 는 두 측정 다 ≈40 % 가 4d 밖을 시사 | ⚠ 정성 · '압도적 4d' 는 과장 |
+| BVSE 경로 차원 (`Fig. S12`) | O = '깊은 덫' · Se = 1D → 2D 전이 | 무도핑이 이미 1D = 2D = 3D = 0.354 · LPSOCl 0.361 · LPSSeCl 0.350/0.350/0.351 — 차 ≤ 0.011 (BVSE 단위 · 우리 것은 softBV 아님 · 같은 축에 놓지 않는다) | 🔴 자기 그림이 부정 |
+| σ · Ea (EIS) | LPSCl 3.19 · LPSSeCl 4.03 · LPSOSeCl 3.21 mS cm⁻¹ · O(16e) Ea 0.365 vs O(4d) 0.391 eV | `Fig. 3h` 298 K 점은 figure-read ≈3.2 · ≈6.5 · ≈4.1 — 본문과 어긋남 · A 는 불순물상 포함 (교락) · 홉 수 검산 (298 K · ν₀ 10¹³ s⁻¹ 가정): Γ ≈6.8×10⁶ vs ≈2.5×10⁶ s⁻¹ (대기 ≈0.15 vs ≈0.41 µs) — 차는 ≈3 배 · 같은 차수 | ⚠ 방향만 |
+| AIMD Li 계면 (`Fig. 5j`) | Se/O 가 PS₄ 분해를 막고 Li₂Se/Li₂O 를 만든다 | 50 ps · 300 K · 궤적 1 · 셀 미기재 · Li–Se · Li–O RDF 띠는 t = 0 부터 (SE 자체) · Li/LPSOSeCl 에서도 LiₓPᵧ 생성 (그림 주석) · 관측창 (300 K · 50 ps · 기회 n = 1 (계면 PS₄ 수 미기재) · ν₀ 10¹³ s⁻¹ 가정 · 정상성 가정): 기대 사건 1 ≈0.16 eV (검출 63 %) · 95 % 검출 ≈0.13 eV | 🔴 근거 약함 |
+
+⛔ 인용 금지 — '혼입 장벽' 을 O 자리 선호 (열역학) 근거로 · BVSE 차를 경로 위상 전이로 · AIMD 띠를 SEI 생성 근거로 · '압도적 4d' 를 Se 자리 정량으로 · 우리 MLIP-MD Ea/σ 를 'O 효과' 로 이 논문 옆에 (`HZ-cross-system-Ea` BLOCKED) · 띠틈은 상대차만.
+
+### J-98. 🔧 **방법 원전 — [Mis26SLEI] argyrodite 분리막 \| 액체 전해질 계면 (*Faraday Discuss.* 2026): R_SLEI 시간 변화는 실측 · 황산염 귀속은 TFSI⁻ 잔류와 안 갈림 · '층상 SLEI' 는 잔류 이온성 액체 막으로도 같은 결과** (2026-11-26 신설)
+
+> 📎 출처: `papers/mistry2026_slei_argyrodite_ionic_liquid_quasi_solid_lis.md` (크롭 11 장 중 그림 10 장 전부 · 2026-11-26 API 실행). ⛔ 준고체 Li–S (액체 전해질) — A–D 물성 4축에 행을 만들지 않는다. 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| R_SLEI (시간분해 EIS · `Fig. 2c`) | DOL:DME ≈25 → ≈2000 Ω cm² (250 h) · EMIMTFSI 150–220 Ω cm² 일정 | ≈265 h 점 ≈3.0 kΩ cm² (본문 언급 없음 · figure-read) · 처음 ≈20 h 는 DOL:DME 쪽이 같거나 낮다 | ✅ 방향 · ⚠ '더 낮다' 는 시간 조건부 |
+| SLEI 화학 (XPS · HAXPES) | 두 SLEI 에 황산염 · 아황산염 | S 2p 169 eV · S 1s 'SOₓ' 는 TFSI⁻ 의 –SO₂– 와 겹친다 · 세척 여부 미기재 | ⚠ 귀속 미확정 |
+| EMIMTFSI 계면 구조 | ≈21 nm Cl 없는 유기 덮개 + 무기층 | EMIMTFSI 는 진공에서 안 날아간다 · 'C–O' 는 EMIM⁺ 의 C–N 과 겹친다 · 덮개를 C 로 가정 | ⚠ 잔류 막과 구분 안 됨 |
+| 대칭셀 100 h (`Fig. 5`) | SLEI 안정 | ≈0.19 V @ 0.1 mA cm⁻² ⇒ 겉보기 ASR ≈1.9 kΩ cm² (우리 산수) | ⚠ '안정' 이지 '저저항' 아님 |
+
+⛔ 인용 금지 — R_SLEI 를 우리 Li 금속 계면 · W_ad 값 옆에 · 황산염 생성을 확정으로 · '21 nm' 를 계면상 두께로.
+
+### J-99. ⭐🔧 **방법 원전 — [Yu25CNG] argyrodite 산화 억제 (*Nat. Mater.* 24, 1082 (2025)): 산화 용량 감소는 실측 (Source data) · DFT 결합 크기는 자기 표면에너지와 안 맞음 · '안 보임' · '억제' 의 그림 세기 · 유지율 기준 사이클** (2026-11-26 신설)
+
+> 📎 출처: `papers/yu2025_cng_host_suppress_argyrodite_oxidation_lis.md` (크롭 35 장 중 21 장 원해상도 · Source data 대조 · 2026-11-26 API 실행). 우리 축 B (argyrodite 산화) 의 실측 짝 — ⚠ 우리 산화 개시값과는 '열역학 개시 < 측정 봉우리' 부등호로만 (`HZ-esw-reduction-limit-label` CONDITIONAL). 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| 4.1 V 직접 충전 산화 용량 (`Fig. 2c`) | VC 277 · NG 200 · CNG ≈46 mAh g⁻¹_SE | Source data 277.5 / 198.4 / 46.4 · 반복 셀 (`Fig. S23f`) 같은 순서 | ✅ 실측 |
+| 첫 dQ/dV 봉우리 (`Fig. 2d`) | VC 2.415 · NG 2.516 V = 첫 탈리튬화 · CNG 소멸 | 귀속은 Schwietert 2020 틀 (상 동정 측정 없음) | ✅ 소멸 · ⚠ 귀속 |
+| DFT 계면 결합 | LPSCl1.5–C₃N₄ ≈0.41 vs graphene ≈0.27 eV Å⁻² | 0.27 eV Å⁻² ≈4.3 J m⁻² vs 자기 γ(010) 0.40 J m⁻² · C₃N₄ 계면은 LPSCl 슬랩 면적을 ≈25 % 눌렀다 (SI CIF 산수) | 🔴 크기 인용 금지 |
+| TOF-SIMS P₂S₇⁻ · 누설 전류 | CNG 에서 '안 보인다' · 4.1 V 30 h '억제' | 정규화 세기 CNG 1.374 · NG 1.751 · VC 1.990 (기준 0.612) = VC 증가분의 ≈55 % · `Fig. S8b` 누설 전류 CNG > NG | 🔴 서술 과장 |
+| 유지율 · 조성 | 92 % · 235 cyc / 91 % · 40 cyc · 'LPSCl1.5' | 기준이 사이클 1 (첫 방전 기준 ≈60 % · ≈86 %) · SI Note 1 이 실제 조성 Li₅.₉PS₄.₉Cl₁.₁ 로 정정 | ⚠ 조건 명시 필요 |
+
+⛔ 인용 금지 — DFT 결합값을 계면 결합 세기로 · '산화 억제' 를 열역학 안정 (창 확장) 으로 · 유지율을 첫 방전 기준으로 · 'LPSCl1.5' 라벨을 조성으로 · 이 논문의 측정 봉우리를 우리 산화 개시와 '일치' 로.
+
+### J-100. 🔧🔴 **방법 원전 — [Zhang26FPDS] 음이온 풍부 용매화 + DIP 매개 (*ACS Nano* 20, 21459 (2026)): 매개체 자체 용량을 안 뺌 · 기준 없는 결합에너지 · AIMD 궤적 1 · 최고 셀 값 · 파우치 질량 산수** (2026-11-26 신설)
+
+> 📎 출처: `papers/zhang2026_fpds_siloxane_dip_mediator_quasi_solid_lis.md` (크롭 49 장 중 11 장 실독 · 2026-11-26 API 실행). ⛔ 액체 Li–S — A–D 물성 4축에 행을 만들지 않는다 · ⚠ `[Shen26CoSol]` · `[Liu25BDTS]` 와 같은 그룹. 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| AIMD 용매화 | CN Li–O(TFSI⁻) 1.01 → 2.43 | 궤적 1 · 40 ps · 300 K · 상자 ≈1.25 M (본문 1.5 M) · 관측창 (300 K · 40 ps · 기회 15 · ν₀ 10¹³ s⁻¹ 가정 · 정상성 가정): 기대 사건 1 ≈0.22 eV (검출 63 %) · 95 % 검출 ≈0.20 eV | ⚠ 정성 |
+| RM–Li₂S₄ 결합 (DFT) | −0.87 ~ −1.21 eV | Li₂S₄–용매 · Li₂S₄–TFSI⁻ 기준 없음 · 기상 · 분산 · BSSE · 전하/스핀 미기재 · \|E\| < 2 eV | 🔴 착물 형성 근거 아님 |
+| DIP 매개 용량 | 고체 LiPS ↔ Li₂S 전환 매개 | DIP 자체 산화환원 용량을 빼지 않았다 — 저부하 셀에서 2e⁻ 만으로 ≈410 mAh g⁻¹(S) 상한 (우리 산수) | 🔴 용량 귀속 미분리 |
+| 성능 | 0.2 C 773.3 mAh g⁻¹ · 2 C '85 %' · 6.52 Ah 453.8 Wh kg⁻¹ | 773.3 = 셀 3 개 중 최고 (평균 740.3 ± 47.7) · 55 °C · '85 %' 기준 사이클 미기재 · 파우치는 800 mAh g⁻¹ 용량 제한 · '포장 제외 607.3' 은 질량이 안 맞는다 | ⚠🔴 성능 주장 판별 실례 |
+
+⛔ 인용 금지 — 결합에너지를 착물 형성 · 용매화 세기로 · AIMD CN 을 정량으로 · 773.3 을 대표값으로 · 607.3 Wh kg⁻¹ · 용량을 DIP 기여 뺀 S 용량으로.
+
+### J-101. 🔧 **방법 원전 — [Lai26MtBE] 중간 용매화 저밀도 에테르 (*Angew. Chem. Int. Ed.* 65, e22940 (2026)): 배위 약화 · Li CE 는 받침 · '용해 제한' 은 측정 0 · 탈용매화 장벽 차 1 % · 율 · CE 값이 그림과 어긋남** (2026-11-26 신설)
+
+> 📎 출처: `papers/lai2026_mtbe_moderately_solvating_ether_cosolvent_lis.md` (크롭 38 장 중 23 장 원해상도 + 12 장 축소 시트 · 2026-11-26 API 실행). ⛔ 액체 Li–S — A–D 물성 4축에 행을 만들지 않는다. 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| Li⁺ 배위 (고전 MD · Raman · NMR) | CN(O_DME) ≈3.6 → ≈3.0 · 띠 741.6 → 742.5–743.1 cm⁻¹ | 방향은 세 측정이 같다 | ✅ 방향 |
+| LiPS 용해 제한 | MSE 가 용해를 제한 | 용해도 측정값 0 · 사진은 MtBE 로 희석한 것이라 색 변화가 희석과 섞임 | 🔴 정량 근거 없음 |
+| 탈용매화 장벽 (`Fig. 2f`) | Rct Ea 64.3 → 63.6 kJ mol⁻¹ (MtBE) | CPME 67.3 · SBME 66.5 · TAME 66.0 은 기준보다 높다 · 차 1 % · 홉 수 검산 (298 K · ν₀ 10¹³ s⁻¹ 가정 · 차수 검산만): 0.666 vs 0.659 eV → Γ ≈55 vs ≈72 s⁻¹ — 같은 차수 | ⚠ 주장 불성립 |
+| 성능 | C/2 781 mAh g⁻¹ · 첫 CE 79.7 % | `Fig. 5b` C/2 figure-read ≈690–712 · `Fig. 5e` 첫 사이클 ≈89 % | 🔴 그림과 다름 |
+
+⛔ 인용 금지 — 'LiPS 용해 제한' 을 정량으로 · 탈용매화 장벽 감소 · 'C/2 781' · 첫 CE 79.7 % · 이 논문의 Li₂S 를 우리 SEI 트랙 Li₂S 결정 NEB 옆에 (`HZ-sei-neb-li2s-cc-cellconv` CONDITIONAL).
+
+### J-102. 🔧🔴 **방법 원전 — [Peng26Solv] 용매 선별 틀 DN × εr (*ACS Energy Lett.* 11, 4125 (2026)): 표 중복 · 사후 문턱 · COSY 는 분자간 상호작용을 못 잰다 · DLS 지름 ↔ 반지름 · DOSY 역산은 두 전해질이 같다** (2026-11-26 신설)
+
+> 📎 출처: `papers/peng2026_er_dn_solvent_screening_csa_methf_lis.md` (크롭 80 장 중 27 장 + 확대 1 장 · 산수 검산 · 2026-11-26 API 실행). ⛔ 액체 Li–S — A–D 물성 4축에 행을 만들지 않는다. 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| 용매 지도 (DN × εr) | 75 용매 · 일곱 영역 | 실제 73 개 (DOL · 아세톤 중복) · DBuE · DIPE 는 자기 규칙상 M 인데 W 표에 · CSA εr 출처 없음 | ⚠ 틀은 쓸 만 · 표가 샌다 |
+| 일곱 지표 선별 | M-S/W (CSA/MeTHF) 만 전부 통과 | 지표 1–4 만으로도 하나가 남는다 · 문턱 900 은 913 바로 아래 · 조합당 셀 1 개 | ⚠ 사후 문턱 |
+| COSY 교차 봉우리 | CSA–MeTHF 상호작용 '명확' | COSY 는 결합 경유 J 결합 기법 · 주장 점은 단일선 t₁ 잡음 줄 위 · 대칭짝 없음 | 🔴 근거 안 됨 |
+| LiPS 덩어리 (DLS · DOSY) | 7.5 nm 덩어리 · 느린 확산 | DLS 축은 지름 · Stokes–Einstein D 는 계산값 · ⁷Li DOSY 역산 반지름은 두 전해질 다 ≈0.55 nm (우리 산수) | 🔴 자기 데이터와 충돌 |
+| 고부하 · 파우치 | 9.4 mAh cm⁻² · 30 cyc 69 % · 3 Ah 369 Wh kg⁻¹ | 그림 · 본문으로는 ≈82 % · 파우치 산수는 맞다 (평균 2.11 V) · 첫 사이클 · 셀 1 개 · E/S 단위 오기 | ⚠ 숫자 불일치 |
+
+⛔ 인용 금지 — COSY 교차 봉우리를 분자간 상호작용 근거로 · DLS 7.5 nm 를 반지름으로 · '일곱 지표 통과' 를 선별 규칙의 검증으로 · 30 사이클 69 %.
+
+### J-103. 🔧🔴 **방법 원전 — [Liu25BDTS] 상 매개 · CPME 약용매화 (*Nat. Chem.* 17, 614 (2025)): AIMD Li⁺ 2 개의 배위 분율 · 연속 용매화 ΔG 는 구조 비교 불가 (저자도 인정) · '표면 국소화' 측정 0 · 율 비교의 하한 전압이 다르다** (2026-11-26 신설)
+
+> 📎 출처: `papers/liu2025_bdts_phase_mediator_cpme_quasi_solid_sulfur_lis.md` (크롭 40 장 중 15 장 원해상도 · 2026-11-26 API 실행). ⛔ 액체 Li–S — A–D 물성 4축에 행을 만들지 않는다 · ⚠ `[Shen26CoSol]` 과 같은 그룹 (전작). 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| AIMD 3 배위 Li⁺ | CPME 계 3 배위 55 % | 한 상자 Li⁺ 2 개 · 시작 구조를 바꾸면 종별 CN 이 뒤바뀜 (`Fig. S2a` ↔ `S2d`) · 고전 MD 는 3 배위 7.5 % · 관측창 (303 K · 10 ps (적힌 유일한 길이) · 기회 2 · ν₀ 10¹³ s⁻¹ 가정 · 정상성 가정): 기대 사건 1 ≈0.14 eV (검출 63 %) · 95 % 검출 ≈0.11 eV | 🔴 분율 인용 금지 |
+| 연속 용매화 DFT | 3 · 4 배위의 '열역학적 존재' | 극성 용질 ΔG_sol 은 거의 늘 음수 · 저자도 '구조 간 비교에 못 쓴다' · Ry ↔ kcal 환산 두 배 어긋남 | 🔴 근거 안 됨 |
+| '표면 국소' 용해 | BDTSRed–Li₂S₆ 착물 · 표면에 국소화 | 공간 국소화를 잰 실험 없음 · 벌크 용해도 ≈8 → ≈900 mM[S] (≈110 배) · BDTS 자체가 산화환원 활성 (RM 배제 못 함) | 🔴 주장 미측정 |
+| 율 성능 | 16 C 494 · 10 C 583 mAh g⁻¹ | BDTS 셀 10 C 하한 ≈0.5 V (55 °C ≈0.2 V) ↔ 비교 셀 1.5–1.7 V · 장기 사이클은 용량 고정 · 55 °C | 🔴 같은 조건 비교 아님 |
+
+⛔ 인용 금지 — AIMD 배위 분율 (표본 Li⁺ 2 개) · 연속 용매화 ΔG 를 배위 구조의 열역학 근거로 · '표면 국소화' 를 측정 사실로 · 16 C 494 를 같은 조건 율 비교로.
+
+### J-104. 🔧🔴 **리뷰 판정 — [Shao26LiSRev] Li–S 세 구조 비교 리뷰 (*Adv. Energy Mater.* 16, e03239 (2026)): 'LiNO₃ 없이' 를 자기 표가 반증 · σ 열 단위 혼재 · 'ASSLSB 의 SE 는 작동창에서 안정' 은 축 없는 일반화 · argyrodite IQSSE 표본 0** (2026-11-26 신설)
+
+> 📎 출처: `papers/shao2026_lis_liquid_quasisolid_allsolid_comparative_review.md` (크롭 13 장 중 12 장 실독 · 2026-11-26 API 실행). ⛔ 자체 계산 · 실험 0 — A–D 물성 4축에 행을 만들지 않는다. 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| LiNO₃ 대체 경로 | LEQSSM · QSSE · ASSLSB 가 LiNO₃ 를 없앤다 | `Table 2` PQSSE 9 행 중 4 · `Table 3` IQSSE 7 행 중 3 · `Table 1` LEQSSM 12 행 중 2 가 LiNO₃ 를 넣었다 | 🔴 자기 표가 반증 |
+| QSSE σ (`Table 3`) | 액체 전도 + 고체 안전 | 'S cm⁻¹' 열에 0.47 · 4 — 단위 혼재 · 온도 · E/S · 압력 없음 | ⚠ σ 열 인용 금지 |
+| ASSLSB SE 산화 | Li–S 는 낮은 전위라 SE 산화 가능성 낮다 | 황화물 SE 의 열역학 산화 개시는 Li–S 충전 끝 (≈2.8–3.0 V) 아래다 — 우리 값은 열역학 개시로만 · 부등호 하나로만 (CONDITIONAL 원장 조건 · 창 폭으로 안 씀) · `[Yu25CNG]` 실측 | 🔴 축 없는 일반화 |
+| ASSLSB 방전 경로 | Li₂S₂ 를 낀 혼합 · 고차 LiPS 가능성 낮다 | 리뷰 자신의 `Fig. 4g` 가 첫 방전 2.4 V 평탄 (S₈ → Li₂S₈,₆) 을 그렸다 | ⚠ 내부 긴장 |
+
+⛔ 인용 금지 — 'LiNO₃ 없이' 를 QSSE · ASSLSB 의 일반 성질로 · `Table 3` σ 열 · 'ASSLSB 의 SE 는 작동창에서 안정' · `Fig. 2` 레이더 순위.
+
+### J-105. 🔧 **리뷰 판정 — [Gad26SSE] 약용매화 전해질 (HCE · LHCE · WSE) 리뷰 (*Commun. Mater.* 7, 9 (2026)): 분류는 분야 합의를 바르게 요약 · WSE 대표 사례가 4 M · SPAN 교락 · 그림 ↔ 본문 자기모순 · 주관 레이더** (2026-11-26 신설)
+
+> 📎 출처: `papers/gadea2026_sse_hce_lhce_wse_lis_review.md` (그림 5 장 전부 원해상도 · SI 미입수 · 2026-11-26 API 실행). ⛔ 자체 계산 · 실험 0 — A–D 물성 4축에 행을 만들지 않는다. 트랙: 우리 DFT 기준선 (사용자 1저자) — 방법 감사만.
+
+| 계산 · 서술 | 논문 값 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| HCE 한계 (`Fig. 2e,f`) | σ 1 M 12.16 → 7 M 0.91 mS cm⁻¹ · 접촉각 15.8° → 72.1° | 그림이 받친다 (2차 인용) | ✅ |
+| LHCE 사례 (`Fig. 3b`) | TFTFE '405 Wh kg⁻¹ · 80 cycles' | 405 는 첫 사이클 값 — 80 사이클 끝은 figure-read ≈290 | ⚠ 사례 수치 어긋남 |
+| WSE 정의 · 사례 | 낮은 염농도 · 희석제 없음 · 셔틀 억제 | `Fig. 4d` THP 파우치가 4 M (HCE 문턱 근처) · 사례 셋이 SPAN 양극 (원래 LiPS 를 거의 안 냄) | ⚠ 반례 · 교락 |
+| WSE 동역학 (`Fig. 1b`) | 'Improved reaction kinetics' | 본문은 'WSE 의 느린 LiPS 산화환원이 과제' (p 7) | 🔴 자기모순 |
+
+⛔ 인용 금지 — `Fig. 5` 레이더를 정량 비교로 · WSE 셔틀 억제 사례 (SPAN) 를 일반 근거로 · 'Improved reaction kinetics' · '405 Wh kg⁻¹ · 80 cycles'.
 
 ---
 

@@ -16,3 +16,6 @@
 | 8 | Shao, Pang, Bird, Robinson, Shearing **"Contemporary Trends in Lithium-Sulfur Battery Design: A Comparative Review of Liquid, Quasi-Solid, and All-Solid-State Architectures and Mechanisms"** — *Adv. Energy Mater.*, 16, e03239 (2026 · Crossref 발행 2025). DOI 10.1002/aenm.202503239 | 액체 → 준고체 → 전고체 Li–S 사다리 (이 논문 ref 7) — 우리 전고체 Li–S 카드 묶음의 지도 | 없음 |
 
 (빼 둔 후보: Chen 2025 *Energy Storage Mater.* 83, 104502 (약용매화 Li–S 동역학) · Jin 2025 *Angew.* e202504898 (약용매화 율 성능) · Jarrold & Manthiram 2025 *Commun. Mater.* 6, 240 (전고체 Li–S 전해질 전략) · Kim 2024 *Nat. Commun.* 15 (용매화–물성 관계 · 2 년 밖).)
+
+## ⏩ 2026-11-26 — 표의 8 편이 전부 litdb 에 들어왔다
+위 표 'litdb' 칸의 '없음' 은 보고 시점 (11-25) 기록이라 그대로 둔다. 1 → `mistry2026_slei_argyrodite_ionic_liquid_quasi_solid_lis` · 2 → `yu2025_cng_host_suppress_argyrodite_oxidation_lis` · 3 → `zhang2026_fpds_siloxane_dip_mediator_quasi_solid_lis` · 4 → `lai2026_mtbe_moderately_solvating_ether_cosolvent_lis` · 5 → `peng2026_er_dn_solvent_screening_csa_methf_lis` · 6 → `liu2025_bdts_phase_mediator_cpme_quasi_solid_sulfur_lis` · 7 → `gadea2026_sse_hce_lhce_wse_lis_review` · 8 → `shao2026_lis_liquid_quasisolid_allsolid_comparative_review` (논문 에이전트 API 실행 · 판정 `comparison_vs_ours.md` §J-98..J-105).

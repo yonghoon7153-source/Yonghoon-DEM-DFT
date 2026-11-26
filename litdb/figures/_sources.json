@@ -1057,6 +1057,13 @@
    "DFT 먹인 논문/42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf"
   ]
  },
+ "gadea2026_sse_hce_lhce_wse_lis_review": {
+  "figures": 5,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "11. Design strategies and future directions of sparingly solvating electrolytes for lithium-sulfur batteries.pdf"
+  ]
+ },
  "galvezaranda2024_time_dependent_dl_calendering_microstructure": {
   "figures": 13,
   "generated": "2026-09-11",
@@ -2181,6 +2188,14 @@
    "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf"
   ]
  },
+ "lai2026_mtbe_moderately_solvating_ether_cosolvent_lis": {
+  "figures": 38,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf"
+  ]
+ },
  "landesfeind2016_tortuosity_eis_electrodes_separators": {
   "figures": 21,
   "generated": "2026-10-02",
@@ -2554,6 +2569,14 @@
   "pdfs": [
    "2._High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf",
    "2._Sup_High_Capacity_Long_Life_Sulfide_All_Solid_State_Batteries_With_Single_Crystal_Ni_Rich_Layered_Oxide_Cathodes.pdf"
+  ]
+ },
+ "liu2025_bdts_phase_mediator_cpme_quasi_solid_sulfur_lis": {
+  "figures": 40,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "9. Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf",
+   "9. Sup) Surface-localized phase mediation accelerates quasi-solid-state reaction kinetics in sulfur batteries.pdf"
   ]
  },
  "liu2025_dry_processing_high_energy_li_batteries_review": {
@@ -2930,6 +2953,14 @@
   "pdfs": [
    "2. Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf",
    "2. Sup) Pressure-Dependent Electronic and Ionic Tortuosities During Fabrication of Composite Cathodes for All-Solid-State Batteries Influence of Active Material Particle Morphology, Volume Fraction, and Coating.pdf"
+  ]
+ },
+ "mistry2026_slei_argyrodite_ionic_liquid_quasi_solid_lis": {
+  "figures": 11,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "4. Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf",
+   "4. Sup2) Solid-liquid electrolyte interphases in quasi-solid-state lithium-sulfur batteries with argyrodite-type solid electrolyte separators.pdf"
   ]
  },
  "mohammadijam2014_inverse_gas_chromatography_review": {
@@ -3389,6 +3420,14 @@
    "814e7565-54._A_new_method_for_the_determination_of_particle_contact_stiffness.pdf"
   ]
  },
+ "peng2026_er_dn_solvent_screening_csa_methf_lis": {
+  "figures": 80,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "8. Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf",
+   "8. Sup) Rational Electrolyte Solvent Screening for Practical Lithium–Sulfur Batteries.pdf"
+  ]
+ },
  "petmad2026_lightweight_universal_interatomic_potential_mad": {
   "figures": 26,
   "generated": "2026-08-19",
@@ -3691,6 +3730,21 @@
    "seymour2021_void_adhesion_SI2.pdf"
   ]
  },
+ "shang2026_uio66_anion_competition_peo_lis": {
+  "figures": 26,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf"
+  ]
+ },
+ "shao2026_lis_liquid_quasisolid_allsolid_comparative_review": {
+  "figures": 13,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "10. Contemporary Trends in Lithium‐Sulfur Battery Design A Comparative Review of Liquid, Quasi‐Solid, and All‐Solid‐State Architectures and Mechanisms.pdf"
+  ]
+ },
  "shapeev2016_moment_tensor_potentials": {
   "figures": 2,
   "generated": "2026-08-26",
@@ -3712,6 +3766,14 @@
   "pdfs": [
    "899bbfca-1-s2.0-S2352431622001961-main.pdf",
    "aa0c780f-1-s2.0-S2352431622001961-mmc1.pdf"
+  ]
+ },
+ "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis": {
+  "figures": 31,
+  "generated": "2026-11-25",
+  "pdfs": [
+   "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
+   "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf"
   ]
  },
  "shenouda2020_dem_metal_powder_am_liggghts_tutorial": {
@@ -3736,6 +3798,14 @@
    "viscoplastic2026_argyrodite_stack_pressure_main.pdf",
    "viscoplastic2026_argyrodite_stack_pressure_SI1.pdf",
    "viscoplastic2026_argyrodite_stack_pressure_SI2.pdf"
+  ]
+ },
+ "shi2026_o16e_se4d_dual_anion_site_preferential_argyrodite": {
+  "figures": 41,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "3. Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf",
+   "3. Sup) Function‐Decoupled Dual‐Anion Doping via Site‐Preferential Regulation Enables High‐Performance Lithium Argyrodite Electrolytes.pdf"
   ]
  },
  "shin2026_bh4_reorientation_li_transport_li6ps5x": {
@@ -4616,6 +4686,14 @@
    "이용민 교수님/01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf"
   ]
  },
+ "yu2025_cng_host_suppress_argyrodite_oxidation_lis": {
+  "figures": 35,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "5. Suppressing argyrodite oxidation by tuning the host structure for high-areal-capacity all-solid-state lithium–sulfur batteries.pdf",
+   "5. Sup1) Suppressing argyrodite oxidation by tuning the host structure for high-areal-capacity all-solid-state lithium–sulfur batteries.pdf"
+  ]
+ },
  "yu2026_pvdf_mos2_anion_solvent_confinement": {
   "figures": 34,
   "generated": "2026-09-12",
@@ -4707,6 +4785,14 @@
   "generated": "2026-08-19",
   "pdfs": [
    "57. Dry electrode architecture design to push energy density limits at the cell level.pdf"
+  ]
+ },
+ "zhang2026_fpds_siloxane_dip_mediator_quasi_solid_lis": {
+  "figures": 49,
+  "generated": "2026-11-26",
+  "pdfs": [
+   "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf"
   ]
  },
  "zhang2026_minimum_abinitio_data_mlip_mace_finetune_nep_distill": {
@@ -4849,14 +4935,6 @@
   "pdfs": [
    "105. Impact_of_the_Chlorination_of_Lithium_Argyrodites_on_the_ElectrolyteCathode_Interface_in_SolidState_Batteries.pdf",
    "105. Sup) Impact_of_the_Chlorination_of_Lithium_Argyrodites_on_the_ElectrolyteCathode_Interface_in_SolidState_Batteries.pdf"
-  ]
- },
- "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis": {
-  "figures": 31,
-  "generated": "2026-11-25",
-  "pdfs": [
-   "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_main.pdf",
-   "shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis_SI.pdf"
   ]
  }
 }
