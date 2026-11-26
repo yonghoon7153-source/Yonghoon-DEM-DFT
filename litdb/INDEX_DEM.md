@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 392편 · 생성 2026-11-25
+> digest 393편 · 생성 2026-11-26
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -241,7 +241,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (89편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (90편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -321,6 +321,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811` | 회전 롤을 그대로 둔 양극 캘린더링 3D DEM — 결합재 층 (R_p 0.34 µm) 을 두른 강체 구 NMC811 24 425 개 (자체 코드 Rockable) · 응집-소성 법선 법칙 (결합재 k₁ → 코어 k₂ → 항복 겹침 δ_e 뒤 거듭제곱 경화 ζ · 제하 = 코어 k₂ · 최대 겹침에 따라 커지는 당김 한계 | DEM 3D (자체 코드 Rockable · 강체 구 + 결합재 층 응집-소성 접촉 법칙 · 회전 롤 R_c | 2026-11-16 | 🖼 76 |
 | `stershic2015_fabric_tensor_calendering_nmc_xct_dem` | 압연한 NMC111 양극 X 선 CT (Ebner 2013 공개 자료) 의 활물질 접촉 방향 분포를 fabric tensor (N · F · D · 2 · 4 차) 로 — 압연하면 접촉이 수직에서 수평으로 옮겨 간다 (다섯 판정법 모두) · 같은 입도 분포의 구 DEM (LIGGGHTS · 헤르츠 + 마찰 0.15 / 0 | image-data analysis + DEM (fabric tensor of the NMC111 AM co | 2026-11-16 | 🖼 68 |
 | `stewart2001_dem_pept_bladed_mixer_detailed_comparison` | 2 날개 수직 원통 믹서 (지름 249 mm · 날 높이 40 mm · 1 rad/s) 의 유리구 유동을 PEPT (양전자 방출 입자 추적 · 3D) 로 재고 같은 계의 DEM (16,000 구 · 단분산 5 mm) 다섯 경우와 셀마다 견준 논문 — 다섯 경우는 미끄럼 · 구름 마찰 (μ_s 0.2–0.5 · μ_r 0– | DEM (in-house soft-sphere · Cundall–Strack + rolling frictio | 2026-11-12 | 🖼 49 |
+| `suharno2026_planetary_ballmill_dem_fea_nd2o3_nmc811_hybrid_supercapacitor` | Suharno · Wicaksono · Astuti 2026 (*Chemical Papers*, DOI 10.1007/s11696-026-06115-3) — Nd₂O₃ (0.3–0.9 wt%) 첨가 LiNMC 분말의 알루미나 유성 볼밀 (100 · 300 · 500 rpm · 30 min) · 매체만 푼 EDEM (공전 없음 · Hertz–Mindlin no slip) + 단일 충돌 선형 탄성 FEA + PSA · XRF · FTIR · XRD · SEM/EDS · 코팅 공정 DEM 의 방법 · QC 대조용 (A 등급 0 · 우리 값과 같은 표 금지) | DEM + FEA + 실험 (산화물 양극 분말 공정) | 2026-11-26 | 🖼 88 |
 | `sun2026_dem_extrusion_recirculation_dry_electrode` | 트윈스크류 압출(extrusion) + 재순환(recirculation) 무용매 공정을 DEM 으로 — 3D 프린팅용 필라멘트 미세구조 — Sun / Vigneaux / Franco (Batteries & Supercaps 2026) | DEM (LIGGGHTS: Hertz + SJKR 점착 + CDT 구름마찰; 트윈스크류 압출기 STL + 재 | 2026-09-19 | 🖼 10 |
 | `sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint` | 압출 DEM 필라멘트를 FFF 3D 프린팅으로 넘긴 입자 단위 사슬 (LAMMPS RHEO: SPH 점성 BC + 고체 구 AM · 가정한 냉각 상태 · BC 결합 연결) — 한 가닥 17 · 한 층 9 · 두 층 18 경우 · 두 층 전극 빈 곳 38.6–40.2 % (BC 나노 공극 10 % 가정 포함 42.8–44. | simulation (DEM 압출 필라멘트 입력 → LAMMPS RHEO: SPH 점성 BC 입자 + 고체  | 2026-11-23 | 🖼 74 |
 | `tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode` | 건식 혼합 '정도' (= 볼밀 시간 10 · 30 · 60 분) 가 건식 PTFE 양극을 바꾼다 — 액체 LIB NMC622 : 카본블랙 : PTFE = 92 : 3 : 5 · ≈7.2 mAh/cm² · ≈153 µm 로 부하 · 두께를 맞춘 세 전극에서 박리 접착 5 · 8 · 4 N/m · Rct 228.6 · 183 | experiment (dry process · dry powder mixing — 건식 PTFE NMC622 | 2026-11-22 | 🖼 54 |
