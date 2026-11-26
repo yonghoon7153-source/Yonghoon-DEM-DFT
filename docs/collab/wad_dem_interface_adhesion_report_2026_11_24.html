@@ -111,7 +111,7 @@ h2:target, h3:target, li:target { background: var(--note-bg); border-radius: 4px
 <h1>Ag–C 층 계면 점착 에너지 (DEM 입력) — DFT 쪽 진행 보고</h1>
 <p class="byline"><time datetime="2026-11-24">2026-11-24</time> · 안용훈</p>
 <p>DEM 박리 시뮬레이션에 넣을 계면 점착 에너지 W 를 DFT 쪽에서 준비하고 있다. 대상은 Ag–C 층과 고체전해질이 맞닿는 네 쌍이다 — 탄소끼리 (C–C), 은과 흑연 (Ag–C), LPSCl 과 은 (LPSCl|Ag), LPSCl 과 흑연 (LPSCl|흑연). 이 보고는 11 월 24 일까지 나온 값, 어디까지 왔는지, 남은 일을 정리한다. LPSCl = Li₆PS₅Cl 이고, W 의 단위는 모두 J/m² 다.</p>
-<p class="edition"><strong>이 판 (11-24) 의 값은 DEM 쪽에 이미 드린 값 그대로다.</strong> 새 값은 없다. LPSCl|Ag 의 DFT 확인이 끝나면 상태 표시를 고쳐서 다시 낸다. 같은 날 <a class="xref" href="#lit">8 절</a> (문헌으로 본 Li 금속 계면) 을 더했고, 이어서 문헌 12 편을 더 읽어 <a class="xref" href="#lit">8 절</a>과 <a class="xref" href="#lithio-targets">7-1</a> 표를 보탰다. 11-25 에 3 편을 더 읽어 <a class="xref" href="#lit">8 절</a>을 고쳤고 (<a class="xref" href="#lit-agc">8-3</a> 의 합금 층 서술을 가넷 한정으로 바로잡음), <a class="xref" href="#lithio">7 절</a>에 세 양 (Li 원자 흡착 에너지 · W · γ<sub>Li</sub>) 을 나란히 놓은 표를 더했다 — 값은 바뀌지 않았다.</p>
+<p class="edition"><strong>이 판 (11-24) 의 값은 DEM 쪽에 이미 드린 값 그대로다.</strong> 새 값은 없다. LPSCl|Ag 의 DFT 확인이 끝나면 상태 표시를 고쳐서 다시 낸다. 같은 날 <a class="xref" href="#lit">8 절</a> (문헌으로 본 Li 금속 계면) 을 더했고, 이어서 문헌 12 편을 더 읽어 <a class="xref" href="#lit">8 절</a>과 <a class="xref" href="#lithio-targets">7-1</a> 표를 보탰다. 11-25 에 3 편을 더 읽어 <a class="xref" href="#lit">8 절</a>을 고쳤고 (<a class="xref" href="#lit-agc">8-3</a> 의 합금 층 서술을 가넷 한정으로 바로잡음), <a class="xref" href="#lithio">7 절</a>에 세 양 (Li 원자 흡착 에너지 · W · γ<sub>Li</sub>) 을 나란히 놓은 표를 더했다 — 값은 바뀌지 않았다. 11-26 에 <a class="xref" href="#values-gr">2-4</a> 에 문헌 값과 견줄 때의 주의 하나를 더하고 <a class="xref" href="#check">3 절</a> 문구를 다듬었다 — 값은 바뀌지 않았다.</p>
 
 <nav class="toc" aria-label="차례">
 <strong>차례</strong>
@@ -261,6 +261,7 @@ h2:target, h3:target, li:target { background: var(--note-bg); border-radius: 4px
 <li><strong>은과 다른 점</strong> — 흑연은 SE 에서 더 멀리 앉는다. 맨 바깥 SE 원자와 기판 첫 층의 높이 차가 흑연 2.9 Å (S 바깥) · 3.3 Å (Li·PS₄ 바깥), 은 2.1 · 2.2 Å 다 (registry A · B 모두). W 도 은 쪽보다 훨씬 작다.</li>
 <li><strong>같은 점</strong> — 두 종결의 순서가 은 쪽과 같다 (S 바깥이 더 크다).</li>
 <li><strong>registry</strong> — 흑연 면은 겹치는 위치에 거의 무관하다 (A · B 차 &lt; 0.001). 은 쪽은 위 표처럼 범위가 조금 있다.</li>
+<li><strong>문헌 값과 견줄 때</strong> — LPSCl|탄소 계면의 DFT 값이 이 표보다 스무 배 넘게 크게 실린 연구가 있다 (Cl 이 많은 조성 Li₅.₅PS₄.₅Cl₁.₅ 와 그래핀 두 층의 계면 결합 0.27 eV/Å² ≈ 4.3 J/m² · <em>Nat. Mater.</em>, 24, 1082 (2025)). 그 값은 같은 논문이 낸 LPSCl 표면 에너지 (0.40 J/m²) 에 그래핀 표면 에너지를 더한 것보다 여러 배 크다 — 계면 에너지가 음수가 아니면 점착 에너지는 두 표면 에너지의 합을 넘을 수 없다. 면적 정규화나 기준 에너지가 이 보고의 W 와 다른 것으로 보이지만 원문 정보로는 어느 쪽인지 가를 수 없어서, 같은 축에 놓지 않는다 (<a class="xref" href="#lit-pitfalls">8-2</a> 의 마지막 항목과 같은 이유).</li>
 </ul>
 <p class="tnote">높이 차 = 기판의 가장 낮은 원자와 SE 의 가장 높은 원자의 z 차 (원자 사이 거리가 아니다). 원자 수 · 높이 차의 출처: <code>db/properties/wad_lpscl_termination_outer_layer_2026_11_24.csv</code> · 은 접촉 수: <code>db/properties/wad_lpscl_ag_termination_contacts_2026_11_24.csv</code>.</p>
 
@@ -274,9 +275,9 @@ h2:target, h3:target, li:target { background: var(--note-bg); border-radius: 4px
 <p><strong>종결 둘은 합치지 않았다.</strong> 실제 계면에 두 면이 어떤 비율로 나오는지는 계산이 모르는 양이다. 그래서 두 값을 시나리오의 양 끝으로 쓰거나, 비율을 가정해 면적 가중하는 것은 DEM 쪽 몫이다.</p>
 
 <h2 id="check">3. LPSCl 쌍의 DFT 확인 — 어디까지 왔나</h2>
-<p>LPSCl 이 들어간 계면은 실제로 의미 있는 크기를 만들면 원자가 300–700 개가 된다 (은 쪽 332 · 308 원자 · 흑연 쪽 666 · 630 원자). 이 크기는 DFT 계산이 메모리에 들어가지 않는다. 그래서 전체 계면은 DFT 결과를 흉내 내도록 학습된 기계학습 퍼텐셜 (UMA) 에 분산력 보정 (D3) 을 더해 계산했고, 같은 재료를 얇게 만든 작은 모델에서 같은 원자 배치를 DFT 로 다시 계산해 두 방법이 맞는지 확인한다.</p>
+<p>LPSCl 이 들어간 계면은 실제로 의미 있는 크기를 만들면 원자가 300–700 개가 된다 (은 쪽 332 · 308 원자 · 흑연 쪽 666 · 630 원자). 이 크기는 DFT 로 직접 계산하기에는 너무 크다. 그래서 전체 계면은 DFT 결과를 흉내 내도록 학습된 기계학습 퍼텐셜 (UMA) 에 분산력 보정 (D3) 을 더해 계산했고, 같은 재료를 얇게 만든 작은 모델에서 같은 원자 배치를 DFT 로 다시 계산해 두 방법이 맞는지 확인한다.</p>
 <ul>
-<li><strong>LPSCl|흑연</strong> — 확인을 마쳤다 (통과). 작은 모델 (LPSCl 2층 + 흑연 2층) 의 미리 고른 표본 넷에서, 같은 원자 배치 · 같은 끝점 · 같은 분산력 보정 아래 DFT 와 UMA+D3 의 W 차이가 계산 전에 정한 허용 범위 안이었다 — 표본마다 0.03 J/m² 이하, 종결별 평균 치우침 0.02 J/m² 이하. 고른 네 조건이 통과했다는 뜻이지 일반적인 오차막대가 아니고, 다른 두께 · 조성 · 계면의 오차를 보증하지 않는다. Li·PS₄ 바깥과 교환상관 함수 선택에 따른 민감도는 확인하지 않았다.</li>
+<li><strong>LPSCl|흑연</strong> — 확인을 마쳤다 (통과). 작은 모델 (LPSCl 2층 + 흑연 2층) 에서 같은 원자 배치 · 같은 끝점 · 같은 분산력 보정으로 DFT 와 UMA+D3 의 W 를 견줬고, 차이가 계산 전에 정한 허용 범위 안이었다. 미리 고른 조건에서 두 방법이 맞았다는 뜻이지 일반적인 오차막대가 아니고, 다른 두께 · 조성 · 계면의 오차를 보증하지 않는다. Li·PS₄ 바깥과 교환상관 함수 선택에 따른 민감도는 확인하지 않았다.</li>
 <li><strong>LPSCl|Ag</strong> — 확인 중이다. 끝나면 결과를 알린다.</li>
 </ul>
 <p>확인이 끝나도 표의 값은 바뀌지 않는다 — 바뀌는 것은 상태 표시뿐이다. 작은 모델 확인은 두 방법이 맞는지를 보는 것이지 전체 계면을 DFT 로 검증하는 것은 아니어서, '미검증 예측' 표시는 그대로 남는다.</p>
