@@ -698,7 +698,9 @@ def review_chain():
             #   그래서 **같은 라벨 안에서** 토큰 겹침으로 맺는다. 라벨을 고정하는
             #   것이 안전장치다 (라벨이 다르면 겹쳐도 맺지 않는다).
             _pt = set(rec["slug"].split("_"))
-            for r in replies:
+            # 보조 채널(agy)은 뒤로 — 역링크 없는 두 회신이 같은 주제로 걸리면 codex 가 먼저다
+            #   (2026-11-26 · 정렬상 agy_ 가 먼저라 보조 회신이 주 회신이 될 뻔했다)
+            for r in sorted(replies, key=lambda x: x["chan"] in REV_AUX_CHANS):
                 if r["name"] in _taken:
                     continue                    # 역링크로 임자가 정해진 회신
                 if r["label"] != rec["label"] or not r["slug"]:
@@ -715,7 +717,9 @@ def review_chain():
             # ⚠ 라벨이 **어긋난** 짝: `AR_reply_c12_v15` ← `AQ_prompt_c12_v15`.
             #   역링크도 같은 라벨도 없으므로 주제가 **정확히 같을 때만** 맺는다
             #   (토큰 겹침으로 느슨하게 맺으면 캠페인이 섞인다).
-            for r in replies:
+            # 보조 채널(agy)은 뒤로 — 역링크 없는 두 회신이 같은 주제로 걸리면 codex 가 먼저다
+            #   (2026-11-26 · 정렬상 agy_ 가 먼저라 보조 회신이 주 회신이 될 뻔했다)
+            for r in sorted(replies, key=lambda x: x["chan"] in REV_AUX_CHANS):
                 if r["name"] in _taken:
                     continue                    # 앞 단계에서 임자가 정해졌다
                 if r["slug"] and r["slug"] == rec["slug"]:
@@ -832,6 +836,7 @@ def cmd_reviews(write=False):
 
 def selftest_reviews():
     """⛔음성 포함 — 모순 탐지가 실제로 도는가."""
+    global REPO     # 끝-끝 시험이 임시 저장소로 잠깐 바꾼다 (finally 에서 되돌린다)
     ok = [True]
 
     def chk(c, m):
@@ -956,6 +961,38 @@ def selftest_reviews():
     _orph = [n for n, r in prompts.items()
              if r["reply"] and r["reply"] not in [x["name"] for x in r.get("replies", [])]]
     chk(not _orph, "주 회신은 그 요청서의 회신 목록 안에 있다 (어긋남 %s)" % (_orph[:2] or "없음"))
+    # 끝-끝: 임시 저장소에서 실제 review_chain 을 돌린다 (합성 사전이 아니라 파일 읽기부터)
+    import tempfile
+    _real = REPO
+    _P = "codex_ZZ_prompt_twosite_probe_2026_11_27.md"
+    _A, _C = "agy_ZZ_reply_twosite_probe_2026_11_27.md", "codex_ZZ_reply_twosite_probe_2026_11_27.md"
+    with tempfile.TemporaryDirectory() as _td:
+        try:
+            REPO = Path(_td)
+            _rv = REPO / "kb" / "reviews"
+            _rv.mkdir(parents=True)
+            (REPO / "db").mkdir()
+            (_rv / _P).write_text("---\nstatus: 회신 수령\n---\n", encoding="utf-8")
+            (_rv / _A).write_text("x\n", encoding="utf-8")
+            (_rv / _C).write_text("x\n", encoding="utf-8")
+            _r = review_chain()[0][_P]
+            chk(str(_r["reply"]).startswith("codex_"),
+                "[음성] 역링크 없는 두 회신이 같은 주제로 걸리면 주 회신은 codex (agy 가 정렬상 먼저여도)")
+            chk("한 곳" in str(_r["two_site"]),
+                "[음성] 역링크 없는 agy 회신은 조용히 붙지 않고 '한 곳만' 경고로 드러난다")
+            for _f in (_A, _C):
+                (_rv / _f).write_text("요청: `kb/reviews/%s`\n" % _P, encoding="utf-8")
+            _r = review_chain()[0][_P]
+            chk(len(_r["replies"]) == 2 and str(_r["reply"]).startswith("codex_")
+                and "대조표" in str(_r["two_site"]),
+                "[음성] 역링크 둘 → 두 회신이 다 붙고 (주 = codex) 대조표 없음 경고")
+            (_rv / "claude_ZZ_reconcile_twosite_probe_2026_11_27.md").write_text(
+                "요청: `kb/reviews/%s`\n" % _P, encoding="utf-8")
+            _r = review_chain()[0][_P]
+            chk(_r["two_site"] is None and len(_r["recons"]) == 1,
+                "대조표까지 있으면 경고 없음 (대조표는 회신으로 세지 않는다)")
+        finally:
+            REPO = _real
     print("reviews selftest %s" % ("PASS" if ok[0] else "FAIL"))
     return 0 if ok[0] else 1
 
