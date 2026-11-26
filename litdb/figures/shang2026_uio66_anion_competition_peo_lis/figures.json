@@ -1,0 +1,547 @@
+{
+ "slug": "shang2026_uio66_anion_competition_peo_lis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+  "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic illustration of the fabrication process of PUPL electrolyte. (b) XRD patterns of UiO-66. (c) Isothermal adsorption-desorption and pore size distribution curves of UiO-66. (d) TEM image of UiO-66. (e) SEM image of PU. (f) EDS elemental mapping images of C, Zr, O and N elements in PU. (g) Cross-sectional SEM of PUPL. As witnessed in Figure 1e, scanning electron microscopy (SEM) image reveals that the PU fiber network features a continuously interconnected structure, with fiber diameters uniformly distributed at approximately 0.40 µm and UiO-66 nanoparticles are homogeneously anchored along the fiber without noticeable aggregation. Cross-sectional SEM analysis reveals that the PU fiber network has a thickness of approximately 2 μm (Figure S1). Energy-dispersive X-ray spectroscopy (EDS) mapping (Figure 1f) further confirms the homogeneous distribution of Zr element th",
+   "rotated_deg": 0,
+   "bbox": [
+    83.9,
+    162.9,
+    514.5,
+    536.8
+   ],
+   "w": 1795,
+   "h": 1559,
+   "dpi": 300,
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.4
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Optimized structural models of (a, c) UiO-66/TFSI- from top and side views, and (b, d) UiO-66/S6 2- from top and side views. Charge density difference distribution of (e) UiO-66/TFSI- and (f) UiO-66/S6 2-. (g) Binding energies and Bader charge analysis of UiO-66/TFSI- and UiO-66/S6 2-. ELF of (h) UiO-66/TFSI- and (i) UiO-66/S6 2-. DOS and PDOS of (j) UiO-66/TFSI- and (k) UiO-66/S6 2-. (l) PDOS of Zr 4d and ligand orbitals (O 2p for TFSI-). (m) PDOS of Zr 4d and ligand orbitals (S 3p for S6 2-). Differential charge density analysis (Figures 2e, f) reveals only limited charge redistribution occurs between the Zr4+ center and the oxygen atoms of TFSI-. This verifies that TFSI- primarily modulates the localized coordination environment of Zr4+ through weak coordination interactions, causing only minor electronic perturbations. Such weak interactions facilitate LiTFSI dissociation w",
+   "rotated_deg": 0,
+   "bbox": [
+    83.9,
+    68.9,
+    517.5,
+    554.3
+   ],
+   "w": 1808,
+   "h": 2023,
+   "dpi": 300,
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.723
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) UV-vis spectra of PEO and UiO-66, along with Li2S6 solution after adsorption (inset: photo of the samples in Li2S6 solution). (b) XPS of Zr 3d for UiO-66. (c) XPS of Zr 3d for UiO-66 after Li2S6 adsorption. (d) XPS of S 2p for UiO-66 after Li2S6 adsorption. (e) XPS of C 1s for UiO-66. (f) VB-XPS of PUPL-TFSI- and PUPL-S6 2-. (g) Schematic diagram of the anion competition induced coordination mechanism. Furthermore, variations in the binding energy and peak area of the carboxyl O–",
+   "rotated_deg": 0,
+   "bbox": [
+    83.9,
+    251.2,
+    514.6,
+    642.1
+   ],
+   "w": 1796,
+   "h": 1630,
+   "dpi": 300,
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 13,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) XRD patterns of PL, PPL, PU and PUPL. (b) TGA curves of PL and PUPL. (c) Stress-strain curves of PL, PU and PUPL. (d) FTIR spectra of PAN, PL, PU and PUPL. (e) Enlarged FTIR spectra of the S–N–S stretching vibration region of PL, PU and PUPL. (f) Raman spectra of PL and PUPL. (g, h) Deconvoluted Raman spectra of PL and PUPL, respectively. The ionic conductivities of the electrolytes were evaluated using stainless steel (SS) symmetric cells SS | x-PUPL | SS via electrochemical impedance spectroscopy (EIS) [41]. As evidenced by Figures 5a, 5b, S7-S9 and Table S1, all PUPL-x electrolytes (x = 5, 7.50 and 10 wt%, representing the UiO-66 loading relative to PAN in the electrospinning precursor) endow higher ionic conductivities than PL over 25-80 °C, with PUPL-7.50 wt% showing the optimal Li+ migration performance. At 60 °C, its ionic conductivity reaches 3.75 × 10-4 S cm-1, app",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    68.2,
+    514.5,
+    431.5
+   ],
+   "w": 1795,
+   "h": 1514,
+   "dpi": 300,
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 15,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Ionic conductivity of (a) PL and (b) PUPL versus temperature (25-80°C). (c) Arrhenius plots of PL and PUPL. (d) LSV curve of PL and PUPL, voltage curves of Li | electrolyte | SS cells at 60°C. (e, f) DC polarization curves of Li | electrolyte | Li symmetric cells for PL and PUPL (inset: Nyquist impedance spectra before and after polarization). (g) Li | electrolyte | Li symmetric cell long cycle performance of PL and PUPL. Li | electrolyte | Li symmetric rate capability of (h) PL and (i) PUPL. Furthermore, Li | Electrolyte | Li symmetric cells were assembled and tested at 0.1 mA cm-2 and 60 °C (Figure 5g). The PL symmetric cell short-circuits after approximately 330 h, whereas PUPL maintains stable cycling for over 1600 h without significant intensity in polarization, demonstrating rapid and uniform Li+ migration that mitigates local current concentration and suppresses dendrite",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    67.9,
+    518.6,
+    525.1
+   ],
+   "w": 1812,
+   "h": 1905,
+   "dpi": 300,
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 18,
+   "file": "fig_6.png",
+   "caption": "Figure 6. CV contour plots of (a) PL and (b) PUPL at 0.10-0.50 mV s-1. (c) CV curves of PL and PUPL at 0.1 mV s-1. Tafel diagram of (d) Peak B and (e) Peak C at 0.1 mV s-1. In-situ EIS (Nyquist plots) during discharge for batteries employing (f) PL and (g)",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    305.1,
+    514.5,
+    709.5
+   ],
+   "w": 1795,
+   "h": 1686,
+   "dpi": 300,
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.661
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 21,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) GITT curves and the corresponding Li+ diffusion coefficients of PL and PUPL. (b) Galvanostatic charge-discharge profile of PUPL at different cycles. (c) Cycling performance of PL and PUPL. (d) Galvanostatic charge-discharge profile of PL at different cycles. (e) The initial Galvanostatic charge-discharge profile of PL and PUPL. (f) Cycling performance of Li | PUPL | LiFePO4 cell. (g) Galvanostatic charge-discharge curves of Li | PUPL |LiFePO4 cell at different cycles. (h) At room temperature photographs of a lighted-up LED by flexible Li| PUPL |S pouch cell under flat, bent, and cut conditions 3. Conclusions This work proposes an anion competition induced Lewis acid charge reconstruction strategy and fabricates a PAN/UiO-66 fiber-reinforced PEO-based composite solid electrolyte (PUPL) for high-performance SSLSBs. Unlike conventional MOF-based electrolytes with static coordi",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    67.2,
+    514.6,
+    491.9
+   ],
+   "w": 1796,
+   "h": 1770,
+   "dpi": 300,
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.658
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 9,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Cross-sectional SEM image of the PU membrane.",
+   "rotated_deg": 0,
+   "bbox": [
+    144.0,
+    66.0,
+    454.3,
+    255.6
+   ],
+   "w": 1293,
+   "h": 791,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.373
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 10,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM image of PUPL membrane.",
+   "rotated_deg": 0,
+   "bbox": [
+    176.6,
+    66.0,
+    418.6,
+    265.2
+   ],
+   "w": 1009,
+   "h": 830,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.176
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Optical image showing the bending capability of PUPL.",
+   "rotated_deg": 0,
+   "bbox": [
+    129.3,
+    66.0,
+    468.8,
+    257.6
+   ],
+   "w": 1416,
+   "h": 799,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.402
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 12,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. XPS full spectrum of UiO-66.",
+   "rotated_deg": 0,
+   "bbox": [
+    184.2,
+    66.0,
+    411.1,
+    269.7
+   ],
+   "w": 946,
+   "h": 849,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 13,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. XPS of C 1s for UiO-66.",
+   "rotated_deg": 0,
+   "bbox": [
+    181.4,
+    66.0,
+    413.6,
+    272.6
+   ],
+   "w": 969,
+   "h": 861,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 14,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Optical images of PL and PUPL recorded at specific time intervals after",
+   "rotated_deg": 0,
+   "bbox": [
+    91.1,
+    66.0,
+    507.2,
+    305.2
+   ],
+   "w": 1735,
+   "h": 997,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.558
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 15,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Ionic conductivity of (a) PPL versus temperature (25-80°C), with an",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    66.0,
+    514.6,
+    245.8
+   ],
+   "w": 1796,
+   "h": 749,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 16,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Ionic conductivity of (a) PUPL-5% versus temperature (25-80°C), with an",
+   "rotated_deg": 0,
+   "bbox": [
+    83.9,
+    66.0,
+    513.0,
+    246.1
+   ],
+   "w": 1789,
+   "h": 751,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 17,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Ionic conductivity of (a) PUPL-10% versus temperature (25-80°C), with",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    66.0,
+    517.6,
+    253.0
+   ],
+   "w": 1808,
+   "h": 780,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 18,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Arrhenius plots of PPL.",
+   "rotated_deg": 0,
+   "bbox": [
+    179.0,
+    66.0,
+    416.3,
+    257.4
+   ],
+   "w": 990,
+   "h": 798,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 19,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Arrhenius plots of PUPL-5% and PUPL-10%.",
+   "rotated_deg": 0,
+   "bbox": [
+    150.1,
+    66.0,
+    448.2,
+    256.5
+   ],
+   "w": 1243,
+   "h": 794,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 20,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. LSV curve of PUPL-5% and PUPL-10%, voltage curves of Li |",
+   "rotated_deg": 0,
+   "bbox": [
+    108.9,
+    66.0,
+    489.5,
+    259.5
+   ],
+   "w": 1587,
+   "h": 807,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 21,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. After 200 hours of cycling, Li| electrolyte |Li symmetric cells were",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    66.0,
+    514.5,
+    226.4
+   ],
+   "w": 1795,
+   "h": 669,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.275
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 22,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. EIS evolution of Li | electrolyte | Li symmetric cells with (a) PL and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    66.0,
+    514.8,
+    241.6
+   ],
+   "w": 1796,
+   "h": 732,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 23,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. CV curves of (a) PL and (b) PUPL at 0.1 to 0.5 mV s-1.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    66.0,
+    514.9,
+    245.3
+   ],
+   "w": 1797,
+   "h": 748,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 24,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Ex-situ XPS of S 2p spectra of the cathode-facing surfaces of PUPL",
+   "rotated_deg": 0,
+   "bbox": [
+    97.3,
+    66.0,
+    500.9,
+    388.0
+   ],
+   "w": 1683,
+   "h": 1342,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 26,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Comparison of the specific discharge capacities of QH and QL at 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.9,
+    66.0,
+    507.6,
+    263.8
+   ],
+   "w": 1737,
+   "h": 825,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 27,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Temperature-dependent ionic conductivity of the sample at different",
+   "rotated_deg": 0,
+   "bbox": [
+    103.0,
+    67.5,
+    495.1,
+    353.9
+   ],
+   "w": 1634,
+   "h": 1194,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 28,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Original single-point total energies and net charges",
+   "rotated_deg": 0,
+   "bbox": [
+    128.0,
+    67.6,
+    480.5,
+    243.9
+   ],
+   "w": 1470,
+   "h": 736,
+   "dpi": 300,
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "blank": 0.935
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "1. Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "1. Sup) Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state Lithium-sulfur batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ]
+}
