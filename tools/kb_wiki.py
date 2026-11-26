@@ -211,6 +211,10 @@ def cmd_lint():
                     + ", ".join(sorted(missing_rev)[:3])
                     + ("…" if len(missing_rev) > 3 else "")
                     + " → python3 tools/kb_wiki.py reviews --write")
+            # 반박 두 곳 규칙 (사용자 2026-11-26) — 한 곳만 반입 · 대조표 없음 (경고)
+            for n, r in sorted(prompts_now.items()):
+                if r.get("two_site"):
+                    warnings.append(f"반박 두 곳 규칙: {n} — {r['two_site']}")
         except Exception as e:                       # 색인 검사가 lint 를 죽이지 않게
             warnings.append(f"kb/reviews/INDEX.md 신선도 검사 실패: {e}")
 
@@ -566,6 +570,51 @@ REV_WAITING = re.compile(r"발송\s*(대기|전)|미발송")
 REV_BACKLINK = re.compile(r"요청[:\s]*`?(kb/reviews/[^\s`]+\.md)`?")
 #: 판정을 인용한 흔적 — 회신에만 있는 것들 (P0 번호·해제조건·Q 답)
 REV_VERDICT = re.compile(r"회신\s+([A-Z]{1,2}\d?)\s*(?:P0|P1|해제조건|판정|Q\d)")
+#: 반박 두 곳 규칙 (사용자 2026-11-26 · CLAUDE.md §반박 두 곳 규칙) — 같은 요청서를
+#:   Codex 와 agy (Antigravity) 두 곳에 준다. 그래서 한 요청서에 회신이 **둘** 붙는다.
+#:   ⚠ 종전 짝짓기는 역링크 회신을 **하나만** 잡고 멈췄다 — 둘이 오면 정렬상 먼저인
+#:   `agy_` 가 '그 회신' 이 되고 `codex_` 회신은 색인에서 조용히 빠졌을 것이다.
+#:   agy 판정은 ⚑보조 표지 — Codex 와 같은 무게로 '확인됨' 처리하지 않는다.
+REV_AUX_CHANS = frozenset({"agy"})
+REV_TWO_SITE = ("codex", "agy")
+#: 이 날짜 (포함) 이후 요청서부터 두 곳 회신 + 대조표를 기대한다 (그 전 요청서는 안 본다)
+REV_TWO_SITE_FROM = "2026-11-26"
+#: 두 회신을 항목별로 묶은 대조표 (일치 · 엇갈림 · 우리 재현 · 처분) — 본문에 `요청:` 역링크
+REV_RECON = re.compile(r"^" + REV_CHAN + r"_([A-Z]{1,2}\d?)_reconcile_(.+)_(\d{4}_\d{2}_\d{2})\.md$")
+
+
+def _primary_reply(replies):
+    """한 요청서에 붙은 회신들 중 '주 회신' — 보조 채널(agy)이 아닌 첫 것.
+
+    보조 채널 회신만 있으면 그것을 돌려주되, 표지는 호출 쪽이 ⚑보조 로 단다.
+    입력 순서(정렬된 파일명)를 그대로 따른다 — 보조 채널이 없으면 종전 동작과 같다.
+    """
+    if not replies:
+        return None
+    return next((r for r in replies if r["chan"] not in REV_AUX_CHANS), replies[0])
+
+
+def _two_site_issue(date, replies, recons):
+    """반박 두 곳 규칙에서 빠진 것 한 줄 (없으면 None).
+
+    · 규칙 시작일 전 요청서 · 두 반박창 어느 쪽 회신도 없는 요청서 (아직 미반입 · 내부 검토) 는 안 본다.
+    · 한 곳 회신만 반입 → 경고 (두 결과는 함께 반입한다).
+    · 두 곳 회신이 다 있는데 대조표가 없음 → 경고.
+    ⛔ 못 하는 것: 대조표 **내용** (엇갈린 칸을 사용자에게 물었는지 · agy 표지) 은 안 본다.
+    """
+    if date < REV_TWO_SITE_FROM:
+        return None
+    chans = {r["chan"] for r in replies}
+    got = [c for c in REV_TWO_SITE if c in chans]
+    if not got:
+        return None
+    if len(got) < len(REV_TWO_SITE):
+        miss = [c for c in REV_TWO_SITE if c not in chans]
+        return ("한 곳 회신만 반입 (%s 있음 · %s 없음) — 두 결과는 함께 반입한다 "
+                "(그쪽 회신 본문에 `요청:` 역링크가 있나?)" % ("·".join(got), "·".join(miss)))
+    if not recons:
+        return "두 곳 회신은 있는데 대조표 (`<채널>_<라벨>_reconcile_…`) 가 없다"
+    return None
 
 
 def review_chain():
@@ -581,7 +630,7 @@ def review_chain():
         **합산**되므로 라벨만으로 어느 쪽인지 못 가른다 — 그래서 인용은 보조 증거다.
     """
     rd = REPO / "kb" / "reviews"
-    prompts, replies = {}, []
+    prompts, replies, recons = {}, [], []
     for p in sorted(rd.glob("*.md")):
         m = REV_PROMPT.match(p.name)
         if m:
@@ -590,6 +639,10 @@ def review_chain():
                                "date": m.group(4).replace("_", "-"), "path": p,
                                "chan": m.group("chan"),
                                "status": (fm or {}).get("status", "(frontmatter 없음)")}
+            continue
+        if REV_RECON.match(p.name):                 # 두 곳 회신 대조표 (회신이 아니다)
+            bl = REV_BACKLINK.search(p.read_text(errors="ignore"))
+            recons.append({"name": p.name, "backlink": bl.group(1) if bl else None})
             continue
         if "_reply" in p.name:
             m2 = REV_REPLY.match(p.name)
@@ -621,14 +674,22 @@ def review_chain():
     #   같은 캠페인으로 리뷰를 여러 판 도는 우리 방식에서는 **매번** 터진다.
     #   ⇒ 단계를 셋 다 돌되, 앞 단계에서 임자가 정해진 회신은 뒤 단계에서 뺀다.
     _taken = set()
+    # 2026-11-26 — 역링크 회신을 **전부** 붙인다 (반박 두 곳 규칙: Codex · agy 둘이 같은
+    #   요청서를 가리킨다). 주 회신은 보조 채널(agy)이 아닌 첫 것 — 보조 채널이 없으면
+    #   종전과 같은 회신이 주 회신이다 (11-26 실측: 역링크 회신이 둘인 요청서 0건 · 짝 불변).
     for name, rec in prompts.items():
         rec["reply"], rec["answered_by"], rec["evidence"] = None, None, []
-        for r in replies:
-            if r["backlink"] and r["backlink"].endswith(name):
-                rec["reply"], rec["answered_by"] = r["name"], r["label"]
-                rec["evidence"].append("회신 본문의 `요청:` 역링크")
-                _taken.add(r["name"])
-                break
+        rec["replies"] = [r for r in replies
+                          if r["backlink"] and r["backlink"].endswith(name)]
+        rec["recons"] = [c["name"] for c in recons
+                         if c["backlink"] and c["backlink"].endswith(name)]
+        _taken.update(r["name"] for r in rec["replies"])
+        prim = _primary_reply(rec["replies"])
+        if prim:
+            rec["reply"], rec["answered_by"] = prim["name"], prim["label"]
+            rec["evidence"].append("회신 본문의 `요청:` 역링크"
+                                   + (" · 회신 %d곳" % len(rec["replies"])
+                                      if len(rec["replies"]) > 1 else ""))
     for name, rec in prompts.items():
         if not rec["reply"]:
             # 주제 slug 일치 (역링크 없는 판). ⚠ 완전일치만 보면 실물을 놓친다 —
@@ -645,6 +706,7 @@ def review_chain():
                 _rt = set(r["slug"].split("_"))
                 if _rt <= _pt or _pt <= _rt or len(_rt & _pt) >= 2:
                     rec["reply"], rec["answered_by"] = r["name"], r["label"]
+                    rec["replies"].append(r)
                     rec["evidence"].append("같은 라벨 · 주제 토큰 일치 %s"
                                            % sorted(_rt & _pt))
                     _taken.add(r["name"])
@@ -658,6 +720,7 @@ def review_chain():
                     continue                    # 앞 단계에서 임자가 정해졌다
                 if r["slug"] and r["slug"] == rec["slug"]:
                     rec["reply"], rec["answered_by"] = r["name"], r["label"]
+                    rec["replies"].append(r)
                     rec["evidence"].append(
                         "⚠ 라벨 어긋남(%s→%s) · 주제 slug 완전일치"
                         % (rec["label"], r["label"]))
@@ -673,6 +736,8 @@ def review_chain():
         elif n:
             rec["evidence"].append("⚠ 인용 %d회 — 라벨 재사용이라 **증거 아님**" % n)
         rec["cited"] = 0 if rec["label_reused"] else n
+        # 반박 두 곳 규칙 (2026-11-26) — 빠진 것 한 줄 (경고 · lint 를 막지 않는다)
+        rec["two_site"] = _two_site_issue(rec["date"], rec["replies"], rec["recons"])
 
     contra = []
     for name, rec in sorted(prompts.items()):
@@ -688,6 +753,24 @@ def review_chain():
     return prompts, contra
 
 
+def _reply_cell(r):
+    """색인의 '회신' 칸 — 회신이 하나뿐이고 보조 채널이 아니면 종전과 같은 꼴.
+
+    회신이 둘 이상이거나 보조 채널(agy)이거나 대조표가 있으면 전부 싣고,
+    보조 채널 회신에는 ⚑보조 표지를 단다 (Codex 와 같은 무게로 읽히지 않게).
+    """
+    reps = r.get("replies") or []
+    recons = r.get("recons") or []
+    if not reps:
+        return ("`%s`" % r["reply"]) if r.get("reply") else "—"
+    if len(reps) == 1 and not recons and reps[0]["chan"] not in REV_AUX_CHANS:
+        return "`%s`" % reps[0]["name"]
+    parts = [("⚑보조 (확인됨 아님) `%s`" if x["chan"] in REV_AUX_CHANS else "`%s`")
+             % x["name"] for x in reps]
+    parts += ["대조표 `%s`" % c for c in recons]
+    return " · ".join(parts)
+
+
 def cmd_reviews(write=False):
     """리뷰 사슬을 산출물에서 재구성해 보여 준다 (`--write` 면 INDEX 갱신)."""
     prompts, contra = review_chain()
@@ -698,6 +781,11 @@ def cmd_reviews(write=False):
             print("   %-56s [%s]\n        → %s" % (n, st, why))
     else:
         print("모순 0건")
+    two = [(n, r["two_site"]) for n, r in sorted(prompts.items()) if r.get("two_site")]
+    if two:
+        print("\n⚠ 반박 두 곳 규칙에서 빠진 것 %d건 (경고):" % len(two))
+        for n, why in two:
+            print("   %-56s → %s" % (n, why))
     if write:
         L = ["---",
              'title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"',
@@ -716,16 +804,26 @@ def cmd_reviews(write=False):
              "회신 파일명의 라벨이 프롬프트와 **어긋나는 판이 섞여 있다**",
              "(`AT_reply`←`AT_prompt` 이지만 `AV_reply`←`AU_prompt`).",
              "그래서 짝은 파일명이 아니라 회신 본문의 `요청:` 역링크로 맺는다.", "",
+             "> 🔁 **반박 두 곳 규칙 (사용자 2026-11-26 · CLAUDE.md §반박 두 곳 규칙)** —",
+             "> 같은 요청서를 Codex 와 agy (Antigravity) 두 곳에 준다. 회신은 "
+             "`codex_<라벨>_reply_…` · `agy_<라벨>_reply_…`",
+             "> (둘 다 본문에 `요청:` 역링크), 대조표는 `claude_<라벨>_reconcile_…` "
+             "(일치 · 엇갈림 · 우리 재현 · 처분).",
+             "> agy 회신은 ⚑보조 표지 — Codex 와 같은 무게로 '확인됨' 처리하지 않는다. "
+             "%s 이후 요청서에서 한 곳만 반입했거나 대조표가 없으면 아래에 경고한다."
+             % REV_TWO_SITE_FROM, "",
              "| 라벨 | 날짜 | 프롬프트 | 회신 | status | 근거 |",
              "|---|---|---|---|---|---|"]
         for name, r in sorted(prompts.items(), key=lambda kv: (kv[1]["date"], kv[0])):
             L.append("| %s | %s | `%s` | %s | %s | %s |"
-                     % (r["label"], r["date"], name,
-                        ("`%s`" % r["reply"]) if r["reply"] else "—",
+                     % (r["label"], r["date"], name, _reply_cell(r),
                         r["status"], "; ".join(r["evidence"]) or "—"))
         if contra:
             L += ["", "## 🔴 모순 (status 는 대기인데 증거는 회신 수령)", ""]
             L += ["- `%s` [%s] — %s" % c for c in contra]
+        if two:
+            L += ["", "## ⚠ 반박 두 곳 규칙에서 빠진 것", ""]
+            L += ["- `%s` — %s" % t for t in two]
         (REPO / "kb" / "reviews" / "INDEX.md").write_text("\n".join(L) + "\n",
                                                           encoding="utf-8")
         print("\n→ kb/reviews/INDEX.md")
@@ -821,6 +919,43 @@ def selftest_reviews():
     _shared = {k: v for k, v in _dup.items() if len(v) > 1}
     chk(not _shared,
         "⛔음성: 한 회신이 **두 요청에 동시에** 붙지 않는다 (%s)" % (_shared or "없음"))
+    # ── 반박 두 곳 규칙 (2026-11-26) ─────────────────────────────────────────────
+    #   종전 짝짓기는 역링크 회신을 하나만 잡고 멈췄다 → 둘이 오면 정렬상 먼저인 agy 가
+    #   '그 회신' 이 되고 codex 회신이 색인에서 조용히 빠진다. 그 길을 막는 시험이다.
+    _R = lambda ch, nm: {"chan": ch, "name": nm, "label": "ZZ"}
+    _a, _c = _R("agy", "agy_ZZ_reply_x_2026_11_27.md"), _R("codex", "codex_ZZ_reply_x_2026_11_27.md")
+    chk(_primary_reply([_a, _c]) is _c,
+        "[음성] 회신이 agy · codex 둘이면 주 회신은 codex (정렬상 agy 가 먼저여도)")
+    chk(_primary_reply([_a]) is _a and _primary_reply([]) is None,
+        "agy 회신만 있으면 그것이 주 회신 (표지는 칸에서 단다) · 회신 없으면 None")
+    _cell = _reply_cell({"reply": _c["name"], "replies": [_a, _c], "recons": []})
+    chk(_c["name"] in _cell and _a["name"] in _cell
+        and ("⚑보조 (확인됨 아님) `%s`" % _a["name"]) in _cell
+        and ("⚑보조 (확인됨 아님) `%s`" % _c["name"]) not in _cell,
+        "[음성] 색인 칸에 두 회신을 다 싣고 ⚑보조 표지는 agy 에만 단다")
+    chk(_reply_cell({"reply": _c["name"], "replies": [_c], "recons": []})
+        == "`%s`" % _c["name"],
+        "회신 하나 · codex 뿐이면 칸 모양이 종전과 같다 (옛 색인 줄이 안 바뀐다)")
+    _d0, _d1 = "2026-11-25", REV_TWO_SITE_FROM
+    chk(_two_site_issue(_d0, [_c], []) is None,
+        "규칙 시작일 전 요청서는 한 곳 회신이어도 경고하지 않는다")
+    chk("한 곳" in str(_two_site_issue(_d1, [_c], [])),
+        "[음성] 규칙 이후 codex 회신만 반입 → 경고")
+    chk("한 곳" in str(_two_site_issue(_d1, [_a], [])),
+        "[음성] 규칙 이후 agy 회신만 반입 → 경고")
+    chk("대조표" in str(_two_site_issue(_d1, [_a, _c], [])),
+        "[음성] 두 곳 회신은 있는데 대조표가 없다 → 경고")
+    chk(_two_site_issue(_d1, [_a, _c], ["claude_ZZ_reconcile_x_2026_11_27.md"]) is None,
+        "두 곳 회신 + 대조표 → 경고 없음")
+    chk(_two_site_issue(_d1, [_R("internal", "internal_ZZ_reply_x_2026_11_27.md")], []) is None,
+        "두 반박창이 아닌 회신 (internal 등) 만 있으면 이 규칙으로 경고하지 않는다")
+    _m = REV_RECON.match("claude_ZZ_reconcile_wad_a6_2026_11_27.md")
+    chk(bool(_m) and not REV_PROMPT.match("claude_ZZ_reconcile_wad_a6_2026_11_27.md"),
+        "[음성] 대조표 파일명은 대조표로 읽고 요청서로 읽지 않는다")
+    # 실물 불변식: 주 회신은 늘 그 요청서에 붙은 회신 목록 안에 있다
+    _orph = [n for n, r in prompts.items()
+             if r["reply"] and r["reply"] not in [x["name"] for x in r.get("replies", [])]]
+    chk(not _orph, "주 회신은 그 요청서의 회신 목록 안에 있다 (어긋남 %s)" % (_orph[:2] or "없음"))
     print("reviews selftest %s" % ("PASS" if ok[0] else "FAIL"))
     return 0 if ok[0] else 1
 

@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-24
-updated: 2026-11-24
+date: 2026-11-26
+updated: 2026-11-26
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-24
+verifiedAt: 2026-11-26
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -24,6 +24,11 @@ evidenceScope: multi-source-primary
 회신 파일명의 라벨이 프롬프트와 **어긋나는 판이 섞여 있다**
 (`AT_reply`←`AT_prompt` 이지만 `AV_reply`←`AU_prompt`).
 그래서 짝은 파일명이 아니라 회신 본문의 `요청:` 역링크로 맺는다.
+
+> 🔁 **반박 두 곳 규칙 (사용자 2026-11-26 · CLAUDE.md §반박 두 곳 규칙)** —
+> 같은 요청서를 Codex 와 agy (Antigravity) 두 곳에 준다. 회신은 `codex_<라벨>_reply_…` · `agy_<라벨>_reply_…`
+> (둘 다 본문에 `요청:` 역링크), 대조표는 `claude_<라벨>_reconcile_…` (일치 · 엇갈림 · 우리 재현 · 처분).
+> agy 회신은 ⚑보조 표지 — Codex 와 같은 무게로 '확인됨' 처리하지 않는다. 2026-11-26 이후 요청서에서 한 곳만 반입했거나 대조표가 없으면 아래에 경고한다.
 
 | 라벨 | 날짜 | 프롬프트 | 회신 | status | 근거 |
 |---|---|---|---|---|---|
