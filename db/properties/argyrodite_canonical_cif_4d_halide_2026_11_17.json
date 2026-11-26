@@ -79,5 +79,17 @@
     "고친 파일이 Li₆PS₅Cl 의 실제 배치다 — 정렬 모형 하나일 뿐이다.",
     "comp1_V0_k444 는 Morgan 0 % (또는 100 %) 배열이다 — 확인 안 했다."
   ],
-  "근거_파일": "db/raw/argyrodite_canonical_fix_2026_11_17/ (make_fixed.py · fix_checks.json · sweep_halide_s_contacts.py · sweep_halide_s_contacts_result.json · SHA256SUMS)"
+  "근거_파일": "db/raw/argyrodite_canonical_fix_2026_11_17/ (make_fixed.py · fix_checks.json · sweep_halide_s_contacts.py · sweep_halide_s_contacts_result.json · SHA256SUMS)",
+  "⏩_레포_VESTA_구조_재확인_2026_11_26": {
+    "근거": "사용자 2026-11-26 '권고대로 하고' (용훈 포메이션 '[우리 DFT 기준선] VESTA 구조 그림이 있는지 확인' 줄에 대한 답 · 대피 세션 11-25)",
+    "한_일": "11-17 의 '레포_안' 확인은 파일 이름 검색 (rg) 이었다 — .vesta 는 구조를 파일 안에 담고 원본 이름을 안 남길 수 있어서, 이번엔 구조 자체를 봤다: git 이 추적하는 .vesta 117 개 중 Cl 과 S 가 같이 든 것 3 개의 S–할로젠 최소 거리.",
+    "결과": {
+      "db/structures/lpsocl_v0.vesta": "S–Cl 최소 3.63 Å (주기 셀 최소상)",
+      "db/properties/bvse_b2o3/b2o3_paper3_bvse_Bcentered.vesta (+ .cube 원자)": "S–Cl 최소 3.63 Å (표시 상자 · 주기 아님 — 직접 거리)",
+      "db/properties/bvse_b2o3/b2o3_paper3_bvse_boundary.vesta (+ .cube 원자)": "S–Cl 최소 3.67 Å (표시 상자 · 직접 거리)"
+    },
+    "판정": "레포 안에 깨진 판 (Cl 이 4d 구멍 · S–Cl 2.36 Å) 으로 만든 VESTA 구조는 없다 (S–Cl < 3 Å 0 개).",
+    "⚠_헛발질_기록": "표시 상자 둘을 처음에 9.92 Å 입방 주기 셀로 보고 최소상 거리를 쟀더니 S–Cl 0.98–1.55 Å 가 나왔다 — 표시 상자는 60° 원 셀에서 잘라 낸 것이라 주기 셀이 아니다 (CLAUDE.md '큐빅 박스는 표시용'). 직접 거리로 다시 재서 3.63 · 3.67 Å.",
+    "남은_것": "사용자 PC 에서 VESTA 로 직접 열어 그린 그림 (레포 밖) — 사용자만 안다 · 11-17 '레포_밖' 줄 그대로."
+  }
 }
