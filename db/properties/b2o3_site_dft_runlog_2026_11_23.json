@@ -251,5 +251,26 @@
   "깨기": "10/10 빨강 — 다시 만든 입력 비교 빼기 · 누락 멈춤 빼기 · G1 멈춤 빼기 · 잡별 원자 수 빼기 · manifest 검사 빼기 · 계획 밖 폴더 검사 빼기 · 둘째 늘 넣기 · G3 부호 뒤집기 · 꼴별 최저 대신 자리 최저 · 덮어쓰기 허용 (전수 변이는 P0 · P1 고침에만 — 새 도구라 고른 변이 10)",
   "블록_6 (12 개가 다 끝난 뒤 · 사용자가 붙여넣는다)": "B=claude/friendly-meitner-lldvar; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; P=$HOME/work/pseudo_b2o3s9; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; O=$R/sp_dft\n( echo \"== ① 실행이 끝났나 (tmux bsite_sp 없음 · scf.out 12)\" && ! tmux has-session -t bsite_sp 2>/dev/null && echo \"  scf.out $(ls $O/*/scf.out 2>/dev/null | wc -l) 개\" && tail -3 $O/run.log \\\n && echo \"== ② worktree 올리기 · selftest\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ③ 단일점 판독 (G2 결속 · G1 수렴 · 자리 안 순위 · 이완 후보 · 판정 아님)\" && $PY $W/tools/doping/b2o3_site_dft.py read_sp --sp_dft $O --sp_pick $R/sp_pick --pseudo_dir $P --out $R/sp_read.json \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
   "by": "claude (본 세션) · 2026-11-25 KST"
+ },
+ "도구_mixing_2026_11_26 (개정 1 믹싱 덮어쓰기 · G2 재생성 · 결과 전)": {
+  "무엇": "b2o3_site_dft.py — sp_inputs · probe 에 --mixing (예 local-TF:0.2) · 믹싱 두 줄만 바꾼다 (나머지 판 고정) · 계획 settings.mixing {mode · beta · decision} · read_sp 가 계획의 믹싱으로 입력을 다시 만들어 G2 대조 (옛 계획 = 키 없음 → 판 고정) · 판독 결과 settings_from_plan.mixing (단계_2 이완도 같은 믹싱)",
+  "왜_G2_로": "판 고정 out_problems 는 출력에서 믹싱을 안 읽는다 — 믹싱이 계획과 입력 사이에서 어긋나지 않게 막는 곳은 입력 결속 (G2) 하나다",
+  "sha256": "4f92d447695eca1558cc9c46f36ca17b68ce495e4b3d25f8ede32762a3804572",
+  "selftest": "111/111 (85 → 111 · 새 시험 26: 두 줄만 · 판 고정 그대로 · 잘못된 믹싱 12 꼴 · 판 고정 입력에 줄 둘 · 계획 기록 · 12 입력 · sha 다름 · 잘못된 β 폴더 안 만듦 · G2 통과 · 계획에서 지움/β 바꿈/꼴 다름/판 고정에 덧붙임 → 멈춤 · 옛 계획 통과)",
+  "변이": "6/6 잡음 (믹싱 무시 · read_sp 가 믹싱 없이 · β 상한 없앰 · 계획이 믹싱을 안 적음 · read_sp 가 계획 β 무시 · 모드 목록 없앰) — 고친 함수에 닿는 변이만 (전수 변이 아님 · 기존 길은 옛 계획 통과 시험으로 확인)",
+  "by": "claude · 2026-11-26 (대피 세션)"
+ },
+ "kgy_블록_6_2026_11_26 (sp_dft_v2 · 개정 1 믹싱 · 개정 2 기계 kgy · 사용자가 붙여넣는다)": {
+  "무엇": "① GPU 가 비었나 (< 1,500 MiB · 아니면 멈춤) ② worktree 를 대피 브랜치 끝으로 · selftest ③ sp_inputs --mixing local-TF:0.2 → 새 폴더 sp_dft_v2 (있으면 멈춤 · 옛 sp_dft 는 그대로) · 12 입력 · 믹싱 두 줄 센다 ④ 실행기 DRY_RUN ⑤ tmux bsite_sp2 발사 (하나씩) — 결과는 read_sp (결과 전에 커밋) 로만 읽는다",
+  "블록": "B=claude/evac-2026-11-25; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; P=$HOME/work/pseudo_b2o3s9; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; O=$R/sp_dft_v2\n( echo \"== ① GPU 가 비었나 (시작 문턱 1,500 MiB · 개정 2)\" && U=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1) && echo \"  사용 $U MiB · 사용률 $(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader | head -1)\" && [ \"$U\" -lt 1500 ] \\\n && echo \"== ② worktree 를 대피 브랜치 끝으로 · selftest\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ③ 단일점 12 입력 (개정 1 믹싱 local-TF β 0.2 · 새 폴더 sp_dft_v2 · 옛 sp_dft 는 그대로)\" && [ ! -e $O ] \\\n && $PY $W/tools/doping/b2o3_site_dft.py sp_inputs --sp_pick $R/sp_pick --out $O --pseudo_dir $P --disk_io medium --mixing local-TF:0.2 | tail -2 \\\n && echo \"  입력 $(ls $O/*/scf.in | wc -l) 개 · local-TF $(grep -l \"mixing_mode = 'local-TF'\" $O/*/scf.in | wc -l) · beta 0.2 $(grep -l 'mixing_beta = 0.2' $O/*/scf.in | wc -l)\" \\\n && echo \"== ④ 실행기 점검만 (DRY_RUN · 계산 안 함)\" && DRY_RUN=1 bash $W/tools/doping/run_force_check_scf.sh $O 2>&1 | tail -5 \\\n && echo \"== ⑤ 발사 — tmux bsite_sp2 (하나씩 · GPU pw.x · 결과는 아직 안 읽는다)\" && ! tmux has-session -t bsite_sp2 2>/dev/null \\\n && tmux new -d -s bsite_sp2 \"bash $W/tools/doping/run_force_check_scf.sh $O > $O/run.log 2>&1\" && sleep 30 && tail -4 $O/run.log \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "감시": "watch -n 30 'O=$HOME/work/runs/b2o3_site_dft_2026_11_23/sp_dft_v2; F=$(ls -t $O/*/scf.out 2>/dev/null | head -1); date +\"지금 %T\"; echo \"-- 실행기: 끝 $(grep -a -c \" ✓ \" $O/run.log) · 실패 $(grep -a -c \" ⛔ \" $O/run.log) / 12\"; grep -a -E \" ✓ | ⛔ |끝 —\" $O/run.log | tail -3 | cut -c1-90; [ -n \"$F\" ] && echo \"-- 지금 점 $(basename $(dirname $F)) · 반복 $(grep -a -c \"iteration #\" $F) · 마지막 쓰기 $(date -r $F +%T) · 미수렴 경고 $(grep -a -c \"not converged\" $F)\"; [ -n \"$F\" ] && grep -a \"estimated scf accuracy\" $F | tail -3 | cut -c1-70; echo \"-- GPU (사용 · 전체 · 사용률)\"; nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader 2>&1 | head -1'",
+  "어림": "점 하나 ≈ 1 시간 안팎 (9 단계 gabia 25–35 분 · kgy 가 더 느림 · local-TF 반복 수 모름) → 12 점 ≈ 하루 가까이 — 판정 아님",
+  "비용": "상한 150 GPU-h · 지금까지 ≈ 2 GPU-h (블록 5 · 프로브)",
+  "결정": [
+   "D-2026-11-23-b2o3-site-dft",
+   "D-2026-11-25-b2o3-site-dft-amend1",
+   "D-2026-11-26-b2o3-site-dft-amend2-kgy"
+  ],
+  "by": "claude · 2026-11-26 (대피 세션)"
  }
 }

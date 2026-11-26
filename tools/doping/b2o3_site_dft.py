@@ -19,6 +19,9 @@
   probe     DFT 메모리 프로브 입력 — 9 단계 판 고정 b2o3_bo_dft.py (sha256 0c3b7f51…) 의 pw_input_text 를 그대로 쓰고
             disk_io 한 줄만 바꾼다 (disk_io 는 숫자에 영향 없음 — QE 설명서: nowf · low 는 파동함수를 메모리에 ·
             medium · high 는 k 점이 둘 이상이면 디스크에)
+  --mixing  (sp_inputs · probe) 개정 1 (D-2026-11-25-b2o3-site-dft-amend1) — SCF 믹싱 두 줄 (mixing_mode · mixing_beta) 만
+            바꾼다 · 예 local-TF:0.2. 계획 (sp_plan.json) 에 적고, read_sp 는 그 값으로 입력을 다시 만들어 G2 로 대조한다.
+            믹싱은 수렴 경로만 바꾸고 수렴한 바닥상태는 같다 (57 Å 막대 셀의 전하 출렁임 처방 · 우리 슬랩 규칙)
   --selftest  음성 경로 포함
 
 이 도구가 못 하는 것 (한계 — 숨기지 않는다)
@@ -37,6 +40,7 @@ import hashlib
 import importlib.util
 import itertools
 import json
+import math
 import shutil
 import sys
 import tempfile
@@ -65,6 +69,8 @@ ANNEAL_T_K, ANNEAL_TIME_PS, ANNEAL_DT_FS = 500.0, 20.0, 2.0   # 10월과 같은 
 RELAX_FMAX = 0.05
 N_PER_FAMILY = 3                                               # 자리 × O 꼴마다 UMA 최저 셋 (카드 4 단계_1)
 DISK_IO = ("nowf", "low", "medium", "high")
+MIXING_MODES = ("plain", "TF", "local-TF")      # QE &ELECTRONS mixing_mode 값
+AMEND1 = "D-2026-11-25-b2o3-site-dft-amend1"     # 개정 1 — 단일점 · 이완 SCF 믹싱 local-TF β 0.2 (12 점 전부 · 새 폴더)
 FAMILIES = ("O-P", "O-B")
 KIND_SP_READ = "b2o3_site_dft_sp_read/v1"
 SP_RELAX_WINDOW_EV = 0.30   # 카드 4 단계_2 — 자리마다 단일점 최저 + 둘째가 첫째와 셀 에너지 0.30 eV 안이면 둘째도
@@ -544,26 +550,65 @@ def load_pinned(repo_root: Path):
     return mod
 
 
-def pw_text(mod, atoms, *, prefix, calc, k, pseudo_dir, disk_io, tstress=False) -> str:
+def parse_mixing(m):
+    """'local-TF:0.2' 또는 ('local-TF', 0.2) → ('local-TF', 0.2) · None → None (판 고정 믹싱 그대로).
+
+    모르는 모드 · β 가 숫자가 아님 · 0 < β ≤ 1 밖 · NaN · 꼴이 다름 → 멈춘다 (조용히 판 고정 값으로 떨어지지 않는다).
+    """
+    if m is None:
+        return None
+    if isinstance(m, (tuple, list)):
+        if len(m) != 2:
+            raise SystemExit(f"⛔ 믹싱 {m} — (모드, β) 둘이어야 한다")
+        mode, beta = m
+    elif isinstance(m, str) and m.count(":") == 1:
+        mode, b = m.split(":")
+        try:
+            beta = float(b)
+        except ValueError:
+            raise SystemExit(f"⛔ --mixing β '{b}' 가 숫자가 아니다")
+    else:
+        raise SystemExit(f"⛔ --mixing '{m}' — '모드:β' 꼴 (예 local-TF:0.2)")
+    if mode not in MIXING_MODES:
+        raise SystemExit(f"⛔ mixing_mode '{mode}' — {MIXING_MODES} 중 하나")
+    if isinstance(beta, bool) or not isinstance(beta, (int, float)) or not math.isfinite(beta) or not 0.0 < beta <= 1.0:
+        raise SystemExit(f"⛔ mixing_beta {beta} — 0 < β ≤ 1")
+    return (mode, float(beta))
+
+
+def pw_text(mod, atoms, *, prefix, calc, k, pseudo_dir, disk_io, tstress=False, mixing=None) -> str:
     if disk_io not in DISK_IO:
         raise SystemExit(f"⛔ disk_io {disk_io} — {DISK_IO} 중 하나")
     t = mod.pw_input_text(atoms, prefix=prefix, calc=calc, k=k, pseudo_dir=pseudo_dir, tstress=tstress)
     old = f"    disk_io = '{mod.DFT['disk_io']}'"
     if t.count(old) != 1:
         raise SystemExit(f"⛔ 판 고정 입력에서 disk_io 줄을 정확히 하나 못 찾았다 ({t.count(old)})")
-    return t.replace(old, f"    disk_io = '{disk_io}'")
+    t = t.replace(old, f"    disk_io = '{disk_io}'")
+    mx = parse_mixing(mixing)
+    if mx is not None:                     # 개정 1 — 믹싱 두 줄만 바꾼다 (나머지는 판 고정 그대로)
+        for key, cur, new in (("mixing_mode", f"'{mod.DFT['mixing_mode']}'", f"'{mx[0]}'"),
+                              ("mixing_beta", f"{mod.DFT['mixing_beta']}", f"{mx[1]}")):
+            o = f"    {key} = {cur}"
+            if t.count(o) != 1:
+                raise SystemExit(f"⛔ 판 고정 입력에서 {key} 줄을 정확히 하나 못 찾았다 ({t.count(o)})")
+            t = t.replace(o, f"    {key} = {new}")
+    return t
 
 
-def cmd_sp_inputs(sp_pick: Path, out: Path, *, pseudo_dir: str, disk_io: str, repo_root: Path, k=(3, 3, 1)) -> dict:
+def cmd_sp_inputs(sp_pick: Path, out: Path, *, pseudo_dir: str, disk_io: str, repo_root: Path, k=(3, 3, 1),
+                  mixing=None) -> dict:
     """카드 4 단계_1 — pick_dft 가 고른 12 구조의 DFT 단일점 입력 (UMA 구조 · UMA 셀 그대로 · 9 단계 판 고정 설정).
 
     출력 = <out>/<이름>/scf.in (run_force_check_scf.sh 가 그대로 도는 꼴) + <out>/sp_plan.json
     (입력 sha256 · 구조 sha256 · 판 고정 도구 sha256 · 유사포텐셜 sha256 · md5 · z_valence · k · disk_io).
     입력은 결정론이다 — 판독기가 같은 인자로 다시 만들어 sha256 으로 대조한다.
+    mixing (개정 1): 주면 믹싱 두 줄만 바꾸고 계획 settings.mixing 에 적는다 (read_sp 가 그 값으로 다시 만든다) ·
+       안 주면 판 고정 믹싱 그대로 · settings.mixing = null.
     ⛔ 못 하는 것: pw.x 를 돌리지 않는다 · disk_io 는 메모리 프로브 결과로 사람이 고른다 (숫자에는 영향 없음 ·
        9 단계 단일점은 gabia nowf) · 셀을 기준 셀로 옮기지 않는다 (단일점은 UMA 셀 그대로 — 기준 셀은 단계_2 이완).
     """
     from ase.io import read
+    mx = parse_mixing(mixing)              # 잘못된 값이면 파일을 만들기 전에 멈춘다
     mod = load_pinned(repo_root)
     sp_pick, out = Path(sp_pick), Path(out)
     man = json.loads((sp_pick / "manifest.json").read_text())
@@ -584,7 +629,7 @@ def cmd_sp_inputs(sp_pick: Path, out: Path, *, pseudo_dir: str, disk_io: str, re
         a = read(str(sp_pick / rel))
         if composition(a) != dict(sorted(MODELS[e["site"]].items())):
             raise SystemExit(f"⛔ {nm}: 조성이 모델과 다르다")
-        t = pw_text(mod, a, prefix=f"sp_{nm}", calc="scf", k=list(k), pseudo_dir=pseudo_dir, disk_io=disk_io)
+        t = pw_text(mod, a, prefix=f"sp_{nm}", calc="scf", k=list(k), pseudo_dir=pseudo_dir, disk_io=disk_io, mixing=mx)
         (out / nm).mkdir(parents=True)
         (out / nm / "scf.in").write_text(t)
         jobs[nm] = {"scf_in_sha256": sha256_file(out / nm / "scf.in"), "xyz": rel, "xyz_sha256": e["sha256"],
@@ -595,17 +640,21 @@ def cmd_sp_inputs(sp_pick: Path, out: Path, *, pseudo_dir: str, disk_io: str, re
             "pinned_dft": {"path": PINNED_DFT_REL, "sha256": PINNED_DFT_SHA},
             "settings": {"calc": "scf", "k": list(k), "disk_io": disk_io, "tstress": False, "cell": "UMA 셀 그대로",
                          "DFT": {kk: mod.DFT[kk] for kk in ("ecutwfc", "ecutrho", "smearing", "degauss", "nspin", "conv_thr",
-                                                            "mixing_mode", "mixing_beta", "electron_maxstep", "diagonalization")}},
+                                                            "mixing_mode", "mixing_beta", "electron_maxstep", "diagonalization")},
+                         "DFT_note": "DFT = 판 고정 값 · mixing 이 null 이 아니면 입력의 믹싱 두 줄은 그 값이다",
+                         "mixing": (None if mx is None else {"mode": mx[0], "beta": mx[1], "decision": AMEND1})},
             "pseudo": pp, "sp_pick_manifest_sha256": sha256_file(sp_pick / "manifest.json"), "jobs": jobs}
     (out / "sp_plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1) + "\n")
     return plan
 
 
-def cmd_probe(xyz: Path, out: Path, *, pseudo_dir: str, k, disk_io: str, repo_root: Path) -> str:
+def cmd_probe(xyz: Path, out: Path, *, pseudo_dir: str, k, disk_io: str, repo_root: Path, mixing=None) -> str:
     from ase.io import read
+    mx = parse_mixing(mixing)
     mod = load_pinned(repo_root)
     a = read(str(xyz))
-    t = pw_text(mod, a, prefix=f"probe_{Path(xyz).stem}_{disk_io}", calc="scf", k=k, pseudo_dir=pseudo_dir, disk_io=disk_io)
+    t = pw_text(mod, a, prefix=f"probe_{Path(xyz).stem}_{disk_io}", calc="scf", k=k, pseudo_dir=pseudo_dir, disk_io=disk_io,
+                mixing=mx)
     Path(out).write_text(t)
     return t
 
@@ -649,9 +698,13 @@ def cmd_read_sp(sp_dft: Path, sp_pick: Path, out: Path, *, pseudo_dir: str, repo
     extra = sorted(d.name for d in sp_dft.iterdir() if d.is_dir() and (d / "scf.in").exists() and d.name not in jobs)
     if extra:
         raise SystemExit(f"⛔ 계획에 없는 잡 폴더 {extra}")
+    mset = (plan.get("settings") or {}).get("mixing")    # 개정 1 — 계획에 적힌 믹싱으로 다시 만든다 (없음 = 판 고정)
+    if mset is not None and not (isinstance(mset, dict) and {"mode", "beta"} <= set(mset)):
+        raise SystemExit(f"⛔ 계획의 settings.mixing 꼴이 다르다: {mset}")
+    mix = None if mset is None else parse_mixing((mset["mode"], mset["beta"]))
     with tempfile.TemporaryDirectory() as td:
         re_plan = cmd_sp_inputs(sp_pick, Path(td) / "re", pseudo_dir=pseudo_dir, disk_io=plan["settings"]["disk_io"],
-                                repo_root=repo_root, k=tuple(plan["settings"]["k"]))
+                                repo_root=repo_root, k=tuple(plan["settings"]["k"]), mixing=mix)
     if set(re_plan["jobs"]) != set(jobs):
         raise SystemExit("⛔ 다시 만든 입력의 잡 이름이 계획과 다르다")
     g2 = []
@@ -705,9 +758,11 @@ def cmd_read_sp(sp_dft: Path, sp_pick: Path, out: Path, *, pseudo_dir: str, repo
          "plan": {"path": str(pf), "sha256": sha256_file(pf), "tool_sha256_at_inputs": (plan.get("tool") or {}).get("sha256")},
          "gates": {"G1": f"단일점 {len(rows)}/{want} — 출력 검사 (판 고정 out_problems · stage sp) 통과",
                    "G2": f"입력 {want} = 계획 = 같은 인자로 다시 만든 입력 (sha256) · sp_pick manifest · 유사포텐셜 같음"},
+         "settings_from_plan": {"mixing": mset, "disk_io": plan["settings"]["disk_io"], "k": plan["settings"]["k"]},
          "relax_window_eV": SP_RELAX_WINDOW_EV, "rows": sorted(rows, key=lambda x: (x["site"], x["E_eV"])), "sites": sites,
          "판정_아님": "자리 사이 D 는 기준상 · 이온 이완 · 압력 어림 · k 탐침 뒤에만 낸다 (카드 4) — 단일점 에너지를 자리 사이에서 빼지 않는다 (조성이 다르다)",
-         "next": "단계_2 — 자리마다 relax_pick 을 고정 기준 셀 (V₀ 2436.33 Å³ · 등방 스케일) 로 옮겨 이온 이완 (카드 4 · 입력 도구는 따로)"}
+         "next": "단계_2 — 자리마다 relax_pick 을 고정 기준 셀 (V₀ 2436.33 Å³ · 등방 스케일) 로 옮겨 이온 이완 (카드 4 · 입력 도구는 따로) · "
+                 "이완 SCF 도 같은 믹싱 (settings_from_plan.mixing · 개정 1)"}
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(v, ensure_ascii=False, indent=1) + "\n")
     return v
@@ -985,6 +1040,25 @@ def selftest() -> int:
             chk("3 3 1 0 0 0" in t1, "[양성] k 격자 3 3 1")
             chk(refuses(pw_text, mod, t_atoms, prefix="x", calc="scf", k=[3, 3, 1], pseudo_dir="/pp", disk_io="fast"),
                 "[음성] 모르는 disk_io → 멈춘다")
+            print("— 믹싱 (개정 1 · local-TF β 0.2 · 두 줄만)")
+            t2 = pw_text(mod, t_atoms, prefix="x", calc="scf", k=[3, 3, 1], pseudo_dir="/pp", disk_io="medium", mixing="local-TF:0.2")
+            d2 = [(x, y) for x, y in zip(t1.splitlines(), t2.splitlines()) if x != y]
+            chk(len(d2) == 2 and d2[0][1] == "    mixing_mode = 'local-TF'" and d2[1][1] == "    mixing_beta = 0.2"
+                and len(t1.splitlines()) == len(t2.splitlines()),
+                "[양성] 믹싱을 주면 mixing_mode · mixing_beta 두 줄만 다르다 (local-TF · 0.2)")
+            chk(pw_text(mod, t_atoms, prefix="x", calc="scf", k=[3, 3, 1], pseudo_dir="/pp", disk_io="medium", mixing=None) == t1,
+                "[양성] 믹싱을 안 주면 판 고정 입력 그대로")
+            chk(parse_mixing("TF:1") == ("TF", 1.0) and parse_mixing(("local-TF", 0.2)) == ("local-TF", 0.2)
+                and parse_mixing(None) is None, "[양성] 꼴 둘 (문자열 · 짝) 같은 값 · None 은 판 고정")
+            for bad_m in ("local-TF", "foo:0.2", "local-TF:0", "local-TF:1.5", "local-TF:nan", "local-TF:-0.1",
+                          "local-TF:x", "local-TF:0.2:1", ("local-TF",), ("local-TF", True), ("local-TF", "0.2"), 0.2):
+                chk(refuses(parse_mixing, bad_m), f"[음성] 잘못된 믹싱 {bad_m!r} → 멈춘다")
+            import types as _ty
+            fake2 = _ty.SimpleNamespace(DFT=mod.DFT, pw_input_text=lambda *a_, **k_: t0 + "    mixing_mode = 'plain'\n")
+            chk(refuses(pw_text, fake2, t_atoms, prefix="x", calc="scf", k=[3, 3, 1], pseudo_dir="/pp", disk_io="medium",
+                        mixing="local-TF:0.2"), "[음성] 판 고정 입력에 mixing_mode 줄이 둘 → 멈춘다 (어느 줄인지 모른다)")
+            chk(not refuses(pw_text, fake2, t_atoms, prefix="x", calc="scf", k=[3, 3, 1], pseudo_dir="/pp", disk_io="medium"),
+                "[양성] 믹싱을 안 바꾸면 그 줄은 안 본다 (disk_io 만)")
 
             print("— sp_inputs (단일점 12 입력 · 판 고정 설정 · 결정론)")
             pdir = T / "pp"; pdir.mkdir()
@@ -1106,6 +1180,47 @@ def selftest() -> int:
                 shutil.copytree(pk, pk_t)
                 (pk_t / "manifest.json").write_text((pk_t / "manifest.json").read_text() + " ")
                 chk(refuses(rs, fresh("man"), "rs_man.json", sp_pick=pk_t), "[음성] sp_pick manifest 가 계획 뒤 바뀜 → 멈춘다")
+                D = fresh("oldplan")
+                pj = json.loads((D / "sp_plan.json").read_text()); pj["settings"].pop("mixing", None)
+                (D / "sp_plan.json").write_text(json.dumps(pj))
+                chk(bool(try_rs(D, "rs_old.json").get("rows")), "[양성] 옛 계획 (settings.mixing 키 없음) → 판 고정 믹싱으로 다시 만들어 통과")
+                print("— 개정 1 믹싱 — sp_inputs 계획 기록 · read_sp 가 같은 믹싱으로 다시 만들어 G2 대조")
+                plm = cmd_sp_inputs(pk, T / "sp_m", pseudo_dir=str(pdir), disk_io="medium", repo_root=root, mixing="local-TF:0.2")
+                tm = (T / "sp_m" / "X00" / "scf.in").read_text()
+                chk(plm["settings"]["mixing"] == {"mode": "local-TF", "beta": 0.2, "decision": AMEND1}
+                    and "    mixing_mode = 'local-TF'" in tm and "    mixing_beta = 0.2" in tm and "mixing_mode = 'plain'" not in tm
+                    and all("mixing_mode = 'local-TF'" in (T / "sp_m" / j / "scf.in").read_text() for j in plm["jobs"]),
+                    "[양성] 계획에 믹싱 (모드 · β · 개정 1) 을 적고 입력 12 개 모두에 두 줄을 넣는다")
+                chk(plm["jobs"]["X00"]["scf_in_sha256"] != pl["jobs"]["X00"]["scf_in_sha256"],
+                    "[양성] 믹싱이 다르면 입력 sha256 도 다르다 (옛 sp_dft 와 섞이지 않는다)")
+                chk(refuses(cmd_sp_inputs, pk, T / "sp_m2", pseudo_dir=str(pdir), disk_io="medium", repo_root=root, mixing="local-TF:2")
+                    and not (T / "sp_m2").exists(), "[음성] 잘못된 β → 입력 폴더를 만들기 전에 멈춘다")
+
+                def fresh_m(tag, plan_edit=None):
+                    Dm = T / f"rsm_{tag}"
+                    shutil.copytree(T / "sp_m", Dm)
+                    for nm in plm["jobs"]:
+                        (Dm / nm / "scf.out").write_text(mod._fake_out(Dm / nm / "scf.in", E_list=[E0[nm]], stage="sp",
+                                                                       pp=plm["pseudo"]["files"]))
+                    if plan_edit:
+                        pj_ = json.loads((Dm / "sp_plan.json").read_text()); plan_edit(pj_)
+                        (Dm / "sp_plan.json").write_text(json.dumps(pj_))
+                    return Dm
+                vm = try_rs(fresh_m("ok"), "rsm_ok.json")
+                chk(((vm.get("settings_from_plan") or {}).get("mixing") or {}).get("mode") == "local-TF"
+                    and vm["sites"]["B-P"].get("relax_pick") == ["X01", "X04"] and "같은 믹싱" in vm.get("next", ""),
+                    "[양성] 믹싱 계획 → 같은 믹싱으로 다시 만들어 G2 통과 · 판독 결과가 믹싱을 단계_2 로 넘긴다")
+                chk(refuses(rs, fresh_m("drop", lambda q: q["settings"].__setitem__("mixing", None)), "rsm_d.json"),
+                    "[음성] 계획에서 믹싱을 지우면 → 다시 만든 입력 (판 고정) 과 달라 G2 멈춤")
+                chk(refuses(rs, fresh_m("beta", lambda q: q["settings"]["mixing"].__setitem__("beta", 0.3)), "rsm_b.json"),
+                    "[음성] 계획의 β 를 바꾸면 → G2 멈춤")
+                chk(refuses(rs, fresh_m("shape", lambda q: q["settings"].__setitem__("mixing", {"mode": "local-TF"})), "rsm_s.json"),
+                    "[음성] 계획의 믹싱 꼴이 다르면 (β 없음) → 멈춘다")
+                D = fresh("addmix")
+                pj = json.loads((D / "sp_plan.json").read_text())
+                pj["settings"]["mixing"] = {"mode": "local-TF", "beta": 0.2, "decision": AMEND1}
+                (D / "sp_plan.json").write_text(json.dumps(pj))
+                chk(refuses(rs, D, "rs_addmix.json"), "[음성] 판 고정 입력인데 계획에 믹싱을 덧붙이면 → G2 멈춤")
                 MODELS["B-Li"] = {"B": 2}
                 chk(refuses(cmd_sp_inputs, pk, T / "sp7", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
                     "[음성] 조성이 모델과 다름 → 멈춘다")
@@ -1130,11 +1245,13 @@ def main(argv=None) -> int:
     a4.add_argument("--ob_sel", required=True); a4.add_argument("--ob_results", required=True); a4.add_argument("--out", required=True)
     a5 = sp.add_parser("sp_inputs"); a5.add_argument("--sp_pick", required=True); a5.add_argument("--out", required=True)
     a5.add_argument("--pseudo_dir", required=True); a5.add_argument("--disk_io", required=True, choices=DISK_IO)
+    a5.add_argument("--mixing", default=None, help="개정 1 — 예 local-TF:0.2 (안 주면 판 고정 믹싱)")
     a6 = sp.add_parser("read_sp"); a6.add_argument("--sp_dft", required=True); a6.add_argument("--sp_pick", required=True)
     a6.add_argument("--pseudo_dir", required=True); a6.add_argument("--out", required=True)
     a3 = sp.add_parser("probe"); a3.add_argument("--xyz", required=True); a3.add_argument("--out", required=True)
     a3.add_argument("--pseudo_dir", required=True); a3.add_argument("--k", type=int, nargs=3, default=[3, 3, 1])
     a3.add_argument("--disk_io", default="medium", choices=DISK_IO)
+    a3.add_argument("--mixing", default=None, help="개정 1 — 예 local-TF:0.2 (안 주면 판 고정 믹싱)")
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
@@ -1163,10 +1280,12 @@ def main(argv=None) -> int:
         return 0
     if a.cmd == "sp_inputs":
         root = Path(__file__).resolve().parents[2]
-        pl = cmd_sp_inputs(Path(a.sp_pick), Path(a.out), pseudo_dir=a.pseudo_dir, disk_io=a.disk_io, repo_root=root)
+        pl = cmd_sp_inputs(Path(a.sp_pick), Path(a.out), pseudo_dir=a.pseudo_dir, disk_io=a.disk_io, repo_root=root,
+                           mixing=a.mixing)
         for nm, j in pl["jobs"].items():
             print(f"  {nm:12s} {j['site']:5s} {j['family']} · nat {j['nat']} · scf.in {j['scf_in_sha256'][:12]}")
-        print(f"단일점 입력 {len(pl['jobs'])} 개 → {a.out}/<이름>/scf.in · 계획 {a.out}/sp_plan.json (disk_io {a.disk_io} · k {pl['settings']['k']})")
+        print(f"단일점 입력 {len(pl['jobs'])} 개 → {a.out}/<이름>/scf.in · 계획 {a.out}/sp_plan.json (disk_io {a.disk_io} · "
+              f"k {pl['settings']['k']} · 믹싱 {pl['settings']['mixing'] or '판 고정'})")
         return 0
     if a.cmd == "read_sp":
         root = Path(__file__).resolve().parents[2]
@@ -1183,8 +1302,8 @@ def main(argv=None) -> int:
         return 0
     if a.cmd == "probe":
         root = Path(__file__).resolve().parents[2]
-        cmd_probe(Path(a.xyz), Path(a.out), pseudo_dir=a.pseudo_dir, k=a.k, disk_io=a.disk_io, repo_root=root)
-        print(f"프로브 입력 → {a.out} (disk_io {a.disk_io} · k {a.k})")
+        cmd_probe(Path(a.xyz), Path(a.out), pseudo_dir=a.pseudo_dir, k=a.k, disk_io=a.disk_io, repo_root=root, mixing=a.mixing)
+        print(f"프로브 입력 → {a.out} (disk_io {a.disk_io} · k {a.k} · 믹싱 {a.mixing or '판 고정'})")
         return 0
     ap.print_help()
     return 2
