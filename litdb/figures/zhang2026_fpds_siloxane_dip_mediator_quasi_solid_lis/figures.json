@@ -1,0 +1,1089 @@
+{
+ "slug": "zhang2026_fpds_siloxane_dip_mediator_quasi_solid_lis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+  "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of QSSSR-based Li−S cells with organosulfur mediation effects. (a) Li−S cell in conventional diglyme (G2) electrolytes exhibits dissolution−precipitation sulfur reactions that induces pronounced polysulfides dissolution/shuttle and lithium anode corrosion. (b) Li−S cell in proposed siloxane-based electrolyte (with DIP as reaction mediator) enables global QSSSRs with fast kinetics, eliminating LiPSs dissolution/shuttle and promoting dendrite-free deposition for stable lithium anode. reactions of sulfur and lithium electrodes are both governed by the electrolyte’s solvation structure. Far beyond its conven- tional role as an ionic conductor, the electrolyte’s solvation environment orchestrates multiple critical processes, including controlling the solubility and diffusion kinetics of LiPSs, modulating sulfur redox pathways, and determining the stability of ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    251.2
+   ],
+   "w": 2151,
+   "h": 821,
+   "dpi": 300,
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.574
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrolyte structure characterizations. (a) Raman spectra of LiTFSI-G2 and LiTFSI-FPDS/G2 electrolytes with TFSI−bands. (b) 7Li spectra showing Li+ coordination environments and fwhm values for LiTFSI-G2 and LiTFSI-FPDS/G2 electrolytes. (c−d) Results of AIMD simulations for (c) LiTFSI-FPDS/G2 and (d) LiTFSI-G2, coordination numbers (right) and Li−O radial distribution functions (RDF, left). (e) Coordination numbers of Li−O in the first solvation shell for LiTFSI-G2 and LiTFSI-FPDS/G2 electrolytes. (f) AIMD simulation snapshots of Li+ solvation clusters for LiTFSI-FPDS/G2. Lithium atoms (green) are highlighted to delineate the coordination environment, while other atoms (sulfur, fluorine, oxygen, nitrogen, carbon, and silicon) are rendered with smaller diameters for enhanced clarity. (g) Representative Li+ solvation clusters with 5-fold and 6-fold coordination in LiTFSI-FPDS/G2",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    361.4
+   ],
+   "w": 2151,
+   "h": 1280,
+   "dpi": 300,
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Sulfur reaction behaviors. (a) Solubility of Li2S6 in LiTFSI-G2 and LiTFSI-FPDS/G2 electrolytes. The inset shows the digital images of Li2S6-saturated solutions in LiTFSI-G2 and LiTFSI-FPDS/G2 electrolytes. (b−c) Quasi-equilibrium voltage profiles of Li−S batteries with (b) LiTFSI-G2 and (c) LiTFSI-FPDS/G2 electrolytes via GITT testing (current pulses of 0.05 C for 30 min and relaxations for 2 h). (d) Charge−discharge curves of the Li−S cells. (e) Shuttle current tests. (f) Self-discharge behavior of Li−S cells. participating in every configuration. These AIMD observations are consistent with Raman spectroscopy results, showing the absence of solvent-separated ion pairs (SSIPs) and exclusive formation of contact ion pairs (CIPs) in LiTFSI-FPDS/G2 electrolyte. observed, which was attributed to the high solubility of polysulfides and the resulting severe shuttle effect. In contra",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    307.4
+   ],
+   "w": 2151,
+   "h": 1055,
+   "dpi": 300,
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Electrochemical behavior and the mediation effects of DIP additive. (a) CV profile of DIP as active material (scan rate: 0.1 mV s−1). (b) Charge/discharge curves of DIP as the active material (charge/discharge rate: 0.1 C). (c) CV curves of elemental sulfur in LiTFSI- FPDS/G2 and DIP-LiTFSI-FPDS/G2 electrolytes (scan rate: 0.05 mV s−1). (d) Comparative charge/discharge profiles (charge/discharge rate: 0.05 C). (e) Charge voltage profiles of microsized Li2S cathode in different electrolytes. (f) Density functional theory (DFT) calculated binding energy of the reaction mediator (RM)-Li2S4 complexes for DIP−Red and DIP−Red(Meso). The insets show different configurations, where Li atoms are green, S atoms are yellow, O atoms are red, C atoms are brown, and H atoms are white. (g) Proposed species evolution of DIP mediator during cycling and schematic of DIP−Red and DIP−Red (Meso) su",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    455.7
+   ],
+   "w": 2151,
+   "h": 1673,
+   "dpi": 300,
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Investigation of the sulfur reaction pathways. (a, b) UV−vis analysis of polysulfide speciation in Li−S cells with LiTFSI-FPDS/G2 electrolyte: (a) Schematic of four-stage UV−vis measurements where the insets are digital photographs of post-mortem separators and DME-immersed electrodes at varying depths of discharge. (b) UV−vis spectroscopic analysis of the supernatant. (c) XRD patterns showing different crystalline phases of sulfur after charging in various electrolytes (α-S8, JCPDS 008-0247; β-S8, JCPDS 071-0137). (d) XRD contour plots of Li−S batteries with DIP-LiTFSI-FPDS/G2 electrolyte and corresponding charge/discharge curves. # denotes Li2S, * denotes S8. (e) Normalized derivative peak intensities showing the evolution of crystalline S8 and Li2S in different electrolytes. The diffraction peak intensity of S8 at the start of discharge and Li2S at the end of discharge were ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    509.4
+   ],
+   "w": 2151,
+   "h": 1897,
+   "dpi": 300,
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Electrochemical performances of Li−S cells with different electrolytes. (a) Long-term cycling performance of Li−S cells in LiTFSI- G2, LiTFSI-FPDS/G2, and DIP-LiTFSI-FPDS/G2 electrolytes. (b) Long-term cycling performance of Li−S cells in DIP-LiTFSI-FPDS/G2 at charge/discharge rates of 0.1 C/0.5 C and 1 C, respectively. (c) Cycling stability of cells under high sulfur loading (3 mg cm−2) with a charge/discharge rate of 0.1 C/0.5 C in DIP-LiTFSI-FPDS/G2. (d) Cycling stability of cells under high sulfur loading (3.5 mg cm−2), at 0.08 C and with a fixed discharge capacity of 800 mAh g−1 in DIP-LiTFSI-FPDS/G2. cycles at 0.2 C (Figure 6a). This robust performance extended to higher rates of 0.5 C and 1 C (Figure 6b, Figure S32). Even under a high discharge rate of 2 C, the Li−S cell retained 605 mAh g−1 after 140 cycles (Figure S33), demonstrating the excellent rate adaptability. To",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    363.5
+   ],
+   "w": 2151,
+   "h": 1289,
+   "dpi": 300,
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Electrochemical performance of a Li−S pouch cell. (a) Cycling performance of the Li−S pouch cell at a rate of 0.05 C (E/S ratio 4 μL mg−1). (b) Cycling performance of the Li−S pouch cell at a rate of 0.05 C (E/S ratio 2 μL mg−1). (c) Charge/discharge voltage profiles of the 6.52 Ah pouch cell. (d) Digital photograph of the Li−S pouch cell. (e) Key parameters of the Li−S pouch cells. ■CONCLUSION ance surpassed that of recently reported electrolyte systems in terms of gravimetric energy density (see summaries in Table S1 and Figure S37). The incorporation of DIP effectively enhances quasi-solid-state sulfur conversion kinetics, enabling high energy density under lean-electrolyte, high-loading conditions. This work establishes a promising pathway toward practical Li−S batteries, while highlighting opportunities for further optimization of electrolyte formulation and cell engineeri",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    600.4
+   ],
+   "w": 2151,
+   "h": 2276,
+   "dpi": 300,
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.679
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The ball-and-stick model of the solvent, where O atoms are red, C atoms are brown, Si",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.5,
+    549.0,
+    245.5
+   ],
+   "w": 2013,
+   "h": 746,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Physical and chemical properties of the electrolyte. (a) Density of electrolyte. (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    74.8,
+    549.1,
+    418.1
+   ],
+   "w": 2013,
+   "h": 1432,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Raman spectra of (a) LiTFSI-G2 electrolyte and (b) LiTFSI-FPDS/G2electrolyte. Raw",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    139.1,
+    549.0,
+    268.1
+   ],
+   "w": 2013,
+   "h": 539,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Electrochemical performances of Li-S cells LiTFSI-G2 and LiTFSI-LiNO3-G2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.5,
+    549.1,
+    440.9
+   ],
+   "w": 2013,
+   "h": 1536,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. (a) Capacity retention of lithium-sulfur batteries in LiTFSI-G2 and LiTFSI-FPDS/G2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.8,
+    549.1,
+    208.4
+   ],
+   "w": 2013,
+   "h": 570,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. SEM images of lithium metal surfaces in lithium-sulfur batteries. (a) SEM image",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.6,
+    549.0,
+    269.1
+   ],
+   "w": 2013,
+   "h": 828,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.439
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. (a-b) Scanning electron microscopy (SEM) images showing the plated Li of Li|Cu cells",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.6,
+    549.1,
+    196.4
+   ],
+   "w": 2013,
+   "h": 521,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.587
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 13,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. SEM images of Li|Cu batteries after 10th cycle. (a) LiTFSI-G2 electrolyte; (b) LiTFSI-",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.4,
+    546.0,
+    176.0
+   ],
+   "w": 2001,
+   "h": 441,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.591
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 14,
+   "file": "fig_S10.png",
+   "caption": "Figure S10 Electrochemical performance of Li||Li symmetric cells tested at a current density of 0.5 mA cm-2 and an areal capacity of 2 mAh cm-2 in LiTFSI-G2 and LiTFSI-FPDS/G2 electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    69.8,
+    549.0,
+    303.9
+   ],
+   "w": 2013,
+   "h": 977,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 15,
+   "file": "fig_S11.png",
+   "caption": "Figure S11 Aurbach Coulombic efficiency of Li|Cu cell in LiTFSI-G2 and LiTFSI-FPDS/G2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    75.4,
+    549.1,
+    268.4
+   ],
+   "w": 2013,
+   "h": 805,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 16,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Elemental Composition Analysis of Li||Li symmetric battery interface by XPS with",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    100.8,
+    549.0,
+    292.5
+   ],
+   "w": 2013,
+   "h": 800,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 17,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. X-ray photoelectron spectroscopy (XPS) characterizations of the Li metal SEI.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    69.0,
+    549.1,
+    365.0
+   ],
+   "w": 2014,
+   "h": 1234,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 20,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Electrochemical Behavior of Lithium-Sulfur Batteries with DIP-LiTFSI-FPDS/G2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    78.0,
+    549.1,
+    268.4
+   ],
+   "w": 2013,
+   "h": 795,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 21,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. EIS and DRT characterization of Li–S batteries using LiTFSI-FPDS/G2 and DIP- LiTFSI-FPDS/G2 electrolytes at a capacity of 200 mAh g-1. (a) Nyquist plots during the discharge",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    26.0,
+    549.0,
+    315.5
+   ],
+   "w": 2013,
+   "h": 1207,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 23,
+   "file": "fig_S18.png",
+   "caption": "Figure S18 EIS and DRT analysis of the battery at different cycling numbers. (a) EIS profile",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    74.5,
+    549.1,
+    423.3
+   ],
+   "w": 2013,
+   "h": 1454,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 25,
+   "file": "fig_S19.png",
+   "caption": "Figure S19 7Li NMR and UV–vis spectra of DIP, DIP + Li2S4, and Li2S4 in FPDS/G2 solvent (a) UV–vis spectra and (b) 7Li NMR spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.3,
+    549.0,
+    259.1
+   ],
+   "w": 2013,
+   "h": 804,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 26,
+   "file": "fig_S20.png",
+   "caption": "Figure S20 (a) UV–vis spectra of DIP, Li2S4, DIP + Li2S4, and DIP + Li2S in G2 solvent. (b) UV–",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.9,
+    546.1,
+    279.9
+   ],
+   "w": 2001,
+   "h": 864,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 27,
+   "file": "fig_S21.png",
+   "caption": "Figure S21 7Li NMR of Li2S4, DIP + Li2S4, and DIP + Li2S in G2 solvent.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.3,
+    439.9,
+    267.8
+   ],
+   "w": 1558,
+   "h": 840,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 28,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. CV curves of Li2S4|Li2S4 symmetric cells with different electrolytes. (a-b)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.4,
+    549.1,
+    451.1
+   ],
+   "w": 2014,
+   "h": 1583,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 30,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Electrochemical impedance spectroscopy (EIS) of Li2S4| Li2S4 symmetric cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    75.1,
+    549.1,
+    252.1
+   ],
+   "w": 2013,
+   "h": 739,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 31,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. The demonstration of universality for improving the cycling performance by DIP.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    82.1,
+    549.1,
+    266.9
+   ],
+   "w": 2013,
+   "h": 770,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 32,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. UV-vis Analysis of Polysulfide Speciation in Li-S Batteries with LiTFSI-G2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    82.6,
+    549.1,
+    284.8
+   ],
+   "w": 2013,
+   "h": 843,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 34,
+   "file": "fig_S26.png",
+   "caption": "Figure S26 (a-b) XRD contour plots showing the XRD patterns during discharging/charging of",
+   "rotated_deg": 0,
+   "bbox": [
+    60,
+    62,
+    552,
+    505
+   ],
+   "w": 2050,
+   "h": 1847,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.831,
+   "manual_crop": "auto crop missed panels a-b (top of page); re-cropped by hand to include a-e, 2026-11-26"
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 36,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. XRD patterns of PP separator, Al2O3-PP separator, and electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    92.6,
+    462.3,
+    266.9
+   ],
+   "w": 1652,
+   "h": 728,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 37,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. Optical images of the separator after disassembly of the in-situ XRD battery with",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.2,
+    549.0,
+    239.1
+   ],
+   "w": 2013,
+   "h": 705,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.325
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 38,
+   "file": "fig_S29.png",
+   "caption": "Figure S29 (a) Schematic illustration of Raman measurement and the as-prepared tested electrodes",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.1,
+    549.0,
+    238.5
+   ],
+   "w": 2013,
+   "h": 702,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.543
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 39,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. (a) Selected positions corresponding to different charge and discharge states in the",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.9,
+    548.8,
+    268.5
+   ],
+   "w": 2012,
+   "h": 816,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 41,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. Raman characterization of the LiTFSI–G2 electrolyte. (a) Electrochemical profile",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.8,
+    549.0,
+    466.9
+   ],
+   "w": 2013,
+   "h": 1647,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 43,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. Voltage profiles of Li–S cells in DIP-LiTFSI-FPDS/G2 at charge/discharge rates of",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    82.2,
+    549.0,
+    268.2
+   ],
+   "w": 2013,
+   "h": 776,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 45,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. Voltage profiles at discharging rates from 0.1 C to 4 C under a constant charging",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    82.2,
+    530.8,
+    268.2
+   ],
+   "w": 1937,
+   "h": 776,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 46,
+   "file": "fig_S35.png",
+   "caption": "Figure 35. Charge–discharge voltage profiles of the cell in LiTFSI FPDS/G2-DIP under a fixed discharge capacity of 800 mAh g-1 at 0.08 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    82.9,
+    541.5,
+    266.6
+   ],
+   "w": 1982,
+   "h": 766,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 50,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of energy density of pouch cells",
+   "rotated_deg": 0,
+   "bbox": [
+    73.0,
+    105.0,
+    552.2,
+    707.2
+   ],
+   "w": 1997,
+   "h": 2510,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 51,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The detailed simulation system compositions of AIMD two modelling systems LiTFSI-G2 LiTFSI-FPDS/G2 LiTFSI 13 15 G2 61 7 FPDS 48 Total no. of atoms 1611 1601 System size (2.5808 nm)3 (2.7105 nm)3",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    509.5,
+    224.6
+   ],
+   "w": 1844,
+   "h": 655,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 55,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Summary of material characterization tests and the corresponding number of",
+   "rotated_deg": 0,
+   "bbox": [
+    91.5,
+    67.5,
+    523.5,
+    418.8
+   ],
+   "w": 1801,
+   "h": 1464,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 56,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Counts of electrochemical and independent tests",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    67.5,
+    509.9,
+    619.2
+   ],
+   "w": 1759,
+   "h": 2300,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 57,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Testing conditions and cycle life of Li-S batteries",
+   "rotated_deg": 0,
+   "bbox": [
+    74.1,
+    67.5,
+    533.9,
+    691.6
+   ],
+   "w": 1917,
+   "h": 2601,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) Raman spectra of LiTFSI-FPDS/G2 electrolyte with Si-O bands. (b) Raman spectra",
+   "rotated_deg": 0,
+   "bbox": [
+    75.4,
+    74.8,
+    549.1,
+    325.4
+   ],
+   "w": 1974,
+   "h": 1046,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "manual_crop": "extractor excluded as 'no graphics' (vector figure); cropped by hand from union of drawings/images above caption, 2026-11-26"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 18,
+   "file": "fig_S14.png",
+   "caption": "Figure S14 Effect of DIP on the electrolyte solvation structure. (a) Raman spectra of the TFSI-",
+   "rotated_deg": 0,
+   "bbox": [
+    89.8,
+    81.2,
+    549.1,
+    277.2
+   ],
+   "w": 1915,
+   "h": 818,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "manual_crop": "extractor excluded as 'no graphics' (vector figure); cropped by hand from union of drawings/images above caption, 2026-11-26"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 19,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Electrochemical performance of DIP active material. (a) Voltage profiles at different",
+   "rotated_deg": 0,
+   "bbox": [
+    74.5,
+    70.1,
+    549.1,
+    271.9
+   ],
+   "w": 1978,
+   "h": 842,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "manual_crop": "extractor excluded as 'no graphics' (vector figure); cropped by hand from union of drawings/images above caption, 2026-11-26"
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 44,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. Long-term cycling performance of Li–S cells in DIP-LiTFSI FPDS/G2 at",
+   "rotated_deg": 0,
+   "bbox": [
+    179.3,
+    82.1,
+    439.0,
+    271.2
+   ],
+   "w": 1083,
+   "h": 789,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "manual_crop": "extractor excluded as 'no graphics' (vector figure); cropped by hand from union of drawings/images above caption, 2026-11-26"
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 47,
+   "file": "fig_S36.png",
+   "caption": "Figure S36. Electrochemical performance of Li−S batteries with DIP-LiTFSI-FPDS/G2",
+   "rotated_deg": 0,
+   "bbox": [
+    73.5,
+    85.9,
+    549.1,
+    583.3
+   ],
+   "w": 1982,
+   "h": 2073,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "manual_crop": "extractor excluded as 'no graphics' (vector figure); cropped by hand from union of drawings/images above caption, 2026-11-26"
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 49,
+   "file": "fig_S37.png",
+   "caption": "Figure S37. Comparison of sulfur loading and electrolyte/sulfur (E/S) ratio for pouch-type Li–S",
+   "rotated_deg": 0,
+   "bbox": [
+    83.3,
+    78.9,
+    549.1,
+    337.9
+   ],
+   "w": 1941,
+   "h": 1081,
+   "dpi": 300,
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "manual_crop": "extractor excluded as 'no graphics' (vector figure); cropped by hand from union of drawings/images above caption, 2026-11-26"
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p3",
+    "p4",
+    "p5",
+    "p6"
+   ],
+   "resolved": "manual_crop -> fig_S4.png (2026-11-26)"
+  },
+  {
+   "key": "fS14",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p18 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p18"
+   ],
+   "resolved": "manual_crop -> fig_S14.png (2026-11-26)"
+  },
+  {
+   "key": "fS15",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p19 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p6",
+    "p19"
+   ],
+   "resolved": "manual_crop -> fig_S15.png (2026-11-26)"
+  },
+  {
+   "key": "fS33",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p44 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p9",
+    "p44"
+   ],
+   "resolved": "manual_crop -> fig_S33.png (2026-11-26)"
+  },
+  {
+   "key": "fS36",
+   "why": "끝 번호 — 본문이 Fig. S37 까지 가리키는데 추출 최대는 35 (남의 논문 그림 참조일 수도 있다 · 확인)",
+   "skipped": [
+    "p47 그래픽 없음(img0/draw4)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p9",
+    "p47"
+   ],
+   "resolved": "manual_crop -> fig_S36.png (2026-11-26)"
+  },
+  {
+   "key": "fS37",
+   "why": "끝 번호 — 본문이 Fig. S37 까지 가리키는데 추출 최대는 35 (남의 논문 그림 참조일 수도 있다 · 확인)",
+   "skipped": [
+    "p49 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p10",
+    "p49"
+   ],
+   "resolved": "manual_crop -> fig_S37.png (2026-11-26)"
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "6. Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "6. Sup) Synergistic Electrolyte Solvation and Mediation Engineering for Quasi-Solid-State Sulfur Electrochemistry.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ]
+}

@@ -1,0 +1,902 @@
+{
+ "slug": "lai2026_mtbe_moderately_solvating_ether_cosolvent_lis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-26",
+ "sources": [
+  "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+  "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Design rationale of MSEs. a) Schematic illustration of Li–S cells with MSE-MtBE. b) Physicochemical properties of various solvents. c) Digital photos of Li2S6 solution in diﬀerent solvents. d) Binding energy of Li+ ion to various solvent molecules and e) their corresponding pairing structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    58.0,
+    549.2,
+    327.6
+   ],
+   "w": 2097,
+   "h": 1124,
+   "dpi": 300,
+   "src": "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.533,
+   "recrop": "2026-11-26 다시 자름 — 도구 판은 위쪽 y≈72 pt 에서 시작해 패널 라벨 a) b) c) (y 61–71 pt) 와 그림 윗부분이 잘렸다 · 위끝만 58 pt 로 올림 (머리글 Research Article 은 y 22–38 이라 안 들어온다)",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Eﬀect of MSEs on solvation structures and anode stability. a) 7Li NMR spectra of various electrolytes. b), c) 1H NMR spectra of diﬀerent solvent mixtures and electrolytes. d) Coordination number (CN) of DME around Li+ ion derived from MD results. e) Binding energy between DME and various solvents. f) Arrhenius plot of the charge-transfer resistance in Li || Li cells and the extracted activation energy. g) Voltage proﬁles of Li || Ni cells for CE measurements. h) Cycling performance of Li || Li symmetric cells in DOL/DME and MSE-MtBE.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.3,
+    58.0,
+    548.8,
+    468.6
+   ],
+   "w": 2095,
+   "h": 1712,
+   "dpi": 300,
+   "src": "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.861,
+   "recrop": "2026-11-26 다시 자름 — 도구 판은 위쪽 y≈72 pt 에서 시작해 패널 라벨 a) b) c) (y 61–71 pt) 와 그림 윗부분이 잘렸다 · 위끝만 58 pt 로 올림 (머리글 Research Article 은 y 22–38 이라 안 들어온다)",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Characterization of polysulﬁde solvating environment and conversion kinetics. a) 7Li NMR spectra of LiPS in various solvent mixtures. b) 1H and c) 7Li chemical shifts and diﬀusion coeﬃcients for diﬀerent LiPS solutions, obtained from DOSY NMR. d), e) Solvation structures of S62−anion in DOL/DME and MSE-MtBE, retrieved from AIMD snapshots. f) RDF curves of Li+ around S62−in diﬀerent electrolytes, derived from AIMD results. g) Overall cell overpotential (ηtotal) derived from the GITT-EIS measurement. h) DRT analysis of Li2S6 symmetric cell with MSE-MtBE at various temperatures. i) Arrhenius plot of the charge-transfer resistance and the extracted activation energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.7,
+    58.0,
+    548.9,
+    452.6
+   ],
+   "w": 2094,
+   "h": 1645,
+   "dpi": 300,
+   "src": "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.902,
+   "recrop": "2026-11-26 다시 자름 — 도구 판은 위쪽 y≈72 pt 에서 시작해 패널 라벨 a) b) c) (y 61–71 pt) 와 그림 윗부분이 잘렸다 · 위끝만 58 pt 로 올림 (머리글 Research Article 은 y 22–38 이라 안 들어온다)",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Operando XRD patterns and the corresponding voltage proﬁles of Li || S cells with a) MSE-MtBE and b) DOL/DME electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    58.0,
+    508.1,
+    208.2
+   ],
+   "w": 1926,
+   "h": 627,
+   "dpi": 300,
+   "src": "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.591,
+   "recrop": "2026-11-26 다시 자름 — 도구 판은 위쪽 y≈72 pt 에서 시작해 패널 라벨 a) b) c) (y 61–71 pt) 와 그림 윗부분이 잘렸다 · 위끝만 58 pt 로 올림 (머리글 Research Article 은 y 22–38 이라 안 들어온다)",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical performances of Li || S cells with diﬀerent electrolytes at a sulfur loading of 3.5–3.7 mg cm−2. a) Long-term cycling performance at a rate of C/5. b) Rate performance of the cells. c) Voltage proﬁles of the MSE-MtBE cell cycled at diﬀerent rates. d) Cycling performance and e) charge–discharge curves of the 1st cycle at 45 °C. f) Cycling performance of a pouch cell with MSE-MtBE.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.3,
+    58.0,
+    548.3,
+    303.9
+   ],
+   "w": 2093,
+   "h": 1026,
+   "dpi": 300,
+   "src": "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.874,
+   "recrop": "2026-11-26 다시 자름 — 도구 판은 위쪽 y≈72 pt 에서 시작해 패널 라벨 a) b) c) (y 61–71 pt) 와 그림 윗부분이 잘렸다 · 위끝만 58 pt 로 올림 (머리글 Research Article 은 y 22–38 이라 안 들어온다)",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. XPS characterization of cycled Li anodes and S cathodes in MSE-MtBE and DOL/DME electrolytes. a) S 2p and b) F 1s spectra for the Li anode after 30 cycles. c) Contour plots of S 2p and F 1s spectra for the Li anode with Ar-cluster ion sputtering. d) S 2p and e) F 1s spectra for the S cathode after 30 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    58.0,
+    548.8,
+    340.6
+   ],
+   "w": 2101,
+   "h": 1179,
+   "dpi": 300,
+   "src": "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.653,
+   "recrop": "2026-11-26 다시 자름 — 도구 판은 위쪽 y≈72 pt 에서 시작해 패널 라벨 a) b) c) (y 61–71 pt) 와 그림 윗부분이 잘렸다 · 위끝만 58 pt 로 올림 (머리글 Research Article 은 y 22–38 이라 안 들어온다)",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Electrostatic potential plot of various solvent molecules.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    161.3,
+    545.0,
+    487.7
+   ],
+   "w": 1996,
+   "h": 1361,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.675,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Digital photos of Li2S6 solution in DOL with different amount of MtBE.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    542.0,
+    551.7,
+    625.2
+   ],
+   "w": 2024,
+   "h": 348,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.703,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Raman spectra of various electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    86.6,
+    437.6,
+    296.1
+   ],
+   "w": 1549,
+   "h": 874,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.922,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. 19F chemical shifts and diffusion coefficients of DOL/DME and MSE-MtBE, obtained from DOSY NMR spectroscopy.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    549.1,
+    293.6
+   ],
+   "w": 2013,
+   "h": 1099,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.966,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. MD snapshots of various electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    505.8,
+    680.2
+   ],
+   "w": 1833,
+   "h": 2560,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.511,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Radial distribution function and coordination number (CN) for solvent around Li+ in various MSEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    549.1,
+    330.6
+   ],
+   "w": 2013,
+   "h": 1253,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.961,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. (a) Tafel plots of Li || Li cells with various electrolytes and (b) the corresponding exchange current densities.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    545.0,
+    258.0
+   ],
+   "w": 1971,
+   "h": 775,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.918,
+   "manual_crop": "2026-11-26 수동 크롭 — 도구 판이 같은 쪽의 Fig. S10 래스터 (Nyquist) 를 S9 로도 잘라 fig_S9 = fig_S10 바이트 동일이었다 · S9 는 벡터 그림 (y 76–250 pt) · clip 72–545 × 72–258 pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Nyquist plots of Li || Li symmetric cell in various electrolytes at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    336.2,
+    563.0,
+    614.9
+   ],
+   "w": 2071,
+   "h": 1163,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.918,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. DRT plots for Li || Li symmetric cells in various electrolytes at different temperatures. Resistance value can be obtained as the area of the corresponding DRT peak (γ(ln 𝜏)) in ln 𝜏 space.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    565.7,
+    344.8
+   ],
+   "w": 2082,
+   "h": 1312,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.915,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Voltage profiles of Li || Ni cells with various MSEs for CE measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    395.0,
+    499.9,
+    620.5
+   ],
+   "w": 1808,
+   "h": 941,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.953,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 12,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Charge-discharge curves of the formation cycle for Li || S cell with MSE-MtBE.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    278.9
+   ],
+   "w": 2000,
+   "h": 1038,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.966,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. AIMD snapshots for Li2S6 in DOL/DME and MSE-MtBE.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    336.4,
+    548.3,
+    567.7
+   ],
+   "w": 2010,
+   "h": 965,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.726,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Voltage profiles of shuttle current measurement in different electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    289.8
+   ],
+   "w": 2000,
+   "h": 1083,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.956,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 13,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. (a) Discharge curves of the GITT-EIS measurement for DOL/DME and MST-MtBE. The derived (b) ohmic (ηohm), (c) activation (ηact), and (d) concentration (ηconc) polarizations.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    307.0,
+    549.1,
+    613.7
+   ],
+   "w": 2013,
+   "h": 1279,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.962,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Digital photos showing electrolyte droplets deposited on the cathode surface. The MSE-MtBE droplet spreads further by 25 ms, suggesting it wets the cathode faster.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    549.1,
+    411.8
+   ],
+   "w": 2013,
+   "h": 1591,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.476,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 14,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Chronoamperometry curves of Li2S8 discharged at 2.08 V with different electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    449.7,
+    549.1,
+    670.7
+   ],
+   "w": 2013,
+   "h": 922,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.923,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 15,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Nyquist plots of Li2S6 symmetric cells with various electrolytes at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    548.9,
+    236.3
+   ],
+   "w": 2013,
+   "h": 860,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.944,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 15,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. DRT plots of Li2S6 symmetric cells with various electrolytes at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    339.9,
+    549.1,
+    514.5
+   ],
+   "w": 2013,
+   "h": 728,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.961,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 16,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Ionic conductivity of DOL/DME and MSE-MtBE at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    251.4
+   ],
+   "w": 2000,
+   "h": 923,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.898,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 16,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. CV curves of Li2S6 symmetric cell with different electrolytes. The cells were scanned at a rate of 5 mV s−1 for 5 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    324.0,
+    549.1,
+    512.7
+   ],
+   "w": 2013,
+   "h": 788,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.936,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 17,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. XRD patterns of S cathodes cycled in DOL/DME electrolyte and after immersing in MSE-MtBE.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    548.7,
+    283.1
+   ],
+   "w": 2012,
+   "h": 1055,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.953,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 17,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Long-term cycling performance of Li || S cells at a sulfur loading of 2.2 mg cm−2 and a rate of C/3.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    390.0,
+    549.1,
+    554.9
+   ],
+   "w": 2013,
+   "h": 687,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.914,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 18,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Long-term cycling performance of a Li || S cell with MSE-MtBE at a sulfur loading of 3.6 mg cm−2 and a rate of C/10.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    549.1,
+    248.8
+   ],
+   "w": 2013,
+   "h": 912,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.954,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 18,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Voltage profiles of the DOL/DME cell cycled at different rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    345.7,
+    447.9,
+    526.8
+   ],
+   "w": 1592,
+   "h": 756,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.933,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 19,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. Coulombic efficiencies for the cells with different electrolytes cycled at 45 °C. Note: Other MSEs were tested for comparison, and MSE-MtBE has the highest and most stable CEs, and MSE-CPME shows the lowest CEs among MSEs. This suggests some degree of correlation between solvation structure and cycling performance as the CEs of different electrolytes match the sequence of chemical shifts in Li NMR.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    558.2,
+    238.0
+   ],
+   "w": 2052,
+   "h": 867,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.912,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 19,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. Cycling performance of a pouch cell with higher S loading and a lower E/S ratio.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    395.9,
+    532.4,
+    582.0
+   ],
+   "w": 1944,
+   "h": 777,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.933,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 20,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. SEM images of the Li-metal anode after 30 cycles in Li || S cells with different electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    549.1,
+    231.8
+   ],
+   "w": 2013,
+   "h": 841,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.352,
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read via 2x2 contact sheet (reduced scale)"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 21,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Physicochemical properties of solvents used in this work. Data were obtained from vendor information and literature sources.[17, 18] Note: No viscosity value is available for SBME, and a value of 0.4 is used in Figure 1b.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    548.1,
+    319.7
+   ],
+   "w": 2005,
+   "h": 1052,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.945,
+   "viewed": false
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 22,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Comparison of MSE-MtBE and other reported high-performance MSEs or weakly solvating electrolytes Ref. Electrolyte S composite Cycles Conditions Loading E/S Initial capacity Capacity Type 70 wt% S in KB+CNT 150 C/5, 55 °C 2 5 680 620 Coin [19] BDTS–LiTFSI– CPME 75 wt% S in graphene 24 40 °C 4 3 1140 740 Pouch [20] HME-EPSE 70 wt% S in CNT 69 C/10, 25 °C 4.4 6.6 1010 860 Coin [21] G20.8LiTFSI 70 wt% S in KB 10 25 °C 3 5 1422 1410 Pouch [22] (THF)2-LiTFSI 70 wt% S in KB 160 C/20, 55 °C 3 5 800 (constant) Coin [23] DOL/DME/HFE 70 wt% S in CNT 20 C/20 7.4 3.5 1200 999 Pouch 300 C/7.5, 1.0M-DMFN 80 wt% S in KB 25 °C 4 8 770 604 Coin [24] 0.8M-DMFN 60 C/15, 25 °C 4 5.2 1000 870 Pouch [25] DME-TFTFE Unknown 154 0.15 C 3.8 5 900 600 Coin 135 C/10 2.5 3.5 1160 812 Pouch [26] F4DMB Unknown 20 C/10, 60 °C 5.3 7 1050 620 Coin 75 wt% S in SDKB 180 C/5, 21 °C 3.7 10 894 710 Coin This work MSE",
+   "rotated_deg": 0,
+   "bbox": [
+    63.2,
+    67.5,
+    586.3,
+    593.5
+   ],
+   "w": 2180,
+   "h": 2193,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.921,
+   "viewed": false
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 23,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Initial configuration of the MD simulation cell for each electrolyte system",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    491.6,
+    254.1
+   ],
+   "w": 1770,
+   "h": 778,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "blank": 0.906,
+   "viewed": false
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. 19F NMR spectra of various electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    165,
+    340,
+    465,
+    592
+   ],
+   "w": 1251,
+   "h": 1051,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "manual_crop": "2026-11-26 수동 크롭 — SI 그림이 래스터 없이 벡터 선 (그림 칸 draw 수가 문턱 아래) 로만 그려져 도구가 그래픽 없음으로 버렸다 · clip [165, 340, 465, 592] pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. (a,b) SAXS profiles for DOL/DME and MSE-MtBE with scattering factor q and d spacing as the x axis, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    72,
+    438,
+    515,
+    622
+   ],
+   "w": 1846,
+   "h": 767,
+   "dpi": 300,
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "manual_crop": "2026-11-26 수동 크롭 — SI 그림이 래스터 없이 벡터 선 (그림 칸 draw 수가 문턱 아래) 로만 그려져 도구가 그래픽 없음으로 버렸다 · clip [72, 438, 515, 622] pt · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-26 litdb-curator: Read (full-resolution crop)"
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p6 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p3",
+    "p6"
+   ]
+  },
+  {
+   "key": "fS8",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p9 그래픽 없음(img0/draw4)"
+   ],
+   "near_miss": [],
+   "refs": [
+    "p3",
+    "p9"
+   ]
+  }
+ ],
+ "table_caption_vote": [
+  {
+   "src": "7. Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  },
+  {
+   "src": "7. Sup) Modulating Li+ and Polysulfide Solvation with Low‐Density Moderately Solvating Electrolytes for Lithium–Sulfur Batteries.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 1,
+   "caption_below": false
+  }
+ ],
+ "missing_labels_resolved": [
+  {
+   "key": "fS4",
+   "how": "manual_crop p6"
+  },
+  {
+   "key": "fS8",
+   "how": "manual_crop p9"
+  }
+ ]
+}
