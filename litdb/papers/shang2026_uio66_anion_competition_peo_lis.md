@@ -1,226 +1,523 @@
-<!-- digest 초판 2026-11-26 (논문 에이전트 · 범위 제한 세션: digest 파일 + 그림 폴더만 씀 —
-     INDEX.md · comparison_vs_ours.md · _sources.json · pdf_map.tsv 반영과 커밋은 부모 세션 몫).
-     ① 그림 추출: tools/litdb/extract_figures.py 의 extract() 를 직접 불러 이 논문 폴더에만 썼다 (CLI 는 끝에 공유 색인
-        litdb/figures/_sources.json 을 다시 쓰므로 피했다 · 실행 전후 _sources.json · pdf_map.tsv md5 동일 확인).
-        26장 = 본문 Fig. 1–7 + SI Fig. S1–S17 + Table S1–S2. 번호 공백 경고 없음.
-     ② 실제로 본 그림 (원본 크기 Read): `Fig. 2` · `Fig. 3` · `Fig. 4` · `Fig. 5` · `Fig. 6` · `Fig. 7` · `Fig. S16` (7장).
-        안 본 그림: `Fig. 1` (합성 모식도 · XRD · BET · TEM · SEM · EDS) · `Fig. S1`–`S15` · `Fig. S17` — 캡션과 본문 서술만 썼다.
-        표 `Table S1` · `Table S2` 는 PDF 텍스트로 읽었다 (이미지 안 봄).
-     ③ 우리 산수: Table S1 → 아레니우스 재적합 · Table S2 → 결합에너지 재계산 · Tafel 기울기 → αn · 홉 수 검산 · TGA 잔량 질량수지.
-     ④ 홉 수 검산 = D-2026-09-27-barrier-hop-count (ν₀ 10¹³ s⁻¹ 가정 · T 명시).
-     ⑤ 흡착 자리 배위 = D-2026-10-05-adsorption-site-coordination (구조 비공개 → '배위 미확인' 병기). -->
+<!-- digest 표준 양식 (paper-level STANDALONE) · 깊이 기준 = papers/zuo2022_chlorination_cathode_interface.md · 형식 참고 = papers/shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis.md
+     2026-11-26 초판 (논문 에이전트 · 범위 제한 세션) → 2026-11-26 **전면 재작성** (같은 slug · 같은 파일 · 범위 제한 세션 2).
+     ① 원문: 본문 28 pp (Journal Pre-proof · 표지 2 쪽 포함) + SI 30 pp 글자층 **전문** 정독 (SI 1.1–1.7 실험·DFT 방법 · Fig. S1–S17 캡션과 해설 · Table S1–S2 · SI 참고문헌 14).
+     ② 그림: `litdb/figures/shang2026_uio66_anion_competition_peo_lis/` 에 이미 잘린 PNG 를 썼다 — **다시 뽑지 않았다** (extract_figures.py 실행 0).
+        직접 Read 로 본 PNG = **본문 7 장 (`Fig. 1`–`Fig. 7` 전부) + SI 17 장 (`Fig. S1`–`Fig. S17` 전부) = 24 장**.
+        안 본 것 = 표 이미지 `tab_S1.png` · `tab_S2.png` 2 장 (값은 PDF 글자층으로 읽었다 — 표는 글자가 더 정확하다).
+        픽셀 판독 (축 눈금 위치 → 값 환산 · python/PIL) 을 한 패널: `Fig. 5c` (PL 7 점) · `Fig. 5d` · `Fig. 6c` · `Fig. 6d` · `Fig. 6e` · `Fig. S12`.
+     ③ 우리 산수: Table S1 → 구간 아레니우스 재적합 (Ea · 전지수 인자 A · R²) · 대조군 비율 · Table S2 → 결합에너지 재계산 + 치환 반응에너지 · 점전하 쿨롱 차수 ·
+        Tafel → αn · S17 → Q_H + Q_L 합 · 이론 용량 대비 · TGA 질량수지 · EO:Li · 홉 수 검산 (D-2026-09-27) · Bruce–Vincent 민감도.
+     ④ 흡착 자리 배위 (D-2026-10-05): 구조 비공개 → '배위 미확인' · 클러스터 화학식으로 **링커 4 개 결손 · 전하 미보상 노드** 임을 역산.
+     ⑤ 이 세션은 digest 파일 하나만 고쳤다 — INDEX.md · comparison_vs_ours.md · _sources.json · pdf_map.tsv · git 은 부모 세션 몫.
+     talk 인입 대기열: 이 세션에서 확인 안 함 (부모 세션 몫). -->
 
-# Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state lithium–sulfur batteries — Shang et al. (*Chem. Eng. J.* 2026, Journal Pre-proof)
+# Dynamic anion competition induced charge reconstruction toward accelerated ion migration and sulfur conversion kinetics in solid-state lithium–sulfur batteries — Shang, Yang\* et al. (*Chem. Eng. J.* 2026, Journal Pre-proof)
 
-> slug `shang2026_uio66_anion_competition_peo_lis` · DOI `10.1016/j.cej.2026.184621` (CEJ 184621 · PII S1385-8947(26)12091-9) · type `exp (PEO/LiTFSI + PAN/UiO-66 전기방사 섬유망 복합 고분자전해질 · EIS · LSV · t⁺ · 대칭셀 · CV/Tafel · in-situ EIS/DRT · GITT · XPS/VB-XPS · FTIR/Raman · UV-vis) + DFT 보조 (CP2K PBE-D3(BJ) · 고립 Zr₆ 노드 클러스터 · 결합에너지 2개 + CDD · Bader · ELF · DOS/PDOS)` · PDF `litdb/inbox/1. Dynamic anion competition … batteries.pdf` (본문 28 pp, Journal Pre-proof) + `litdb/inbox/1. Sup) Dynamic anion competition … batteries.pdf` (SI 30 pp: 실험 pp.2–7 · DFT pp.7–8 · `Fig. S1`–`S17` · `Table S1`–`S2`) · digested `2026-11-26` · status ✅ · 태그 **[외부 · 고분자 전해질 · Li–S]**
-
+> slug `shang2026_uio66_anion_competition_peo_lis` · DOI `10.1016/j.cej.2026.184621` (CEJ 184621 · PII S1385-8947(26)12091-9) · type `mixed — exp 주 (PEO/LiTFSI + PAN/UiO-66 전기방사 섬유망 복합 고분자전해질 · XRD · BET · TEM/SEM/EDS · TGA · 인장 · FTIR · Raman · EIS σ(T) · LSV · Bruce–Vincent t⁺ · Li|Li 대칭셀 · CV/Tafel · in-situ EIS/DRT · ex-situ S 2p XPS · GITT · UV-vis · XPS/VB-XPS · 코인/파우치) + DFT 보조 (CP2K 2025.2 PBE-D3(BJ) · 고립 Zr₆ 노드 클러스터 (전하 +4) · 결합에너지 2 개 · CDD · Bader · ELF · DOS/PDOS) — AIMD 0 · MD 0 · NEB 0 · MLIP 0 · COHP 0` · PDF `litdb/inbox/1. Dynamic anion competition … batteries.pdf` (본문 28 pp) + `litdb/inbox/1. Sup) Dynamic anion competition … batteries.pdf` (SI 30 pp: 실험 pp.2–7 · DFT pp.7–8 · `Fig. S1`–`S17` · `Table S1`–`S2`) · digested `2026-11-26` (재작성) · status ✅ · 태그 **[외부 · 고분자 전해질 · 준고체(양극 액체 젖음) Li–S · 비-argyrodite]**
 > elements: Zr, S, Li, O, N, F, C
 > methods: DFT, Bader, ELF, DOS, PDOS, XPS, Raman, ESW
 
-> **저자**: **Hongyu Shang**ᵃ · **Rong Yang**ᵃ\* (yangrong@xaut.edu.cn) · Yurou Wangᵃ · Zhixin Muᵃ · Xin Dongᵃ · Ruixuan Yangᵃ · Ying Zhuᵇ · Min Zhangᵃ · **Jou-Hyeon Ahn**ᶜ · Hyun Woo Kimᶜ — ᵃ西安理工大学(Xi'an Univ. of Technology) 재료과학공학원 · ᵇ같은 대학 인문외국어학원 · ᶜ**경상국립대(Gyeongsang National Univ.)** 재료공학·융합기술학과.
-> 접수 2026-08-29 · 수정 2026-10-23 · 수락 2026-11-22 · **Journal Pre-proof** (최종 편집본 아님 — 인용 시 지위를 밝힌다). 자금: NSFC 52571179 · Energy Shaanxi Lab ESL B/202423 · 陕西 2023GHJD-18 · 咸阳 L2025-ZDYF-XCL-011 · 한국 과기정통부/연구개발특구진흥재단 RS-2023-IN231026. **데이터: "요청 시 제공"** — DFT 구조 비공개.
-> 기여: 계산(Software/Methodology) = **Ruixuan Yang · Min Zhang**. 같은 그룹 선행: ref [12] Shang *et al.* *Energy Storage Mater.* 89 (2026) 105199 (초분자 host–guest · 고체 Li–S).
+> **저자**: **Hongyu Shang**ᵃ · **Rong Yang**ᵃ\* (yangrong@xaut.edu.cn) · Yurou Wangᵃ · Zhixin Muᵃ · Xin Dongᵃ · Ruixuan Yangᵃ · Ying Zhuᵇ · Min Zhangᵃ · **Jou-Hyeon Ahn**ᶜ · Hyun Woo Kimᶜ — ᵃ西安理工大学 (Xi'an Univ. of Technology) 재료과학공학원 · ᵇ같은 대학 인문외국어학원 · ᶜ**경상국립대 (Gyeongsang National Univ.)** 재료공학·융합기술학과 (진주).
+> 접수 2026-08-29 · 수정 2026-10-23 · 수락 2026-11-22 · **Journal Pre-proof** (최종 편집본 아님 — 인용 시 지위를 밝힌다). 자금: NSFC 52571179 · Energy Shaanxi Lab ESL B/202423 · 陕西 2023GHJD-18 · 咸阳 L2025-ZDYF-XCL-011 · 한국 과기정통부/연구개발특구진흥재단 RS-2023-IN231026. 이해 상충 없음. **데이터: "Data will be made available on request"** — DFT 구조 · 원 스펙트럼 비공개.
+> 기여 (CRediT): 계산 (Software · Methodology) = **Ruixuan Yang · Min Zhang** · 실험·작성 = Shang · R. Yang · Y. Wang · Mu · 감독 = Ahn.
+> **계보**: ref [17] Zhang *et al.* *Small Struct.* 2023 (UiO-66 기능기 Lewis 산–TFSI⁻ 상호작용으로 PEO 해리 촉진) · ref [18] Zhang *et al.* *Chem. Eng. J.* 2025 (MOF-5 / PEO · 폴리설파이드 고정) · ref [20] Li *et al.* *Sci. Adv.* 2024 (ordered-MOF 복합 SE Li–S) · ref [24] Li, …, Zhang *Joule* 2026 ('competitive anion coordination' — 이 논문 제목의 개념 원천) · **같은 그룹 선행** ref [12] Shang *et al.* *Energy Storage Mater.* 89 (2026) 105199 (초분자 host–guest · 고체 Li–S · DRT τ 구간 정의를 여기서 가져온다).
+> 🔗 **이어 읽기**: 고분자 전해질 · 흡착에너지 반례 계열 `yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal` · `yu2026_pvdf_mos2_anion_solvent_confinement` · `meng2026_pvdf_li2zrf6_phase_ordering` / Li–S `wei2026_data_driven_hea_mediator_lis` · `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` · `wang2025_miec_tis2_lps_three_phase_interface_lis_assb` 등 — 대응은 §14.
 
-> **트랙 판정 (정직하게)**: 재료가 **PEO-LiTFSI 고분자 전해질 + MOF 충전재**이고 전지는 **Li–S (S/CNT 양극 · 60 °C)** 다. 우리 계(argyrodite 황화물 LPSCl · QE PBE · UMA MD)와 **겹치는 물성 칸이 없다.** DFT 는 *전하를 띤 고립 클러스터* 위 결합에너지 2개 + 그림 분석 묶음이다 ⇒ **A–D 물성 4축 표에는 넣지 않는다.** 쓸모는 ① 화학결합 규모 흡착에너지의 **방법 반례**(전하 상태가 다른 두 흡착종 비교 — 저자 스스로 과대평가를 인정) ② CP2K 설정 선례 하나 ③ Li–S 양극 쪽 S 2p XPS 지정의 **경고 사례**.
-
-> **관련 digest**: 고분자 전해질 + '화학결합 규모 흡착에너지' 반례 계열 `[Yuan26LCE]` `yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal` (SiO₂–TFSI⁻ 3.11 eV · 1-배위 Si) · `[Yu26Pol]` `yu2026_pvdf_mos2_anion_solvent_confinement` · `[Meng26LZF]` `meng2026_pvdf_li2zrf6_phase_ordering` (FSI⁻/LZF) · CP2K 선례 `[Liu26CCTO]` `liu2026_ccto_colossal_dielectric_interlayer_dry_lpscl` · `[Zhang26PI3]` `zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector` · Li–S 쪽 `cronk2026_lis_cathode_interphase_chemistry` · `wang2025_miec_tis2_lps_three_phase_interface_lis_assb` · `luo2026_lis_separator_crystal_engineering_review`.
-
-> **본 digest 에서 실제로 본 그림 (2026-11-26)**: `Fig. 2` (DFT 전부) · `Fig. 3` (UV-vis · XPS · VB-XPS · 모식도) · `Fig. 4` (XRD · TGA · 인장 · FTIR · Raman) · `Fig. 5` (σ · 아레니우스 · LSV · t⁺ · 대칭셀) · `Fig. 6` (CV · Tafel · in-situ EIS · DRT) · `Fig. 7` (GITT · 사이클 · LFP · 파우치) · `Fig. S16` (ex-situ S 2p) — **7장, 원본 크기**. **안 본 그림**: `Fig. 1` · `Fig. S1`–`S15` · `Fig. S17` (캡션·본문만 사용). `Table S1`·`S2` 는 PDF 텍스트.
-> 그림에서만 읽은 값은 **`figure-read ≈`**, 논문에 없는 우리 계산은 **(우리 산수)** 로 표시했다. 문헌 수치는 소환값이다 — 우리 db 절대값과 섞지 않는다.
+> **본 그림 (2026-11-26 재작성 세션 · 원본 PNG 를 Read 로 직접)**: 본문 `Fig. 1`–`Fig. 7` **7 장 전부** · SI `Fig. S1`–`Fig. S17` **17 장 전부** = **24 장**. **안 본 것**: `Table S1` · `Table S2` 의 표 이미지 2 장 (PDF 글자층 값 사용).
+> 표기: 그림에서만 읽은 값은 **`figure-read ≈`** · 픽셀 좌표로 눈금을 환산한 값은 **`figure-read (픽셀) ≈`** · 논문에 없는 우리 계산은 **(우리 산수)**. 문헌 수치는 소환값이다 — 우리 db 절대값과 섞지 않는다.
 
 ---
 
-## 0. 이 digest 를 읽는 법 — 판정 먼저
+## 0. 이 digest 를 읽는 법
 
-주장 (한 문장): *"UiO-66 의 열린 Zr⁴⁺ 자리가 처음엔 TFSI⁻ 를 약하게 잡아 LiTFSI 해리·Li⁺ 이동을 돕고, 방전 중 생긴 폴리설파이드(Sₙ²⁻)가 더 세게 붙어 TFSI⁻ 를 밀어내며 Zr 자리 전하를 재구성해 황 변환을 빠르게 한다."*
+**읽기축 (우리 트랙에서의 자리)**: 재료는 **PEO-LiTFSI 고분자 전해질 + UiO-66 (Zr-MOF) 충전재**, 전지는 **Li–S (S/CNT 양극 · 60 °C · 양극에 액체 5 µL)** 다. argyrodite 황화물 SE (우리 LPSCl · QE PBE · UMA MD) 와 **같은 물성 칸이 없다** ⇒ A–D 물성 4축 표에 행을 만들지 않는다. 쓰는 곳은 셋이다 — ① **방법 반례** (전하를 띤 절단 클러스터 위에서 **전하가 다른 두 음이온**의 결합에너지 비교 · 저자도 과대평가를 인정) ② **CP2K 설정 선례 1 점** (PBE-D3(BJ) · DZVP→TZV2P · 400/55 Ry) ③ **보고 규약 감사 사례** (라벨 숫자가 자기 그림 축과 어긋나는 곳이 여럿 — Tafel 기울기는 **10 배**).
 
-| 질문 | 한 줄 답 | 절 |
+**판정 요약 (§6 · §10 상세)**:
+
+| 주장 | 판정 | 핵심 근거 |
 |---|---|---|
-| ① σ 2.8 배 향상이 UiO-66(Zr⁴⁺) 덕인가 | **60 °C 에서는 거의 아니다.** 같은 `Table S1` 에 UiO-66 **없는** PAN 섬유망 대조(PPL)가 있고, 60 °C σ 는 PPL **3.54** vs PUPL **3.75 ×10⁻⁴ S cm⁻¹** — UiO-66 몫 ≈ **1.06 배** (우리 산수). 2.8 배 중 대부분은 PAN 섬유망이다. UiO-66 효과가 큰 곳은 **25 °C (PPL 대비 4.4 배)** — 결정화 억제 영역 | §3a · §10-① |
-| ② DFT 가 "S₆²⁻ 가 TFSI⁻ 보다 세게 붙는다"를 보였나 | **보이지 못한다.** 클러스터 전하 **+4**, 흡착종 전하 **−1 vs −2** 라 −11.96 vs −26.45 eV 의 차이는 **쿨롱 항**이 대부분이고, 저자도 SI 에서 그렇게 인정한다. 구조 비공개 → 결합 자리 배위 미확인 | §4 · §10-② |
-| ③ 그림이 본문 서술을 받쳐 주나 | **여러 곳에서 어긋난다** — ELF 단면(`Fig. 2h,i`)엔 흡착종이 안 보이고, `Fig. 3d` 의 폴리설파이드 S 2p 를 169–171 eV(설페이트 대역)에 지정, `Fig. S16` 의 "Briding S" 는 본문이 말한 163.5 eV 가 아니라 ≈167–168 eV, Tafel 기울기 15 mV dec⁻¹ 는 αn ≈ 4.3 (비물리), DRT 의 가장 센 봉우리(10–100 s)는 저자의 τ 구간 정의 밖 | §5 · §10-③ |
-| ④ "고체" Li–S 인가 | **아니다 — 혼성이다.** SI 1.6: S 양극에 **액체 전해액 5 µL** (1 M LiTFSI DOL/DME + 2 wt% LiNO₃) 를 적셔 조립. LFP 셀만 액체 0 | §2 · §10-④ |
-| ⑤ 우리 일에 쓸 것 | 방법 반례 1건(전하 다른 흡착종 결합에너지 비교 금지) + CP2K 설정 1점. 물성 비교값 없음 | §7 · §8 |
+| PUPL σ 3.75×10⁻⁴ S cm⁻¹ @60 °C, PL 대비 ≈2.8 배 — **UiO-66 Zr⁴⁺–TFSI⁻ 배위 덕** | 🔴 **60 °C 에서는 UiO-66 몫이 거의 없다** | 같은 `Table S1` 의 UiO-66 없는 PPL 이 60 °C 3.54×10⁻⁴ → PUPL/PPL **1.06 배** · 70 °C 1.03 · 80 °C 1.01 (우리 산수). UiO-66 효과는 25–40 °C (2.6–4.4 배) 에만 있다 — 결정화 억제 영역 |
+| 저온 Ea 1.15 (PL) → 0.64 eV (PUPL) | ⚠ 재현은 된다 (±0.01) · 홉 장벽이 아니다 | PL 저온 적합의 전지수 인자 **A ≈ 5.9×10¹³ S cm⁻¹** (우리 산수 · 비물리) → 결정 PEO 용융이 섞인 겉보기 기울기 |
+| t⁺ 0.21 → 0.65 | ⚠ 재현 불가 | Bruce–Vincent ΔV 미기재 · PPL 대조 없음 |
+| DFT: S₆²⁻ (−26.45 eV) 가 TFSI⁻ (−11.96 eV) 보다 세게 붙는다 | 🔴 **전하 교락** | 클러스터 +4 × 음이온 −1/−2. 점전하 어림 (r = 5 Å) 만으로 −11.5 / −23.0 eV (우리 산수) — 결합에너지 거의 전부가 쿨롱 항. 저자도 SI 에서 인정 |
+| 'open Zr⁴⁺' 모형이 실제 UiO-66 자리를 대표한다 | 🔴 근거 없음 | 화학식 Zr₆O₄₀C₆₄H₄₄ = **링커 12 개 중 4 개 결손 · 전하 미보상 노드** (우리 역산). 실제 결손 자리는 OH⁻/H₂O/아세트산 (합성 조절제) 으로 막힌다 · 구조 비공개 → 배위 미확인 |
+| Zr–S 강한 혼성 · 계면 ELF 증가 | 🔴 그림이 안 받친다 | `Fig. 2m` 점유 S 3p 자리에 Zr 4d ≈ 0 · `Fig. 2h,i` ELF 단면에 흡착종이 없다 |
+| Li₂S₆ 흡착 후 Zr 3d 하향 · 새 S 2p 성분 · C 1s 카르복실 변화 | ⚠ 피팅 신뢰도 낮음 | Zr 3d 스핀–궤도 간격 2.32 → 2.20 eV · '폴리설파이드' S 2p 를 169–171 eV 에 지정 · C 1s 'O–C=O' 가 288.7 (`Fig. S5`) → **≈293 eV** (`Fig. 3e`) 로 라벨이 옮겨갔다 (CF₃ 영역) |
+| 황 변환 가속 — Tafel 15.45 / 16.75 vs 33.36 / 39.35 mV dec⁻¹ | ⚠ **라벨이 그림 축과 10 배 어긋난다** | 픽셀 판독 기울기 ≈155 / ≈163 vs ≈335 / ≈380 mV dec⁻¹ (비 ≈2.2 는 유지) · 봉우리 라벨 ↔ 전위 구간도 안 맞는다 |
+| CV ΔE 0.38 vs 0.42 V | ⚠ 라벨 ↔ 축 불일치 | 그린 화살표 폭 figure-read (픽셀) ≈0.50 / ≈0.53 V |
+| DRT: PUPL 은 τ₃·τ₄ 가 안정 | ⚠ 가장 센 응답이 정의 구간 밖 | 최강 봉우리 τ ≈ 10–100 s · 저자의 τ₄ 는 ≤ 10⁰ s |
+| 초기 1282.81 mAh g⁻¹ · 100 사이클 493.20 · PL 보다 유지율 훨씬 높다 | ⚠ PL 은 **≈6 사이클**만 그려졌고 CE 가 ≈81 → ≈75 % 로 떨어진다 (figure-read) | 유지율 비교 대상 없음 · PUPL 유지율 38.4 % (우리 산수) |
+| Q_L 만 크게 늘었다 (Q_H 차이는 미미) | 🔴 자기 숫자와 모순 | `Fig. S17`: Q_H 비 **1.52** · Q_L 비 **1.57** (우리 산수) — 둘 다 같은 비율 · PUPL Q_H + Q_L = **1350.19 ≠ 1282.81** |
+| "고체" Li–S | 🔴 혼성 | SI 1.6: S 양극에 액체 1 M LiTFSI DOL/DME + 2 wt% LiNO₃ **5 µL** |
 
 ---
 
 ## 1. 한 줄 요약
 
-PAN/UiO-66 전기방사 섬유망(PU)에 PEO/LiTFSI(PL)를 함침한 복합 고분자 전해질 **PUPL** 로 60 °C 고체(실제로는 양극 액체 젖음) Li–S 전지를 만들고, 성능 향상을 *"TFSI⁻ → Sₙ²⁻ 음이온 경쟁 배위에 의한 Zr⁴⁺ 루이스산 자리의 동적 전하 재구성"* 으로 설명한다. 전기화학 지표(σ 3.75×10⁻⁴ S cm⁻¹ @60 °C · t⁺ 0.65 · 1600 h 대칭셀 · 초기 1282.81 mAh g⁻¹)는 실측이지만, **기전 귀속은 대조군·그림·계산 모형이 받쳐 주지 못한다.**
+PAN/UiO-66 전기방사 섬유망 (PU) 에 PEO/LiTFSI (PL) 를 함침한 복합 고분자전해질 **PUPL** 로 60 °C Li–S 전지 (양극 액체 젖음 5 µL) 를 만들고, 성능 향상을 *"UiO-66 의 열린 Zr⁴⁺ 가 처음엔 TFSI⁻ 를 약하게 잡아 LiTFSI 해리를 돕고, 방전 중 생긴 Sₙ²⁻ 가 더 세게 붙어 TFSI⁻ 를 밀어내며 Zr 자리 전하를 재구성해 황 변환을 빠르게 한다"* 로 설명한다. 전기화학 수치 (σ 3.75×10⁻⁴ S cm⁻¹ @60 °C · t⁺ 0.65 · Li|Li 1600 h · 초기 1282.81 mAh g⁻¹) 는 실측이지만, **기전 귀속 (UiO-66 → σ · Zr–S → 황 변환) 은 대조군 (PPL) · 그림 · 계산 모형 어느 쪽도 받쳐 주지 못한다.** 60 °C σ 향상은 거의 전부 PAN 섬유망 몫이다.
 
-## 2. 메타
+## 2. 메타 / 동기 / 질문
 
 | 저자 | 저널/년 | DOI | 조성 | 연구유형 |
 |---|---|---|---|---|
-| H. Shang, R. Yang\* 외 (XAUT · 경상국립대 J.-H. Ahn) | *Chem. Eng. J.* 2026 (Journal Pre-proof, CEJ 184621) | 10.1016/j.cej.2026.184621 | PEO (Mw 6×10⁵) 1.20 g + LiTFSI 0.52 g (PL) · PAN/UiO-66 섬유막 (UiO-66 : PAN = 5 / **7.5** / 10 wt%) · PUPL-7.5 질량분율 **PL 91.05 · PAN 8.28 · UiO-66 0.67 wt%** (SI 1.3) · 막 두께 ≈158 µm · PU 막 ≈2 µm · 섬유 지름 ≈0.40 µm · UiO-66 ≈150 nm 팔면체 · BET 961.60 m² g⁻¹ | exp 주 + DFT 보조 |
+| H. Shang, R. Yang\* 외 (XAUT · 경상국립대 J.-H. Ahn) | *Chem. Eng. J.* 2026 (Journal Pre-proof, CEJ 184621) | 10.1016/j.cej.2026.184621 | PEO (Mw 6×10⁵) 1.20 g + LiTFSI 0.52 g (PL · EO:Li ≈ **15**, 우리 산수) · PAN/UiO-66 섬유막 (UiO-66 : PAN = 5 / **7.5** / 10 wt% — 전기방사 전구체 기준) · PUPL-7.5 최종 질량분율 **PL 91.05 · PAN 8.28 · UiO-66 0.67 wt%** (SI 1.3) · 막 두께 ≈158 µm (본문) / 156 µm (`Fig. 1g` 라벨) · UiO-66 ≈150 nm 팔면체 · BET 961.60 m² g⁻¹ | exp 주 + DFT 보조 |
 
-- 셀: Li | 전해질 | S (S/CNT 6:4 → 155 °C 12 h · 양극 S/CNT : CNT : PVDF = 7:2:1 · **S 1.0 mg cm⁻²** · ⌀12.5 mm) · **양극에만 액체 5 µL** · 1.7–2.8 V · **모든 전기화학 60 °C**. Li | PUPL | LFP (액체 없음). 굽힘·절단 파우치 LED 시연 (`Fig. 7h` — "room temperature").
-- EO:Li 비 (우리 산수): PEO 1.20 g / 44.05 = 27.2 mmol EO · LiTFSI 0.52 g / 287.1 = 1.81 mmol → **EO:Li ≈ 15**.
+- **동기 (Introduction)**: PEO 계 고체 Li–S 는 ① 전해질 안 Li⁺ 이동이 느리고 ② 전극/전해질 계면 황 변환이 느리다. MOF 의 Lewis 산 자리는 LiTFSI 해리 (ref 17) 나 폴리설파이드 고정 (ref 18) 에 쓰였지만 *"정적 배위 환경"* 만 봤다. 작동 중엔 TFSI⁻ 와 Sₙ²⁻ (n = 1, 2, 4, 6, 8) 가 **둘 다 Lewis 염기**라 같은 금속 자리를 두고 경쟁한다 (ref 24, 25).
+- **질문**: 동적 음이온 환경이 Lewis 산 자리의 국소 전하를 재분배하는가, 그 '적응형 전하 재구성' 이 Li⁺ 이동과 황 변환을 동시에 조절하는가.
+- **설계 요지**: UiO-66 을 양극이 아니라 **전해질** 에 넣는다 — Zr₆O₄(OH)₄ 노드의 노출 Zr⁴⁺ 가 '동적 응답 중심'.
+- **셀 조건 (중요)**: 모든 전기화학 **60 °C** · S 담지 **1.0 mg cm⁻²** (저자 스스로 한계로 인정) · Li|전해질|S 조립 시 **양극에만 액체 전해액 5 µL** (1 M LiTFSI DOL/DME 1:1 + 2 wt% LiNO₃ · "interfacial wetting agent") · Li|PUPL|LFP 는 액체 0 · 파우치 LED 사진만 "room temperature".
 
-## 3. 핵심 물성 (수치) — 전부 소환값
+## 3. 핵심 수치 총정리 ★ (전부 소환값)
 
-### 3a. 이온 수송 (`Fig. 5`, `Table S1`, `Fig. S7`–`S11`)
+### 3a. 이온 수송 (`Fig. 5`, `Table S1`, `Fig. S7`–`S12`)
 
-| 물성 | PL | PPL (PAN, UiO-66 없음) | PUPL-5 | **PUPL (7.5)** | PUPL-10 | 비고 |
+| 물성 | PL | PPL (PAN, UiO-66 없음) | PUPL-5 | **PUPL (7.5)** | PUPL-10 | 출처 |
 |---|---|---|---|---|---|---|
 | σ 25 °C (S cm⁻¹) | 1.48×10⁻⁶ | 8.84×10⁻⁶ | 8.29×10⁻⁶ | **3.92×10⁻⁵** | 2.18×10⁻⁵ | `Table S1` |
+| σ 30 °C | 4.44×10⁻⁶ | 1.48×10⁻⁵ | 1.66×10⁻⁵ | 4.54×10⁻⁵ | 3.68×10⁻⁵ | 〃 |
+| σ 40 °C | 1.55×10⁻⁵ | 5.05×10⁻⁵ | 5.22×10⁻⁵ | 1.32×10⁻⁴ | 4.11×10⁻⁵ | 〃 |
+| σ 50 °C | 5.32×10⁻⁵ | 1.91×10⁻⁴ | 1.94×10⁻⁴ | 2.44×10⁻⁴ | 1.26×10⁻⁴ | 〃 |
 | σ 60 °C | 1.30×10⁻⁴ | **3.54×10⁻⁴** | 2.99×10⁻⁴ | **3.75×10⁻⁴** | 2.18×10⁻⁴ | 본문 "≈2.8 배 vs PL" |
-| σ 80 °C | 4.49×10⁻⁴ | 7.51×10⁻⁴ | 6.74×10⁻⁴ | 7.57×10⁻⁴ | 5.16×10⁻⁴ | |
-| Ea 저온 (25–50 °C) | **1.15 eV** | 1.04 | 1.03 | **0.64** | 0.52 | 구간 아레니우스 (`Fig. 5c`, `S10`, `S11`) |
-| Ea 고온 (60–80 °C) | 0.62 | 0.39 | 0.41 | **0.35** | 0.44 | |
+| σ 70 °C | 1.31×10⁻⁴ (⚠ 그림은 ≈1.87×10⁻⁴) | 5.22×10⁻⁴ | 4.33×10⁻⁴ | 5.39×10⁻⁴ | 3.60×10⁻⁴ | 〃 |
+| σ 80 °C | 4.49×10⁻⁴ | 7.51×10⁻⁴ | 6.74×10⁻⁴ | 7.57×10⁻⁴ | 5.16×10⁻⁴ | 〃 |
+| Ea 저온 (25–50 °C 4 점) | **1.15 eV** | 1.04 | 1.03 | **0.64** | 0.52 | `Fig. 5c` · `S10` · `S11` |
+| Ea 고온 (60–80 °C 3 점) | 0.62 | 0.39 | 0.41 | **0.35** | 0.44 | 〃 |
 | t⁺ (Bruce–Vincent) | 0.21 | n/a | n/a | **0.65** | n/a | `Fig. 5e,f` · ΔV 미기재 |
-| LSV 산화 개시 | 3.90 V | n/a | 4.69 V | **5.15 V** | 4.91 V | `Fig. 5d`, `S12` · 접선 외삽 · 0.1 mV s⁻¹ · 60 °C |
-| Li\|Li 0.1 mA cm⁻² | ≈330 h 단락 | n/a | n/a | **>1600 h** | n/a | `Fig. 5g` |
-| 율속 대칭셀 | 0.20 mA cm⁻² 에서 단락 | | | 0.30 mA cm⁻² 까지 안정 | | `Fig. 5h,i` |
+| LSV 산화 개시 (접선 외삽 · 0.1 mV s⁻¹ · 60 °C) | 3.90 V | n/a | 4.69 V | **5.15 V** | 4.91 V | `Fig. 5d` · `S12` |
+| Li\|Li 0.1 mA cm⁻² · 60 °C | ≈330 h 단락 | n/a | n/a | **>1600 h** | n/a | `Fig. 5g` |
+| 율속 대칭셀 | 0.20 mA cm⁻² 에서 요동 → 단락 | | | 0.30 mA cm⁻² 까지 안정 | | `Fig. 5h,i` |
 
-**우리 재적합 (Table S1 → ln σ vs 1/T 최소자승, 우리 산수)**: PL 1.16 / 0.62 · PPL 1.03 / 0.38 · PUPL-5 1.03 / 0.41 · PUPL 0.65 / 0.36 · PUPL-10 0.52 / 0.44 eV — 논문 값과 ±0.01 eV 로 **재현된다**. 60 °C 를 고온 구간에 넣은 분할이다 (`Fig. 5c` 에서 확인: 고온 3점 = 1000/T 2.83–3.00, 저온 4점 = 3.10–3.36).
+**우리 재적합 (Table S1 → ln σ vs 1/(k_BT) 최소자승 · 우리 산수)**:
 
-**대조군 비율 (우리 산수)**: PUPL/PPL = 25 °C **4.43 배** · 60 °C **1.06 배** · 80 °C **1.01 배**. PPL/PL @60 °C = 2.72 배. ⇒ *"2.8 배"* 의 거의 전부가 PAN 섬유망 몫이다.
+| 시료 | Ea 저온 / 고온 (eV) | A 저온 / 고온 (S cm⁻¹) | R² 저온 / 고온 | 전 구간 단일 적합 Ea |
+|---|---|---|---|---|
+| PL | 1.155 / 0.622 | **5.9×10¹³** / 2.7×10⁵ | 0.991 / **0.740** | 0.885 |
+| PPL | 1.025 / 0.381 | 1.8×10¹² / 2.1×10² | 0.996 / 1.000 | 0.766 |
+| PUPL-5 | 1.034 / 0.412 | 2.5×10¹² / 5.0×10² | 0.998 / 0.995 | 0.732 |
+| PUPL | 0.648 / 0.356 | 3.2×10⁶ / 91 | 0.978 / 1.000 | 0.509 |
+| PUPL-10 | 0.521 / 0.437 | 1.4×10⁴ / 9.2×10² | **0.888** / 0.994 | 0.536 |
 
-⚠ `Table S1` 이상점: PL 60 °C 1.30×10⁻⁴ ≈ 70 °C 1.31×10⁻⁴ (10 K 동안 평탄) · PUPL-10 25 °C 와 60 °C 가 가수 2.18 로 같다 — 전사 오류 가능성. 원자료 비공개라 확인 불가.
+- 논문 값과 ±0.01 eV 로 **재현된다** — 60 °C 를 고온 구간에 넣은 분할이다 (`Fig. 5c` 픽셀 판독으로 확인: 고온 3 점 = 1000/T 2.83 · 2.91 · 3.00, 저온 4 점 = 3.10 · 3.19 · 3.30 · 3.36).
+- 저온 구간 A 가 10¹²–10¹³ S cm⁻¹ — 비물리적 (점프 모형의 A 는 이보다 수십 자릿수 작다). 결정 PEO 의 용융 (≈60 °C) 이 기울기에 섞인 **겉보기 Ea** 라는 뜻이다 (§10-⑥).
+- PUPL-10 저온 적합 R² 0.888: 30 → 40 °C 에 σ 가 3.68 → 4.11×10⁻⁵ 로 거의 평탄 (`Fig. S11` 에서도 30 · 40 °C 점이 직선에서 벗어난다).
 
-### 3b. 황 변환·전지 (`Fig. 6`, `Fig. 7`)
+**대조군 비율 (우리 산수)** — 이 digest 의 가장 중요한 표:
 
-| 물성 | PL | PUPL | 비고 |
-|---|---|---|---|
-| CV ΔE (0.1 mV s⁻¹) | 0.42 V | **0.38 V** | `Fig. 6c` |
-| Tafel (`Fig. 6d` "Peak B") | 33.36 mV dec⁻¹ | **15.45** | 본문: 환원 |
-| Tafel (`Fig. 6e` "Peak C") | 39.35 mV dec⁻¹ | **16.75** | 본문: 산화 |
-| GITT 평균 D_Li⁺ | 1.33×10⁻¹³ cm² s⁻¹ | **1.34×10⁻¹²** | `Fig. 7a` · **양극 겉보기 D** (SI 식 4: 활물질 m_B·V_M·M_B 사용) |
-| 초기 방전용량 0.1 C | 867.60 mAh g⁻¹ | **1282.81** | `Fig. 7c` · 이론 1675 의 76.6 % (우리 산수) |
-| 100 사이클 후 | n/a (그림에 ≈6 사이클만) | 493.20 mAh g⁻¹ | 유지율 **38.4 %** (우리 산수) · CE > 97 % |
-| Li\|PUPL\|LFP | | 144.80 mAh g⁻¹, 50 사이클 96 % | `Fig. 7f,g` (그림은 100 사이클까지 그림) |
+| T (°C) | 25 | 30 | 40 | 50 | 60 | 70 | 80 |
+|---|---|---|---|---|---|---|---|
+| PUPL / PPL (UiO-66 몫) | **4.43** | 3.07 | 2.61 | 1.28 | **1.06** | 1.03 | 1.01 |
+| PPL / PL (PAN 섬유망 몫) | 5.97 | 3.33 | 3.26 | 3.59 | **2.72** | 3.98 | 1.67 |
+| PUPL / PL (논문 주장) | 26.5 | 10.2 | 8.52 | 4.59 | **2.88** | 4.11 | 1.69 |
 
-### 3c. 기계·열 (`Fig. 4b,c`)
-- 인장강도 PUPL **5.11 MPa** vs PL 0.40 · PU 막 단독 2.37 MPa (`Fig. 4c` 라벨). figure-read ≈ 파단 신율 PUPL ≈40 % · PL ≈65 % · PU ≈16 %. ⚠ x 축 라벨이 "Stress (%)" — 변형률(strain)의 오기.
-- TGA (N₂, 10 °C min⁻¹): `Fig. 4b` 라벨 PL 100.00 % · PUPL **92.70 %** 손실 → PUPL 잔량 ≈7.3 %.
+⇒ 본문 *"≈2.8 배"* (60 °C) 중 **2.72 배는 PAN 섬유망, 1.06 배가 UiO-66**. 모든 셀 시험이 60 °C 라는 점을 겹치면, 셀 성능 차이에서 UiO-66 의 σ 기여는 사실상 0 이다.
 
-### 3d. 전자구조 — 클러스터 DFT (`Fig. 2g`, `Table S2`)
+⚠ `Table S1` ↔ `Fig. 5c` 불일치: PL 70 °C 가 표 **1.31×10⁻⁴** 인데 그림 점은 figure-read (픽셀) log σ ≈ −3.73 → **≈1.87×10⁻⁴**. 나머지 PL 6 점 · PUPL 7 점 · PPL (`Fig. S10`) · PUPL-5/-10 (`Fig. S11`) 점은 표와 ±0.03 decade 안에서 맞는다. ⇒ 표의 PL 70 °C 가 전사 오류일 가능성이 높다 (고온 Ea 0.62 는 그림 값으로 재적합해도 0.63 — 결론 영향 없음). (초판 digest 가 의심했던 PUPL-10 25 °C ↔ 60 °C 가수 2.18 일치는 `Fig. S11` 점 위치와 둘 다 맞는다 — **우연 일치로 판정, 철회**.)
+
+### 3b. 계산 (전부 문헌 소환값 · 방법은 §4g · §8)
+
 | 양 | UiO-66/TFSI⁻ | UiO-66/S₆²⁻ | 비고 |
 |---|---|---|---|
 | E_bind | **−11.96 eV** | **−26.45 eV** | `Table S2` 로 재계산 −11.958 / −26.450 eV (우리 산수 · 1 Ha = 27.2114 eV) ✓ |
-| Bader 전하 이동 | 0.35 e | 1.16 e | 방향·기준 원자 집합 미기재 |
-| 계 전하 | 클러스터 +4 → 복합체 +3 | 클러스터 +4 → 복합체 +2 | SI `Table S2` |
+| 총에너지 (Ha) | 복합체 −1563.275038866 · 음이온 −251.384016205 | 복합체 −1373.670291252 · 음이온 −61.246714291 | 맨 클러스터 −1311.451572022 · `Table S2` |
+| 계 전하 | 클러스터 +4 → 복합체 **+3** | 클러스터 +4 → 복합체 **+2** | 〃 |
+| Bader 전하 이동 | 0.35 e | 1.16 e | 방향 · 기준 원자 집합 미기재 · `Fig. 2g` |
+| 치환 반응 ΔE (복합체/TFSI⁻ + S₆²⁻ → 복합체/S₆²⁻ + TFSI⁻) | — | **−14.49 eV** | **(우리 산수)** — 논문은 계산 안 함 · 전하가 바뀌는 반응이라 같은 교락이 남는다 |
+| 점전하 쿨롱 어림 −q₁q₂·14.40/r (r = 4 / 5 / 6 Å) | −14.4 / −11.5 / −9.6 eV | −28.8 / −23.0 / −19.2 eV | **(우리 산수)** · 차폐 없음 · 비 = 정확히 2.0 (관측 비 2.21) |
 
-band gap 은 보고하지 않는다 (클러스터 DOS 의 E_F 기준 그림뿐).
+band gap 은 보고하지 않는다. `Fig. 2j–m` 의 'Fermi level' 은 클러스터 HOMO 기준으로 보인다 (정의 미기재). figure-read: 점유 끝 (0 eV) 과 Zr 4d 시작 사이가 TFSI⁻ 계 ≈0.8 eV · S₆²⁻ 계 ≈1.2 eV.
 
-## 4. DFT/계산 방법 ★ (SI 1.7 전부)
+### 3c. 황 변환 · 반응 동역학 (`Fig. 6`, `Fig. S15`, `Fig. S16`, `Fig. 7a`)
 
-- **code / version**: **CP2K 2025.2**, QUICKSTEP (GPW).
-- **functional + vdW**: PBE + **DFT-D3(BJ)**.
-- **기저 / pseudo**: 기하 최적화 **DZVP-MOLOPT-SR-GTH** · GTH 의사퍼텐셜 · 최종 에너지는 같은 구조에서 **TZV2P-MOLOPT 단일점**. (두 기저 사이 BSSE 보정 언급 **없음**.)
-- **cutoff**: CUTOFF **400 Ry** · REL_CUTOFF **55 Ry**.
-- **k-points**: 주기 UiO-66 최적화만 2×2×2 MP · 클러스터는 k 없음(비주기).
-- **모형**: 주기 UiO-66 를 먼저 최적화 → **고립 Zr₆ 노드 클러스터 Zr₆O₄₀C₆₄H₄₄** 절단 (**링커 8개 = COO⁻ 8 + COOH 8**, "배위 불포화 Zr 자리" 포함) · **순전하 +4** (Zr⁴⁺×6 = +24 · μ₃-O²⁻ 4 = −8 · μ₃-OH⁻ 4 = −4 · COO⁻ 8 = −8 · COOH 8 = 0). 흡착 복합체 +3 (TFSI⁻) / +2 (S₆²⁻). 비주기 경계. **주변 원자 일부 고정** (어느 원자인지 미기재).
-  - ⚠ 정상 UiO-66 노드는 링커 12개 배위다 — 8개면 **링커 4개 결손 노드** 를 일부러 만든 것 (우리 판독: 원자 수 C₆₄ = BDC 8 개 × 8 C).
-- **결합에너지**: E_bind = E_complex − E_UiO-66 − E_adsorbate (SI 식 5) · 흡착종 TFSI⁻ (−1) · S₆²⁻ (−2) 고립 이온 기준. **용매·고분자·Li⁺ 짝이온 없음.**
-- **DFT+U · AIMD · MLIP · NEB**: 없음.
-- **무질서 처리**: 해당 없음 — **흡착 자세 1개씩** (자세·자리 탐색 규칙 미기재).
-- **후처리**: CDD (전하밀도 차) · **Bader** (grid 기반, CP2K 가전자 밀도) · **ELF** (Becke–Edgecombe) · DOS/PDOS (**Multiwfn**).
-- **결합 자리 배위 (D-2026-10-05 규칙)**: 결합 규모 ≫ 2 eV 이고 **구조 비공개** ("Data will be made available on request") → **배위 미확인**. 모형 자체가 "배위 불포화 Zr" 을 의도적으로 만든 링커 결손 노드라, 값은 *그 결손 자리의 포화 에너지 + 전하 클러스터–음이온 쿨롱 에너지* 로만 읽는다.
+| 물성 | PL | PUPL | 비고 |
+|---|---|---|---|
+| CV ΔE (0.1 mV s⁻¹) — 본문 / 라벨 | 0.42 V | **0.38 V** | `Fig. 6c` |
+| ↳ 그림 화살표 폭 (C 최고점 ↔ B 최저점) | figure-read (픽셀) ≈0.53 V | ≈0.50 V | 라벨과 ≈0.12 V 어긋남 · 차이 방향은 같다 |
+| CV 봉우리 (0.1 mV s⁻¹) | A ≈ −0.15 mA @≈2.35 V · B ≈ −0.27 mA @≈1.81 V · C ≈ +0.30 mA @≈2.35 V | A ≈ −0.25 mA @≈2.33 V · B ≈ −0.58 mA @1.92 V · C ≈ **+0.80 mA @2.43 V** | figure-read (픽셀) |
+| Tafel (라벨) "Peak B" | 33.36 mV dec⁻¹ | **15.45** | `Fig. 6d` · 본문: 환원 |
+| ↳ 그림 축으로 잰 기울기 | figure-read (픽셀) ≈ **335** | ≈ **155** | 라벨의 ≈10 배 |
+| Tafel (라벨) "Peak C" | 39.35 mV dec⁻¹ | **16.75** | `Fig. 6e` · 본문: 산화 |
+| ↳ 그림 축으로 잰 기울기 | ≈ **−380** | ≈ **−163** | 라벨의 ≈10 배 · 부호 음 |
+| CV 0.5 mV s⁻¹ 봉우리 | C ≈ +0.45 mA · B ≈ −0.50 mA (창 끝 1.7 V 에 걸림) | C ≈ +1.45 mA @≈2.6 V · B ≈ −1.10 mA @≈1.9 V | `Fig. S15` figure-read |
+| in-situ EIS 반원 (OCV) | figure-read ≈190 Ω | ≈110 Ω | `Fig. 6f,g` |
+| in-situ EIS 반원 (1.7 V) | ≈330 Ω | ≈280 Ω | 둘 다 커진다 |
+| GITT 평균 D_Li⁺ | 1.33×10⁻¹³ cm² s⁻¹ | **1.34×10⁻¹²** | `Fig. 7a` · **양극 겉보기 D** (SI 식 4 · 활물질 m_B·V_M·M_B) · 가수 1.33 / 1.34 |
 
-## 5. Figure set ★
+### 3d. 셀 성능 (`Fig. 7`, `Fig. S17`)
 
-| Fig | 내용 (무엇을 보여주나) | 우리 활용 |
-|---|---|---|
-| 1 | (안 봄) 제조 모식도 · UiO-66 XRD (CCDC 837158 일치) · N₂ 흡착 (Type I, 961.60 m² g⁻¹) · TEM (≈150 nm) · PU SEM (섬유 ≈0.40 µm) · EDS (C/Zr/O/N) · PUPL 단면 SEM | 없음 |
-| 2a–d | Zr₆ 클러스터 위 TFSI⁻ · S₆²⁻ 최적화 구조 (위·옆). 본 그림: `Fig. 2c` 에서 TFSI⁻ 는 술포닐 O 로 노드 꼭대기 Zr 에 붙고, `Fig. 2d` 에서 S₆²⁻ 는 사슬 끝 S 쪽이 노드 Zr 근처에 놓인다 — **Zr–S 원자 수·거리는 그림으로 셀 수 없다** (라벨 없음) | 흡착 자세 1개씩 · 자리 탐색 없음 — 방법 반례 |
-| 2e,f | CDD 등치면 (노랑/청록, **등치면 값 미기재**). S₆²⁻ 쪽 청록 덩어리가 S 사슬 전체를 덮어 크고, TFSI⁻ 는 작다 | 등치면 값 없는 CDD 는 크기 비교 근거가 못 된다 |
-| 2g | 막대: E_bind −11.96 / −26.45 eV (왼축 0 ~ −40) · Bader 0.35 / 1.16 e (오른축 0–1.8) | §10-② |
-| 2h,i | ELF 2D 단면 — **색막대 숫자 없음**. figure-read: 단면이 링커 4개(십자형)가 놓인 면이고, **TFSI⁻ 와 S₆²⁻ 가 단면에 보이지 않는다**; 두 그림이 사실상 같다 | ⚠ 본문 *"Zr–S 계면 ELF 증가"* 를 이 그림이 **보여 주지 않는다** (§10-③) |
-| 2j,k | Total DOS · UiO-66 PDOS · 흡착종 PDOS (−15 … +10 eV, E_F 기준). figure-read: (j) TFSI⁻ PDOS 는 ≈ −10 … −3 eV 에 넓게, E_F 근처 거의 0; (k) S₆²⁻ PDOS 는 ≈ −2 … 0 eV 에 작은 봉우리들 | 클러스터 '페르미 준위' = HOMO 기준이다 (갭 계 · 정의 미기재) |
-| 2l,m | Zr 4d vs O 2p(TFSI⁻) / S 3p(S₆²⁻). figure-read: (m) 점유 영역 **−2 … 0 eV 의 S 3p 봉우리 위치에 Zr 4d 는 ≈0** — Zr 4d 는 ≈ +1.3 eV 이상 비점유대에 있고, S 3p 와 겹치는 곳은 **비점유 ≈ +2 … +3.5 eV** 뿐. (l) Zr 4d 는 ≈ +0.8 eV 이상, O 2p 는 −10 … −3 eV | 본문 *"Zr 4d–S 3p 뚜렷한 혼성"* 은 점유 상태에서 그림으로 확인되지 않는다 (§10-③) · y 축 척도가 (l) 1.2 / (m) 1.0 으로 다르다 |
-| 3a | UV-vis: Li₂S₆ 용액 흡수(≈320 nm 봉우리) — PEO 담근 뒤 줄고, UiO-66 담근 뒤 가장 낮다 · 사진: UiO-66 병이 거의 무색 | 정성 흡착 증거 (UiO-66 질량·표면적 정규화 없음) |
-| 3b,c | Zr 3d: 183.18/185.50 → **183.10/185.30 eV**. figure-read: (c) 에 **≈181.5 eV 저결합 성분이 새로 맞춰져 있다** (본문 언급 없음) | 이동 0.08 eV 는 XPS 대전 보정 오차 범위 · **스핀–궤도 간격이 2.32 → 2.20 eV 로 바뀐다** (우리 산수 · Zr 3d 는 고정값 ≈2.4 eV 여야 함) → 피팅 신뢰도 낮음 |
-| 3d | UiO-66/Li₂S₆ S 2p: "S_B⁰" ≈170.3 eV · "S_T⁻¹" ≈169.1 eV (figure-read) | ⚠ **폴리설파이드 S 2p 는 162–164 eV 대역**이다 (저자 자신의 `Fig. S16` 본문 서술도 163.5/162.0). 169–171 eV 는 설페이트/TFSI 대역 → 지정 불일치 (§10-③) |
-| 3e | C 1s: O–C=O ≈293, C–O ≈288.8, C–C ≈284.8 eV (figure-read) | 본문은 `Fig. S5` 와 비교해 카르복실 변화 주장 (S5 안 봄) |
-| 3f | VB-XPS "PUPL-Sₙ²⁻" vs "PUPL-TFSI⁻" (캡션은 S₆²⁻). figure-read: Sₙ²⁻ 곡선이 **모든 결합에너지에서 위에 있고** 개시점(≈3 eV)은 같다 | 정규화 없는 a.u. 세기 차이는 *상태밀도 증가* 의 근거가 아니다 (전체 배율 차와 구분 불가) · 시료 제조법 미기재 |
-| 3g | 기전 모식도 (TFSI⁻ 약한 Zr–O → Sₙ²⁻ 강한 Zr–S, "weak → strong polarization") | 개념도 |
-| 4a | XRD: PU 7.30° (UiO-66) · PL 19.60°/23.10° (PEO) — PPL·PUPL 순으로 약해짐 | 정성 |
-| 4b | TGA (본 §3c) | ⚠ 잔량 귀속 (§10-⑥) |
-| 4c | 응력–변형 (본 §3c) | 우리 E 와 다른 양 · 다른 재료군 — 비교 안 함 |
-| 4d,e | FTIR: O=S=O 1346→1348, S–N–S 651→653 cm⁻¹ · C–F ≈1197 불변 | 2 cm⁻¹ 이동 — 분해능 미기재 |
-| 4f–h | Raman 735/743 cm⁻¹ 대역 디콘볼루션: free TFSI⁻ **49.40 → 78.10 %**. figure-read: (h) 의 free 성분 FWHM ≈16 cm⁻¹ 대 pair ≈6 cm⁻¹ — 두 시료에서 **폭이 자유롭게 달라진 피팅** | 폭 고정 없이 면적비를 비교했다 (§10-①) |
-| 5a,b | Nyquist (25–80 °C). figure-read: PL 25 °C 반원 끝 ≈4000 Ω, PUPL 25 °C 절편 ≈150–180 Ω | |
-| 5c | 구간 아레니우스 (본 §3a) — 0.35 / 0.64 (PUPL) · 0.62 / 1.15 eV (PL) | 재적합 재현 ✓ |
-| 5d | LSV 접선 외삽 3.90 / 5.15 V. figure-read: PL 은 ≈5.0 V 에서 ≈0.95 mA 봉우리, PUPL 은 6 V 에서 ≈0.18 mA | 전류 문턱 미정의 · 우리 grand-potential 창과 **다른 양** |
-| 5e,f | DC 분극 + 전후 Nyquist. figure-read: PL I₀ ≈44.5 → I_s ≈21 µA · PUPL I₀ ≈31 → I_s ≈20.7 µA | ΔV 미기재라 t⁺ 재계산 불가 |
-| 5g | Li\|Li 0.1 mA cm⁻² 60 °C: PL ≈330 h 에서 끊김 · PUPL 1600 h. figure-read 과전압 PL ≈ ±0.06 V · PUPL ≈ ±0.035 V | |
-| 5h,i | 율속 대칭셀 0.05–0.30 mA cm⁻² | |
-| 6a,b | CV 등고선 (0.1–0.5 mV s⁻¹) — 봉우리 A (S₈→Li₂Sₓ), B (Li₂Sₓ→Li₂S), C (Li₂S→S₈) | |
-| 6c | CV 0.1 mV s⁻¹: ΔE 0.38 (PUPL) / 0.42 V (PL). figure-read: 봉우리 C PUPL ≈0.8 mA @≈2.43 V · PL ≈0.28 mA | 같은 S 부하에서 봉우리 전류 3 배 — 양극 액체 젖음 조건 |
-| 6d,e | "Tafel" (본 §3b). figure-read: `Fig. 6d` "Peak B" 는 **2.18–2.35 V · 양의 기울기**, `Fig. 6e` "Peak C" 는 **1.87–2.07 V · 음의 기울기** — 그런데 `Fig. 6c` 에서 B 는 환원(≈1.8–1.95 V), C 는 산화(≈2.4 V) | 전위 범위·기울기 부호가 **봉우리 라벨과 뒤바뀌어 보인다** · 기울기 값 자체도 비물리 (§10-③) |
-| 6f,g | in-situ Nyquist (OCV → 1.7 V, 겹쳐 쌓음). figure-read: OCV 반원 PL ≈250 Ω · PUPL ≈150 Ω | |
-| 6h,i | DRT 등고선 (τ 10⁻⁵–10² s · 색 0–700). figure-read: **가장 센 응답은 τ ≈10–100 s** (PL 은 거의 모든 전압에서 빨강, PUPL 은 OCV·1.8·1.7 V 에서만 약하게) | 저자의 τ 구간 정의는 τ₄ = 10⁻¹–10⁰ s 까지 — **가장 센 봉우리가 정의 밖** (§10-③) |
-| 7a | GITT + log D (오른축 −10 … −40, 단위 "cm²g⁻¹" 오기). figure-read: 두 계 모두 log D ≈ −10 … −15.5 범위에 흩어짐 | 5 자릿수에 걸친 값의 "평균" 은 큰 값이 좌우한다 · 양극 겉보기 D — 전해질 물성 아님 |
-| 7b,d | 충방전 곡선 (PUPL 1/2/10/50/100 · PL 1/2) | |
-| 7c | 사이클: PUPL 1282.81 → 493.20 (100 cyc) · **PL 점은 ≈6 사이클까지만** (figure-read 867 → ≈640) | 본문 *"PL 보다 유지율이 훨씬 높다"* 는 PL 100 사이클 자료가 그림에 없다 |
-| 7e | 첫 사이클 Q_H / Q_L 구간 | `Fig. S17` 안 봄 |
-| 7f,g | Li\|PUPL\|LFP — 본문 "50 사이클 96 %", **그림은 100 사이클까지** (figure-read ≈145 → ≈130 mAh g⁻¹, ≈90 %) | 본문과 그림 사이클 수 불일치 |
-| 7h | 파우치 LED (평평·굽힘·절단) | 시연 |
-| S16 | ex-situ S 2p (전해질의 양극 쪽 면) @2.2/2.0/1.9/1.7 V. figure-read: "Sulfate-related S" ≈169–170 eV · **"Briding S" 라벨 봉우리 ≈167–168 eV** · "Terminal S" 화살표는 ≈162.3 eV 성분 · 라벨 없는 녹색 ≈163.8 eV 성분 | ⚠ 본문은 bridging = **163.5 eV** 라 한다 — 그림의 "Briding S" 는 4 eV 이상 높은 곳 (§10-③) · 단일 성분 피팅(2p₃/₂·₁/₂ 짝 없음) · Zr 3d 신호는 안 잡혔다고 SI 가 자인 |
-| Table S1 | 온도별 σ (5 시료 × 7 온도) | §3a 재적합의 원자료 |
-| Table S2 | 단일점 총에너지·순전하 | §3d 재계산 원자료 |
+| 물성 | PL | PUPL | 비고 |
+|---|---|---|---|
+| 초기 방전 0.1 C · 60 °C · S 1.0 mg cm⁻² | 867.60 mAh g⁻¹ | **1282.81** | 이론 1675 의 51.8 % / 76.6 % (우리 산수) |
+| 2 사이클 | figure-read ≈810 | ≈1230 | `Fig. 7b,d` |
+| 10 · 50 사이클 | — | figure-read ≈1040 · ≈670 | `Fig. 7b` |
+| 100 사이클 | **그림에 없음 (≈6 사이클까지만)** | 493.20 mAh g⁻¹ | 유지율 **38.4 %** (우리 산수) · CE "> 97 %" |
+| PL 의 CE | figure-read 1–4 사이클 ≈93–98 % → 5 · 6 사이클 **≈81 · ≈75 %** | ≈97–98 % 일정 | `Fig. 7c` 오른축 환산 |
+| Q_H (상부 평탄부) | **208.35** | **317.43** | `Fig. S17` · 이론 Q_H 419 (= 1675/4) 의 50 % / 76 % (우리 산수) |
+| Q_L (하부 평탄부) | **659.29** | **1032.76** | 이론 Q_L 1256 의 52 % / 82 % (우리 산수) |
+| Q_H + Q_L | 867.64 (✓ 867.60) | **1350.19 (≠ 1282.81)** | 우리 산수 — PUPL 은 합이 총 용량보다 67 mAh g⁻¹ 크다 |
+| PUPL/PL 비 | Q_H **1.52** · Q_L **1.57** | | 우리 산수 — 본문 "Q_H 차이는 미미" 와 반대 |
+| 첫 사이클 분극 (평탄부 사이) | figure-read ≈0.25 V | ≈0.18 V | `Fig. 7e` 화살표 |
+| Li\|PUPL\|LFP 0.1 C · 60 °C · 액체 0 | | 144.80 mAh g⁻¹ · 50 사이클 96 % (본문) | `Fig. 7f` 는 100 사이클까지 그림: figure-read ≈131 (≈90 %) · 충방전 평탄 ≈3.49 / ≈3.36 V |
+| 파우치 Li\|PUPL\|S | | 평평 · 굽힘 · 절단에서 LED 점등 | `Fig. 7h` · 상온 (캡션) · 수치 없음 |
 
-## 6. Post-processing ★
+### 3e. 구조 · 기계 · 열 (`Fig. 1`, `Fig. 4a–c`, `Fig. S1`–`S6`)
 
-- **무엇**: E_bind (단일점 차) · CDD · Bader (grid) · ELF · DOS/PDOS — 전부 **흡착 자세 1개짜리 클러스터 두 개** 위에서.
-- **도구**: CP2K → Multiwfn (DOS/PDOS · ELF 추정) · Bader (Henkelman 알고리즘) · 그림은 VESTA 류 볼-스틱 (명시 없음).
-- **수치화·기록**: `Table S2` 에 원 총에너지 (Ha, 소수 12자리) + 순전하를 공개 — **재현 가능한 유일한 수치**. CDD 등치면 값 · ELF 색막대 값 · DOS 번짐(broadening) 폭 · Bader 원자 집합은 **모두 미기재**.
-- **실험 후처리**: 구간 아레니우스 (σ = A·exp(−Ea/k_BT), σT 형 아님) · Bruce–Vincent t⁺ · GITT (ECbox, SI 식 4) · DRT (방법·정칙화 미기재) · Tafel (CV 봉우리 부근 log i–E).
+- UiO-66: XRD 가 CCDC #837158 모의와 일치 (주 봉우리 ≈7.3° · ≈8.5°) · Type I 등온선 · BET **961.60 m² g⁻¹** · 세공 분포 봉우리 ≈3–4 nm (figure-read · `Fig. 1c` 삽입) · TEM 팔면체 ≈150 nm (`Fig. 1d` 막대 50 nm).
+- PU 섬유 지름 ≈0.4 µm (`Fig. 1e` 라벨) · EDS C/Zr/O/N 고른 분포 (`Fig. 1f`) · PU 막 두께 "≈2 µm" (`Fig. S1` — ⚠ §5.1) · PUPL 단면 156 µm (`Fig. 1g` 라벨) / 본문 158 µm.
+- 인장강도 PUPL **5.11 MPa** · PU 2.37 MPa · PL 0.40 MPa (`Fig. 4c` 라벨). figure-read 파단 변형률 PUPL ≈40 % (최대응력 ≈25 %) · PU ≈16 % · PL ≈65 %. x 축 라벨 "Stress (%)" 는 strain 의 오기.
+- TGA (N₂ · 10 °C min⁻¹ · 30–800 °C): 30–120 °C 소폭 손실 (잔류 아세토니트릴) · >400 °C 급감 (PEO 분해) · 라벨 PL **100.00 %** · PUPL **92.70 %** 손실. figure-read PUPL 800 °C 잔량 ≈3–4 %.
+- 연소 (`Fig. S6`): 0 · 3 · 6 · 9 s — PL 원판은 6 s 에 거의 사라지고 PUPL 은 형태 유지 (가장자리 붉게). ⚠ 시료가 **불꽃 위 공중**에 있다 — 착화 시험이 아니라 열 수축 시험에 가깝다.
 
-### 기법 미니 용어집
-- **루이스산 자리 (Lewis acid site)**: 전자쌍을 받을 수 있는 빈 궤도를 가진 자리 — 여기선 링커가 빠져 배위가 비는 Zr⁴⁺.
-- **UiO-66**: Zr₆O₄(OH)₄ 노드 + 테레프탈산(BDC) 링커 12 개로 된 MOF. 링커 결손이 생기면 Zr 자리가 열린다.
-- **CDD (charge density difference)**: ρ(복합체) − ρ(기판) − ρ(흡착종). 등치면 값이 같아야 두 그림 크기를 비교할 수 있다.
-- **ELF**: 0–1 사이 전자 국소화 지표. 2D 단면은 **그 면에 놓인 원자만** 보여 준다.
-- **VB-XPS**: 가전자대 광전자 스펙트럼 — 점유 상태 분포. 시료 간 비교엔 세기 정규화가 필수.
-- **DRT (distribution of relaxation times)**: 임피던스를 이완시간 τ 분포로 바꾼 것 — 봉우리 지정은 τ 구간 가정에 달려 있다.
-- **Tafel 기울기**: b = 2.303RT/(αnF). 60 °C 에서 2.303RT/F = **66.1 mV** (우리 산수) → 단일 전자 α=0.5 면 ≈132 mV dec⁻¹.
-- **GITT 겉보기 D**: 양극 활물질 기준 확산계수 — 전해질 성질이 아니라 셀 전체 반응의 겉보기 값.
+---
 
-## 7. 우리 DFT 대비 (comp1 / modelc) → `our_dft_baseline.md`
+## 4. 재료 & 방법 — 같은 축을 흉내 낼 때 필요한 조건 전부 ★ (SI 1.1–1.7)
+
+### 4a. UiO-66 합성 (SI 1.1)
+ZrCl₄ **0.2510 g** 을 DMF 에, 테레프탈산 (TPA 98 %) 을 DMF 에 따로 녹여 섞고 **빙초산 (조절제)** 첨가 → 120 °C 24 h 용매열 → 원심분리 · DMF/탈이온수 세척 → **120 °C 진공 24 h** (원 문헌 90 °C 2 h 를 바꿈). TPA 양 · DMF 부피 · 아세트산 당량 **미기재**. ⚠ 아세트산 조절제는 링커 결손 자리를 아세테이트로 막는 것으로 알려져 있다 — 실제 '노출 Zr⁴⁺' 수는 정량 안 됨 (TGA 결손 정량 · ¹H NMR 소화 분석 없음).
+
+### 4b. PU 전기방사막 (SI 1.2)
+UiO-66 를 DMF 에 초음파 분산 → PAN 첨가 · 30 °C 12 h 교반 (UiO-66 : PAN = 5 / 7.50 / 10 wt%) → 21G 바늘 · 공급 0.0025 mm s⁻¹ · **15 kV** · 거리 12 cm → 80 °C 진공 12 h → **5 MPa · 60 °C 12 h 열압**. PAN 분자량 · 농도 미기재.
+
+### 4c. 복합 전해질 (SI 1.3)
+PEO (Mw 6×10⁵) **1.20 g** / 무수 아세토니트릴 16 mL · 30 °C 24 h → LiTFSI **0.52 g** · 24 h → PTFE 기판에 도포 → 일부 건조 후 PU 막을 얹고 다시 PL 도포 → 60 °C 진공 12 h → ⌀16 mm 펀칭. 대조: **PL** (섬유망 없음) · **PPL** (UiO-66 없는 PAN/PEO/LiTFSI · "otherwise identical"). x 는 전구체 기준이며 실제 PUPL-7.5 질량분율은 PL 91.05 · PAN 8.28 · UiO-66 0.67 wt% (계산 방법 미기재).
+
+### 4d. 양극 (SI 1.4)
+승화 S : CNT = 6 : 4 · 30 min 분쇄 → 밀폐 155 °C 12 h (용융 확산) → CNT/S : CNT : PVDF = 7 : 2 : 1 · NMP 800 µL · 800 rpm 24 h → 탄소 코팅 Al 박 · 150 µm 닥터블레이드 → ⌀12.5 mm · **S ≈1.0 mg cm⁻²**. (S 전체 비율 = 0.6 × 0.7 = 42 wt% · 우리 산수.)
+
+### 4e. 분석 (SI 1.5)
+SEM JSM-6700F · XRD-6100 (Shimadzu) · TGA NETZSCH STA 449 F5 (N₂ · 10 °C min⁻¹ · 30–800 °C) · XPS ESCALAB Xi+ · UV-Vis UV-2550. **FTIR · Raman · BET · TEM · VB-XPS 기기 · 조건 미기재**. ex-situ XPS 는 Ar 글러브박스 해체 · 진공 이송 (본문). **Li₂S₆ 용액 조성 (용매 · 농도 · LiTFSI 포함 여부) · 흡착 실험 UiO-66 질량 · VB-XPS 시료 제조법 미기재.**
+
+### 4f. 전기화학 (SI 1.6)
+- σ: SS|전해질|SS · EIS (VersaSTAT 3F) · σ = L/(R·S) (식 1) · 아레니우스 σ = A exp(−Ea/k_BT) (식 2 · **σT 꼴 아님**) · 25–80 °C.
+- t⁺: Li|전해질|Li · Bruce–Vincent t = I_s(ΔV − I₀R₀) / [I₀(ΔV − I_sR_s)] (식 3) · **ΔV 미기재**.
+- GITT: 0.10 C · 600 s 펄스 + **7200 s** 휴지 · ECbox · 식 4 D = 4/(πτ)·(m_B V_M / M_B A)² (ΔE_s/ΔE_t)² — 양극 활물질 기준 겉보기 D.
+- LSV: SS|전해질|Li · 0–6 V · 0.1 mV s⁻¹ (Princeton).
+- Li–S: 양극에 액체 5 µL (위 §2) · Neware BST-CT-4008 · **1.7–2.8 V** · CV · EIS 는 IviumStat 20 V · **전부 60 °C**. CV 주사 0.10–0.50 mV s⁻¹.
+- in-situ EIS: OCV → 2.5 → … → 1.7 V (0.1 V 간격 · 측정 주파수 범위 · 휴지 시간 미기재) · DRT 정칙화 · 소프트웨어 미기재.
+- 셀 수 · 반복 · 오차막대 **전부 미기재** (단일 셀로 보인다).
+
+### 4g. 계산 (SI 1.7) ★
+- **CP2K 2025.2** · QUICKSTEP (GPW).
+- 주기 UiO-66 를 먼저 최적화 (**2×2×2 MP k-격자**) → 고립 Zr₆ 노드 클러스터 **Zr₆O₄₀C₆₄H₄₄** 절단 ("coordinatively unsaturated Zr sites" 포함) → 비주기 경계 · k 샘플링 없음 · **주변 원자 일부 고정** (어느 원자인지 미기재).
+- PBE + **DFT-D3(BJ)** · GTH 의사퍼텐셜 · MOLOPT 기저: 최적화 **DZVP-MOLOPT-SR-GTH** · **CUTOFF 400 Ry · REL_CUTOFF 55 Ry** · 최종 에너지는 같은 구조에서 **TZV2P-MOLOPT 단일점**.
+- E_bind = E_complex − E_UiO-66 − E_adsorbate (식 5) · 흡착종 = 고립 TFSI⁻ (−1) · 고립 S₆²⁻ (−2). **용매 · 고분자 · Li⁺ 짝이온 · 암시적 용매화 없음** · BSSE 보정 언급 없음 · 스핀 설정 · 셀 (진공) 크기 · Poisson 해법 (비주기 전하계에 필요) **미기재**.
+- 후처리: CDD · ELF (Becke–Edgecombe) · DOS/PDOS (**Multiwfn**) · Bader (Henkelman grid · CP2K 가전자 밀도).
+- **클러스터 전하 장부 (`Table S2` 아래 문단)**: Zr(IV) × 6 = +24 · μ₃-O²⁻ × 4 = −8 · μ₃-OH⁻ × 4 = −4 · COO⁻ × 8 = −8 · COOH × 8 = 0 → **+4**. 저자: *"양전하는 절단 · 말단 처리에서 온 것이고 UiO-66 결정 전체의 전하 상태가 아니다 … 쿨롱 인력이 큰 정전기 안정화를 주어 결합에너지 절댓값이 커진다 … 두 음이온의 전하가 달라 차이는 국소 배위뿐 아니라 장거리 정전기에도 크게 좌우된다 … 따라서 보조 증거로만"*.
+- **우리 역산 (화학식 → 구조)**: O 40 = 노드 8 + 링커 8 × 4 · C 64 = BDC 8 × 8 · H 44 = OH 4 + 고리 H 8 × 4 + COOH 8 ⇒ **BDC 링커 8 개, 각 먼 쪽 끝은 COOH 로 막음**. 결손 없는 UiO-66 노드는 카르복실레이트 12 개로 Zr₆O₄(OH)₄(COO)₁₂ = 전하 0 이다 ⇒ 이 모형은 **링커 4 개 결손 · 전하 미보상 노드**이고, +4 는 정확히 빠진 카르복실레이트 4 개의 몫이다. 음이온이 들어가는 자리는 원래 보상 리간드가 차야 할 자리다.
+
+---
+
+## 5. 결과 — 절별 상세 (그림 실독 포함 · 모든 수치)
+
+### 5.1 UiO-66 기반 Lewis 산 배위망 구성 (본문 2.1 · `Fig. 1`, `Fig. S1`–`S3`)
+- `Fig. 1a` 모식도: 전기방사 → PU (섬유 위 UiO-66 입자) → PL 붓기 → PUPL 원판.
+- `Fig. 1b` (본 그림): UiO-66 XRD — 주 봉우리 ≈7.3° · ≈8.5° 와 약한 봉우리들이 CCDC #837158 막대와 위치 일치, 불순물 봉우리 없음.
+- `Fig. 1c` (본 그림): N₂ 흡탈착 — P/P₀ < 0.05 에서 ≈200 cm³ g⁻¹ 까지 급상승 후 완만히 ≈430 cm³ g⁻¹ (P/P₀ = 1) · 라벨 961.60 m² g⁻¹ · 삽입 세공 분포 봉우리 figure-read ≈3–4 nm. 본문은 "hierarchical micro/mesopores" — 0.4–0.5 P/P₀ 부근 작은 히스테리시스가 보인다.
+- `Fig. 1d` (본 그림): TEM 팔면체 1 개 (+ 옆 입자 일부) — 크기 figure-read ≈150 nm (막대 50 nm). **입자 하나**로 "uniform" 을 말한다 (크기 분포 없음).
+- `Fig. 1e` (본 그림): PU SEM — 섬유 망 · 라벨 "0.4 µm" (한 가닥 표시). UiO-66 입자 '균일 고정' 은 이 배율 (막대 4 µm) 에서 식별되지 않는다.
+- `Fig. 1f` (본 그림): EDS C · Zr · O · N 지도 — 모두 점묘 형태로 고름. 섬유 형상이 지도에서 안 보인다 (해상도 한계).
+- `Fig. 1g` (본 그림): PUPL 단면 — 라벨 **156 µm** (본문 158 µm).
+- `Fig. S1` (본 그림): PU 막 단면 — 빨간 화살표 "2 µm" 는 **맨 위의 흐트러진 섬유 층 한 켜만** 가리킨다. 그 아래에도 섬유 다발이 화면 밖까지 이어진다. ⚠ 질량수지 어림 (우리 산수 · 밀도 PAN 1.18 · PL ≈1.3 g cm⁻³ 가정): PAN 8.28 wt% 이면 158 µm 막에서 조밀 PAN 환산 두께가 ≈12 µm — 다공 섬유막이면 수십 µm 다. "PU 막 ≈2 µm" 와 SI 1.3 질량분율은 둘 다 맞을 수 없다.
+- `Fig. S2` (본 그림): PUPL 표면 — 매끈한 회색 면에 주름 몇 줄 · 섬유 안 보임 (본문: PL 이 섬유를 덮어서).
+- `Fig. S3` (본 그림): 핀셋으로 접은 흰 막 사진 (저해상도) — 굽힘 수치 없음.
+
+### 5.2 음이온 경쟁에 의한 Zr⁴⁺ 동적 전하 재구성 — DFT (본문 2.2 앞부분 · `Fig. 2`, `Table S2`)
+- **흡착종 선택**: S₆²⁻ 를 "황 환원의 핵심 중간체 · 뚜렷한 전하 국재" 로 대표 폴리설파이드로 골랐다. 다른 사슬 (S₈²⁻ · S₄²⁻ · S₂²⁻ · S²⁻) 계산 없음 — 그런데 기전 서술 (§5.3) 은 "짧은 사슬일수록 더 강한 경쟁" 을 말한다.
+- `Fig. 2a–d` (본 그림): 위 · 옆 보기. 위 보기에서 링커 8 개 (4 개는 십자 방향으로 옆에서 본 모양 · 4 개는 대각) 가 보인다. figure-read: (c) TFSI⁻ 는 술포닐 O 로 노드 위쪽 Zr 하나에 붙고 (O 1–2 개로 보임), (d) S₆²⁻ 는 고리에 가까운 굽은 사슬로 **Zr 하나에 S 두 개가 삼각형으로 연결**된 것처럼 그려져 있다. 결합선 라벨 · 거리 · 배위수 표시 없음 → **배위수는 그림으로 셀 수 없다**.
+- `Fig. 2e,f` (본 그림): CDD 등치면 (노랑/청록 · **등치면 값 미기재**). S₆²⁻ 쪽 덩어리가 사슬 전체를 덮어 크고, TFSI⁻ 쪽도 음이온 주위에 꽤 큰 덩어리가 있다. 두 그림 모두 **멀리 떨어진 COOH 말단에도** 작은 노랑/청록 조각이 있다 — 전하를 띤 클러스터 전체의 분극 응답으로 보인다. 본문 *"TFSI⁻ 는 제한적 재분배"* 는 등치면 값을 모르면 비교할 수 없다.
+- `Fig. 2g` (본 그림): 막대 — E_bind −11.96 / −26.45 eV (왼축 0 … −40) · Bader 0.35 / 1.16 e (오른축 0–1.8). 본문도 *"distinct charge states … positively charged cluster model … might be somewhat overestimated"* 라고 적는다.
+- `Fig. 2h,i` (본 그림): ELF 2D 단면 — **색막대 숫자 없음**. 단면은 링커 4 개가 십자로 놓인 면이고, **TFSI⁻ · S₆²⁻ 는 단면에 보이지 않는다**; 두 그림은 사실상 같다. 본문 *"UiO-66/S₆²⁻ 는 Zr–S 계면에서 전자 국재가 커진다"* 를 이 그림은 보여 주지 않는다.
+- `Fig. 2j,k` (본 그림): Total DOS · UiO-66 PDOS · 흡착종 PDOS (−15 … +10 eV). (j) TFSI⁻ PDOS 는 ≈ −10 … −3 eV 에 넓게 · E_F 근처 ≈0. (k) S₆²⁻ PDOS 는 전체 척도에서 작고 −2 … 0 eV 에 작은 봉우리들 + 비점유 ≈ +2 … +3.5 eV.
+- `Fig. 2l,m` (본 그림): Zr 4d vs 리간드. (l) O 2p (TFSI⁻) 는 −10 … −3 eV, Zr 4d 는 ≈ +0.8 eV 이상 비점유대 — 점유 영역 겹침 ≈0. (m) S 3p 는 −6 … 0 eV 에 점유 봉우리 (최대 ≈0.62 @≈ −1.8 eV), **그 자리에서 Zr 4d 는 ≈0** (−10 … −6 eV 에 ≈0.05 수준 꼬리뿐) · Zr 4d 는 ≈ +1.3 eV 이상 · 둘이 겹치는 곳은 **비점유 ≈ +1.8 … +3.5 eV** 뿐. y 축 척도 (l) 1.2 / (m) 1.0. ⇒ 본문 *"Zr 4d–S 3p 뚜렷한 혼성"* 은 점유 상태에서 확인되지 않는다. 본문 스스로 *"비점유 Zr 4d 와 S 3p 가전자 궤도의 결합"* 이라고 적어 비점유대 겹침을 말하고 있음을 인정한다.
+
+### 5.3 실험 검증 — UV-vis · XPS · VB-XPS · 기전 모식도 (본문 2.2 뒷부분 · `Fig. 3`, `Fig. S4`, `Fig. S5`)
+- `Fig. 3a` (본 그림): UV-vis — 범례 'UiO-66 · PEO · Li₂S₆' 는 각각 *UiO-66 담근 Li₂S₆ 용액 · PEO 담근 용액 · 원 Li₂S₆ 용액* 으로 읽힌다 (캡션). figure-read 흡광 (≈320 nm 봉우리): 원 용액 ≈0.92 (축 상대) · PEO 후 ≈0.35 · UiO-66 후 300 nm 에서도 ≈0.2 이하 · 봉우리 거의 소멸. 사진: UiO-66 병이 거의 무색. ⚠ 흡착제 질량 · 표면적 정규화 · 용액 농도 · 시간 **미기재** — PEO 도 흡광을 절반 이상 줄인다. UiO-66 은 이 실험에선 **노출된 분말**이지만 PUPL 안에서는 0.67 wt% 로 PAN 섬유에 박혀 PEO 로 덮여 있다.
+- `Fig. 3b,c` (본 그림): Zr 3d — 흡착 전 3d₅/₂ **183.18** · 3d₃/₂ **185.50 eV** → Li₂S₆ 흡착 후 **183.10** · **185.30 eV**. 이동 0.08 / 0.20 eV. 스핀–궤도 간격 **2.32 → 2.20 eV** (우리 산수 · 고정 물리량이어야 한다). (c) 에는 본문 언급 없는 **≈181.4 eV 저결합 성분**이 새로 맞춰져 있고, 겉봉 (검정 선) 이 184 · 186.5 eV 근처에서 끊겨 그려졌다.
+- `Fig. 3d` (본 그림): S 2p (UiO-66/Li₂S₆) — 'S_B⁰' 큰 봉우리 ≈170.3 eV + 짝 ≈171.2 eV · 'S_T⁻¹' 큰 봉우리 ≈169.1 eV + 작은 성분 ≈169.6 eV (figure-read). ⚠ 폴리설파이드 S 2p 는 통상 162–164 eV 대역이다 (저자 자신의 본문도 `Fig. S16` 해설에서 bridging 163.5 · terminal 162.0 eV 로 적는다). 169–171 eV 는 설페이트 · 술포닐 (TFSI) 대역이다. 본문 *"자유 폴리설파이드와 다른 새 황 배위 성분"* 은 지정 대역부터 맞지 않는다.
+- `Fig. 3e` + `Fig. S5` (둘 다 본 그림): C 1s — 흡착 **전** (`Fig. S5`) O–C=O ≈**288.7** · C–O ≈286.5 (작음) · C–C ≈284.7 eV. 흡착 **후** (`Fig. 3e`) 'O–C=O' 라벨이 ≈**293.1 eV** 봉우리에 붙고, 'C–O' 라벨이 ≈288.8 eV (= 흡착 전 O–C=O 자리) 에 붙어 있다 (figure-read). ≈293 eV 는 CF₃ (TFSI) · π–π* 위성 영역이다. 본문 *"카르복실 O–C=O 의 결합에너지 · 면적 변화 → 노드–리간드 전자 응답"* 은 **라벨 재배치로 생긴 ≈4.4 eV '이동'** 일 가능성이 크다. Li₂S₆ 용액에 LiTFSI 가 들어 있었는지 미기재.
+- `Fig. S4` (본 그림): UiO-66 survey — O 1s · C 1s · Zr 3d 라벨 + Zr 3p (≈333/346 eV) · Zr 3s (≈430 eV) · 저결합 Zr 4p/4s 봉우리 (라벨 없음). figure-read **≈690 eV 에 작은 라벨 없는 봉우리** (F 1s 위치) — 본문 *"불순물 봉우리 없음"* 과 대조할 것 (확인 불가).
+- `Fig. 3f` (본 그림): VB-XPS — 범례 **"PUPL-Sₙ²⁻"** vs "PUPL-TFSI⁻" (캡션 · 본문은 S₆²⁻). 두 곡선 모두 ≈19 · ≈14.5 · ≈10 · ≈6 eV 봉우리, 개시점 ≈3 eV 동일, **Sₙ²⁻ 곡선이 전 구간에서 ≈2 배 위**에 있다. 0–3 eV (저결합 영역) 는 둘 다 바닥선. ⇒ 본문 *"특히 저결합 영역에서 가전자 상태 밀도가 높다"* 는 그림과 다르고, 전 구간 균일 배율은 정규화 차이로도 설명된다. 시료 (PUPL 에 무엇을 어떻게 적셨나) 미기재.
+- `Fig. 3g` (본 그림): 모식도 — TFSI⁻ 'Zr–O · Zr 4d ← O 2p · weak polarization · uniform electron distribution' → 'TFSI⁻ ⇄ Sₙ²⁻ coordination' → 'Zr–S · Zr 4d ← S 3p · strong polarization · electron redistribution'.
+- 본문 서술 (사슬 길이 효과): *"사슬이 짧아질수록 전자 밀도가 말단 S 에 국재 → S₄²⁻ · S₂²⁻ · S²⁻ 가 더 강하게 경쟁 → Zr⁴⁺ 전하 밀도 감소 · 국소 전하 비대칭 증가 → 약분극 → 강분극 재구성 → 계면 전위 구배 · 전기장 구동력 → 황 활성화"* — **계산 · 측정 근거 없음** (ref 30–33 인용 · ref 33 은 2D COF 유기 전기화학 트랜지스터 논문).
+
+### 5.4 Zr–O 배위에 의한 Li⁺ 수송 조절 (본문 2.3 · `Fig. 4`, `Fig. 5`, `Fig. S6`–`S14`)
+- `Fig. 4a` (본 그림): XRD — PU 7.30° (UiO-66) + PAN 넓은 봉우리 ≈17° · PL 19.60° · 23.10° (PEO). 본문: PPL 에서 PEO 봉우리 약화 · PUPL 에서 더 약화. figure-read: PUPL 의 PEO 봉우리는 확실히 작지만, **PPL 봉우리는 PL 과 비슷하거나 더 날카롭다** — 세기 정규화 · 결정화도 정량 (DSC 없음) 없음.
+- `Fig. 4b` (본 그림): TGA — §3e. 본문: PUPL 잔량 "주로 UiO-66 → ZrO₂". 질량수지 (우리 산수): UiO-66 (Zr₆O₄(OH)₄(BDC)₆ ≈1664 g mol⁻¹) → 6 ZrO₂ (≈739 g mol⁻¹) = 44.4 % ⇒ 0.67 wt% × 0.444 = **0.30 wt%**. 관측 잔량 ≈3–4 % 의 대부분은 N₂ 중 **PAN 탄화 잔류물** (PAN 8.28 wt%) 로 보는 편이 자연스럽다.
+- `Fig. 4c` (본 그림): 응력–변형 §3e. 본문: "PAN 섬유 + UiO-66 이 시너지로 보강 · 덴드라이트 억제에 유리" — UiO-66 없는 PPL 의 인장 곡선은 없다.
+- `Fig. 4d,e` (본 그림): FTIR — O=S=O 비대칭 신축 1346 → 1348 cm⁻¹ · S–N–S 651 → 653 cm⁻¹ · C–F ≈1197 cm⁻¹ 불변 → *"Zr–O (술포닐 O) 배위 우선 · CF₃ 아님"*. figure-read: 이동 2 cm⁻¹ 은 그림에서 점선 위치로만 구분된다 (분해능 미기재). ⚠ PAN · PU 스펙트럼이 거의 평탄하고 **C≡N 신축 (≈2240 cm⁻¹) 이 어느 곡선에도 안 보인다** — PAN 시료 스펙트럼으로서 이상하다.
+- `Fig. 4f–h` (본 그림): Raman 735/743 cm⁻¹ 대역 — (f) 봉우리 PL ≈740 → PUPL ≈737 cm⁻¹ (회색 화살표). (g) PL: free ≈736.5 · pair ≈742 cm⁻¹ · **49.40 / 50.60 %**. (h) PUPL: free ≈736 · pair ≈744 cm⁻¹ · **78.10 / 21.90 %**. figure-read: (h) free 성분 FWHM ≈14–16 cm⁻¹ · pair ≈6 cm⁻¹ — (g) 는 두 성분 폭이 비슷 (≈10) → **시료마다 폭이 자유롭게 달라진 피팅**. (f) 의 PL 곡선은 잡음 없는 매끈한 가우시안으로 원 데이터가 아니라 적합 곡선처럼 보인다.
+- 본문 결론: *"초기에 Zr⁴⁺ 가 TFSI⁻ 와 우선 배위 → 약분극 배위 구조 → 접촉 이온쌍에서 LiTFSI 해리 → Li⁺ 이동 향상"*.
+- `Fig. 5a,b` (본 그림): Nyquist 25–80 °C. figure-read PL 25 °C 반원 끝 ≈4000 Ω · PUPL 25 °C 절편 ≈150–180 Ω · PUPL 60 °C ≈20 Ω. (우리 산수 검산: L = 158 µm · S = ⌀16 mm 원판 2.01 cm² 가정 시 PL 25 °C σ = 1.48×10⁻⁶ ⇒ R ≈5300 Ω · PUPL 60 °C ⇒ ≈21 Ω — 차수 일치. 실제 SS 전극 면적 미기재.)
+- `Fig. 5c` (본 그림 · 픽셀 판독): §3a. 라벨 0.35 / 0.64 (PUPL) · 0.62 / 1.15 eV (PL).
+- `Fig. S7`–`S9` (본 그림): PPL · PUPL-5 · PUPL-10 Nyquist. figure-read 25 °C 절편 PPL ≈1000 Ω · PUPL-5 ≈900 Ω · PUPL-10 ≈230–250 Ω · 60 °C 는 셋 다 ≈20–24 Ω (확대도) — 60 °C 에서 시료 간 차이가 거의 없다는 §3a 결론을 Nyquist 원자료가 그대로 보여 준다. PUPL-5 · PUPL-10 의 70 · 80 °C 곡선은 고주파 쪽에 유도성 꼬리 (음의 −Zim 쪽 꺾임 · 축 밖) 가 보인다.
+- `Fig. S10` (본 그림): PPL 아레니우스 1.04 / 0.39 eV. `Fig. S11` (본 그림): PUPL-5 1.03 / 0.41 · PUPL-10 0.52 / 0.44 eV. SI 해설: *"UiO-66 이 늘수록 저온 Ea 감소 (1.03 → 0.52) 이나 PUPL-10 은 σ 가 더 높지 않다 → 캐리어 농도 · 경로 연속성 중요 · 고온에선 PUPL-7.5 가 최저 Ea"*. 본문: *"UiO-66 효과는 함량과 함께 커지지 않는다 (`Fig. S8`) · 과량 충전재가 경로를 해친다"*.
+- `Fig. 5d` (본 그림 · 픽셀 판독): LSV (전류 **mA**, 면적 정규화 없음) — PL 은 ≈3.5 V 부터 오르고 ≈5.0 V 에서 ≈0.95 mA 봉우리 · 접선 교점 figure-read (픽셀) ≈3.92 V (라벨 3.90 ✓). PUPL 은 ≈5.3 V 부터 · 6 V 에서 ≈0.18 mA · 라벨 5.15 V (화살표 끝은 ≈5.35 V 쪽 — 정확한 교점은 판독 불확실). 본문: *"안정한 PU 골격이 균일한 Li⁺ 이동 · 고분자 고전압 분해 억제"* — PPL LSV 없음.
+- `Fig. S12` (본 그림 · 픽셀 판독): PUPL-5 · PUPL-10 LSV — 라벨 4.69 / 4.91 V 인데 그린 접선이 영선과 만나는 점은 figure-read (픽셀) ≈4.80 / ≈4.99 V (≈0.1 V 위). PUPL-10 전류는 ≈5.7 V 이후 **0.50 mA 에서 평평** — 기기 전류 상한에 닿은 모양이다. PUPL-5 곡선은 ≈5.4 V 에서 끊긴다. SI 해설: 적은 충전재 → Lewis 산 자리 부족 · 많은 충전재 → 응집 · 계면 불균일.
+- `Fig. 5e,f` (본 그림): DC 분극 + 전후 Nyquist. figure-read PL I₀ ≈44.5 → I_s ≈21 µA · 반원 끝 R₀ ≈270 → R_s ≈400 Ω · PUPL I₀ ≈30.8 → I_s ≈20.7 µA · R₀ ≈215 → R_s ≈290 Ω. 단순비 I_s/I₀ = 0.47 / 0.67 (우리 산수). **ΔV 미기재**라 재계산 불가. 민감도 (우리 산수 · figure-read 입력 · ΔV 가정): ΔV = 15 mV 로 두면 식 3 은 PL ≈0.21 · PUPL ≈0.63 을 준다; ΔV = 20 mV 면 PL ≈0.32. ⇒ PL 의 0.21 은 분자 (ΔV − I₀R₀ ≈ 3 mV) 가 작은 영역에 있어 **ΔV 와 R 판독에 매우 민감**하다.
+- `Fig. 5g` (본 그림): Li|Li 0.1 mA cm⁻² · 60 °C — PL ≈ ±0.04 → ±0.06 V 로 커지다 **≈330 h** 에서 끊김 · PUPL ≈ ±0.035 V 로 **1600 h**. 반주기 시간 (도금/박리 1 회 시간 · 용량) 미기재.
+- `Fig. 5h,i` (본 그림): 율속 대칭셀 — figure-read PL 0.05 / 0.10 / 0.15 / 0.20 mA cm⁻² 에서 ±0.03 / ±0.06 / ±0.09 / ±0.12 V · 0.20 에서 ≈162 h 무렵 붕괴. PUPL 0.05 / 0.10 / 0.15 / 0.20 / 0.25 / 0.30 → 0.05 에서 ±0.02 / ±0.04 / ±0.06 / ±0.08 / ±0.10 / ±0.12 / ±0.02 V. 두 계 모두 과전압이 전류에 **선형** (옴 거동) — 기울기 PL ≈0.6 · PUPL ≈0.4 V per mA cm⁻² (우리 산수 · ≈600 vs ≈400 Ω cm²).
+- `Fig. S13` (본 그림): 200 h 후 Li 표면 SEM (막대 20 µm). 본문: *"PUPL 매끈 · 덴드라이트 없음 / PL 은 뚜렷한 덴드라이트 · dead Li"*. figure-read: (a) PL 은 판상 표면에 균열망 · 작은 입자 몇 개, (b) PUPL 은 오히려 거칠고 박편 · 틈이 많다. 이 배율에서 **덴드라이트 · dead Li 는 어느 쪽에서도 식별하기 어렵다**.
+- `Fig. S14` (본 그림): Li|Li EIS 0 · 50 · 100 · 150 h (등가회로 R_b–(R_dl‖CPE)–(R_ct+Z_w‖CPE) · 라벨에 워드 맞춤법 빨간 물결선이 그대로 찍혀 있다). figure-read 반원 끝: PL 0 h ≈440 → 50 h ≈530 → 100 h ≈590 → 150 h ≈790 Ω (×1.8) · PUPL 0 h ≈220 → ≈370 → … → 150 h ≈650 Ω (**×3.0** · 100 h 곡선은 겹쳐 구분 어려움). 적합 값 표 없음. 본문 *"PUPL 이 계속 가장 낮은 계면 저항"* 은 절댓값으로는 맞지만, **간격은 2 배 → 1.2 배로 좁아진다**.
+
+### 5.5 음이온 경쟁 구동 계면 황 변환 (본문 2.4 · `Fig. 6`, `Fig. S15`, `Fig. S16`)
+- `Fig. 6a,b` (본 그림): CV 등고선 (0.10–0.50 mV s⁻¹ · 색 0–5 mA). 아래 절반 = 환원 (Peak B Li₂Sₓ → Li₂S ≈1.75–1.95 V · Peak A S₈ → Li₂Sₓ ≈2.3–2.4 V), 위 절반 = 산화 (Peak C Li₂S → S₈ ≈2.3–2.6 V). PUPL 은 B · C 가 더 진하고 넓다. (b) 는 색막대가 뒤집혀 있다 (위 0 · 아래 5 로 보임).
+- `Fig. 6c` (본 그림 · 픽셀 판독): 0.1 mV s⁻¹ CV — §3c. 본문: 환원 봉우리 2 개 (S₈ → Li₂Sₙ (n = 4, 6, 8) · → Li₂S₂/Li₂S) + 산화 1 개. PUPL 봉우리 전류가 크고 ΔE 가 작다 (라벨 0.38 vs 0.42 V). **그린 화살표 폭은 ≈0.50 / ≈0.53 V** — 라벨 숫자와 다르고, 두 계 차이 (≈0.03–0.04 V) 방향만 같다.
+- `Fig. S15` (본 그림): 주사 속도별 CV — PUPL 은 0.5 mV s⁻¹ 에서 C ≈1.45 mA · B ≈ −1.10 mA, PL 은 ≈0.45 / ≈ −0.50 mA 이고 **PL 의 B 봉우리는 하한 1.7 V 에 걸려 잘린다** (봉우리가 창 안에서 안 끝남). Randles–Sevcik 기울기 · D 추출 없음.
+- `Fig. 6d,e` (본 그림 · 픽셀 판독): "Tafel" — **(d) "Peak B"**: 전위 2.18–2.35 V · **양의 기울기** · log|i| −1.15 … −0.25 · 라벨 PUPL **15.45** / PL **33.36 mV dec⁻¹** — 축 눈금으로 잰 기울기 figure-read (픽셀) **≈155 / ≈335 mV dec⁻¹**. **(e) "Peak C"**: 전위 1.87–2.07 V · **음의 기울기** · 라벨 **16.75 / 39.35** — 잰 기울기 **≈ −163 / ≈ −380 mV dec⁻¹**. ⇒ ① 라벨이 그림 기울기의 **약 1/10** (네 곡선 모두 9.7–10.0 배) — 단위 · 자릿수 오류로 보인다. ② `Fig. 6c` 에서 B 는 ≈1.8–1.95 V 환원, C 는 ≈2.4 V 산화인데 (d) 는 2.2–2.35 V, (e) 는 1.87–2.07 V 다 — **전위 구간 · 기울기 부호가 라벨과 뒤바뀐 것처럼 보인다**. 본문은 *"PUPL 의 산화 · 환원 Tafel 기울기 16.75 · 15.45 mV dec⁻¹"* 이라고 적는다. 그림에서 잰 값으로 αn = 2.303RT/(F·b) (60 °C · 66.1 mV) ≈ **0.43 / 0.20 (B)** · **0.41 / 0.17 (C)** (우리 산수) — 라벨 값 (αn ≈ 4.3 / 4.0) 보다 물리적으로 그럴듯하다. 두 계 비 (≈2.2) 는 라벨 · 그림 모두 같다.
+- 본문 해석: *"낮은 Tafel 기울기 = 계면 전하이동 저항 감소"*. ⚠ CV 봉우리 부근은 확산 제한이 섞여 Tafel 영역이 아니다.
+- **in-situ EIS / DRT** (본문 서술 · τ 구간 정의 = ref 12 · 49): τ₁ 10⁻⁵–10⁻⁴ s 벌크 이온 이동 · τ₂ 10⁻⁴–10⁻² s 계면 접촉/계면상 · τ₃ 10⁻²–10⁻¹ s 계면 전하이동 · τ₄ 10⁻¹–10⁰ s 확산/석출. 서술 순서: OCV → 2.50 V 두 계 모두 임피던스 증가 (절연 S₈ 활성화) · τ₄ 감소가 지배 → Li₂S₈ 생성 시 PUPL 의 τ₄ 감소가 더 빠름 (Zr–O 약배위 → 해리 → 계면 자유 Li⁺) → 2.50–2.30 V 장사슬 폴리설파이드가 전도 경로 → 임피던스 감소 · PUPL 은 τ₃ 세기 더 낮음 → 2.30–2.00 V PL 은 τ₃ · τ₄ 크게 증가 (Li₂S₄ 축적) · PUPL 은 작은 변화 → 2.00–1.70 V Li₂S₂/Li₂S 석출 · PL 급증 · PUPL 낮게 유지.
+- `Fig. 6f,g` (본 그림): in-situ Nyquist (OCV … 1.7 V · ≈90 Ω 씩 위로 쌓음). figure-read 반원 폭 PL OCV ≈190 → 2.5 V ≈200 → 2.3–1.9 V ≈250–300 → 1.7 V ≈330 Ω · PUPL OCV ≈110 → 2.5 V ≈120 → 2.3–1.9 V ≈180–220 → 1.7 V ≈280 Ω. PUPL 의 중간 전압 곡선들은 저주파 꼬리 전에 잘려 있다. ⇒ **PUPL 도 방전 끝으로 갈수록 반원이 ≈2.5 배 커진다** — "낮게 유지" 는 상대적 서술.
+- `Fig. 6h,i` (본 그림): DRT 등고선 (τ 10⁻⁵–10² s · 색 0–700 a.u.). figure-read: PL 은 **τ ≈ 20–100 s 에서 거의 모든 전압이 빨강 (≈700)**, τ ≈10⁻⁴–10⁻³ s 와 ≈1 s 에 약한 (청록) 띠. PUPL 은 τ ≈30–100 s 에서 OCV · 1.8 · 1.7 V 만 초록–노랑, 나머지는 옅은 청록. ⇒ 두 계를 가르는 **가장 센 차이는 τ > 10 s** 인데, 저자의 τ 구간 정의 (최대 τ₄ = 10⁰ s) 밖이고 본문은 이 영역을 언급하지 않는다. 저주파 끝 · 정칙화에 가장 민감한 영역이기도 하다 (측정 최저 주파수 미기재).
+- **ex-situ S 2p XPS** (`Fig. S16` · 본 그림 · PUPL 의 양극 쪽 면 · 2.2 / 2.0 / 1.9 / 1.7 V): 본문 지정 — ≈169.0 eV LiTFSI 유래 (+ 산소 함유 황 부산물), **≈163.5 eV bridging S · ≈162.0 eV terminal S**. 서술: 2.2 V bridging 약함 (폴리설파이드가 양극 쪽에 머묾) → 2.0 V 크게 증가 (계면 축적) → 1.9 V 크게 감소 · terminal 유지 (사슬 절단) → 1.7 V 더 감소 (Li₂S₂/Li₂S 로 전환). figure-read (그림 라벨 기준):
+  - (a) 2.2 V: "Sulfate-related S" 보라 ≈168.8 + 청록 ≈170.0 eV · **"Briding S" 갈색 ≈168.0 eV (넓음)** · 라벨 없는 초록 ≈163.7 · "Terminal S" 파랑 ≈162.3 eV.
+  - (b) 2.0 V: 청록 ≈170.2 · 보라 ≈169.1 · **"Briding S" 진갈색 ≈167.2 eV (큼)** · 초록 ≈163.8 · "Terminal S" 파랑 ≈162.6.
+  - (c) 1.9 V: 청록 ≈169.9 · 보라 ≈169.1 · 라벨 없는 주황 ≈168.4 · **"Briding S" ≈167.2** · 초록 ≈163.9 · 파랑 ≈162.3.
+  - (d) 1.7 V: 청록 ≈169.9 · 보라 ≈168.9 · **"Briding S" ≈167.6 (작음)** · **"Terminal S" 가 ≈163.6 eV 봉우리** (초록 없음).
+  ⇒ 그림의 "Briding S" 는 본문의 163.5 eV 가 아니라 **≈167–168 eV** (아황산 · 티오황산 계 대역) 이고, 본문 163.5 eV 위치의 성분 (초록) 은 라벨이 없다. (d) 에서는 "Terminal S" 라벨이 ≈163.6 eV 봉우리로 옮겨갔다. 2p₃/₂ · 2p₁/₂ 짝 (1.18 eV 간격 · 2:1) 을 묶지 않은 단일 성분 피팅이다. 1.7 V 에서 Li₂S (≈160–161.5 eV) 성분은 보이지 않는다 (x 축 159 eV 까지). SI 해설: *"이 조건에서 신뢰할 만한 Zr 3d 신호를 얻지 못했다 (탐침 깊이 · 내부 계면 Zr 광전자 감쇠) … 그래도 Zr 와 상호작용 못 한다는 뜻은 아니다 … 앞선 XPS/VB-XPS · DFT · CV · DRT 와 함께 기전을 지지한다"*.
+
+### 5.6 SSLSB 전기화학 성능 (본문 2.5 · `Fig. 7`, `Fig. S17`)
+- `Fig. 7a` (본 그림): GITT 전압 (왼축 1.6–3.0 V · 라벨 "Potentia") + log D (오른축 −10 … −40 · 단위 "cm² g⁻¹" 오기). figure-read: 방전이 PL ≈150 h · PUPL ≈175 h 에 끝나고, 전체 ≈300 / ≈340 h. log D 점은 두 계 모두 ≈ −10 … −16 안에 흩어지고, 방전 평탄부 (≈60–150 h) 에서 PUPL ≈ −14 · PL ≈ −15.5 로 가장 벌어지며 충전 쪽에서는 거의 겹친다. 오른축 −20 … −40 은 비어 있다. 평균 1.34×10⁻¹² vs 1.33×10⁻¹³ (가수까지 거의 같고 정확히 10 배) — 평균 방식 (산술 · 로그) 미기재. 산술평균이면 가장 큰 몇 점이 좌우한다. 본문 해석: *"방출된 TFSI⁻ 가 계면 이온 균형 조절에 다시 참여 → 안정한 Li⁺ 경로"* — 이 해석의 직접 근거는 없다.
+- `Fig. 7b` (본 그림): PUPL 1 / 2 / 10 / 50 / 100 사이클 — 상부 평탄 ≈2.3–2.4 V · 하부 평탄 ≈2.08 V · 충전 ≈2.25–2.4 V · 용량 ≈1280 → ≈1230 → ≈1040 → ≈670 → ≈500 mAh g⁻¹ (figure-read). 사이클이 갈수록 하부 평탄이 짧아진다.
+- `Fig. 7c` (본 그림): PUPL 1282.81 → 493.20 (100 사이클) · CE ≈97–98 % 일정. **PL 은 사이클 1–6 만**: 용량 867 → ≈800 → ≈770 → ≈780 → ≈640 → ≈670 · CE 점은 1–4 사이클 ≈93–98 % 이다가 **5 · 6 사이클에 ≈81 · ≈75 %** (figure-read · 오른축 환산). ⇒ PL 셀은 ≈6 사이클에서 셔틀 · 연성 단락으로 보이는 실패를 겪고 멈췄다 — 본문 *"PL 보다 유지율이 훨씬 높다"* 의 비교 대상이 그림에 없다.
+- `Fig. 7d` (본 그림): PL 1 · 2 사이클 — 방전 ≈870 · ≈810 · 충전 끝 ≈915 · ≈840 mAh g⁻¹.
+- `Fig. 7e` + `Fig. S17` (둘 다 본 그림): 첫 사이클 Q_H (≈2.3 V 이상 상부 평탄 · 음영 0 … ≈300 mAh g⁻¹) · Q_L (≈2.1 V 하부 평탄 · 음영 300 … 1280). `Fig. S17` 막대: Q_H **208.35 / 317.43** · Q_L **659.29 / 1032.76** (PL / PUPL). 본문: *"Q_H 차이는 상대적으로 작다 → S₈ → 장사슬 전환은 막힘 없음 · PUPL 은 Q_L 이 뚜렷이 높다 → 장사슬 → Li₂S₂/Li₂S 완전 전환 · 후반 반응 장벽을 낮춘다"*. 우리 산수: Q_H 비 **1.52** · Q_L 비 **1.57** — **두 평탄부가 같은 비율로 늘었다** (이론 대비 PL 50 / 52 % · PUPL 76 / 82 %). 이는 '후반 단계 선택적 가속' 이 아니라 **황 이용률 전체가 늘었다** (양극 젖음 · 접촉 · 분극 차이로도 설명 가능) 는 쪽에 맞다. 또 PUPL Q_H + Q_L = 1350.19 가 총 1282.81 보다 크다 — 평탄부 경계 정의 미기재.
+- 본문 한계 인정: *"S 1.0 mg cm⁻² 는 고담지에서의 느린 Li⁺ 수송 · 분극 문제를 충분히 반영하지 못할 수 있다 → 후속 과제"*.
+- `Fig. 7f,g` (본 그림): Li|PUPL|LFP — 본문 *"144.80 mAh g⁻¹ · 50 사이클 96 %"* · 그림은 **100 사이클까지**: figure-read ≈145 → ≈138 (50 사이클 · ≈95 %) → ≈131 (100 사이클 · ≈90 %) · CE ≈99–100 % · 2.5–4.0 V · 평탄 ≈3.49 / ≈3.36 V (ΔV ≈0.13 V) · (g) 1 / 20 / 50 / 70 / 100 사이클 ≈147 / ≈143 / ≈140 / ≈137 / ≈130.
+- `Fig. 7h` (본 그림): 파우치 사진 3 장 — 평평 · 굽힘 · 절단에서 LED 점등 (캡션 "room temperature"). 전압 · 전류 · 지속 시간 · 파우치 용량 없음. 상온 σ 3.92×10⁻⁵ S cm⁻¹ 로도 LED 같은 작은 부하는 켤 수 있다 — 성능 증거로는 약하다.
+
+### 5.7 결론 (본문 3)
+*"정적 배위의 기존 MOF 전해질과 달리 UiO-66 의 노출 Zr⁴⁺ 가 동적 응답 중심으로 작동 … σ 3.75×10⁻⁴ S cm⁻¹ · 평균 D 1.34×10⁻¹² cm² s⁻¹ · 초기 1282.81 mAh g⁻¹ @60 °C · in-situ EIS/DRT 가 방전 중 계면 임피던스 축적 억제와 균일한 Li₂S 석출을 보인다 … 고에너지밀도 SSLSB 의 이론적 기반"*. ⚠ '균일한 Li₂S 석출' 은 형상 · 상 관찰 (SEM · XRD) 없이 DRT 해석만으로 나온 말이다.
+
+---
+
+## 6. 메커니즘 · 논증 흐름 — 사슬 판정
+
+저자의 증거 사슬 (단계마다 근거 그림 · 우리 판정):
+
+| 단계 | 저자 주장 | 근거 그림 | 판정 |
+|---|---|---|---|
+| ① 구조 | PU 섬유망에 UiO-66 이 고르게 박혀 Zr⁴⁺ 가 노출된다 | `Fig. 1b–g` · `Fig. S1`–`S2` · `Fig. S4` | ⚠ 결정성 · 다공성은 ✓ · '노출 Zr⁴⁺' 수는 정량 없음 (아세트산 조절제 · 0.67 wt% · PL 로 덮임) · PU 두께 2 µm ↔ PAN 8.28 wt% 모순 |
+| ② 계산 | TFSI⁻ 는 약하게, S₆²⁻ 는 강하게 Zr 에 붙는다 (−11.96 vs −26.45 eV · Bader 0.35 vs 1.16 e) | `Fig. 2a–g` · `Table S2` | 🔴 전하 +4 클러스터 × 음이온 −1/−2 → 쿨롱 교락 (점전하 어림 −11.5 / −23.0 eV) · 링커 결손 · 미보상 노드 · 자세 1 개씩 · 배위 미확인 |
+| ③ 계산 | Zr–S 계면 ELF 증가 · Zr 4d–S 3p 혼성 | `Fig. 2h,i` · `Fig. 2l,m` | 🔴 ELF 단면에 흡착종 없음 · 점유 S 3p 자리에 Zr 4d ≈0 |
+| ④ 실험 | UiO-66 이 Li₂S₆ 를 강하게 잡는다 | `Fig. 3a` | ⚠ 정성 ✓ · 정규화 없음 · PEO 도 큰 감소 · 분말 상태 시험 |
+| ⑤ 실험 | 전자가 S → Zr 로 간다 (Zr 3d 하향) · 새 Zr–S 성분 | `Fig. 3b–d` | ⚠ 0.08 eV 이동 · 스핀–궤도 간격 변화 · S 2p 지정이 169–171 eV |
+| ⑥ 실험 | 응답이 리간드까지 번진다 (C 1s) | `Fig. 3e` · `Fig. S5` | 🔴 'O–C=O' 라벨이 288.7 → 293 eV 로 옮겨간 것 |
+| ⑦ 실험 | S₆²⁻ 배위가 가전자 상태를 늘린다 | `Fig. 3f` | ⚠ 전 구간 균일 ≈2 배 · 저결합 영역 바닥선 · 시료 제조 미기재 |
+| ⑧ 실험 | Zr⁴⁺–TFSI⁻ 배위 → LiTFSI 해리 (FTIR 2 cm⁻¹ · Raman free 49.4 → 78.1 %) | `Fig. 4d–h` | ⚠ 폭 자유 피팅 · PPL 분광 없음 |
+| ⑨ 실험 | 그래서 σ · Ea · t⁺ 향상 | `Fig. 5a–f` · `Table S1` | 🔴 60 °C σ 는 PPL 과 1.06 배 · 저온 효과만 UiO-66 · t⁺ PPL 대조 없음 |
+| ⑩ 실험 | Li 덴드라이트 억제 · 장수명 | `Fig. 5g–i` · `Fig. S13` · `Fig. S14` | ⚠ 1600 h ✓ (실측) · SEM 은 주장을 안 보여 줌 · 인장 보강은 PAN 몫과 분리 안 됨 |
+| ⑪ 실험 | Sₙ²⁻ 가 TFSI⁻ 를 밀어내 Zr–S 강분극 → 황 변환 가속 | `Fig. 6` · `Fig. S15` | ⚠ CV 봉우리 전류 ✓ · Tafel 라벨 ×10 오류 · 봉우리 라벨 ↔ 전위 불일치 · DRT 최강 응답 정의 밖 · 치환을 직접 보는 측정 없음 |
+| ⑫ 실험 | 계면 폴리설파이드가 축적 → 소비 (Zr 자리에서) | `Fig. S16` | 🔴 "Briding S" 라벨 ≈167–168 eV · Zr 3d 신호 없음 (자인) |
+| ⑬ 실험 | Q_L 선택적 증가 → 후반 반응 장벽 감소 | `Fig. 7e` · `Fig. S17` | 🔴 Q_H · Q_L 같은 비율 (1.52 · 1.57) · 합 불일치 |
+| ⑭ 실험 | 사이클 · LFP · 파우치 실용성 | `Fig. 7c,f,g,h` | ⚠ PL ≈6 사이클 · LFP 50 vs 100 사이클 서술 · 파우치 수치 없음 |
+
+**사슬의 끊어진 곳 세 군데**:
+1. **⑨** — σ 향상의 귀속. 저자 자신의 표에 UiO-66 없는 대조 (PPL) 가 있고, 그 행이 60 °C 에서 UiO-66 의 기여를 6 % 로 묶는다. 이 고리가 끊어지면 'Zr–TFSI⁻ → 해리 → σ' 의 실험적 결과가 사라진다.
+2. **②→⑪** — '경쟁 치환' 은 계산 (전하 교락) · 분광 (지정 오류) · 동시 측정 (없음) 어느 것도 직접 보지 못했다. 작동 셀 안에서 Zr 자리를 본 유일한 시도 (`Fig. S16`) 는 Zr 신호를 얻지 못했다.
+3. **⑪⑬** — 황 변환 '선택적 가속' 의 정량 근거 (Tafel · Q_L) 는 라벨 오류 · 자기 숫자 모순을 안고 있다. 남는 것은 'PUPL 셀이 같은 조건에서 분극이 작고 용량이 크다' 는 셀 수준 관찰뿐인데, 이것은 PAN 섬유망 (σ · 기계) · 양극 액체 젖음 · 셀 간 편차로도 설명된다 (PPL Li–S 셀 없음).
+
+---
+
+## 7. 우리 계산 대비 ★ (`../our_dft_baseline.md`)
 
 | 항목 | 이 논문 | 우리 | 차이 / 이유 |
 |---|---|---|---|
-| 재료 | PEO-LiTFSI + PAN + UiO-66 (고분자 복합) | argyrodite Li₆PS₅Cl 계 (comp1 · modelc) | **다른 재료군 — 물성 칸 비교 없음** |
-| 코드 · 범함수 | CP2K 2025.2 · PBE-D3(BJ) · GTH + DZVP/TZV2P-MOLOPT · 400/55 Ry | QE · PBE · 평면파 (우리 기준선) | 같은 PBE 계열이나 기저 체계가 다르다. CP2K 선례 셋 (`[Zhang26PI3]` 520 Ry · `[Wang26uMLP]` 900 Ry · 이 논문 400 Ry) 과 함께 **CUTOFF 가 편마다 다름** — 문헌 설정을 이식하지 않는다 |
-| 모형 | 고립 **전하 +4** 클러스터 · 비주기 · 링커 4개 결손 | 주기 결정 셀 · 중성 | 전하 클러스터 결합에너지는 우리 흡착/결합에너지와 같은 줄에 놓을 수 없다 |
-| 흡착에너지 규모 | −11.96 / −26.45 eV | (우리 흡착 결과 기록은 배위수를 싣는 규칙 — D-2026-10-05) | 화학결합 규모 ≫2 eV · 구조 비공개 → **배위 미확인** · 쿨롱 항 지배 |
-| 이온 수송 | 실측 σ · 구간 Ea (고분자 분절 운동) | UMA-MD (절대값 비인용 · 계 간 상대차만) | 기전이 다르다 (고분자 VTF/결정화 vs 결정 홉) — **같은 표에 숫자로 두지 않는다** |
-| 산화 안정 | LSV 접선 외삽 5.15 V (60 °C · 고분자) | grand-potential 산화 개시는 S-제한 2 V 대 (축 ① · 열역학) | **다른 양** (동역학 전류 개시 vs 열역학 분해 개시) · 다른 재료 |
-| 전자구조 | 클러스터 DOS (E_F = HOMO 추정) · gap 미보고 | fixed-occ nscf VBM/CBM gap | 비교 대상 없음 |
+| 재료 | PEO-LiTFSI + PAN + UiO-66 (고분자 복합) · 60 °C | argyrodite Li₆PS₅Cl 계 (comp1 · modelc 등) | **다른 재료군 — 물성 칸 비교 없음** |
+| 코드 · 범함수 | CP2K 2025.2 · PBE-D3(BJ) · GTH + DZVP/TZV2P-MOLOPT · 400/55 Ry | QE · PBE · 평면파 (우리 기준선) | 같은 PBE 계열이나 기저 체계가 다르다. litdb 의 CP2K 선례끼리도 CUTOFF 가 편마다 다르다 (`zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector` 520/60 Ry · 이 논문 400/55 Ry) — 문헌 설정을 이식하지 않는다 |
+| 모형 | 고립 **전하 +4** 클러스터 · 비주기 · 링커 4 개 결손 · 자세 1 개 | 주기 결정 셀 · 중성 · 고정셀 + EOS | 전하 클러스터 결합에너지는 우리 흡착/결합에너지와 같은 줄에 놓을 수 없다 |
+| 흡착에너지 규모 | −11.96 / −26.45 eV | 우리 흡착 결과 기록은 결합 자리 배위수를 싣는다 (D-2026-10-05) | 화학결합 규모 ≫ 2 eV · 구조 비공개 → **배위 미확인** · 쿨롱 항 지배 |
+| 이온 수송 | 실측 σ · 구간 Ea (고분자 분절 운동 · 결정화) | UMA-MD (절대값 비인용 · 계 간 상대차만) | 기전이 다르다 (고분자 분절/결정화 vs 결정 홉) — 같은 표에 숫자로 두지 않는다 |
+| 산화 안정 | LSV 접선 외삽 5.15 V (60 °C · mA · 고분자) | grand-potential 산화 개시 (S-제한 · 축 ① · 열역학) · 양극 판단은 작동창 2.5–4.25 V 기준 | **다른 양** (동역학 전류 개시 vs 열역학 분해 개시) · 다른 재료 |
+| 전자구조 | 클러스터 DOS (E_F = HOMO 추정) · gap 미보고 · HOMO–Zr 4d 간격 ≈1 eV (figure-read) | fixed-occ nscf VBM/CBM gap | 비교 대상 없음 |
+| MD | 없음 | UMA MLIP-MD | 관측창 규칙 (D-2026-10-05) 해당 없음 |
 
-**판정**: 실제 차이 vs 방법 인공물을 가를 만한 **같은 양이 하나도 없다.** 방법 반례로만 쓴다.
+**판정**: 실제 차이 vs 방법 인공물을 가를 **같은 양이 하나도 없다.** 방법 반례 · 보고 규약 감사 사례로만 쓴다.
 
-## 8. 적용 인사이트 (내 연구에 어떻게)
+## 8. DFT/계산 방법 ★ (템플릿 항목별 · 상세는 §4g)
 
-- ① **전하가 다른 두 흡착종의 결합에너지를 서로 비교하지 않는다** — 특히 전하를 띤 절단 클러스터 위에서. 이 논문의 −11.96 vs −26.45 eV 는 전하 −1 대 −2 × 클러스터 +4 의 쿨롱 차이가 대부분이고, 저자도 SI 에서 인정한다. 우리 쪽에서 Li₂Sₙ / 폴리설파이드 · 음이온 흡착을 비교할 일이 생기면 **중성 짝 (Li₂S₆ vs LiTFSI) 또는 같은 전하끼리** 로 보고량을 정의한다 (보고량 카드 §1–3).
-- ② **2D ELF 단면은 단면 위치를 먼저 확인** — 흡착 계면이 단면 밖이면 그 그림은 계면 주장에 쓸 수 없다. 우리 ELF 그림(Nd · LPSCl)도 단면 면 지정과 색막대 숫자를 같이 싣는다.
-- ③ **PDOS '혼성' 주장은 점유 · 비점유를 나눠 말한다** — 이 논문은 비점유 영역의 겹침을 '강한 혼성' 으로 서술했다. 우리 COHP/ICOHP 를 이미 쓰고 있으므로 결합 세기는 그쪽 숫자로 말한다.
-- ④ **대조군 행은 표 안에 있는데 결론에 안 쓰인 경우를 찾는다** — PPL 행이 그렇다. 우리 원고도 대조 계산(예: O 단독 대조)이 결론과 어떤 비율로 연결되는지 한 줄을 싣는다.
-- ⑤ Li–S 양극 쪽 S 2p 지정 참고점: 폴리설파이드 bridging ≈163.5 · terminal ≈162.0 eV (이 논문 본문 서술) — 단 이 논문의 그림 라벨과 어긋나므로 **이 편을 XPS 기준점 출처로 쓰지 않는다** (우리 `xps_reference_sei.csv` 기준점은 따로 있다).
+- **code / version**: CP2K 2025.2 · QUICKSTEP (GPW).
+- **functional + vdW**: PBE + DFT-D3(BJ).
+- **pseudo / basis**: GTH · DZVP-MOLOPT-SR-GTH (최적화) → TZV2P-MOLOPT (단일점) · BSSE 언급 없음.
+- **cutoff**: CUTOFF 400 Ry · REL_CUTOFF 55 Ry.
+- **k-points**: 주기 UiO-66 2×2×2 MP · 클러스터 Γ (k 없음).
+- **supercell / nat**: 주기 셀 크기 미기재 · 클러스터 Zr₆O₄₀C₆₄H₄₄ = **158 원자** (우리 산수) + TFSI⁻ 15 원자 / S₆²⁻ 6 원자 · 진공 박스 크기 미기재.
+- **DFT+U**: 없음 · **spin**: 미기재.
+- **AIMD / MD / MLIP / NEB**: 없음 (장벽 계산 0 · 동역학 0).
+- **무질서 처리**: 해당 없음 — 흡착 자세 · 자리 **각 1 개** (탐색 규칙 미기재 · 최저 에너지 보장 없음).
+- **전하 상태**: 클러스터 +4 · 복합체 +3 / +2 · 고립 음이온 −1 / −2 (비주기 전하계의 정전기 처리 방법 미기재).
+- **후처리**: CDD · Bader (Henkelman grid) · ELF (Becke–Edgecombe) · DOS/PDOS (Multiwfn).
+- **재현 가능 수치**: `Table S2` 총에너지 5 개 (Ha · 소수 12 자리) + 순전하만. CDD 등치면 값 · ELF 색막대 · DOS 번짐 폭 · Bader 원자 집합 · 좌표 **미기재**.
 
-## 9. 인용 가능 문장 (deck/paper용)
+## 9. Figure set ★
 
-- "A PAN/UiO-66 nanofiber-reinforced PEO/LiTFSI electrolyte showed 3.75 × 10⁻⁴ S cm⁻¹ at 60 °C, compared with 1.30 × 10⁻⁴ S cm⁻¹ for PEO/LiTFSI and 3.54 × 10⁻⁴ S cm⁻¹ for the UiO-66-free PAN/PEO/LiTFSI control (Shang *et al.*, *Chem. Eng. J.* 2026, Table S1)." — 대조군까지 같이 인용할 때만.
-- "Binding energies computed on a positively charged truncated Zr₆ cluster (+4) for anions of different charge (TFSI⁻, S₆²⁻) are dominated by long-range electrostatics, as the authors note." — 방법 반례로.
-- ⛔ 인용 금지: *"UiO-66 Zr⁴⁺ sites raise ionic conductivity 2.8-fold"* (대조군 PPL 이 1.06 배로 반박) · *"S₆²⁻ binds more strongly than TFSI⁻ (−26.45 vs −11.96 eV)"* (전하 교락) · *"solid-state Li–S"* 를 액체 없는 셀로 서술 · 이 논문의 t⁺ · GITT D · σ 를 우리 계산값 옆에 같은 양으로 두는 것.
+| Fig | 내용 (무엇을 보여주나) | 우리 활용 |
+|---|---|---|
+| 1a | 제조 모식도 (전기방사 → PU → PL 붓기 → PUPL) | 없음 |
+| 1b–d | UiO-66 XRD (CCDC 837158 일치) · N₂ 등온선 961.60 m² g⁻¹ (세공 ≈3–4 nm) · TEM 팔면체 ≈150 nm (입자 1 개) | 없음 |
+| 1e–g | PU SEM (섬유 0.4 µm) · EDS C/Zr/O/N · PUPL 단면 **156 µm** (본문 158) | 두께 표기 불일치 기록 |
+| 2a–d | Zr₆ 클러스터 위 TFSI⁻ · S₆²⁻ 최적 구조 (위 · 옆) — 링커 8 개 · S₆²⁻ 는 Zr 하나에 S 두 개가 붙은 것처럼 보임 · 배위수 셀 수 없음 | 흡착 자세 1 개씩 · 배위 미확인 — 방법 반례 |
+| 2e,f | CDD 등치면 (값 미기재) — 먼 COOH 끝까지 응답 | 등치면 값 없는 CDD 는 크기 비교 근거가 못 된다 |
+| 2g | E_bind −11.96 / −26.45 eV · Bader 0.35 / 1.16 e | §10-② 전하 교락 |
+| 2h,i | ELF 2D 단면 (색막대 숫자 없음) — 흡착종이 단면에 없다 · 두 그림 사실상 같음 | ELF 단면 위치 확인의 반례 |
+| 2j,k | Total DOS · UiO-66 PDOS · 흡착종 PDOS (−15 … +10 eV) | 클러스터 'Fermi level' = HOMO (정의 미기재) |
+| 2l,m | Zr 4d vs O 2p / S 3p — 점유 영역 겹침 ≈0 · 비점유 ≈+1.8 … +3.5 eV 에서만 겹침 | PDOS '혼성' 은 점유/비점유를 나눠 말한다 |
+| 3a | UV-vis Li₂S₆ 흡착 (≈320 nm) · 사진 (UiO-66 병 무색) | 정성 · 정규화 없음 |
+| 3b,c | Zr 3d 183.18/185.50 → 183.10/185.30 eV · 스핀–궤도 2.32 → 2.20 eV · 새 ≈181.4 eV 성분 | 피팅 신뢰도 낮음 |
+| 3d | S 2p 'S_B⁰' ≈170.3 · 'S_T⁻¹' ≈169.1 eV | ⚠ 폴리설파이드를 설페이트 대역에 지정 |
+| 3e | C 1s 'O–C=O' ≈293 · 'C–O' ≈288.8 · C–C 284.8 eV | `Fig. S5` 와 라벨 위치가 다르다 (≈4.4 eV) |
+| 3f | VB-XPS "PUPL-Sₙ²⁻" vs "PUPL-TFSI⁻" — 전 구간 ≈2 배 · 개시 ≈3 eV 동일 | 정규화 없는 세기 차는 DOS 증가 근거 아님 |
+| 3g | 기전 모식도 (약분극 Zr–O → 강분극 Zr–S) | 개념도 |
+| 4a | XRD PU 7.30° · PL 19.60°/23.10° · PPL 봉우리는 PL 과 비슷 | 정성 |
+| 4b | TGA PL 100.00 % · PUPL 92.70 % 손실 (잔량 ≈3–4 %) | ZrO₂ 몫 0.30 wt% (우리 산수) — PAN 탄화 잔량 |
+| 4c | 인장 PUPL 5.11 · PU 2.37 · PL 0.40 MPa (x 축 "Stress (%)" 오기) | 다른 재료군 — 비교 안 함 |
+| 4d,e | FTIR O=S=O 1346→1348 · S–N–S 651→653 · C–F 1197 · C≡N 안 보임 | 2 cm⁻¹ · 분해능 미기재 |
+| 4f–h | Raman free TFSI⁻ 49.40 → 78.10 % (폭 자유 피팅) | 피팅 규약 반례 |
+| 5a,b | Nyquist 25–80 °C (PL 25 °C ≈4000 Ω · PUPL ≈150–180 Ω) | σ 차수 검산 |
+| 5c | 구간 아레니우스 0.35/0.64 (PUPL) · 0.62/1.15 eV (PL) | 재적합 재현 ✓ · PL 70 °C 점 ↔ 표 불일치 |
+| 5d | LSV 3.90 / 5.15 V (mA · 접선 외삽) | 우리 grand-potential 창과 **다른 양** |
+| 5e,f | DC 분극 (PL I₀ ≈44.5 → I_s ≈21 µA · PUPL ≈30.8 → ≈20.7 µA) + 전후 Nyquist · t⁺ 0.21 / 0.65 | ΔV 미기재 — 민감도만 |
+| 5g | Li\|Li 0.1 mA cm⁻² 60 °C: PL ≈330 h 단락 · PUPL 1600 h | 실측 |
+| 5h,i | 율속 대칭셀 0.05–0.30 mA cm⁻² (과전압 전류에 선형) | ASR 어림 ≈600 vs ≈400 Ω cm² |
+| 6a,b | CV 등고선 0.10–0.50 mV s⁻¹ (Peak A · B · C) | 없음 |
+| 6c | CV 0.1 mV s⁻¹ · ΔE 라벨 0.38 / 0.42 V (화살표 폭 ≈0.50 / ≈0.53 V) | 라벨 ↔ 축 불일치 기록 |
+| 6d,e | "Tafel" 라벨 15.45 / 33.36 · 16.75 / 39.35 mV dec⁻¹ — 축으로 재면 ≈155 / ≈335 · ≈−163 / ≈−380 | **라벨 ×1/10 오류** · 봉우리 라벨 ↔ 전위 불일치 |
+| 6f,g | in-situ Nyquist OCV → 1.7 V (PL ≈190 → ≈330 · PUPL ≈110 → ≈280 Ω) | PUPL 도 커진다 |
+| 6h,i | DRT 등고선 — 최강 응답 τ ≈10–100 s (정의 구간 밖) | DRT τ 구간 지정 반례 |
+| 7a | GITT + log D (≈ −10 … −16 · 오른축 단위 오기) · 평균 1.34×10⁻¹² vs 1.33×10⁻¹³ | 양극 겉보기 D — 전해질 물성 아님 |
+| 7b,d | 충방전 곡선 PUPL 1/2/10/50/100 · PL 1/2 | 없음 |
+| 7c | 사이클 PUPL 1282.81 → 493.20 · PL ≈6 사이클만 · PL CE ≈81 → ≈75 % | 비교 대상 없는 유지율 주장 |
+| 7e | 첫 사이클 Q_H / Q_L 구간 | `Fig. S17` 과 함께 |
+| 7f,g | Li\|PUPL\|LFP 144.80 mAh g⁻¹ · 본문 50 사이클 96 % · 그림 100 사이클 ≈90 % | 본문–그림 사이클 수 불일치 |
+| 7h | 파우치 LED (평평 · 굽힘 · 절단 · 상온) | 시연 |
+| S1 | PU 막 단면 "2 µm" (맨 위 한 켜만 표시) | PAN 8.28 wt% 와 모순 |
+| S2 | PUPL 표면 SEM (섬유 안 보임) | 없음 |
+| S3 | 굽힘 사진 | 없음 |
+| S4 | UiO-66 XPS survey — ≈690 eV 작은 라벨 없는 봉우리 | 불순물 확인 불가 |
+| S5 | 흡착 전 C 1s (O–C=O ≈288.7 · C–O ≈286.5 · C–C ≈284.7 eV) | `Fig. 3e` 대조 기준 |
+| S6 | 연소 0–9 s (시료가 불꽃 위 공중) | 열 수축 시험에 가깝다 |
+| S7–S9 | PPL · PUPL-5 · PUPL-10 Nyquist (60 °C 셋 다 ≈20–24 Ω) | 60 °C 시료 간 차이 없음 확인 |
+| S10, S11 | PPL 1.04/0.39 · PUPL-5 1.03/0.41 · PUPL-10 0.52/0.44 eV | 재적합 재현 ✓ |
+| S12 | LSV PUPL-5 4.69 · PUPL-10 4.91 V (접선 교점 ≈4.80 · ≈4.99) · PUPL-10 0.50 mA 평평 | 전류 상한 |
+| S13 | 200 h 후 Li 표면 SEM | 주장 (덴드라이트 · 매끈) 식별 불가 |
+| S14 | Li\|Li EIS 0–150 h · PL ×1.8 · PUPL ×3.0 증가 | 간격이 좁아진다 |
+| S15 | CV 주사 속도별 — PL B 봉우리가 1.7 V 창 끝에 잘림 | 없음 |
+| S16 | ex-situ S 2p @2.2/2.0/1.9/1.7 V — "Briding S" ≈167–168 eV · Zr 3d 신호 없음 | ⚠ XPS 지정 경고 사례 |
+| S17 | Q_H 208.35/317.43 · Q_L 659.29/1032.76 mAh g⁻¹ | 비 1.52 · 1.57 · 합 불일치 |
+| Table S1 | 온도별 σ (5 시료 × 7 온도) | §3a 재적합 원자료 |
+| Table S2 | 단일점 총에너지 · 순전하 + 클러스터 전하 장부 | §3b 재계산 원자료 |
 
-## 10. 주의/한계 (over-claim 방지)
+## 10. 비판 — 이 논문의 약한 곳 ★
 
-- **① 귀속 대조 부재 — 가장 큰 결함.** σ 향상의 귀속(Zr⁴⁺–TFSI⁻) 근거는 FTIR 2 cm⁻¹ 이동과 Raman 면적비인데, Raman 피팅은 성분 폭이 시료마다 자유롭다 (figure-read FWHM ≈16 vs ≈6 cm⁻¹). 그리고 같은 SI `Table S1` 의 **PPL (UiO-66 없음)** 이 60–80 °C 에서 PUPL 과 1.01–1.06 배다 (우리 산수). **PPL 의 Raman · t⁺ · Li–S 셀은 보고되지 않았다** — UiO-66 이 셀 성능에 무엇을 더했는지 가를 실험이 없다. UiO-66 은 PUPL 질량의 **0.67 wt%** 다.
-- **② DFT 모형이 결론을 받치지 못함.** (a) 클러스터 +4 · 흡착종 −1/−2 → E_bind 차이 대부분 쿨롱 (저자 인정 · "might be somewhat overestimated"); (b) 흡착 자세 1개씩 · 자리 탐색 없음 · 구조 비공개 → 배위 미확인; (c) 용매 · 고분자 · Li⁺ 짝이온 없음 — 실제 경쟁은 *LiTFSI 해리 상태 대 Li₂Sₙ* 이지 맨 음이온끼리가 아니다; (d) 두 기저(DZVP 최적화 → TZV2P 단일점) 사이 BSSE 보정 없음; (e) **'경쟁 치환' 반응에너지 (복합체/TFSI⁻ + S₆²⁻ → 복합체/S₆²⁻ + TFSI⁻) 를 계산하지 않았다** — 계산 두 개로 바로 낼 수 있는 양인데, 그것도 전하가 바뀌는 반응이라 같은 교락이 남는다.
-- **③ 그림–본문 불일치 (본 그림 기준).** `Fig. 2h,i` ELF 단면에 흡착종이 없다 · `Fig. 2m` 점유 S 3p 위치에 Zr 4d ≈0 · `Fig. 3c` Zr 3d 스핀–궤도 간격 2.32 → 2.20 eV (물리 상수여야 함) + 언급 없는 ≈181.5 eV 성분 · `Fig. 3d` 폴리설파이드를 169–171 eV 에 지정 · `Fig. S16` "Briding S" ≈167–168 eV vs 본문 163.5 eV · `Fig. 6d,e` 봉우리 라벨과 전위 범위·기울기 부호가 뒤바뀌어 보임 · Tafel 15.45 / 16.75 mV dec⁻¹ → αn ≈ **4.3 / 4.0** (60 °C, 우리 산수 — 단일 전자 이동으로는 비물리; CV 봉우리 부근은 확산 제한이 섞여 Tafel 영역이 아니다) · `Fig. 6h,i` DRT 최강 봉우리 τ ≈10–100 s 가 정의 구간(≤10⁰ s) 밖 · `Fig. 7c` PL 은 ≈6 사이클뿐인데 "유지율 비교" · `Fig. 7f` 는 100 사이클인데 본문은 50 사이클 96 %.
-- **④ "고체" 가 아니다.** S 양극에 액체 전해액 5 µL (DOL/DME + LiNO₃). 폴리설파이드 용해·셔틀이 액체 상에서 일어날 수 있고, LiNO₃ 는 Li 음극 보호 첨가제다. 황 변환 지표 (CV · Tafel · DRT · 용량) 는 이 혼성 조건의 값이다. 또 모든 시험이 **60 °C** (PEO 융점 부근) — 상온 성능은 σ 25 °C 3.92×10⁻⁵ S cm⁻¹ 뿐.
-- **⑤ 겉보기 Ea 는 홉 장벽이 아니다 (홉 수 검산, D-2026-09-27).** Γ = ν₀·exp(−Ea/kT), ν₀ 10¹³ s⁻¹ 가정: PL 저온 **1.15 eV @298 K → Γ ≈ 3.6×10⁻⁷ s⁻¹ · 1/Γ ≈ 2.8×10⁶ s (≈32 일)** — 그런데 측정 σ 는 1.48×10⁻⁶ S cm⁻¹ 로 잰다 ⇒ 1.15 eV 는 단일 홉 장벽이 아니라 **결정 PEO → 비정질 전이가 섞인 겉보기 기울기**다. PUPL 고온 0.35 eV @333 K → Γ ≈ 5.1×10⁷ s⁻¹ · 1/Γ ≈ 20 ns (차수 검산이지 D·σ 아님). 구간 분할 (60 °C 를 어디에 넣느냐) 에 따라 값이 바뀐다.
-- **⑥ TGA 잔량 귀속 질량수지 불일치 (우리 산수).** 본문: PUPL 800 °C 잔량은 "주로 UiO-66 → ZrO₂". 그런데 UiO-66 은 0.67 wt% 이고 Zr₆O₄(OH)₄(BDC)₆ (≈1664 g mol⁻¹) → 6 ZrO₂ (≈739 g mol⁻¹) 면 ZrO₂ ≈ **0.30 wt%** 다. `Fig. 4b` 라벨상 잔량 ≈7.3 % 의 대부분은 N₂ 중 **PAN 탄화 잔류물** (PAN 8.28 wt%) 로 보는 것이 자연스럽다.
-- **⑦ 숫자 정밀도 과장.** 1282.81 mAh g⁻¹ · 961.60 m² g⁻¹ · 0.40 µm 처럼 반복 재현 오차 없이 유효숫자를 많이 쓴다 — 셀 수 · 오차막대 전부 미기재 (단일 셀로 보인다).
-- **⑧ t⁺ 재현 불가.** Bruce–Vincent 에 필요한 ΔV 미기재. 고분자 전해질 t⁺ 0.21 → 0.65 는 큰 변화인데 PPL 대조가 없다.
-- **⑨ 지위.** Journal Pre-proof — 최종판에서 그림·수치가 바뀔 수 있다.
+**① 귀속 대조 부재 — 가장 큰 결함.** σ 향상의 귀속 (Zr⁴⁺–TFSI⁻) 근거는 FTIR 2 cm⁻¹ 이동과 폭 자유 Raman 면적비다. 그리고 같은 SI `Table S1` 의 **PPL (UiO-66 없음)** 이 60–80 °C 에서 PUPL 과 1.01–1.06 배다 (우리 산수 · Nyquist `Fig. S7` 원자료도 같다). **PPL 의 Raman · FTIR · t⁺ · LSV · 인장 · Li–S 셀은 보고되지 않았다** — UiO-66 이 셀 성능에 무엇을 더했는지 가를 실험이 없다. UiO-66 은 PUPL 질량의 0.67 wt% 이고, 셀 시험은 전부 UiO-66 효과가 사라지는 60 °C 다.
 
-## 11. 우리 쪽 원장 대조 (인용 전 30초)
+**② DFT 모형이 결론을 받치지 못함.**
+- (a) **전하 교락**: 클러스터 +4 · 흡착종 −1 / −2. 점전하 어림만으로 −11.5 / −23.0 eV (r = 5 Å · 우리 산수) — 보고값 −11.96 / −26.45 eV 의 대부분이고, 비 (2.0 vs 2.21) 도 거의 전하비다. 저자 스스로 "somewhat overestimated" · "long-range electrostatic" 을 인정하고 *"보조 증거"* 로 낮췄지만, 본문 · 초록 · 모식도는 이 비교를 경쟁 배위의 근거로 쓴다.
+- (b) **모형 자체**: 화학식이 말해 주는 것은 **링커 4 개 결손 · 전하 미보상 노드**다 (우리 역산). 실제 UiO-66 결손 자리는 OH⁻/H₂O · 아세테이트 (이 논문 합성의 조절제) · Cl⁻ 등으로 막힌다. 음이온은 '열린 Zr⁴⁺' 가 아니라 **원래 보상 리간드가 차야 할 빈자리**에 들어가 그 전하를 채운다 — 결합에너지가 화학결합 규모를 훨씬 넘는 이유다.
+- (c) **배위 미확인 (D-2026-10-05)**: 구조 비공개 · 그림에 결합 거리 없음 · 흡착 자세 · 자리 각 1 개. ⇒ 값은 *그 결손 자리의 포화 에너지 + 전하 클러스터–음이온 쿨롱 에너지* 로만 읽는다. 표면 일반 흡착 세기 · 기전 근거로 쓰지 않는다.
+- (d) **기준 상태**: 용매 · 고분자 · Li⁺ 짝이온 없음. 실제 경쟁은 *Li⁺–TFSI⁻ 쌍 / PEO 용매화 TFSI⁻ 대 Li₂Sₙ (또는 LiSₙ⁻)* 이지 맨 음이온끼리가 아니다. 고립 이가 음이온 (S₆²⁻) 의 진공 에너지는 두 번째 전자가 약하게 묶여 기저 · 계산 설정에 민감할 수 있다 (이 논문은 확인 안 함).
+- (e) **치환 반응을 안 계산했다**: 이미 있는 다섯 에너지로 *복합체/TFSI⁻ + S₆²⁻ → 복합체/S₆²⁻ + TFSI⁻* = −14.49 eV 가 나온다 (우리 산수) — 하지만 이것도 전하가 바뀌는 반응이라 같은 교락이 남는다. 중성 짝 (LiTFSI vs Li₂S₆) 이나 Li⁺ 짝이온을 단 같은 전하끼리 비교해야 의미가 있다.
+- (f) DZVP 최적화 → TZV2P 단일점 사이 BSSE 보정 없음 · 비주기 전하계 정전기 처리 미기재 · Bader 1.16 e 는 +4 클러스터가 음이온에서 전자를 끌어온 것이고 PBE 의 비국재 오차는 이런 전하이동을 키우는 쪽이다.
+- (g) S₆²⁻ 하나만 계산했는데 기전 서술은 *"짧은 사슬일수록 더 강한 경쟁"* (S₄²⁻ · S₂²⁻ · S²⁻) 을 말한다 — 계산 근거 없음.
 
-- 우리 값을 이 digest 에 숫자로 옮기지 않았다. §7 의 "S-제한 2 V 대" 는 정성 표현이고, 창 폭 (`window_V`) 은 `HZ-esw-reduction-limit-label` 로 걸려 있어 인용하지 않았다 (`db/properties/citation_hazards.json`).
-- 우리 σ · D · Ea 는 1저자 인용정책(2026-09-18)상 계 간 상대차로만 쓴다 — 이 논문 값과 한 줄에 두지 않는다.
-- comparison_vs_ours.md 등록 제안 (부모 세션 몫): A–D 물성 표 **아님** · `🔧 방법 원전/반례` 블록 한 줄 — *"전하 클러스터 위 서로 다른 전하 음이온 결합에너지 비교 (−11.96 vs −26.45 eV) = 쿨롱 교락 · 배위 미확인"* · `[Yuan26LCE]` · `[Yu26Pol]` · `[Meng26LZF]` 반례 계열에 추가.
+**③ 그림–본문 · 라벨–축 불일치 (전부 본 그림 기준).**
+- `Fig. 6d,e` Tafel 라벨이 그림 축 기울기의 **≈1/10** (픽셀 판독 ≈155 / ≈335 · ≈163 / ≈380 vs 15.45 / 33.36 · 16.75 / 39.35 mV dec⁻¹). 본문 · 결론이 라벨 값을 인용한다. 그리고 (d) "Peak B" 는 2.18–2.35 V · 양의 기울기, (e) "Peak C" 는 1.87–2.07 V · 음의 기울기 — `Fig. 6c` 의 B (≈1.9 V 환원) · C (≈2.4 V 산화) 와 전위가 안 맞는다.
+- `Fig. 6c` ΔE 라벨 0.38 / 0.42 V vs 화살표 폭 ≈0.50 / ≈0.53 V.
+- `Fig. 2h,i` ELF 단면에 흡착종이 없다 · `Fig. 2m` 점유 S 3p 위치에 Zr 4d ≈0.
+- `Fig. 3c` Zr 3d 스핀–궤도 2.32 → 2.20 eV + 언급 없는 ≈181.4 eV 성분 · `Fig. 3d` 폴리설파이드를 169–171 eV 에 지정 · `Fig. 3e` 'O–C=O' 가 `Fig. S5` 의 288.7 eV 에서 ≈293 eV 로 라벨 이동 · `Fig. 3f` 범례 Sₙ²⁻ vs 캡션 S₆²⁻ · '저결합 영역' 차이 없음.
+- `Fig. S16` "Briding S" ≈167–168 eV vs 본문 163.5 eV · (d) 에서 "Terminal S" 라벨이 ≈163.6 eV 로 이동 · 2p 짝 없는 단일 성분.
+- `Fig. 6h,i` DRT 최강 봉우리 τ ≈10–100 s 가 정의 구간 (≤10⁰ s) 밖.
+- `Fig. 7c` PL ≈6 사이클뿐 · CE 붕괴 (≈81 · ≈75 %) 인데 "유지율 비교" · `Fig. 7f` 는 100 사이클인데 본문은 50 사이클 96 %.
+- `Fig. S17` Q_H 비 1.52 ≈ Q_L 비 1.57 인데 본문 "Q_H 차이 미미" · PUPL Q_H + Q_L 1350.19 ≠ 1282.81.
+- `Fig. 5c` PL 70 °C 점 ≈1.87×10⁻⁴ vs `Table S1` 1.31×10⁻⁴.
+- `Fig. S12` 접선 교점 ≈4.80 / ≈4.99 V vs 라벨 4.69 / 4.91 V (판독 신뢰도 중간).
+- `Fig. 1g` 156 µm vs 본문 158 µm · `Fig. S1` "2 µm" vs PAN 8.28 wt%.
+- 축 · 단위 오기: `Fig. 4c` "Stress (%)" · `Fig. 7a` "Potentia" · "cm² g⁻¹" · `Fig. 7c,f` "Spectiic".
+⇒ 개별로는 사소한 것도 있지만, **정량 주장의 핵심 숫자 (Tafel · ΔE · Q_H/Q_L · '새 Zr–S 성분' 위치)** 가 자기 그림과 어긋난다. 이 논문의 라벨 숫자를 그대로 옮기지 않는다.
+
+**④ "고체" 가 아니다.** S 양극에 액체 전해액 5 µL (DOL/DME + LiNO₃). 폴리설파이드 용해 · 셔틀이 액체 상에서 일어날 수 있고, LiNO₃ 는 Li 음극 보호 첨가제다. 황 변환 지표 (CV · Tafel · DRT · 용량 · Q_H/Q_L) 는 이 혼성 조건의 값이다. UiO-66 은 PAN 섬유 속 · PEO 아래 0.67 wt% 인데, 양극 쪽 면 XPS 는 Zr 를 보지 못했다 — Sₙ²⁻ 가 Zr 자리에 닿는다는 공간적 근거가 없다.
+
+**⑤ 측정 · 해석 규약.**
+- LSV 개시는 접선 외삽 · 전류 (mA) 정규화 없음 · 전류 문턱 미정의 · PUPL-10 은 기기 상한 0.50 mA 에 닿음.
+- Bruce–Vincent ΔV 미기재 — PL 0.21 은 ΔV − I₀R₀ 가 작은 영역이라 민감 (§5.4).
+- GITT D 는 양극 겉보기값 · 5–6 자릿수에 흩어진 값의 '평균' (방식 미기재) · 두 평균의 가수가 1.33 / 1.34.
+- DRT 정칙화 · 최저 주파수 미기재.
+- Raman 성분 폭 자유 · FTIR 분해능 미기재 · XRD 세기 정규화 없음 · DSC (결정화도) 없음.
+- UV-vis · VB-XPS · Li₂S₆ 용액 조성 미기재.
+- 셀 수 · 반복 · 오차막대 전무 (1282.81 · 961.60 · 0.40 µm 처럼 유효숫자만 많다).
+
+**⑥ 겉보기 Ea 는 홉 장벽이 아니다 — 홉 수 검산 (D-2026-09-27 · ν₀ 10¹³ s⁻¹ 가정 · T 명시 · 차수 검산이지 D · σ 아님).**
+- PL 저온 1.15 eV @298 K: Γ ≈ 3.6×10⁻⁷ s⁻¹ · 평균 대기 1/Γ ≈ 2.8×10⁶ s (≈32 일).
+- PPL 저온 1.04 eV @298 K: Γ ≈ 2.6×10⁻⁵ s⁻¹ · 1/Γ ≈ 3.8×10⁴ s (≈10 h).
+- PUPL 저온 0.64 eV @298 K: Γ ≈ 1.5×10² s⁻¹ · 1/Γ ≈ 6.6 ms.
+- PL 고온 0.62 eV @333 K: Γ ≈ 4.2×10³ s⁻¹ · 1/Γ ≈ 0.24 ms.
+- PUPL 고온 0.35 eV @333 K: Γ ≈ 5.1×10⁷ s⁻¹ · 1/Γ ≈ 20 ns.
+- ⇒ PL · PPL 저온 값이 단일 홉 장벽이라면 상온 Li⁺ 는 며칠–몇 시간에 한 번 뛴다 — 그런데 σ ≈10⁻⁶–10⁻⁵ S cm⁻¹ 로 EIS 반원이 잡힌다. 저온 적합의 전지수 인자 A ≈ 10¹²–10¹⁴ S cm⁻¹ (우리 산수) 도 같은 결론이다: **결정 PEO 의 용융 · 비정질 분율 변화가 섞인 겉보기 기울기**다. Ea 차이 1.15 → 0.64 eV 를 'Li⁺ 이동 장벽이 낮아졌다' 로 읽으면 안 된다 — 결정화 억제의 지표로 읽는다. 구간 분할 (60 °C 를 어디에 넣나) 에 따라 값이 바뀐다 (전 구간 단일 적합이면 0.885 / 0.509 eV).
+- **짧은 MD '반응 없음' (D-2026-10-05 관측창)**: 이 논문에 MD 는 없다 — 해당 없음. 다만 DFT 는 0 K 정적 최적화 하나뿐이라 '경쟁 치환' 의 동역학 (장벽 · 속도) 은 전혀 다뤄지지 않았다.
+
+**⑦ TGA 질량수지 (우리 산수).** 본문은 PUPL 잔량을 "주로 UiO-66 → ZrO₂" 로 돌리지만 ZrO₂ 몫은 0.30 wt% 이고 그림 잔량은 ≈3–4 % 다 — PAN (8.28 wt%) 의 N₂ 중 탄화 잔류물이 대부분일 것이다.
+
+**⑧ 대조 · 공정성.** PL 과 PUPL 셀은 같은 양극 · 같은 액체 5 µL 를 쓰지만, PL 막 두께는 미기재이고 PL 셀은 ≈6 사이클에서 실패했다. PPL Li–S 셀 · UiO-66 을 양극에 넣은 대조 · UiO-66 대신 불활성 충전재를 넣은 대조가 없다 — 'Zr⁴⁺ 자리' 를 '충전재 · 섬유망 일반 효과' 와 가를 실험이 없다.
+
+**⑨ 지위.** Journal Pre-proof — 최종판에서 그림 · 수치가 바뀔 수 있다 (특히 라벨 오류들).
+
+## 11. 적용 인사이트 ★ (우리 연구에 어떻게)
+
+- ① **전하가 다른 두 흡착종의 결합에너지를 서로 비교하지 않는다** — 특히 전하를 띤 절단 클러스터 위에서. 우리 쪽에서 폴리설파이드 · 음이온 흡착을 비교할 일이 생기면 **중성 짝 (Li₂S₆ vs LiTFSI) 또는 같은 전하끼리** 로 보고량을 정의한다 (보고량 카드 §1–3). '치환 반응에너지' 로 바꿔도 전하가 바뀌면 교락은 그대로다.
+- ② **절단 모형은 화학식으로 전하 장부를 먼저 맞춘다** — 이 논문은 장부를 SI 에 공개해서 '링커 4 개 결손 · 미보상 노드' 임을 역산할 수 있었다. 우리 슬랩 · 클러스터도 전하 장부와 '그 자리가 실제 재료에서 무엇으로 막혀 있나' 를 한 줄 싣는다.
+- ③ **라벨 숫자는 축으로 다시 잰다** — Tafel 기울기 라벨이 그림의 1/10 이었다. 문헌 그림에서 값을 가져올 때는 축 눈금 픽셀 환산으로 한 번 검산한다 (이번 판독은 PIL 로 눈금 위치를 찾아 했다).
+- ④ **2D ELF 단면은 단면 위치부터 확인 · PDOS '혼성' 은 점유/비점유를 나눠 말한다** — 우리 ELF 그림 (Nd · LPSCl) 도 단면 면 지정과 색막대 숫자를 싣고, 결합 세기는 COHP/ICOHP 숫자로 말한다.
+- ⑤ **대조군 행은 표 안에 있는데 결론에 안 쓰인 경우를 찾는다** — PPL 이 그렇다. 우리 원고도 대조 계산 (예: O 단독 대조) 이 결론과 어떤 비율로 이어지는지 한 줄을 싣는다.
+- ⑥ **겉보기 Ea 는 전지수 인자와 같이 본다** — A 가 비물리적이면 홉 장벽이 아니라 상변화 · 분율 변화가 섞인 기울기다. 홉 수 검산과 같은 방향의 검사다.
+
+## 12. 인용 가능 문장 (영문 초안 · 랩 표기 *Chem. Eng. J.*, in press (2026), DOI 10.1016/j.cej.2026.184621 · Journal Pre-proof 임을 밝힌다)
+
+- "A PAN/UiO-66 nanofiber-reinforced PEO/LiTFSI electrolyte showed 3.75 × 10⁻⁴ S cm⁻¹ at 60 °C, compared with 1.30 × 10⁻⁴ S cm⁻¹ for PEO/LiTFSI and 3.54 × 10⁻⁴ S cm⁻¹ for a UiO-66-free PAN/PEO/LiTFSI control." — 대조군까지 같이 인용할 때만.
+- "Binding energies computed on a positively charged (+4) truncated Zr₆ node for anions of different charge (TFSI⁻, S₆²⁻) are dominated by electrostatics, as the authors note." — 방법 반례로.
+- ⛔ 인용 금지: *"UiO-66 Zr⁴⁺ sites raise ionic conductivity 2.8-fold"* (PPL 이 1.06 배로 반박) · *"S₆²⁻ binds more strongly than TFSI⁻ (−26.45 vs −11.96 eV)"* (전하 교락) · Tafel 15.45 / 16.75 mV dec⁻¹ (그림과 10 배 불일치) · ΔE 0.38 V (화살표 폭과 불일치) · *"solid-state Li–S"* 를 액체 없는 셀로 서술 · Ea 1.15 → 0.64 eV 를 Li⁺ 홉 장벽 감소로 서술 · 이 논문의 t⁺ · GITT D · σ 를 우리 계산값 옆에 같은 양으로 두는 것.
+
+## 13. 주의 / 한계 (인용 규율)
+
+- 우리 값을 이 digest 에 숫자로 옮기지 않았다. §7 의 "S-제한" 은 정성 표현이고, ESW 창 폭은 `HZ-esw-reduction-limit-label` 로 걸려 있어 인용하지 않았다 (`db/properties/citation_hazards.json`).
+- 우리 σ · D · Ea 는 1저자 인용정책 (2026-09-18) 상 계 간 상대차로만 쓴다 — 이 논문 값과 한 줄에 두지 않는다.
+- 이 digest 의 figure-read (픽셀) 값은 축 눈금 위치 환산이라 ±1–2 % (축 범위 대비) 의 판독 오차가 있다. Tafel ×10 · Q_H/Q_L 비 · PPL 비율 같은 결론은 이 오차보다 훨씬 크다.
+- comparison_vs_ours.md 등록 제안 (부모 세션 몫): A–D 물성 표 **아님** · `🔧 방법 원전/반례` 블록 한 줄 — *"전하 +4 절단 클러스터 위 전하 다른 음이온 결합에너지 (−11.96 vs −26.45 eV) = 쿨롱 교락 · 링커 결손 미보상 노드 · 배위 미확인"* · `yuan2026_…` · `yu2026_…` · `meng2026_…` 반례 계열에 추가.
+
+## 14. 이어 읽기 — litdb 의 관련 digest
+
+| digest | 무엇이 이어지나 |
+|---|---|
+| `yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal` | 같은 PEO-LiTFSI 계 · 충전재 (2D SiO₂) 위 TFSI⁻ 흡착 3.11 eV 가 1-배위 Si 자리였던 사례 — D-2026-10-05 배위 규칙의 계기 · 이 논문의 '결손 노드' 와 같은 꼴 |
+| `yu2026_pvdf_mos2_anion_solvent_confinement` | 고분자 (PVDF) 전해질 + 무기 충전재의 음이온 · 용매 가둠 — 정적 DFT 상호작용에너지로 음이온 고정을 주장하는 같은 계열 |
+| `meng2026_pvdf_li2zrf6_phase_ordering` | PVDF + Zr 함유 충전재 (Li₂ZrF₆) · 흡착에너지 3 점으로 계면 안정을 주장 — Zr 자리 음이온 상호작용의 다른 사례 |
+| `zhang2026_polymer_electrolyte_modeling_perspective` | 고분자계 전해질 모델링을 고르는 틀 — 이 논문의 '클러스터 결합에너지 하나' 가 그 틀의 어디에 해당하는지 보는 기준 |
+| `zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector` | 고체 Li–S · CP2K PBE-D3(BJ) 설정 선례 (520/60 Ry) — 이 논문 400/55 Ry 와 설정 비교 |
+| `liu2026_ccto_colossal_dielectric_interlayer_dry_lpscl` | CP2K PBE / PBE+U · ELF · DOS 그림 묶음을 쓰는 다른 실험 주도 논문 — 그림 분석 묶음의 보고 규약 비교 |
+| `wang2025_miec_tis2_lps_three_phase_interface_lis_assb` | **진짜 전고체** (황화물 SE) Li–S 의 3 상 계면 변환 한계 — 이 논문의 '고체' 가 양극 액체 젖음 혼성이라는 점과 대조 |
+| `cronk2026_lis_cathode_interphase_chemistry` | 황화물 SE Li–S 양극 계면상 화학 (S K-edge XANES 등) — 양극 쪽 황 종 지정을 XPS 단독이 아닌 방법으로 한 사례 |
+| `wu2026_asslsb_li2s_reaction_mechanisms_engineering_review` | 전고체 Li–S 반응 기전 · 공학 리뷰 — 고체 Li–S 에서 '폴리설파이드 중간체' 가 어디까지 존재하는지의 배경 |
+| `shen2026_thf_cpme_cosolvent_quasi_solid_sulfur_lis` | 준고체 황 반응 · in situ EIS · 라벨–그림 불일치 감사의 형식 기준 |
+| `wei2026_data_driven_hea_mediator_lis` | Li₂S₆ 흡착 DFT · Bader · in situ EIS/DRT 를 쓰는 Li–S 촉매 논문 — 흡착 보고량 · DRT 해석 감사 비교 |
+| `zhang2026_fpds_siloxane_dip_mediator_quasi_solid_lis` | 준고체 Li–S · EIS/DRT · UV–vis Li₂S₆ 흡착 시험 — 같은 분석 도구의 다른 쓰임 |
+| `liu2025_bdts_phase_mediator_cpme_quasi_solid_sulfur_lis` | 준고체 황 반응의 표면 매개자 · LSV/Tafel 교환전류 — Tafel 보고 규약 비교 |
+| `lin2026_p_doped_compounds_li_s_review` | UiO-66@BP 등 MOF 계 Li–S 분리막 · 중간층 사례 (리뷰 속 2 차 인용) — MOF 를 양극 쪽에 둔 설계와 대조 |
+| `luo2026_lis_separator_crystal_engineering_review` | Li–S 분리막 결정공학 리뷰 — Lewis 산 자리 폴리설파이드 고정 설계의 큰 그림 |
+| `shao2026_lis_liquid_quasisolid_allsolid_comparative_review` | 액체 · 준고체 · 전고체 Li–S 비교 리뷰 (이 논문 ref [9]) — '고체' 표기의 범주 판단 기준 |
+| `gadea2026_sse_hce_lhce_wse_lis_review` | 액체 전해질 설계 (SSE · HCE · LHCE) 리뷰 — 양극 젖음 액체 (DOL/DME + LiNO₃) 가 하는 역할의 배경 |
+
+## 15. 기법 용어 미니사전
+
+- **루이스산 자리 (Lewis acid site)**: 전자쌍을 받을 빈 궤도가 있는 자리 — 여기선 링커가 빠져 배위가 비는 Zr⁴⁺.
+- **UiO-66**: Zr₆O₄(OH)₄ 노드 + 테레프탈산 (BDC) 링커 12 개로 된 MOF. 링커 결손이 생기면 Zr 자리가 열리고, 합성 조절제 (아세트산) · OH⁻ · H₂O 가 그 자리를 막는다.
+- **링커 결손 · 전하 보상**: 카르복실레이트 하나가 빠지면 노드에 +1 이 남는다 — 실제 재료는 다른 음이온 리간드로 이를 보상한다. 이 논문 클러스터의 +4 가 그 미보상분이다.
+- **CDD (charge density difference)**: ρ(복합체) − ρ(기판) − ρ(흡착종). 등치면 값이 같아야 두 그림 크기를 비교할 수 있다.
+- **Bader 전하**: 밀도의 0-선속 면으로 원자 구역을 나눠 센 전하. 전하를 띤 모형에서는 모형 전하가 이동량을 바꾼다.
+- **ELF**: 0–1 사이 전자 국재 지표. 2D 단면은 **그 면에 놓인 원자만** 보여 준다.
+- **PDOS 혼성**: 두 원자 궤도가 같은 에너지에 상태를 가질 때 — 결합에 기여하는 것은 주로 **점유** 영역의 겹침이다.
+- **VB-XPS**: 가전자대 광전자 스펙트럼 — 점유 상태 분포. 시료 간 비교엔 세기 정규화가 필수.
+- **XPS 스핀–궤도 분리**: Zr 3d₅/₂ · 3d₃/₂ 간격 (≈2.4 eV) · S 2p₃/₂ · 2p₁/₂ 간격 (≈1.18 eV) 과 면적비는 원소 고정값이라 피팅에서 묶어야 한다.
+- **Bruce–Vincent t⁺**: 작은 DC 전압 ΔV 를 걸어 초기 · 정상 전류와 전후 계면저항으로 계산한 양이온 전달수. ΔV 를 모르면 재계산할 수 없다.
+- **구간 아레니우스**: 온도 구간별로 σ = A exp(−Ea/k_BT) 를 따로 맞춘 것. PEO 는 ≈60 °C 결정 용융 때문에 꺾인다 — 저온 기울기는 홉 장벽이 아니라 상변화가 섞인 값.
+- **DRT (distribution of relaxation times)**: 임피던스를 이완시간 τ 분포로 바꾼 것. 봉우리 지정은 τ 구간 가정에 달려 있고, 가장 긴 τ 쪽은 측정 최저 주파수와 정칙화에 민감하다.
+- **Tafel 기울기**: b = 2.303RT/(αnF). 60 °C 에서 2.303RT/F = **66.1 mV** (우리 산수) → 단일 전자 α = 0.5 면 ≈132 mV dec⁻¹. b 가 이보다 훨씬 작으면 (≈15 mV dec⁻¹) αn ≈ 4 로 비물리다.
+- **GITT 겉보기 D**: 양극 활물질 기준 확산계수 — 전해질 성질이 아니라 셀 전체 반응의 겉보기 값.
+- **Q_H / Q_L**: Li–S 방전의 상부 (≈2.3–2.4 V · S₈ → Li₂S₄ · 이론 419 mAh g⁻¹) / 하부 (≈2.1 V · Li₂S₄ → Li₂S · 이론 1256 mAh g⁻¹) 평탄부 용량.
+- **홉 수 검산**: Γ = ν₀ exp(−Ea/k_BT) (ν₀ 10¹³ s⁻¹ 가정 · T 명시) · 평균 대기 1/Γ — 장벽 값과 '빠르다/느리다' 서술이 차수에서 맞는지 보는 검사 (D-2026-09-27).
