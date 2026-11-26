@@ -272,5 +272,17 @@
    "D-2026-11-26-b2o3-site-dft-amend2-kgy"
   ],
   "by": "claude · 2026-11-26 (대피 세션)"
+ },
+ "kgy_블록_6_결과_2026_11_26 (① 에서 멈춤 · 사용자가 붙인 화면)": {
+  "본_것": "① GPU 사용 3459 MiB · 사용률 36 % → 시작 문턱 1,500 MiB 넘음 → 블록이 멈춤 (② 이후 안 돔 · sp_dft_v2 안 만듦 · 계산 0)",
+  "읽기": "남의 잡이 돌고 있다 (11-25 의 남의 몫 3.6 → 7.7 GB 와 같은 꼴일 수 있다 · 확인 안 함) · 우리 최고 ≈ 22 GB 를 더하면 ≈ 25.5 / 24.6 GB → 11-25 처럼 반복 2 의 addusdens_g 할당에서 메모리 부족이 날 자리 · 문턱이 의도대로 막았다",
+  "by": "claude · 2026-11-26"
+ },
+ "kgy_블록_6b_2026_11_26 (GPU 가 비면 시작 · 사용자가 붙여넣는다)": {
+  "무엇": "블록 6 의 ②–⑤ 를 스크립트로 두고, GPU 가 5 분 간격 연속 3 번 1,500 MiB 아래면 시작 (개정 2 시작 문턱 그대로) · 48 시간 넘게 안 비면 시작하지 않고 멈춘다 (그때는 개정 1 의 V100 11-28/29) · tmux bsite_sp2 하나에서 기다림 → 입력 → 실행",
+  "블록": "cat > $HOME/bsite_wait_start.sh <<'EOF'\n#!/usr/bin/env bash\n# 개정 2 — kgy GPU 가 연속 3 번 (5 분 간격) 1,500 MiB 아래면 블록 6 의 ②–⑤ 를 돈다 · 48 시간 넘게 안 비면 시작 안 함\nB=claude/evac-2026-11-25; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; P=$HOME/work/pseudo_b2o3s9\nPY=/home/kgy/apps/miniforge3/envs/uma/bin/python; O=$R/sp_dft_v2; ok=0; t0=$(date +%s)\nwhile [ $ok -lt 3 ]; do\n  U=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1)\n  if [ \"$U\" -lt 1500 ]; then ok=$((ok+1)); else ok=0; fi\n  echo \"$(date '+%m-%d %T') GPU ${U} MiB · 연속 빈 ${ok}/3\"\n  [ $ok -ge 3 ] && break\n  [ $(( $(date +%s) - t0 )) -gt 172800 ] && { echo \"⛔ 48 시간 동안 안 비었다 — 시작 안 함\"; exit 3; }\n  sleep 300\ndone\necho \"== ② worktree · selftest\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ③ 입력 (local-TF 0.2 · sp_dft_v2)\" && [ ! -e $O ] && $PY $W/tools/doping/b2o3_site_dft.py sp_inputs --sp_pick $R/sp_pick --out $O --pseudo_dir $P --disk_io medium --mixing local-TF:0.2 | tail -2 \\\n && echo \"  입력 $(ls $O/*/scf.in | wc -l) · local-TF $(grep -l \"mixing_mode = 'local-TF'\" $O/*/scf.in | wc -l) · beta 0.2 $(grep -l 'mixing_beta = 0.2' $O/*/scf.in | wc -l)\" \\\n && echo \"== ④ DRY_RUN\" && DRY_RUN=1 bash $W/tools/doping/run_force_check_scf.sh $O 2>&1 | tail -5 \\\n && echo \"== ⑤ 실행 $(date '+%m-%d %T')\" && bash $W/tools/doping/run_force_check_scf.sh $O > $O/run.log 2>&1; echo \"끝 rc=$? $(date '+%m-%d %T')\"\nEOF\n! tmux has-session -t bsite_sp2 2>/dev/null && tmux new -d -s bsite_sp2 \"bash $HOME/bsite_wait_start.sh 2>&1 | tee $HOME/bsite_wait.log\" && sleep 5 && tail -2 $HOME/bsite_wait.log",
+  "감시": "watch -n 30 'tail -3 $HOME/bsite_wait.log; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader'",
+  "누가_쓰나_보기": "nvidia-smi; ps -eo user:10,pid,etime,pcpu,rss:10,args --sort=-pcpu | head -6 | cut -c1-160",
+  "by": "claude · 2026-11-26"
  }
 }
