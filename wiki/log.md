@@ -4094,3 +4094,12 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 사용자가 정할 것: C2 승인 · 순서 (권고 C2b → C2a) · 예산 · 선택 팔 · D4 EIS · 70 · 85 wt% 쌍 · 첫 충전 상한 넓히기 · 폭 측정 구현 · (아)(자) — 설계서 §10 ·
   `followups/assb-contact-truth/STATUS.md` · 근거 [[assb-synthetic-truth-contact-loss-requirements]] · [[assb-lampe-contact-product-degeneracy]].
 - `python3 -I -B wiki/tools/lint.py` → 0 errors (반영 뒤 직접 실행).
+
+## [2026-11-26] update | 반박 두 곳 규칙 (Codex · agy 반박창에 같은 프롬프트 · 함께 반입 · 대조표 · 엇갈림은 1저자 질문 · agy 표지) — 1저자 지시
+- 1저자 원문 (2026-11-26) "[1저자 · 반박 두 곳 규칙] … 이거 cluade.md 등에 달아놔줘" — 원문 그대로 `raw/transcripts/2026-11-26-dual-rebuttal-rule.md`.
+- 루트 `CLAUDE.md` 작업 규율 8 (원문 네 줄 + 절차 안내 한 줄) · 같은 파일 '게이트 리뷰 루프' 절에 GO 판정 한 줄 (두 판정이 다 GO 일 때만 · 엇갈리면 1저자).
+- [[gate-review-loop]] '반박 두 곳' 절 (발송 · 반입 순서 · 반입 꼴 · 대조표 꼴 · agy 표지 · GO) · 루프 3–5 단계에 안내 · `updated` · sources 에 원문.
+- `.claude/commands/gate-request.md` '반박 두 곳' 절 (본문 하나 · 받는 쪽을 가리지 않는 문구 · 같은 회차 다른 쪽 판정문 넣지 않음).
+- 원문에 없던 운용 세부 셋 (1저자 확인 대기 · 위 두 곳에 그대로 적음): 한쪽만 낸 지적도 엇갈림으로 본다 · 먼저 온 회신은 다른 쪽이 끝날 때까지 저장소에
+  넣지 않는다 · 앞 회차 지적은 판정문 원문 대신 우리 처분으로 인용한다.
+- 코드 검사는 아직 없다 (루트 `CLAUDE.md` 규율 6) — 첫 두 곳 반입에서 꼴이 정해지면 후보: 반입 절에 대조표 · agy 표지가 있는지 보는 검사.
