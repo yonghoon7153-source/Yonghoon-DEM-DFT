@@ -1,5 +1,6 @@
 import words from '../../data/words.json';
 import { el } from './dom';
+import { createStudyVideos } from './study-videos';
 import { createWordCards } from './word-cards';
 
 // Cards are a reading view. Notion remains the source of the learning content.
@@ -40,13 +41,11 @@ export function createWordsPage() {
       el('span', { class: 'sr-only' }, ' (새 탭)'),
     )));
   }
-  page.append(el('div', { class: 'words' },
-    back,
-    el('header', { class: 'words__heading' },
-      el('p', { class: 'words__eyebrow', lang: 'ja' }, '今日のことば'),
-      title,
-      el('p', { class: 'words__intro' }, '차곡차곡 모은 표현, 한 장씩 뒤집으며 익혀 봐요.'),
-    ),
+  const intro = el('p', { class: 'words__intro' }, '차곡차곡 모은 표현, 한 장씩 뒤집으며 익혀 봐요.');
+  const cardsLink = el('a', { href: '#words' }, '단어 카드');
+  const videosLink = el('a', { href: '#words/videos' }, '오늘의 영상');
+  const videos = createStudyVideos();
+  const wordContent = el('div', {},
     createWordCards(),
     el('section', { class: 'words__note-link', 'aria-labelledby': 'words-note-title' },
       el('div', {}, el('p', { class: 'words__label' }, '나의 Notion 단어 노트'),
@@ -66,14 +65,28 @@ export function createWordsPage() {
       el('p', { class: 'words__resource-intro' }, 'Codex 추천 · 상황별 회화와 단어의 쓰임을 확인하는 공식 학습 자료예요.'),
       resources,
     ),
-  ));
+  );
+  const notebook = el('div', { class: 'words' }, back,
+    el('header', { class: 'words__heading' },
+      el('p', { class: 'words__eyebrow', lang: 'ja' }, '今日のことば'), title, intro),
+    el('nav', { class: 'words__modes', 'aria-label': '학습 메뉴' }, cardsLink, videosLink),
+    wordContent, videos.root);
+  page.append(notebook);
 
-  const isOpen = () => /^#\/?words$/.test(location.hash);
+  const route = () => /^#\/?words(?:\/(videos)(?:\/([^/]+))?)?\/?$/.exec(location.hash);
+  const isOpen = () => route() !== null;
   nav.addEventListener('click', () => {
     if (!isOpen()) returnHash = location.hash;
   });
   function sync() {
-    const open = isOpen();
+    const match = route();
+    const open = match !== null;
+    const isVideo = !!match?.[1];
+    const changedSection = videos.root.hidden === isVideo;
+    if (!isVideo) videos.pause();
+    videos.root.hidden = !isVideo;
+    wordContent.hidden = isVideo;
+    notebook.classList.toggle('words--videos', isVideo);
     const wasOpen = !page.hidden;
     page.hidden = !open;
     app.classList.toggle('has-words', open);
@@ -81,8 +94,14 @@ export function createWordsPage() {
     if (open) {
       nav.setAttribute('aria-current', 'page');
       back.href = home + returnHash;
-      document.title = '오늘의 단어 — にほんちず';
-      if (!wasOpen) {
+      const activeLink = isVideo ? videosLink : cardsLink;
+      (isVideo ? cardsLink : videosLink).removeAttribute('aria-current');
+      activeLink.setAttribute('aria-current', 'page');
+      title.textContent = isVideo ? '오늘의 영상' : '오늘의 단어';
+      intro.hidden = isVideo;
+      if (isVideo) videos.show(match?.[2]);
+      document.title = title.textContent + ' — にほんちず';
+      if (!wasOpen || changedSection) {
         page.scrollTop = 0;
         title.focus({ preventScroll: true });
       }

@@ -2,6 +2,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
 import './styles/words.css';
+import './styles/study-videos.css';
 
 import { landmarkById, mountains, places, prefBySlug, regionById, regions, regionsInGroup, transit } from './data';
 import { createMap, type MapApi } from './map/map';
@@ -418,8 +419,10 @@ async function init() {
   function readHash() {
     // Browser forward can return to words while a hash-linked festival dialog is still open.
     if (wordsPage.isOpen()) {
-      modal.close();
-      $('words-title').focus({ preventScroll: true });
+      if (modal.isOpen()) {
+        modal.close();
+        $('words-title').focus({ preventScroll: true });
+      }
       return;
     }
     const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));

@@ -223,3 +223,19 @@ Pages Source = GitHub Actions 와 `github-pages` 환경의 Deployment branches �
 - 폰트: Google Fonts (OFL).
 - 마스코트: 실제 ご当地キャラクター. 각 캐릭터의 권리는 각 자치체·단체·기업에 있다. 공식 일러스트는 규정이 허용하는 범위에서 크레딧과 함께 쓰고(예: ©2010熊本県くまモン — 지금 54종 중 53종), 사용자가 고른 대체 그림은 출처와 「공식 그림 아님」 을 표시하며(かながわキンタロウ — いらすとや), 그림이 없는 캐릭터는 이 프로젝트가 그린 닮은꼴에 「공식 그림 아님」 을 표시한다 ([ADR 0003](docs/adr/0003-real-mascots-with-credits.md)).
 - 県 기본 정보(名物·観光·ひとこと)는 일반 상식 수준으로 정리한 것 — 틀린 게 있으면 `data/prefectures.json` 에서 고치면 된다.
+
+### 오늘의 영상
+
+**오늘의 단어 → 오늘의 영상**을 열면 가장 최근에 공개한 회차를 재생할 수 있다. 재생목록에서 날짜를 선택하면 해당 회차의 주소로 바뀐다. [영상 목록](https://nihoncheese.bmlwork.kr/#words/videos) · [2026년 11월 24일](https://nihoncheese.bmlwork.kr/#words/videos/2026-11-24)
+
+새 회차는 영상·음성·자막의 최종 검토와 공개 승인이 끝난 MP4를 사용한다. 승인 기록에서 확인한 **그 MP4의 SHA-256**과 공개할 제목만 아래 명령에 전달한다. `video_path`·`approved_sha256`·`episode_date`·`episode_title`·`episode_title_ja`는 이번 회차의 값이다. Python 3.11 이상, FFmpeg, ffprobe를 설치한 Linux의 최신 `nihonchizu` 체크아웃에서 실행한다.
+
+```sh
+python3 tools/add-study-video.py --date "$episode_date" --video "$video_path" \
+  --approved-sha256 "$approved_sha256" --title "$episode_title" --japanese-title "$episode_title_ja"
+bash tools/nihon check
+```
+
+회차의 날짜가 고유 키다. 이미 등록된 날짜·제목·해시가 같으면 `unchanged`로 끝난다. 같은 날짜의 다른 영상은 충돌로 남으므로 기존 승인 기록을 대조한다. 한 파일에 대한 Cloudflare Pages 한도는 25 MiB다. 용량을 줄여 새로 인코딩했다면 그 결과물을 다시 검토하고 새 해시로 승인한다.
+
+정기 게시 때 공개할 파일은 `data/study-videos.json`, 이번 날짜의 `public/study-videos/YYYY-MM-DD/lesson.mp4`와 `poster.webp`, 커밋 제목과 짝을 이루는 `docs/log.md`다. 포스터는 도구가 MP4의 프레임으로 만든다. 개인 입력·대화·원본 그림·검토 보고서·키는 이 파일 목록에 들어가지 않는다. 병합 시 원격에 먼저 올라간 회차를 보존하고 같은 승인본에 대해 도구를 다시 실행한다. 일반 fast-forward push 후 해당 Git SHA의 Cloudflare Pages 배포 성공과 날짜 링크의 재생을 확인한다.

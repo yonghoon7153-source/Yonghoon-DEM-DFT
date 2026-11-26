@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 const { chromium } = createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const base = process.env.BASE || 'http://localhost:4173/';
 const out = process.env.OUT || 'docs/screenshots/qa';
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 const errors = [];
 async function page(vp, opts = {}) {
   const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, hasTouch: !!opts.touch, isMobile: !!opts.touch, locale: 'ko-KR' });
@@ -19,7 +19,7 @@ async function ready(p) {
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(400);
 }
-const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit,matsuri,landmarks,words').split(',');
+const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit,matsuri,landmarks,words,videos').split(',');
 
 if (steps.includes('desktop')) {
   const { ctx, p } = await page({ width: 1440, height: 900 });
@@ -169,6 +169,21 @@ if (steps.includes('words')) {
     await p.screenshot({ path: `${out}/23-words-${name}.png` });
     await p.locator('.words__resources').scrollIntoViewIfNeeded();
     await p.screenshot({ path: `${out}/24-word-resources-${name}.png` });
+    await ctx.close();
+  }
+}
+if (steps.includes('videos')) {
+  for (const [name, viewport] of [['desktop', { width: 1440, height: 900 }], ['mobile', { width: 390, height: 844 }]]) {
+    const { ctx, p } = await page(viewport, { touch: name === 'mobile' });
+    await p.goto(base + '#words/videos', { waitUntil: 'domcontentloaded' });
+    await p.locator('.video-archive__player').waitFor();
+    await p.waitForFunction(() => document.querySelector('.video-archive__player')?.readyState >= 1);
+    await p.evaluate(() => document.fonts.ready);
+    await p.screenshot({ path: `${out}/25-videos-${name}.png` });
+    if (name === 'mobile') {
+      await p.locator('.video-archive__list').scrollIntoViewIfNeeded();
+      await p.screenshot({ path: `${out}/26-video-list-${name}.png` });
+    }
     await ctx.close();
   }
 }

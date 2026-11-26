@@ -1,6 +1,7 @@
 // Cross-checks the JSON database in data/ (runs before every build: npm run data:check).
 // Deliberately dependency-free; the *.schema.json files document the shapes for editors.
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const { regions, groups = [] } = read('regions.json');
@@ -302,6 +303,40 @@ if (existsSync(feedPath)) {
       || typeof feed.ciphertext !== 'string' || !/^[A-Za-z0-9_-]+$/.test(feed.ciphertext)
       || Buffer.from(feed.ciphertext, 'base64url').length < 16) err('study-feed: invalid encrypted envelope');
   } catch { err('study-feed: unreadable encrypted envelope'); }
+}
+
+// Every published video file must belong to a dated catalog entry, including after an interrupted append.
+const videosDir = new URL('../public/study-videos/', import.meta.url);
+const videoDates = new Set();
+for (const episode of read('study-videos.json')) {
+  const { date, title, japaneseTitle, durationSeconds, sha256, posterSha256 } = episode;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date))
+      || new Date(date).toISOString().slice(0, 10) !== date || videoDates.has(date)) {
+    err('study-videos: invalid or duplicate date');
+    continue;
+  }
+  videoDates.add(date);
+  if ([title, japaneseTitle].some(t => typeof t !== 'string' || !t.trim() || t.length > 180)
+      || !Number.isFinite(durationSeconds) || durationSeconds <= 0
+      || Object.keys(episode).sort().join() !== 'date,durationSeconds,japaneseTitle,posterSha256,sha256,title') {
+    err(`study-videos ${date}: invalid public metadata`);
+  }
+  try {
+    const dir = new URL(date + '/', videosDir);
+    const assets = readdirSync(dir, { withFileTypes: true });
+    if (assets.some(f => !f.isFile()) || assets.map(f => f.name).sort().join() !== 'lesson.mp4,poster.webp') {
+      err(`study-videos ${date}: unexpected public files`);
+    }
+    for (const [name, hash] of [['lesson.mp4', sha256], ['poster.webp', posterSha256]]) {
+      const bytes = readFileSync(new URL(name, dir));
+      if (!bytes.length || bytes.length > 25 * 1024**2 || createHash('sha256').update(bytes).digest('hex') !== hash) {
+        err(`study-videos ${date}/${name}: unexpected file size or SHA-256`);
+      }
+    }
+  } catch { err(`study-videos ${date}: media missing or unreadable`); }
+}
+if (existsSync(videosDir) && readdirSync(videosDir, { withFileTypes: true }).some(f => !f.isDirectory() || !videoDates.has(f.name))) {
+  err('study-videos: unregistered files in the public video archive');
 }
 
 if (errors.length) {
