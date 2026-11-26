@@ -284,5 +284,20 @@
   "감시": "watch -n 30 'tail -3 $HOME/bsite_wait.log; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader'",
   "누가_쓰나_보기": "nvidia-smi; ps -eo user:10,pid,etime,pcpu,rss:10,args --sort=-pcpu | head -6 | cut -c1-160",
   "by": "claude · 2026-11-26"
+ },
+ "kgy_GPU_사용자_2026_11_26 (사용자가 붙인 화면 20:40)": {
+  "본_것": "kgy 20:40 — esp 계정 grape_twin (전체 화면 3D 데모 · 3,003 MiB · 2 일 8 시간째) + Xorg 110 · gnome-shell 29 · python 306 MiB ≈ 3,495 MiB · 사용률 36–56 % · 화면 스트리밍 (ffmpeg · mediamtx) 이 같이 돈다 — 데모라 계속 켜져 있을 것으로 본다 (1,500 MiB 문턱은 안 채워진다)",
+  "by": "claude · 2026-11-26"
+ },
+ "kgy_블록_6c_2026_11_26 (개정 3 문턱 · 데모 옆 · 사용자가 붙여넣는다)": {
+  "무엇": "블록 6 과 같고 ① 문턱만 '사용 ≤ 4,000 MiB' (개정 3) · 감시는 블록 6 의 감시 그대로 · 데모 쪽 문제 시 멈추는 법 (카드 개정 3)",
+  "블록": "B=claude/evac-2026-11-25; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; P=$HOME/work/pseudo_b2o3s9; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; O=$R/sp_dft_v2\n( echo \"== ① 남의 몫이 4,000 MiB 이하인가 (개정 3 · 데모 옆)\" && U=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1) && echo \"  사용 $U MiB · 사용률 $(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader | head -1)\" && [ \"$U\" -le 4000 ] \\\n && echo \"== ② worktree 를 대피 브랜치 끝으로 · selftest\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ③ 단일점 12 입력 (개정 1 믹싱 local-TF β 0.2 · 새 폴더 sp_dft_v2 · 옛 sp_dft 는 그대로)\" && [ ! -e $O ] \\\n && $PY $W/tools/doping/b2o3_site_dft.py sp_inputs --sp_pick $R/sp_pick --out $O --pseudo_dir $P --disk_io medium --mixing local-TF:0.2 | tail -2 \\\n && echo \"  입력 $(ls $O/*/scf.in | wc -l) 개 · local-TF $(grep -l \"mixing_mode = 'local-TF'\" $O/*/scf.in | wc -l) · beta 0.2 $(grep -l 'mixing_beta = 0.2' $O/*/scf.in | wc -l)\" \\\n && echo \"== ④ 실행기 점검만 (DRY_RUN · 계산 안 함)\" && DRY_RUN=1 bash $W/tools/doping/run_force_check_scf.sh $O 2>&1 | tail -5 \\\n && echo \"== ⑤ 발사 — tmux bsite_sp2 (하나씩 · GPU pw.x · 결과는 아직 안 읽는다)\" && ! tmux has-session -t bsite_sp2 2>/dev/null \\\n && tmux new -d -s bsite_sp2 \"bash $W/tools/doping/run_force_check_scf.sh $O > $O/run.log 2>&1\" && sleep 30 && tail -4 $O/run.log \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "멈추는_법": "tmux kill-session -t bsite_sp2; for x in $(pgrep -x pw.x); do case \"$(readlink /proc/$x/cwd)\" in $HOME/work/runs/b2o3_site_dft_2026_11_23/sp_dft_v2/*) kill $x && echo \"세움 $x\";; esac; done",
+  "결정": [
+   "D-2026-11-25-b2o3-site-dft-amend1",
+   "D-2026-11-26-b2o3-site-dft-amend2-kgy",
+   "D-2026-11-26-b2o3-site-dft-amend3-kgy-threshold"
+  ],
+  "by": "claude · 2026-11-26"
  }
 }
