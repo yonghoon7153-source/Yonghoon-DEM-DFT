@@ -1,0 +1,193 @@
+{
+  "as_run_input_sha256": {
+    "check_step1.py": "50c31f66f5092d55ef767911a3c8f845bf4703f91d51019b70d18a2c15d1e8c0",
+    "make_disk_msh.py": "7932f60d24c0de283998dc65bd8e69093380c38ca2f7c1d5b8adcad6fea2ea4a",
+    "run_step1.sh": "80086ca020a094e2a6eedc0717197c11213e0afec57516b9324198396f9ed650",
+    "step1_disk.i": "0c8ec7d232a118feba3d902bb3041b70f50763a872977492de45dd0086a211fb"
+  },
+  "json_compare": {
+    "abs_tol": 1e-14,
+    "ignored": [
+      "cases.*.dir"
+    ],
+    "rel_tol": 1e-12
+  },
+  "registration_checker_sha256": "50c31f66f5092d55ef767911a3c8f845bf4703f91d51019b70d18a2c15d1e8c0",
+  "runs": [
+    {
+      "native_csv_sha256": {
+        "m13": "c5c9e7d5dc56b0d3e81bb8039a70090aeec8fdfd1ee5842609d3f359f3f6bac5",
+        "m26": "b22313b357d2d790621beb5f4c083e92201ce5ecdb9c5abf3093caa72b7fd649",
+        "smoke_m13": "f9feee5829942b098cb7b47cf178028e27a4ff6de8f34cac8e08aba9ed65d415"
+      },
+      "replay_rc": 0,
+      "smoke_rc": 0,
+      "tar_sha256": "a32c33404800f5592b744c07330762fcef703d5ccdd970b9ef108c72c9766508"
+    },
+    {
+      "native_csv_sha256": {
+        "m13": "c5c9e7d5dc56b0d3e81bb8039a70090aeec8fdfd1ee5842609d3f359f3f6bac5",
+        "m26": "b22313b357d2d790621beb5f4c083e92201ce5ecdb9c5abf3093caa72b7fd649",
+        "smoke_m13": "f9feee5829942b098cb7b47cf178028e27a4ff6de8f34cac8e08aba9ed65d415"
+      },
+      "replay_rc": 0,
+      "smoke_rc": 0,
+      "tar_sha256": "af63fb1d52f77c6e31215afd90eaeefab4e18da09c42404fa99f5bf955517907"
+    }
+  ],
+  "scope": "DEVELOPMENT_ONLY",
+  "solver_runs_during_replay": 0,
+  "verified_report": {
+    "P6_report": {
+      "coarse": "m13",
+      "fine": "m26",
+      "fine_max_MPa": 0.29480181743984996,
+      "kind": "REPORT_ONLY",
+      "max_abs_difference_MPa": 0.02204212879218501,
+      "ratio": 0.07476931107007977,
+      "rule": "U6c-06 shape: common support [0, min end], union of native samples, piecewise linear, max |coarse - fine| / max |fine|",
+      "support_m": [
+        0.0,
+        0.02035
+      ],
+      "u_at_fine_max_m": 0.02035,
+      "u_at_max_difference_m": 0.0028,
+      "union_knots": 408
+    },
+    "all_pass": true,
+    "cases": {
+      "m13": {
+        "case_pass": true,
+        "checks": {
+          "C_all_converged": {
+            "expected_steps": 407,
+            "pass": true,
+            "rc": 0,
+            "reasons": [],
+            "steps": 407
+          },
+          "C_reached_end": {
+            "end_time": 407.0,
+            "last_time": 407.0,
+            "pass": true
+          },
+          "P1": {
+            "pass": true,
+            "tol": 0.001,
+            "value": 9.509836283289071e-13,
+            "worst_time": 10.0
+          },
+          "P2": {
+            "pass": true,
+            "sxx_value": 0.0009869164213244421,
+            "syy_value": 0.0012513830585179318,
+            "tol": 0.01,
+            "worst_time_sxx": 395.0,
+            "worst_time_syy": 55.0
+          },
+          "P4": {
+            "K_Pa": 33333333.33333334,
+            "pass": true,
+            "tol": 0.001,
+            "value": 0.00029685828286231397,
+            "worst_time": 407.0
+          }
+        },
+        "csv_sha256": "c5c9e7d5dc56b0d3e81bb8039a70090aeec8fdfd1ee5842609d3f359f3f6bac5",
+        "integrity": {
+          "pass": true,
+          "reasons": []
+        },
+        "report": {
+          "Fmax_N_per_m": 28814.786294572,
+          "Fx_over_Fbot_max": 6.331962389500892e-13,
+          "area_ref_vs_mesh_rel": 4.11250337458024e-15,
+          "big_rows": 398,
+          "final_approach_m": 0.02035,
+          "first_big_time": 10.0,
+          "nl_its_max": 8.0,
+          "nl_its_total": 1541.0,
+          "sigma_b_max_Pa": 288147.86294572,
+          "svm_max_over_sy": 1.0,
+          "symy_reaction_over_Fbot_max": 1.4055690338950949e-12
+        }
+      },
+      "m26": {
+        "case_pass": true,
+        "checks": {
+          "C_all_converged": {
+            "expected_steps": 407,
+            "pass": true,
+            "rc": 0,
+            "reasons": [],
+            "steps": 407
+          },
+          "C_reached_end": {
+            "end_time": 407.0,
+            "last_time": 407.0,
+            "pass": true
+          },
+          "P1": {
+            "pass": true,
+            "tol": 0.001,
+            "value": 8.460227906998454e-13,
+            "worst_time": 11.0
+          },
+          "P2": {
+            "pass": true,
+            "sxx_value": 0.0003101255094046238,
+            "syy_value": 0.0004580741807995044,
+            "tol": 0.01,
+            "worst_time_sxx": 407.0,
+            "worst_time_syy": 392.0
+          },
+          "P4": {
+            "K_Pa": 33333333.33333334,
+            "pass": true,
+            "tol": 0.001,
+            "value": 0.0001195377250166451,
+            "worst_time": 407.0
+          }
+        },
+        "csv_sha256": "b22313b357d2d790621beb5f4c083e92201ce5ecdb9c5abf3093caa72b7fd649",
+        "integrity": {
+          "pass": true,
+          "reasons": []
+        },
+        "report": {
+          "Fmax_N_per_m": 29480.181743985,
+          "Fx_over_Fbot_max": 6.124756048761154e-13,
+          "area_ref_vs_mesh_rel": 6.636811697465065e-15,
+          "big_rows": 398,
+          "final_approach_m": 0.02035,
+          "first_big_time": 10.0,
+          "nl_its_max": 11.0,
+          "nl_its_total": 2158.0,
+          "sigma_b_max_Pa": 294801.81743984995,
+          "svm_max_over_sy": 1.0,
+          "symy_reaction_over_Fbot_max": 1.0390075997105192e-12
+        }
+      }
+    },
+    "checker_sha256": "50c31f66f5092d55ef767911a3c8f845bf4703f91d51019b70d18a2c15d1e8c0",
+    "dt": 1.0,
+    "end_time": 407.0,
+    "kind": "mpfem_step1_moose_check",
+    "label": "DEVELOPMENT_ONLY",
+    "registered": {
+      "D_m": 0.1,
+      "E_Pa": 10000000.0,
+      "K_Pa": 33333333.33333334,
+      "nu": 0.45,
+      "source": "mpfem_plan/step1_kratos_onedisk.md section 4; formulas of mpfem_plan/step1_inputs/run_onedisk.py",
+      "tol": {
+        "C_end_rel": 1e-09,
+        "P1": 0.001,
+        "P2_sxx": 0.01,
+        "P2_syy": 0.01,
+        "P4": 0.001,
+        "big_row_fraction": 0.01
+      }
+    }
+  }
+}
