@@ -132,7 +132,7 @@ function createCardPanel(original: WordDeck | undefined, known: Set<string>, mar
     el('h2', { class: 'study__connect-title' }, '오늘 복습할 일본어'),
     el('p', {}, '이 브라우저에서 오늘의 카드를 보려면 개인 연결 파일(study-connection.json)을 한 번 불러와 주세요.'),
     el('div', { class: 'study__connect-actions' }, connect,
-      el('a', { class: 'study__text-button', href: words.today.reviewUrl, target: '_blank', rel: 'noopener noreferrer' }, 'Notion에서 오늘 목록 열기')));
+      el('a', { class: 'study__text-button', href: words.today.url, target: '_blank', rel: 'noopener noreferrer' }, 'Notion에서 오늘 목록 열기')));
   const forget = button('이 기기의 단어장 지우기', 'study__text-button');
   const syncMessage = el('p', { class: 'study__save-note', role: 'status' });
   const refresh = button('지금 새로 받기', 'study__text-button');

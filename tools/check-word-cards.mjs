@@ -21,7 +21,7 @@ try {
   assert.ok(await study.getByRole('button', { name: '내 Notion 단어장 연결', exact: true }).isVisible());
   const todayLink = p.getByRole('tabpanel').getByRole('link', { name: /Notion.*오늘|오늘.*Notion/ });
   assert.ok(await todayLink.isVisible());
-  assert.equal(await todayLink.getAttribute('href'), 'https://app.notion.com/p/88da2a26e0104ee39453b672ef24cee1?v=200bd4a8aa6d4f6e99060fe9d6e0663e');
+  assert.equal(await todayLink.getAttribute('href'), 'https://app.notion.com/p/striped-weaver-ayh/c3b7a2a61afa4f83a4a832c4e057e5a9');
   assert.equal(await p.locator('.study__card:visible').count(), 0);
   assert.equal(await p.locator('.study__search:visible').count(), 0);
   await tab('내 일본어 기록').press('Home');
