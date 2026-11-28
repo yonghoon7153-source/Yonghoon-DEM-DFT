@@ -310,5 +310,41 @@
   "블록": "B=claude/evac-2026-11-25; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; P=$HOME/work/pseudo_b2o3s9; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; O=$R/sp_dft_v2\n( echo \"== ① 실행이 끝났나 (tmux bsite_sp2 없음 · scf.out 12)\" && ! tmux has-session -t bsite_sp2 2>/dev/null && echo \"  scf.out $(ls $O/*/scf.out | wc -l) 개\" && tail -1 $O/run.log \\\n && echo \"== ② worktree 를 대피 브랜치 끝으로 · selftest\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ③ 단일점 판독 (G2 결속 · G1 수렴 · 자리 안 순위 · 이완 후보 · 판정 아님)\" && [ ! -e $R/sp_read_v2.json ] && $PY $W/tools/doping/b2o3_site_dft.py read_sp --sp_dft $O --sp_pick $R/sp_pick --pseudo_dir $P --out $R/sp_read_v2.json \\\n && echo \"== ④ 잡마다 반복 · 고유값 미수렴 경고 (기록만 · 게이트 아님)\" && for f in $O/*/scf.out; do awk -v n=$(basename $(dirname $f)) '/iteration #/{it=$3+0} /eigenvalues not converged/{w++; last=it} /convergence has been achieved/{c=it} END{printf \"  %-12s 수렴 반복 %3d · 경고 %3d · 마지막 경고 반복 %3d\\n\", n, c, w, last}' $f; done \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
   "도구": "tools/doping/b2o3_site_dft.py — 마지막 변경 0830c347d (개정 1 믹싱 · sp_inputs 를 만든 판과 같다 → G2 다시 만든 입력이 같은 코드)",
   "by": "claude · 2026-11-28"
+ },
+ "kgy_블록_7_결과_2026_11_28 (read_sp 판독 · 사용자가 붙인 화면)": {
+  "게이트": "① tmux 없음 · scf.out 12 · run.log '끝 — 완료 12 · 실패 0 · 총 2033분' · ② worktree 5ac0fad1 · selftest PASS 111/111 · ③ G1 단일점 12/12 (판 고정 out_problems · stage sp) 통과 · G2 입력 12 = 계획 = 같은 인자로 다시 만든 입력 (sha256) · sp_pick manifest · 유사포텐셜 같음",
+  "출력_파일": "kgy:$HOME/work/runs/b2o3_site_dft_2026_11_23/sp_read_v2.json (아직 회수 안 함 · sha256 미기록)",
+  "B-P (두 O 꼴 합쳐 · 최저와의 차 eV/셀 · 판정 아님)": {
+   "BMP_04_OB": "+0.000 (O-B · UMA -544.109 · 끝 꼴 O-B)",
+   "BMP_00_OB": "+0.214 (O-B · UMA -543.833)",
+   "BMP_01_OB": "+0.404 (O-B · UMA -543.541)",
+   "BMP_04": "+1.242 (O-P · UMA -542.821)",
+   "BMP_05": "+1.331 (O-P · UMA -542.646)",
+   "BMP_02": "+1.413 (O-P · UMA -542.607)",
+   "단계_2_이완_후보": [
+    "BMP_04_OB",
+    "BMP_00_OB"
+   ],
+   "둘째와": "0.214 eV (창 0.30 안)",
+   "G3_기록_O-B_minus_O-P": "-1.242 eV/셀"
+  },
+  "B-Li (두 O 꼴 합쳐 · 최저와의 차 eV/셀 · 판정 아님)": {
+   "BMLi_01_OB": "+0.000 (O-B · UMA -518.316 · 끝 꼴 mixed)",
+   "BMLi_01": "+0.766 (O-P · UMA -517.520)",
+   "BMLi_04_OB": "+1.016 (O-B · UMA -517.340)",
+   "BMLi_04": "+1.287 (O-P · UMA -517.010)",
+   "BMLi_03_OB": "+1.460 (O-B · UMA -516.751 · 끝 꼴 mixed)",
+   "BMLi_00": "+2.658 (O-P · UMA -515.639)",
+   "단계_2_이완_후보": [
+    "BMLi_01_OB"
+   ],
+   "둘째와": "0.766 eV (창 0.30 밖 → 하나)",
+   "G3_기록_O-B_minus_O-P": "-0.766 eV/셀"
+  },
+  "UMA_순서_기록만": "두 자리 다 UMA 에너지 순서 = DFT 단일점 순서 (12/12 같은 자리) — 기록만 · 판정에 안 쓴다 (카드)",
+  "④_고유값_미수렴_경고 (기록만 · 게이트 아님)": "잡마다 경고 21–99 회 · 마지막 경고 반복 47–98 — 확인된 두 잡은 수렴 반복보다 앞 (BMLi_04 62 < 98 · BMP_00_OB 47 < 97) · 나머지 열 잡은 수렴이 100 번째 이후라 아래 결함으로 '수렴 반복 0' 이 찍혔고 마지막 경고는 99 이하 → 마지막 경고 뒤에 경고 없는 반복이 있다 (Davidson 초 · 중반 경고 · 끝 SCF 오차 < 1e-8 Ry)",
+  "⚠_헛발질_블록_7_④": "awk 가 'iteration #' 뒤 셋째 칸을 숫자로 읽었는데 QE 는 100 번째부터 'iteration #100' 처럼 # 뒤 빈칸 없이 찍는다 → 100 이상은 0 으로 읽혀 '수렴 반복 0' (10 잡). 판독기 G1 (판 고정 파서) 은 12 개 다 수렴으로 봤다 — 결함은 기록용 ④ 에만 있다. 다음에 같은 셈을 하면 match($0, /iteration #[ ]*[0-9]+/) 로 # 뒤 숫자를 뽑는다",
+  "읽은_순서": "커밋된 read_sp 출력만 읽었다 (에너지 · 순위) — 단계_2 도구는 아직 없다 (만들면 결과 전 커밋)",
+  "by": "claude · 2026-11-28"
  }
 }
