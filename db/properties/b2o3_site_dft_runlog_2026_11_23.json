@@ -299,5 +299,16 @@
    "D-2026-11-26-b2o3-site-dft-amend3-kgy-threshold"
   ],
   "by": "claude · 2026-11-26"
+ },
+ "kgy_블록_6c_결과_2026_11_28 (12 끝 · 사용자가 붙인 감시 화면 12:11:38)": {
+  "화면": "실행기 끝 — 완료 12 · 건너뜀 0 · 실패 0 · 총 2033 분 · 마지막 ✓ BMP_04 174 분 (03:48:01) · BMP_05 172 분 (06:40:10) · 마지막 점 BMP_05 반복 109 · 마지막 쓰기 06:40:09 · 'estimated scf accuracy' 마지막 셋 < 1e-8 · 1e-8 · 9.3e-9 Ry · 'not converged' 문자열 67 (BMP_05 scf.out · Davidson 고유값 경고로 보임 — 판독기 G1 은 이 경고를 보지 않는다 · 블록 7 ④ 에서 잡마다 기록만) · GPU 3663 / 24576 MiB · 57 % (남의 몫 · 우리 잡 끝)",
+  "읽은_것": "감시 화면만 — 에너지 · 순위는 아직 안 읽었다 (커밋된 read_sp 로만 읽는다)",
+  "by": "claude · 2026-11-28"
+ },
+ "kgy_블록_7_2026_11_28 (read_sp · sp_dft_v2 · 사용자가 붙여넣는다)": {
+  "무엇": "11-25 블록 6 (도구_read_sp 기록) 의 틀 그대로 — 폴더 sp_dft_v2 · tmux bsite_sp2 · 출력 sp_read_v2.json (없을 때만) · 브랜치 = 대피 · ④ 잡마다 반복 · 고유값 미수렴 경고 · 마지막 경고 반복 (기록만 · 게이트 아님)",
+  "블록": "B=claude/evac-2026-11-25; W=$HOME/wt_bsite_1123; R=$HOME/work/runs/b2o3_site_dft_2026_11_23; P=$HOME/work/pseudo_b2o3s9; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; O=$R/sp_dft_v2\n( echo \"== ① 실행이 끝났나 (tmux bsite_sp2 없음 · scf.out 12)\" && ! tmux has-session -t bsite_sp2 2>/dev/null && echo \"  scf.out $(ls $O/*/scf.out | wc -l) 개\" && tail -1 $O/run.log \\\n && echo \"== ② worktree 를 대피 브랜치 끝으로 · selftest\" && git -C $W fetch -q origin $B && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log --oneline -1 && $PY $W/tools/doping/b2o3_site_dft.py --selftest | tail -1 | grep PASS \\\n && echo \"== ③ 단일점 판독 (G2 결속 · G1 수렴 · 자리 안 순위 · 이완 후보 · 판정 아님)\" && [ ! -e $R/sp_read_v2.json ] && $PY $W/tools/doping/b2o3_site_dft.py read_sp --sp_dft $O --sp_pick $R/sp_pick --pseudo_dir $P --out $R/sp_read_v2.json \\\n && echo \"== ④ 잡마다 반복 · 고유값 미수렴 경고 (기록만 · 게이트 아님)\" && for f in $O/*/scf.out; do awk -v n=$(basename $(dirname $f)) '/iteration #/{it=$3+0} /eigenvalues not converged/{w++; last=it} /convergence has been achieved/{c=it} END{printf \"  %-12s 수렴 반복 %3d · 경고 %3d · 마지막 경고 반복 %3d\\n\", n, c, w, last}' $f; done \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "도구": "tools/doping/b2o3_site_dft.py — 마지막 변경 0830c347d (개정 1 믹싱 · sp_inputs 를 만든 판과 같다 → G2 다시 만든 입력이 같은 코드)",
+  "by": "claude · 2026-11-28"
  }
 }
