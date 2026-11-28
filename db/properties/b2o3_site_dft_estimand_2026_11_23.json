@@ -150,5 +150,24 @@
   "위험_감수 (사용자)": "① 데모가 메모리를 더 쓰면 우리 점이 메모리 부족으로 죽는다 — 실행기가 기록하고 다음 점 · 같은 폴더 · 같은 설정으로 다시 ② 우리가 ≈ 19.5 GB 를 잡는 동안 데모가 메모리를 더 못 받아 멈출 수 있다 (esp 쪽 일) — 사용자가 알고 고른 위험",
   "멈추는_법 (데모 쪽에서 문제가 나면)": "tmux kill-session -t bsite_sp2; for x in $(pgrep -x pw.x); do case \"$(readlink /proc/$x/cwd)\" in $HOME/work/runs/b2o3_site_dft_2026_11_23/sp_dft_v2/*) kill $x && echo \"세움 $x\";; esac; done",
   "결정": "D-2026-11-26-b2o3-site-dft-amend3-kgy-threshold"
+ },
+ "⏩_개정_4_2026_11_28_결과_전": {
+  "근거": "사용자 2026-11-28 'gabia에 tmux로 걸어두자 ㅇㅇ' (두 번) · GPU 상한 질문에 'Raise cap to 250 (Recommended)' (AskUserQuestion) — 대피 세션 · 결과 전 (단계 2 이완 · 기준상 · k 탐침 수렴 0 건 · 단계 1 판독 결과는 봤다 — 단계 2 후보는 카드 규칙으로 정해진다)",
+  "바뀌는_것": {
+   "① 기계": "단계_2 이온 이완 · 기준상 넷 vc-relax · k 탐침 — kgy (개정 2 · 3) → gabia A6000 48 GB · GPU 혼자 (실행기 GPU_EXCLUSIVE=1 · MIN_FREE_MIB=40000 — 다른 compute 프로세스가 있거나 여유가 40,000 MiB 아래면 그 잡이 물러난다) · CLAUDE.md 'gabia pw.x 와 UMA 동시 금지' 그대로",
+   "② 시작 · 순서": "11b (tmux b2o3_s11b · UMA MD) 가 끝나고 GPU compute 프로세스가 0 이 된 뒤 — tmux bsite_s2 가 5 분마다 보고 기다린다 · 기준상 넷 먼저 (작은 벌크 셀 · 몇 시간 · gabia 에서 이 설정이 도는지 보는 대조 잡 겸) → 이완 셋은 폴더 이름 순 r1 B-P 최저 BMP_04_OB · r2 B-Li 최저 BMLi_01_OB · r3 B-P 둘째 BMP_00_OB (자리 최저 둘 먼저 — 상한 · 고장에 걸려도 D 에 먼저 필요한 것이 먼저 끝난다)",
+   "③ gabia 줄": "카드 7 의 'gabia 줄: 11b → 11b 이어 돌리기 → 개정 6 이완 셋 → 이것' 에서 이것을 개정 6 앞으로 — 개정 6 이완 도구 (b2o3_bo_dft_relax2.py) 가 아직 없다 · 11b 이어 돌리기가 필요해지면 (150 h 상한) 그것이 먼저다: bsite_s2 를 세우고 (아래 멈추는 법) 11b 를 이어 돌린다 (11-25 실측 어림으로는 상한 전에 끝난다)",
+   "④ 상한": "150 → 250 GPU-h (사용자 선택) · 어림: 이완 하나 16–63 h (9 단계 gabia 이완 31–49 h · 57–113 BFGS 걸음 · SCF 반복당 ≈ 1.5 분 (k 4 점 · nowf) → 이번 셀 k 5 점 · local-TF β 0.2 는 걸음마다 반복이 늘 수 있다) · 기준상 몇 h · k 탐침 ≈ 9 h → 합 ≈ 60–200 GPU-h · 지금까지 ≈ 36 GPU-h (kgy 블록 5 · 프로브 ≈ 2 + sp_dft_v2 2033 분) · 250 도 넘을 것 같으면 멈추고 다시 묻는다",
+   "⑤ disk_io": "medium (kgy 단일점과 같다 · 숫자에 영향 없음) — 9 단계 nowf 이완이 gabia 에서 ≈ 35 GB (k 4 점) 였고 이번은 k 5 점이라 파동함수를 디스크에 둬 여유를 남긴다",
+   "⑥ 믹싱": "이완 = 판독 결과의 settings_from_plan.mixing (개정 1 · local-TF β 0.2 · 도구가 판독 결과 ↔ 계획을 대조) · 기준상 = 판 고정 plain 0.3 (작은 벌크 결정 셀 · 57 Å 막대 문제 없음 · 카드 4 설정 그대로)"
+  },
+  "안_바뀌는_것": "보고량 D · 판정 규칙 (|D| ≥ 0.10 eV/B · 압력 2² 조합 · k 탐침 뒤에도 같아야) · 게이트 G1–G3 · 압력 어림 · k 탐침 재개 규칙 · 기준 셀 (host × (1,1,2) · V₀ 2436.33 Å³) · 이완 후보 고르기 (최저 + 0.30 eV 안 둘째 — 도구가 판독 결과의 rows 에서 다시 고른다) · 다른 DFT 설정 (카드 4) · 단계 1 결과 (kgy sp_dft_v2 · sp_read_v2.json)",
+  "도구 (결과 전 커밋)": "tools/doping/b2o3_site_dft.py relax_inputs · ref_inputs · mp_fetch (sha256 3f2bbb56c420e481…) + tools/doping/fetch_mp_structure.py fetch_mp_doc (sha256 f56beadf32c3baa7… · 옛 함수는 그대로) · selftest 148/148 · 변이 30/30 (모두 빨간 줄로 잡음) · 실행 = tools/doping/run_force_check_scf.sh (relax 완료 = bfgs converged · vc-relax 는 + 최종 scf)",
+  "도구가 거는 것": "판독 결과 kind · 카드 · 결정 · 계획 sha256 · rows ↔ 계획 잡 · 창 0.30 · relax_pick 을 rows 에서 다시 골라 대조 · 믹싱 · 유사포텐셜 (sha256 · md5 · z) · 구조 sha256 · 조성 · host sha256 · 기준 셀 cellpar (카드 문구 ±0.01) · UMA 셀 모양 (길이 5 % · 각 3° — 9 단계 UMA 셀 6 개는 최대 2.1 % · 0.95°) · 옮긴 뒤 최소 원자 쌍 1.0 Å · 기준상 저장소 사본 sha256 · MP 받은 기록 (물은 id · sha256) · 조성 정수배 · 검사를 다 통과한 뒤에만 쓴다",
+  "Li3PS4_다형": "mp-2646995 · mp-1097036 은 gabia uma env 의 mp_api 로 받는다 (mp_fetch · 키 = gabia 환경변수 MP_API_KEY · 출력 안 함) · 돌려받은 id 가 다르면 (MP 의 id 옮김) 둘 다 기록 · mp-985583 · Li₂S mp-1153 은 저장소 파일 · 다형 고르기 (f.u. 당 최저) 는 판독기",
+  "판독기": "따로 · 결과 전 커밋 — 이완 bfgs 수렴 · 자리 값 = 이완한 것 중 최저 · 잡마다 P · 압력 어림 2² · 기준상 Li₃PS₄ = 셋 중 f.u. 당 최저 · k 탐침 입력 → D. 이번 묶음에 없다 · 이완이 끝나기 전에 만든다",
+  "멈추는_법": "tmux kill-session -t bsite_s2; for x in $(pgrep -x pw.x); do case \"$(readlink /proc/$x/cwd)\" in /data/work/runs/b2o3_site_dft_2026_11_23/*) kill $x && echo \"세움 $x\";; esac; done",
+  "결정": "D-2026-11-28-b2o3-site-dft-amend4-gabia",
+  "기록": "db/properties/b2o3_site_dft_runlog_2026_11_23.json 도구_단계2_2026_11_28 · kgy_블록_8_2026_11_28 · gabia_블록_1_2026_11_28"
  }
 }

@@ -39,6 +39,36 @@ def fetch_mp_structure(mp_id: str, api_key: str):
         return docs[0].structure
 
 
+def fetch_mp_doc(mp_id: str, api_key: str) -> dict:
+    """fetch_mp_structure plus provenance (2026-11-28 · b2o3_site_dft.py mp_fetch uses it).
+
+    Returns {"structure", "material_id_returned", "formula_pretty", "db_version"}.
+    MP is migrating ids — asking for mp-1211324 returned mp-aaacqxxk (CLAUDE.md 2026-09-21) —
+    so the caller records both the asked and the returned id.
+    Cannot: pick among polymorphs, look at energies, or work without network and a key
+    (the key is read by the caller from the environment and never printed here).
+    db_version is None when the client cannot report it (recorded as unknown, not guessed).
+    """
+    try:
+        from mp_api.client import MPRester
+    except ImportError as e:
+        raise ImportError(
+            "mp_api not installed. On gabia: /data/apps/miniforge3/envs/uma/bin/python"
+        ) from e
+    with MPRester(api_key) as mpr:
+        docs = mpr.materials.summary.search(material_ids=[mp_id],
+                                            fields=["material_id", "structure", "formula_pretty"])
+        if not docs:
+            raise ValueError(f"{mp_id} not found in Materials Project")
+        try:
+            ver = mpr.get_database_version()
+        except Exception:
+            ver = None
+        d = docs[0]
+        return {"structure": d.structure, "material_id_returned": str(d.material_id),
+                "formula_pretty": str(d.formula_pretty), "db_version": None if ver is None else str(ver)}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                     formatter_class=argparse.RawDescriptionHelpFormatter)

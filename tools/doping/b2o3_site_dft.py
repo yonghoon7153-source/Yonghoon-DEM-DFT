@@ -22,6 +22,14 @@
   --mixing  (sp_inputs · probe) 개정 1 (D-2026-11-25-b2o3-site-dft-amend1) — SCF 믹싱 두 줄 (mixing_mode · mixing_beta) 만
             바꾼다 · 예 local-TF:0.2. 계획 (sp_plan.json) 에 적고, read_sp 는 그 값으로 입력을 다시 만들어 G2 로 대조한다.
             믹싱은 수렴 경로만 바꾸고 수렴한 바닥상태는 같다 (57 Å 막대 셀의 전하 출렁임 처방 · 우리 슬랩 규칙)
+  relax_inputs 카드 4 단계_2 — read_sp 결과의 relax_pick 을 믿지 않고 rows 에서 같은 규칙 (최저 + 0.30 eV 안의 둘째) 으로
+            다시 골라 대조 → 고정 기준 셀 (host × (1,1,2) 를 V₀ 로 등방 스케일 · 9 단계와 같은 host · V₀) 로 분수 좌표째 옮긴
+            이온 이완 입력 (bfgs · tstress · k 3 3 1 · 판독 결과 = 계획의 믹싱) + relax_plan.json (판독 · 계획 · 구조 · host sha256)
+  ref_inputs  카드 2 기준상 — Li₂S (mp-1153) · Li₃PS₄ 다형 셋 vc-relax 입력 (판 고정 설정 + &CELL bfgs · k = ceil(13.9 Å / 축)) ·
+            저장소에 있는 둘은 저장소 파일 sha256 으로 묶고, MP 에서 받은 둘은 mp_fetch.json 기록 (sha256 · 물은 id) 과 대조 + ref_plan.json
+  mp_fetch  카드 2 기준상 넷 모으기 — 저장소 둘 (Li₂S mp-1153 · Li₃PS₄ mp-985583) 은 바이트 그대로 복사 · 없는 둘 (Li₃PS₄ mp-2646995 ·
+            mp-1097036) 은 MP 에서 받는다 (fetch_mp_structure.py fetch_mp_doc · 키는 환경변수 MP_API_KEY · 출력 안 함) + mp_fetch.json
+            (물은 id · 돌려받은 id — MP 가 id 를 옮기는 중 · 화학식 · DB 판 · sha256) · 다 받고 조성까지 맞아야 쓴다
   --selftest  음성 경로 포함
 
 이 도구가 못 하는 것 (한계 — 숨기지 않는다)
@@ -32,6 +40,10 @@
   · O 꼴 이름 (O–B · O–P) 은 끝 구조로 다시 매겨야 한다 — 여기서는 시작 꼴만 적는다 (pick_ob 는 고른 이완 구조의 끝 꼴을 적는다).
   · 10월 O–P 후보는 10월 run_anneal.py (08-30 판) 로, O–B 짝은 지금 판으로 돈다 — MD · 이완 경로는 같고 수렴 판정 · 기록만 다르다
     (git diff 34a400e93 HEAD -- tools/doping/run_anneal.py · 11-23 확인).
+  · relax_inputs · ref_inputs 도 pw.x 를 돌리지 않는다 · 이완 · 기준상 출력 판독 (read_relax · D · 압력 어림 · k 탐침) 은 따로
+    (결과 전에 커밋한다) · 기준상 믹싱은 판 고정 그대로다 (개정 1 믹싱은 57 Å 막대 셀 후보 SCF 에만 — 기준상은 작은 벌크 셀) ·
+    MP 에서 받는 것은 mp_fetch 하나다 (키 · 네트워크가 있는 기계 · 받은 그대로 · 다형을 고르지 않는다 — 고르기는 판독기 몫) ·
+    UMA 셀 모양이 기준 셀과 크게 다르면 옮기지 않고 멈춘다 (문턱 = 9 단계 UMA 셀 6 개의 최대 차 2.1 % · 0.95° 의 두 배 넘게 여유).
 """
 from __future__ import annotations
 
@@ -41,10 +53,13 @@ import importlib.util
 import itertools
 import json
 import math
+import os
+import re
 import shutil
 import sys
 import tempfile
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -74,6 +89,28 @@ AMEND1 = "D-2026-11-25-b2o3-site-dft-amend1"     # 개정 1 — 단일점 · 이
 FAMILIES = ("O-P", "O-B")
 KIND_SP_READ = "b2o3_site_dft_sp_read/v1"
 SP_RELAX_WINDOW_EV = 0.30   # 카드 4 단계_2 — 자리마다 단일점 최저 + 둘째가 첫째와 셀 에너지 0.30 eV 안이면 둘째도
+# ── 단계_2 이완 · 기준상 (카드 4 · 2 · 개정 4) ─────────────────────────────────────────────
+AMEND4 = "D-2026-11-28-b2o3-site-dft-amend4-gabia"   # 개정 4 — 단계_2 · 기준상 · 탐침 기계 kgy → gabia (11b 끝난 뒤 · GPU 독점)
+SITE_SUPERCELL = (1, 1, 2)          # 카드 4 기준_셀 — host × (1,1,2) (판 고정 reference_cell 은 9 단계 셀 모양 (1,2,1) 이라 따로)
+CARD_CELLPAR_UNSCALED = (7.007, 7.007, 70.07, 60.0, 60.0, 60.0)   # 카드 문구 (스케일 전) — host × (1,1,2) 대조 (0.01 Å · 0.01°)
+RELAX_K = (3, 3, 1)                 # 카드 4 k_main
+RELAX_SHAPE_TOL = {"len_rel": 0.05, "angle_deg": 3.0}   # UMA 셀 ↔ 기준 셀 모양 차 상한 — 다른 초격자 · 축 순서를 잡는 문턱
+KIND_RELAX_PLAN = "b2o3_site_dft_relax_plan/v1"
+PURPOSE_RELAX = "b2o3_site_dft/dft_relax_stage2"
+KIND_REF_PLAN = "b2o3_site_dft_ref_plan/v1"
+PURPOSE_REF = "b2o3_site_dft/dft_reference_vc_relax"
+KIND_MP_FETCH = "b2o3_site_dft_mp_fetch/v1"
+REF_K_LEN_A = 13.9                  # 기준상 k = ceil(13.9 Å / 축 길이) (카드 4 · 10-15 선례)
+REF_SPECS = {                       # 카드 2 기준상 — 저장소 파일은 sha256 결속 · 나머지는 MP 받은 기록 (mp_fetch.json) 결속
+    "Li2S_mp-1153": {"file": "sei_li2s_mp-1153.cif", "formula": {"Li": 2, "S": 1}, "mp": "mp-1153",
+                     "repo": "db/structures/sei_li2s_mp-1153.cif"},
+    "Li3PS4_mp-985583": {"file": "li3ps4_mp-985583.cif", "formula": {"Li": 3, "P": 1, "S": 4}, "mp": "mp-985583",
+                         "repo": "db/structures/li3ps4_mp-985583.cif"},
+    "Li3PS4_mp-2646995": {"file": "li3ps4_mp-2646995.cif", "formula": {"Li": 3, "P": 1, "S": 4}, "mp": "mp-2646995",
+                          "repo": None},
+    "Li3PS4_mp-1097036": {"file": "li3ps4_mp-1097036.cif", "formula": {"Li": 3, "P": 1, "S": 4}, "mp": "mp-1097036",
+                          "repo": None},
+}
 
 
 def sha256_file(p) -> str:
@@ -768,6 +805,339 @@ def cmd_read_sp(sp_dft: Path, sp_pick: Path, out: Path, *, pseudo_dir: str, repo
     return v
 
 
+# ----------------------------------------------------------------------------- 단계_2 이완 · 기준상 입력
+def site_reference_cell(mod, host: Path):
+    """카드 4 기준_셀 — host (modelc_V0_k663.xyz · 9 단계와 같은 파일 · sha256) × (1,1,2) 의 cellpar 를 V₀ 로 등방 스케일.
+
+    판 고정 reference_cell 은 9 단계 셀 모양 (1,2,1) 이라 쓰지 않는다 — host sha256 · V₀ 는 판 고정 값을 그대로 쓴다.
+    스케일 전 cellpar 가 카드 문구 (7.007 · 7.007 · 70.07 Å · 60°) 와 다르면 멈춘다 (초격자 방향을 잘못 잡은 경우).
+    """
+    from ase.geometry import cellpar_to_cell
+    from ase.io import read
+    hp = Path(host)
+    if not hp.is_file() or sha256_file(hp) != mod.DFT["ref_cell"]["host_sha256"]:
+        raise SystemExit(f"⛔ host {hp} 가 없거나 sha256 이 카드의 modelc_V0_k663.xyz 가 아니다")
+    h = read(str(hp)).repeat(SITE_SUPERCELL)
+    par = np.array(h.cell.cellpar(), float)
+    if any(abs(par[i] - CARD_CELLPAR_UNSCALED[i]) > 0.01 for i in range(6)):
+        raise SystemExit(f"⛔ host × {SITE_SUPERCELL} cellpar {np.round(par, 4).tolist()} ≠ 카드 문구 {CARD_CELLPAR_UNSCALED}")
+    V0 = float(mod.DFT["ref_cell"]["V0_A3"])
+    s = (V0 / h.get_volume()) ** (1.0 / 3.0)
+    par[:3] *= s
+    cell = np.asarray(cellpar_to_cell(par), float)
+    return cell, {"host_sha256": sha256_file(hp), "supercell": list(SITE_SUPERCELL), "host_volume_A3": float(h.get_volume()),
+                  "scale": float(s), "cellpar": par.tolist(), "V0_A3": V0, "volume_A3": float(abs(np.linalg.det(cell)))}
+
+
+def cell_shape_diff(cell_a, cell_b) -> dict:
+    """두 셀의 cellpar 차 — 길이는 상대 차 최대 · 각은 절대 차 최대 (°)."""
+    from ase.geometry import cell_to_cellpar
+    pa = cell_to_cellpar(np.asarray(cell_a, float))
+    pb = cell_to_cellpar(np.asarray(cell_b, float))
+    return {"len_rel_max": float(max(abs(pa[i] - pb[i]) / pb[i] for i in range(3))),
+            "angle_deg_max": float(max(abs(pa[i] - pb[i]) for i in range(3, 6)))}
+
+
+def min_pair_distance(atoms) -> float:
+    d = np.asarray(atoms.get_all_distances(mic=True), float)
+    np.fill_diagonal(d, np.inf)
+    return float(d.min())
+
+
+def relax_atoms(mod, a, cell):
+    """후보 (UMA 셀) → 기준 셀 (분수 좌표 그대로 · 판 고정 map_to_cell). 반환 (옮긴 원자, 기록).
+
+    멈추는 경우: 기하가 유한 · 정칙이 아님 (판 고정 _geom_bad) · UMA 셀 모양이 기준 셀과 크게 다름 (RELAX_SHAPE_TOL —
+    다른 초격자 · 축 순서) · 옮긴 뒤 원자 쌍이 MIN_PAIR (1.0 Å) 보다 가까움 (가장 짧은 실제 결합 B–O ≈ 1.37 Å).
+    """
+    if mod._geom_bad(a):
+        raise SystemExit("⛔ 후보 기하가 유한 · 정칙이 아니다")
+    d = cell_shape_diff(a.cell.array, cell)
+    if d["len_rel_max"] > RELAX_SHAPE_TOL["len_rel"] or d["angle_deg_max"] > RELAX_SHAPE_TOL["angle_deg"]:
+        raise SystemExit(f"⛔ UMA 셀 모양이 기준 셀과 크게 다르다 ({d}) — 분수 좌표째 옮기면 결합이 일그러진다")
+    m = mod.map_to_cell(a, cell)
+    if mod._geom_bad(m):
+        raise SystemExit("⛔ 옮긴 기하가 유한 · 정칙이 아니다")
+    d0, d1 = min_pair_distance(a), min_pair_distance(m)
+    if d1 < MIN_PAIR:
+        raise SystemExit(f"⛔ 옮긴 뒤 원자 쌍 최소 거리 {d1:.3f} Å < {MIN_PAIR} Å")
+    from ase.geometry import cell_to_cellpar
+    return m, {"uma_cellpar": [float(x) for x in cell_to_cellpar(a.cell.array)], "uma_volume_A3": float(abs(np.linalg.det(a.cell.array))),
+               "shape_diff": d, "min_pair_before_A": d0, "min_pair_after_A": d1}
+
+
+def cmd_relax_inputs(sp_read: Path, sp_dft: Path, sp_pick: Path, host: Path, out: Path, *, pseudo_dir: str, disk_io: str,
+                     repo_root: Path) -> dict:
+    """카드 4 단계_2 — read_sp 가 고른 이완 후보를 고정 기준 셀로 옮긴 이온 이완 입력 (bfgs · tstress · k 3 3 1 · 같은 믹싱).
+
+    결속: 판독 결과 (kind · 카드 · 결정) ↔ 단일점 계획 (판독 결과의 plan sha256) ↔ sp_pick manifest (계획의 sha256) ↔ 구조 파일
+    (manifest · 계획의 sha256) · 유사포텐셜 (파일 · sha256 · md5 · z — 폴더 경로는 기계마다 달라 안 본다) · host (판 고정 sha256).
+    판독 결과의 relax_pick 을 믿지 않고 rows 에서 같은 규칙 (최저 + 0.30 eV 안의 둘째) 으로 다시 골라 다르면 멈춘다.
+    믹싱은 판독 결과의 settings_from_plan.mixing (= 계획 settings.mixing · 개정 1) 그대로. 검사를 다 통과한 뒤에만 쓴다.
+    출력 = <out>/r<순서>_<이름>/scf.in (run_force_check_scf.sh 가 그대로 도는 꼴 · relax 완료 = bfgs converged) + <out>/relax_plan.json.
+    순서 = 자리마다 최저 먼저 (B-P · B-Li) · 그 다음 둘째 — 실행기는 폴더 이름 순으로 돈다 (GPU 상한에 걸려도 자리 최저 둘이 먼저 끝난다).
+    ⛔ 못 하는 것: pw.x 를 돌리지 않는다 · 자리 사이 D · 압력 어림 · k 탐침을 하지 않는다 (판독기는 따로 · 결과 전 커밋) ·
+       이완 시작 구조는 UMA 구조 그대로다 (DFT 단일점의 전자 밀도를 이어 쓰지 않는다 · 셀이 다르다).
+    """
+    from ase.io import read
+    mod = load_pinned(repo_root)
+    sp_read, sp_dft, sp_pick, host, out = Path(sp_read), Path(sp_dft), Path(sp_pick), Path(host), Path(out)
+    if out.exists() and any(out.iterdir()):
+        raise SystemExit(f"⛔ {out} 가 비어 있지 않다 — 덮지 않는다")
+    v = json.loads(sp_read.read_text())
+    if v.get("kind") != KIND_SP_READ or v.get("card") != CARD or v.get("decision") != DECISION:
+        raise SystemExit("⛔ read_sp 판독 결과가 아니다 (kind · card · decision)")
+    pf = sp_dft / "sp_plan.json"
+    if not pf.is_file():
+        raise SystemExit(f"⛔ {pf} 가 없다")
+    plan = json.loads(pf.read_text())
+    if plan.get("schema") != "b2o3_site_dft_sp_plan/v1" or plan.get("purpose") != PURPOSE_SP or plan.get("card") != CARD:
+        raise SystemExit("⛔ sp_inputs 의 단일점 계획이 아니다 (schema · purpose · card)")
+    if (v.get("plan") or {}).get("sha256") != sha256_file(pf):
+        raise SystemExit("⛔ 판독 결과가 이 단일점 계획에서 나온 것이 아니다 (plan sha256)")
+    if not (sp_pick / "manifest.json").is_file() or sha256_file(sp_pick / "manifest.json") != plan.get("sp_pick_manifest_sha256"):
+        raise SystemExit("⛔ sp_pick manifest 가 없거나 계획과 다르다 (sha256)")
+    man = json.loads((sp_pick / "manifest.json").read_text())
+    jp = plan.get("jobs") or {}
+    rows = v.get("rows") or []
+    if len(rows) != len(jp) or {r.get("name") for r in rows} != set(jp):
+        raise SystemExit("⛔ 판독 결과의 rows 가 계획의 잡과 다르다")
+    if v.get("relax_window_eV") != SP_RELAX_WINDOW_EV:
+        raise SystemExit(f"⛔ 판독 결과의 창 {v.get('relax_window_eV')} ≠ 카드 {SP_RELAX_WINDOW_EV} eV")
+    picks = {}
+    for s in BASES:
+        r = sorted((x for x in rows if x.get("site") == s), key=lambda x: (x["E_eV"], x["name"]))
+        if len(r) < 2 or any(jp[x["name"]].get("site") != s for x in r):
+            raise SystemExit(f"⛔ {s}: rows 의 자리가 계획과 다르거나 둘보다 적다")
+        if any(not math.isfinite(float(x["E_eV"])) for x in r):
+            raise SystemExit(f"⛔ {s}: rows 에 유한하지 않은 에너지")
+        gap = r[1]["E_eV"] - r[0]["E_eV"]
+        want = [r[0]["name"]] + ([r[1]["name"]] if gap <= SP_RELAX_WINDOW_EV else [])
+        if ((v.get("sites") or {}).get(s) or {}).get("relax_pick") != want:
+            raise SystemExit(f"⛔ {s}: 판독 결과의 relax_pick 이 rows 에서 다시 고른 {want} 와 다르다")
+        picks[s] = want
+    mset = (plan.get("settings") or {}).get("mixing")
+    if (v.get("settings_from_plan") or {}).get("mixing") != mset:
+        raise SystemExit("⛔ 판독 결과의 믹싱이 계획의 믹싱과 다르다")
+    if mset is not None and not (isinstance(mset, dict) and {"mode", "beta"} <= set(mset)):
+        raise SystemExit(f"⛔ 계획의 settings.mixing 꼴이 다르다: {mset}")
+    mx = None if mset is None else parse_mixing((mset["mode"], mset["beta"]))
+    pp = mod.pseudo_record(pseudo_dir)
+    if pp.get("files") != (plan.get("pseudo") or {}).get("files"):
+        raise SystemExit("⛔ 유사포텐셜 파일 기록 (sha256 · md5 · z_valence) 이 단일점 계획과 다르다")
+    cell, crec = site_reference_cell(mod, host)
+    order = [picks[s][0] for s in BASES] + [picks[s][1] for s in BASES if len(picks[s]) > 1]
+    texts, jobs = {}, {}
+    for rank, nm in enumerate(order, 1):
+        s = jp[nm]["site"]
+        j = jp[nm]
+        rel = j.get("xyz")
+        e = (man.get("files") or {}).get(rel)
+        if e is None or e.get("sha256") != j.get("xyz_sha256") or sha256_file(sp_pick / rel) != e["sha256"]:
+            raise SystemExit(f"⛔ {nm}: 구조 파일이 manifest · 계획과 다르다 (sha256)")
+        a = read(str(sp_pick / rel))
+        if composition(a) != dict(sorted(MODELS[s].items())) or len(a) != j.get("nat"):
+            raise SystemExit(f"⛔ {nm}: 조성 · 원자 수가 모델 · 계획과 다르다")
+        m, grec = relax_atoms(mod, a, cell)
+        texts[nm] = pw_text(mod, m, prefix=f"rx_{nm}", calc="relax", k=list(RELAX_K), pseudo_dir=pseudo_dir,
+                            disk_io=disk_io, tstress=True, mixing=mx)
+        jobs[nm] = {"priority": rank, "dir": f"r{rank}_{nm}", "site": s, "family": j.get("family"), "base": j.get("base"),
+                    "nat": len(m), "xyz": rel,
+                    "xyz_sha256": e["sha256"], "sp_E_eV": next(x["E_eV"] for x in rows if x["name"] == nm),
+                    "geometry": grec, "scf_in_sha256": hashlib.sha256(texts[nm].encode("utf-8")).hexdigest()}
+    for nm, t in texts.items():                     # 검사를 다 통과한 뒤에만 쓴다
+        (out / jobs[nm]["dir"]).mkdir(parents=True)
+        (out / jobs[nm]["dir"] / "scf.in").write_text(t)
+        if sha256_file(out / jobs[nm]["dir"] / "scf.in") != jobs[nm]["scf_in_sha256"]:
+            raise SystemExit(f"⛔ {nm}: 쓴 입력의 sha256 이 만든 텍스트와 다르다")
+    rp = {"schema": KIND_RELAX_PLAN, "purpose": PURPOSE_RELAX, "card": CARD, "decision": DECISION, "amendments": [AMEND1, AMEND4],
+          "tool": {"path": "tools/doping/b2o3_site_dft.py", "sha256": tool_sha()},
+          "pinned_dft": {"path": PINNED_DFT_REL, "sha256": PINNED_DFT_SHA},
+          "sp_read": {"sha256": sha256_file(sp_read)}, "sp_plan": {"sha256": sha256_file(pf)},
+          "sp_pick_manifest_sha256": sha256_file(sp_pick / "manifest.json"), "picks": picks, "order": order, "ref_cell": crec,
+          "settings": {"calc": "relax", "k": list(RELAX_K), "disk_io": disk_io, "tstress": True,
+                       "relax": dict(mod.DFT["relax"]), "mixing": mset, "cell": "고정 기준 셀 (host × (1,1,2) · V₀ 등방 스케일)"},
+          "pseudo": pp, "jobs": jobs,
+          "next": "run_force_check_scf.sh (GPU 독점) → 판독기 (따로 · 결과 전 커밋): bfgs 수렴 · 자리 값 = 이완한 것 중 최저 · 압력 어림 · 기준상 · k 탐침 → D"}
+    (out / "relax_plan.json").write_text(json.dumps(rp, ensure_ascii=False, indent=1) + "\n")
+    return rp
+
+
+def ref_vc_text(mod, atoms, *, prefix, k, pseudo_dir, disk_io) -> str:
+    """기준상 vc-relax 입력 — 판 고정 relax 입력 (tstress) 에서 calculation 한 줄만 vc-relax 로 · &IONS 뒤에 &CELL (bfgs · 0.5 kbar)."""
+    t = pw_text(mod, atoms, prefix=prefix, calc="relax", k=k, pseudo_dir=pseudo_dir, disk_io=disk_io, tstress=True)
+    a = "    calculation = 'relax'"
+    if t.count(a) != 1:
+        raise SystemExit(f"⛔ 판 고정 relax 입력에서 calculation 줄을 정확히 하나 못 찾았다 ({t.count(a)})")
+    t = t.replace(a, "    calculation = 'vc-relax'")
+    ions = "&IONS\n    ion_dynamics = 'bfgs'\n/\n"
+    if t.count(ions) != 1:
+        raise SystemExit(f"⛔ 판 고정 relax 입력에서 &IONS 블록을 정확히 하나 못 찾았다 ({t.count(ions)})")
+    return t.replace(ions, ions + "&CELL\n    cell_dynamics = 'bfgs'\n    press_conv_thr = 0.5\n/\n")
+
+
+def cmd_ref_inputs(refs_dir: Path, out: Path, *, pseudo_dir: str, disk_io: str, repo_root: Path) -> dict:
+    """카드 2 기준상 — Li₂S · Li₃PS₄ 다형 셋 vc-relax 입력 (사용자 허락 11-23 · argyrodite 아님 · 판 고정 설정 + &CELL bfgs).
+
+    결속: 저장소에 있는 파일 (REF_SPECS repo) 은 refs_dir 사본이 저장소 파일과 같은 sha256 이어야 한다 · 나머지는
+    refs_dir/mp_fetch.json (kind · 파일마다 sha256 · 물은 id) 과 같아야 한다 · 조성은 화학식의 정수배 · k = ceil(13.9 Å / 축 길이).
+    믹싱은 판 고정 그대로 (개정 1 은 후보 SCF 에만). 검사를 다 통과한 뒤에만 쓴다.
+    ⛔ 못 하는 것: MP 에서 받지 않는다 · 다형 중 최저를 고르지 않는다 (판독기 몫) · vc-relax 의 Pulay 응력을 보정하지 않는다
+       (완료 = bfgs converged + 최종 scf — 판독은 최종 scf 에너지로).
+    """
+    from ase.io import read
+    mod = load_pinned(repo_root)
+    refs_dir, out = Path(refs_dir), Path(out)
+    if out.exists() and any(out.iterdir()):
+        raise SystemExit(f"⛔ {out} 가 비어 있지 않다 — 덮지 않는다")
+    fetch = None
+    if (refs_dir / "mp_fetch.json").is_file():
+        fetch = json.loads((refs_dir / "mp_fetch.json").read_text())
+        if fetch.get("schema") != KIND_MP_FETCH:
+            raise SystemExit("⛔ mp_fetch.json 의 schema 가 다르다")
+    pp = mod.pseudo_record(pseudo_dir)
+    texts, jobs = {}, {}
+    for name, spec in REF_SPECS.items():
+        f = refs_dir / spec["file"]
+        if not f.is_file():
+            raise SystemExit(f"⛔ 기준상 구조 {f} 가 없다")
+        h = sha256_file(f)
+        if spec["repo"]:
+            rp = Path(repo_root) / spec["repo"]
+            if not rp.is_file() or sha256_file(rp) != h:
+                raise SystemExit(f"⛔ {spec['file']}: 저장소 파일 {spec['repo']} 과 sha256 이 다르다")
+            src = {"kind": "repo", "path": spec["repo"], "sha256": h}
+        else:
+            e = ((fetch or {}).get("files") or {}).get(spec["file"])
+            if not e or e.get("sha256") != h or e.get("material_id_asked") != spec["mp"]:
+                raise SystemExit(f"⛔ {spec['file']}: MP 받은 기록 (mp_fetch.json · sha256 · 물은 id) 과 다르다")
+            src = {"kind": "mp_fetch", "sha256": h, "material_id_asked": spec["mp"],
+                   "material_id_returned": e.get("material_id_returned"), "db_version": e.get("db_version")}
+        a = read(str(f))
+        c = composition(a)
+        fo = spec["formula"]
+        nfu = c.get(next(iter(fo)), 0) // next(iter(fo.values()))
+        if set(c) != set(fo) or nfu < 1 or any(c[el] != nfu * n for el, n in fo.items()):
+            raise SystemExit(f"⛔ {name}: 조성 {c} 이 {fo} 의 정수배가 아니다")
+        if mod._geom_bad(a):
+            raise SystemExit(f"⛔ {name}: 기하가 유한 · 정칙이 아니다")
+        lens = [float(x) for x in a.cell.cellpar()[:3]]
+        k = [max(1, math.ceil(REF_K_LEN_A / L)) for L in lens]
+        texts[name] = ref_vc_text(mod, a, prefix=f"ref_{name}", k=k, pseudo_dir=pseudo_dir, disk_io=disk_io)
+        jobs[name] = {"file": spec["file"], "source": src, "composition": c, "n_fu": int(nfu), "nat": len(a),
+                      "cell_lengths_A": lens, "k": k, "mp": spec["mp"],
+                      "scf_in_sha256": hashlib.sha256(texts[name].encode("utf-8")).hexdigest()}
+    for name, t in texts.items():                   # 검사를 다 통과한 뒤에만 쓴다
+        (out / name).mkdir(parents=True)
+        (out / name / "scf.in").write_text(t)
+    plan = {"schema": KIND_REF_PLAN, "purpose": PURPOSE_REF, "card": CARD, "decision": DECISION, "amendments": [AMEND4],
+            "tool": {"path": "tools/doping/b2o3_site_dft.py", "sha256": tool_sha()},
+            "pinned_dft": {"path": PINNED_DFT_REL, "sha256": PINNED_DFT_SHA},
+            "settings": {"calc": "vc-relax", "cell_dynamics": "bfgs", "press_conv_thr_kbar": 0.5, "tstress": True,
+                         "relax": dict(mod.DFT["relax"]), "k_rule": f"ceil({REF_K_LEN_A} Å / 축 길이)", "disk_io": disk_io,
+                         "mixing": None, "mixing_note": "판 고정 (개정 1 믹싱은 57 Å 막대 셀 후보 SCF 에만)"},
+            "pseudo": pp, "mp_fetch_sha256": (sha256_file(refs_dir / "mp_fetch.json") if fetch else None), "jobs": jobs,
+            "next": "run_force_check_scf.sh (vc-relax 완료 = bfgs converged + 최종 scf) → 판독기 (따로): Li₃PS₄ = 셋 중 f.u. 당 최저"}
+    (out / "ref_plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1) + "\n")
+    return plan
+
+
+def _parse_formula(t: str) -> dict:
+    """'Li3PS4' → {'Li': 3, 'P': 1, 'S': 4} (MP formula_pretty 꼴 · 꼴이 다르면 빈 dict)."""
+    if not isinstance(t, str) or not re.fullmatch(r"(?:[A-Z][a-z]?\d*)+", t):
+        return {}
+    out = {}
+    for el, n in re.findall(r"([A-Z][a-z]?)(\d*)", t):
+        if el in out:
+            return {}
+        out[el] = int(n) if n else 1
+    return out
+
+
+def _mp_fetcher_default(repo_root: Path):
+    """기본 받기 — tools/doping/fetch_mp_structure.py 의 fetch_mp_doc (mp_api). 키는 환경변수 MP_API_KEY 에서만 읽고 출력하지 않는다."""
+    key = os.environ.get("MP_API_KEY")
+    if not key:
+        raise SystemExit("⛔ MP_API_KEY 환경변수가 없다 — 키를 대화에 붙이지 말고 그 기계 셸에서 read -rs 로 넣는다 · 받지 않는다")
+    spec = importlib.util.spec_from_file_location("fetch_mp_structure", Path(repo_root) / "tools" / "doping" / "fetch_mp_structure.py")
+    fm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fm)
+
+    def f(mp_id):
+        d = fm.fetch_mp_doc(mp_id, key)
+        return {"cif_text": d["structure"].to(fmt="cif"), "material_id_returned": d["material_id_returned"],
+                "formula_pretty": d["formula_pretty"], "db_version": d["db_version"]}
+    return f
+
+
+def cmd_mp_fetch(refs_dir: Path, *, repo_root: Path, fetcher=None) -> dict:
+    """카드 2 기준상 넷을 한 폴더에 모은다 — ref_inputs 가 그대로 받는 꼴 (저장소 사본 sha256 · mp_fetch.json).
+
+    저장소에 있는 둘 (REF_SPECS repo) 은 바이트 그대로 복사 · 없는 둘은 MP 에서 받는다 (fetcher(mp_id) →
+    {cif_text · material_id_returned · formula_pretty · db_version} · 기본 = fetch_mp_doc · selftest 는 가짜 받기).
+    멈추는 경우 (아무것도 안 쓴다): 폴더가 비어 있지 않음 · 키 없음 · 받기 실패 · MP 가 다른 화학식을 돌려줌 ·
+    받은 CIF 를 다시 읽은 조성이 화학식의 정수배가 아님 — 다 받고 다 읽은 뒤에만 폴더에 쓴다.
+    ⛔ 못 하는 것: 다형을 고르거나 구조를 고치지 않는다 (받은 그대로 · P1 CIF) · 에너지를 보지 않는다 · 키를 출력하지 않는다 ·
+       돌려받은 id 가 물은 id 와 달라도 멈추지 않는다 (MP 의 id 옮김 · 둘 다 기록하고 화학식 · 조성으로 확인한다).
+    """
+    from ase.io import read
+    refs_dir = Path(refs_dir)
+    if refs_dir.exists() and any(refs_dir.iterdir()):
+        raise SystemExit(f"⛔ {refs_dir} 가 비어 있지 않다 — 덮지 않는다")
+    f = fetcher or _mp_fetcher_default(repo_root)
+    got, files, copies = {}, {}, {}
+    for name, spec in REF_SPECS.items():
+        if spec["repo"]:
+            src = Path(repo_root) / spec["repo"]
+            if not src.is_file():
+                raise SystemExit(f"⛔ 저장소 파일 {spec['repo']} 가 없다")
+            got[spec["file"]] = src.read_bytes()
+            copies[spec["file"]] = {"path": spec["repo"], "sha256": hashlib.sha256(got[spec["file"]]).hexdigest()}
+            continue
+        try:
+            d = f(spec["mp"])
+        except SystemExit:
+            raise
+        except Exception as ex:
+            raise SystemExit(f"⛔ {spec['mp']} 받기 실패 — {type(ex).__name__}: {str(ex)[:200]} · 아무것도 안 썼다")
+        if _parse_formula(d.get("formula_pretty")) != spec["formula"]:
+            raise SystemExit(f"⛔ {spec['mp']}: MP 가 돌려준 화학식 {d.get('formula_pretty')!r} ≠ {spec['formula']} · 아무것도 안 썼다")
+        b = str(d.get("cif_text") or "").encode("utf-8")
+        got[spec["file"]] = b
+        files[spec["file"]] = {"material_id_asked": spec["mp"], "material_id_returned": d.get("material_id_returned"),
+                               "formula_pretty": d.get("formula_pretty"), "db_version": d.get("db_version"),
+                               "sha256": hashlib.sha256(b).hexdigest()}
+    tmp = Path(tempfile.mkdtemp(prefix="b2o3_mp_fetch_"))
+    try:                                            # 다 받은 뒤 — 임시 폴더에서 다시 읽어 조성을 본 다음에만 옮긴다
+        for fn, b in got.items():
+            (tmp / fn).write_bytes(b)
+        for name, spec in REF_SPECS.items():
+            try:
+                a = read(str(tmp / spec["file"]))
+            except Exception as ex:
+                raise SystemExit(f"⛔ {spec['file']}: CIF 를 다시 못 읽었다 — {type(ex).__name__}: {str(ex)[:160]} · 아무것도 안 썼다")
+            c, fo = composition(a), spec["formula"]
+            nfu = c.get(next(iter(fo)), 0) // next(iter(fo.values()))
+            if set(c) != set(fo) or nfu < 1 or any(c[el] != nfu * n for el, n in fo.items()):
+                raise SystemExit(f"⛔ {spec['file']}: 다시 읽은 조성 {c} 이 {fo} 의 정수배가 아니다 · 아무것도 안 썼다")
+            (files.get(spec["file"]) or copies[spec["file"]]).update({"nat": len(a), "composition": c})
+        refs_dir.mkdir(parents=True, exist_ok=True)
+        for fn in got:
+            shutil.copyfile(tmp / fn, refs_dir / fn)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    for fn, e in list(files.items()) + list(copies.items()):
+        if sha256_file(refs_dir / fn) != e["sha256"]:
+            raise SystemExit(f"⛔ {fn}: 쓴 파일의 sha256 이 받은 바이트와 다르다")
+    rec = {"schema": KIND_MP_FETCH, "card": CARD, "decision": DECISION, "amendments": [AMEND4],
+           "tool": {"path": "tools/doping/b2o3_site_dft.py", "sha256": tool_sha()},
+           "fetched_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+           "files": files, "repo_copies": copies,
+           "note": "받은 그대로 (pymatgen Structure.to cif · P1) — 고르거나 고치지 않았다 · 물은 id ≠ 돌려받은 id 면 MP 의 id 옮김 (둘 다 기록)"}
+    (refs_dir / "mp_fetch.json").write_text(json.dumps(rec, ensure_ascii=False, indent=1) + "\n")
+    return rec
+
+
 # ----------------------------------------------------------------------------- selftest
 def selftest() -> int:
     from ase import Atoms
@@ -1221,6 +1591,236 @@ def selftest() -> int:
                 pj["settings"]["mixing"] = {"mode": "local-TF", "beta": 0.2, "decision": AMEND1}
                 (D / "sp_plan.json").write_text(json.dumps(pj))
                 chk(refuses(rs, D, "rs_addmix.json"), "[음성] 판 고정 입력인데 계획에 믹싱을 덧붙이면 → G2 멈춤")
+
+                print("— relax_inputs (단계_2 이온 이완 입력 · 고정 기준 셀 · 판독 결과 결속 · 결과 전)")
+                host = root / "db" / "structures" / "modelc_V0_k663.xyz"
+                cell_r, crec = site_reference_cell(mod, host)
+                from ase.geometry import cell_to_cellpar as _c2p
+                from ase.io import read as _rd2
+                p0_, p1_ = _rd2(str(host)).repeat((1, 1, 2)).cell.cellpar(), _c2p(cell_r)
+                chk(abs(crec["volume_A3"] - mod.DFT["ref_cell"]["V0_A3"]) < 1e-6 and np.allclose(p1_[3:], p0_[3:], atol=1e-8)
+                    and np.allclose(p1_[:3] / p0_[:3], crec["scale"], atol=1e-10) and all(abs(x - 60.0) < 1e-3 for x in p1_[3:])
+                    and crec["supercell"] == [1, 1, 2],
+                    "[양성] 기준 셀 = host × (1,1,2) 를 V₀ 로 등방 스케일 (세 축 같은 배율 · 각 그대로 60°)")
+                host_bad = T / "host_bad.xyz"              # 읽히는 구조 · 좌표 하나만 다름 (sha256 만 다르다)
+                hb = _rd2(str(host)); hb.positions[0] += np.array([1e-3, 0.0, 0.0]); write(str(host_bad), hb, format="extxyz")
+                chk(refuses(site_reference_cell, mod, host_bad), "[음성] host 가 카드 파일 (sha256) 이 아님 (좌표 하나 다름) → 멈춘다")
+
+                def toy_ref(scale=1.0):            # 기준 셀 (× scale) 안의 장난감 — UMA 셀은 기준 셀과 조금 다르다 (실제 문턱으로 시험)
+                    t_ = toy(edge=False)
+                    sy_ = t_.get_chemical_symbols()
+                    return Atoms(sy_, scaled_positions=[[0.0, 0.0, (i + 0.5) / len(sy_)] for i in range(len(sy_))],
+                                 cell=cell_r * scale, pbc=True)
+
+                def mk_pick_ref(D):
+                    (D / "sp_selected").mkdir(parents=True)
+                    files = {}
+                    for i in range(12):
+                        rel = f"sp_selected/X{i:02d}.xyz"
+                        write(str(D / rel), toy_ref(1.02), format="extxyz")
+                        files[rel] = {"sha256": sha256_file(D / rel), "site": "B-P" if i < 6 else "B-Li",
+                                      "family": "O-P" if i % 2 else "O-B", "base": f"X{i:02d}", "E_uma_eV": -100.0 - i,
+                                      "end_motif": "O-P"}
+                    (D / "manifest.json").write_text(json.dumps({"schema": "b2o3_site_dft_sp_selected/v1",
+                                                                 "purpose": PURPOSE_SP, "files": files}))
+                    return D
+                pk_r = mk_pick_ref(T / "pk_r")
+                pl_r = cmd_sp_inputs(pk_r, T / "sp_r", pseudo_dir=str(pdir), disk_io="medium", repo_root=root,
+                                     mixing="local-TF:0.2")
+                for nm in pl_r["jobs"]:
+                    (T / "sp_r" / nm / "scf.out").write_text(mod._fake_out(T / "sp_r" / nm / "scf.in", E_list=[E0[nm]],
+                                                                           stage="sp", pp=pl_r["pseudo"]["files"]))
+                try_rs(T / "sp_r", "rr.json", sp_pick=pk_r)
+
+                def rx(out_name, sp_read=None, sp_dft=None, sp_pick=None, host_=None, pseudo=None):
+                    return cmd_relax_inputs(sp_read or T / "rr.json", sp_dft or T / "sp_r", sp_pick or pk_r, host_ or host,
+                                            T / out_name, pseudo_dir=str(pseudo or pdir), disk_io="medium", repo_root=root)
+                rp1 = None
+                try:
+                    rp1 = rx("rx1")
+                except SystemExit as ex:
+                    print(f"    (양성 호출이 멈춤: {ex})")
+                f1 = T / "rx1" / "r1_X01" / "scf.in"     # 자리 최저 (B-P X01) 의 입력 — 폴더 이름까지 본다
+                ok_rx = rp1 is not None and f1.is_file()
+                t1 = f1.read_text() if ok_rx else ""
+                chk(ok_rx and sorted(rp1["jobs"]) == ["X01", "X04", "X06"]
+                    and rp1["picks"] == {"B-P": ["X01", "X04"], "B-Li": ["X06"]}
+                    and all((T / "rx1" / rp1["jobs"][j]["dir"] / "scf.in").is_file() for j in rp1["jobs"]),
+                    "[양성] 자리마다 다시 고른 relax_pick 만 입력 (B-P X01 · X04 둘째 0.20 eV · B-Li X06 둘째 0.35 eV 는 창 밖)")
+                chk(ok_rx and rp1["order"] == ["X01", "X06", "X04"]
+                    and sorted(x.name for x in (T / "rx1").iterdir() if x.is_dir()) == ["r1_X01", "r2_X06", "r3_X04"],
+                    "[양성] 폴더 순서 = 자리 최저 둘 먼저 (r1 B-P · r2 B-Li) · 둘째 (r3) 뒤 — 실행기가 이름 순으로 돈다")
+                chk(ok_rx and "calculation = 'relax'" in t1 and "tstress = .true." in t1 and "ion_dynamics = 'bfgs'" in t1
+                    and "mixing_mode = 'local-TF'" in t1 and "mixing_beta = 0.2" in t1 and "\n3 3 1 0 0 0\n" in t1
+                    and "disk_io = 'medium'" in t1 and "forc_conv_thr" in t1,
+                    "[양성] 이완 (bfgs · tstress · 판 고정 문턱) · 판독 결과의 믹싱 · k 3 3 1 · disk_io")
+                if ok_rx:
+                    pin = mod.parse_pw_in(T / "rx1" / "r1_X01" / "scf.in")
+                    chk(np.allclose(np.asarray(pin["cell"], float), cell_r, atol=1e-8)
+                        and abs(rp1["jobs"]["X01"]["geometry"]["shape_diff"]["len_rel_max"] - 0.02) < 1e-9
+                        and np.abs((lambda d_: d_ - np.round(d_))(np.asarray(pin["frac"], float)
+                                   - _rd2(str(pk_r / "sp_selected" / "X01.xyz")).get_scaled_positions(wrap=False))).max() < 1e-6
+                        and rp1["jobs"]["X01"]["scf_in_sha256"] == sha256_file(T / "rx1" / "r1_X01" / "scf.in")
+                        and rp1["sp_read"]["sha256"] == sha256_file(T / "rr.json") and rp1["ref_cell"]["supercell"] == [1, 1, 2],
+                        "[양성] UMA 셀 (기준 × 1.02) → 입력 셀 = 기준 셀 · 분수 좌표 그대로 · 계획에 입력 · 판독 결과 sha256 · 기준 셀 기록")
+                    chk(rx("rx2")["jobs"]["X04"]["scf_in_sha256"] == rp1["jobs"]["X04"]["scf_in_sha256"],
+                        "[양성] 결정론 — 같은 인자로 다시 만든 입력이 같은 바이트")
+                else:
+                    chk(False, "[양성] UMA 셀 → 입력 셀 = 기준 셀 — 입력 rx1/r1_X01/scf.in 이 없다 (폴더 이름 · 순서)")
+                chk(refuses(rx, "rx1"), "[음성] 비어 있지 않은 출력 폴더 → 덮지 않는다")
+                vj = json.loads((T / "rr.json").read_text()); vj["sites"]["B-Li"]["relax_pick"] = ["X06", "X10"]
+                (T / "rr_pick.json").write_text(json.dumps(vj))
+                chk(refuses(rx, "rx3", sp_read=T / "rr_pick.json") and not (T / "rx3").exists(),
+                    "[음성] 판독 결과의 relax_pick 을 고쳐도 → rows 에서 다시 고른 것과 달라 멈춘다 (아무것도 안 쓴다)")
+                vj = json.loads((T / "rr.json").read_text())
+                for x in vj["rows"]:
+                    if x["name"] == "X10":
+                        x["E_eV"] = -1.0e9
+                (T / "rr_rows.json").write_text(json.dumps(vj))
+                chk(refuses(rx, "rx4", sp_read=T / "rr_rows.json"), "[음성] rows 에너지만 고쳐도 → relax_pick 과 안 맞아 멈춘다")
+                vj = json.loads((T / "rr.json").read_text()); vj["kind"] = "x"
+                (T / "rr_kind.json").write_text(json.dumps(vj))
+                chk(refuses(rx, "rx5", sp_read=T / "rr_kind.json"), "[음성] read_sp 판독 결과가 아님 (kind) → 멈춘다")
+                vj = json.loads((T / "rr.json").read_text()); vj["settings_from_plan"]["mixing"] = None
+                (T / "rr_mix.json").write_text(json.dumps(vj))
+                chk(refuses(rx, "rx6", sp_read=T / "rr_mix.json"), "[음성] 판독 결과의 믹싱이 계획과 다름 → 멈춘다")
+                vj = json.loads((T / "rr.json").read_text()); vj["relax_window_eV"] = 0.5
+                (T / "rr_win.json").write_text(json.dumps(vj))
+                chk(refuses(rx, "rx7", sp_read=T / "rr_win.json"), "[음성] 판독 결과의 창이 카드 (0.30 eV) 와 다름 → 멈춘다")
+                Dp = T / "sp_r2"
+                shutil.copytree(T / "sp_r", Dp)
+                (Dp / "sp_plan.json").write_text((Dp / "sp_plan.json").read_text() + " ")
+                chk(refuses(rx, "rx8", sp_dft=Dp), "[음성] 단일점 계획이 판독 뒤 바뀜 (plan sha256) → 멈춘다")
+                chk(refuses(rx, "rx9", pseudo=pdir2), "[음성] 유사포텐셜 파일이 단일점 계획과 다름 → 멈춘다")
+                chk(refuses(rx, "rx10", host_=host_bad), "[음성] host 가 카드 파일이 아님 → 멈춘다")
+                pk_r2 = T / "pk_r2"
+                shutil.copytree(pk_r, pk_r2)
+                (pk_r2 / "sp_selected" / "X04.xyz").write_text((pk_r2 / "sp_selected" / "X04.xyz").read_text() + " ")
+                chk(refuses(rx, "rx11", sp_pick=pk_r2) and not (T / "rx11").exists(),
+                    "[음성] 둘째 이완 후보 (X04) 구조 파일이 manifest 뒤 바뀜 → 멈춘다 (앞 후보 X01 도 안 쓴다)")
+                chk(refuses(relax_atoms, mod, toy(edge=False), cell_r),
+                    "[음성] UMA 셀 모양이 기준 셀과 크게 다름 (10 Å 입방 ↔ 7·7·70 Å 60°) → 옮기지 않고 멈춘다")
+                cl = toy_ref()
+                cl.positions[1] = cl.positions[0] + np.array([0.5, 0.0, 0.0])
+                chk(refuses(relax_atoms, mod, cl, cell_r), "[음성] 옮긴 뒤 원자 쌍이 1.0 Å 보다 가까움 → 멈춘다")
+                sq = toy_ref()
+                sq.set_cell(cell_r * np.array([[1.03], [1.03], [1.03]]), scale_atoms=True)
+                chk(not refuses(relax_atoms, mod, sq, cell_r), "[양성] 셀 길이 3 % 차 (등방) 는 옮긴다 (문턱 5 %)")
+                saved_bp = dict(MODELS["B-P"]); MODELS["B-P"] = {"B": 2}
+                try:
+                    chk(refuses(rx, "rx12"), "[음성] 조성이 모델과 다름 → 멈춘다")
+                finally:
+                    MODELS["B-P"] = saved_bp
+
+                print("— ref_inputs (기준상 넷 vc-relax · 저장소 · MP 받은 기록 결속 · k = ceil(13.9/축))")
+                RD = T / "refs"
+                RD.mkdir()
+                for sp_ in REF_SPECS.values():
+                    src_ = root / (sp_["repo"] or REF_SPECS["Li3PS4_mp-985583"]["repo"])   # MP 몫은 시험용 가짜 (조성 Li₃PS₄)
+                    shutil.copy(src_, RD / sp_["file"])
+
+                def mp_meta(Dir):
+                    (Dir / "mp_fetch.json").write_text(json.dumps({"schema": KIND_MP_FETCH, "files": {
+                        sp_["file"]: {"sha256": sha256_file(Dir / sp_["file"]), "material_id_asked": sp_["mp"],
+                                      "material_id_returned": sp_["mp"], "db_version": "selftest"}
+                        for sp_ in REF_SPECS.values() if not sp_["repo"]}}))
+                mp_meta(RD)
+                rf = None
+                try:
+                    rf = cmd_ref_inputs(RD, T / "ref1", pseudo_dir=str(pdir), disk_io="low", repo_root=root)
+                except SystemExit as ex:
+                    print(f"    (양성 호출이 멈춤: {ex})")
+                tl = (T / "ref1" / "Li2S_mp-1153" / "scf.in").read_text() if rf else ""
+                chk(rf is not None and sorted(rf["jobs"]) == sorted(REF_SPECS) and tl.count("calculation = 'vc-relax'") == 1
+                    and tl.count("&CELL") == 1 and "cell_dynamics = 'bfgs'" in tl and "press_conv_thr = 0.5" in tl
+                    and "tstress = .true." in tl and "mixing_mode = 'plain'" in tl and "calculation = 'relax'" not in tl,
+                    "[양성] 넷 다 vc-relax · &CELL bfgs 0.5 kbar · tstress · 판 고정 믹싱 (plain)")
+                chk(rf is not None and rf["jobs"]["Li2S_mp-1153"]["k"] == [4, 4, 4]
+                    and rf["jobs"]["Li3PS4_mp-985583"]["k"] == [3, 2, 2]
+                    and rf["jobs"]["Li2S_mp-1153"]["source"]["kind"] == "repo"
+                    and rf["jobs"]["Li3PS4_mp-2646995"]["source"]["kind"] == "mp_fetch",
+                    "[양성] k = ceil(13.9 Å / 축) (Li₂S 원시 셀 4.01 Å → 4 4 4 · Li₃PS₄ 6.17/8.02/13.03 Å → 3 2 2) · 출처 결속")
+                chk(refuses(cmd_ref_inputs, RD, T / "ref1", pseudo_dir=str(pdir), disk_io="low", repo_root=root),
+                    "[음성] 비어 있지 않은 출력 폴더 → 덮지 않는다")
+                R2 = T / "refs2"; shutil.copytree(RD, R2)
+                (R2 / "sei_li2s_mp-1153.cif").write_text((R2 / "sei_li2s_mp-1153.cif").read_text() + "\n")
+                chk(refuses(cmd_ref_inputs, R2, T / "ref2", pseudo_dir=str(pdir), disk_io="low", repo_root=root)
+                    and not (T / "ref2").exists(), "[음성] 저장소에 있는 기준상 사본이 저장소 파일과 다름 → 멈춘다 (아무것도 안 쓴다)")
+                R3 = T / "refs3"; shutil.copytree(RD, R3)
+                (R3 / "li3ps4_mp-1097036.cif").write_text((R3 / "li3ps4_mp-1097036.cif").read_text() + "\n")
+                chk(refuses(cmd_ref_inputs, R3, T / "ref3", pseudo_dir=str(pdir), disk_io="low", repo_root=root)
+                    and not (T / "ref3").exists(),
+                    "[음성] 마지막 기준상 (MP 받은 파일) 이 mp_fetch.json 기록 (sha256) 과 다름 → 멈춘다 (앞 셋도 안 쓴다)")
+                R4 = T / "refs4"; shutil.copytree(RD, R4)
+                (R4 / "mp_fetch.json").unlink()
+                chk(refuses(cmd_ref_inputs, R4, T / "ref4", pseudo_dir=str(pdir), disk_io="low", repo_root=root),
+                    "[음성] mp_fetch.json 이 없음 → MP 몫을 결속 못 해 멈춘다")
+                R5 = T / "refs5"; shutil.copytree(RD, R5)
+                shutil.copy(root / REF_SPECS["Li2S_mp-1153"]["repo"], R5 / "li3ps4_mp-2646995.cif")
+                mp_meta(R5)
+                chk(refuses(cmd_ref_inputs, R5, T / "ref5", pseudo_dir=str(pdir), disk_io="low", repo_root=root),
+                    "[음성] Li₃PS₄ 이름에 Li₂S 구조 (조성이 화학식의 정수배가 아님) → 멈춘다")
+                R6 = T / "refs6"; shutil.copytree(RD, R6)
+                (R6 / "li3ps4_mp-985583.cif").unlink()
+                chk(refuses(cmd_ref_inputs, R6, T / "ref6", pseudo_dir=str(pdir), disk_io="low", repo_root=root),
+                    "[음성] 기준상 파일 하나 없음 → 멈춘다")
+
+                print("— mp_fetch (저장소 둘 복사 · MP 둘 받기 (가짜 받기) · 받은 기록 · ref_inputs 로 이어짐)")
+                cif_l3 = (root / REF_SPECS["Li3PS4_mp-985583"]["repo"]).read_text()
+                cif_l2 = (root / REF_SPECS["Li2S_mp-1153"]["repo"]).read_text()
+
+                def fake_mp(ret=None, formula="Li3PS4", text=None, boom_on=None):
+                    def f_(mp_id):
+                        if boom_on == mp_id:
+                            raise RuntimeError("selftest 가짜 네트워크 오류")
+                        return {"cif_text": cif_l3 if text is None else text, "material_id_returned": (ret or {}).get(mp_id, mp_id),
+                                "formula_pretty": formula, "db_version": "selftest"}
+                    return f_
+                F1 = T / "mpf1"
+                rec = None
+                try:
+                    rec = cmd_mp_fetch(F1, repo_root=root, fetcher=fake_mp(ret={"mp-1097036": "mp-aaaselftest"}))
+                except SystemExit as ex:
+                    print(f"    (양성 호출이 멈춤: {ex})")
+                want_files = sorted([sp_["file"] for sp_ in REF_SPECS.values()] + ["mp_fetch.json"])
+                chk(rec is not None and sorted(x.name for x in F1.iterdir()) == want_files
+                    and rec["files"]["li3ps4_mp-1097036.cif"]["material_id_returned"] == "mp-aaaselftest"
+                    and rec["files"]["li3ps4_mp-1097036.cif"]["material_id_asked"] == "mp-1097036"
+                    and all(rec["files"][fn]["sha256"] == sha256_file(F1 / fn) for fn in rec["files"])
+                    and sorted(rec["files"]) == ["li3ps4_mp-1097036.cif", "li3ps4_mp-2646995.cif"]
+                    and all(sha256_file(F1 / sp_["file"]) == sha256_file(root / sp_["repo"]) for sp_ in REF_SPECS.values() if sp_["repo"]),
+                    "[양성] 저장소 둘은 바이트 그대로 복사 · MP 둘은 받은 기록 (물은 id · 돌려받은 id 따로 · sha256)")
+                rfp = None
+                try:
+                    rfp = cmd_ref_inputs(F1, T / "ref_mpf1", pseudo_dir=str(pdir), disk_io="low", repo_root=root)
+                except SystemExit as ex:
+                    print(f"    (양성 호출이 멈춤: {ex})")
+                chk(rfp is not None and rfp["jobs"]["Li3PS4_mp-1097036"]["source"]["material_id_returned"] == "mp-aaaselftest"
+                    and rfp["mp_fetch_sha256"] == sha256_file(F1 / "mp_fetch.json"),
+                    "[양성] mp_fetch 가 쓴 폴더를 ref_inputs 가 그대로 받는다 (돌려받은 id · 기록 sha256 이 계획까지 간다)")
+                chk(refuses(cmd_mp_fetch, F1, repo_root=root, fetcher=fake_mp()), "[음성] 비어 있지 않은 폴더 → 덮지 않는다")
+                chk(refuses(cmd_mp_fetch, T / "mpf2", repo_root=root, fetcher=fake_mp(formula="Li2S")) and not (T / "mpf2").exists(),
+                    "[음성] MP 가 다른 화학식을 돌려줌 → 멈춘다 (아무것도 안 쓴다)")
+                chk(refuses(cmd_mp_fetch, T / "mpf3", repo_root=root, fetcher=fake_mp(text=cif_l2)) and not (T / "mpf3").exists(),
+                    "[음성] 화학식은 Li₃PS₄ 라는데 받은 구조가 Li₂S → 다시 읽은 조성으로 멈춘다 (아무것도 안 쓴다)")
+                chk(refuses(cmd_mp_fetch, T / "mpf4", repo_root=root, fetcher=fake_mp(boom_on="mp-1097036")) and not (T / "mpf4").exists(),
+                    "[음성] 마지막 받기가 네트워크 오류 → 멈춘다 (먼저 받은 것 · 저장소 복사도 안 쓴다)")
+                chk(_parse_formula("Li3PS4") == {"Li": 3, "P": 1, "S": 4} and _parse_formula("PS4Li3") == {"P": 1, "S": 4, "Li": 3}
+                    and _parse_formula("Li3PS4 ") == {} and _parse_formula("li3ps4") == {} and _parse_formula(None) == {},
+                    "[양성 · 음성] 화학식 읽기 — 순서는 상관없다 · 꼴이 다르면 빈 값 (멈춤으로 이어진다)")
+                def refuse_msg(f_, *a_, **kw_):    # 멈춘 이유까지 본다 (다른 이유로 멈춘 것을 통과로 읽지 않게)
+                    try:
+                        f_(*a_, **kw_)
+                    except SystemExit as ex:
+                        return str(ex)
+                    return ""
+                saved_key = os.environ.pop("MP_API_KEY", None)
+                try:
+                    chk("MP_API_KEY 환경변수가 없다" in refuse_msg(cmd_mp_fetch, T / "mpf5", repo_root=root) and not (T / "mpf5").exists(),
+                        "[음성] 키 (MP_API_KEY) 없음 → 그 이유로 받지 않고 멈춘다")
+                finally:
+                    if saved_key is not None:
+                        os.environ["MP_API_KEY"] = saved_key
                 MODELS["B-Li"] = {"B": 2}
                 chk(refuses(cmd_sp_inputs, pk, T / "sp7", pseudo_dir=str(pdir), disk_io="medium", repo_root=root),
                     "[음성] 조성이 모델과 다름 → 멈춘다")
@@ -1252,6 +1852,16 @@ def main(argv=None) -> int:
     a3.add_argument("--pseudo_dir", required=True); a3.add_argument("--k", type=int, nargs=3, default=[3, 3, 1])
     a3.add_argument("--disk_io", default="medium", choices=DISK_IO)
     a3.add_argument("--mixing", default=None, help="개정 1 — 예 local-TF:0.2 (안 주면 판 고정 믹싱)")
+    a7 = sp.add_parser("relax_inputs", help="개정 4 — 단계_2 이온 이완 입력 (고정 기준 셀 · 판독 결과 결속)")
+    a7.add_argument("--sp_read", required=True); a7.add_argument("--sp_dft", required=True)
+    a7.add_argument("--sp_pick", required=True); a7.add_argument("--host", required=True)
+    a7.add_argument("--pseudo_dir", required=True); a7.add_argument("--disk_io", required=True, choices=DISK_IO)
+    a7.add_argument("--out", required=True)
+    a8 = sp.add_parser("ref_inputs", help="개정 4 — 기준상 Li₂S · Li₃PS₄ 셋 vc-relax 입력 (저장소 · mp_fetch.json 결속)")
+    a8.add_argument("--refs_dir", required=True); a8.add_argument("--pseudo_dir", required=True)
+    a8.add_argument("--disk_io", required=True, choices=DISK_IO); a8.add_argument("--out", required=True)
+    a9 = sp.add_parser("mp_fetch", help="개정 4 — 기준상 넷 모으기 (저장소 둘 복사 · MP 둘 받기 · mp_fetch.json · 키는 MP_API_KEY)")
+    a9.add_argument("--refs_dir", required=True)
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
@@ -1299,6 +1909,41 @@ def main(argv=None) -> int:
             print(f"        → 단계_2 이완 후보 {g['relax_pick']} (둘째와 {g['second_gap_eV']:.3f} eV · 창 {v['relax_window_eV']}) · "
                   f"G3 기록 O–B − O–P = {g['O-B_minus_O-P_eV']:+.3f} eV/셀")
         print(f"→ {a.out} · {v['판정_아님']}")
+        return 0
+    if a.cmd == "relax_inputs":
+        root = Path(__file__).resolve().parents[2]
+        rp = cmd_relax_inputs(Path(a.sp_read), Path(a.sp_dft), Path(a.sp_pick), Path(a.host), Path(a.out),
+                              pseudo_dir=a.pseudo_dir, disk_io=a.disk_io, repo_root=root)
+        c = rp["ref_cell"]
+        print(f"  기준 셀 host × {tuple(c['supercell'])} · 스케일 {c['scale']:.5f} · V {c['volume_A3']:.2f} Å³ (V₀ {c['V0_A3']})")
+        for nm, j in rp["jobs"].items():
+            g = j["geometry"]
+            print(f"  {nm:12s} {j['site']:5s} {j['family']} · nat {j['nat']} · 단일점 {j['sp_E_eV']:.4f} eV · 셀 차 길이 "
+                  f"{g['shape_diff']['len_rel_max'] * 100:.2f} % · 각 {g['shape_diff']['angle_deg_max']:.2f}° · 최소 쌍 "
+                  f"{g['min_pair_before_A']:.3f} → {g['min_pair_after_A']:.3f} Å · scf.in {j['scf_in_sha256'][:12]}")
+        mx = rp["settings"]["mixing"]
+        print(f"이완 입력 {len(rp['jobs'])} 개 → {a.out}/<이름>/scf.in · 계획 {a.out}/relax_plan.json (disk_io {a.disk_io} · "
+              f"k {rp['settings']['k']} · 믹싱 {mx['mode'] + ':' + str(mx['beta']) if mx else '판 고정'})")
+        return 0
+    if a.cmd == "mp_fetch":
+        root = Path(__file__).resolve().parents[2]
+        rec = cmd_mp_fetch(Path(a.refs_dir), repo_root=root)
+        for fn, e in rec["files"].items():
+            print(f"  {fn:24s} 물은 {e['material_id_asked']} → 돌려받은 {e['material_id_returned']} · {e['formula_pretty']} · "
+                  f"nat {e['nat']} · DB {e['db_version']} · sha256 {e['sha256'][:12]}")
+        for fn, e in rec["repo_copies"].items():
+            print(f"  {fn:24s} 저장소 {e['path']} · nat {e['nat']} · sha256 {e['sha256'][:12]}")
+        print(f"→ {a.refs_dir}/mp_fetch.json (받은 그대로 · 다형 고르기는 판독기)")
+        return 0
+    if a.cmd == "ref_inputs":
+        root = Path(__file__).resolve().parents[2]
+        pl = cmd_ref_inputs(Path(a.refs_dir), Path(a.out), pseudo_dir=a.pseudo_dir, disk_io=a.disk_io, repo_root=root)
+        for nm, j in pl["jobs"].items():
+            src = j["source"]
+            where = src["path"] if src["kind"] == "repo" else f"MP {src['material_id_asked']} → {src['material_id_returned']}"
+            print(f"  {nm:18s} nat {j['nat']:3d} · f.u. {j['n_fu']} · 축 " + " · ".join(f"{x:.3f}" for x in j["cell_lengths_A"])
+                  + f" Å · k {j['k']} · {where} · scf.in {j['scf_in_sha256'][:12]}")
+        print(f"기준상 vc-relax 입력 {len(pl['jobs'])} 개 → {a.out}/<이름>/scf.in · 계획 {a.out}/ref_plan.json (disk_io {a.disk_io} · 믹싱 판 고정)")
         return 0
     if a.cmd == "probe":
         root = Path(__file__).resolve().parents[2]
